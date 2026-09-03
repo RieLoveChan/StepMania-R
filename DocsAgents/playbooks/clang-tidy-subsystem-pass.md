@@ -48,17 +48,24 @@ Only files under the chosen subsystem's `src/...` glob, plus:
    big subsystem in one go.
 2. **Measure before:** run clang-tidy over the subsystem's files, record
    the warning count and the check breakdown.
-3. **Apply:** `clang-tidy -p build --fix --checks='-*,modernize-use-nullptr' <files>`
-   (or apply by hand for anything the fixer does clumsily).
+3. **Apply**, per file, sequentially (not parallel — shared-header fix
+   conflicts):
+   `clang-tidy.exe -p build-tidy --quiet --fix --format-style=none --extra-arg-before=/Y- --checks='-*,<one-check>' src\Foo.cpp`
+   - **`--format-style=none`** (also set in `.clang-tidy`) — without it,
+     `--fix` runs `.clang-format` over the touched region and turns a
+     1-line swap into a braces-added, re-indented 5-line diff. Verified
+     2026-09-03.
+   - **Never `--fix-errors`** — it applies fixes even when the TU has
+     compiler errors and produces garbage (half-qualified names etc.).
+   - Exclude Linux-only files (`RageDisplay_GLES2.cpp`, `*_Unix*`,
+     `*_X11*`) — the Windows build can't verify them (`AGENTS.md` §3).
 4. **Review every hunk.** clang-tidy fixers are not always behavior-safe
    (macros, template context, `NULL` used as int, `auto` changing type).
-   Revert anything questionable.
-5. **Build Windows** (primary target) — must compile clean. Build macOS/
-   Linux only if CI complains; do not chase non-Windows-only fixes
-   (`AGENTS.md` §3).
+   `git checkout --` anything questionable.
+5. **Build Windows** (primary target) — must compile clean.
 6. **Measure after**, update `../baseline.md`.
-7. **Commit split:** code changes in one commit, `DocsAgents/` updates in
-   a separate commit (`AGENTS.md` §2).
+7. **Commit** (one commit per subsystem×check), then a separate
+   `DocsAgents/` commit, then `git push` (`AGENTS.md` §2, §4).
 
 # Gotchas
 

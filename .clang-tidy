@@ -31,7 +31,10 @@ WarningsAsErrors: ''
 # Our headers only; never extern/ or vendored trees.
 HeaderFilterRegex: '.*/src/(?!.*(libtomcrypt|libtommath|smpackage/ZipArchive)).*\.h$'
 
-FormatStyle: file
+# none: --fix applies ONLY the check's replacement, no clang-format
+# reformatting of the touched region. Keeps diffs to the actual change
+# (a repo-wide clang-format is a separate deliberate task — ADR 0002).
+FormatStyle: none
 
 CheckOptions:
   - key: modernize-make-unique.MakeSmartPtrFunction

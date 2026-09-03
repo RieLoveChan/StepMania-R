@@ -127,15 +127,16 @@ and cross-platform — a dedicated ADR-scoped effort, not a casual pass.
 one subsystem + one check family per PR; record in
 [`baseline.md`](./baseline.md).
 
-### 13. `src/archutils/Win32/arch_setup.h` is a legacy dump
-`isnan`/`isfinite` macros: **removed 2026-09-03 (`37e6766d5e`)**.
-Remaining: `#define _WIN32_WINNT 0x0601` (Windows 7); `#define __STDC__ 0`
-(VC2005 hack); comment "we support Win98 and WinME";
-`_CRT_SECURE_NO_DEPRECATE` / `_SCL_SECURE_NO_DEPRECATE` "for VC2005/2008";
-`_WIN32_IE 0x0400` (IE4).
-**Action (now clearly in scope — ADR 0003, Win11 floor):** `_WIN32_WINNT`
-→ `0x0A00`, drop the VC2005/IE4 hacks, with a real Windows build+run
-check (raising `_WIN32_WINNT` can change header behavior). Small commit.
+### 13. `src/archutils/Win32/arch_setup.h` legacy — mostly DONE
+- `isnan`/`isfinite` macros removed 2026-09-03 (`37e6766d5e`).
+- `_WIN32_WINNT 0x0601` → `0x0A00`, `_WIN32_IE 0x0400` → `0x0A00`,
+  `#define __STDC__ 0` removed, Win98/ME comment dropped — 2026-09-03
+  (`5565039bf7`). Clean rebuild; runtime not yet smoke-tested.
+**Remaining (low priority, warning-suppression territory — bundle with a
+warnings pass):** `_CRT_SECURE_NO_DEPRECATE` / `_SCL_SECURE_NO_DEPRECATE`
+(the latter is a no-op on VS2017+; the former is redundant with the
+CMake-level `_CRT_SECURE_NO_WARNINGS`), the stale VC6/VC2005 comment
+block (lines 9-36).
 Related: `src/archutils/Win32/DirectXErrorList.h` — 12 `case` labels
 (`0x8007xxxx`) that don't fit signed `HRESULT`; MSVC compiles it, clang
 rejects (C++11 narrowing). Rewrite the cases as hex literals / `HRESULT(...)`.
@@ -172,4 +173,6 @@ in `baseline.md` → "How to (re)generate").
 
 - **Item 4** — dead Travis + AppVeyor CI configs removed (`e065f69c8b`, 2026-09-03).
 - **Item 5** — orphaned `src/irc/` IRC-reporter subproject removed (`718d3b3ec1`, 2026-09-03).
-- **Item 13 (partial)** — dead `isnan`/`isfinite` macros removed from `arch_setup.h` (`37e6766d5e`, 2026-09-03).
+- **Item 13 (mostly)** — `arch_setup.h`: dead `isnan`/`isfinite` macros
+  (`37e6766d5e`); `_WIN32_WINNT`/`_WIN32_IE` → `0x0A00`, `__STDC__ 0`
+  removed (`5565039bf7`). Only warning-suppression cruft left.

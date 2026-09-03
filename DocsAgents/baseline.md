@@ -94,11 +94,11 @@ bugs.
 (clang C++11-narrowing strictness; MSVC allows it). Non-conforming but
 isolated; write the cases as hex/`HRESULT(...)`. Backlog note under item 13.
 
-Per-subsystem breakdown gets filled in as passes run:
+Per-subsystem breakdown as passes run:
 
-| Subsystem | check | hits before | after | PR |
-|---|---|---|---|---|
-| _(none yet)_ | | | | |
+| Subsystem | check | before | after | commit |
+|---|---|---:|---:|---|
+| rage (`src/Rage*.cpp`) | `readability-container-size-empty` | ~98 | 0 | _(pilot 2026-09-03)_ |
 
 # Tests
 
