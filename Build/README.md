@@ -1,98 +1,100 @@
-Warning
-==
+# Building StepMania-R
 
-Using CMake is considered stable, but not every single combination is known to work.
-Using the defaults as suggested should cause minimal problems.
+StepMania-R is configured with **CMake**. This document covers configuring
+the build; see [`INSTALL.md`](./INSTALL.md) for compiling and (optionally)
+installing afterwards.
 
-Install CMake
-==
+## Requirements
 
-At first, you have to install CMake.
+- **CMake ≥ 3.20.**
+- A **C++17** compiler:
+  - Windows: **Visual Studio 2022** (MSVC v143) or newer, x64.
+  - macOS: current Xcode.
+  - Linux: current GCC or Clang.
+- **nasm** — required on every platform (FFmpeg / asm codecs).
+- The `extern/` libraries are git submodules:
 
-All OSes
-===
+  ```
+  git submodule update --init --recursive
+  ```
 
-The common way of installing CMake is to go to [CMake's download page](http://www.cmake.org/download/). At this time of writing, the latest versions are 3.3.0-rc3 and 3.2.3. Either version will work: the minimum version supported at this time is 2.8.12.
+- Linux only: development headers for ALSA, GL/GLU, GTK3, JACK, libmad,
+  PulseAudio, udev, usb, Xinerama, X11, Xrandr, Xtst. See
+  `.github/workflows/ci.yml` for the exact `apt-get` list.
 
-If this approach is used, consider using the binary distributions. Most should also provide a friendly GUI interface.
+### Platform support floors
 
-Windows
-===
+Windows 11 x64; the latest macOS and the one before it; current
+mainstream Linux distributions. Nothing older is supported — there is no
+Windows XP / 7 / 8 / 10 target and no `-T "v###_xp"` toolset. See
+[ADR 0003](../DocsAgents/adr/0003-platform-support-floors.md).
 
-For those that prefer package manager systems, [Chocolatey](https://chocolatey.org/) has a CMake package. Run `choco install cmake` to get the latest stable version.
+## Installing CMake
 
-Mac OS X Specific
-===
+- **Windows:** `choco install cmake`, `winget install Kitware.CMake`, or
+  the installer from <https://cmake.org/download/> (it also ships with the
+  Visual Studio installer).
+- **macOS:** `brew install cmake` or `port install cmake`.
+- **Linux:** your distribution's package manager, or the official binary
+  from the download page.
 
-For those that prefer package manager systems, both [Homebrew](http://brew.sh/) and [MacPorts](https://www.macports.org/) offer CMake as part of their offerings. Run `brew install cmake` or `port install cmake` respectively to get the latest stable version.
+## Configuring
 
-Linux
-===
+Run these from the **repository root** (not this `Build/` directory). CI
+does exactly this:
 
-There are many package managers available for Linux. Look at your manual for more details. Either that, or utilize the All OS specific approach.
+```
+cmake -B build
+cmake --build build
+```
 
+`cmake -B build` creates a `build/` directory and generates the project
+files there:
 
-CMake Installation
-==
+- **Windows:** a Visual Studio solution (`build/StepMania.sln`). Open it
+  in Visual Studio, or keep using `cmake --build build`.
+- **macOS:** a Makefile project by default; pass `-G Xcode` for an Xcode
+  project. Also pass `-DCMAKE_OSX_ARCHITECTURES=arm64` (or `x86_64`).
+- **Linux:** a Makefile project.
 
-There are two ways of working with cmake: the command line and the GUI.
+### Build type
 
-CMake Command Line
-===
+Single-config generators (Makefiles, Ninja) need the build type at
+configure time:
 
-If you are unfamiliar with cmake, first run `cmake --help`. This will present a list of options and generators.
-The generators are used for setting up your project.
+```
+cmake -B build -DCMAKE_BUILD_TYPE=Release
+```
 
-The following steps will assume you operate from the StepMania project's Build directory.
+`Debug`, `RelWithDebInfo`, and `MinSizeRel` are also available. Release is
+what ships and what the maintainer plays; Debug produces a separate
+`*_debug` executable with assertions on. Multi-config generators (Visual
+Studio, Xcode) pick the configuration at build time instead — e.g.
+`cmake --build build --config Release`.
 
-For the first setup, you will want to run this command:
+### Re-configuring
 
-`cmake -G {YourGeneratorHere} .. && cmake ..`
+If a `CMakeLists.txt` or `.cmake` file changes, just build again — CMake
+re-runs itself. If that fails, delete `build/` and configure from
+scratch.
 
-Replace {YourGeneratorHere} with one of the generator choices from `cmake --help`. As an example, Mac OS X users that want to have Xcode used would run `cmake -G Xcode .. && cmake ..` on their Terminal program.
+## Common options
 
-If you are building on Windows and expecting your final executable to be able to run on Windows XP, append an additional parameter `-T "v140_xp"` (or `-T "v120_xp"`, depending on which version of Visual Studio you have installed) to your command line.
+Defined in `CMake/DefineOptions.cmake`. Pass as `-DWITH_X=ON` / `-DWITH_X=OFF`:
 
-If any cmake project file changes, you can just run `cmake .. && cmake ..` to get up to date.
-If this by itself doesn't work, you may have to clean the cmake cache.
-Use `rm -rf CMakeCache.txt CMakeScripts/ CMakeFiles/ cmake_install.txt` to do that, and then run the generator command again as specified above.
+| Option | Default | Purpose |
+|---|---|---|
+| `WITH_FULL_RELEASE` | OFF | Build as a proper, full release |
+| `WITH_WERROR` | OFF | Treat StepMania's own warnings as errors (used by CI) |
+| `WITH_LTO` | OFF | Link-time optimization |
+| `WITH_SSE2` | ON | SSE2 codegen |
+| `WITH_CLUB_FANTASTIC` | OFF | Bundle the Club Fantastic song packs |
+| `WITH_CRASH_HANDLER` | ON | Built-in crash reporter (non-Windows option; always on for Windows) |
+| `WITH_GLES2` / `WITH_GTK3` | ON | OpenGL ES 2.0 / GTK3 UI (Linux) |
+| `WITH_ALSA` / `WITH_PULSEAUDIO` / `WITH_JACK` | ON / ON / OFF | Audio backends (Linux) |
 
-The reason for running cmake at least twice is to make sure that all of the variables get set up appropriately.
+## More
 
-Environment variables can be modified at this stage. If you want to pass `-ggdb` or any other flag that is not set up by default,
-utilize `CXXFLAGS` or any appropriate variable.
-
-CMake GUI
-===
-
-For those that use the GUI to work with cmake, you need to specify where the source code is and where the binaries will be built.
-The first one, counter-intuitively, is actually the parent directory of this one: the main StepMania directory.
-The second one for building can be this directory.
-
-Upon setting the source and build directories, you should `Configure` the build.
-If no errors show up, you can hit `Generate` until none of the rows on the GUI are red.
-
-If the cmake project file changes, you can just generate the build to get up to date.
-If this by itself doesn't work, you may have to clean the cmake cache.
-Go to File -> Delete Cache, and then run the `Configure` and `Generate` steps again.
-
-Release vs Debug
-==
-
-If you are generating makefiles with cmake, you will also need to specify your build type.
-Most users will want to use `RELEASE` while some developers may want to use `DEBUG`.
-
-When generating your cmake files for the first time (or after any cache delete),
-pass in `-DCMAKE_BUILD_TYPE=Debug` for a debug build. We have `RelWithDbgInfo` and `MinSizeRel` builds available as well.
-
-It is advised to clean your cmake cache if you switch build types.
-
-Note that if you use an IDE like Visual Studio or Xcode, you do not need to worry about setting the build type.
-You can edit the build type directly in the IDE.
-
-Last Words
-==
-
-With that, you should be good to go.
-If there are still questions, view the resources on the parent directory's README.md file.
-
+Agent- and contributor-facing build notes, including the CI matrix and
+the test story, live in
+[`DocsAgents/build.md`](../DocsAgents/build.md).

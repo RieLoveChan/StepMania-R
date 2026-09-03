@@ -1,41 +1,56 @@
-Warning
-==
-Make sure you read README.md first if you have not.
+# Compiling and installing StepMania-R
 
-Compiling StepMania
-==
-To use StepMania on your computer, it is first assumed that cmake is run (see README.md for more information).
-Then, follow the guide based on your operating system.
+Read [`README.md`](./README.md) first and configure the build. This
+document covers compiling the generated project and, optionally,
+installing it to a system location.
 
-Windows
-===
-Using Visual Studio, simply build and it will place the .exe file in the correct directory.
+## Compiling
 
-Mac OS X
-===
-Using Xcode, simply build in Xcode and it will place the .app file in the correct directory.
+From the repository root:
 
-Linux
-===
-Using the command line, simply type make and it will place stepmania and GtkModule.so
-(if requested) in the root StepMania directory. There is no more need to symlink the files.
+```
+cmake --build build --config Release
+```
 
-Installing StepMania
-==
-Installing in this context refers to placing the folders and generated binary in a standard location based on your operating system.
-This guide assumes default install locations.
-If you want to change the initial location, pass in `-DCMAKE_INSTALL_PREFIX=/new/path/here` when configuring your local setup.
+Or open the generated project in your IDE and build there:
 
-Windows
-===
-The default installation directory is `C:\Program Files (x86)\Stepmania 5`.
+- **Windows:** open `build/StepMania.sln` in Visual Studio and build.
+- **macOS:** build the Makefile project, or open the Xcode project if you
+  configured with `-G Xcode`.
+- **Linux:** `cmake --build build` (or `make -C build`).
 
-Mac OS X
-===
-The `StepMania.app` package can be copied to `/Applications` and it will work as expected.
+The executable is written to `Program/` in the repository root
+(`Program/StepMania-R.exe` on Windows; a `*_debug` variant for Debug
+builds). On macOS the bundle is `StepMania-R.app`; on Linux the binary is
+`stepmania` plus an optional `GtkModule.so`.
 
-Linux
-===
-After installing, run `sudo make install`. The files will be placed in the location specified:
-by default, that is now `/usr/local/stepmania-5.1`.
+## Running from the build tree
 
+**No install step is needed for development or for just playing.** The
+binary runs in place from the repository root, next to `Themes/`,
+`NoteSkins/`, `Songs/`, `Data/`, and the rest of the content folders.
+
+## Installing (optional)
+
+"Installing" copies the binary and content folders to a standard system
+location. This is only for packaging or a system-wide deployment.
+
+```
+cmake --install build --config Release
+```
+
+The destination is CMake's default prefix (`C:\Program Files\StepMania` on
+Windows, `/usr/local` on Unix). Override it at configure time:
+
+```
+cmake -B build -DCMAKE_INSTALL_PREFIX=/your/path
+```
+
+- **Windows:** the binary lands in `<prefix>\Program\`, content folders
+  alongside.
+- **macOS:** copy `StepMania-R.app` to `/Applications`; it runs as-is.
+- **Linux:** installs under `<prefix>/stepmania/`, with a
+  `stepmania.desktop` entry and `Installer/setup.sh`.
+
+Packaging (`.exe` installer, `.dmg`, archives) is driven by CPack — see
+`CMake/CPackSetup.cmake`.
