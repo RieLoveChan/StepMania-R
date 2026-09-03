@@ -4,6 +4,12 @@
 option(WITH_EXTERNAL_WARNINGS
        "Build with warnings for all components, not just StepMania." OFF)
 
+# Treat StepMania's own compiler warnings as errors. Intended for CI;
+# OFF by default so a compiler-version bump that adds diagnostics does
+# not break local/contributor builds. See
+# DocsAgents/adr/0001-toolchain-target.md section 7.
+option(WITH_WERROR "Treat StepMania's compiler warnings as errors (CI)." OFF)
+
 # This option is not yet working, but will likely default to ON in the future.
 option(WITH_LTO
        "Build with Link Time Optimization (LTO)/Whole Program Optimization."

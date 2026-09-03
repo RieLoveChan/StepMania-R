@@ -132,6 +132,17 @@ target_compile_options("${SM_EXE_NAME}" PRIVATE
     /W4 /wd4100 /wd4189 /wd4244 /wd4267 /wd4702>
 )
 
+# WITH_WERROR (CI): make the above warning set fatal. The StepMania
+# target currently builds clean at these levels, so this is a ratchet —
+# it prevents regressions, it does not create work. See
+# DocsAgents/adr/0001-toolchain-target.md section 7.
+if(WITH_WERROR)
+  target_compile_options("${SM_EXE_NAME}" PRIVATE
+    $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Werror>
+    $<$<CXX_COMPILER_ID:MSVC>:/WX>
+  )
+endif()
+
 set(SM_COMPILE_FLAGS "")
 
 if(WITH_SSE2)

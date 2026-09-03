@@ -73,7 +73,10 @@ jobs:
       - name: Checkout submodules
         run: git submodule update --init --recursive
       - name: Configure
-        run: cmake -B build
+        # WITH_WERROR: Windows/MSVC is verified warning-clean; keep it that
+        # way. macOS/Linux stay non-fatal until their warning state is
+        # audited. See DocsAgents/adr/0001-toolchain-target.md section 7.
+        run: cmake -B build -DWITH_WERROR=ON
       - name: Build
         run: cmake --build build
 
