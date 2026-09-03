@@ -16,7 +16,7 @@ for a given `StepsType`. `NoteSkinManager` (`NOTESKIN`) loads them;
 
 ```
 NoteSkins/
-  <game>/            e.g. dance, pump, popn  (note: NoteSkins/popn/ is currently untracked in this fork)
+  <game>/            e.g. dance, pump, popn
     <skinname>/
       metrics.ini        per-skin config (colors, blend, animation)
       *.lua / *.png       element actors + textures
@@ -44,8 +44,7 @@ NoteSkins/
 
 - Skins are **per game type**; a `dance` skin has 4/8 columns, `pump` has
   5, `popn` 9 — element sets differ.
-- `NoteSkins/popn/` is present but **untracked** (shows in `git status`).
-  Decide deliberately whether to commit it.
+- `NoteSkins/popn/` is fork-local content (committed `f533ec3fb1`).
 - Note-color-by-beat (4th/8th/12th/16th…) is a skin concern via
   `NoteDisplay` + skin metrics, tied to `NoteTypes.*`.
 - Performance: `NoteDisplay` runs per visible note per frame; skin Lua

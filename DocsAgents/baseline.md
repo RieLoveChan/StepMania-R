@@ -98,7 +98,8 @@ Per-subsystem breakdown as passes run:
 
 | Subsystem | check | before | after | commit |
 |---|---|---:|---:|---|
-| rage (`src/Rage*.cpp`) | `readability-container-size-empty` | ~98 | 0 | _(pilot 2026-09-03)_ |
+| rage (`src/Rage*.cpp`) | `readability-container-size-empty` | ~98 | 0 | `10a1ba54ec` |
+| rage (`src/Rage*`) | `modernize-use-override` | ~65 | 0 | `689e35a486` |
 
 # Tests
 
