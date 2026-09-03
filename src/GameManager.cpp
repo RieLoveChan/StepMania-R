@@ -3215,24 +3215,30 @@ static const Game g_Game_Kickbox =
 	TNS_W5,	// m_mapW5To
 };
 
+/* StepMania-R enables every defined game type. A game only actually
+ * appears in Select Game if it also has at least one NoteSkin
+ * (GameManager::IsGameEnabled -> NoteSkinManager::DoNoteSkinsExistForGame),
+ * so maniax/ez2/ds3ddx stay hidden until skins exist for them.
+ *
+ * This hand-written array + the g_Game_* struct literals + the compile-time
+ * StepsType enum are an archaic way to define games. Replacing it with a
+ * data-driven registry (without breaking the on-disk #STEPSTYPE contract,
+ * AGENTS.md section 5) is tracked in DocsAgents/modernization-backlog.md
+ * item 20. */
 static const Game *g_Games[] =
 {
 	&g_Game_Dance,
 	&g_Game_Pump,
 	&g_Game_Techno,
 	&g_Game_Lights,
-
-	// We don't intend to support the following game modes so comment them out.
-	// TODO(teejusb/natano): Remove the following game modes from StepMania
-	// whenever they start hindering development.
-	// &g_Game_KB7,
-	// &g_Game_Ez2,
-	// &g_Game_Para,
-	// &g_Game_DS3DDX,
-	// &g_Game_Beat,
-	// &g_Game_Maniax,
-	// &g_Game_Popn,
-	// &g_Game_Kickbox,
+	&g_Game_KB7,
+	&g_Game_Ez2,
+	&g_Game_Para,
+	&g_Game_DS3DDX,
+	&g_Game_Beat,
+	&g_Game_Maniax,
+	&g_Game_Popn,
+	&g_Game_Kickbox,
 };
 
 GameManager::GameManager()
