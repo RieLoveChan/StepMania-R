@@ -1052,6 +1052,19 @@ int sm_main(int argc, char* argv[])
 
 	CodeDetector::RefreshCacheItems();
 
+	/* --SelfTest: headless smoke test. Everything above has run (managers,
+	 * display, input, fonts, song scan, initial screen), so if we got here
+	 * the engine initialises. Exit before the main loop instead of
+	 * rendering a window. Intended invocation:
+	 *   stepmania --SelfTest --VideoRenderers=null --SoundDrivers=null
+	 * Exit code 0 = init succeeded. */
+	if( GetCommandlineArgument("SelfTest") )
+	{
+		LOG->Info( "[SelfTest] Engine initialised; exiting before the main loop." );
+		ShutdownGame();
+		return 0;
+	}
+
 	// Run the main loop.
 	GameLoop::RunGameLoop();
 
