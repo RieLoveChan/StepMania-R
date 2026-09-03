@@ -3,8 +3,8 @@
 Encoding=UTF-8
 Name=StepMania
 GenericName=Rhythm and dance game
-TryExec=stepmania
-Exec=stepmania
+TryExec=stepmania-r
+Exec=stepmania-r
 Terminal=false
 Icon=stepmania-ssc
 Type=Application

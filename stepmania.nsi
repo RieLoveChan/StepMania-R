@@ -163,7 +163,7 @@
 	; generate, then include installer strings
 	;!delfile "nsis_strings_temp.inc"
 
-	!system '"Program\StepMania.exe" --ExportNsisStrings'
+	!system '"Program\StepMania-R.exe" --ExportNsisStrings'
 	!include "nsis_strings_temp.inc"
 
 ;-------------------------------------------------------------------------------
@@ -231,16 +231,16 @@ Section "Main Section" SecMain
 
 !ifdef ASSOCIATE_SMZIP
 	WriteRegStr HKEY_LOCAL_MACHINE "SOFTWARE\Classes\smzipfile" "" "$(TEXT_IO_SMZIP_PACKAGE)"
-	WriteRegStr HKEY_LOCAL_MACHINE "SOFTWARE\Classes\smzipfile\DefaultIcon" "" "$INSTDIR\Program\StepMania.exe,1"
-	WriteRegStr HKEY_LOCAL_MACHINE "SOFTWARE\Classes\smzipfile\shell\open\command" "" '"$INSTDIR\Program\StepMania.exe" "%1"'
+	WriteRegStr HKEY_LOCAL_MACHINE "SOFTWARE\Classes\smzipfile\DefaultIcon" "" "$INSTDIR\Program\StepMania-R.exe,1"
+	WriteRegStr HKEY_LOCAL_MACHINE "SOFTWARE\Classes\smzipfile\shell\open\command" "" '"$INSTDIR\Program\StepMania-R.exe" "%1"'
 	WriteRegStr HKEY_LOCAL_MACHINE "SOFTWARE\Classes\.smzip" "" "smzipfile"
 !endif
 
 !ifdef ASSOCIATE_SMURL
 	WriteRegStr HKEY_LOCAL_MACHINE "SOFTWARE\Classes\stepmania" "" "StepMania protocol handler"
 	WriteRegStr HKEY_LOCAL_MACHINE "SOFTWARE\Classes\stepmania" "URL Protocol" ""
-	WriteRegStr HKEY_LOCAL_MACHINE "SOFTWARE\Classes\stepmania\DefaultIcon" "" "$INSTDIR\Program\StepMania.exe"
-	WriteRegStr HKEY_LOCAL_MACHINE "SOFTWARE\Classes\stepmania\shell\open\command" "" '"$INSTDIR\Program\StepMania.exe" "%1"'
+	WriteRegStr HKEY_LOCAL_MACHINE "SOFTWARE\Classes\stepmania\DefaultIcon" "" "$INSTDIR\Program\StepMania-R.exe"
+	WriteRegStr HKEY_LOCAL_MACHINE "SOFTWARE\Classes\stepmania\shell\open\command" "" '"$INSTDIR\Program\StepMania-R.exe" "%1"'
 !endif
 
 !ifdef INSTALL_NON_PCK_FILES
@@ -427,7 +427,7 @@ Section "Main Section" SecMain
 	SetOutPath "$INSTDIR\Program"
 !ifdef INSTALL_EXECUTABLES
 	; normal exec
-	File "Program\StepMania.exe"
+	File "Program\StepMania-R.exe"
 	File "Program\StepMania.vdi"
 	; sse2 exec
 	File "Program\StepMania-SSE2.exe"
@@ -493,7 +493,7 @@ Section "Main Section" SecMain
 	!endif
 
 	CreateShortCut "$SMPROGRAMS\${PRODUCT_ID}\$(TEXT_IO_RUN).lnk" "$INSTDIR\Program\StepMania-SSE2.exe"
-	CreateShortCut "$SMPROGRAMS\${PRODUCT_ID}\$(TEXT_IO_RUN_WITHOUT_SSE2).lnk" "$INSTDIR\Program\StepMania.exe"
+	CreateShortCut "$SMPROGRAMS\${PRODUCT_ID}\$(TEXT_IO_RUN_WITHOUT_SSE2).lnk" "$INSTDIR\Program\StepMania-R.exe"
 
 	!ifdef MAKE_OPEN_PROGRAM_FOLDER_SHORTCUT
 		CreateShortCut "$SMPROGRAMS\${PRODUCT_ID}\$(TEXT_IO_OPEN_PROGRAM_FOLDER).lnk" "$WINDIR\explorer.exe" "$INSTDIR\"
@@ -512,7 +512,7 @@ Section "Main Section" SecMain
 		CreateShortCut "$SMPROGRAMS\${PRODUCT_ID}\$(TEXT_IO_CHECK_FOR_UPDATES).lnk" "${UPDATES_URL}"
 	!endif
 	CreateShortCut "$INSTDIR\${PRODUCT_ID}.lnk" "$INSTDIR\Program\StepMania-SSE2.exe"
-	CreateShortCut "$INSTDIR\${PRODUCT_ID} (non-SSE2).lnk" "$INSTDIR\Program\StepMania.exe"
+	CreateShortCut "$INSTDIR\${PRODUCT_ID} (non-SSE2).lnk" "$INSTDIR\Program\StepMania-R.exe"
 !endif
 
 	IfErrors do_error do_no_error
@@ -679,7 +679,7 @@ Function PreInstall
 	!endif
 !else
 		; Check that full version is installed.
-		IfFileExists "$INSTDIR\Program\StepMania.exe" proceed_with_patch
+		IfFileExists "$INSTDIR\Program\StepMania-R.exe" proceed_with_patch
 		MessageBox MB_YESNO|MB_ICONINFORMATION "$(TEXT_IO_FULL_INSTALL_NOT_FOUND)" IDYES proceed_with_patch
 		Abort
 		proceed_with_patch:
@@ -834,7 +834,7 @@ Section "Uninstall"
 !endif
 
 !ifdef INSTALL_EXECUTABLES
-	Delete "$INSTDIR\Program\StepMania.exe"
+	Delete "$INSTDIR\Program\StepMania-R.exe"
 	Delete "$INSTDIR\Program\StepMania.vdi"
 	Delete "$INSTDIR\Program\StepMania-SSE2.exe"
 	Delete "$INSTDIR\Program\StepMania-SSE2.vdi"

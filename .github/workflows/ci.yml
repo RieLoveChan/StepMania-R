@@ -85,7 +85,7 @@ jobs:
         # unproven); flip to fatal once it's green a few times.
         continue-on-error: true
         timeout-minutes: 5
-        run: ./Program/StepMania.exe --SelfTest --VideoRenderers=null --SoundDrivers=null
+        run: ./Program/StepMania-R.exe --SelfTest --VideoRenderers=null --SoundDrivers=null
 
   validate-xml-docs:
     name: Validate Lua.xml, LuaDocumentation.xml
