@@ -5,6 +5,60 @@ fully, then start from [`DocsAgents/index.md`](./DocsAgents/index.md).
 
 ---
 
+## The point of all this: de-hard-code the engine
+
+Every specific task in this project is an instance of one goal:
+**StepMania bakes into C++ things that should be data, configuration, or
+an extensible registry.** Twenty years of "just put it in the `.cpp`" —
+game types, driver lists, layout numbers, platform assumptions, code that
+assumes an old on-disk layout. The direction of every change is to move
+those *out of the compiler's reach*: into something a person can edit
+without rebuilding, or that the engine resolves at run time.
+
+**Recognise hard-coding.** Signs a thing should become data:
+
+- A compile-time `enum` or `static const` array that enumerates
+  **content** — game types + the `StepsType` enum, note types, difficulty
+  names. Adding one means editing a huge `.cpp` and rebuilding.
+- Magic numbers for on-screen layout / timing windows / colours that live
+  in code instead of theme metrics (`THEME->GetMetric*`).
+- A hand-maintained list of backends / drivers / handlers dispatched by
+  `if( name == "..." )` chains.
+- Fixed paths, buffer sizes, OS version constants, `#ifdef` ladders for
+  specific platforms.
+- Code that assumes a legacy on-disk shape and silently "fixes it up"
+  (the `Char Widths` / `IniFile::RenameKey` case).
+
+**"De-hard-code" resolves to — pick the fit:** a theme metric; a data
+file loaded at startup (Lua or an `.ini` tree — `NoteSkins/` and
+`Themes/` already work this way); a runtime registry keyed by string/id
+instead of a compile-time enum; a CMake or `Preferences.ini` option; a
+plugin / extension point.
+
+**Guardrails — do NOT over-apply:**
+
+- This is a **direction and a tiebreaker, not** "stop and rip out every
+  constant". De-hard-code a thing when you are already in that file for
+  another reason, or as a deliberately scoped change.
+- **On-disk contracts are stable contracts, not hard-coding to remove.**
+  `#STEPSTYPE` strings, `.ssc` tag names, simfile formats,
+  `FILE_CACHE_VERSION` semantics — see §5. Making the *engine*
+  data-driven must keep every existing on-disk value resolving
+  identically; never "flexibilise" a file format itself.
+- Hot paths, security-relevant code, and genuine invariants stay in code.
+- Same process as everything else (§4): incremental, Release-build
+  verified, small commits. A large one (e.g. `StepsType` enum → runtime
+  id) gets its own ADR.
+
+**Applying it:** when you meet a hard-coded thing, ask *"should a person
+be able to change this without recompiling?"* If yes and it is small —
+do it as part of the change in hand. If yes and it is large — add a
+[`DocsAgents/modernization-backlog.md`](./DocsAgents/modernization-backlog.md)
+item (items 10, 18, 20 and ADR 0004 are existing examples) and, if it is
+architectural, propose an ADR.
+
+---
+
 ## 1. Language rules (MUST)
 
 - **Reply to the user in the same language they wrote to you in.** If they

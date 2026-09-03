@@ -170,6 +170,14 @@
   gaps for the new games (per-game style/difficulty assets) are a
   play-test follow-up.
 
+* **North star recorded (2026-09-03).** Added an opening section to
+  `AGENTS.md` — "The point of all this: de-hard-code the engine" — with
+  how to recognise hard-coding, what it resolves to (metric / data file /
+  runtime registry / option / plugin point), guardrails (on-disk
+  contracts are NOT hard-coding to remove; tiebreaker not mandate), and
+  how to apply it (small → do it; large → backlog item + maybe ADR).
+  Mirrored in `index.md` and the `fork-mission` memory.
+
 ### Notes for future maintainers
 
 * Subsystem docs are a first pass built from `src/CMakeData-*.cmake`

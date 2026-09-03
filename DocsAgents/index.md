@@ -21,6 +21,12 @@ original repo is **not** a goal — breaking it is fine (ADR
 toward a modern, releasable state" is a valid tiebreaker when
 prioritizing.
 
+**The technical north star:** *de-hard-code the engine* — move baked-in
+C++ decisions (game types, driver lists, layout numbers, platform
+assumptions) into data / config / runtime registries, without breaking
+the on-disk contracts with the simfile library. Full statement:
+[`AGENTS.md`](../AGENTS.md) → "The point of all this".
+
 Before editing anything, read [`AGENTS.md`](../AGENTS.md) — the language
 rules, platform priority, and verification gate are mandatory.
 
