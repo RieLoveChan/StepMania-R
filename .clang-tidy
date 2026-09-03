@@ -1,0 +1,38 @@
+# Fork-local starter clang-tidy config for StepMania-R modernization.
+# See DocsAgents/playbooks/clang-tidy-subsystem-pass.md and
+# DocsAgents/adr/0001-toolchain-target.md.
+#
+# Intentionally small and behavior-safe. Widen the check set per
+# subsystem as passes land; do not turn on "modernize-*" wholesale.
+# Not run automatically by the build — invoke explicitly (run-clang-tidy
+# -p build ...). WarningsAsErrors stays empty until a check is fully
+# clean (Open question A in ADR 0001).
+
+Checks: >
+  -*,
+  modernize-use-nullptr,
+  modernize-use-override,
+  modernize-use-equals-default,
+  modernize-use-equals-delete,
+  modernize-use-bool-literals,
+  modernize-make-unique,
+  modernize-make-shared,
+  modernize-redundant-void-arg,
+  readability-redundant-member-init,
+  readability-redundant-string-cstr,
+  readability-container-size-empty,
+  bugprone-macro-parentheses,
+  bugprone-suspicious-string-compare,
+  bugprone-copy-constructor-init,
+  bugprone-integer-division
+
+WarningsAsErrors: ''
+
+# Our headers only; never extern/ or vendored trees.
+HeaderFilterRegex: '.*/src/(?!.*(libtomcrypt|libtommath|smpackage/ZipArchive)).*\.h$'
+
+FormatStyle: file
+
+CheckOptions:
+  - key: modernize-make-unique.MakeSmartPtrFunction
+    value: 'std::make_unique'

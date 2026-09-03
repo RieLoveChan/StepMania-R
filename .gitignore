@@ -17,6 +17,7 @@ StepMania.workspace
 version.hpp
 Build/*
 Build/*/*
+build-tidy/
 Debug/
 Release/
 Contents/
@@ -116,6 +117,9 @@ core
 *.BASE.*
 *.LOCAL.*
 *.REMOTE.*
+
+# Agent tooling: local Claude Code shim (points to AGENTS.md)
+/CLAUDE.md
 
 # StepMania Specific
 *.smzip

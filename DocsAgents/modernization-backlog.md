@@ -1,0 +1,161 @@
+---
+type: Reference
+title: Modernization backlog
+description: Ranked list of code needing attention, from a 2026-09-02 source-tree sweep. The live to-do for the fork.
+tags: [modernization, backlog, triage]
+---
+
+# How to use
+
+Ranked by "does this block safe continuous work" first, then rot, then
+risk, then hotspots. Tiers 1–2 are step 2 (make change safe + cheap
+cleanup). Tier 3 needs ADR decisions. Tier 4 is where ongoing passes go.
+
+Update this file as items are closed (strike through + link the PR) and
+as new sweeps find things. Numbers/anchors confirmed 2026-09-02.
+
+---
+
+## Tier 1 — Blocks safe continuous work
+
+### 1. No safety net
+`src/tests/` = 7 standalone `test_*.cpp`, not wired to a runnable/CI
+target. No headless smoke test. Continuous refactor with zero regression
+detection.
+**Action:** wire a test target + CI job; add a headless smoke run
+(`RageDisplay_Null` + null ArchHooks, boot→exit 0); add characterization
+tests on the pure cores (`TimingData`, `NoteData`/`NoteDataUtil`,
+`NotesLoader*`, `RageUtil`). Feeds [`baseline.md`](./baseline.md).
+
+### 2. Warnings on but unmeasured / unenforced
+`-Wall -Wextra` (GCC/Clang) + `/W4` (MSVC) with blanket suppressions
+(`src/CMakeLists.txt:126-132`); no `-Werror` except `type-limits`.
+**Action:** capture counts into [`baseline.md`](./baseline.md); add a
+`WITH_WERROR` option (default OFF, ON in CI) and promote each warning
+category to `-Werror=<cat>` once it hits zero across `src/` (ADR 0001 §7).
+
+### 3. Stale cppcheck leak list, never cleared
+`Docs/Devdocs/possible memory leaks.txt` — from 2009. Likely still live:
+`ActorFrameTexture::m_pRenderTarget`, `AdjustSync::s_pTimingDataOriginal`,
+`AutoKeysounds::m_pSharedSound`, `LifeMeterTime::m_pStream`,
+`MusicWheelItem::m_pTextSectionCount`, `OptionRow::m_textTitle`,
+`Font.cpp` `pPage`, `RageFileDriverDeflate.cpp`.
+**Action:** re-run cppcheck/ASan, confirm which survive, fix or dismiss
+with a note. Small, independent PRs.
+
+---
+
+## Tier 2 — Rot / dead weight (cheap, low-risk)
+
+### 4. Dead CI committed
+`.travis.yml` (travis-ci.org shut down 2021). Also `.appveyor.yml` —
+verify whether the AppVeyor project is still used before removing. Live
+CI is `.github/workflows/ci.yml`. `README.md` was already replaced (no
+badges left).
+**Action:** delete `.travis.yml`. (ADR 0001 §6.)
+
+### 5. Dead IRC notifier
+`src/irc/` (`CMakeProject-irc.cmake`, `src/irc/appveyor.cpp`) targets
+`irc.freenode.net` — defunct since 2021.
+**Action:** remove the subproject. (ADR 0001 Settled #6.)
+
+### 6. Stale build docs
+`Build/README.md` says "CMake min 2.8.12", "latest 3.3.0-rc3". Actual:
+`CMakeLists.txt` requires 3.20, C++17. `README.md` badges point at dead
+Travis (see item 4).
+**Action:** rewrite `Build/README.md` and `Build/INSTALL.md` to match
+reality (`Docs/` is editable now — ADR 0002). Cross-check against
+`DocsAgents/build.md`.
+
+---
+
+## Tier 3 — Risk; deliberate decisions (see ADR 0001, ADR 0003)
+
+### 7. Prebuilt FFmpeg binaries in the repo
+`extern/ffmpeg-w32/` — 36 MB of committed `.dll`/`.lib`/`.def`
+(avcodec-59, avutil-57 ≈ FFmpeg 5.x). This is what the **Windows** build
+links and copies to output (`StepmaniaCore.cmake:179+`, `:209`).
+Non-Windows builds FFmpeg from the `extern/ffmpeg` submodule.
+Opaque, unpatchable, aging, on the primary platform.
+**Decided (ADR 0001 §8):** direction is to **drop the committed
+`extern/ffmpeg-w32/` blob and use the `extern/ffmpeg` submodule** so we
+own the FFmpeg version. Keep the blob until the green baseline + smoke
+test exist; record its versions/origin in `baseline.md` meanwhile.
+**This item = execute it:** either make `CMake/SetupFfmpeg.cmake` build
+the submodule on Windows (needs msys2 + nasm per contributor) or build
+the DLLs once per bump in CI and consume that artifact (preferred).
+Early bounded change, through the §4 gate.
+
+### 8. Unsafe C string ops in crash/URL/zip paths
+~40 `strcpy`/`strcat`/`strncpy` into fixed buffers, concentrated in
+`archutils/Win32/Crash*.cpp`, `archutils/Unix/CrashHandler*`. Genuine
+overflow candidates: `Crash.cpp:30` `strcpy(pszFile, fn)`, `:170`;
+`archutils/Win32/GotoURL.cpp:22,59-60` (builds a shell command with
+`strcat` + a URL); `CreateZip.cpp` `strcpy`/`strcat` into `zfi.name`
+etc. with user paths.
+**Action:** Windows crash + `GotoURL` + `CreateZip` are in scope
+(P1 platform). Signal-handler context partly justifies no-alloc, but
+bounded copies with explicit length checks are still required. Treat as
+`AGENTS.md` §4 large changes (touch the crash path → verify carefully).
+
+---
+
+## Tier 4 — Hotspots (where ongoing passes concentrate; not bugs)
+
+### 9. God objects / oversized TUs
+`ScreenEdit.cpp` 6596 · `GameManager.cpp` 3614 · `Player.cpp` 3567
+(30 TODO/HACK) · `GameState.cpp` 3523 (~2,100 `GAMESTATE->` call sites) ·
+`ScreenGameplay.cpp` 3381 · `NoteDataUtil.cpp` 3379 · `Profile.cpp` 2897.
+**Action:** [`playbooks/split-god-object.md`](./playbooks/split-god-object.md),
+one cluster per PR, always §4.
+
+### 10. RString everywhere
+`typedef StdString::CStdString RString` (`global.h:107`), 723 files /
+~8,429 uses. Declared retirement goal (ADR 0001 Settled #5).
+**Action:** [`playbooks/migrate-rstring.md`](./playbooks/migrate-rstring.md),
+per subsystem, opportunistic.
+
+### 11. Pre-C++11 threading / smart pointers
+`RageThreads` predates `std::thread`/`std::mutex`;
+`RageUtil_AutoPtr.h` ("TODO: replace with c++11 smart pointers");
+`RageUtil_WorkerThread`, `BackgroundLoader`.
+**Action:** after the safety net exists; `RageThreads` is load-bearing
+and cross-platform — a dedicated ADR-scoped effort, not a casual pass.
+
+### 12. Mechanical modernize-* debt
+`modernize-use-nullptr`, `-use-override`, `-use-equals-default`,
+`-use-bool-literals`, redundant void args, etc. across the tree.
+**Action:** [`playbooks/clang-tidy-subsystem-pass.md`](./playbooks/clang-tidy-subsystem-pass.md),
+one subsystem + one check family per PR; record in
+[`baseline.md`](./baseline.md).
+
+### 13. `src/archutils/Win32/arch_setup.h` is a legacy dump
+`#define _WIN32_WINNT 0x0601` (Windows 7 — contradicts ADR 0001 §9 Win10
+floor); `#define __STDC__ 0` (VC2005 hack); comment "we support Win98 and
+WinME"; `#define isnan _isnan` / `#define isfinite _finite` (pre-C++11,
+**zero users**, and they break clang tooling by colliding with modern
+MSVC `<cmath>`); `_CRT_SECURE_NO_DEPRECATE` / `_SCL_SECURE_NO_DEPRECATE`
+"for VC2005/2008"; `_WIN32_IE 0x0400` (IE4).
+**Action:** the `isnan`/`isfinite` removal is done locally (unblocks
+clang-tidy) — first §4-gated change. The rest (`_WIN32_WINNT` → `0x0A00`,
+drop `__STDC__`/IE4/VC2005 hacks) is a follow-up pass once the Win10
+floor lands in code.
+Related: `src/archutils/Win32/DirectXErrorList.h` — 12 `case` labels
+(`0x8007xxxx`) that don't fit signed `HRESULT`; MSVC compiles it, clang
+rejects (C++11 narrowing). Rewrite the cases as hex literals / `HRESULT(...)`.
+
+### 14. `vcvars64.bat` does not wire the Windows SDK on the maintainer box
+`vcvars64.bat` sets only the MSVC toolchain INCLUDE/LIB, not the Windows
+SDK (`WindowsSdkDir` empty, `WindowsSDKLibVersion=winv6.3\`). The VS
+generator build works anyway (MSBuild finds the SDK via VS props); Ninja
+/ command-line builds need INCLUDE/LIB reconstructed by hand (SDK
+`10.0.26100.0` at `C:\Program Files (x86)\Windows Kits\10`).
+**Action:** low priority — repair the VS install / SDK registration, or
+ship a project `env` helper script. Not blocking (workaround documented
+in `baseline.md` → "How to (re)generate").
+
+---
+
+## Closed
+
+_(none yet)_
