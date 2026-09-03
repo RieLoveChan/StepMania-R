@@ -108,6 +108,17 @@
   `src/irc/`. Backlog items 4, 5 closed; 13 partial. New items 14
   (`vcvars64` SDK), 15 (`#if 0` sweep).
 
+* **Decision (2026-09-03):** platform floors raised. New ADR
+  [`0003`](./adr/0003-platform-support-floors.md) (**Accepted**) —
+  **Windows 11 x64**, latest macOS + prior, current Linux distros;
+  no 32-bit. Supersedes ADR 0001 §9 (was Win10). Below-floor support
+  code (Win7/8/10, XP/9x, `_WIN32_WINNT` < `0x0A00`, old-macOS `.mm`,
+  EOL-distro shims) is now delete-on-sight (`AGENTS.md` §3.2a). Renderer
+  ADR renumbered 0003 → **0004**. Propagated to `adr/0001` §9 + §deferred,
+  `adr/index.md`, `build.md`, `baseline.md`, `AGENTS.md` §3;
+  `modernization-backlog.md` item 13 reframed, new item 16 (pre-floor
+  `#if` sweep).
+
 ### Notes for future maintainers
 
 * Subsystem docs are a first pass built from `src/CMakeData-*.cmake`

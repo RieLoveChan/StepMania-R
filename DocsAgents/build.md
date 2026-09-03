@@ -16,10 +16,13 @@ tags: [build, cmake, ci, tests]
 - Linux: dev headers for ALSA, GL/GLU, GTK3, JACK, libmad, PulseAudio,
   udev, usb, Xinerama, X11, Xrandr, Xtst (see `.github/workflows/ci.yml`
   for the exact `apt-get` list).
-- Windows: **Visual Studio 2022 (MSVC v143)**, x64. Minimum supported
-  runtime target is **Windows 10 x64** (ADR
-  [0001](./adr/0001-toolchain-target.md) §9). The generated solution is
-  `Build/StepMania.sln`.
+- Windows: **Visual Studio 2022 (MSVC v143)** or newer, x64. Minimum
+  supported runtime target is **Windows 11 x64** (ADR
+  [0003](./adr/0003-platform-support-floors.md)). The generated solution
+  is `Build/StepMania.sln`.
+- macOS: current Xcode; latest macOS and the one before it; arm64
+  primary. Linux: current mainstream distros (~Ubuntu 24.04 / current
+  Fedora). See ADR [0003](./adr/0003-platform-support-floors.md).
 - macOS: Xcode; nasm via `brew install nasm`.
 
 # Configure + build (all platforms)

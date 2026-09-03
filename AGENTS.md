@@ -44,12 +44,18 @@ against upstream. It is about keeping the repo legible.
   (ADR 0002) but must go through the §4 verification gate and should not
   be mixed into a logic change.
 
-## 3. Platform priority (MUST)
+## 3. Platform priority & support floors (MUST)
 
 1. **Windows is the primary target.** Every change must build and run on
    Windows. This is the platform the maintainer develops and verifies on.
 2. **macOS is second**, **Linux is third** — kept building (CI covers
    them) but not actively developed.
+2a. **Support floors (ADR
+   [0003](./DocsAgents/adr/0003-platform-support-floors.md)):** Windows
+   11 x64; latest macOS + the one before; current Linux distros. Support
+   code for anything older (Win7/8/10, XP/9x hacks, `_WIN32_WINNT` <
+   `0x0A00`, old-macOS `.mm` fallbacks, EOL-distro shims, 32-bit) may be
+   **deleted on sight** — small commit, Windows build verified, pushed.
 3. **Do not do macOS- or Linux-specific work unless explicitly
    instructed.** That includes touching `src/arch/*/`*`_MacOSX`* /
    *`_Unix`* / *`_X11`* files, macOS/Linux build tooling, or `.mm` files.

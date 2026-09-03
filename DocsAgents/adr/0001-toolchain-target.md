@@ -9,7 +9,7 @@ tags: [adr, toolchain, cpp, cmake, platforms]
 
 **Accepted** — 2026-09-02. All open questions resolved (see *Decision*).
 The renderer-backend question (former open questions B and C) is
-**deferred to ADR 0003 (renderer strategy)**, not left open here.
+**deferred to ADR 0004 (renderer strategy)**, not left open here.
 
 # Context
 
@@ -89,22 +89,18 @@ So: the **build system** is already fairly modern; the **source** is not.
      artifact — more robust, no local msys2 dependency. Lean (b).
    - Tracked as backlog item 7.
 
-9. **Windows / MSVC floor (was E).**
-   - Minimum runtime target: **Windows 10 x64.** (Win10 hit end of
-     support 2025-10 but still holds most of the Windows desktop base;
-     requiring Windows 11 would be user-hostile for a community game.
-     Revisit when the Win10 share collapses.)
-   - **MSVC v143 / Visual Studio 2022** is the reference toolchain
-     (matches CI; required for C++17).
-   - Windows 7 / 8 / 32-bit-only code paths may be dropped where they
-     carry maintenance cost.
+9. **Windows / MSVC floor (was E). → SUPERSEDED by ADR
+   [0003](./0003-platform-support-floors.md).** Originally set a Windows
+   10 x64 floor; ADR 0003 raises it to **Windows 11 x64** and adds the
+   macOS / Linux floors. Reference toolchain stays **MSVC v143 / Visual
+   Studio 2022** (or newer).
 
 10. **C++20 (was F): after the baseline.** Stay C++17 until
     `../baseline.md` warning/tidy counts are captured and trending down;
     then evaluate C++20 in its own ADR. A `-std` bump on an unmeasured
     base only adds noise.
 
-## Deferred to ADR 0003 (renderer strategy)
+## Deferred to ADR 0004 (renderer strategy)
 
 - **Drop the D3D9 renderer (`RageDisplay_D3D`)?** (was B)
 - **Drop `WITH_GLES2`?** (was C)
@@ -112,7 +108,7 @@ So: the **build system** is already fairly modern; the **source** is not.
 Both depend on the overall renderer direction — clean the legacy GL
 backend (`RageDisplay_Legacy`, still fixed-function) / modernize to GL
 3.3 core / adopt an abstraction layer (bgfx et al.) — which a toolchain
-ADR should not pre-empt. **Until ADR 0003:** `RageDisplay_D3D` and the
+ADR should not pre-empt. **Until ADR 0004:** `RageDisplay_D3D` and the
 GLES2 path are **frozen** — kept compiling, no investment, no new
 features. GLES2 is the leading removal candidate there (Linux-only, P3,
 ~26 TODO/HACK markers, no dependent user base).
@@ -129,5 +125,5 @@ features. GLES2 is the leading removal candidate there (Linux-only, P3,
   precondition is met (baseline captured / renderer direction chosen).
 - Immediate actionable items from this ADR: the §6 cleanup cut; add
   `WITH_WERROR` (default OFF, ON in CI); document the FFmpeg binary
-  provenance in `baseline.md`; state the Win10/v143 floor in the build
+  provenance in `baseline.md`; state the Win11/v143 floor in the build
   docs.

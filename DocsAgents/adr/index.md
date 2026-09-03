@@ -9,9 +9,10 @@ Status values: `Proposed` (awaiting maintainer sign-off) · `Accepted` ·
 
 # Records
 
-* [0001](./0001-toolchain-target.md) - Toolchain & modernization target (C++17, CMake 3.20, Win10/v143 floor, `-Werror` policy, FFmpeg binaries). **Status: Accepted.**
+* [0001](./0001-toolchain-target.md) - Toolchain & modernization target (C++17, CMake 3.20, `-Werror` policy, FFmpeg binaries). **Status: Accepted.** (§9 superseded by 0003.)
 * [0002](./0002-independent-project.md) - Independent project; no upstream compatibility constraint. **Status: Accepted.**
-* 0003 (not written) - Renderer strategy: legacy GL cleanup vs GL 3.3 core vs abstraction layer (bgfx et al.); fate of D3D9 and GLES2. Deferred here from ADR 0001.
+* [0003](./0003-platform-support-floors.md) - Platform support floors: Windows 11, current macOS, current Linux; supersedes 0001 §9. **Status: Accepted.**
+* 0004 (not written) - Renderer strategy: legacy GL cleanup vs GL 3.3 core vs abstraction layer (bgfx et al.); fate of D3D9 and GLES2. Deferred from ADR 0001.
 
 # Adding one
 

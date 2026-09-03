@@ -129,17 +129,25 @@ one subsystem + one check family per PR; record in
 
 ### 13. `src/archutils/Win32/arch_setup.h` is a legacy dump
 `isnan`/`isfinite` macros: **removed 2026-09-03 (`37e6766d5e`)**.
-Remaining: `#define _WIN32_WINNT 0x0601` (Windows 7 — contradicts ADR
-0001 §9 Win10 floor); `#define __STDC__ 0` (VC2005 hack); comment "we
-support Win98 and WinME"; `_CRT_SECURE_NO_DEPRECATE` /
-`_SCL_SECURE_NO_DEPRECATE` "for VC2005/2008"; `_WIN32_IE 0x0400` (IE4).
-**Action:** a follow-up pass — `_WIN32_WINNT` → `0x0A00`, drop the
-VC2005/IE4 hacks — with a real Windows build+run check (raising
-`_WIN32_WINNT` can change header behavior). Bundle with the Win10-floor
-work.
+Remaining: `#define _WIN32_WINNT 0x0601` (Windows 7); `#define __STDC__ 0`
+(VC2005 hack); comment "we support Win98 and WinME";
+`_CRT_SECURE_NO_DEPRECATE` / `_SCL_SECURE_NO_DEPRECATE` "for VC2005/2008";
+`_WIN32_IE 0x0400` (IE4).
+**Action (now clearly in scope — ADR 0003, Win11 floor):** `_WIN32_WINNT`
+→ `0x0A00`, drop the VC2005/IE4 hacks, with a real Windows build+run
+check (raising `_WIN32_WINNT` can change header behavior). Small commit.
 Related: `src/archutils/Win32/DirectXErrorList.h` — 12 `case` labels
 (`0x8007xxxx`) that don't fit signed `HRESULT`; MSVC compiles it, clang
 rejects (C++11 narrowing). Rewrite the cases as hex literals / `HRESULT(...)`.
+
+### 16. Pre-floor `#if` guards across `src/arch/` and `src/archutils/`
+Now that ADR 0003 sets Windows 11 / current-macOS / current-Linux floors,
+sweep for `#if`/`#ifdef` guards handling below-floor OSes: `_WIN32_WINNT`
+comparisons, `WINVER` checks, `MAC_OS_X_VERSION_MIN_REQUIRED` for old
+10.x, XP/9x fallback branches, 32-bit paths, EOL-distro `#ifdef`s.
+**Action:** batched sweep, one `src/arch/<area>` per commit, Windows
+build verified. Coordinate with items 13 (`arch_setup.h`) and the
+D3D9/GLES2 question (ADR 0004).
 
 ### 15. `#if 0` dead blocks
 ~37 `#if 0` markers across `src/` (`Player.cpp`, `NoteDataUtil.cpp`,

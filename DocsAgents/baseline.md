@@ -31,7 +31,7 @@ green build for the §4 gate.
 | GCC/Clang warnings | `-Wall -Wextra -Wno-unused -Wno-unused-parameter -Wno-unknown-pragmas -Werror=type-limits` (+ `-Wno-undefined-var-template`, `-Wno-deprecated-declarations` on Clang) | `src/CMakeLists.txt:126-130` |
 | MSVC warnings | `/W4 /wd4100 /wd4189 /wd4244 /wd4267 /wd4702` | `src/CMakeLists.txt:132` |
 | `-Werror` | only `type-limits` today. **Policy (ADR 0001 §7):** curated `-Werror` set that grows; a category is promoted once it is zero across `src/`; enforced via `WITH_WERROR` (ON in CI, OFF by default). `WITH_WERROR` not added yet. | `src/CMakeLists.txt:126-132` |
-| Windows / MSVC floor | **Windows 10 x64 min; MSVC v143 / VS2022** (ADR 0001 §9). Not yet stated in `Build/` docs. | ADR 0001 |
+| Platform floors | **Windows 11 x64** min; MSVC v143 / VS2022+. macOS: latest + prior, arm64 primary. Linux: current distros. (ADR 0003.) | ADR 0003 |
 | Externals | git submodules; FFmpeg prebuilt for Windows in `extern/ffmpeg-w32/` (~36 MB) — `avcodec-59`, `avformat-59`, `avutil-57`, `swscale-6` ≈ **FFmpeg 5.x**. Origin not documented in-repo. Kept per ADR 0001 §8; replace via submodule build later (backlog 7). | `.gitmodules`, `StepmaniaCore.cmake:179+`, `:201-209` |
 
 # Warnings (MSVC captured 2026-09-03)
