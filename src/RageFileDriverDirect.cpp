@@ -106,7 +106,7 @@ RageFileBasic *RageFileDriverDirect::Open( const RString &sPath_, int iMode, int
 	}
 
 	RString sPath = sPath_;
-	ASSERT( sPath.size() && sPath[0] == '/' );
+	ASSERT( !sPath.empty() && sPath[0] == '/' );
 
 	/* This partially resolves.  For example, if "abc/def" exists, and we're opening
 	 * "ABC/DEF/GHI/jkl/mno", this will resolve it to "abc/def/GHI/jkl/mno"; we'll

@@ -326,7 +326,7 @@ RageFileObjInflate *GunzipFile( RageFileBasic *pFile_, RString &sError, std::uin
 	{
 		char magic[2];
 		FileReading::ReadBytes( *pFile, magic, 2, sError );
-		if( sError != "" )
+		if( !sError.empty() )
 			return nullptr;
 
 		if( magic[0] != '\x1f' || magic[1] != '\x8b' )
@@ -341,7 +341,7 @@ RageFileObjInflate *GunzipFile( RageFileBasic *pFile_, RString &sError, std::uin
 	FileReading::read_32_le( *pFile, sError ); /* time */
 	FileReading::read_8( *pFile, sError ); /* xfl */
 	FileReading::read_8( *pFile, sError ); /* os */
-	if( sError != "" )
+	if( !sError.empty() )
 		return nullptr;
 
 #define FTEXT    1<<0
@@ -371,10 +371,10 @@ RageFileObjInflate *GunzipFile( RageFileBasic *pFile_, RString &sError, std::uin
 	}
 
 	if( iFlags & FNAME )
-		while( sError == "" && FileReading::read_8( *pFile, sError ) != 0 )
+		while( sError.empty() && FileReading::read_8( *pFile, sError ) != 0 )
 			;
 	if( iFlags & FCOMMENT )
-		while( sError == "" && FileReading::read_8( *pFile, sError ) != 0 )
+		while( sError.empty() && FileReading::read_8( *pFile, sError ) != 0 )
 			;
 
 	if( iFlags & FHCRC )
@@ -387,7 +387,7 @@ RageFileObjInflate *GunzipFile( RageFileBasic *pFile_, RString &sError, std::uin
 
 		std::uint16_t iExpectedCRC16 = FileReading::read_u16_le( *pFile, sError );
 		std::uint16_t iActualCRC16 = std::int16_t( iActualCRC32 & 0xFFFF );
-		if( sError != "" )
+		if( !sError.empty() )
 			return nullptr;
 
 		if( iActualCRC16 != iExpectedCRC16 )
@@ -401,7 +401,7 @@ RageFileObjInflate *GunzipFile( RageFileBasic *pFile_, RString &sError, std::uin
 	 * it. */
 	pFile->EnableCRC32( false );
 
-	if( sError != "" )
+	if( !sError.empty() )
 		return nullptr;
 
 	int iDataPos = pFile->Tell();
@@ -418,7 +418,7 @@ RageFileObjInflate *GunzipFile( RageFileBasic *pFile_, RString &sError, std::uin
 
 	FileReading::Seek( *pFile, iDataPos, sError );
 
-	if( sError != "" )
+	if( !sError.empty() )
 		return nullptr;
 
 	RageFileDriverSlice *pSliceFile = new RageFileDriverSlice( pFile.release(), iDataPos, iFooterPos-iDataPos );

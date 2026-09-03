@@ -232,7 +232,7 @@ public:
 			m_iaCoef2[i] = FileReading::read_16_le( m_File, m_sError );
 		}
 
-		if( m_sError.size() != 0 )
+		if( !m_sError.empty() )
 			return false;
 
 		m_pBuffer = new float[m_iFramesPerBlock*m_WavData.m_iChannels];
@@ -270,7 +270,7 @@ public:
 		for( int i = 0; i < m_WavData.m_iChannels; ++i )
 			iSamp2[i] = FileReading::read_16_le( m_File, m_sError );
 
-		if( m_sError.size() != 0 )
+		if( !m_sError.empty() )
 			return false;
 
 		float *pBuffer = m_pBuffer;
@@ -454,7 +454,7 @@ public:
 
 RString ReadString( RageFileBasic &f, int iSize, RString &sError )
 {
-	if( sError.size() != 0 )
+	if( !sError.empty() )
 		return RString();
 
 	char *buf = new char[iSize + 1];
@@ -498,7 +498,7 @@ RageSoundReader_FileReader::OpenResult RageSoundReader_WAV::Open( RageFileBasic 
 		RString ChunkID = ReadString( *m_pFile, 4, sError );
 		std::int32_t iChunkSize = FileReading::read_32_le( *m_pFile, sError );
 
-		if( sError.size() != 0 )
+		if( !sError.empty() )
 		{
 			SetError( sError );
 			return OPEN_FATAL_ERROR;
@@ -552,7 +552,7 @@ RageSoundReader_FileReader::OpenResult RageSoundReader_WAV::Open( RageFileBasic 
 		m_pFile->Seek( iNextChunk );
 	}
 
-	if( sError.size() != 0 )
+	if( !sError.empty() )
 	{
 		SetError( sError );
 		return OPEN_FATAL_ERROR;

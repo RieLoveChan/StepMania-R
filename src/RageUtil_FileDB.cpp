@@ -168,7 +168,7 @@ int FilenameDB::GetFileHash( const RString &sPath )
 /* path should be fully collapsed, so we can operate in-place: no . or .. */
 bool FilenameDB::ResolvePath( RString &sPath )
 {
-	if( sPath == "/" || sPath == "" )
+	if( sPath == "/" || sPath.empty() )
 		return true;
 
 	/* Split path into components. */
@@ -209,7 +209,7 @@ bool FilenameDB::ResolvePath( RString &sPath )
 		m_Mutex.Unlock(); /* locked by GetFileSet */
 	}
 
-	if( sPath.size() && sPath[sPath.size()-1] == '/' )
+	if( !sPath.empty() && sPath[sPath.size()-1] == '/' )
 		sPath = ret + "/";
 	else
 		sPath = ret;
@@ -280,7 +280,7 @@ FileSet *FilenameDB::GetFileSet( const RString &sDir_, bool bCreate )
 	sDir.Replace("\\", "/"); /* foo\bar -> foo/bar */
 	sDir.Replace("//", "/"); /* foo//bar -> foo/bar */
 
-	if( sDir == "" )
+	if( sDir.empty() )
 		sDir = "/";
 
 	RString sLower = sDir;
@@ -385,7 +385,7 @@ void FilenameDB::AddFile( const RString &sPath_, int iSize, int iHash, void *pPr
 {
 	RString sPath(sPath_);
 
-	if( sPath == "" || sPath == "/" )
+	if( sPath.empty() || sPath == "/" )
 		return;
 
 	if( sPath[0] != '/' )
@@ -594,7 +594,7 @@ void FilenameDB::GetDirListing( const RString &sPath_, std::vector<RString> &asA
 	}
 
 	/* If the last element was empty, use "*". */
-	if( fn.size() == 0 )
+	if( fn.empty() )
 		fn = "*";
 
 	unsigned iStart = asAddTo.size();

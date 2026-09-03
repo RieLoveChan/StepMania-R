@@ -366,7 +366,7 @@ void RageTextureManager::DiagnosticOutput() const
 		RString sStr = ssprintf( "%3ix%3i (%2i)", pTex->GetTextureHeight(), pTex->GetTextureWidth(),
 			pTex->m_iRefCount );
 
-		if( sDiags != "" )
+		if( !sDiags.empty() )
 			sStr += " " + sDiags;
 
 		LOG->Trace( " %-40s %s", sStr.c_str(), Basename(ID.filename).c_str() );

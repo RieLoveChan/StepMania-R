@@ -77,21 +77,21 @@ RString RageDisplay::SetVideoMode( VideoModeParams p, bool &bNeedReloadTextures 
 	RString err;
 	std::vector<RString> vs;
 
-	if( (err = this->TryVideoMode(p,bNeedReloadTextures)) == "" )
+	if( (err = this->TryVideoMode(p,bNeedReloadTextures)).empty() )
 		return RString();
 	LOG->Trace( "TryVideoMode failed: %s", err.c_str() );
 	vs.push_back( err );
 
 	// fall back to settings that will most likely work
 	p.bpp = 16;
-	if( (err = this->TryVideoMode(p,bNeedReloadTextures)) == "" )
+	if( (err = this->TryVideoMode(p,bNeedReloadTextures)).empty() )
 		return RString();
 	vs.push_back( err );
 
 	// "Intel(R) 82810E Graphics Controller" won't accept a 16 bpp surface if
 	// the desktop is 32 bpp, so try 32 bpp as well.
 	p.bpp = 32;
-	if( (err = this->TryVideoMode(p,bNeedReloadTextures)) == "" )
+	if( (err = this->TryVideoMode(p,bNeedReloadTextures)).empty() )
 		return RString();
 	vs.push_back( err );
 
@@ -123,7 +123,7 @@ RString RageDisplay::SetVideoMode( VideoModeParams p, bool &bNeedReloadTextures 
 	p.width = supported.width;
 	p.height = supported.height;
 	p.rate = std::round(supported.refreshRate);
-	if( (err = this->TryVideoMode(p,bNeedReloadTextures)) == "" )
+	if( (err = this->TryVideoMode(p,bNeedReloadTextures)).empty() )
 		return RString();
 	vs.push_back( err );
 
@@ -296,7 +296,7 @@ public:
 	void Pop()
 	{
 		stack.pop_back();
-		ASSERT( stack.size() > 0 ); // underflow
+		ASSERT( !stack.empty() ); // underflow
 	}
 
 	// Pushes the stack by one, duplicating the current matrix.
@@ -722,7 +722,7 @@ void RageDisplay::CenteringPushMatrix()
 void RageDisplay::CenteringPopMatrix()
 {
 	g_CenteringStack.pop_back();
-	ASSERT( g_CenteringStack.size() > 0 ); // underflow
+	ASSERT( !g_CenteringStack.empty() ); // underflow
 	UpdateCentering();
 }
 

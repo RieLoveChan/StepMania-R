@@ -74,7 +74,7 @@ RString BackgroundLoader::GetRequest()
 		return RString();
 
 	LockMut( m_Mutex );
-	if( !m_CacheRequests.size() )
+	if( m_CacheRequests.empty() )
 		return RString();
 
 	RString ret;
@@ -168,7 +168,7 @@ void BackgroundLoader::CacheFile( const RString &sFile )
 	if( !g_bEnableBackgroundLoading )
 		return;
 
-	if( sFile == "" )
+	if( sFile.empty() )
 		return;
 
 	LockMut( m_Mutex );
@@ -186,7 +186,7 @@ bool BackgroundLoader::IsCacheFileFinished( const RString &sFile, RString &sActu
 
 	LockMut( m_Mutex );
 
-	if( sFile == "" )
+	if( sFile.empty() )
 	{
 		sActualPath = "";
 		return true;
@@ -211,7 +211,7 @@ void BackgroundLoader::FinishedWithCachedFile( RString sFile )
 	if( !g_bEnableBackgroundLoading )
 		return;
 
-	if( sFile == "" )
+	if( sFile.empty() )
 		return;
 
 	std::map<RString, int>::iterator it;
@@ -239,7 +239,7 @@ void BackgroundLoader::Abort()
 		;
 
 	/* Clear any previously finished requests. */
-	while( m_FinishedRequests.size() )
+	while( !m_FinishedRequests.empty() )
 		FinishedWithCachedFile( m_FinishedRequests.begin()->first );
 
 	/* Tell the thread to abort any request it's handling now. */

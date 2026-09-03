@@ -112,7 +112,7 @@ static RageSurfaceUtils::OpenResult LoadBMP( RageFile &f, RageSurface *&img, RSt
 	}
 
 	/* Stop on error before we use any of the values we just read. */
-	if( sError.size() != 0 )
+	if( !sError.empty() )
 		return RageSurfaceUtils::OPEN_FATAL_ERROR;
 
 	img = CreateSurface( iWidth, iHeight, iBPP, Rmask, Gmask, Bmask, Amask );
@@ -140,7 +140,7 @@ static RageSurfaceUtils::OpenResult LoadBMP( RageFile &f, RageSurface *&img, RSt
 	}
 
 	/* Stop on error before we seek, so we don't return the wrong error message. */
-	if( sError.size() != 0 )
+	if( !sError.empty() )
 		return RageSurfaceUtils::OPEN_FATAL_ERROR;
 
 	int iFilePitch = iFileBPP * iWidth; // in bits
@@ -187,7 +187,7 @@ static RageSurfaceUtils::OpenResult LoadBMP( RageFile &f, RageSurface *&img, RSt
 			memcpy( pRow, buf.data(), img->pitch );
 	}
 
-	return sError.size() != 0? RageSurfaceUtils::OPEN_FATAL_ERROR: RageSurfaceUtils::OPEN_OK;
+	return !sError.empty()? RageSurfaceUtils::OPEN_FATAL_ERROR: RageSurfaceUtils::OPEN_OK;
 }
 
 RageSurfaceUtils::OpenResult RageSurface_Load_BMP( const RString &sPath, RageSurface *&img, bool bHeaderOnly, RString &error )

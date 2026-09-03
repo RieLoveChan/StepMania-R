@@ -83,7 +83,7 @@ bool RageFileDriverZip::ReadEndCentralRecord( int &iTotalEntries, int &iCentralD
 	int iCommentLength = FileReading::read_16_le( *m_pZip, sError );
 	m_sComment = FileReading::ReadString( *m_pZip, iCommentLength, sError );
 
-	if( sError != "" )
+	if( !sError.empty() )
 	{
 		WARN( ssprintf("%s: %s", m_sPath.c_str(), sError.c_str()) );
 		return false;
@@ -159,7 +159,7 @@ bool RageFileDriverZip::ParseZipfile()
 		FDB->AddFile( "/" + pInfo->m_sName, pInfo->m_iUncompressedSize, pInfo->m_iCRC32, pInfo );
 	}
 
-	if( m_pFiles.size() == 0 )
+	if( m_pFiles.empty() )
 		WARN( ssprintf("%s: no files found in central file header", m_sPath.c_str()) );
 
 	return true;
@@ -194,7 +194,7 @@ int RageFileDriverZip::ProcessCdirFileHdr( FileInfo &info )
 	info.m_iOffset = FileReading::read_32_le( *m_pZip, sError );
 
 	/* Check for errors before reading variable-length fields. */
-	if( sError != "" )
+	if( !sError.empty() )
 	{
 		WARN( ssprintf("%s: %s", m_sPath.c_str(), sError.c_str()) );
 		return -1;
@@ -204,7 +204,7 @@ int RageFileDriverZip::ProcessCdirFileHdr( FileInfo &info )
 	FileReading::SkipBytes( *m_pZip, iExtraFieldLength, sError ); /* skip extra field */
 	FileReading::SkipBytes( *m_pZip, iFileCommentLength, sError ); /* skip file comment */
 
-	if( sError != "" )
+	if( !sError.empty() )
 	{
 		WARN( ssprintf("%s: %s", m_sPath.c_str(), sError.c_str()) );
 		return -1;
@@ -250,7 +250,7 @@ bool RageFileDriverZip::ReadLocalFileHeader( FileInfo &info )
 	RString sError;
 	RString sSig = FileReading::ReadString( *m_pZip, 4, sError );
 
-	if( sError != "" )
+	if( !sError.empty() )
 	{
 		WARN( ssprintf("%s: error opening \"%s\": %s", m_sPath.c_str(), info.m_sName.c_str(), sError.c_str()) );
 		return false;
@@ -268,7 +268,7 @@ bool RageFileDriverZip::ReadLocalFileHeader( FileInfo &info )
 	const int iExtraFieldLength = FileReading::read_16_le( *m_pZip, sError );
 	info.m_iDataOffset = m_pZip->Tell() + iFilenameLength + iExtraFieldLength;
 
-	if( sError != "" )
+	if( !sError.empty() )
 	{
 		WARN( ssprintf("%s: %s", m_sPath.c_str(), sError.c_str()) );
 		return false;

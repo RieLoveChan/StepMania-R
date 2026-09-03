@@ -479,7 +479,7 @@ RString RageDisplay_Legacy::Init( const VideoModeParams &p, bool bAllowUnacceler
 
 	bool bIgnore = false;
 	RString sError = SetVideoMode( p, bIgnore );
-	if (sError != "")
+	if (!sError.empty())
 		return sError;
 
 	// Log driver details
@@ -654,7 +654,7 @@ static void CheckPalettedTextures()
 	} while(0);
 #undef GL_CHECK_ERROR
 
-	if (sError == "")
+	if (sError.empty())
 		return;
 
 	/* If 8-bit palettes don't work, disable them entirely--don't trust 4-bit
@@ -783,7 +783,7 @@ RString RageDisplay_Legacy::TryVideoMode( const VideoModeParams &p, bool &bNewDe
 
 	RString err;
 	err = g_pWind->TryVideoMode( p, bNewDeviceOut );
-	if (err != "")
+	if (!err.empty())
 		return err;	// failed to set video mode
 
 	/* Now that we've initialized, we can search for extensions.  Do this before InvalidateObjects,

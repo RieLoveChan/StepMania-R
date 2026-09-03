@@ -227,7 +227,7 @@ void DirectFilenameDB::PopulateFileSet( FileSet &fs, const RString &path )
 #if defined(_WIN32)
 	WIN32_FIND_DATA fd;
 
-	if ( sPath.size() > 0  && sPath.Right(1) == "/" )
+	if ( !sPath.empty()  && sPath.Right(1) == "/" )
 		sPath.erase( sPath.size() - 1 );
 
 	HANDLE hFind = DoFindFirstFile( root+sPath+"/*", &fd );

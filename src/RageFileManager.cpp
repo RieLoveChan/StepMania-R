@@ -75,7 +75,7 @@ static void UnreferenceAllDrivers( std::vector<LoadedDriver *> &apDriverList )
 RageFileDriver *RageFileManager::GetFileDriver( RString sMountpoint )
 {
 	FixSlashesInPlace( sMountpoint );
-	if( sMountpoint.size() && sMountpoint.Right(1) != "/" )
+	if( !sMountpoint.empty() && sMountpoint.Right(1) != "/" )
 		sMountpoint += '/';
 
 	g_Mutex->Lock();
@@ -242,7 +242,7 @@ static void NormalizePath( RString &sPath )
 {
 	FixSlashesInPlace( sPath );
 	CollapsePath( sPath, true );
-	if (sPath.size() == 0)
+	if (sPath.empty())
 	{
 		sPath = '/';
 	}
@@ -351,7 +351,7 @@ static RString GetDirOfExecutable( RString argv0 )
 	sPath.Replace( "\\", "/" );
 
 	bool bIsAbsolutePath = false;
-	if( sPath.size() == 0 || sPath[0] == '/' )
+	if( sPath.empty() || sPath[0] == '/' )
 		bIsAbsolutePath = true;
 #if defined(_WIN32)
 	if( sPath.size() > 2 && sPath[1] == ':' && sPath[2] == '/' )
@@ -520,7 +520,7 @@ void RageFileManager::GetDirListing( const RString &sPath_, std::vector<RString>
 	{
 		LoadedDriver *pLoadedDriver = apDriverList[i];
 		const RString p = pLoadedDriver->GetPath( sPath );
-		if( p.size() == 0 )
+		if( p.empty() )
 			continue;
 
 		const unsigned OldStart = AddTo.size();
@@ -530,7 +530,7 @@ void RageFileManager::GetDirListing( const RString &sPath_, std::vector<RString>
 			++iDriversThatReturnedFiles;
 
 		/* If returning the path, prepend the mountpoint name to the files this driver returned. */
-		if( bReturnPathToo && pLoadedDriver->m_sMountPoint.size() > 0 )
+		if( bReturnPathToo && !pLoadedDriver->m_sMountPoint.empty() )
 		{
 			RString const &mountPoint = pLoadedDriver->m_sMountPoint;
 			/* Skip the trailing slash on the mountpoint; there's already a slash there. */
@@ -584,7 +584,7 @@ bool RageFileManager::Move( const RString &fromPath_, const RString &toPath_ )
 	{
 		const RString sOldDriverPath = aDriverList[i]->GetPath( fromPath );
 		const RString sNewDriverPath = aDriverList[i]->GetPath( toPath );
-		if( sOldDriverPath.size() == 0 || sNewDriverPath.size() == 0 )
+		if( sOldDriverPath.empty() || sNewDriverPath.empty() )
 			continue;
 
 		bool ret = aDriverList[i]->m_pDriver->Move( sOldDriverPath, sNewDriverPath );
@@ -641,7 +641,7 @@ bool RageFileManager::Remove( const RString &sPath_ )
 	for( unsigned i = 0; i < apDriverList.size(); ++i )
 	{
 		const RString p = apDriverList[i]->GetPath( sPath );
-		if( p.size() == 0 )
+		if( p.empty() )
 			continue;
 
 		bool ret = apDriverList[i]->m_pDriver->Remove( p );
@@ -677,7 +677,7 @@ static void AdjustMountpoint( RString &sMountPoint )
 
 	ASSERT_M( sMountPoint.Left(1) == "/", "Mountpoints must be absolute: " + sMountPoint );
 
-	if( sMountPoint.size() && sMountPoint.Right(1) != "/" )
+	if( !sMountPoint.empty() && sMountPoint.Right(1) != "/" )
 		sMountPoint += '/';
 
 	if( sMountPoint.Left(1) != "/" )
@@ -742,7 +742,7 @@ void RageFileManager::Unmount( const RString &sType, const RString &sRoot_, cons
 	FixSlashesInPlace( sRoot );
 	FixSlashesInPlace( sMountPoint );
 
-	if( sMountPoint.size() && sMountPoint.Right(1) != "/" )
+	if( !sMountPoint.empty() && sMountPoint.Right(1) != "/" )
 		sMountPoint += '/';
 
 	/* Find all drivers we want to delete.  Remove them from g_pDrivers, and move them
@@ -769,7 +769,7 @@ void RageFileManager::Unmount( const RString &sType, const RString &sRoot_, cons
 	g_Mutex->Unlock();
 
 	/* Now we have a list of drivers to remove. */
-	while( apDriverListToUnmount.size() )
+	while( !apDriverListToUnmount.empty() )
 	{
 		/* If the driver has more than one reference, somebody other than us is
 		 * using it; wait for that operation to complete. Note that two Unmount()
@@ -834,7 +834,7 @@ void RageFileManager::FlushDirCache( const RString &sPath_ )
 
 	LockMut( *g_Mutex );
 
-	if( sPath == "" )
+	if( sPath.empty() )
 	{
 		for( unsigned i = 0; i < g_pDrivers.size(); ++i )
 			g_pDrivers[i]->m_pDriver->FlushDirCache( "" );
@@ -846,7 +846,7 @@ void RageFileManager::FlushDirCache( const RString &sPath_ )
 	for( unsigned i = 0; i < g_pDrivers.size(); ++i )
 	{
 		const RString &path = g_pDrivers[i]->GetPath( sPath );
-		if( path.size() == 0 )
+		if( path.empty() )
 			continue;
 		g_pDrivers[i]->m_pDriver->FlushDirCache( path );
 	}
@@ -865,7 +865,7 @@ RageFileManager::FileType RageFileManager::GetFileType( const RString &sPath_ )
 	for( unsigned i = 0; i < apDriverList.size(); ++i )
 	{
 		const RString p = apDriverList[i]->GetPath( sPath );
-		if( p.size() == 0 )
+		if( p.empty() )
 			continue;
 		ret = apDriverList[i]->m_pDriver->GetFileType( p );
 		if( ret != TYPE_NONE )
@@ -891,7 +891,7 @@ int RageFileManager::GetFileSizeInBytes( const RString &sPath_ )
 	for( unsigned i = 0; i < apDriverList.size(); ++i )
 	{
 		const RString p = apDriverList[i]->GetPath( sPath );
-		if( p.size() == 0 )
+		if( p.empty() )
 			continue;
 		iRet = apDriverList[i]->m_pDriver->GetFileSizeInBytes( p );
 		if( iRet != -1 )
@@ -915,7 +915,7 @@ int RageFileManager::GetFileHash( const RString &sPath_ )
 	for( unsigned i = 0; i < apDriverList.size(); ++i )
 	{
 		const RString p = apDriverList[i]->GetPath( sPath );
-		if( p.size() == 0 )
+		if( p.empty() )
 			continue;
 		iRet = apDriverList[i]->m_pDriver->GetFileHash( p );
 		if( iRet != -1 )
@@ -1031,7 +1031,7 @@ RageFileBasic *RageFileManager::OpenForReading( const RString &sPath, int mode, 
 	{
 		LoadedDriver &ld = *apDriverList[i];
 		const RString path = ld.GetPath( sPath );
-		if( path.size() == 0 )
+		if( path.empty() )
 			continue;
 		int error;
 		RageFileBasic *ret = ld.m_pDriver->Open( path, mode, error );
@@ -1080,7 +1080,7 @@ RageFileBasic *RageFileManager::OpenForWriting( const RString &sPath, int mode, 
 	{
 		LoadedDriver &ld = *apDriverList[i];
 		const RString path = ld.GetPath( sPath );
-		if( path.size() == 0 )
+		if( path.empty() )
 			continue;
 
 		const int value = ld.m_pDriver->GetPathValue( path );
@@ -1096,7 +1096,7 @@ RageFileBasic *RageFileManager::OpenForWriting( const RString &sPath, int mode, 
 	 * create or write files in any driver mounted after it, because when we later
 	 * try to read it, we'll get that file and not the one we wrote. */
 	int iMaximumDriver = apDriverList.size();
-	if( Values.size() > 0 && Values[0].second == 0 )
+	if( !Values.empty() && Values[0].second == 0 )
 		iMaximumDriver = Values[0].first;
 
 	iError = 0;

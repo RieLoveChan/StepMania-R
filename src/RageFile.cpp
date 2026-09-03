@@ -40,7 +40,7 @@ RString RageFile::GetPath() const
 		return RString();
 
 	RString sRet = m_File->GetDisplayPath();
-	if( sRet != "" )
+	if( !sRet.empty() )
 		return sRet;
 
 	return GetRealPath();
@@ -133,7 +133,7 @@ void RageFile::ClearError()
 
 RString RageFile::GetError() const
 {
-	if( m_File != nullptr && m_File->GetError() != "" )
+	if( m_File != nullptr && !m_File->GetError().empty() )
 		return m_File->GetError();
 	return m_sError;
 }
@@ -220,7 +220,7 @@ int RageFile::Seek( int offset, int whence )
 
 void FileReading::ReadBytes( RageFileBasic &f, void *buf, int size, RString &sError )
 {
-	if( sError.size() != 0 )
+	if( !sError.empty() )
 		return;
 
 	int ret = f.Read( buf, size );
@@ -232,7 +232,7 @@ void FileReading::ReadBytes( RageFileBasic &f, void *buf, int size, RString &sEr
 
 RString FileReading::ReadString( RageFileBasic &f, int size, RString &sError )
 {
-	if( sError.size() != 0 )
+	if( !sError.empty() )
 		return RString();
 
 	RString sBuf;
@@ -246,7 +246,7 @@ RString FileReading::ReadString( RageFileBasic &f, int size, RString &sError )
 
 void FileReading::SkipBytes( RageFileBasic &f, int iBytes, RString &sError )
 {
-	if( sError.size() != 0 )
+	if( !sError.empty() )
 		return;
 
 	iBytes += f.Tell();
@@ -255,7 +255,7 @@ void FileReading::SkipBytes( RageFileBasic &f, int iBytes, RString &sError )
 
 void FileReading::Seek( RageFileBasic &f, int iOffset, RString &sError )
 {
-	if( sError.size() != 0 )
+	if( !sError.empty() )
 		return;
 
 	int iGot = f.Seek( iOffset );
@@ -271,7 +271,7 @@ std::uint8_t FileReading::read_8( RageFileBasic &f, RString &sError )
 {
 	std::uint8_t val;
 	ReadBytes( f, &val, sizeof(std::uint8_t), sError );
-	if( sError.size() == 0 )
+	if( sError.empty() )
 		return val;
 	else
 		return 0;
@@ -281,7 +281,7 @@ std::uint16_t FileReading::read_u16_le( RageFileBasic &f, RString &sError )
 {
 	std::uint16_t val;
 	ReadBytes( f, &val, sizeof(std::uint16_t), sError );
-	if( sError.size() == 0 )
+	if( sError.empty() )
 		return Swap16LE( val );
 	else
 		return 0;
@@ -291,7 +291,7 @@ std::int16_t FileReading::read_16_le( RageFileBasic &f, RString &sError )
 {
 	std::int16_t val;
 	ReadBytes( f, &val, sizeof(std::int16_t), sError );
-	if( sError.size() == 0 )
+	if( sError.empty() )
 		return Swap16LE( val );
 	else
 		return 0;
@@ -301,7 +301,7 @@ std::uint32_t FileReading::read_u32_le( RageFileBasic &f, RString &sError )
 {
 	std::uint32_t val;
 	ReadBytes( f, &val, sizeof(std::uint32_t), sError );
-	if( sError.size() == 0 )
+	if( sError.empty() )
 		return Swap32LE( val );
 	else
 		return 0;
@@ -311,7 +311,7 @@ std::int32_t FileReading::read_32_le( RageFileBasic &f, RString &sError )
 {
 	std::int32_t val;
 	ReadBytes( f, &val, sizeof(std::int32_t), sError );
-	if( sError.size() == 0 )
+	if( sError.empty() )
 		return Swap32LE( val );
 	else
 		return 0;

@@ -72,7 +72,7 @@ void RageBitmapTexture::Create()
 {
 	RageTextureID actualID = GetID();
 
-	ASSERT( actualID.filename != "" );
+	ASSERT( !actualID.filename.empty() );
 
 	/* Load the image into a RageSurface. */
 	RString error;

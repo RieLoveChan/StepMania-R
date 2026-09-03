@@ -145,7 +145,7 @@ int power_of_two( int input )
 
 bool IsAnInt( const RString &s )
 {
-	if( !s.size() )
+	if( s.empty() )
 		return false;
 
 	for( std::size_t i=0; i < s.size(); ++i )
@@ -157,7 +157,7 @@ bool IsAnInt( const RString &s )
 
 bool IsHexVal( const RString &s )
 {
-	if( !s.size() )
+	if( s.empty() )
 		return false;
 
 	for( std::size_t i=0; i < s.size(); ++i )
@@ -963,7 +963,7 @@ RString SetExtension( const RString &sPath, const RString &sExt )
 {
 	RString sDir, sFileName, sOldExt;
 	splitpath( sPath, sDir, sFileName, sOldExt );
-	return sDir + sFileName + (sExt.size()? ".":"") + sExt;
+	return sDir + sFileName + (!sExt.empty()? ".":"") + sExt;
 }
 
 RString GetExtension( const RString &sPath )
@@ -1302,7 +1302,7 @@ void Trim( RString &sStr, const char *s )
 
 void StripCrnl( RString &s )
 {
-	while( s.size() && (s[s.size()-1] == '\r' || s[s.size()-1] == '\n') )
+	while( !s.empty() && (s[s.size()-1] == '\r' || s[s.size()-1] == '\n') )
 		s.erase( s.size()-1 );
 }
 
@@ -1371,7 +1371,7 @@ RString DerefRedir( const RString &_path )
 		GetFileContents( sPath, sNewFileName, true );
 
 		// Empty is invalid.
-		if( sNewFileName == "" )
+		if( sNewFileName.empty() )
 			return RString();
 
 		RString sPath2 = Dirname(sPath) + sNewFileName;
@@ -1873,7 +1873,7 @@ bool StringToFloat( const RString &sString, float &fOut )
 	char *endPtr = nullptr;
 
 	fOut = std::strtof(sString, &endPtr);
-	return sString.size() && *endPtr == '\0' && std::isfinite(fOut);
+	return !sString.empty() && *endPtr == '\0' && std::isfinite(fOut);
 }
 
 RString FloatToString( const float &num )
@@ -2346,7 +2346,7 @@ namespace StringConversion
 
 	template<> bool FromString<bool>( const RString &sValue, bool &out )
 	{
-		if( sValue.size() == 0 )
+		if( sValue.empty() )
 			return false;
 
 		out = StringToInt(sValue) != 0;

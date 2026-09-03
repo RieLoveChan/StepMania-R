@@ -277,7 +277,7 @@ void RageLog::Write( int where, const RString &sLine )
 	{
 		RString &sStr = asLines[i];
 
-		if( sWarning.size() )
+		if( !sWarning.empty() )
 			sStr.insert( 0, sWarning );
 
 		if( m_bShowLogOutput || (where&WRITE_TO_INFO) )
