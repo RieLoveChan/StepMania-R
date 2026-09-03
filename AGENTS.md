@@ -74,11 +74,11 @@ Per change:
 1. Make the change, keeping it **small and single-purpose** so a revert
    is surgical. Code and knowledge-base edits in separate commits (§2).
 2. **Confirm the Windows Release build is green** (`--config Release` —
-   that is `Program/StepMania.exe`, what ships and what the maintainer
-   plays; `-config Debug` = `StepMania-debug.exe` differs: `/Od`, asserts
+   that is `Program/StepMania-R.exe`, what ships and what the maintainer
+   plays; `-config Debug` = `StepMania-R_debug.exe` differs: `/Od`, asserts
    on, `DEBUG` macro, `/RTC1`). Optimisation can surface warnings/UB that
    Debug hides. Then the `--SelfTest` smoke
-   (`Program/StepMania.exe --SelfTest --VideoRenderers=null
+   (`Program/StepMania-R.exe --SelfTest --VideoRenderers=null
    --SoundDrivers=null` → exit 0). Do not push a change you know is broken.
 3. Commit with a message that says **what to spot-check** (the affected
    screen / feature / path) so the maintainer's async review is quick.

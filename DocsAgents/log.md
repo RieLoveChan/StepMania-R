@@ -152,6 +152,14 @@
   §4 + `baseline.md` ("verify Release, not just Debug"). Not committed as
   a separate hash yet — folded into the next push.
 
+* **Executables renamed (2026-09-03, `6d62e88f3f`):**
+  `StepMania.exe` → `StepMania-R.exe`, `StepMania-debug.exe` →
+  `StepMania-R_debug.exe` (Linux: `stepmania` → `stepmania-r`). Source:
+  `src/CMakeLists.txt` `SM_NAME_*`. CMake target/project name stays
+  `StepMania`. Updated `stepmania.nsi`, `stepmania.desktop`, `.gitignore`,
+  CI smoke, `AGENTS.md` §4, `baseline.md`. Both configs rebuilt clean
+  with `/WX`.
+
 ### Notes for future maintainers
 
 * Subsystem docs are a first pass built from `src/CMakeData-*.cmake`
