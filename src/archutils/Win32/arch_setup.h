@@ -48,13 +48,11 @@ C4355: 'this' : used in base member initializer list
 #define WIN32_LEAN_AND_MEAN
 #define VC_EXTRALEAN
 
-/* Pull in NT-only definitions. Note that we support Win98 and WinME; you can
- * make NT calls, but be sure to fall back on 9x if they're not supported. */
-#define _WIN32_WINNT 0x0601
-#define _WIN32_IE 0x0400
-
-// If this isn't defined to 0, VC fails to define things like stat and alloca.
-#define __STDC__ 0
+/* Minimum target is Windows 11 (ADR 0003). 0x0A00 is the _WIN32_WINNT
+ * value for Windows 10 and 11 alike; use NTDDI_VERSION for anything
+ * Win11-specific. */
+#define _WIN32_WINNT 0x0A00
+#define _WIN32_IE 0x0A00
 
 #include <wchar.h> // needs to be included before our fixes below
 
