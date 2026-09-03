@@ -142,6 +142,16 @@
   clean boot**. Backlog: item 18 (ph2-4 open), item 19 (OS reports
   "Win8" — manifest). `conventions.md` logging section updated.
 
+* **Process fix (2026-09-03).** This session verified code changes
+  against **Debug only**; `Program/StepMania.exe` (Release) was stale
+  from Sept 2 — the maintainer plays Release, so saw none of the changes.
+  Did a clean Release `--clean-first` rebuild with `-DWITH_WERROR=ON`:
+  **green, 0 warnings** — so all session commits are Release-clean
+  retroactively. Fixed CI (all jobs now `-DCMAKE_BUILD_TYPE=Release` +
+  `--config Release`; Windows smoke runs `StepMania.exe`) and `AGENTS.md`
+  §4 + `baseline.md` ("verify Release, not just Debug"). Not committed as
+  a separate hash yet — folded into the next push.
+
 ### Notes for future maintainers
 
 * Subsystem docs are a first pass built from `src/CMakeData-*.cmake`

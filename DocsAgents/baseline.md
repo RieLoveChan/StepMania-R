@@ -16,11 +16,16 @@ lands, update the relevant row. This file is the progress bar.
 
 # Build status
 
-**Green** (2026-09-03). Clean `cmake --build build --clean-first` on
-Windows (VS 2022 / v143, Debug config, cmake 4.3.3) → exit 0, produces
-`Program/StepMania-debug.exe`. ~460 main-target TUs, ~3.5 min on the
-maintainer's machine (externals already built). This is the reference
-green build for the §4 gate.
+**Green** (2026-09-03), both configs, VS 2022 / v143, cmake 3.31 (bundled):
+- **Release** (`--config Release`) → `Program/StepMania.exe` — **this is
+  what ships and what the maintainer plays.** Clean `--clean-first`
+  rebuild with `-DWITH_WERROR=ON`: exit 0, 0 warnings. ~4 min.
+- **Debug** (`--config Debug`) → `Program/StepMania-debug.exe` — dev
+  binary: `/Od`, asserts + `/RTC1` on, `DEBUG` macro, ~2.5× larger.
+
+**Verify Release, not just Debug** — `/O2` can surface warnings/UB Debug
+hides. `Program/` holds both (CMake names them per config,
+`src/CMakeLists.txt` `SM_NAME_*`). Reference green build for the §4 gate.
 
 # Build configuration (confirmed 2026-09-02)
 
