@@ -44,6 +44,12 @@ NoteSkins/
 
 - Skins are **per game type**; a `dance` skin has 4/8 columns, `pump` has
   5, `popn` 9 — element sets differ.
+- **`NoteSkins/<gamename>/` is the switch for whether the engine offers
+  that game.** `GameManager::IsGameEnabled` = `DoNoteSkinsExistForGame`;
+  a game with no skin dir never appears in Select Game even though its
+  `g_Game_*` C++ definition exists. Intended end-state
+  ([`../modernization-backlog.md`](../modernization-backlog.md) item 20):
+  the only gate, with game definitions themselves moved to data.
 - `NoteSkins/popn/` is fork-local content (committed `f533ec3fb1`).
 - Note-color-by-beat (4th/8th/12th/16th…) is a skin concern via
   `NoteDisplay` + skin metrics, tied to `NoteTypes.*`.

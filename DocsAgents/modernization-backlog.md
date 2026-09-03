@@ -205,6 +205,17 @@ enabled (`229d0769d5`); the *mechanism* is what needs replacing.
 data (Lua or a `Games/` tree, like NoteSkins/Themes are), loaded at
 startup, with the C++ side working off a runtime id instead of the
 `StepsType` enum.
+
+**End-state — `NoteSkins/` is the switch for supported games.** A game is
+offered iff `NoteSkins/<gamename>/` holds ≥1 valid skin. This is *already*
+how enablement works (`GameManager::GetEnabledGames` →
+`IsGameEnabled` → `NoteSkinManager::DoNoteSkinsExistForGame`); after
+`229d0769d5` `g_Games[]` lists all defined games, so the NoteSkins check
+is the only gate that reaches the UI. What remains: the `g_Games[]` array
++ `g_Game_*` structs are still hand-maintained C++. Target: adding a game
+= drop in a definition file + a `NoteSkins/<name>/` folder — no `.cpp`
+edit, no rebuild. `g_Games[]` becomes "every definition found", the
+NoteSkin dir stays the on/off.
 **Hard constraint:** the on-disk `#STEPSTYPE` strings (`dance-single`,
 `pump-double`, `bm-single7`, `pnm-nine`, …) are a stable contract with the
 ~20-year simfile library (`AGENTS.md` §5) — every existing value must
