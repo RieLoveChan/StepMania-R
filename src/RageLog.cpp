@@ -76,9 +76,12 @@ enum
 	/* If this is set, the message will also be written to userlog.txt. (user warnings only) */
 	WRITE_TO_USER_LOG = 0x02,
 
-	/* Whether this line should be loud when written to log.txt (warnings). */
+	/* Whether this line is a warning. */
 	WRITE_LOUD = 0x04,
-	WRITE_TO_TIME= 0x08
+	WRITE_TO_TIME= 0x08,
+
+	/* Whether this line is an error (implies WRITE_LOUD). See ADR 0005. */
+	WRITE_ERROR = 0x10
 };
 
 RageLog::RageLog(): m_bLogToDisk(false), m_bInfoToDisk(false),
@@ -231,6 +234,16 @@ void RageLog::Warn( const char *fmt, ... )
 	Write( WRITE_TO_INFO | WRITE_LOUD, sBuff );
 }
 
+void RageLog::Error( const char *fmt, ... )
+{
+	va_list	va;
+	va_start( va, fmt );
+	RString sBuff = vssprintf( fmt, va );
+	va_end( va );
+
+	Write( WRITE_TO_INFO | WRITE_LOUD | WRITE_ERROR, sBuff );
+}
+
 void RageLog::Time(const char *fmt, ...)
 {
 	va_list	va;
@@ -258,30 +271,34 @@ void RageLog::Write( int where, const RString &sLine )
 {
 	LockMut( *g_Mutex );
 
-	const char *const sWarningSeparator = "/////////////////////////////////////////";
+	/* Bracketed, fixed-width level tag on every line. Replaces the old
+	 * ///// warning frame; makes the log greppable by severity
+	 * (grep '\[WARN\]', grep -E '\[(WARN|ERROR)\]'). See ADR 0005. */
+	const char *sTag;
+	if( where & WRITE_ERROR )
+		sTag = "[ERROR] ";
+	else if( where & WRITE_LOUD )
+		sTag = "[WARN]  ";
+	else if( where & WRITE_TO_INFO )
+		sTag = "[INFO]  ";
+	else if( where & (WRITE_TO_TIME | WRITE_TO_USER_LOG) )
+		sTag = ""; // time log and userlog.txt keep their own format
+	else
+		sTag = "[TRACE] ";
+
 	std::vector<RString> asLines;
 	split( sLine, "\n", asLines, false );
-	if( where & WRITE_LOUD )
-	{
-		if( m_bLogToDisk && g_fileLog->IsOpen() )
-			g_fileLog->PutLine( sWarningSeparator );
-		puts( sWarningSeparator );
-	}
 
-	RString sTimestamp = SecondsToMMSSMsMsMs( RageTimer::GetTimeSinceStart() ) + ": ";
-	RString sWarning;
-	if( where & WRITE_LOUD )
-		sWarning = "WARNING: ";
+	RString sTimestamp = SecondsToMMSSMsMsMs( RageTimer::GetTimeSinceStart() ) + "  ";
 
 	for( unsigned i = 0; i < asLines.size(); ++i )
 	{
 		RString &sStr = asLines[i];
 
-		if( !sWarning.empty() )
-			sStr.insert( 0, sWarning );
+		sStr.insert( 0, sTag );
 
 		if( m_bShowLogOutput || (where&WRITE_TO_INFO) )
-			puts(sStr); //fputws( (const wchar_t *)sStr.c_str(), stdout );
+			puts(sStr);
 		if( where & WRITE_TO_INFO )
 			AddToInfo( sStr );
 		if( m_bLogToDisk && (where&WRITE_TO_INFO) && g_fileInfo->IsOpen() )
@@ -302,12 +319,6 @@ void RageLog::Write( int where, const RString &sLine )
 			g_fileLog->PutLine( sStr );
 	}
 
-	if( where & WRITE_LOUD )
-	{
-		if( m_bLogToDisk && g_fileLog->IsOpen() && (where & WRITE_LOUD) )
-			g_fileLog->PutLine( sWarningSeparator );
-		puts( sWarningSeparator );
-	}
 	if( m_bFlush || (where & WRITE_TO_INFO) )
 		Flush();
 }

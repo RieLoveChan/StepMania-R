@@ -214,7 +214,10 @@ bool IniFile::RenameKey(const RString &from, const RString &to)
 	XNode* pNode = GetChild( from );
 	if( pNode == nullptr )
 	{
-		LOG->Warn("Key '%s' not found.", from.c_str());
+		/* Rename-if-present: callers use this to normalise legacy INIs
+		 * (e.g. Font.cpp maps a legacy [Char Widths] section to [main]),
+		 * so an absent source key is the normal case, not a warning.
+		 * Symmetric with the "to already exists" branch above. */
 		return false;
 	}
 

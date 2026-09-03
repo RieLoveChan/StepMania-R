@@ -11,6 +11,9 @@ public:
 	
 	void Trace( const char *fmt, ... ) PRINTF(2,3);
 	void Warn( const char *fmt, ... ) PRINTF(2,3);
+	// Error is for serious-but-recoverable failures. For unrecoverable
+	// ones use RageException::Throw (which also logs). See ADR 0005.
+	void Error( const char *fmt, ... ) PRINTF(2,3);
 	void Info( const char *fmt, ... ) PRINTF(2,3);
 	// Time is purely for writing profiling time data to the time log. -Kyz
 	void Time( const char *fmt, ... ) PRINTF(2,3);
