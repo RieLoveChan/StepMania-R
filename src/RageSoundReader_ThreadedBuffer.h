@@ -14,20 +14,20 @@ class RageSoundReader_ThreadedBuffer: public RageSoundReader_Filter
 public:
 	RageSoundReader_ThreadedBuffer( RageSoundReader *pSource );
 	RageSoundReader_ThreadedBuffer( const RageSoundReader_ThreadedBuffer &cpy );
-	~RageSoundReader_ThreadedBuffer();
-	RageSoundReader_ThreadedBuffer *Copy() const { return new RageSoundReader_ThreadedBuffer(*this); }
+	~RageSoundReader_ThreadedBuffer() override;
+	RageSoundReader_ThreadedBuffer *Copy() const override { return new RageSoundReader_ThreadedBuffer(*this); }
 
-	virtual int SetPosition( int iFrame );
-	virtual int Read( float *pBuffer, int iLength );
-	virtual int GetNextSourceFrame() const;
+	int SetPosition( int iFrame ) override;
+	int Read( float *pBuffer, int iLength ) override;
+	int GetNextSourceFrame() const override;
 
-	virtual int GetLength() const;
-	virtual int GetLength_Fast() const;
-	virtual int GetSampleRate() const { return m_iSampleRate; }
-	virtual unsigned GetNumChannels() const { return m_iChannels; }
-	virtual bool SetProperty( const RString &sProperty, float fValue );
-	virtual float GetStreamToSourceRatio() const;
-	virtual RageSoundReader *GetSource() { return nullptr; }
+	int GetLength() const override;
+	int GetLength_Fast() const override;
+	int GetSampleRate() const override { return m_iSampleRate; }
+	unsigned GetNumChannels() const override { return m_iChannels; }
+	bool SetProperty( const RString &sProperty, float fValue ) override;
+	float GetStreamToSourceRatio() const override;
+	RageSoundReader *GetSource() override { return nullptr; }
 
 	/* Enable and disable threaded buffering.  Disable buffering before accessing
 	 * the underlying sound.  DisableBuffering returns true if buffering was enabled. */

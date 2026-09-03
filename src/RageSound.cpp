@@ -142,16 +142,16 @@ bool RageSound::IsLoaded() const
 class RageSoundReader_Silence: public RageSoundReader
 {
 public:
-	int GetLength() const { return 0; }
-	int GetLength_Fast() const { return 0; }
-	int SetPosition( int iFrame )  { return 1; }
-	int Read( float *pBuf, int iFrames ) { return RageSoundReader::END_OF_FILE; }
-	RageSoundReader *Copy() const { return new RageSoundReader_Silence; }
-	int GetSampleRate() const { return 44100; }
-	unsigned GetNumChannels() const { return 1; }
-	int GetNextSourceFrame() const { return 0; }
-	float GetStreamToSourceRatio() const { return 1.0f; }
-	RString GetError() const { return ""; }
+	int GetLength() const override { return 0; }
+	int GetLength_Fast() const override { return 0; }
+	int SetPosition( int iFrame ) override  { return 1; }
+	int Read( float *pBuf, int iFrames ) override { return RageSoundReader::END_OF_FILE; }
+	RageSoundReader *Copy() const override { return new RageSoundReader_Silence; }
+	int GetSampleRate() const override { return 44100; }
+	unsigned GetNumChannels() const override { return 1; }
+	int GetNextSourceFrame() const override { return 0; }
+	float GetStreamToSourceRatio() const override { return 1.0f; }
+	RString GetError() const override { return ""; }
 };
 
 

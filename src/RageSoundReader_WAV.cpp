@@ -109,7 +109,7 @@ struct WavReaderPCM: public WavReader
 	WavReaderPCM( RageFileBasic &f, const RageSoundReader_WAV::WavData &data ):
 		WavReader(f, data) { }
 
-	bool Init()
+	bool Init() override
 	{
 		if( QuantizeUp(m_WavData.m_iBitsPerSample, 8) < 8 ||
 		    QuantizeUp(m_WavData.m_iBitsPerSample, 8) > 32 )
@@ -128,7 +128,7 @@ struct WavReaderPCM: public WavReader
 		return true;
 	}
 
-	int Read( float *buf, int iFrames )
+	int Read( float *buf, int iFrames ) override
 	{
 		int iBytesPerSample = QuantizeUp(m_WavData.m_iBitsPerSample, 8) / 8;
 		int len = iFrames * m_WavData.m_iChannels;
@@ -164,14 +164,14 @@ struct WavReaderPCM: public WavReader
 		return iGotSamples / m_WavData.m_iChannels;
 	}
 
-	int GetLength() const
+	int GetLength() const override
 	{
 		const int iBytesPerSec = m_WavData.m_iSampleRate * m_WavData.m_iChannels * m_WavData.m_iBitsPerSample / 8;
 		std::int64_t iMS = (std::int64_t(m_WavData.m_iDataChunkSize) * 1000) / iBytesPerSec;
 		return (int) iMS;
 	}
 
-	int SetPosition( int iFrame )
+	int SetPosition( int iFrame ) override
 	{
 		int iByte = (int) (std::int64_t(iFrame) * m_WavData.m_iChannels * m_WavData.m_iBitsPerSample / 8);
 		if( iByte > m_WavData.m_iDataChunkSize )
@@ -185,7 +185,7 @@ struct WavReaderPCM: public WavReader
 	}
 
 	// XXX: untested
-	int GetNextSourceFrame() const
+	int GetNextSourceFrame() const override
 	{
 		int iByte = m_File.Tell() - m_WavData.m_iDataChunkPos;
 		int iFrame = iByte / (m_WavData.m_iChannels * m_WavData.m_iBitsPerSample / 8);
@@ -207,12 +207,12 @@ public:
 		m_pBuffer = nullptr;
 	}
 
-	virtual ~WavReaderADPCM()
+	~WavReaderADPCM() override
 	{
 		delete[] m_pBuffer;
 	}
 
-	bool Init()
+	bool Init() override
 	{
 		if( m_WavData.m_iBitsPerSample != 4 )
 		{
@@ -357,7 +357,7 @@ public:
 		return true;
 	}
 
-	int Read( float *buf, int iFrames )
+	int Read( float *buf, int iFrames ) override
 	{
 		int iGotFrames = 0;
 
@@ -386,7 +386,7 @@ public:
 		return iGotFrames;
 	}
 
-	int GetLength() const
+	int GetLength() const override
 	{
 		const int iNumWholeBlocks = m_WavData.m_iDataChunkSize / m_WavData.m_iBlockAlign;
 		const int iExtraBytes = m_WavData.m_iDataChunkSize - (iNumWholeBlocks*m_WavData.m_iBlockAlign);
@@ -406,7 +406,7 @@ public:
 		return iMS;
 	}
 
-	int SetPosition( int iFrame )
+	int SetPosition( int iFrame ) override
 	{
 		const int iBlock = iFrame / m_iFramesPerBlock;
 
@@ -438,7 +438,7 @@ public:
 	}
 
 	// XXX: untested
-	int GetNextSourceFrame() const
+	int GetNextSourceFrame() const override
 	{
 		int iByte = m_File.Tell() - m_WavData.m_iDataChunkPos;
 		int iBlock = iByte / m_WavData.m_iBlockAlign;

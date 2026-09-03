@@ -1038,7 +1038,7 @@ class RageCompiledGeometrySWOGL : public RageCompiledGeometry
 {
 public:
 
-	void Allocate( const std::vector<msMesh> &vMeshes )
+	void Allocate( const std::vector<msMesh> &vMeshes ) override
 	{
 		/* Always allocate at least 1 entry, so &x[0] is valid. */
 		const unsigned int verticesCount = std::max<unsigned int>(1u, GetTotalVertices());
@@ -1050,7 +1050,7 @@ public:
 		m_vTexMatrixScale.resize(verticesCount);
 		m_vTriangles.resize(trianglesCount);
 	}
-	void Change( const std::vector<msMesh> &vMeshes )
+	void Change( const std::vector<msMesh> &vMeshes ) override
 	{
 		for( unsigned i=0; i<vMeshes.size(); i++ )
 		{
@@ -1075,7 +1075,7 @@ public:
 				}
 		}
 	}
-	void Draw( int iMeshIndex ) const
+	void Draw( int iMeshIndex ) const override
 	{
 		TurnOffHardwareVBO();
 
@@ -1163,14 +1163,14 @@ protected:
 
 public:
 	RageCompiledGeometryHWOGL();
-	~RageCompiledGeometryHWOGL();
+	~RageCompiledGeometryHWOGL() override;
 
 	/* This is called when our OpenGL context is invalidated. */
-	void Invalidate();
+	void Invalidate() override;
 
-	void Allocate( const std::vector<msMesh> &vMeshes );
-	void Change( const std::vector<msMesh> &vMeshes );
-	void Draw( int iMeshIndex ) const;
+	void Allocate( const std::vector<msMesh> &vMeshes ) override;
+	void Change( const std::vector<msMesh> &vMeshes ) override;
+	void Draw( int iMeshIndex ) const override;
 };
 
 RageCompiledGeometryHWOGL::RageCompiledGeometryHWOGL()
@@ -2340,19 +2340,19 @@ public:
 		CreateObject();
 	}
 
-	~RageTextureLock_OGL()
+	~RageTextureLock_OGL() override
 	{
 		ASSERT( m_iTexHandle == 0 ); // locked!
 		glDeleteBuffersARB( 1, &m_iBuffer );
 	}
 
 	/* This is called when our OpenGL context is invalidated. */
-	void Invalidate()
+	void Invalidate() override
 	{
 		m_iTexHandle = 0;
 	}
 
-	void Lock( std::uintptr_t iTexHandle, RageSurface *pSurface )
+	void Lock( std::uintptr_t iTexHandle, RageSurface *pSurface ) override
 	{
 		ASSERT( m_iTexHandle == 0 );
 		ASSERT( pSurface->pixels == nullptr );
@@ -2370,7 +2370,7 @@ public:
 		pSurface->pixels_owned = false;
 	}
 
-	void Unlock( RageSurface *pSurface, bool bChanged )
+	void Unlock( RageSurface *pSurface, bool bChanged ) override
 	{
 		glUnmapBufferARB( GL_PIXEL_UNPACK_BUFFER_ARB );
 
@@ -2450,13 +2450,13 @@ class RenderTarget_FramebufferObject: public RenderTarget
 {
 public:
 	RenderTarget_FramebufferObject();
-	~RenderTarget_FramebufferObject();
-	void Create( const RenderTargetParam &param, int &iTextureWidthOut, int &iTextureHeightOut );
-	std::uintptr_t GetTexture() const { return m_iTexHandle; }
-	void StartRenderingTo();
-	void FinishRenderingTo();
+	~RenderTarget_FramebufferObject() override;
+	void Create( const RenderTargetParam &param, int &iTextureWidthOut, int &iTextureHeightOut ) override;
+	std::uintptr_t GetTexture() const override { return m_iTexHandle; }
+	void StartRenderingTo() override;
+	void FinishRenderingTo() override;
 
-	virtual bool InvertY() const { return true; }
+	bool InvertY() const override { return true; }
 
 private:
 	std::uintptr_t m_iFrameBufferHandle;

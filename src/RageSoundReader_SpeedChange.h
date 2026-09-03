@@ -13,12 +13,12 @@ class RageSoundReader_SpeedChange: public RageSoundReader_Filter
 public:
 	RageSoundReader_SpeedChange( RageSoundReader *pSource );
 
-	virtual int SetPosition( int iFrame );
-	virtual int Read( float *pBuf, int iFrames );
-	virtual RageSoundReader_SpeedChange *Copy() const { return new RageSoundReader_SpeedChange(*this); }
-	virtual bool SetProperty( const RString &sProperty, float fValue );
-	virtual int GetNextSourceFrame() const;
-	virtual float GetStreamToSourceRatio() const;
+	int SetPosition( int iFrame ) override;
+	int Read( float *pBuf, int iFrames ) override;
+	RageSoundReader_SpeedChange *Copy() const override { return new RageSoundReader_SpeedChange(*this); }
+	bool SetProperty( const RString &sProperty, float fValue ) override;
+	int GetNextSourceFrame() const override;
+	float GetStreamToSourceRatio() const override;
 
 	void SetSpeedRatio( float fRatio );
 

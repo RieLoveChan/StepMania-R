@@ -13,13 +13,13 @@ public:
 	RageSoundReader_PitchChange( RageSoundReader *pSource );
 	RageSoundReader_PitchChange( const RageSoundReader_PitchChange &cpy );
 
-	virtual int Read( float *pBuf, int iFrames );
-	virtual bool SetProperty( const RString &sProperty, float fValue );
+	int Read( float *pBuf, int iFrames ) override;
+	bool SetProperty( const RString &sProperty, float fValue ) override;
 
 	void SetSpeedRatio( float fRatio ) { m_fSpeedRatio = fRatio; }
 	void SetPitchRatio( float fRatio ) { m_fPitchRatio = fRatio; }
 
-	virtual RageSoundReader_PitchChange *Copy() const { return new RageSoundReader_PitchChange(*this); }
+	RageSoundReader_PitchChange *Copy() const override { return new RageSoundReader_PitchChange(*this); }
 
 private:
 	RageSoundReader_SpeedChange *m_pSpeedChange; // freed by RageSoundReader_Filter

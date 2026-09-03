@@ -12,10 +12,10 @@ class RageFileDriverDirect: public RageFileDriver
 public:
 	RageFileDriverDirect( const RString &sRoot );
 
-	RageFileBasic *Open( const RString &sPath, int iMode, int &iError );
-	bool Move( const RString &sOldPath, const RString &sNewPath );
-	bool Remove( const RString &sPath );
-	bool Remount( const RString &sPath );
+	RageFileBasic *Open( const RString &sPath, int iMode, int &iError ) override;
+	bool Move( const RString &sOldPath, const RString &sNewPath ) override;
+	bool Remove( const RString &sPath ) override;
+	bool Remount( const RString &sPath ) override;
 
 private:
 	RString m_sRoot;
@@ -25,9 +25,9 @@ class RageFileDriverDirectReadOnly: public RageFileDriverDirect
 {
 public:
 	RageFileDriverDirectReadOnly( const RString &sRoot );
-	RageFileBasic *Open( const RString &sPath, int iMode, int &iError );
-	bool Move( const RString &sOldPath, const RString &sNewPath );
-	bool Remove( const RString &sPath );
+	RageFileBasic *Open( const RString &sPath, int iMode, int &iError ) override;
+	bool Move( const RString &sOldPath, const RString &sNewPath ) override;
+	bool Remove( const RString &sPath ) override;
 };
 
 /** @brief This driver handles direct file access. */
@@ -36,15 +36,15 @@ class RageFileObjDirect: public RageFileObj
 {
 public:
 	RageFileObjDirect( const RString &sPath, int iFD, int iMode );
-	virtual ~RageFileObjDirect();
-	virtual int ReadInternal( void *pBuffer, std::size_t iBytes );
-	virtual int WriteInternal( const void *pBuffer, std::size_t iBytes );
-	virtual int FlushInternal();
-	virtual int SeekInternal( int offset );
-	virtual RageFileObjDirect *Copy() const;
-	virtual RString GetDisplayPath() const { return m_sPath; }
-	virtual int GetFileSize() const;
-	virtual int GetFD();
+	~RageFileObjDirect() override;
+	int ReadInternal( void *pBuffer, std::size_t iBytes ) override;
+	int WriteInternal( const void *pBuffer, std::size_t iBytes ) override;
+	int FlushInternal() override;
+	int SeekInternal( int offset ) override;
+	RageFileObjDirect *Copy() const override;
+	RString GetDisplayPath() const override { return m_sPath; }
+	int GetFileSize() const override;
+	int GetFD() override;
 
 private:
 	bool FinalFlush();

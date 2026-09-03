@@ -145,7 +145,7 @@ class NullFilenameDB: public FilenameDB
 {
 public:
 	NullFilenameDB() { ExpireSeconds = -1; }
-	void CacheFile( const RString & /* sPath */ ) { }
+	void CacheFile( const RString & /* sPath */ ) override { }
 };
 
 #endif

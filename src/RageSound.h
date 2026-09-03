@@ -82,7 +82,7 @@ class RageSound: public RageSoundBase
 {
 public:
 	RageSound();
-	~RageSound();
+	~RageSound() override;
 	RageSound( const RageSound &cpy );
 	RageSound &operator=( const RageSound &cpy );
 
@@ -132,11 +132,11 @@ public:
 
 	float GetLengthSeconds();
 	float GetPositionSeconds( bool *approximate=nullptr, RageTimer *Timestamp=nullptr ) const;
-	RString GetLoadedFilePath() const { return m_sFilePath; }
+	RString GetLoadedFilePath() const override { return m_sFilePath; }
 	bool IsPlaying() const { return m_bPlaying; }
 
 	float GetPlaybackRate() const;
-	RageTimer GetStartTime() const;
+	RageTimer GetStartTime() const override;
 	void SetParams( const RageSoundParams &p );
 	const RageSoundParams &GetParams() const { return m_Param; }
 	bool SetProperty( const RString &sProperty, float fValue );
@@ -180,7 +180,7 @@ private:
 	bool SetPositionFrames( int frames = -1 );
 	RageSoundParams::StopMode_t GetStopMode() const; // resolves M_AUTO
 
-	void SoundIsFinishedPlaying(); // called by sound drivers
+	void SoundIsFinishedPlaying() override; // called by sound drivers
 
 public:
 	// These functions are called only by sound drivers.
@@ -189,8 +189,8 @@ public:
 	 * it signals the stream to stop; once it's flushed, SoundStopped will be
 	 * called. Until then, SOUNDMAN->GetPosition can still be called; the sound
 	 * is still playing. */
-	int GetDataToPlay( float *pBuffer, int iSize, std::int64_t &iStreamFrame, int &iBytesRead );
-	void CommitPlayingPosition( std::int64_t iHardwareFrame, std::int64_t iStreamFrame, int iGotFrames );
+	int GetDataToPlay( float *pBuffer, int iSize, std::int64_t &iStreamFrame, int &iBytesRead ) override;
+	void CommitPlayingPosition( std::int64_t iHardwareFrame, std::int64_t iStreamFrame, int iGotFrames ) override;
 };
 
 #endif

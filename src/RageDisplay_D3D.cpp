@@ -779,12 +779,12 @@ void RageDisplay_D3D::SendCurrentMatrices()
 class RageCompiledGeometrySWD3D : public RageCompiledGeometry
 {
 public:
-	void Allocate( const std::vector<msMesh> &vMeshes )
+	void Allocate( const std::vector<msMesh> &vMeshes ) override
 	{
 		m_vVertex.resize( std::max<unsigned int>(1u, GetTotalVertices()) );
 		m_vTriangles.resize( std::max<unsigned int>(1u, GetTotalTriangles()) );
 	}
-	void Change( const std::vector<msMesh> &vMeshes )
+	void Change( const std::vector<msMesh> &vMeshes ) override
 	{
 		for( std::size_t i=0; i<vMeshes.size(); i++ )
 		{
@@ -801,7 +801,7 @@ public:
 					m_vTriangles[meshInfo.iTriangleStart+j].nVertexIndices[k] = (std::uint16_t) meshInfo.iVertexStart + Triangles[j].nVertexIndices[k];
 		}
 	}
-	void Draw( int iMeshIndex ) const
+	void Draw( int iMeshIndex ) const override
 	{
 		const MeshInfo& meshInfo = m_vMeshInfo[iMeshIndex];
 

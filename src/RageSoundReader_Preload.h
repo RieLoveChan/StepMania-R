@@ -13,22 +13,22 @@ public:
 	/* Return true if the sound has been preloaded, in which case source will
 	 * be deleted.  Otherwise, return false. */
 	bool Open( RageSoundReader *pSource );
-	int GetLength() const;
-	int GetLength_Fast() const;
-	int SetPosition( int iFrame );
-	int Read( float *pBuffer, int iLength );
-	int GetSampleRate() const { return m_iSampleRate; }
-	unsigned GetNumChannels() const { return m_iChannels; }
-	int GetNextSourceFrame() const;
-	float GetStreamToSourceRatio() const { return m_fRate; }
-	RString GetError() const { return ""; }
+	int GetLength() const override;
+	int GetLength_Fast() const override;
+	int SetPosition( int iFrame ) override;
+	int Read( float *pBuffer, int iLength ) override;
+	int GetSampleRate() const override { return m_iSampleRate; }
+	unsigned GetNumChannels() const override { return m_iChannels; }
+	int GetNextSourceFrame() const override;
+	float GetStreamToSourceRatio() const override { return m_fRate; }
+	RString GetError() const override { return ""; }
 
 	/* Return the total number of copies of this sound.  (If 1 is returned,
 	 * this is the last copy.) */
 	int GetReferenceCount() const;
 
-	RageSoundReader_Preload *Copy() const;
-	~RageSoundReader_Preload() { }
+	RageSoundReader_Preload *Copy() const override;
+	~RageSoundReader_Preload() override { }
 
 	/* Attempt to preload a sound.  pSound must be rewound. */
 	static bool PreloadSound( RageSoundReader *&pSound );

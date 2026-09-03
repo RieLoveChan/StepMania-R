@@ -25,7 +25,7 @@ public:
 	friend class RageSoundManager;
 
 	RageSoundDriver();
-	virtual ~RageSoundDriver();
+	~RageSoundDriver() override;
 
 	/* Initialize.  On failure, an error message is returned. */
 	virtual RString Init() { return RString(); }

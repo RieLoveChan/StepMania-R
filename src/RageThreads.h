@@ -154,7 +154,7 @@ class RageEvent: public RageMutex
 {
 public:
 	RageEvent( RString name );
-	~RageEvent();
+	~RageEvent() override;
 
 	/*
 	 * If pTimeout is non-nullptr, the event will be automatically signalled at the given

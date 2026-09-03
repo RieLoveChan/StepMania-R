@@ -11,11 +11,11 @@ class RageBitmapTexture : public RageTexture
 {
 public:
 	RageBitmapTexture( RageTextureID name );
-	virtual ~RageBitmapTexture();
+	~RageBitmapTexture() override;
 	/* only called by RageTextureManager::InvalidateTextures */
-	virtual void Invalidate() { m_uTexHandle = 0; /* don't Destroy() */}
-	virtual void Reload();
-	virtual std::uintptr_t GetTexHandle() const { return m_uTexHandle; };	// accessed by RageDisplay
+	void Invalidate() override { m_uTexHandle = 0; /* don't Destroy() */}
+	void Reload() override;
+	std::uintptr_t GetTexHandle() const override { return m_uTexHandle; };	// accessed by RageDisplay
 
 private:
 	void Create();	// called by constructor and Reload

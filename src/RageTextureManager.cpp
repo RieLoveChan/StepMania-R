@@ -133,7 +133,7 @@ public:
 		m_iImageWidth = m_iImageHeight = 1;
 		CreateFrameRects();
 	}
-	std::uintptr_t GetTexHandle() const { return m_uTexHandle; }
+	std::uintptr_t GetTexHandle() const override { return m_uTexHandle; }
 
 private:
 	std::uintptr_t m_uTexHandle;

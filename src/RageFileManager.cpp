@@ -278,13 +278,13 @@ class RageFileDriverMountpoints: public RageFileDriver
 {
 public:
 	RageFileDriverMountpoints(): RageFileDriver( new FilenameDB ) { }
-	RageFileBasic *Open( const RString &sPath, int iMode, int &iError )
+	RageFileBasic *Open( const RString &sPath, int iMode, int &iError ) override
 	{
 		iError = (iMode == RageFile::WRITE)? ERROR_WRITING_NOT_SUPPORTED:ENOENT;
 		return nullptr;
 	}
 	/* Never flush FDB, except in LoadFromDrivers. */
-	void FlushDirCache( const RString &sPath ) { }
+	void FlushDirCache( const RString &sPath ) override { }
 
 	void LoadFromDrivers( const std::vector<LoadedDriver *> &apDrivers )
 	{
