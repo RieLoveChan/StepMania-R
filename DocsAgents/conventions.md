@@ -42,9 +42,13 @@ See [`AGENTS.md`](../AGENTS.md) §1–§5 and ADR
 - **Naming:** largely Hungarian. `m_` prefix for class members
   (`m_pFoo`, `m_iCount`, `m_bEnabled`, `m_sName`, `m_fValue`). Newer code
   sometimes drops Hungarian prefixes — follow local context.
-- **Logging:** prefix with class/function —
-  `LOG->Info( "[NetworkSyncManager::Listen] ..." )`. Log levels via the
-  `RageLog` global `LOG` (`Trace`/`Info`/`Warn`).
+- **Logging:** `RageLog` global `LOG` — `Trace` / `Info` / `Warn` /
+  `Error` (`Error` added 2026-09-03, ADR 0005). Every line now gets a
+  bracketed level tag (`[WARN]` etc.) automatically; **do not** hand-add
+  `WARNING:` or `/////`. Legacy code prefixes the message with
+  `[Class::Function]` — keep doing that until ADR 0005 phase 2 adds a
+  category/`file:line` layer. An expected fallback is a `Trace`, not a
+  `Warn`.
 - Comments: `//` for one-liners and short blocks; `/* ... */` for long
   form with the opening text on the first line. Don't reformat copyright
   blocks.

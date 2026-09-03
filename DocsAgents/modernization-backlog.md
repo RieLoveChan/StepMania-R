@@ -176,6 +176,23 @@ generator build works anyway (MSBuild finds the SDK via VS props); Ninja
 ship a project `env` helper script. Not blocking (workaround documented
 in `baseline.md` → "How to (re)generate").
 
+### 18. Logging overhaul — phase 1 DONE, phases 2-4 open
+Phase 1 (`c82d0e9058`): bracketed level tags, `Error()` level, no
+`/////`, `Char Widths` fixed. `--SelfTest` log 695→467 lines, clean.
+**Remaining (ADR [0005](./adr/0005-logging-overhaul.md)):**
+- Ph2: `Debug` level, per-category thresholds + `--LogLevel`,
+  `Log::Category` enum, `LOG_*` macros capturing `file:line`.
+- Ph3: repeat-collapsing (`… (repeated N×)`).
+- Ph4: call-site audit per subsystem — `Warn`→`Trace` (expected
+  fallback) / `Warn`→`Error` (real failure), add category tags.
+
+### 19. OS version detection reports "Windows 8"
+`info.txt`: `Windows 6.2 (Win8) build 9200` on a Windows 11 box.
+`GetVersionEx`-style detection without a `supportedOS` entry in the app
+manifest caps at 6.2. `src/archutils/Win32/` OS detection + the exe
+manifest. Cosmetic but misleading in crash reports; fits the ADR-0003
+Win11-floor work (item 16).
+
 ---
 
 ## Closed

@@ -13,6 +13,7 @@ Status values: `Proposed` (awaiting maintainer sign-off) · `Accepted` ·
 * [0002](./0002-independent-project.md) - Independent project; no upstream compatibility constraint. **Status: Accepted.**
 * [0003](./0003-platform-support-floors.md) - Platform support floors: Windows 11, current macOS, current Linux; supersedes 0001 §9. **Status: Accepted.**
 * 0004 (not written) - Renderer strategy: legacy GL cleanup vs GL 3.3 core vs abstraction layer (bgfx et al.); fate of D3D9 and GLES2. Deferred from ADR 0001.
+* [0005](./0005-logging-overhaul.md) - Logging overhaul: bracketed level tags, no `/////` frames, categories, repeat-collapsing. **Status: Accepted** (phase 1 landed).
 
 # Adding one
 

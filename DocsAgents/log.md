@@ -132,6 +132,16 @@
   unsalvageable → backlog 17 (framework decision). Backlog 1 smoke part
   closed.
 
+* **Logging overhaul (2026-09-03), `c82d0e9058`** + ADR
+  [`0005`](./adr/0005-logging-overhaul.md) (**Accepted**, phase 1).
+  `RageLog::Write` now stamps every line with a bracketed level tag
+  (`[TRACE] [INFO] [WARN] [ERROR]`), dropped the `/////` warning frame
+  and `WARNING:` prefix, added `RageLog::Error()`. `IniFile::RenameKey`
+  no longer warns on an absent source key (the `Char Widths` spam).
+  `--SelfTest` `log.txt`: 695 → 467 lines, **0 `[WARN]`/`[ERROR]` on a
+  clean boot**. Backlog: item 18 (ph2-4 open), item 19 (OS reports
+  "Win8" — manifest). `conventions.md` logging section updated.
+
 ### Notes for future maintainers
 
 * Subsystem docs are a first pass built from `src/CMakeData-*.cmake`
