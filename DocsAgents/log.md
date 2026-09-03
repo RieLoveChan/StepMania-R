@@ -95,6 +95,19 @@
   §4 change. New backlog items 13 (`arch_setup.h` legacy),
   14 (`vcvars64.bat`).
 
+* **Workflow change (2026-09-03):** maintainer dropped the blocking
+  manual-verification gate. New `AGENTS.md` §4 — **commit and push
+  autonomously**, don't wait for approval; keep commits small and
+  single-purpose; the maintainer reviews async and `git revert`s
+  mistakes. Propagated to `conventions.md`, `adr/0002`, all playbooks,
+  and memory (`modernization-process`, `work-style-conciseness`).
+* **First commits pushed to `origin 5_1-new` (2026-09-03):**
+  `8af333de6c` DocsAgents bundle + `AGENTS.md` + `.clang-tidy`;
+  `0054e61d95` README; `37e6766d5e` drop dead `isnan`/`isfinite` macros;
+  `e065f69c8b` remove dead Travis/AppVeyor; `718d3b3ec1` remove orphaned
+  `src/irc/`. Backlog items 4, 5 closed; 13 partial. New items 14
+  (`vcvars64` SDK), 15 (`#if 0` sweep).
+
 ### Notes for future maintainers
 
 * Subsystem docs are a first pass built from `src/CMakeData-*.cmake`

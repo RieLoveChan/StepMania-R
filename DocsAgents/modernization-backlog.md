@@ -47,17 +47,15 @@ with a note. Small, independent PRs.
 
 ## Tier 2 — Rot / dead weight (cheap, low-risk)
 
-### 4. Dead CI committed
-`.travis.yml` (travis-ci.org shut down 2021). Also `.appveyor.yml` —
-verify whether the AppVeyor project is still used before removing. Live
-CI is `.github/workflows/ci.yml`. `README.md` was already replaced (no
-badges left).
-**Action:** delete `.travis.yml`. (ADR 0001 §6.)
+### 4. Dead CI committed — DONE 2026-09-03 (`e065f69c8b`)
+~~`.travis.yml` (travis-ci.org shut 2021) + `.appveyor.yml` (VS2015,
+v140_xp, IRC reporter, stale token). Removed. Live CI is
+`.github/workflows/ci.yml`.~~
 
-### 5. Dead IRC notifier
-`src/irc/` (`CMakeProject-irc.cmake`, `src/irc/appveyor.cpp`) targets
-`irc.freenode.net` — defunct since 2021.
-**Action:** remove the subproject. (ADR 0001 Settled #6.)
+### 5. Dead IRC notifier — DONE 2026-09-03 (`718d3b3ec1`)
+~~`src/CMakeProject-irc.cmake` + `src/irc/appveyor.cpp` — orphaned
+(not `include()`d anywhere), targeted defunct `irc.freenode.net`.
+Removed.~~
 
 ### 6. Stale build docs
 `Build/README.md` says "CMake min 2.8.12", "latest 3.3.0-rc3". Actual:
@@ -130,19 +128,25 @@ one subsystem + one check family per PR; record in
 [`baseline.md`](./baseline.md).
 
 ### 13. `src/archutils/Win32/arch_setup.h` is a legacy dump
-`#define _WIN32_WINNT 0x0601` (Windows 7 — contradicts ADR 0001 §9 Win10
-floor); `#define __STDC__ 0` (VC2005 hack); comment "we support Win98 and
-WinME"; `#define isnan _isnan` / `#define isfinite _finite` (pre-C++11,
-**zero users**, and they break clang tooling by colliding with modern
-MSVC `<cmath>`); `_CRT_SECURE_NO_DEPRECATE` / `_SCL_SECURE_NO_DEPRECATE`
-"for VC2005/2008"; `_WIN32_IE 0x0400` (IE4).
-**Action:** the `isnan`/`isfinite` removal is done locally (unblocks
-clang-tidy) — first §4-gated change. The rest (`_WIN32_WINNT` → `0x0A00`,
-drop `__STDC__`/IE4/VC2005 hacks) is a follow-up pass once the Win10
-floor lands in code.
+`isnan`/`isfinite` macros: **removed 2026-09-03 (`37e6766d5e`)**.
+Remaining: `#define _WIN32_WINNT 0x0601` (Windows 7 — contradicts ADR
+0001 §9 Win10 floor); `#define __STDC__ 0` (VC2005 hack); comment "we
+support Win98 and WinME"; `_CRT_SECURE_NO_DEPRECATE` /
+`_SCL_SECURE_NO_DEPRECATE` "for VC2005/2008"; `_WIN32_IE 0x0400` (IE4).
+**Action:** a follow-up pass — `_WIN32_WINNT` → `0x0A00`, drop the
+VC2005/IE4 hacks — with a real Windows build+run check (raising
+`_WIN32_WINNT` can change header behavior). Bundle with the Win10-floor
+work.
 Related: `src/archutils/Win32/DirectXErrorList.h` — 12 `case` labels
 (`0x8007xxxx`) that don't fit signed `HRESULT`; MSVC compiles it, clang
 rejects (C++11 narrowing). Rewrite the cases as hex literals / `HRESULT(...)`.
+
+### 15. `#if 0` dead blocks
+~37 `#if 0` markers across `src/` (`Player.cpp`, `NoteDataUtil.cpp`,
+`ScreenEdit.cpp`, `RageDisplay_GLES2.cpp`, `ScoreKeeperNormal.cpp`, …).
+**Action:** a dedicated sweep — glance at each (some guard
+kept-for-reference code), remove the truly dead ones. One commit per
+handful of files.
 
 ### 14. `vcvars64.bat` does not wire the Windows SDK on the maintainer box
 `vcvars64.bat` sets only the MSVC toolchain INCLUDE/LIB, not the Windows
@@ -158,4 +162,6 @@ in `baseline.md` → "How to (re)generate").
 
 ## Closed
 
-_(none yet)_
+- **Item 4** — dead Travis + AppVeyor CI configs removed (`e065f69c8b`, 2026-09-03).
+- **Item 5** — orphaned `src/irc/` IRC-reporter subproject removed (`718d3b3ec1`, 2026-09-03).
+- **Item 13 (partial)** — dead `isnan`/`isfinite` macros removed from `arch_setup.h` (`37e6766d5e`, 2026-09-03).
