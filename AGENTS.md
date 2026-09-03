@@ -73,8 +73,9 @@ Per change:
 
 1. Make the change, keeping it **small and single-purpose** so a revert
    is surgical. Code and knowledge-base edits in separate commits (§2).
-2. **Confirm the Windows build is green** and (once it exists) the
-   headless smoke test passes. Do not push a change you know is broken.
+2. **Confirm the Windows build is green** and the `--SelfTest` headless
+   smoke passes (`stepmania --SelfTest --VideoRenderers=null
+   --SoundDrivers=null` → exit 0). Do not push a change you know is broken.
 3. Commit with a message that says **what to spot-check** (the affected
    screen / feature / path) so the maintainer's async review is quick.
 4. `git push` to `origin 5_1-new`. Continue to the next change.

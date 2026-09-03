@@ -67,7 +67,7 @@ usually read-only). If the value is timing, it also belongs in
 
 # Verification
 
-- Windows build green (+ headless smoke test once it exists).
+- Windows build green (+ `--SelfTest` headless smoke).
 - **Corpus regression test the parse path** (`AGENTS.md` §5) before
   pushing — load→save→load a set of real simfiles, diff the parsed
   state. The simfile invariant is not just "review it later".

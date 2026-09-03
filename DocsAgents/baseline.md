@@ -103,11 +103,19 @@ Per-subsystem breakdown as passes run:
 
 # Tests
 
-- `src/tests/`: 7 standalone `test_*.cpp` (audio readers, file errors,
-  file readers, misc, threads, timing data, vector). **Not wired into a
-  runnable/CI target** as of this baseline. See `src/tests/00 README`.
-- No headless smoke test yet.
-- CI test coverage = `xmllint` validation of the two Lua doc XMLs only.
+- **Headless smoke test: EXISTS** as of `f7249f3a95` (2026-09-03).
+  `stepmania --SelfTest --VideoRenderers=null --SoundDrivers=null` runs
+  full engine init and exits 0. Verified locally (~11s). Wired into the
+  Windows CI job (`continue-on-error` for now). This is the `AGENTS.md`
+  §4 smoke test.
+- `src/tests/`: 7 standalone `test_*.cpp` from ~2004-06 — **Unix/Apple
+  only, need uncommitted 30 MB test data, `#error` without altivec/SSE,
+  full of `#if 0`**. Not wireable as-is; they're a rewrite. Real unit
+  coverage needs a decision (Catch2 / doctest — backlog item 17) and new
+  tests on the pure cores. Salvage the *intent* (timing data, file
+  readers) into new tests where still relevant.
+- CI: build on 4 platforms + `xmllint` Lua-doc validation + the Windows
+  headless smoke.
 
 **Smoke-test plan (recon 2026-09-02).** No headless / boot-and-exit mode
 exists. `CommandLineActions::Handle()` (`StepMania.cpp:960`) runs *after*

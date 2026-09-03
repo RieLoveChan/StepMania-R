@@ -80,7 +80,7 @@ Do **not** attempt both in one PR.
 
 # Verification
 
-- Windows build green + headless smoke test (once it exists).
+- Windows build green + `--SelfTest` smoke.
 - **Always higher-risk.** Phase 1 and phase 2 are separate commits (and
   ideally a short-lived branch) — a behavior-preserving extract that
   turns out not to be behavior-preserving is the worst case, and one

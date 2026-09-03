@@ -18,14 +18,15 @@ as new sweeps find things. Numbers/anchors confirmed 2026-09-02.
 
 ## Tier 1 — Blocks safe continuous work
 
-### 1. No safety net
-`src/tests/` = 7 standalone `test_*.cpp`, not wired to a runnable/CI
-target. No headless smoke test. Continuous refactor with zero regression
-detection.
-**Action:** wire a test target + CI job; add a headless smoke run
-(`RageDisplay_Null` + null ArchHooks, boot→exit 0); add characterization
-tests on the pure cores (`TimingData`, `NoteData`/`NoteDataUtil`,
-`NotesLoader*`, `RageUtil`). Feeds [`baseline.md`](./baseline.md).
+### 1. Safety net — smoke DONE, unit coverage OPEN
+- **Headless smoke: DONE** (`f7249f3a95`) — `--SelfTest` flag runs full
+  engine init and exits 0; wired into Windows CI (`continue-on-error`
+  until it's green a few times, then make fatal).
+- **Unit coverage: OPEN.** `src/tests/` is unsalvageable (Unix/Apple
+  only, uncommitted 30 MB data, `#error` without SSE, `#if 0` everywhere).
+  Needs a framework (item 17) + new characterization tests on the pure
+  cores (`TimingData`, `NoteData`/`NoteDataUtil`, `NotesLoader*`,
+  `RageUtil`).
 
 ### 2. Warnings on but unmeasured / unenforced
 `-Wall -Wextra` (GCC/Clang) + `/W4` (MSVC) with blanket suppressions
@@ -140,6 +141,14 @@ block (lines 9-36).
 Related: `src/archutils/Win32/DirectXErrorList.h` — 12 `case` labels
 (`0x8007xxxx`) that don't fit signed `HRESULT`; MSVC compiles it, clang
 rejects (C++11 narrowing). Rewrite the cases as hex literals / `HRESULT(...)`.
+
+### 17. Pick a unit-test framework + write core characterization tests
+`src/tests/` (2004-era, Unix/Apple-only, needs uncommitted data) can't be
+wired as-is. Decide: **Catch2** or **doctest** (both single-header, no
+deps, easy to vendor under `extern/`). Then a `tests/` target (not built
+by default; own CI job) with new tests on the pure cores. Salvage the
+intent of `test_timing_data` / `test_file_readers` / `test_misc` where
+still relevant. Deserves a short ADR.
 
 ### 16. Pre-floor `#if` guards across `src/arch/` and `src/archutils/`
 Now that ADR 0003 sets Windows 11 / current-macOS / current-Linux floors,

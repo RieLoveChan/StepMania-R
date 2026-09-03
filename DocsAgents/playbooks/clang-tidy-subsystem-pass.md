@@ -89,8 +89,8 @@ Only files under the chosen subsystem's `src/...` glob, plus:
 
 # Verification
 
-- Windows build green, no new warnings, headless smoke test passes (once
-  it exists).
+- Windows build green (with `-DWITH_WERROR=ON` for extra safety), no new
+  warnings, `--SelfTest` smoke green.
 - `../baseline.md` number for this subsystem/check is lower; update it.
 - **One commit per (subsystem × check family)** — small enough that a
   single `git revert` cleanly undoes the pass. Message names the check,

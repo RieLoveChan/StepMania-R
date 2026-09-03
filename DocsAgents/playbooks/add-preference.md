@@ -64,7 +64,7 @@ themable numbers go in metrics ([../subsystems/theming.md](../subsystems/theming
 
 # Verification
 
-- Windows build green (+ headless smoke test once it exists), then
+- Windows build green (+ `--SelfTest` headless smoke), then
   commit + push (`AGENTS.md` §4).
 - Spot-check to note in the commit: launch, change the option in the UI
   (if added), quit, confirm the value is in `Save/Preferences.ini` and

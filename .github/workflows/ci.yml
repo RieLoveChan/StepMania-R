@@ -79,6 +79,13 @@ jobs:
         run: cmake -B build -DWITH_WERROR=ON
       - name: Build
         run: cmake --build build
+      - name: Headless smoke test
+        # --SelfTest runs full engine init then exits 0. Non-fatal for now
+        # (renderer/loading-window behaviour on a headless runner is
+        # unproven); flip to fatal once it's green a few times.
+        continue-on-error: true
+        timeout-minutes: 5
+        run: ./Program/StepMania-debug.exe --SelfTest --VideoRenderers=null --SoundDrivers=null
 
   validate-xml-docs:
     name: Validate Lua.xml, LuaDocumentation.xml

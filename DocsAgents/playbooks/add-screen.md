@@ -56,7 +56,7 @@ generic screen + a metrics block is enough — most "new menus" need no C++.
 
 # Verification
 
-- Windows build green (+ headless smoke test once it exists), then
+- Windows build green (+ `--SelfTest` headless smoke), then
   commit + push (`AGENTS.md` §4).
 - Spot-check to note in the commit: navigate to the screen in-game,
   exercise input, confirm transitions in and out.

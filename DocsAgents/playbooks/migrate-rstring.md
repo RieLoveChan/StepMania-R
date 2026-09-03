@@ -82,8 +82,8 @@ if a boundary gotcha turned up, plus `log.md`.
 
 # Verification
 
-- Windows build green, no new warnings, headless smoke test (once it
-  exists), then commit + push (`AGENTS.md` §4).
+- Windows build green, no new warnings, `--SelfTest` smoke green, then
+  commit + push (`AGENTS.md` §4).
 - Higher-risk (cross-file type migration): commit **per subsystem**, one
   subsystem per commit, so a revert is a single clean undo. Spell out in
   the message what to spot-check — string-heavy code is easy to break

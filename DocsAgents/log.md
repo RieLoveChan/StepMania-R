@@ -119,6 +119,19 @@
   `modernization-backlog.md` item 13 reframed, new item 16 (pre-floor
   `#if` sweep).
 
+* **Step-2 push (2026-09-03), all on `origin 5_1-new`:**
+  `f533ec3fb1` popn noteskin (intentional fork content) ·
+  `a48f4bdacf` `WITH_WERROR` option + Windows-CI `-DWITH_WERROR=ON`
+  (MSVC build verified clean at `/WX`) ·
+  `10a1ba54ec` rage × `container-size-empty` (~98→0) ·
+  `689e35a486` rage × `modernize-use-override` (~65→0) ·
+  `f7249f3a95` **`--SelfTest` headless smoke** — runs full init, exits 0
+  (verified locally ~11s), wired into Windows CI (`continue-on-error`).
+  Pilot found and fixed the tidy flow (`FormatStyle: none`, no
+  `--fix-errors`, exclude Linux-only). `src/tests/` confirmed
+  unsalvageable → backlog 17 (framework decision). Backlog 1 smoke part
+  closed.
+
 ### Notes for future maintainers
 
 * Subsystem docs are a first pass built from `src/CMakeData-*.cmake`
