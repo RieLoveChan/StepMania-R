@@ -160,6 +160,16 @@
   CI smoke, `AGENTS.md` §4, `baseline.md`. Both configs rebuilt clean
   with `/WX`.
 
+* **All game types enabled (2026-09-03, `229d0769d5`).** Uncommented
+  KB7/Ez2/Para/DS3DDX/Beat/Maniax/Popn/Kickbox in `GameManager.cpp`
+  `g_Games[]` (upstream had them off). A game still needs a NoteSkin to
+  show in Select Game, so effective additions: kb7, para, beat, popn,
+  kickbox. Documented the archaic hand-coded game-type mechanism as
+  backlog **item 20** (data-driven registry, keep `#STEPSTYPE` contract;
+  ADR-worthy) — also noted in `subsystems/data-structures.md`. Theme
+  gaps for the new games (per-game style/difficulty assets) are a
+  play-test follow-up.
+
 ### Notes for future maintainers
 
 * Subsystem docs are a first pass built from `src/CMakeData-*.cmake`

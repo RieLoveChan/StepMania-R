@@ -193,6 +193,28 @@ manifest caps at 6.2. `src/archutils/Win32/` OS detection + the exe
 manifest. Cosmetic but misleading in crash reports; fits the ADR-0003
 Win11-floor work (item 16).
 
+### 20. Replace the archaic hard-coded game-type system
+Game types are defined by hand-written `static const Game g_Game_X = {…}`
+struct literals in `src/GameManager.cpp` (~150 lines each: controllers,
+button maps, per-style mappings, menu buttons), registered in a
+hand-maintained `g_Games[]` array, with a **compile-time `StepsType`
+enum** and a parallel `g_StepsTypeInfos[]` array. Adding or editing a game
+means editing a 3600-line `.cpp` and rebuilding. All game types are now
+enabled (`229d0769d5`); the *mechanism* is what needs replacing.
+**Goal:** a **data-driven game/style/stepstype registry** — defined in
+data (Lua or a `Games/` tree, like NoteSkins/Themes are), loaded at
+startup, with the C++ side working off a runtime id instead of the
+`StepsType` enum.
+**Hard constraint:** the on-disk `#STEPSTYPE` strings (`dance-single`,
+`pump-double`, `bm-single7`, `pnm-nine`, …) are a stable contract with the
+~20-year simfile library (`AGENTS.md` §5) — every existing value must
+resolve identically, no mass cache invalidation.
+**Scope:** big. `StepsType` (enum → runtime id) ripples through
+`NoteData`, `Style`, `Steps`, `RadarValues`, score keepers, the editor,
+Lua bindings, `Profile` serialization. **Deserves its own ADR** when
+picked up. Also: `NoteSkins/Para/` is capitalised but the game name is
+`para` — rename for Linux (case-sensitive FS).
+
 ---
 
 ## Closed

@@ -50,3 +50,10 @@ DB under `Cache/` for fast startup.
   you add a note type (`NoteTypes.*`).
 - `SongUtil`/`StepsUtil` hold the sorting/filtering predicates used by the
   music wheel.
+- **`StepsType` is a compile-time enum** and games are hand-written
+  `g_Game_*` struct literals in `src/GameManager.cpp` + the `g_Games[]`
+  array (all types enabled as of `229d0769d5`). Adding/changing a game
+  type means editing that 3600-line file. Replacing this with a
+  data-driven registry — without breaking the on-disk `#STEPSTYPE`
+  contract (`AGENTS.md` §5) — is [`../modernization-backlog.md`](../modernization-backlog.md)
+  item 20 (ADR-worthy).
