@@ -58,13 +58,13 @@ v140_xp, IRC reporter, stale token). Removed. Live CI is
 (not `include()`d anywhere), targeted defunct `irc.freenode.net`.
 Removed.~~
 
-### 6. Stale build docs
-`Build/README.md` says "CMake min 2.8.12", "latest 3.3.0-rc3". Actual:
-`CMakeLists.txt` requires 3.20, C++17. `README.md` badges point at dead
-Travis (see item 4).
-**Action:** rewrite `Build/README.md` and `Build/INSTALL.md` to match
-reality (`Docs/` is editable now — ADR 0002). Cross-check against
-`DocsAgents/build.md`.
+### 6. Stale build docs — DONE 2026-09-03
+~~`Build/README.md` said "CMake min 2.8.12", "latest 3.3.0-rc3"; actual is
+CMake 3.20 + C++17. Rewrote `Build/README.md` and `Build/INSTALL.md` to
+current reality (`cmake -B build`, VS 2022, Windows 11 floor, no dev
+install step, `StepMania-R` exe names). Fixed the matching 2.8.12 line and
+`Build/StepMania.sln` path in `DocsAgents/build.md`. Root `README.md`
+Travis badges were already removed.~~
 
 ---
 
@@ -232,6 +232,9 @@ picked up. Also: `NoteSkins/Para/` is capitalised but the game name is
 
 - **Item 4** — dead Travis + AppVeyor CI configs removed (`e065f69c8b`, 2026-09-03).
 - **Item 5** — orphaned `src/irc/` IRC-reporter subproject removed (`718d3b3ec1`, 2026-09-03).
+- **Item 6** — `Build/README.md` + `Build/INSTALL.md` rewritten to current
+  reality (CMake 3.20, `cmake -B build`, Windows 11 floor); `build.md`
+  cross-checked (2026-09-03).
 - **Item 13 (mostly)** — `arch_setup.h`: dead `isnan`/`isfinite` macros
   (`37e6766d5e`); `_WIN32_WINNT`/`_WIN32_IE` → `0x0A00`, `__STDC__ 0`
   removed (`5565039bf7`). Only warning-suppression cruft left.

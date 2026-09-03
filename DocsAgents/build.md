@@ -7,7 +7,8 @@ tags: [build, cmake, ci, tests]
 
 # Prerequisites
 
-- **CMake** ≥ 2.8.12 (3.x recommended).
+- **CMake** ≥ 3.20 (`CMakeLists.txt:1`). Language standard is C++17
+  (`src/CMakeLists.txt:88`).
 - **Submodules** — the `extern/` libraries are git submodules. Always:
   ```
   git submodule update --init --recursive
@@ -18,8 +19,8 @@ tags: [build, cmake, ci, tests]
   for the exact `apt-get` list).
 - Windows: **Visual Studio 2022 (MSVC v143)** or newer, x64. Minimum
   supported runtime target is **Windows 11 x64** (ADR
-  [0003](./adr/0003-platform-support-floors.md)). The generated solution
-  is `Build/StepMania.sln`.
+  [0003](./adr/0003-platform-support-floors.md)). `cmake -B build`
+  generates `build/StepMania.sln`.
 - macOS: current Xcode; latest macOS and the one before it; arm64
   primary. Linux: current mainstream distros (~Ubuntu 24.04 / current
   Fedora). See ADR [0003](./adr/0003-platform-support-floors.md).
@@ -36,9 +37,9 @@ cmake --build build
 
 Platform notes:
 
-- **Windows** — `cmake -B build` generates `Build/StepMania.sln` +
+- **Windows** — `cmake -B build` generates `build/StepMania.sln` +
   `.vcxproj` files. Build in Visual Studio or `cmake --build build`. The
-  `.exe` is placed in the repo root (`Program/`).
+  `.exe` is placed in the repo root (`Program/StepMania-R.exe`).
 - **macOS** — pass `-DCMAKE_OSX_ARCHITECTURES=arm64` (or `x86_64`).
   Produces `StepMania.app`.
 - **Linux** — `cmake -B build && cmake --build build` (or plain `make`

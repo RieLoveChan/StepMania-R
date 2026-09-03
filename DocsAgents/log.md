@@ -178,6 +178,18 @@
   how to apply it (small → do it; large → backlog item + maybe ADR).
   Mirrored in `index.md` and the `fork-mission` memory.
 
+* **Stale build docs rewritten (2026-09-03).** Backlog **item 6**.
+  `Build/README.md` and `Build/INSTALL.md` were pre-fork text: "CMake min
+  2.8.12 / latest 3.3.0-rc3", `cmake -G {gen} .. && cmake ..` in-source
+  flow, Windows XP `-T "v###_xp"` toolset, `Stepmania 5` /
+  `stepmania-5.1` install paths, `StepMania.app`. Replaced with current
+  reality: CMake ≥ 3.20, C++17, VS 2022, `cmake -B build` +
+  `cmake --build build` (matches CI), Windows 11 floor (ADR 0003), no
+  install step for dev/play (runs from repo root), `StepMania-R`
+  executable names. Also fixed `build.md` prereqs (2.8.12 → 3.20) and the
+  `Build/StepMania.sln` → `build/StepMania.sln` path. Root `README.md`
+  Travis badges were already gone (now a one-line tagline).
+
 ### Notes for future maintainers
 
 * Subsystem docs are a first pass built from `src/CMakeData-*.cmake`
