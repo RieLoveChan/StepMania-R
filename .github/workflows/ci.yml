@@ -87,6 +87,10 @@ jobs:
         timeout-minutes: 5
         run: ./Program/StepMania-R.exe --SelfTest --VideoRenderers=null --SoundDrivers=null
 
+  # WITH_TESTS builds src/ as the sm_engine OBJECT library and adds the
+  # sm_tests target (Catch2). Kept as separate jobs from the plain builds
+  # so a red test never masks the ship-build / smoke signal while the
+  # suite is young. See DocsAgents/adr/0006-test-harness.md.
   windows-tests:
     name: Windows unit tests (sm_tests)
     runs-on: windows-latest
@@ -95,11 +99,54 @@ jobs:
       - name: Checkout submodules
         run: git submodule update --init --recursive
       - name: Configure
-        # WITH_TESTS builds src/ as the sm_engine OBJECT library and adds
-        # the sm_tests target (Catch2). Separate from windows-build so a
-        # red test never masks the ship-build / smoke signal while the
-        # suite is young. See DocsAgents/adr/0006-test-harness.md.
         run: cmake -B build-tests -DCMAKE_BUILD_TYPE=Debug -DWITH_TESTS=ON -DWITH_WERROR=ON
+      - name: Build tests
+        run: cmake --build build-tests --config Debug --target sm_tests
+      - name: Run tests
+        run: ctest --test-dir build-tests -C Debug --output-on-failure
+
+  ubuntu-tests:
+    name: Ubuntu unit tests (sm_tests)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Checkout submodules
+        run: git submodule update --init --recursive
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y
+          libasound2-dev
+          libgl-dev
+          libglu1-mesa-dev
+          libgtk-3-dev
+          libjack-dev
+          libmad0-dev
+          libpulse-dev
+          libudev-dev
+          libusb-dev
+          libxinerama-dev
+          libx11-dev
+          libxrandr-dev
+          libxtst-dev
+          nasm
+      - name: Configure
+        run: cmake -B build-tests -DCMAKE_BUILD_TYPE=Debug -DWITH_TESTS=ON
+      - name: Build tests
+        run: cmake --build build-tests --config Debug --target sm_tests
+      - name: Run tests
+        run: ctest --test-dir build-tests -C Debug --output-on-failure
+
+  macos-tests:
+    name: macOS unit tests (sm_tests, arm64)
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Checkout submodules
+        run: git submodule update --init --recursive
+      - name: Install dependencies
+        run: brew install
+          nasm
+      - name: Configure
+        run: cmake -B build-tests -DCMAKE_BUILD_TYPE=Debug -DWITH_TESTS=ON -DCMAKE_OSX_ARCHITECTURES=arm64
       - name: Build tests
         run: cmake --build build-tests --config Debug --target sm_tests
       - name: Run tests

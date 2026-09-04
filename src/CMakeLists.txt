@@ -42,17 +42,18 @@ list(APPEND SMDATA_ALL_FILES_HPP
             ${SMDATA_OS_HPP}
             ${SMDATA_FILE_TYPES_HPP})
 
-# Main.cpp is the non-Apple entry point (just `int main(){ sm_main(); }`).
-# It is kept OUT of the engine source list so that, when the engine is
-# built as the sm_engine OBJECT library (WITH_TESTS), its `main` does not
-# collide with Catch2's `main` in the sm_tests target. It is added
-# directly to the executable below. See
-# DocsAgents/adr/0006-test-harness.md.
-if(NOT APPLE)
+# The platform entry point that defines main() — Main.cpp everywhere
+# except Apple, where it is archutils/Darwin/SMMain.mm. It is kept OUT of
+# the engine source list so that, when the engine is built as the
+# sm_engine OBJECT library (WITH_TESTS), its main() does not collide with
+# Catch2's main() in the sm_tests target. It is added straight to the
+# executable below. See DocsAgents/adr/0006-test-harness.md.
+if(APPLE)
+  set(SM_MAIN_SRC "archutils/Darwin/SMMain.mm")
+  list(REMOVE_ITEM SMDATA_ALL_FILES_SRC "archutils/Darwin/SMMain.mm")
+else()
   set(SM_MAIN_SRC "Main.cpp")
   source_group("" FILES "Main.cpp")
-else()
-  set(SM_MAIN_SRC "")
 endif()
 
 if(MSVC OR APPLE)
@@ -96,7 +97,7 @@ if(WITH_TESTS)
   set_property(TARGET sm_engine PROPERTY FOLDER "Internal Libraries")
 
   if(APPLE)
-    add_executable("${SM_EXE_NAME}" MACOSX_BUNDLE $<TARGET_OBJECTS:sm_engine>)
+    add_executable("${SM_EXE_NAME}" MACOSX_BUNDLE ${SM_MAIN_SRC})
   else()
     add_executable("${SM_EXE_NAME}" ${SM_MAIN_SRC})
   endif()
@@ -105,6 +106,7 @@ else()
   if(APPLE)
     add_executable("${SM_EXE_NAME}"
                    MACOSX_BUNDLE
+                   ${SM_MAIN_SRC}
                    ${SMDATA_ALL_FILES_SRC}
                    ${SMDATA_ALL_FILES_HPP})
   else()
