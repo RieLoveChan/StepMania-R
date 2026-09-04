@@ -119,13 +119,19 @@ jobs:
             local dest="$1" outdir="$2" machine="$3"
             local dll
             find "$dest" -name '*.dll' | while read -r dll; do
-              local base name
+              local base name libname
               base="$(basename "$dll")"
               name="${base%.dll}"
+              # The import .lib is named WITHOUT the SONAME version suffix
+              # (avcodec.lib, not avcodec-59.lib) -- that's what
+              # find_library(NAMES "avcodec" ...) and the /LIBPATH link
+              # step expect, matching extern/ffmpeg-w32/'s old convention.
+              # The .dll/.def keep the versioned name.
+              libname="$(echo "$name" | sed -E 's/-[0-9]+$//')"
               cp "$dll" "$outdir/$base"
               # gendef writes <name>.def into the cwd from a DLL's export table.
               ( cd "$outdir" && gendef "$base" )
-              llvm-lib "/def:$outdir/$name.def" "/out:$outdir/$name.lib" "/machine:$machine"
+              llvm-lib "/def:$outdir/$name.def" "/out:$outdir/$libname.lib" "/machine:$machine"
             done
           }
           package_arch extern/ffmpeg/dest-x64 "$OUT/x64" X64

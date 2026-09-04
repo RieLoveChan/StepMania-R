@@ -401,7 +401,7 @@ if(WIN32)
               "setupapi.lib"
               "hid.lib")
 
-  sm_add_link_flag("${SM_EXE_NAME}" "/LIBPATH:\"${SM_EXTERN_DIR}/ffmpeg-w32/${SM_WIN32_ARCH}\"")
+  sm_add_link_flag("${SM_EXE_NAME}" "/LIBPATH:\"${SM_FFMPEG_W32_DIR}/${SM_WIN32_ARCH}\"")
   sm_add_link_flag("${SM_EXE_NAME}"
                    "/LIBPATH:\"$(WindowsSdkDir)Lib\\um\\${SM_WIN32_ARCH}\"")
   sm_add_link_flag("${SM_EXE_NAME}" "/ERRORREPORT:SEND")
@@ -503,7 +503,7 @@ if(APPLE)
   list(APPEND SM_INCLUDE_DIRS "${SM_FFMPEG_INCLUDE}")
 else()
   if(MSVC)
-    list(APPEND SM_INCLUDE_DIRS "${SM_EXTERN_DIR}/ffmpeg-w32/include")
+    list(APPEND SM_INCLUDE_DIRS "${SM_FFMPEG_W32_DIR}/include")
   else()
     add_dependencies("${SM_ENGINE_TGT}" "ffmpeg")
     list(APPEND SM_INCLUDE_DIRS "${SM_FFMPEG_INCLUDE}")

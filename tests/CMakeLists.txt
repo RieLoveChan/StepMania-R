@@ -27,7 +27,7 @@ if(MSVC)
   # debug CRT; match the executable's link settings. Console subsystem
   # (the default) — sm_tests must NOT inherit the exe's /SUBSYSTEM:WINDOWS.
   target_link_directories(sm_tests PRIVATE
-                          "${SM_EXTERN_DIR}/ffmpeg-w32/${SM_WIN32_ARCH}")
+                          "${SM_FFMPEG_W32_DIR}/${SM_WIN32_ARCH}")
   set_target_properties(sm_tests PROPERTIES LINK_FLAGS "/SAFESEH:NO")
   set_target_properties(sm_tests
                         PROPERTIES LINK_FLAGS_DEBUG "/NODEFAULTLIB:msvcrt.lib")

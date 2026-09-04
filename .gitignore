@@ -19,6 +19,7 @@ Build/*
 Build/*/*
 build-tidy/
 build-tests/
+extern/ffmpeg-w32-prebuilt/
 Debug/
 Release/
 Contents/
