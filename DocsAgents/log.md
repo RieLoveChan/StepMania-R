@@ -223,11 +223,12 @@
   - `.github/workflows/ci.yml` — new `windows-tests` job
     (`-DWITH_TESTS=ON` Debug build + `ctest`).
   - `playbooks/add-characterization-test.md`.
-  **Verified locally: CMake configure only** (VS 2022 generator, bundled
-  cmake 3.31) — both `WITH_TESTS` ON and OFF configure clean; target
-  graph resolves (`sm_tests` → `sm_engine` + `Catch2`); `ctest -N` lists
-  `sm_tests`; the OFF path emits no new targets. **A full compile/link
-  and a green `ctest` are the maintainer's merge gate** (`AGENTS.md` §4).
+  **Verified locally on Windows** (VS 2022 gen, bundled cmake 3.31):
+  `WITH_TESTS=ON` Debug + `/WX` fully compiles (`sm_engine` OBJECT lib +
+  `Catch2` + `sm_tests.exe`), `sm_tests.exe` → 27 assertions / 8 cases
+  pass, `ctest` 100%; `WITH_TESTS=OFF` Release + `/WX` still builds
+  `StepMania-R.exe` clean and configure emits no new targets. **macOS /
+  Linux and the GitHub Actions run are the maintainer's §4 merge gate.**
   Next phases (ADR 0006): `RageMath` / `TimingData` / `NoteData`, then a
   committed simfile corpus via `GENERATE(from_range(...))`.
 

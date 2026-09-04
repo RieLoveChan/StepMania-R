@@ -121,11 +121,16 @@ Per-subsystem breakdown as passes run:
   (Trim/GetExtension/Basename/SetExtension/BinaryToHex/ssprintf — pins
   current behaviour, quirks included). New Windows CI job
   `windows-tests`: `-DWITH_TESTS=ON` build + `ctest`.
-  **Locally verified: CMake configure only** (VS 2022 gen, cmake 3.31) —
-  target graph resolves (`sm_tests` → `sm_engine` + `Catch2`), `ctest -N`
-  lists it, and the `WITH_TESTS=OFF` path generates identically to before
-  (no new targets). **NOT yet verified: a full compile/link or that the
-  assertions pass** — that is the maintainer's §4 merge gate.
+  **Locally verified on Windows** (VS 2022, cmake 3.31):
+  - `WITH_TESTS=ON` Debug + `WITH_WERROR=ON` → `sm_engine` OBJECT lib +
+    `Catch2` + `sm_tests.exe` all build; `sm_tests.exe` → 27 assertions /
+    8 cases pass; `ctest` 100%.
+  - `WITH_TESTS=OFF` Release + `WITH_WERROR=ON` → `StepMania-R.exe`
+    builds clean (the OBJECT-library split is transparent when off);
+    configure emits no new targets.
+  **Not verified: macOS/Linux, and the GitHub Actions run** — the
+  `windows-tests` job + the existing 4-platform build on push are the
+  maintainer's §4 merge gate.
 - `src/tests/`: 7 standalone `test_*.cpp` from ~2004-06 — **Unix/Apple
   only, need uncommitted 30 MB test data, `#error` without altivec/SSE,
   full of `#if 0`**. Not wireable as-is. Salvage the *intent* (timing
