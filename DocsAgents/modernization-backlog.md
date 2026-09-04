@@ -18,18 +18,17 @@ as new sweeps find things. Numbers/anchors confirmed 2026-09-02.
 
 ## Tier 1 — Blocks safe continuous work
 
-### 1. Safety net — smoke DONE, unit coverage OPEN
+### 1. Safety net — smoke DONE, harness scaffold DONE, coverage OPEN
 - **Headless smoke: DONE** (`f7249f3a95`) — `--SelfTest` flag runs full
   engine init and exits 0; wired into Windows CI (`continue-on-error`
   until it's green a few times, then make fatal).
-- **Unit coverage: IN PROGRESS.** `src/tests/` is unsalvageable
-  (Unix/Apple only, uncommitted 30 MB data, `#error` without SSE, `#if 0`
-  everywhere). Framework + build approach decided in ADR
+- **Harness scaffold: DONE** (merged `5_1-new` 2026-09-04). ADR
   [0006](./adr/0006-test-harness.md) (Catch2 v3 + `sm_engine` OBJECT
-  library); scaffold on branch `feature/test-harness` (see item 17).
-  Characterization targets, in order: `RageUtil` → `RageMath` →
-  `TimingData` → `NoteData`/`NoteDataUtil` → `NotesLoader*` (tiny
-  committed corpus).
+  library); `sm_tests` + first `RageUtil` coverage; CI green on
+  Windows/macOS/Linux (see item 17).
+- **Unit coverage: OPEN.** Characterization targets, in order:
+  `RageUtil` (started) → `RageMath` → `TimingData` →
+  `NoteData`/`NoteDataUtil` → `NotesLoader*` (tiny committed corpus).
 
 ### 2. Warnings on but unmeasured / unenforced
 `-Wall -Wextra` (GCC/Clang) + `/W4` (MSVC) with blanket suppressions
