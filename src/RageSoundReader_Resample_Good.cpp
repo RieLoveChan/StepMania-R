@@ -90,19 +90,6 @@ namespace
 			// printf( "n %i, %f, %f -> %f\n", n, p, fN1, fVal );
 			pFIR[n] = fVal;
 		}
-#if 0
-		float *pFIRp = pFIR+iWinSize/2;
-		for(int i=-iWinSize/2;i<=iWinSize/2;i++)
-		{
-			float ff = sinc(2*M_PI*fCutoff * (i + 0.0))*(2*fCutoff);
-
-			printf( "%i: %f\n", i, ff );
-
-			pFIRp[i]=ff;
-		}
-		for( int i=0; i < iWinSize; i++ )
-			printf( "sinc: %i: %f\n", i, pFIR[i] );
-#endif
 	}
 
 	void NormalizeVector( float *pBuf, int iSize )
@@ -116,25 +103,6 @@ namespace
 		return std::gcd(i1, i2);
 	}
 }
-
-#if 0
-void RunFIRFilter( float *pIn, float *pOut, int iInputValues, float *pFIR, int iWinSize )
-{
-	for( int i = 0; i < iInputValues; ++i )
-	{
-		float fSum = 0;
-		const float *pInData = &pIn[i];
-		for( int j = 0; j < iWinSize; ++j )
-		{
-			float in = pInData[j];
-			fSum += in*pFIR[j];
-			printf( "%i: in %f * %f, += %f\n", j, pInData[j], pFIR[j], in*pFIR[j] );
-		}
-
-		pOut[i] = fSum;
-	}
-}
-#endif
 
 template<typename T>
 class AlignedBuffer
@@ -350,29 +318,6 @@ int PolyphaseFilter::NumInputsForOutputSamples( const State &State, int iOut, in
 	int iIn = 0;
 	int iFilled = State.m_iFilled;
 	int iPolyIndex = State.m_iPolyIndex;
-
-#if 0
-	while( iOut > 0 )
-	{
-		if( iFilled < L )
-		{
-			int iToFill = L-iFilled;
-			iIn += iToFill;
-			iFilled += iToFill;
-		}
-
-		while( iFilled == L && iOut )
-		{
-			--iOut;
-			iPolyIndex += iDownFactor;
-
-			if( iPolyIndex >= m_iUpFactor )
-				break;
-		}
-		iFilled -= iPolyIndex/m_iUpFactor;
-		iPolyIndex %= m_iUpFactor;
-	}
-#endif
 
 	if( iOut > 0 )
 	{

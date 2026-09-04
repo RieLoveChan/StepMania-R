@@ -109,32 +109,9 @@ void CourseUtil::SortCoursePointerArrayByTotalDifficulty( std::vector<Course*> &
 	sort( vpCoursesInOut.begin(), vpCoursesInOut.end(), CompareCoursePointersByTotalDifficulty );
 }
 
-// this code isn't ready yet!!
-#if 0
-RString GetSectionNameFromCourseAndSort( const Course *pCourse, SortOrder so )
-{
-	if( pCourse == nullptr )
-		return RString();
-	// more code here
-}
-
-void SortCoursePointerArrayBySectionName( std::vector<Course*> &vpCoursesInOut, SortOrder so )
-{
-	RString sOther = SORT_OTHER.GetValue();
-	for(unsigned i = 0; i < vpCoursesInOut.size(); ++i)
-	{
-		RString val = GetSectionNameFromCourseAndSort( vpCoursesInOut[i], so );
-
-		/* Make sure 0-9 comes first and OTHER comes last. */
-		if( val == "0-9" )			val = "0";
-		else if( val == sOther )    val = "2";
-		else						val = "1" + MakeSortString(val);
-
-		//g_mapSongSortVal[vpSongsInOut[i]] = val;
-	}
-}
-#endif
-// ok real code begins again
+// GetSectionNameFromCourseAndSort() and SortCoursePointerArrayBySectionName()
+// were never finished ("more code here") and are unreferenced (see the
+// commented-out declarations in CourseUtil.h).
 
 static bool CompareCoursePointersByType( const Course* pCourse1, const Course* pCourse2 )
 {

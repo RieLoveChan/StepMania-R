@@ -179,29 +179,6 @@ static void LoadFromSMNoteDataStringWithPlayer( NoteData& out, const RString &sS
 
 				p++;
 				// We won't scan past the end of the line so these are safe to do.
-#if 0
-				// look for optional attack info (e.g. "{tipsy,50% drunk:15.2}")
-				if( *p == '{' )
-				{
-					p++;
-
-					char szModifiers[256] = "";
-					float fDurationSeconds = 0;
-					if( sscanf( p, "%255[^:]:%f}", szModifiers, &fDurationSeconds ) == 2 )	// not fatal if this fails due to malformed data
-					{
-						tn.type = TapNoteType_Attack;
-						tn.sAttackModifiers = szModifiers;
-		 				tn.fAttackDurationSeconds = fDurationSeconds;
-					}
-
-					// skip past the '}'
-					while( p < endLine )
-					{
-						if( *(p++) == '}' )
-							break;
-					}
-				}
-#endif
 
 				// look for optional keysound index (e.g. "[123]")
 				if( *p == '[' )
@@ -218,23 +195,6 @@ static void LoadFromSMNoteDataStringWithPlayer( NoteData& out, const RString &sS
 							break;
 					}
 				}
-
-#if 0
-				// look for optional item name (e.g. "<potion>"),
-				// where the name in the <> is a Lua function defined elsewhere
-				// (Data/ItemTypes.lua, perhaps?) -aj
-				if( *p == '<' )
-				{
-					p++;
-
-					// skip past the '>'
-					while( p < endLine )
-					{
-						if( *(p++) == '>' )
-							break;
-					}
-				}
-#endif
 
 				/* Optimization: if we pass TAP_EMPTY, NoteData will do a search
 				 * to remove anything in this position.  We know that there's nothing
@@ -2455,72 +2415,6 @@ void NoteDataUtil::InsertIntelligentTaps(
 	}
 	inout.RevalidateATIs(std::vector<int>(), false);
 }
-#if 0
-class TrackIterator
-{
-public:
-	TrackIterator();
-
-	/* If called, iterate only over [iStart,iEnd]. */
-	void SetRange( int iStart, int iEnd )
-	{
-	}
-
-	/* If called, pay attention to iTrack only. */
-	void SetTrack( iTrack );
-
-	/* Extend iStart and iEnd to include hold notes overlapping the boundaries.  Call SetRange()
-	 * and SetTrack() first. */
-	void HoldInclusive();
-
-	/* Reduce iStart and iEnd to exclude hold notes overlapping the boundaries.  Call SetRange()
-	 * and SetTrack() first. */
-	void HoldExclusive();
-
-	/* If called, keep the iterator around.  This results in much faster iteration.  If used,
-	 * ensure that the current row will always remain valid.  SetTrack() must be called first. */
-	void Fast();
-
-	/* Retrieve an iterator for the current row.  SetTrack() must be called first (but Fast()
-	 * does not). */
-	TapNote::iterator Get();
-
-	int GetRow() const { return m_iCurrentRow; }
-	bool Prev();
-	bool Next();
-
-private:
-	int m_iStart, m_iEnd;
-	int m_iTrack;
-
-	bool m_bFast;
-
-	int m_iCurrentRow;
-
-	NoteData::iterator m_Iterator;
-
-	/* m_bFast only: */
-	NoteData::iterator m_Begin, m_End;
-};
-
-bool TrackIterator::Next()
-{
-	if( m_bFast )
-	{
-		if( m_Iterator == XXX )
-			;
-
-	}
-
-}
-
-TrackIterator::TrackIterator()
-{
-	m_iStart = 0;
-	m_iEnd = MAX_NOTE_ROW;
-	m_iTrack = -1;
-}
-#endif
 
 void NoteDataUtil::AddMines( NoteData &inout, int iStartIndex, int iEndIndex )
 {

@@ -67,9 +67,6 @@ public:
 	static bool EnteredCloseFolder( GameController controller );
 	static bool EnteredPrevOpList( GameController controller );
 	static bool EnteredNextOpList( GameController controller );
-
-	// todo: move to PlayerOptions.h -aj
-	void ChangeScrollSpeed( GameController controller, bool bIncrement );
 };
 
 #endif

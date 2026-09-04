@@ -503,41 +503,11 @@ void FilenameDB::FlushDirCache( const RString & /* sDir */ )
 		delete pFileSet;
 	}
 
-#if 0
-	/* XXX: This is tricky, we want to flush all of the subdirectories of
-	 * sDir, but once we unlock the mutex, we basically have to start over.
-	 * It's just an optimization though, so it can wait. */
-	{
-		if( it != dirs.end() )
-		{
-			pFileSet = it->second;
-			dirs.erase( it );
-			while( !pFileSet->m_bFilled )
-				m_Mutex.Wait();
-			delete pFileSet;
-
-			if( sDir != "/" )
-			{
-				RString sParent = Dirname( sDir );
-				if( sParent == "./" )
-					sParent = "";
-				sParent.MakeLower();
-				it = dirs.find( sParent );
-				if( it != dirs.end() )
-				{
-					FileSet *pParent = it->second;
-					std::set<File>::iterator fileit = pParent->files.find( File(Basename(sDir)) );
-					if( fileit != pParent->files.end() )
-						fileit->dirp = nullptr;
-				}
-			}
-		}
-		else
-		{
-			LOG->Warn( "Trying to flush an unknown directory %s.", sDir.c_str() );
-		}
-#endif
-		m_Mutex.Unlock();
+	// A per-directory flush (instead of flushing everything above) was
+	// planned as an optimization but never finished -- the disabled
+	// attempt here referenced an undeclared iterator and had an unbalanced
+	// brace, so it could never have compiled as-is.
+	m_Mutex.Unlock();
 }
 
 const File *FilenameDB::GetFile( const RString &sPath )

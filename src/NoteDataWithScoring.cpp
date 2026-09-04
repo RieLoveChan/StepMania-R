@@ -53,46 +53,11 @@ int LastTapNoteScoreTrack( const NoteData &in, unsigned iRow, PlayerNumber pn )
 	return best_track;
 }
 
-/* Return the minimum tap score of a row: the lowest grade of the tap in the row.
- * If the row isn't complete (not all taps have been hit),
- * return TNS_NONE or TNS_MISS. */
-#if 0
-int MinTapNoteScoreTrack( const NoteData &in, unsigned iRow, PlayerNumber pn )
-{
-	// work in progress
-	float scoretime = -9999;
-	int worst_track = -1;
-	TapNoteScore lowestTNS = TapNoteScore_Invalid;
-	for( int t=0; t<in.GetNumTracks(); t++ )
-	{
-		// Skip empty tracks and mines
-		const TapNote &tn = in.GetTapNote( t, iRow );
-		if (tn.type == TapNoteType_Empty ||
-			tn.type == TapNoteType_Mine ||
-			tn.type == TapNoteType_Fake ||
-			tn.type == TapNoteType_AutoKeysound)
-			continue;
-		if( tn.pn != PLAYER_INVALID && tn.pn != pn && pn != PLAYER_INVALID )
-			continue;
-
-		TapNoteScore tns = tn.result.tns;
-
-		if( tns == TNS_Miss || tns == TNS_None )
-			return t;
-
-		float tm = tn.result.fTapNoteOffset;
-		if(tm > scoretime) continue; // huh -aj
-
-		// enum compare against lowestTNS here
-		//if( tns < lowestTNS ) continue;
-
-		scoretime = tm;
-		worst_track = t;
-	}
-
-	return worst_track;
-}
-#endif
+// MinTapNoteScoreTrack() -- an alternate to LastTapNoteScoreTrack() above,
+// picking the row's worst-graded tap instead of the one that completed it
+// -- never got past "work in progress" and has no caller (the one call site
+// that looked live, in LastTapNoteWithResult() below, is itself inside a
+// block comment).
 
 }
 
