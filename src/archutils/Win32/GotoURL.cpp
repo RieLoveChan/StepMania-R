@@ -6,9 +6,12 @@
 #include <windows.h>
 #include <shellapi.h>
 
-/* This is called from the crash handler; don't use RegistryAccess, since it's
- * not crash-conditions safe. */
-static LONG GetRegKey( HKEY key, RString subkey, LPTSTR retdata )
+/* This is called from the crash handler's separate child process (see
+ * CrashHandlerChild.cpp), not from the crashed process's own exception
+ * handler -- heap allocation (RString) is safe here. Still don't use
+ * RegistryAccess, since it depends on engine state this minimal child
+ * process doesn't set up. */
+static LONG GetRegKey( HKEY key, RString subkey, RString &out )
 {
 	HKEY hKey;
     LONG iRet = RegOpenKeyEx( key, subkey, 0, KEY_QUERY_VALUE, &hKey );
@@ -19,7 +22,7 @@ static LONG GetRegKey( HKEY key, RString subkey, LPTSTR retdata )
 	long iDataSize = MAX_PATH;
 	char data[MAX_PATH];
 	RegQueryValue( hKey, "emulation", data, &iDataSize );
-	strcpy( retdata, data );
+	out = data;
 	RegCloseKey( hKey );
 
     return ERROR_SUCCESS;
@@ -34,32 +37,30 @@ bool GotoURL( RString sUrl )
 	if( iRet > 32 )
 		return true;
 
-	char key[2*MAX_PATH];
-	if( GetRegKey(HKEY_CLASSES_ROOT, ".htm", key) != ERROR_SUCCESS )
+	RString sKey;
+	if( GetRegKey(HKEY_CLASSES_ROOT, ".htm", sKey) != ERROR_SUCCESS )
 		return false;
 
-	strcpy( key, "\\shell\\open\\command" );
+	sKey = "\\shell\\open\\command";
 
-	if( GetRegKey(HKEY_CLASSES_ROOT, key, key) != ERROR_SUCCESS )
+	if( GetRegKey(HKEY_CLASSES_ROOT, sKey, sKey) != ERROR_SUCCESS )
 		return false;
 
-	char *szPos = strstr( key, "\"%1\"" );
-	if( szPos == nullptr )
-	{
-		// No quotes found. Check for %1 without quotes
-		szPos = strstr( key, "%1" );
-		if( szPos == nullptr )
-			szPos = key+lstrlen(key)-1;	// No parameter.
-		else
-			*szPos = '\0';	// Remove the parameter
-	}
-	else
-		*szPos = '\0';	// Remove the parameter
+	// Strip the "%1" (quoted or bare) parameter placeholder, if present, so
+	// sUrl can be appended in its place below. sUrl is caller-supplied and,
+	// via the crash handler's update checker (CrashHandlerChild.cpp),
+	// network-supplied -- this used to be a fixed-buffer strcat with no
+	// bound on sUrl's length; an RString has no fixed capacity to overflow.
+	std::size_t iPos = sKey.find( "\"%1\"" );
+	if( iPos == RString::npos )
+		iPos = sKey.find( "%1" );
+	if( iPos != RString::npos )
+		sKey.erase( iPos );
 
-	strcat( szPos, " " );
-	strcat( szPos, sUrl );
+	sKey += " ";
+	sKey += sUrl;
 
-	return WinExec( key, SW_SHOWDEFAULT ) > 32;
+	return WinExec( sKey, SW_SHOWDEFAULT ) > 32;
 }
 
 /*
