@@ -190,6 +190,21 @@
   `Build/StepMania.sln` → `build/StepMania.sln` path. Root `README.md`
   Travis badges were already gone (now a one-line tagline).
 
+* **Test harness decided — ADR
+  [0006](./adr/0006-test-harness.md) (2026-09-03).** Backlog **item 17**
+  resolved: framework is **Catch2 v3** (amalgamated, vendored at
+  `extern/Catch2/`, pinned v3.16.0) over doctest / GoogleTest — decided
+  on corpus-regression ergonomics (`GENERATE(from_range)`) and `WithinULP`
+  float matchers for `TimingData`. Build approach: `src/` becomes an
+  **OBJECT library** (`sm_engine`) that both `${SM_EXE_NAME}` and a new
+  `sm_tests` target consume; `Main.cpp` stays exe-only so its `main`
+  never collides with Catch2's. Gated behind `WITH_TESTS` (default OFF,
+  CI-on). This commit: ADR + vendored Catch2 files +
+  `extern/CMakeProject-catch2.cmake` (not yet `include()`d — inert). The
+  `src/CMakeLists.txt` split + `tests/` target + CI job land on branch
+  `feature/test-harness` (§4 large change; merge gated on a green Windows
+  Release build + `ctest`).
+
 ### Notes for future maintainers
 
 * Subsystem docs are a first pass built from `src/CMakeData-*.cmake`

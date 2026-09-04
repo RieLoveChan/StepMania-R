@@ -22,11 +22,14 @@ as new sweeps find things. Numbers/anchors confirmed 2026-09-02.
 - **Headless smoke: DONE** (`f7249f3a95`) — `--SelfTest` flag runs full
   engine init and exits 0; wired into Windows CI (`continue-on-error`
   until it's green a few times, then make fatal).
-- **Unit coverage: OPEN.** `src/tests/` is unsalvageable (Unix/Apple
-  only, uncommitted 30 MB data, `#error` without SSE, `#if 0` everywhere).
-  Needs a framework (item 17) + new characterization tests on the pure
-  cores (`TimingData`, `NoteData`/`NoteDataUtil`, `NotesLoader*`,
-  `RageUtil`).
+- **Unit coverage: IN PROGRESS.** `src/tests/` is unsalvageable
+  (Unix/Apple only, uncommitted 30 MB data, `#error` without SSE, `#if 0`
+  everywhere). Framework + build approach decided in ADR
+  [0006](./adr/0006-test-harness.md) (Catch2 v3 + `sm_engine` OBJECT
+  library); scaffold on branch `feature/test-harness` (see item 17).
+  Characterization targets, in order: `RageUtil` → `RageMath` →
+  `TimingData` → `NoteData`/`NoteDataUtil` → `NotesLoader*` (tiny
+  committed corpus).
 
 ### 2. Warnings on but unmeasured / unenforced
 `-Wall -Wextra` (GCC/Clang) + `/W4` (MSVC) with blanket suppressions
@@ -142,13 +145,18 @@ Related: `src/archutils/Win32/DirectXErrorList.h` — 12 `case` labels
 (`0x8007xxxx`) that don't fit signed `HRESULT`; MSVC compiles it, clang
 rejects (C++11 narrowing). Rewrite the cases as hex literals / `HRESULT(...)`.
 
-### 17. Pick a unit-test framework + write core characterization tests
-`src/tests/` (2004-era, Unix/Apple-only, needs uncommitted data) can't be
-wired as-is. Decide: **Catch2** or **doctest** (both single-header, no
-deps, easy to vendor under `extern/`). Then a `tests/` target (not built
-by default; own CI job) with new tests on the pure cores. Salvage the
-intent of `test_timing_data` / `test_file_readers` / `test_misc` where
-still relevant. Deserves a short ADR.
+### 17. Pick a unit-test framework + write core characterization tests — DECIDED (ADR 0006), scaffold IN PROGRESS
+Framework decided: **Catch2 v3** (amalgamated, vendored `extern/Catch2/`
+@ v3.16.0) — ADR [0006](./adr/0006-test-harness.md). Build approach:
+`src/` → OBJECT library `sm_engine`, shared by the exe and a new
+`sm_tests` target, behind `WITH_TESTS` (default OFF, CI-on).
+**Done:** ADR, vendored Catch2, `extern/CMakeProject-catch2.cmake`
+(2026-09-03, on `5_1-new` — inert).
+**In progress (branch `feature/test-harness`):** the `src/CMakeLists.txt`
+OBJECT-library split, `tests/CMakeLists.txt`, `tests/test_RageUtil.cpp`
+(first characterization coverage), CI job. §4 large change — merge gated
+on a green Windows Release build + `ctest`. Salvage the intent of the old
+`test_timing_data` / `test_file_readers` / `test_misc` in later phases.
 
 ### 16. Pre-floor `#if` guards across `src/arch/` and `src/archutils/`
 Now that ADR 0003 sets Windows 11 / current-macOS / current-Linux floors,
