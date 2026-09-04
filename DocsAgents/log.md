@@ -367,3 +367,16 @@
   "general error c1010070" — LNK1327 at link time, not a compile
   error. Verified via a real `--SelfTest` run:
   `Logs/info.txt` → `Windows 10.0 (Win11) build 26200`.
+
+* **Backlog item 15, first batch** (`a2c3d44522`, 2026-09-04): 10 of
+  ~23 remaining dead `#if 0` blocks removed across 8 files. Real
+  gotcha: `CourseUtil.cpp`'s block extended past where a mid-block
+  read made it look like it ended (`SortCoursePointerArrayBySectionName()`
+  was inside the same disabled region as the function above it, not
+  separate) — the first cut left it calling now-removed symbols;
+  `WITH_WERROR` build caught it immediately, inspection hadn't.
+  Takeaway recorded in the backlog: always locate the actual matching
+  `#endif` first. Several sites are legitimate compile-time selectors
+  (`#if 0`/`#elif 1`/`#else` in `ScoreKeeperNormal.cpp`, `#if 0`/`#else`
+  in `RandomSample.cpp`) or explained kept-for-reference code, not
+  dead code — left untouched. ~13 sites remain for a follow-up pass.

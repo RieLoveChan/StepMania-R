@@ -145,12 +145,33 @@ comparisons, `WINVER` checks, `MAC_OS_X_VERSION_MIN_REQUIRED` for old
 build verified. Coordinate with items 13 (`arch_setup.h`) and the
 D3D9/GLES2 question (ADR 0004).
 
-### 15. `#if 0` dead blocks
-~37 `#if 0` markers across `src/` (`Player.cpp`, `NoteDataUtil.cpp`,
-`ScreenEdit.cpp`, `RageDisplay_GLES2.cpp`, `ScoreKeeperNormal.cpp`, …).
-**Action:** a dedicated sweep — glance at each (some guard
-kept-for-reference code), remove the truly dead ones. One commit per
-handful of files.
+### 15. `#if 0` dead blocks — first batch DONE (`a2c3d44522`), ~13 remain
+First pass (2026-09-04) removed 10 dead blocks across 8 files
+(`CodeDetector.cpp`/`.h`, `CourseUtil.cpp`, `NoteDataUtil.cpp` ×3,
+`NoteDataWithScoring.cpp`, `NotesWriterSSC.cpp`,
+`RageSoundReader_Resample_Good.cpp` ×3, `RageUtil_FileDB.cpp`) —
+each confirmed dead (broken syntax, undeclared identifiers, "not
+ready yet", or a live caller that turned out to be inside a block
+comment) before removal. Explicitly **left alone**, real
+kept-for-reference cases: `NoteData.cpp` (explains why the disabled
+iterator op is unsafe), `RageFileManager_ReadAhead.cpp` (explains why
+`dup()` doesn't work here), `RageDisplay_GLES2.cpp` ("useful in the
+future"), `RandomSample.cpp` / `ScoreKeeperNormal.cpp` (active
+`#if 0`/`#else` or `#if 0`/`#elif 1`/`#else` compile-time selectors,
+not dead code), `RageUtil_CachedObject.cpp` (a deliberately-disabled
+usage example).
+**Remaining (~13 sites, not yet reviewed in depth):** `Player.cpp`,
+`RageDisplay_GLES2.cpp` (a different site than the one already
+triaged), `RageSoundReader_MP3.cpp`, `RageThreads.cpp`,
+`RageUtil_AutoPtr.h`, `ScreenEdit.cpp`, `ScreenNameEntry.cpp`,
+`StdString.h`. Out of scope: `archutils/Unix/*` and
+`arch/Threads/Threads_Pthreads.*` (non-Windows, `AGENTS.md` §3),
+`src/tests/` (unsalvageable, ADR 0006).
+**Action:** continue the sweep, one commit per handful of files —
+locate the actual matching `#endif` before judging a block (a
+mid-block partial read can look like it ends earlier than it does;
+bit us once already on `CourseUtil.cpp`, caught by the `WITH_WERROR`
+build, not by inspection).
 
 ### 14. `vcvars64.bat` does not wire the Windows SDK on the maintainer box
 `vcvars64.bat` sets only the MSVC toolchain INCLUDE/LIB, not the Windows
