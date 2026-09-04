@@ -253,3 +253,27 @@
 * Still not written: a generated symbol/ctags index; playbooks
   `fix-memory-leak`, `harden-c-string` (both listed in
   `playbooks/index.md` → Wanted).
+
+## 2026-09-04
+
+* **Gotcha found + fixed** (`c29368cb40`, branch `feature/test-harness`):
+  `ubuntu-tests` CI job (`sm_tests` on Linux) failed to link —
+  `undefined reference to LoadingWindow_Gtk::LoadingWindow_Gtk()`.
+  Root cause: `src/CMakeData-gtk.cmake` built `LoadingWindow_Gtk.cpp` as
+  its own `OBJECT` library (`LoadingWindowGtk`), linked into `sm_engine`
+  via `target_link_libraries(... PUBLIC ...)`. CMake does not propagate
+  an OBJECT library's objects transitively through *another* OBJECT
+  library — it only pulls them into a "real" binary target. That holds
+  for the normal exe (`WITH_TESTS=OFF`, `SM_ENGINE_TGT` = the exe itself)
+  but not for `sm_tests` (`WITH_TESTS=ON`, `SM_ENGINE_TGT` = `sm_engine`,
+  itself an OBJECT library). Windows/macOS never hit this because their
+  loading-window sources are plain files in `SMDATA_ALL_ARCH_SRC`, not a
+  separate OBJECT-library target — only the Linux/GTK path is shaped this
+  way. **Fix**: changed `LoadingWindowGtk` from `OBJECT` to `STATIC` —
+  static libraries resolve normally through any number of
+  `target_link_libraries()` hops. Linux-only change, no effect on the
+  shipped exe (already linked correctly) or on Windows/macOS. **Verified
+  green** on all 8 `feature/test-harness` CI jobs (Windows/macOS/Linux ×
+  plain build + `sm_tests`, plus the Lua.xml validator) — run
+  [33894450910](https://github.com/RieLoveChan/StepMania-R/actions/runs/33894450910).
+  See [`adr/0006-test-harness.md`](./adr/0006-test-harness.md).
