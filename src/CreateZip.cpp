@@ -795,6 +795,9 @@ ZRESULT TZip::Add(const TCHAR *odstzn, const TCHAR *src,unsigned long flags)
 		return ZR_ENDED;
 
 	// zip has its own notion of what its names should look like: i.e. dir/file.stuff
+	// -1 leaves room for the trailing '/' Add() may append to a directory entry below.
+	if (_tcslen(odstzn) >= MAX_PATH-1)
+		return ZR_ARGS;
 	TCHAR dstzn[MAX_PATH]; _tcscpy(dstzn,odstzn);
 	if (*dstzn==0)
 		return ZR_ARGS;
