@@ -72,3 +72,9 @@ endif()
 
 option(WITH_MINIMAID "Build with Minimaid support." ON)
 
+# Build the unit-test target (sm_tests, driven by Catch2). OFF for a
+# normal build; a dedicated CI job turns it ON. Requires the sm_engine
+# OBJECT library and extern/Catch2. See
+# DocsAgents/adr/0006-test-harness.md.
+option(WITH_TESTS "Build the unit-test target (sm_tests)." OFF)
+

@@ -87,6 +87,24 @@ jobs:
         timeout-minutes: 5
         run: ./Program/StepMania-R.exe --SelfTest --VideoRenderers=null --SoundDrivers=null
 
+  windows-tests:
+    name: Windows unit tests (sm_tests)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Checkout submodules
+        run: git submodule update --init --recursive
+      - name: Configure
+        # WITH_TESTS builds src/ as the sm_engine OBJECT library and adds
+        # the sm_tests target (Catch2). Separate from windows-build so a
+        # red test never masks the ship-build / smoke signal while the
+        # suite is young. See DocsAgents/adr/0006-test-harness.md.
+        run: cmake -B build-tests -DCMAKE_BUILD_TYPE=Debug -DWITH_TESTS=ON -DWITH_WERROR=ON
+      - name: Build tests
+        run: cmake --build build-tests --config Debug --target sm_tests
+      - name: Run tests
+        run: ctest --test-dir build-tests -C Debug --output-on-failure
+
   validate-xml-docs:
     name: Validate Lua.xml, LuaDocumentation.xml
     runs-on: ubuntu-latest
