@@ -277,3 +277,47 @@
   plain build + `sm_tests`, plus the Lua.xml validator) — run
   [33894450910](https://github.com/RieLoveChan/StepMania-R/actions/runs/33894450910).
   See [`adr/0006-test-harness.md`](./adr/0006-test-harness.md).
+
+* **`RageMath` characterization coverage** (`f98d7a489e`) — second test
+  file (ADR 0006 phase 2, after `RageUtil`): wave/matrix/vector/bezier
+  helpers, pins the `RageSquare(0)` hack and the `RageMatrixMultiply`
+  reversed-argument (`pOut = pB * pA`) quirk. 94 assertions / 19 cases
+  green across all 3 platforms.
+
+* **Backlog item 7 closed — FFmpeg on Windows now CI-built, not
+  committed** (2026-09-04, phased per an approved plan). Replaced the
+  36 MB `extern/ffmpeg-w32/` blob (unknown provenance) with a
+  reproducible pipeline:
+  - `.github/workflows/build-ffmpeg-win32.yml` (`0be3d9f91c`,
+    `workflow_dispatch`) cross-compiles `extern/ffmpeg` (pinned
+    `19feb712f5`) with mingw-w64 on `ubuntu-latest` — no Windows runner
+    needed for the FFmpeg build itself — using the exact recipe recorded
+    in the old blob's own `README.txt`. `gendef` + `llvm-lib` turn each
+    built DLL's export table into an MSVC-compatible `.lib` (GNU
+    dlltool's default `.a` isn't MSVC-linkable). Deviates from the
+    original recipe by dropping `--enable-bzlib`/`-zlib` (no Ubuntu
+    mingw-w64 package for either; not needed for StepMania's codec
+    paths).
+  - Published as GitHub Release `ffmpeg-w32-19feb712f5` — this repo's
+    first-ever Release object, used purely as a binary artifact store
+    (Actions artifacts expire at 90 days, which would silently break a
+    fresh clone months later).
+  - `CMake/SetupFfmpegWin32.cmake` (`4014f275e9`) downloads +
+    SHA256-verifies that asset into `extern/ffmpeg-w32-prebuilt/` at
+    configure time, skipping re-download once the hash already matches
+    (offline on repeat configures). `StepmaniaCore.cmake`,
+    `src/CMakeLists.txt`, `tests/CMakeLists.txt` now point at
+    `SM_FFMPEG_W32_DIR` instead of the old hardcoded path.
+  - **Gotcha caught by real end-to-end testing, not just inspection:**
+    the first packaged `.lib`s were named after the DLL's
+    SONAME-versioned basename (`avcodec-59.lib`); the linker and
+    `find_library(NAMES "avcodec" ...)` expect the unversioned name
+    (`avcodec.lib`) — this only surfaced when actually linking
+    `StepMania-R.exe` against the artifact, not from inspecting the zip.
+    Fixed in the workflow and by re-uploading a corrected Release asset.
+  - Verified locally (fresh `build/` + `build-tests/`, artifact directory
+    deleted first to force a real network download against the published
+    Release): Release build links + `--SelfTest` exits 0; `WITH_TESTS=ON`
+    Debug build links `sm_tests.exe` clean. **CI: all 8 jobs green**,
+    including the Windows runner independently downloading the same
+    Release asset.

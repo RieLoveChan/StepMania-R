@@ -37,7 +37,7 @@ hides. `Program/` holds both (CMake names them per config,
 | MSVC warnings | `/W4 /wd4100 /wd4189 /wd4244 /wd4267 /wd4702` | `src/CMakeLists.txt:132` |
 | `-Werror` | only `type-limits` today. **Policy (ADR 0001 §7):** curated `-Werror` set that grows; a category is promoted once it is zero across `src/`; enforced via `WITH_WERROR` (ON in CI, OFF by default). `WITH_WERROR` not added yet. | `src/CMakeLists.txt:126-132` |
 | Platform floors | **Windows 11 x64** min; MSVC v143 / VS2022+. macOS: latest + prior, arm64 primary. Linux: current distros. (ADR 0003.) | ADR 0003 |
-| Externals | git submodules; FFmpeg prebuilt for Windows in `extern/ffmpeg-w32/` (~36 MB) — `avcodec-59`, `avformat-59`, `avutil-57`, `swscale-6` ≈ **FFmpeg 5.x**. Origin not documented in-repo. Kept per ADR 0001 §8; replace via submodule build later (backlog 7). | `.gitmodules`, `StepmaniaCore.cmake:179+`, `:201-209` |
+| Externals | git submodules; FFmpeg prebuilt for Windows — `avcodec-59`, `avformat-59`, `avutil-57`, `swscale-6` ≈ **FFmpeg 5.x**, built from `extern/ffmpeg` @ `19feb712f5` (backlog 7, closed 2026-09-04). Downloaded + SHA256-verified from GitHub Release `ffmpeg-w32-19feb712f5` into `extern/ffmpeg-w32-prebuilt/` at configure time — no committed blob anymore. | `.gitmodules`, `CMake/SetupFfmpegWin32.cmake`, `StepmaniaCore.cmake:175+` |
 
 # Warnings (MSVC captured 2026-09-03)
 

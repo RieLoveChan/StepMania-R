@@ -72,21 +72,6 @@ Travis badges were already removed.~~
 
 ## Tier 3 — Risk; deliberate decisions (see ADR 0001, ADR 0003)
 
-### 7. Prebuilt FFmpeg binaries in the repo
-`extern/ffmpeg-w32/` — 36 MB of committed `.dll`/`.lib`/`.def`
-(avcodec-59, avutil-57 ≈ FFmpeg 5.x). This is what the **Windows** build
-links and copies to output (`StepmaniaCore.cmake:179+`, `:209`).
-Non-Windows builds FFmpeg from the `extern/ffmpeg` submodule.
-Opaque, unpatchable, aging, on the primary platform.
-**Decided (ADR 0001 §8):** direction is to **drop the committed
-`extern/ffmpeg-w32/` blob and use the `extern/ffmpeg` submodule** so we
-own the FFmpeg version. Keep the blob until the green baseline + smoke
-test exist; record its versions/origin in `baseline.md` meanwhile.
-**This item = execute it:** either make `CMake/SetupFfmpeg.cmake` build
-the submodule on Windows (needs msys2 + nasm per contributor) or build
-the DLLs once per bump in CI and consume that artifact (preferred).
-Early bounded change, through the §4 gate.
-
 ### 8. Unsafe C string ops in crash/URL/zip paths
 ~40 `strcpy`/`strcat`/`strncpy` into fixed buffers, concentrated in
 `archutils/Win32/Crash*.cpp`, `archutils/Unix/CrashHandler*`. Genuine
@@ -243,6 +228,21 @@ picked up. Also: `NoteSkins/Para/` is capitalised but the game name is
 
 ## Closed
 
+- **Item 7** — `extern/ffmpeg-w32/` (36 MB committed blob, unknown
+  provenance) replaced with a CI-built artifact from the pinned
+  `extern/ffmpeg` submodule (2026-09-04). `.github/workflows/
+  build-ffmpeg-win32.yml` cross-compiles with mingw-w64 on
+  `ubuntu-latest` (no Windows runner needed) and generates MSVC `.lib`
+  import libs via `gendef` + `llvm-lib`; published as GitHub Release
+  `ffmpeg-w32-19feb712f5`. `CMake/SetupFfmpegWin32.cmake` downloads +
+  SHA256-verifies it into `extern/ffmpeg-w32-prebuilt/` at configure
+  time (offline on repeat configures). `StepmaniaCore.cmake`,
+  `src/CMakeLists.txt`, `tests/CMakeLists.txt` point at that dir now.
+  Verified locally (fresh network download, Release build + `--SelfTest`,
+  `WITH_TESTS` Debug build) and in CI (all 8 jobs green, including the
+  Windows runner downloading the same Release asset). Deviates from the
+  original recipe by dropping `--enable-bzlib`/`-zlib` (no Ubuntu
+  mingw-w64 package for either; unused by StepMania's codec paths).
 - **Item 4** — dead Travis + AppVeyor CI configs removed (`e065f69c8b`, 2026-09-03).
 - **Item 5** — orphaned `src/irc/` IRC-reporter subproject removed (`718d3b3ec1`, 2026-09-03).
 - **Item 6** — `Build/README.md` + `Build/INSTALL.md` rewritten to current

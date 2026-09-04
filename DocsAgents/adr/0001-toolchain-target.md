@@ -88,6 +88,9 @@ So: the **build system** is already fairly modern; the **source** is not.
      msys2; (b) build the DLLs once per FFmpeg bump in CI and consume that
      artifact — more robust, no local msys2 dependency. Lean (b).
    - Tracked as backlog item 7.
+   - **Executed (2026-09-04), path (b).** `extern/ffmpeg-w32/` is gone;
+     `CMake/SetupFfmpegWin32.cmake` downloads the CI-built artifact. See
+     backlog item 7 (Closed) and `baseline.md` for details.
 
 9. **Windows / MSVC floor (was E). → SUPERSEDED by ADR
    [0003](./0003-platform-support-floors.md).** Originally set a Windows
