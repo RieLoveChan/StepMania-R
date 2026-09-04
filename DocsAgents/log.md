@@ -321,3 +321,36 @@
     Debug build links `sm_tests.exe` clean. **CI: all 8 jobs green**,
     including the Windows runner independently downloading the same
     Release asset.
+
+* **Backlog item 8 closed — unsafe C string ops, Windows crash/URL/zip
+  paths** (2026-09-04). `GotoURL.cpp` (`d346dacccc`) had a real,
+  reachable stack buffer overflow: a fixed `char[2*MAX_PATH]` built a
+  fallback shell-open command via `strcat(szPos, sUrl)` with no bound
+  on `sUrl`'s length, and `sUrl` reaches `GotoURL()` network-supplied
+  through the crash handler's update checker
+  (`CrashHandlerChild.cpp`'s `m_sUpdateURL`, parsed straight from the
+  update-check XML response `<UpdateAvailable>`). Traced `GotoURL`'s
+  callers to confirm it never runs inside the crashed process's own
+  exception handler — only in the crash handler's separate
+  `CreateProcess`-spawned child, or normal application code — so heap
+  allocation is safe there; rewrote with `RString`, preserving the
+  original (already slightly odd) control flow bug-for-bug, including
+  the "no `%1` placeholder found" branch, whose `strcat`-from-mid-buffer
+  trick turned out to always append at the true end of the string
+  either way (traced through `strcat`'s scan-to-null-terminator
+  semantics by hand to confirm).
+  `Crash.cpp` (`0095f2673d`) — three more `strcpy`/`strcat` sites,
+  none reachable with an attacker-controlled length today, but this
+  file explicitly forbids `malloc`/`new` (runs at crash time), so
+  fixed with bounded `strncpy`-style copies + explicit length math
+  (or, for the one `szBuf` case, just sizing the buffer for its own
+  known-fixed suffix) rather than a growable string type.
+  `CreateZip.cpp` (`448e4412fe`) — `TZip::Add`'s entry-name copy,
+  rejected instead of overflowed if too long; confirmed `TZip`/
+  `CreateZip` have zero callers anywhere in the current `src/` tree
+  (dead code today, but compiled and named in the backlog).
+  Left alone, deliberately: two more `strcpy`/`strcat` sites in
+  `Crash.cpp` (`m_CrashReason` from the fixed `exceptions[]` table,
+  and appending a fixed literal) copy only compile-time-bounded
+  literals into an 8 KB buffer — safe by construction, not what the
+  backlog flagged, fixing them would be pure churn.

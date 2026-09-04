@@ -72,18 +72,6 @@ Travis badges were already removed.~~
 
 ## Tier 3 — Risk; deliberate decisions (see ADR 0001, ADR 0003)
 
-### 8. Unsafe C string ops in crash/URL/zip paths
-~40 `strcpy`/`strcat`/`strncpy` into fixed buffers, concentrated in
-`archutils/Win32/Crash*.cpp`, `archutils/Unix/CrashHandler*`. Genuine
-overflow candidates: `Crash.cpp:30` `strcpy(pszFile, fn)`, `:170`;
-`archutils/Win32/GotoURL.cpp:22,59-60` (builds a shell command with
-`strcat` + a URL); `CreateZip.cpp` `strcpy`/`strcat` into `zfi.name`
-etc. with user paths.
-**Action:** Windows crash + `GotoURL` + `CreateZip` are in scope
-(P1 platform). Signal-handler context partly justifies no-alloc, but
-bounded copies with explicit length checks are still required. Treat as
-`AGENTS.md` §4 large changes (touch the crash path → verify carefully).
-
 ---
 
 ## Tier 4 — Hotspots (where ongoing passes concentrate; not bugs)
@@ -228,6 +216,29 @@ picked up. Also: `NoteSkins/Para/` is capitalised but the game name is
 
 ## Closed
 
+- **Item 8** — unsafe C string ops in the Windows crash/URL/zip paths
+  (2026-09-04), scoped to what was in-scope (P1 platform; `archutils/
+  Unix/CrashHandler*` untouched per `AGENTS.md` §3). Three commits:
+  `GotoURL.cpp` (`d346dacccc`) — the one genuine, reachable overflow:
+  a fixed `char[2*MAX_PATH]` `strcat`'d with `sUrl`, which reaches here
+  network-supplied via the crash handler's update checker
+  (`CrashHandlerChild.cpp`'s `m_sUpdateURL`, parsed from the
+  update-check XML response). Confirmed `GotoURL` only ever runs in
+  the crash handler's separate child process (`CreateProcess`-spawned,
+  not the crashed process's own exception handler) or normal app code,
+  so rewrote with `RString` (no fixed capacity to overflow) — safe
+  because heap allocation is fine there, unlike `Crash.cpp` itself.
+  `Crash.cpp` (`0095f2673d`) — `SpliceProgramPath`, `StartChild`,
+  `CrashGetModuleBaseName`: none reachable with an attacker-controlled
+  length today, but this file explicitly forbids `malloc`/`new`
+  (crash-time), so fixed with bounded `strncpy`-style copies + explicit
+  length math instead of a growable string type.
+  `CreateZip.cpp` (`448e4412fe`) — `TZip::Add`'s entry-name `_tcscpy`
+  into a fixed buffer, rejected instead of overflowed if too long;
+  `TZip`/`CreateZip` have no callers anywhere in the current `src/`
+  tree, hardened for whenever it's wired up. All three verified against
+  a Windows Release build clean under `WITH_WERROR=ON` (`/WX`) +
+  `--SelfTest`.
 - **Item 7** — `extern/ffmpeg-w32/` (36 MB committed blob, unknown
   provenance) replaced with a CI-built artifact from the pinned
   `extern/ffmpeg` submodule (2026-09-04). `.github/workflows/
