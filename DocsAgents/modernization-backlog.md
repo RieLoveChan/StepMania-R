@@ -172,13 +172,6 @@ Phase 1 (`c82d0e9058`): bracketed level tags, `Error()` level, no
 - Ph4: call-site audit per subsystem — `Warn`→`Trace` (expected
   fallback) / `Warn`→`Error` (real failure), add category tags.
 
-### 19. OS version detection reports "Windows 8"
-`info.txt`: `Windows 6.2 (Win8) build 9200` on a Windows 11 box.
-`GetVersionEx`-style detection without a `supportedOS` entry in the app
-manifest caps at 6.2. `src/archutils/Win32/` OS detection + the exe
-manifest. Cosmetic but misleading in crash reports; fits the ADR-0003
-Win11-floor work (item 16).
-
 ### 20. Replace the archaic hard-coded game-type system
 Game types are defined by hand-written `static const Game g_Game_X = {…}`
 struct literals in `src/GameManager.cpp` (~150 lines each: controllers,
@@ -216,6 +209,15 @@ picked up. Also: `NoteSkins/Para/` is capitalised but the game name is
 
 ## Closed
 
+- **Item 19** — OS version detection reported "Windows 8" on Windows 11
+  (2026-09-04, `fee51d41e7`). Root cause: the exe manifest had no
+  `<compatibility>` `supportedOS` entries, so Windows caps
+  `GetVersionEx`/`RtlGetVersion` at 6.2 for any unmanifested app;
+  added the Windows 10 GUID (covers 11 too — no separate GUID exists,
+  identified only by build ≥ 22000). `DebugInfoHunt.cpp`'s version
+  table also had no branch for major version 10 at all. Verified via a
+  real `--SelfTest` run: `Logs/info.txt` now reads
+  `Windows 10.0 (Win11) build 26200`.
 - **Item 8** — unsafe C string ops in the Windows crash/URL/zip paths
   (2026-09-04), scoped to what was in-scope (P1 platform; `archutils/
   Unix/CrashHandler*` untouched per `AGENTS.md` §3). Three commits:

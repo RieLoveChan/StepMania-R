@@ -354,3 +354,16 @@
   and appending a fixed literal) copy only compile-time-bounded
   literals into an 8 KB buffer — safe by construction, not what the
   backlog flagged, fixing them would be pure churn.
+
+* **Backlog item 19 closed — OS version detection** (`fee51d41e7`,
+  2026-09-04). The exe manifest declared no `<compatibility>`
+  `supportedOS` GUIDs, so Windows capped `GetVersionEx` at 6.2 (Win8)
+  regardless of the real OS; added the Windows 10 GUID (Windows 11 has
+  no separate one — same NT 10.0, identified only by build ≥ 22000)
+  plus a matching branch in `DebugInfoHunt.cpp`'s version table (which
+  had nothing past major version 6). Hit and fixed an XML gotcha along
+  the way: a bare `--` inside an XML comment body (not at the `-->`
+  terminator) makes `mt.exe` fail to parse the manifest with an opaque
+  "general error c1010070" — LNK1327 at link time, not a compile
+  error. Verified via a real `--SelfTest` run:
+  `Logs/info.txt` → `Windows 10.0 (Win11) build 26200`.
