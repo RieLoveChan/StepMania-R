@@ -145,18 +145,24 @@ Related: `src/archutils/Win32/DirectXErrorList.h` — 12 `case` labels
 (`0x8007xxxx`) that don't fit signed `HRESULT`; MSVC compiles it, clang
 rejects (C++11 narrowing). Rewrite the cases as hex literals / `HRESULT(...)`.
 
-### 17. Pick a unit-test framework + write core characterization tests — DECIDED (ADR 0006), scaffold IN PROGRESS
+### 17. Pick a unit-test framework + write core characterization tests — scaffold DONE (ADR 0006 phase 1), phases 2-4 open
 Framework decided: **Catch2 v3** (amalgamated, vendored `extern/Catch2/`
 @ v3.16.0) — ADR [0006](./adr/0006-test-harness.md). Build approach:
 `src/` → OBJECT library `sm_engine`, shared by the exe and a new
 `sm_tests` target, behind `WITH_TESTS` (default OFF, CI-on).
-**Done:** ADR, vendored Catch2, `extern/CMakeProject-catch2.cmake`
-(2026-09-03, on `5_1-new` — inert).
-**In progress (branch `feature/test-harness`):** the `src/CMakeLists.txt`
+**Scaffold merged to `5_1-new` (2026-09-04):** `src/CMakeLists.txt`
 OBJECT-library split, `tests/CMakeLists.txt`, `tests/test_RageUtil.cpp`
-(first characterization coverage), CI job. §4 large change — merge gated
-on a green Windows Release build + `ctest`. Salvage the intent of the old
-`test_timing_data` / `test_file_readers` / `test_misc` in later phases.
+(first characterization coverage), Apple `SMMain.mm` entry-point split,
+CI jobs for Windows/macOS/Linux × `sm_tests`. All 8 CI jobs green; local
+Windows Release build + `--SelfTest` also verified (§4 gate). Fixed en
+route: `LoadingWindowGtk` OBJECT → STATIC (Linux-only link fix, see
+`log.md` 2026-09-04).
+**Remaining (ADR 0006 phases 2-4):** `RageMath` + `RageUtil`
+numeric/path helpers → `TimingData` (`WithinULP`) → `NoteData`/
+`NoteDataUtil` → a tiny committed simfile corpus for `NotesLoader*` via
+`GENERATE(from_range(...))`. Salvage the intent of the old
+`test_timing_data` / `test_file_readers` / `test_misc` where still
+meaningful.
 
 ### 16. Pre-floor `#if` guards across `src/arch/` and `src/archutils/`
 Now that ADR 0003 sets Windows 11 / current-macOS / current-Linux floors,

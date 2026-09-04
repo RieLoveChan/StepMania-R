@@ -8,9 +8,17 @@ tags: [adr, testing, catch2, cmake, safety-net, modularization]
 # Status
 
 **Accepted** — 2026-09-03. Maintainer decision (framework choice +
-OBJECT-library approach confirmed in-session). Scaffolding lands on a
-branch (`feature/test-harness`); merge is gated on a green Windows
-Release build + `ctest` pass (`AGENTS.md` §4).
+OBJECT-library approach confirmed in-session). Scaffolding built on
+`feature/test-harness`, gated on a green Windows Release build + `ctest`
+pass (`AGENTS.md` §4).
+
+**Merged to `5_1-new` — 2026-09-04.** All 8 CI jobs green (Windows/macOS/
+Linux × plain build + `sm_tests`, plus the Lua.xml validator); Windows
+Release build + `--SelfTest` also verified locally. Fixed en route:
+`LoadingWindowGtk` OBJECT → STATIC (an OBJECT library's objects don't
+propagate through *another* OBJECT library — broke the Linux `sm_tests`
+link only; see `log.md` 2026-09-04). Phase 1 (Scaffold) is done; phases
+2–4 below are open.
 
 Supersedes the "Catch2 **or** doctest — TBD" note in
 [`modernization-backlog.md`](../modernization-backlog.md) item 17.
