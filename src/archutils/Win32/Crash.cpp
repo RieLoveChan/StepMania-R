@@ -5,6 +5,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <cstring> // for strncpy -- no malloc(), see the warning below
 #include <windows.h>
 
 #include "global.h"
@@ -27,7 +28,17 @@ static void SpliceProgramPath(char *buf, int bufsiz, const char *fn) {
 
 	GetModuleFileName(nullptr, tbuf, sizeof tbuf);
 	GetFullPathName(tbuf, bufsiz, buf, &pszFile);
-	strcpy(pszFile, fn);
+
+	// pszFile points inside buf[bufsiz] (at the filename component of the
+	// full path GetFullPathName just wrote); a plain strcpy(pszFile, fn)
+	// has no idea how much space is left there. Bounded copy instead --
+	// still no malloc()/new, per the warning above.
+	std::ptrdiff_t iRemaining = (buf + bufsiz) - pszFile;
+	if (iRemaining > 0)
+	{
+		strncpy(pszFile, fn, static_cast<std::size_t>(iRemaining) - 1);
+		pszFile[iRemaining - 1] = '\0';
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -116,7 +127,11 @@ bool StartChild( HANDLE &hProcess, HANDLE &hToStdin, HANDLE &hFromStdout )
 		SetHandleInformation( hFromStdout, HANDLE_FLAG_INHERIT, 0 );
 	}
 
-	char szBuf[MAX_PATH] = "";
+	// Sized for the MAX_PATH module path GetModuleFileName can write plus
+	// " " + CHILD_MAGIC_PARAMETER -- a worst-case module path (this
+	// process's own .exe, which on a real install can sit under a long
+	// nested folder name) left no spare room in a plain MAX_PATH buffer.
+	char szBuf[MAX_PATH + 1 + sizeof(CHILD_MAGIC_PARAMETER)] = "";
 	GetModuleFileName( nullptr, szBuf, MAX_PATH );
 	strcat( szBuf, " " );
 	strcat( szBuf, CHILD_MAGIC_PARAMETER );
@@ -151,7 +166,7 @@ bool StartChild( HANDLE &hProcess, HANDLE &hToStdin, HANDLE &hFromStdout )
 	return true;
 }
 
-static const char *CrashGetModuleBaseName(HMODULE hmod, char *pszBaseName)
+static const char *CrashGetModuleBaseName(HMODULE hmod, char *pszBaseName, std::size_t iBaseNameSize)
 {
 	char szPath1[MAX_PATH];
 	char szPath2[MAX_PATH];
@@ -167,7 +182,13 @@ static const char *CrashGetModuleBaseName(HMODULE hmod, char *pszBaseName)
 		if( !dw || dw > sizeof(szPath2) )
 			return nullptr;
 
-		strcpy( pszBaseName, pszFile );
+		if( iBaseNameSize == 0 )
+			return nullptr;
+		// pszFile's length is bounded by the sizeof(szPath2) check above,
+		// but the caller's buffer size is independent of that -- bounded
+		// copy instead of strcpy.
+		strncpy( pszBaseName, pszFile, iBaseNameSize - 1 );
+		pszBaseName[iBaseNameSize - 1] = '\0';
 
 		pszFile = pszBaseName;
 
@@ -264,7 +285,7 @@ void RunChild()
 			break;
 
 		TCHAR szName[MAX_PATH];
-		if( !CrashGetModuleBaseName(hMod, szName) )
+		if( !CrashGetModuleBaseName(hMod, szName, sizeof(szName)) )
 			strcpy( szName, "???" );
 		iSize = static_cast<int>(strlen( szName ));
 		WriteToChild( hToStdin, &iSize, sizeof(iSize) );
