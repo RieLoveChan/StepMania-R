@@ -208,13 +208,15 @@ Cross-cutting: `RString` in 723 files / ~8,429 uses; `GAMESTATE->` at
   and VS-bundled **3.31** (`…\BuildTools\…\CommonExtensions\…\CMake\bin`).
   The `build/` dir was configured with **3.31** — reconfiguring it with
   4.3.3 breaks (mixed module versions). Use the bundled 3.31 for `build/`.
-- `vcvars64.bat` does **not** set the Windows SDK env (backlog 14). For
-  Ninja / command-line builds, set by hand:
-  - `INCLUDE` += `<Kit>\Include\10.0.26100.0\{ucrt,um,shared,winrt,cppwinrt}`
-  - `LIB` += `<Kit>\Lib\10.0.26100.0\{ucrt,um}\x64`
-  - `PATH` += `<MSVC>\bin\Hostx64\x64`, `<Kit>\bin\10.0.26100.0\x64`
-  - `<Kit>` = `C:\Program Files (x86)\Windows Kits\10`;
-    `<MSVC>` = `…\BuildTools\VC\Tools\MSVC\14.44.35207`
+- `vcvars64.bat` does **not** set the Windows SDK env — **fixed 2026-09-04
+  (backlog 14, closed):** dot-source `Build/dev-env.ps1` instead of
+  reconstructing `INCLUDE`/`LIB`/`PATH` by hand. It runs `vcvars64.bat`
+  (found via `vswhere.exe`, not hardcoded) then, if `WindowsSdkDir` still
+  comes back empty, wires the newest installed SDK version (auto-detected
+  from `Windows Kits\10\Include\`, not hardcoded to `10.0.26100.0`).
+  Verified end-to-end on this box: compiled+ran a `<windows.h>` program
+  linked against `kernel32.lib`, and `cmake -G Ninja -B build` configures
+  clean (previously failed compiler detection without this).
 - `pwsh` at `C:\Program Files\PowerShell\7\pwsh.exe`. `cmd`/`python`/`nasm`
   are **not** on PATH — use full paths. No `python` → `run-clang-tidy`
   (`.py`) can't run; drive `clang-tidy.exe` directly.

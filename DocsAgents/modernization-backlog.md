@@ -173,16 +173,6 @@ mid-block partial read can look like it ends earlier than it does;
 bit us once already on `CourseUtil.cpp`, caught by the `WITH_WERROR`
 build, not by inspection).
 
-### 14. `vcvars64.bat` does not wire the Windows SDK on the maintainer box
-`vcvars64.bat` sets only the MSVC toolchain INCLUDE/LIB, not the Windows
-SDK (`WindowsSdkDir` empty, `WindowsSDKLibVersion=winv6.3\`). The VS
-generator build works anyway (MSBuild finds the SDK via VS props); Ninja
-/ command-line builds need INCLUDE/LIB reconstructed by hand (SDK
-`10.0.26100.0` at `C:\Program Files (x86)\Windows Kits\10`).
-**Action:** low priority — repair the VS install / SDK registration, or
-ship a project `env` helper script. Not blocking (workaround documented
-in `baseline.md` → "How to (re)generate").
-
 ### 18. Logging overhaul — phase 1 DONE, phases 2-4 open
 Phase 1 (`c82d0e9058`): bracketed level tags, `Error()` level, no
 `/////`, `Char Widths` fixed. `--SelfTest` log 695→467 lines, clean.
@@ -230,6 +220,16 @@ picked up. Also: `NoteSkins/Para/` is capitalised but the game name is
 
 ## Closed
 
+- **Item 14** — `vcvars64.bat` doesn't wire the Windows SDK
+  (2026-09-04). Shipped `Build/dev-env.ps1` (the "ship a project `env`
+  helper script" option) instead of repairing the VS install: runs
+  `vcvars64.bat` (located via `vswhere.exe`), and if `WindowsSdkDir`
+  still comes back empty, wires the newest installed SDK version
+  (auto-detected, not hardcoded) into `INCLUDE`/`LIB`/`PATH`. Verified
+  end-to-end on the maintainer box: compiled + ran a `<windows.h>`
+  program linked against `kernel32.lib`, and `cmake -G Ninja -B build`
+  configures clean (previously failed compiler/SDK detection without
+  it — the actual documented pain point).
 - **Item 19** — OS version detection reported "Windows 8" on Windows 11
   (2026-09-04, `fee51d41e7`). Root cause: the exe manifest had no
   `<compatibility>` `supportedOS` entries, so Windows caps

@@ -40,6 +40,16 @@ Platform notes:
 - **Windows** — `cmake -B build` generates `build/StepMania.sln` +
   `.vcxproj` files. Build in Visual Studio or `cmake --build build`. The
   `.exe` is placed in the repo root (`Program/StepMania-R.exe`).
+  For a **Ninja or raw command-line** build (no Visual Studio generator),
+  a plain `vcvars64.bat` leaves the Windows SDK unwired
+  (`WindowsSdkDir` empty) — MSBuild papers over this via `.vcxproj`
+  properties, but `cl.exe`/`link.exe`/Ninja have no such fallback and
+  the compiler-detection step in `cmake -G Ninja -B build` fails.
+  Dot-source `Build/dev-env.ps1` first to fix that (backlog item 14):
+  ```powershell
+  . .\Build\dev-env.ps1
+  cmake -G Ninja -B build
+  ```
 - **macOS** — pass `-DCMAKE_OSX_ARCHITECTURES=arm64` (or `x86_64`).
   Produces `StepMania.app`.
 - **Linux** — `cmake -B build && cmake --build build` (or plain `make`
