@@ -18,6 +18,7 @@ subsystem doc's `# Gotchas` instead.
 * [add-preference](./add-preference.md) - Add a `Preferences.ini` value and surface it in options.
 
 ### Modernization
+* [add-characterization-test](./add-characterization-test.md) - Pin an engine function's current behaviour with a Catch2 test under `tests/` before refactoring it.
 * [clang-tidy-subsystem-pass](./clang-tidy-subsystem-pass.md) - Run one modernization pass over a single subsystem: fix, verify Windows build, commit + push.
 * [migrate-rstring](./migrate-rstring.md) - Convert one subsystem from `RString` to `std::string` without a repo-wide diff.
 * [split-god-object](./split-god-object.md) - Carve a cohesive slice out of `GameState` / `ScreenEdit` / `GameManager` with zero call-site churn in phase 1.

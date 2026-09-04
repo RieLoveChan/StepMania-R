@@ -13,3 +13,7 @@ include(CMakeProject-tommath.cmake)
 include(CMakeProject-png.cmake)
 include(CMakeProject-ixwebsocket.cmake)
 include(CMakeProject-miniz.cmake)
+
+if(WITH_TESTS)
+  include(CMakeProject-catch2.cmake)
+endif()

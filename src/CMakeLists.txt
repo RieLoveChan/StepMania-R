@@ -42,8 +42,17 @@ list(APPEND SMDATA_ALL_FILES_HPP
             ${SMDATA_OS_HPP}
             ${SMDATA_FILE_TYPES_HPP})
 
-if(NOT APPLE)
-  list(APPEND SMDATA_ALL_FILES_SRC "Main.cpp")
+# The platform entry point that defines main() — Main.cpp everywhere
+# except Apple, where it is archutils/Darwin/SMMain.mm. It is kept OUT of
+# the engine source list so that, when the engine is built as the
+# sm_engine OBJECT library (WITH_TESTS), its main() does not collide with
+# Catch2's main() in the sm_tests target. It is added straight to the
+# executable below. See DocsAgents/adr/0006-test-harness.md.
+if(APPLE)
+  set(SM_MAIN_SRC "archutils/Darwin/SMMain.mm")
+  list(REMOVE_ITEM SMDATA_ALL_FILES_SRC "archutils/Darwin/SMMain.mm")
+else()
+  set(SM_MAIN_SRC "Main.cpp")
   source_group("" FILES "Main.cpp")
 endif()
 
@@ -59,35 +68,61 @@ else()
   set(SM_NAME_RELWITHDEBINFO "stepmania-r_release-symbols")
 endif()
 
-if(APPLE)
-  add_executable("${SM_EXE_NAME}"
-                 MACOSX_BUNDLE
-                 ${SMDATA_ALL_FILES_SRC}
-                 ${SMDATA_ALL_FILES_HPP})
-else()
-  if(MSVC)
-    foreach(sm_src_file ${SMDATA_ALL_FILES_SRC})
-      get_filename_component(sm_src_raw "${sm_src_file}" NAME_WE)
-      if(${sm_src_raw} MATCHES "global")
-        set_source_files_properties("${sm_src_raw}.cpp"
-                                    PROPERTIES
-                                    COMPILE_FLAGS
-                                    "/Ycglobal.h")
-      elseif(NOT (${sm_src_raw} MATCHES "verstub"))
-        set_source_files_properties("${sm_src_raw}.cpp"
-                                    PROPERTIES
-                                    COMPILE_FLAGS
-                                    "/Yuglobal.h")
-      endif()
-    endforeach()
-  endif()
-  add_executable("${SM_EXE_NAME}" ${SMDATA_ALL_FILES_SRC}
-                 ${SMDATA_ALL_FILES_HPP})
+if(MSVC AND NOT APPLE)
+  foreach(sm_src_file ${SMDATA_ALL_FILES_SRC})
+    get_filename_component(sm_src_raw "${sm_src_file}" NAME_WE)
+    if(${sm_src_raw} MATCHES "global")
+      set_source_files_properties("${sm_src_raw}.cpp"
+                                  PROPERTIES
+                                  COMPILE_FLAGS
+                                  "/Ycglobal.h")
+    elseif(NOT (${sm_src_raw} MATCHES "verstub"))
+      set_source_files_properties("${sm_src_raw}.cpp"
+                                  PROPERTIES
+                                  COMPILE_FLAGS
+                                  "/Yuglobal.h")
+    endif()
+  endforeach()
 endif()
 
-set_property(TARGET "${SM_EXE_NAME}" PROPERTY CXX_STANDARD 17)
-set_property(TARGET "${SM_EXE_NAME}" PROPERTY CXX_STANDARD_REQUIRED ON)
-set_property(TARGET "${SM_EXE_NAME}" PROPERTY CXX_EXTENSIONS ON)
+# WITH_TESTS: build the engine as an OBJECT library (sm_engine) so both
+# the executable and the sm_tests target link one build of it. Otherwise
+# (every normal build, and every CI job except the dedicated tests job)
+# SM_ENGINE_TGT resolves to the executable itself and this file behaves
+# exactly as it did before the split. See
+# DocsAgents/adr/0006-test-harness.md.
+if(WITH_TESTS)
+  add_library(sm_engine OBJECT ${SMDATA_ALL_FILES_SRC} ${SMDATA_ALL_FILES_HPP})
+  set(SM_ENGINE_TGT sm_engine)
+  set_property(TARGET sm_engine PROPERTY FOLDER "Internal Libraries")
+
+  if(APPLE)
+    add_executable("${SM_EXE_NAME}" MACOSX_BUNDLE ${SM_MAIN_SRC})
+  else()
+    add_executable("${SM_EXE_NAME}" ${SM_MAIN_SRC})
+  endif()
+  target_link_libraries("${SM_EXE_NAME}" PRIVATE sm_engine)
+else()
+  if(APPLE)
+    add_executable("${SM_EXE_NAME}"
+                   MACOSX_BUNDLE
+                   ${SM_MAIN_SRC}
+                   ${SMDATA_ALL_FILES_SRC}
+                   ${SMDATA_ALL_FILES_HPP})
+  else()
+    add_executable("${SM_EXE_NAME}" ${SM_MAIN_SRC} ${SMDATA_ALL_FILES_SRC}
+                   ${SMDATA_ALL_FILES_HPP})
+  endif()
+  set(SM_ENGINE_TGT "${SM_EXE_NAME}")
+endif()
+
+# Applied to both targets; when WITH_TESTS is OFF they are the same target
+# and the second pass is a harmless no-op.
+foreach(_sm_tgt "${SM_ENGINE_TGT}" "${SM_EXE_NAME}")
+  set_property(TARGET "${_sm_tgt}" PROPERTY CXX_STANDARD 17)
+  set_property(TARGET "${_sm_tgt}" PROPERTY CXX_STANDARD_REQUIRED ON)
+  set_property(TARGET "${_sm_tgt}" PROPERTY CXX_EXTENSIONS ON)
+endforeach()
 
 set_target_properties("${SM_EXE_NAME}"
                       PROPERTIES OUTPUT_NAME "${SM_NAME_RELEASE}"
@@ -99,21 +134,21 @@ set_target_properties("${SM_EXE_NAME}"
 if(WITH_LTO)
   include(CheckIPOSupported)
   check_ipo_supported()
-  set_property(TARGET "${SM_EXE_NAME}" PROPERTY INTERPROCEDURAL_OPTIMIZATION ON)
+  set_property(TARGET "${SM_ENGINE_TGT}" PROPERTY INTERPROCEDURAL_OPTIMIZATION ON)
 endif()
 
 if(WITH_PORTABLE_TOMCRYPT)
-  target_compile_definitions("${SM_EXE_NAME}" PRIVATE LTC_NO_ASM)
+  target_compile_definitions("${SM_ENGINE_TGT}" PUBLIC LTC_NO_ASM)
 endif()
 if(WITH_NO_ROLC_TOMCRYPT)
-  target_compile_definitions("${SM_EXE_NAME}" PRIVATE LTC_NO_ROLC)
+  target_compile_definitions("${SM_ENGINE_TGT}" PUBLIC LTC_NO_ROLC)
 endif()
 
 # Compilation flags per project here.
-target_compile_definitions("${SM_EXE_NAME}" PRIVATE $<$<CONFIG:Debug>:DEBUG>)
-target_compile_definitions("${SM_EXE_NAME}" PRIVATE $<$<CONFIG:Release>:RELEASE>)
-target_compile_definitions("${SM_EXE_NAME}" PRIVATE $<$<CONFIG:MinSizeRel>:MINSIZEREL>)
-target_compile_definitions("${SM_EXE_NAME}" PRIVATE
+target_compile_definitions("${SM_ENGINE_TGT}" PUBLIC $<$<CONFIG:Debug>:DEBUG>)
+target_compile_definitions("${SM_ENGINE_TGT}" PUBLIC $<$<CONFIG:Release>:RELEASE>)
+target_compile_definitions("${SM_ENGINE_TGT}" PUBLIC $<$<CONFIG:MinSizeRel>:MINSIZEREL>)
+target_compile_definitions("${SM_ENGINE_TGT}" PUBLIC
                            $<$<CONFIG:RelWithDebInfo>:RELWITHDEBINFO>)
 
 # For Apple Clang, CMAKE_<LANG>_COMPILER_ID will be set to AppleClang instead of Clang.
@@ -121,7 +156,7 @@ if (POLICY CMP0025)
   cmake_policy(SET CMP0025 NEW)
 endif()
 
-target_compile_options("${SM_EXE_NAME}" PRIVATE
+target_compile_options("${SM_ENGINE_TGT}" PRIVATE
   $<$<CXX_COMPILER_ID:GNU>:
   -Wall -Wextra -Wno-unused -Wno-unused-parameter -Wno-unknown-pragmas -Werror=type-limits>
   $<$<CXX_COMPILER_ID:Clang>:
@@ -137,7 +172,7 @@ target_compile_options("${SM_EXE_NAME}" PRIVATE
 # it prevents regressions, it does not create work. See
 # DocsAgents/adr/0001-toolchain-target.md section 7.
 if(WITH_WERROR)
-  target_compile_options("${SM_EXE_NAME}" PRIVATE
+  target_compile_options("${SM_ENGINE_TGT}" PRIVATE
     $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Werror>
     $<$<CXX_COMPILER_ID:MSVC>:/WX>
   )
@@ -164,7 +199,7 @@ if(MSVC)
   set(SM_COMPILE_FLAGS "${SM_COMPILE_FLAGS} /MP2 /utf-8")
 endif()
 
-set_target_properties("${SM_EXE_NAME}"
+set_target_properties("${SM_ENGINE_TGT}"
                       PROPERTIES COMPILE_FLAGS "${SM_COMPILE_FLAGS}")
 
 set_target_properties("${SM_EXE_NAME}"
@@ -173,10 +208,10 @@ set_target_properties("${SM_EXE_NAME}"
                                  OUTPUT_NAME_RELWITHDEBINFO "${SM_NAME_RELWITHDEBINFO}")
 
 if(WIN32)
-  target_compile_definitions("${SM_EXE_NAME}" PRIVATE WINDOWS)
-  target_compile_definitions("${SM_EXE_NAME}" PRIVATE _WINDOWS) # TODO: Remove this potential duplicate.
-  target_compile_definitions("${SM_EXE_NAME}" PRIVATE _CRT_SECURE_NO_WARNINGS)
-  target_compile_definitions("${SM_EXE_NAME}" PRIVATE _WINSOCK_DEPRECATED_NO_WARNINGS)
+  target_compile_definitions("${SM_ENGINE_TGT}" PUBLIC WINDOWS)
+  target_compile_definitions("${SM_ENGINE_TGT}" PUBLIC _WINDOWS) # TODO: Remove this potential duplicate.
+  target_compile_definitions("${SM_ENGINE_TGT}" PUBLIC _CRT_SECURE_NO_WARNINGS)
+  target_compile_definitions("${SM_ENGINE_TGT}" PUBLIC _WINSOCK_DEPRECATED_NO_WARNINGS)
 
   set_target_properties("${SM_EXE_NAME}"
                         PROPERTIES RUNTIME_OUTPUT_DIRECTORY
@@ -202,10 +237,10 @@ if(WIN32)
   endif()
 elseif(APPLE)
   # TODO should we set CRASH_HANDLER and other things like LINUX does below? Why is that logic specfic to LINUX?
-  target_compile_definitions("${SM_EXE_NAME}" PRIVATE BACKTRACE_METHOD_X86_DARWIN)
-  target_compile_definitions("${SM_EXE_NAME}" PRIVATE BACKTRACE_LOOKUP_METHOD_TEXT="dladdr")
-  target_compile_definitions("${SM_EXE_NAME}" PRIVATE BACKTRACE_LOOKUP_METHOD_DLADDR)
-  target_compile_definitions("${SM_EXE_NAME}" PRIVATE MACOSX)
+  target_compile_definitions("${SM_ENGINE_TGT}" PUBLIC BACKTRACE_METHOD_X86_DARWIN)
+  target_compile_definitions("${SM_ENGINE_TGT}" PUBLIC BACKTRACE_LOOKUP_METHOD_TEXT="dladdr")
+  target_compile_definitions("${SM_ENGINE_TGT}" PUBLIC BACKTRACE_LOOKUP_METHOD_DLADDR)
+  target_compile_definitions("${SM_ENGINE_TGT}" PUBLIC MACOSX)
   set_target_properties(
     "${SM_EXE_NAME}"
     PROPERTIES
@@ -239,7 +274,7 @@ elseif(APPLE)
   target_sources("${SM_EXE_NAME}" PUBLIC ${APPLE_BUNDLE_RESOURCES})
   set_source_files_properties(${APPLE_BUNDLE_RESOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
-  target_compile_definitions("${SM_EXE_NAME}" PRIVATE _XOPEN_SOURCE)
+  target_compile_definitions("${SM_ENGINE_TGT}" PUBLIC _XOPEN_SOURCE)
 
   if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(SM_APP_RELEASE_NAME "${SM_NAME_DEBUG}")
@@ -272,66 +307,66 @@ else() # Linux
                                    "${SM_ROOT_DIR}")
 
   if(${WITH_CRASH_HANDLER})
-    target_compile_definitions("${SM_EXE_NAME}" PRIVATE CRASH_HANDLER)
+    target_compile_definitions("${SM_ENGINE_TGT}" PUBLIC CRASH_HANDLER)
     if(LINUX)
       # used only in the ArchHooks_Unix.cpp file
       if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86" OR CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
-        target_compile_definitions("${SM_EXE_NAME}" PRIVATE BACKTRACE_METHOD_X86_LINUX)
-        target_compile_definitions("${SM_EXE_NAME}" PRIVATE
+        target_compile_definitions("${SM_ENGINE_TGT}" PUBLIC BACKTRACE_METHOD_X86_LINUX)
+        target_compile_definitions("${SM_ENGINE_TGT}" PUBLIC
                                    BACKTRACE_METHOD_TEXT="x86 custom backtrace")
       else()
-        target_compile_definitions("${SM_EXE_NAME}" PRIVATE
+        target_compile_definitions("${SM_ENGINE_TGT}" PUBLIC
                                    BACKTRACE_METHOD_TEXT="no backtrace")
       endif()
-      target_compile_definitions("${SM_EXE_NAME}" PRIVATE
+      target_compile_definitions("${SM_ENGINE_TGT}" PUBLIC
                                  BACKTRACE_LOOKUP_METHOD_TEXT="dladdr")
-      target_compile_definitions("${SM_EXE_NAME}" PRIVATE
+      target_compile_definitions("${SM_ENGINE_TGT}" PUBLIC
                                  BACKTRACE_LOOKUP_METHOD_DLADDR)
     endif()
   endif()
   if(${HAS_PTHREAD})
-    target_compile_definitions("${SM_EXE_NAME}" PRIVATE HAVE_LIBPTHREAD)
+    target_compile_definitions("${SM_ENGINE_TGT}" PUBLIC HAVE_LIBPTHREAD)
 
     message("Host processor is ${CMAKE_SYSTEM_PROCESSOR}")
     if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
       message("Host processor is 64bit X86")
-      target_compile_definitions("${SM_EXE_NAME}" PRIVATE CPU_X86_64)
+      target_compile_definitions("${SM_ENGINE_TGT}" PUBLIC CPU_X86_64)
     elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "x86"
            OR CMAKE_SYSTEM_PROCESSOR MATCHES "i686")
       message("Host processor is 32bit X86")
-      target_compile_definitions("${SM_EXE_NAME}" PRIVATE CPU_X86)
+      target_compile_definitions("${SM_ENGINE_TGT}" PUBLIC CPU_X86)
     elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
       message("Host processor is 64bit ARM")
-      target_compile_definitions("${SM_EXE_NAME}" PRIVATE CPU_AARCH64)
+      target_compile_definitions("${SM_ENGINE_TGT}" PUBLIC CPU_AARCH64)
     else()
       message("Unrecognized host processor type")
     endif()
   endif()
   if(${HAS_XRANDR})
-    target_compile_definitions("${SM_EXE_NAME}" PRIVATE HAVE_XRANDR)
+    target_compile_definitions("${SM_ENGINE_TGT}" PUBLIC HAVE_XRANDR)
   endif()
   if(${HAS_LIBXTST})
-    target_compile_definitions("${SM_EXE_NAME}" PRIVATE HAVE_LIBXTST)
+    target_compile_definitions("${SM_ENGINE_TGT}" PUBLIC HAVE_LIBXTST)
   endif()
   if(${HAS_XINERAMA})
-    target_compile_definitions("${SM_EXE_NAME}" PRIVATE HAVE_XINERAMA)
+    target_compile_definitions("${SM_ENGINE_TGT}" PUBLIC HAVE_XINERAMA)
   endif()
 
   if(BSD)
-    target_compile_definitions("${SM_EXE_NAME}" PRIVATE BSD)
+    target_compile_definitions("${SM_ENGINE_TGT}" PUBLIC BSD)
   endif()
 
   if(GTK3_FOUND)
-    target_compile_definitions("${SM_EXE_NAME}" PRIVATE HAVE_GTK)
+    target_compile_definitions("${SM_ENGINE_TGT}" PUBLIC HAVE_GTK)
   endif()
 
-  target_compile_definitions("${SM_EXE_NAME}" PRIVATE UNIX)
+  target_compile_definitions("${SM_ENGINE_TGT}" PUBLIC UNIX)
   if("${CMAKE_SYSTEM}" MATCHES "Linux")
-    target_compile_definitions("${SM_EXE_NAME}" PRIVATE LINUX)
+    target_compile_definitions("${SM_ENGINE_TGT}" PUBLIC LINUX)
   endif()
 endif()
 
-set_property(TARGET "${SM_EXE_NAME}" PROPERTY FOLDER "Internal Libraries")
+set_property(TARGET "${SM_ENGINE_TGT}" PROPERTY FOLDER "Internal Libraries")
 
 list(APPEND SMDATA_LINK_LIB "lua-5.1" "miniz")
 
@@ -434,7 +469,7 @@ else() # Unix / Linux TODO: Remember to find and locate the zip archive files.
 
   if(HAS_OSS)
     # No mention of OSS libraries.
-    target_compile_definitions("${SM_EXE_NAME}" PRIVATE "HAVE_OSS_VERSION=1")
+    target_compile_definitions("${SM_ENGINE_TGT}" PUBLIC "HAVE_OSS_VERSION=1")
   endif()
 
   if(HAS_PULSE)
@@ -456,7 +491,7 @@ else() # Unix / Linux TODO: Remember to find and locate the zip archive files.
   list(REMOVE_DUPLICATES SMDATA_LINK_LIB)
 endif()
 
-target_link_libraries("${SM_EXE_NAME}" ${SMDATA_LINK_LIB})
+target_link_libraries("${SM_ENGINE_TGT}" PUBLIC ${SMDATA_LINK_LIB})
 
 list(APPEND SM_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
             "${SM_GENERATED_SRC_DIR}")
@@ -464,13 +499,13 @@ list(APPEND SM_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
 if(APPLE)
   list(APPEND SM_INCLUDE_DIRS "archutils/Unix")
 
-  add_dependencies("${SM_EXE_NAME}" "ffmpeg")
+  add_dependencies("${SM_ENGINE_TGT}" "ffmpeg")
   list(APPEND SM_INCLUDE_DIRS "${SM_FFMPEG_INCLUDE}")
 else()
   if(MSVC)
     list(APPEND SM_INCLUDE_DIRS "${SM_EXTERN_DIR}/ffmpeg-w32/include")
   else()
-    add_dependencies("${SM_EXE_NAME}" "ffmpeg")
+    add_dependencies("${SM_ENGINE_TGT}" "ffmpeg")
     list(APPEND SM_INCLUDE_DIRS "${SM_FFMPEG_INCLUDE}")
 
     if(X11_FOUND)
@@ -481,7 +516,7 @@ else()
   endif()
 endif()
 
-target_include_directories("${SM_EXE_NAME}" PUBLIC ${SM_INCLUDE_DIRS})
+target_include_directories("${SM_ENGINE_TGT}" PUBLIC ${SM_INCLUDE_DIRS})
 
 if(WIN32)
   set(SM_INSTALL_DESTINATION ".")

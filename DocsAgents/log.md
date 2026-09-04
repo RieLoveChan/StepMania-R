@@ -200,10 +200,42 @@
   `sm_tests` target consume; `Main.cpp` stays exe-only so its `main`
   never collides with Catch2's. Gated behind `WITH_TESTS` (default OFF,
   CI-on). This commit: ADR + vendored Catch2 files +
-  `extern/CMakeProject-catch2.cmake` (not yet `include()`d — inert). The
-  `src/CMakeLists.txt` split + `tests/` target + CI job land on branch
-  `feature/test-harness` (§4 large change; merge gated on a green Windows
-  Release build + `ctest`).
+  `extern/CMakeProject-catch2.cmake` (not yet `include()`d — inert).
+
+* **Test harness scaffold — branch `feature/test-harness` (2026-09-03).**
+  The ADR-0006 §4 large change:
+  - `CMake/DefineOptions.cmake` — `option(WITH_TESTS OFF)`.
+  - `src/CMakeLists.txt` — when `WITH_TESTS`, `src/` builds as
+    `add_library(sm_engine OBJECT …)` and the exe links it + the platform
+    entry source (`Main.cpp`, or `archutils/Darwin/SMMain.mm` on Apple —
+    both pulled out of the engine list so their `main()` never collides
+    with Catch2's); otherwise a new `SM_ENGINE_TGT` var just aliases the
+    exe and the file is unchanged. Engine compile defs flipped
+    `PRIVATE`→`PUBLIC` (no-op
+    on a leaf exe; needed so `sm_tests` inherits them); link libs +
+    include dirs moved to `sm_engine PUBLIC`; output-name /
+    RUNTIME_OUTPUT_DIRECTORY / link-flags / `mapconv` POST_BUILD /
+    `install()` stay on the exe.
+  - `extern/CMakeLists.txt` — `include(CMakeProject-catch2.cmake)` under
+    `if(WITH_TESTS)`. `CMakeLists.txt` — `if(WITH_TESTS) enable_testing();
+    add_subdirectory(tests)`.
+  - `tests/CMakeLists.txt` + `tests/test_RageUtil.cpp` (8 `TEST_CASE`s
+    pinning `Trim`/`TrimLeft`/`TrimRight`/`GetExtension`/
+    `GetFileNameWithoutExtension`/`SetExtension`/`Basename`/`BinaryToHex`/
+    `ssprintf`, quirks included).
+  - `.github/workflows/ci.yml` — `windows-tests` / `ubuntu-tests` /
+    `macos-tests` (arm64) jobs, `-DWITH_TESTS=ON` Debug build + `ctest`.
+  - `playbooks/add-characterization-test.md`.
+  **Verified locally on Windows** (VS 2022 gen, bundled cmake 3.31):
+  `WITH_TESTS=ON` Debug + `/WX` fully compiles (`sm_engine` OBJECT lib +
+  `Catch2` + `sm_tests.exe`), `sm_tests.exe` → 27 assertions / 8 cases
+  pass, `ctest` 100%; `WITH_TESTS=OFF` Release + `/WX` still builds
+  `StepMania-R.exe` clean and configure emits no new targets. Non-Windows
+  `WITH_TESTS` paths (Apple `SMMain.mm` split, Linux) are
+  **configure-checked only** — maintainer verifies on an M1 + WSL/Linux;
+  then `ubuntu-tests` / `macos-tests` + the Actions run are the §4 gate.
+  Next phases (ADR 0006): `RageMath` / `TimingData` / `NoteData`, then a
+  committed simfile corpus via `GENERATE(from_range(...))`.
 
 ### Notes for future maintainers
 
@@ -221,3 +253,27 @@
 * Still not written: a generated symbol/ctags index; playbooks
   `fix-memory-leak`, `harden-c-string` (both listed in
   `playbooks/index.md` → Wanted).
+
+## 2026-09-04
+
+* **Gotcha found + fixed** (`c29368cb40`, branch `feature/test-harness`):
+  `ubuntu-tests` CI job (`sm_tests` on Linux) failed to link —
+  `undefined reference to LoadingWindow_Gtk::LoadingWindow_Gtk()`.
+  Root cause: `src/CMakeData-gtk.cmake` built `LoadingWindow_Gtk.cpp` as
+  its own `OBJECT` library (`LoadingWindowGtk`), linked into `sm_engine`
+  via `target_link_libraries(... PUBLIC ...)`. CMake does not propagate
+  an OBJECT library's objects transitively through *another* OBJECT
+  library — it only pulls them into a "real" binary target. That holds
+  for the normal exe (`WITH_TESTS=OFF`, `SM_ENGINE_TGT` = the exe itself)
+  but not for `sm_tests` (`WITH_TESTS=ON`, `SM_ENGINE_TGT` = `sm_engine`,
+  itself an OBJECT library). Windows/macOS never hit this because their
+  loading-window sources are plain files in `SMDATA_ALL_ARCH_SRC`, not a
+  separate OBJECT-library target — only the Linux/GTK path is shaped this
+  way. **Fix**: changed `LoadingWindowGtk` from `OBJECT` to `STATIC` —
+  static libraries resolve normally through any number of
+  `target_link_libraries()` hops. Linux-only change, no effect on the
+  shipped exe (already linked correctly) or on Windows/macOS. **Verified
+  green** on all 8 `feature/test-harness` CI jobs (Windows/macOS/Linux ×
+  plain build + `sm_tests`, plus the Lua.xml validator) — run
+  [33894450910](https://github.com/RieLoveChan/StepMania-R/actions/runs/33894450910).
+  See [`adr/0006-test-harness.md`](./adr/0006-test-harness.md).

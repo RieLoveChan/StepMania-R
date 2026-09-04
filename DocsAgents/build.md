@@ -63,14 +63,33 @@ Defined in `CMake/DefineOptions.cmake`. Pass as `-DWITH_X=ON/OFF`:
 | `WITH_CLUB_FANTASTIC` | OFF | Bundle Club Fantastic songs |
 | `WITH_GLES2` / `WITH_GTK3` (Linux) | ON | GL ES 2.0 / GTK3 UI |
 | `WITH_ALSA` / `WITH_PULSEAUDIO` / `WITH_JACK` (Linux) | ON/ON/OFF | Audio backends |
+| `WITH_WERROR` | OFF | Treat the engine's own warnings as errors (CI) |
+| `WITH_TESTS` | OFF | Build `sm_tests` (Catch2); makes `src/` an OBJECT library |
 
 # Tests
 
-Unit tests live in `src/tests/` (`test_*.cpp`): audio readers, file
-errors/readers, misc, threads, timing data, vector. They are small
-standalone programs, not a framework harness. See `src/tests/00 README`.
-Check `src/CMakeLists.txt` / `src/CMakeProject-*.cmake` for whether a
-given test target is wired into the current build.
+Two layers:
+
+- **Headless smoke** — `Program/StepMania-R.exe --SelfTest
+  --VideoRenderers=null --SoundDrivers=null` runs full engine init and
+  exits 0. This is the `AGENTS.md` §4 smoke gate; it runs in Windows CI.
+- **Unit / characterization** — `WITH_TESTS=ON` builds `src/` as the
+  `sm_engine` OBJECT library and adds the `sm_tests` target (Catch2 v3,
+  vendored at `extern/Catch2/`). Sources in `tests/`.
+
+  ```
+  cmake -B build-tests -DCMAKE_BUILD_TYPE=Debug -DWITH_TESTS=ON
+  cmake --build build-tests --config Debug --target sm_tests
+  ctest --test-dir build-tests -C Debug --output-on-failure
+  ```
+
+  `WITH_TESTS=OFF` (the default, and every build except the dedicated CI
+  job) leaves `src/CMakeLists.txt` behaving exactly as before the split.
+  See ADR [0006](./adr/0006-test-harness.md) and
+  [`playbooks/add-characterization-test.md`](./playbooks/add-characterization-test.md).
+
+The old `src/tests/` `test_*.cpp` (2004-era, Unix-only, uncommitted data)
+are **not** wired and are being replaced file-by-file under `tests/`.
 
 CI additionally validates the Lua docs XML:
 ```
@@ -81,6 +100,7 @@ xmllint --noout Docs/Luadoc/LuaDocumentation.xml
 # CI matrix
 
 `.github/workflows/ci.yml` builds on Ubuntu x86_64, macOS arm64, macOS
-x86_64, and Windows x86_64, plus the XML validation job. `paths-ignore`
-skips CI for `**.md`-only changes — so knowledge-base edits under
-`DocsAgents/` do not trigger a build.
+x86_64, and Windows x86_64, plus the XML validation job, the Windows
+headless smoke, and `windows-tests` (`-DWITH_TESTS=ON` build + `ctest`).
+`paths-ignore` skips CI for `**.md`-only changes — so knowledge-base
+edits under `DocsAgents/` do not trigger a build.
