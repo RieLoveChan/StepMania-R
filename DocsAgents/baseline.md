@@ -119,8 +119,10 @@ Per-subsystem breakdown as passes run:
   **`sm_engine` OBJECT library** when `WITH_TESTS=ON`; `sm_tests` links it
   + Catch2. `tests/test_RageUtil.cpp` is the first characterization file
   (Trim/GetExtension/Basename/SetExtension/BinaryToHex/ssprintf — pins
-  current behaviour, quirks included). New Windows CI job
-  `windows-tests`: `-DWITH_TESTS=ON` build + `ctest`.
+  current behaviour, quirks included). New CI jobs `windows-tests` /
+  `ubuntu-tests` / `macos-tests` (arm64): `-DWITH_TESTS=ON` Debug build +
+  `ctest`. On Apple the entry point pulled out of `sm_engine` is
+  `archutils/Darwin/SMMain.mm` (not `Main.cpp`).
   **Locally verified on Windows** (VS 2022, cmake 3.31):
   - `WITH_TESTS=ON` Debug + `WITH_WERROR=ON` → `sm_engine` OBJECT lib +
     `Catch2` + `sm_tests.exe` all build; `sm_tests.exe` → 27 assertions /
@@ -128,16 +130,18 @@ Per-subsystem breakdown as passes run:
   - `WITH_TESTS=OFF` Release + `WITH_WERROR=ON` → `StepMania-R.exe`
     builds clean (the OBJECT-library split is transparent when off);
     configure emits no new targets.
-  **Not verified: macOS/Linux, and the GitHub Actions run** — the
-  `windows-tests` job + the existing 4-platform build on push are the
-  maintainer's §4 merge gate.
+  **Not verified: the non-Windows `WITH_TESTS` paths** (Apple's
+  `SMMain.mm` split, Linux) — configure-checked only. Maintainer verifies
+  on an M1 + WSL/Linux, then `ubuntu-tests` / `macos-tests` + the
+  existing 4-platform build on push are the §4 merge gate.
 - `src/tests/`: 7 standalone `test_*.cpp` from ~2004-06 — **Unix/Apple
   only, need uncommitted 30 MB test data, `#error` without altivec/SSE,
   full of `#if 0`**. Not wireable as-is. Salvage the *intent* (timing
   data, file readers) into new `tests/` files where still relevant (ADR
   0006 phases 3–4).
 - CI: build on 4 platforms + `xmllint` Lua-doc validation + the Windows
-  headless smoke + (pending merge) the `windows-tests` job.
+  headless smoke + (pending merge) `windows-tests` / `ubuntu-tests` /
+  `macos-tests`.
 
 **Smoke-test plan (recon 2026-09-02).** No headless / boot-and-exit mode
 exists. `CommandLineActions::Handle()` (`StepMania.cpp:960`) runs *after*

@@ -107,11 +107,13 @@ default OFF, ON in a dedicated CI job. Not built in a normal dev build.
   `/SAFESEH:NO`, `/NODEFAULTLIB:*`, the `mapconv` POST_BUILD, every
   `install()`) → stays on `${SM_EXE_NAME}`. `sm_tests` is a console
   binary and wants none of it.
-- **`Main.cpp`** (6 lines: `int main(){ return sm_main(...); }`) is
-  **exe-only** — excluded from `sm_engine` so its `main` never collides
-  with Catch2's `main` in `sm_tests`. It is dropped from the list the PCH
-  `foreach` iterates, so it compiles without `/Yu` (one TU, textual
-  `global.h` — negligible).
+- **The platform entry source** — `Main.cpp` everywhere, or
+  `archutils/Darwin/SMMain.mm` on Apple — is **exe-only**, pulled out of
+  `sm_engine` (`list(REMOVE_ITEM …)` for `SMMain.mm`, which
+  `CMakeData-os.cmake` had put in the engine list) so its `main` never
+  collides with Catch2's `main` in `sm_tests`. On Windows it also drops
+  out of the PCH `foreach`, so it compiles without `/Yu` (one TU — no
+  active PCH on macOS, so nothing to do there).
 
 ### Why an OBJECT library (not STATIC, not per-test source lists)
 
@@ -138,10 +140,13 @@ default OFF, ON in a dedicated CI job. Not built in a normal dev build.
   ffmpeg-w32 `LIBPATH` reaching `sm_tests` (handled via
   `target_link_directories(sm_engine PUBLIC …)`), `/SUBSYSTEM` staying
   off `sm_tests`.
-- **CI** grows one job: configure `-DWITH_TESTS=ON -DWITH_WERROR=ON`,
-  build `sm_tests`, run `ctest --output-on-failure`. Separate from the
-  ship build so a red test never blocks the smoke/build signal while the
-  suite is young.
+- **CI** grows three jobs — `windows-tests` / `ubuntu-tests` /
+  `macos-tests` (arm64): configure `-DWITH_TESTS=ON` (Windows also
+  `-DWITH_WERROR=ON`), build `sm_tests`, `ctest --output-on-failure`.
+  Separate from the ship builds so a red test never blocks the
+  smoke/build signal while the suite is young. Windows is verified
+  locally; the non-Windows `WITH_TESTS` paths are configure-checked and
+  wait on a maintainer run (M1 / WSL) before the jobs are trusted.
 - **`extern/Catch2/`** adds ~1.1 MB of vendored source. Bumping it =
   replace the two files + `LICENSE.txt`, note the version here and in
   `baseline.md`.

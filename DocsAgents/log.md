@@ -206,9 +206,12 @@
   The ADR-0006 §4 large change:
   - `CMake/DefineOptions.cmake` — `option(WITH_TESTS OFF)`.
   - `src/CMakeLists.txt` — when `WITH_TESTS`, `src/` builds as
-    `add_library(sm_engine OBJECT …)` and the exe links it + `Main.cpp`;
-    otherwise a new `SM_ENGINE_TGT` var just aliases the exe and the file
-    is unchanged. Engine compile defs flipped `PRIVATE`→`PUBLIC` (no-op
+    `add_library(sm_engine OBJECT …)` and the exe links it + the platform
+    entry source (`Main.cpp`, or `archutils/Darwin/SMMain.mm` on Apple —
+    both pulled out of the engine list so their `main()` never collides
+    with Catch2's); otherwise a new `SM_ENGINE_TGT` var just aliases the
+    exe and the file is unchanged. Engine compile defs flipped
+    `PRIVATE`→`PUBLIC` (no-op
     on a leaf exe; needed so `sm_tests` inherits them); link libs +
     include dirs moved to `sm_engine PUBLIC`; output-name /
     RUNTIME_OUTPUT_DIRECTORY / link-flags / `mapconv` POST_BUILD /
@@ -220,15 +223,17 @@
     pinning `Trim`/`TrimLeft`/`TrimRight`/`GetExtension`/
     `GetFileNameWithoutExtension`/`SetExtension`/`Basename`/`BinaryToHex`/
     `ssprintf`, quirks included).
-  - `.github/workflows/ci.yml` — new `windows-tests` job
-    (`-DWITH_TESTS=ON` Debug build + `ctest`).
+  - `.github/workflows/ci.yml` — `windows-tests` / `ubuntu-tests` /
+    `macos-tests` (arm64) jobs, `-DWITH_TESTS=ON` Debug build + `ctest`.
   - `playbooks/add-characterization-test.md`.
   **Verified locally on Windows** (VS 2022 gen, bundled cmake 3.31):
   `WITH_TESTS=ON` Debug + `/WX` fully compiles (`sm_engine` OBJECT lib +
   `Catch2` + `sm_tests.exe`), `sm_tests.exe` → 27 assertions / 8 cases
   pass, `ctest` 100%; `WITH_TESTS=OFF` Release + `/WX` still builds
-  `StepMania-R.exe` clean and configure emits no new targets. **macOS /
-  Linux and the GitHub Actions run are the maintainer's §4 merge gate.**
+  `StepMania-R.exe` clean and configure emits no new targets. Non-Windows
+  `WITH_TESTS` paths (Apple `SMMain.mm` split, Linux) are
+  **configure-checked only** — maintainer verifies on an M1 + WSL/Linux;
+  then `ubuntu-tests` / `macos-tests` + the Actions run are the §4 gate.
   Next phases (ADR 0006): `RageMath` / `TimingData` / `NoteData`, then a
   committed simfile corpus via `GENERATE(from_range(...))`.
 
