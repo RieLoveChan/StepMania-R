@@ -7,7 +7,8 @@
 # DocsAgents/adr/0006-test-harness.md.
 
 set(SM_TEST_SRC
-    test_RageUtil.cpp)
+    test_RageUtil.cpp
+    test_RageMath.cpp)
 
 source_group("" FILES ${SM_TEST_SRC})
 

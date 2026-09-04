@@ -18,6 +18,7 @@ version.hpp
 Build/*
 Build/*/*
 build-tidy/
+build-tests/
 Debug/
 Release/
 Contents/
