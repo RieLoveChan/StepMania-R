@@ -12,8 +12,6 @@
 #include "archutils/win32/GotoURL.h"
 #include "archutils/Win32/RegistryAccess.h"
 
-#include "VersionHelpers.h"
-
 #include <cstdint>
 #include <vector>
 
@@ -152,19 +150,14 @@ void ArchHooks_Win32::BoostPriority()
 {
 	/* We just want a slight boost, so we don't skip needlessly if something happens
 	 * in the background.  We don't really want to be high-priority--above normal should
-	 * be enough.  However, ABOVE_NORMAL_PRIORITY_CLASS is only supported in Win2000
-	 * and later. */
-#ifndef ABOVE_NORMAL_PRIORITY_CLASS
-#define ABOVE_NORMAL_PRIORITY_CLASS 0x00008000
-#endif
-
-	DWORD pri = HIGH_PRIORITY_CLASS;
-	if( IsWindowsVersionOrGreater(HIBYTE(_WIN32_WINNT_WIN2K), LOBYTE(_WIN32_WINNT_WIN2K), 0) )
-		pri = ABOVE_NORMAL_PRIORITY_CLASS;
+	 * be enough. ABOVE_NORMAL_PRIORITY_CLASS has been available since Win2000; the
+	 * floor is Windows 11 (ADR 0003), so it's unconditionally available -- the
+	 * runtime IsWindowsVersionOrGreater(Win2000) check this used to gate on is
+	 * pre-floor dead weight (backlog item 16). */
 
 	/* Be sure to boost the app, not the thread, to make sure the
 	 * sound thread stays higher priority than the main thread. */
-	SetPriorityClass( GetCurrentProcess(), pri );
+	SetPriorityClass( GetCurrentProcess(), ABOVE_NORMAL_PRIORITY_CLASS );
 }
 
 void ArchHooks_Win32::UnBoostPriority()

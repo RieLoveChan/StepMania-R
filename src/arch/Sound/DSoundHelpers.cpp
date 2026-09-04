@@ -213,14 +213,11 @@ RString DSoundBuf::Init( DSound &ds, DSoundBuf::hw hardware,
 	memset( &format, 0, sizeof(format) );
 	format.dwSize = sizeof(format);
 
-	if (IsWindowsVistaOrGreater())
-	{
-		format.dwFlags = DSBCAPS_GETCURRENTPOSITION2 | DSBCAPS_GLOBALFOCUS | DSBCAPS_CTRLVOLUME | DSBCAPS_TRUEPLAYPOSITION;
-	}
-	else
-	{
-		format.dwFlags = DSBCAPS_GETCURRENTPOSITION2 | DSBCAPS_GLOBALFOCUS | DSBCAPS_CTRLVOLUME;
-	}
+	// DSBCAPS_TRUEPLAYPOSITION has been available since Vista; the floor is
+	// Windows 11 (ADR 0003), so it's unconditionally available -- the
+	// runtime IsWindowsVistaOrGreater() check this used to gate on is
+	// pre-floor dead weight (backlog item 16).
+	format.dwFlags = DSBCAPS_GETCURRENTPOSITION2 | DSBCAPS_GLOBALFOCUS | DSBCAPS_CTRLVOLUME | DSBCAPS_TRUEPLAYPOSITION;
 
 	/* Don't use DSBCAPS_STATIC.  It's meant for static buffers, and we
 	 * only use streaming buffers. */
