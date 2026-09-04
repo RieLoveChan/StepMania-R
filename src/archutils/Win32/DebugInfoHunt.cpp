@@ -213,6 +213,13 @@ static void GetWindowsVersionDebugInfo()
 				Ver += "WinServer2008 R2";
 			*/
 		}
+		else if(ovi.dwMajorVersion == 10 && ovi.dwMinorVersion == 0)
+		{
+			// Windows 11 is still NT 10.0 -- Microsoft never introduced a
+			// separate major/minor for it, so build number is the only way
+			// to tell them apart (11 starts at build 22000).
+			Ver += (ovi.dwBuildNumber >= 22000) ? "Win11" : "Win10";
+		}
 		else
 			Ver += "unknown NT-based";
 	} else Ver += "???";
