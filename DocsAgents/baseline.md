@@ -113,14 +113,26 @@ Per-subsystem breakdown as passes run:
   full engine init and exits 0. Verified locally (~11s). Wired into the
   Windows CI job (`continue-on-error` for now). This is the `AGENTS.md`
   §4 smoke test.
+- **Unit harness: SCAFFOLDED** (branch `feature/test-harness`, 2026-09-03,
+  ADR [0006](./adr/0006-test-harness.md)). Framework = **Catch2 v3.16.0**
+  (vendored amalgamated, `extern/Catch2/`). `src/` builds as the
+  **`sm_engine` OBJECT library** when `WITH_TESTS=ON`; `sm_tests` links it
+  + Catch2. `tests/test_RageUtil.cpp` is the first characterization file
+  (Trim/GetExtension/Basename/SetExtension/BinaryToHex/ssprintf — pins
+  current behaviour, quirks included). New Windows CI job
+  `windows-tests`: `-DWITH_TESTS=ON` build + `ctest`.
+  **Locally verified: CMake configure only** (VS 2022 gen, cmake 3.31) —
+  target graph resolves (`sm_tests` → `sm_engine` + `Catch2`), `ctest -N`
+  lists it, and the `WITH_TESTS=OFF` path generates identically to before
+  (no new targets). **NOT yet verified: a full compile/link or that the
+  assertions pass** — that is the maintainer's §4 merge gate.
 - `src/tests/`: 7 standalone `test_*.cpp` from ~2004-06 — **Unix/Apple
   only, need uncommitted 30 MB test data, `#error` without altivec/SSE,
-  full of `#if 0`**. Not wireable as-is; they're a rewrite. Real unit
-  coverage needs a decision (Catch2 / doctest — backlog item 17) and new
-  tests on the pure cores. Salvage the *intent* (timing data, file
-  readers) into new tests where still relevant.
+  full of `#if 0`**. Not wireable as-is. Salvage the *intent* (timing
+  data, file readers) into new `tests/` files where still relevant (ADR
+  0006 phases 3–4).
 - CI: build on 4 platforms + `xmllint` Lua-doc validation + the Windows
-  headless smoke.
+  headless smoke + (pending merge) the `windows-tests` job.
 
 **Smoke-test plan (recon 2026-09-02).** No headless / boot-and-exit mode
 exists. `CommandLineActions::Handle()` (`StepMania.cpp:960`) runs *after*
@@ -219,7 +231,17 @@ Cross-cutting: `RString` in 723 files / ~8,429 uses; `GAMESTATE->` at
 
 ## Tests / smoke
 
-Once a test target + `--SelfTest` flag exist, record pass/fail + a
-headless run here.
+Smoke (`--SelfTest`) exists. Unit target:
+
+```
+cmake -B build-tests -DCMAKE_BUILD_TYPE=Debug -DWITH_TESTS=ON -DWITH_WERROR=ON
+cmake --build build-tests --config Debug --target sm_tests
+ctest --test-dir build-tests -C Debug --output-on-failure
+```
+
+On the maintainer box use the VS-bundled cmake (`…\BuildTools\…\CMake\bin`)
+and a fresh build dir (do not reuse `build/`). `WITH_TESTS=ON` swaps
+`src/` to the `sm_engine` OBJECT library; `WITH_TESTS=OFF` (default) is
+byte-identical to before.
 
 Then update the tables above and add a dated note to [`log.md`](./log.md).

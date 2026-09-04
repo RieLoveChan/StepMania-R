@@ -200,10 +200,36 @@
   `sm_tests` target consume; `Main.cpp` stays exe-only so its `main`
   never collides with Catch2's. Gated behind `WITH_TESTS` (default OFF,
   CI-on). This commit: ADR + vendored Catch2 files +
-  `extern/CMakeProject-catch2.cmake` (not yet `include()`d — inert). The
-  `src/CMakeLists.txt` split + `tests/` target + CI job land on branch
-  `feature/test-harness` (§4 large change; merge gated on a green Windows
-  Release build + `ctest`).
+  `extern/CMakeProject-catch2.cmake` (not yet `include()`d — inert).
+
+* **Test harness scaffold — branch `feature/test-harness` (2026-09-03).**
+  The ADR-0006 §4 large change:
+  - `CMake/DefineOptions.cmake` — `option(WITH_TESTS OFF)`.
+  - `src/CMakeLists.txt` — when `WITH_TESTS`, `src/` builds as
+    `add_library(sm_engine OBJECT …)` and the exe links it + `Main.cpp`;
+    otherwise a new `SM_ENGINE_TGT` var just aliases the exe and the file
+    is unchanged. Engine compile defs flipped `PRIVATE`→`PUBLIC` (no-op
+    on a leaf exe; needed so `sm_tests` inherits them); link libs +
+    include dirs moved to `sm_engine PUBLIC`; output-name /
+    RUNTIME_OUTPUT_DIRECTORY / link-flags / `mapconv` POST_BUILD /
+    `install()` stay on the exe.
+  - `extern/CMakeLists.txt` — `include(CMakeProject-catch2.cmake)` under
+    `if(WITH_TESTS)`. `CMakeLists.txt` — `if(WITH_TESTS) enable_testing();
+    add_subdirectory(tests)`.
+  - `tests/CMakeLists.txt` + `tests/test_RageUtil.cpp` (8 `TEST_CASE`s
+    pinning `Trim`/`TrimLeft`/`TrimRight`/`GetExtension`/
+    `GetFileNameWithoutExtension`/`SetExtension`/`Basename`/`BinaryToHex`/
+    `ssprintf`, quirks included).
+  - `.github/workflows/ci.yml` — new `windows-tests` job
+    (`-DWITH_TESTS=ON` Debug build + `ctest`).
+  - `playbooks/add-characterization-test.md`.
+  **Verified locally: CMake configure only** (VS 2022 generator, bundled
+  cmake 3.31) — both `WITH_TESTS` ON and OFF configure clean; target
+  graph resolves (`sm_tests` → `sm_engine` + `Catch2`); `ctest -N` lists
+  `sm_tests`; the OFF path emits no new targets. **A full compile/link
+  and a green `ctest` are the maintainer's merge gate** (`AGENTS.md` §4).
+  Next phases (ADR 0006): `RageMath` / `TimingData` / `NoteData`, then a
+  committed simfile corpus via `GENERATE(from_range(...))`.
 
 ### Notes for future maintainers
 
