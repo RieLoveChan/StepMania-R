@@ -1,0 +1,141 @@
+# Builds the Windows FFmpeg DLLs + MSVC import libs from the extern/ffmpeg
+# submodule, cross-compiled with mingw-w64 on Ubuntu (no Windows runner
+# needed for this). Manual trigger only: this is slow (~2x a native FFmpeg
+# build, x2 for the two architectures) and only needs to rerun when the
+# extern/ffmpeg submodule pin changes.
+#
+# Phase A (current): uploads the packaged output as a workflow artifact for
+# manual inspection. Nothing in the engine consumes this yet — see
+# DocsAgents/modernization-backlog.md item 7.
+#
+# Deviation from the recipe in extern/ffmpeg-w32/README.txt: --enable-bzlib
+# and --enable-zlib are dropped. Cross-building zlib/bzip2 for mingw would
+# need either a distro package that Ubuntu doesn't carry (unlike Arch, where
+# the original blob was built) or a from-source cross-build with its own
+# pitfalls (zlib's ./configure runs compiled test binaries, which can't
+# execute cross-compiled Windows output on a Linux runner). Neither codec
+# path StepMania actually exercises (video/audio decode) needs them.
+name: FFmpeg Windows artifact
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-ffmpeg-win32:
+    name: Build ffmpeg-w32 (mingw-w64 cross)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Checkout ffmpeg submodule
+        run: git submodule update --init extern/ffmpeg
+      - name: Install cross toolchain
+        run: sudo apt-get update && sudo apt-get install -y
+          gcc-mingw-w64-x86-64
+          g++-mingw-w64-x86-64
+          gcc-mingw-w64-i686
+          g++-mingw-w64-i686
+          mingw-w64-tools
+          nasm
+          llvm
+          zip
+
+      - name: Build x64 (x86_64-w64-mingw32)
+        working-directory: extern/ffmpeg
+        run: |
+          ./configure \
+            --arch=x86_64 \
+            --target-os=mingw32 \
+            --cross-prefix=x86_64-w64-mingw32- \
+            --disable-autodetect \
+            --disable-avdevice \
+            --disable-avfilter \
+            --disable-bzlib \
+            --disable-debug \
+            --disable-devices \
+            --disable-doc \
+            --disable-filters \
+            --disable-lzma \
+            --disable-network \
+            --disable-postproc \
+            --disable-programs \
+            --disable-static \
+            --disable-swresample \
+            --disable-zlib \
+            --enable-d3d11va \
+            --enable-dxva2 \
+            --enable-gpl \
+            --enable-shared \
+            --enable-w32threads \
+            --extra-cflags=-w \
+            --extra-ldflags=-static \
+            --prefix=/
+          make -j"$(nproc)"
+          make DESTDIR="$PWD/dest-x64" install
+          make distclean
+
+      - name: Build x86 (i686-w64-mingw32)
+        working-directory: extern/ffmpeg
+        run: |
+          ./configure \
+            --arch=x86 \
+            --target-os=mingw32 \
+            --cross-prefix=i686-w64-mingw32- \
+            --disable-autodetect \
+            --disable-avdevice \
+            --disable-avfilter \
+            --disable-bzlib \
+            --disable-debug \
+            --disable-devices \
+            --disable-doc \
+            --disable-filters \
+            --disable-lzma \
+            --disable-network \
+            --disable-postproc \
+            --disable-programs \
+            --disable-static \
+            --disable-swresample \
+            --disable-zlib \
+            --enable-d3d11va \
+            --enable-dxva2 \
+            --enable-gpl \
+            --enable-shared \
+            --enable-w32threads \
+            --extra-cflags=-w \
+            --extra-ldflags=-static \
+            --prefix=/
+          make -j"$(nproc)"
+          make DESTDIR="$PWD/dest-x86" install
+
+      - name: Package (DLL + MSVC .lib + .def, per arch; headers once)
+        run: |
+          set -eux
+          OUT=ffmpeg-w32-package
+          mkdir -p "$OUT/include" "$OUT/x64" "$OUT/x86"
+
+          # Headers are identical between arches; take them from the x64 install.
+          cp -r extern/ffmpeg/dest-x64/include/. "$OUT/include/"
+
+          package_arch() {
+            local dest="$1" outdir="$2" machine="$3"
+            local dll
+            find "$dest" -name '*.dll' | while read -r dll; do
+              local base name
+              base="$(basename "$dll")"
+              name="${base%.dll}"
+              cp "$dll" "$outdir/$base"
+              # gendef writes <name>.def into the cwd from a DLL's export table.
+              ( cd "$outdir" && gendef "$base" )
+              llvm-lib "/def:$outdir/$name.def" "/out:$outdir/$name.lib" "/machine:$machine"
+            done
+          }
+          package_arch extern/ffmpeg/dest-x64 "$OUT/x64" X64
+          package_arch extern/ffmpeg/dest-x86 "$OUT/x86" X86
+
+          ls -la "$OUT/x64" "$OUT/x86"
+          zip -r ffmpeg-w32-package.zip "$OUT"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ffmpeg-w32-package
+          path: ffmpeg-w32-package.zip
+          retention-days: 30
