@@ -136,14 +136,45 @@ numeric/path helpers → `TimingData` (`WithinULP`) → `NoteData`/
 `test_timing_data` / `test_file_readers` / `test_misc` where still
 meaningful.
 
-### 16. Pre-floor `#if` guards across `src/arch/` and `src/archutils/`
+### 16. Pre-floor `#if` guards across `src/arch/` and `src/archutils/` — Windows runtime-version checks DONE
 Now that ADR 0003 sets Windows 11 / current-macOS / current-Linux floors,
 sweep for `#if`/`#ifdef` guards handling below-floor OSes: `_WIN32_WINNT`
 comparisons, `WINVER` checks, `MAC_OS_X_VERSION_MIN_REQUIRED` for old
 10.x, XP/9x fallback branches, 32-bit paths, EOL-distro `#ifdef`s.
-**Action:** batched sweep, one `src/arch/<area>` per commit, Windows
-build verified. Coordinate with items 13 (`arch_setup.h`) and the
-D3D9/GLES2 question (ADR 0004).
+**Done (2026-09-04), Windows runtime-version checks:**
+`ArchHooks_Win32.cpp::BoostPriority()` ran `IsWindowsVersionOrGreater
+(Win2000)` at runtime to decide whether `ABOVE_NORMAL_PRIORITY_CLASS`
+was usable (always true on the floor) — collapsed to unconditional.
+`DSoundHelpers.cpp` did the same for `IsWindowsVistaOrGreater()` gating
+`DSBCAPS_TRUEPLAYPOSITION`. Both now-unused `#include "VersionHelpers.h"`
+removed (`DirectXHelpers.h` and the two call sites). No preprocessor-level
+`#if _WIN32_WINNT`/`WINVER` guards remain in `src/arch`/`src/archutils`
+outside `arch_setup.h` (already correct at `0x0A00`, item 13). A few
+comments mention Win9x/XP/Win98 as historical context on still-live code
+(hardware quirk notes, page-permission differences) — left alone, not
+functional gates.
+**Not done — 32-bit Windows removal (new, see item 21).**
+**Remaining:** macOS `MAC_OS_X_VERSION_MIN_REQUIRED` / old-`.mm` sweep,
+Linux EOL-distro `#ifdef`s — both out of scope for now (`AGENTS.md` §3,
+non-Windows work needs explicit instruction).
+
+### 21. Drop 32-bit Windows (x86) — ADR 0003 already says so, not executed
+ADR [0003](./adr/0003-platform-support-floors.md) (Accepted): "No 32-bit
+targets on any platform." Windows 11 (the floor) doesn't even ship a
+32-bit edition, so a Windows-R x86 build has nowhere to run — but the
+x86 build path is still fully present: `SM_WIN32_ARCH` branches in
+`src/CMakeLists.txt`, `StepmaniaCore.cmake`, `tests/CMakeLists.txt`,
+`CMake/Modules/FindDirectX.cmake`, and (as of 2026-09-04) the x86 half
+of the `build-ffmpeg-win32.yml` artifact / `ffmpeg-w32-19feb712f5`
+Release asset (item 7). Found during the item 16 sweep; deliberately
+**not executed yet** — flagged to the maintainer first since it
+intersects with the just-shipped ffmpeg artifact pipeline.
+**Action:** remove the `x86`/Win32 branches from the 4 CMake files
+above, then simplify `build-ffmpeg-win32.yml` to only build x64 (drop
+the second `./configure`/`make` pass and the `x86/` package dir) —
+existing `x64/` Release asset stays valid, no need to re-cut it.
+`AGENTS.md` §4 higher-risk change (build-flag/toolchain scope);
+Windows build verified before/after.
 
 ### 15. `#if 0` dead blocks — first batch DONE (`a2c3d44522`), ~13 remain
 First pass (2026-09-04) removed 10 dead blocks across 8 files
