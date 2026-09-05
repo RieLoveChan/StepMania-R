@@ -4790,7 +4790,6 @@ void ScreenEdit::DisplayTimingMenu()
 
 void ScreenEdit::DisplayTimingChangeMenu()
 {
-	int row= GetRow();
 	EditMiniMenu(&g_TimingDataChangeInformation, SM_BackFromTimingDataChangeInformation);
 }
 

@@ -731,7 +731,6 @@ void MusicWheel::BuildWheelItemDatas( std::vector<MusicWheelItemData *> &arrayWh
 				case SORT_METER:
 					if( bUseSections )
 					{
-						int iSectionCount = 0;
 						for (auto const& [sectionName, songs] : SONGMAN->GetMeterToSongsMap()) {
 							RageColor colorSection = SECTION_COLORS.GetValue(iSectionColorIndex);
 							iSectionColorIndex = (iSectionColorIndex+1) % NUM_SECTION_COLORS;

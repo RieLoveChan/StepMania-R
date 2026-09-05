@@ -1422,9 +1422,14 @@ int GameState::GetCourseSongIndex() const
 	// iSongsPlayed includes the current song, so it's 1-based; subtract one.
 	if( GAMESTATE->m_bMultiplayer )
 	{
-		FOREACH_EnabledMultiPlayer(mp)
-			return STATSMAN->m_CurStageStats.m_multiPlayer[mp].m_iSongsPlayed-1;
-		FAIL_M("At least one MultiPlayer must be joined.");
+		// Equivalent to FOREACH_EnabledMultiPlayer(mp) return ...; -- written
+		// directly because the FOREACH-then-immediate-return pattern makes
+		// MSVC warn C4702 (unreachable code) on the loop's back-edge
+		// (backlog item 2).
+		MultiPlayer mp = GetNextEnabledMultiPlayer( (MultiPlayer)-1 );
+		if( mp == MultiPlayer_Invalid )
+			FAIL_M("At least one MultiPlayer must be joined.");
+		return STATSMAN->m_CurStageStats.m_multiPlayer[mp].m_iSongsPlayed-1;
 	}
 	else
 	{
@@ -1744,9 +1749,12 @@ int GameState::GetNumHumanPlayers() const
 
 PlayerNumber GameState::GetFirstHumanPlayer() const
 {
-	FOREACH_HumanPlayer( pn )
-		return pn;
-	return PLAYER_INVALID;
+	// Equivalent to FOREACH_HumanPlayer(pn) return pn; return PLAYER_INVALID;
+	// -- written directly because the FOREACH-then-immediate-return pattern
+	// makes MSVC warn C4702 (unreachable code) on the loop's back-edge,
+	// which the body's unconditional return makes genuinely unreachable
+	// (backlog item 2).
+	return GetNextHumanPlayer( (PlayerNumber)-1 );
 }
 
 PlayerNumber GameState::GetFirstDisabledPlayer() const
@@ -1764,9 +1772,8 @@ bool GameState::IsCpuPlayer( PlayerNumber pn ) const
 
 bool GameState::AnyPlayersAreCpu() const
 {
-	FOREACH_CpuPlayer( pn )
-		return true;
-	return false;
+	// See GetFirstHumanPlayer() above for why this isn't FOREACH_CpuPlayer.
+	return GetNextCpuPlayer( (PlayerNumber)-1 ) != PLAYER_INVALID;
 }
 
 
@@ -2358,7 +2365,6 @@ void GameState::StoreRankingName( PlayerNumber pn, RString sName )
 
 	// Only attempt to remove/clamp scores after the last enabled player has saved their scores.
 	if (GAMESTATE->GetNumPlayersEnabled() <= static_cast<int>(m_sPlayersThatWereFilled.size())) {
-		StepsType st = GetCurrentStyle(pn)->m_StepsType;
 		PlayMode mode = m_PlayMode.Get();
 		Profile *pProfile = PROFILEMAN->GetMachineProfile();
 		switch (mode)
@@ -2410,7 +2416,6 @@ void GameState::StoreRankingName( PlayerNumber pn, RString sName )
 					ASSERT( pCourse != nullptr );
 					Trail *pTrail = m_pCurTrail[pn];
 					ASSERT( pTrail != nullptr );
-					CourseDifficulty cd = pTrail->m_CourseDifficulty;
 					HighScoreList &hsl = pProfile->GetCourseHighScoreList( pCourse, pTrail );
 					if (!PREFSMAN->m_bAllowMultipleHighScoreWithSameName)
 					{
@@ -3305,7 +3310,7 @@ public:
 			return 0;
 		}
 		StepsType stype= Enum::Check<StepsType>(L, 3);
-		Difficulty diff= Enum::Check<Difficulty>(L, 4);
+		Enum::Check<Difficulty>(L, 4); // Validate the arg; the resulting Difficulty isn't otherwise used here.
 		Steps* new_steps= song->CreateSteps();
 		RString edit_name;
 		// Form 2.

@@ -3138,7 +3138,14 @@ void ScreenGameplay::SaveReplay()
 	 */
 	FOREACH_HumanPlayer( pn )
 	{
-		FOREACH_EnabledPlayerInfo( m_vPlayerInfo, pi )
+		// Equivalent to FOREACH_EnabledPlayerInfo(m_vPlayerInfo, pi) { ...; return; }
+		// -- written directly because that loop's body always returns on its
+		// first iteration, which makes MSVC warn C4702 (unreachable code) on
+		// the loop's back-edge (backlog item 2). The outer FOREACH_HumanPlayer
+		// still needs to try the next pn if this one has no enabled PlayerInfo.
+		std::vector<PlayerInfo>::iterator pi = GetNextEnabledPlayerInfo( m_vPlayerInfo.begin(), m_vPlayerInfo );
+		if( pi == m_vPlayerInfo.end() )
+			continue;
 		{
 			Profile *pTempProfile = PROFILEMAN->GetProfile(pn);
 

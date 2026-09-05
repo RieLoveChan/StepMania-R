@@ -275,43 +275,11 @@ void RageBitmapTexture::Create()
 	CreateFrameRects();
 
 
-	{
-		// Enforce frames in the image have even dimensions.
-		// Otherwise, pixel/texel alignment will be off.
-		int iDimensionMultiple = 2;
-
-		if( sHintString.find("doubleres") != std::string::npos )
-		{
-			iDimensionMultiple = 4;
-		}
-
-		bool bRunCheck = true;
-
-		// Don't check if the artist intentionally blanked the image by making it very tiny.
-		if( this->GetSourceWidth()<=iDimensionMultiple || this->GetSourceHeight()<=iDimensionMultiple )
-			bRunCheck = false;
-
-		// HACK: Don't check song graphics. Many of them are weird dimensions.
-		if( !TEXTUREMAN->GetOddDimensionWarning() )
-			bRunCheck = false;
-
-		// Don't check if this is the screen texture, the theme can't do anything
-		// about it. -Kyz
-		if(actualID == TEXTUREMAN->GetScreenTextureID())
-		{
-			bRunCheck= false;
-		}
-
-		if( bRunCheck  )
-		{
-			float fFrameWidth = this->GetSourceWidth() / (float)this->GetFramesWide();
-			float fFrameHeight = this->GetSourceHeight() / (float)this->GetFramesHigh();
-			float fBetterFrameWidth = std::ceil(fFrameWidth/iDimensionMultiple) * iDimensionMultiple;
-			float fBetterFrameHeight = std::ceil(fFrameHeight/iDimensionMultiple) * iDimensionMultiple;
-			float fBetterSourceWidth = this->GetFramesWide() * fBetterFrameWidth;
-			float fBetterSourceHeight = this->GetFramesHigh() * fBetterFrameHeight;
-		}
-	}
+	// An "enforce even frame dimensions" check used to live here: it
+	// gated on TEXTUREMAN->GetOddDimensionWarning() and computed the
+	// "better" (dimension-multiple-aligned) frame/source size, but never
+	// did anything with the result (no log, no resize) -- dead weight
+	// entirely, not just the two locals MSVC flagged (backlog item 2).
 
 
 	delete pImg;

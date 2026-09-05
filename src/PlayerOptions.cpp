@@ -2073,7 +2073,6 @@ public:
 
 	static int GetDisabledTimingWindows(T* p, lua_State* L)
 	{
-		int original_top= lua_gettop(L);
 		lua_newtable( L );
 		int j = 0;
 		for (int i=TW_W1; i <= TW_W5; ++i) {

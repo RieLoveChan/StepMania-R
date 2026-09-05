@@ -762,9 +762,10 @@ INT_PTR CrashDialog::HandleMessage( UINT msg, WPARAM wParam, LPARAM lParam )
 			ShellExecute( nullptr, "open", SpliceProgramPath("../crashinfo.txt"), "", "", SW_SHOWNORMAL );
 			return TRUE;
 		case IDC_BUTTON_RESTART:
+			// Win32RestartProgram() is [[noreturn]] -- it exits this process
+			// after spawning the restart, so nothing after it ever runs
+			// (backlog item 2: was flagged C4702 unreachable code).
 			Win32RestartProgram();
-			EndDialog( hDlg, FALSE );
-			break;
 		case IDC_BUTTON_REPORT:
 			GotoURL( REPORT_BUG_URL );
 			break;
