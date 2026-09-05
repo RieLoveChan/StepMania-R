@@ -380,3 +380,21 @@
   (`#if 0`/`#elif 1`/`#else` in `ScoreKeeperNormal.cpp`, `#if 0`/`#else`
   in `RandomSample.cpp`) or explained kept-for-reference code, not
   dead code — left untouched. ~13 sites remain for a follow-up pass.
+
+* **Backlog item 15, second batch** (`f1d6e6c4ac`, 2026-09-04). Found a
+  new shape of `#if 0` block: `RageUtil_AutoPtr.h` had three marked
+  `#if 0 // broken VC6` — not dead code, but working `HiddenPtr<T>`
+  functionality (cross-type converting ctor/assignment + the friend
+  declaration it needs) disabled for a VC6 template bug. Toolchain
+  floor is MSVC v143 (ADR 0001), nothing left to work around —
+  **enabled** rather than deleted; zero risk since templates only
+  compile if instantiated, and nothing instantiates the cross-type
+  path today. Also removed two explicit debug-scaffolding blocks in
+  `ScreenNameEntry.cpp` and a superseded generic template in
+  `StdString.h`. Left `Player.cpp` and `ScreenEdit.cpp` alone — both
+  read as plausibly-superseded-but-not-explicitly-disowned, and are
+  gameplay/editor state-machine code fragile enough that a mechanical
+  sweep shouldn't guess. Backlog now documents three block shapes to
+  distinguish before touching any `#if 0`: plain dead code, an active
+  `#if 0/#else` selector (never remove), and a toolchain-EOL block
+  (enable, don't delete).

@@ -176,33 +176,49 @@ existing `x64/` Release asset stays valid, no need to re-cut it.
 `AGENTS.md` §4 higher-risk change (build-flag/toolchain scope);
 Windows build verified before/after.
 
-### 15. `#if 0` dead blocks — first batch DONE (`a2c3d44522`), ~13 remain
-First pass (2026-09-04) removed 10 dead blocks across 8 files
+### 15. `#if 0` dead blocks — two batches DONE, ~7 remain (fragile ones)
+First pass (`a2c3d44522`, 2026-09-04): 10 dead blocks across 8 files
 (`CodeDetector.cpp`/`.h`, `CourseUtil.cpp`, `NoteDataUtil.cpp` ×3,
 `NoteDataWithScoring.cpp`, `NotesWriterSSC.cpp`,
-`RageSoundReader_Resample_Good.cpp` ×3, `RageUtil_FileDB.cpp`) —
-each confirmed dead (broken syntax, undeclared identifiers, "not
-ready yet", or a live caller that turned out to be inside a block
-comment) before removal. Explicitly **left alone**, real
-kept-for-reference cases: `NoteData.cpp` (explains why the disabled
-iterator op is unsafe), `RageFileManager_ReadAhead.cpp` (explains why
-`dup()` doesn't work here), `RageDisplay_GLES2.cpp` ("useful in the
-future"), `RandomSample.cpp` / `ScoreKeeperNormal.cpp` (active
-`#if 0`/`#else` or `#if 0`/`#elif 1`/`#else` compile-time selectors,
-not dead code), `RageUtil_CachedObject.cpp` (a deliberately-disabled
-usage example).
-**Remaining (~13 sites, not yet reviewed in depth):** `Player.cpp`,
-`RageDisplay_GLES2.cpp` (a different site than the one already
-triaged), `RageSoundReader_MP3.cpp`, `RageThreads.cpp`,
-`RageUtil_AutoPtr.h`, `ScreenEdit.cpp`, `ScreenNameEntry.cpp`,
-`StdString.h`. Out of scope: `archutils/Unix/*` and
+`RageSoundReader_Resample_Good.cpp` ×3, `RageUtil_FileDB.cpp`).
+Second pass (`f1d6e6c4ac`, 2026-09-04): `RageUtil_AutoPtr.h` — three
+blocks marked `#if 0 // broken VC6` weren't dead code at all, but
+working `HiddenPtr<T>` cross-type conversion + the friend declaration
+it needs, blocked by a VC6 template bug; **enabled**, not deleted (the
+toolchain floor is MSVC v143, nothing left to work around).
+`ScreenNameEntry.cpp` — two blocks explicitly labeled "DEBUGGING
+STUFF"/"Debugging." (dead ad-hoc dev shortcuts). `StdString.h` — a
+generic template superseded by the concrete overloads right after it.
+**Left alone both passes, real kept-for-reference or ambiguous cases:**
+`NoteData.cpp` (explains why the disabled iterator op is unsafe),
+`RageFileManager_ReadAhead.cpp` (explains why `dup()` doesn't work
+here), `RageDisplay_GLES2.cpp` (an active `#if 0`/`#else` selector —
+the `#else` branch is what's actually compiled), `RandomSample.cpp` /
+`ScoreKeeperNormal.cpp` (same, `#if 0`/`#else` or `#if 0`/`#elif 1`/
+`#else`), `RageUtil_CachedObject.cpp` (a deliberately-disabled usage
+example), `RageSoundReader_MP3.cpp`'s `resync()` (declared in the
+header; a comment elsewhere explicitly says "don't use resync(), it's
+slow" — deliberate non-use, not abandonment), `RageThreads.cpp`'s
+mutex lock-order checker (a complete, working deadlock-detection
+feature, just not wired in), `Player.cpp` (author's own "doesn't make
+sense" comment, but it's CPU/autoplay scoring — too fragile a hot path
+to guess at) and `ScreenEdit.cpp` (looks superseded by the logic that
+replaced it, but no explicit disowning comment and it's fragile editor
+state-machine code).
+**Remaining (~7 sites):** `Player.cpp`, `ScreenEdit.cpp`, plus
+whatever's left after re-verifying the rest weren't miscounted. Both
+need someone to actually reason through gameplay/editor logic, not a
+mechanical read. Out of scope: `archutils/Unix/*` and
 `arch/Threads/Threads_Pthreads.*` (non-Windows, `AGENTS.md` §3),
 `src/tests/` (unsalvageable, ADR 0006).
-**Action:** continue the sweep, one commit per handful of files —
-locate the actual matching `#endif` before judging a block (a
-mid-block partial read can look like it ends earlier than it does;
-bit us once already on `CourseUtil.cpp`, caught by the `WITH_WERROR`
-build, not by inspection).
+**Action:** locate the actual matching `#endif` before judging a
+block — a mid-block partial read can look like it ends earlier than
+it does (bit us once on `CourseUtil.cpp`, caught by the `WITH_WERROR`
+build, not by inspection). Distinguish three shapes before deciding:
+plain dead `#if 0 ... #endif` (candidate for removal), an active
+`#if 0/#else` or `#if 0/#elif N/#else` selector (never remove — the
+other branch is live), and a toolchain-EOL block like the VC6 ones
+above (enable, don't delete).
 
 ### 18. Logging overhaul — phase 1 DONE, phases 2-4 open
 Phase 1 (`c82d0e9058`): bracketed level tags, `Error()` level, no
