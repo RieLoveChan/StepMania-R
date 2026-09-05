@@ -8,7 +8,8 @@
 
 set(SM_TEST_SRC
     test_RageUtil.cpp
-    test_RageMath.cpp)
+    test_RageMath.cpp
+    test_TimingData.cpp)
 
 source_group("" FILES ${SM_TEST_SRC})
 
