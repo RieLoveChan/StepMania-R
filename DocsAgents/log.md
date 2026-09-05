@@ -480,3 +480,15 @@
   confirmed zero-diff before commit (the near-miss from the first
   batch made this a standing check now). 116 sites remain, all in
   files with 1-2 hits each.
+
+* **Backlog item 2 — C4100 fifth batch, 252 of 314** (`3636b80690`,
+  2026-09-05). The 27 files sitting at exactly 2 sites each (54 more
+  sites), spanning screens, arch input/loading-window backends, and
+  Rage subsystems. No new exception shapes this round -- every site
+  was a genuinely unused parameter, confirmed by reading each
+  function's full body rather than trusting the flagged signature
+  alone. Verified Release build clean under `WITH_WERROR=ON` (zero
+  C4100 in the 27 files, zero warnings overall in the `sm_tests`
+  rebuild), `--SelfTest` exit 0, `sm_tests` 94 assertions / 19 cases
+  pass. `src/CMakeLists.txt` zero-diff before commit. 62 sites remain,
+  every one in a different file (the true single-hit tail).

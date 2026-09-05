@@ -47,12 +47,13 @@ check both configs, not just Release).
 measured count is **314 unique sites** (not the stale ~1362 raw-line
 figure, which double-counts headers across every including TU) spread
 across ~150 files with no concentration (max 11 in one file) — a wide
-mechanical sweep, no shortcut. **198 of 314 fixed** (`713e58a0f6` +
-`9844ab3c4b` + `26b7de158b`), the 12 highest-concentration files, then
-the 19 files at exactly 4 sites each, then 13 files at exactly 3 sites
-each: comment out the unused parameter name (`Type /* name */`, this
-codebase's existing convention), except one site genuinely used only
-under `#if defined(HAVE_POSIX_FADVISE)` (unset on Windows) —
+mechanical sweep, no shortcut. **252 of 314 fixed** (`713e58a0f6` +
+`9844ab3c4b` + `26b7de158b` + `3636b80690`), the 12 highest-concentration
+files, then the 19 files at exactly 4 sites each, then 13 files at
+exactly 3 sites each, then 27 files at exactly 2 sites each: comment
+out the unused parameter name (`Type /* name */`, this codebase's
+existing convention), except one site genuinely used only under
+`#if defined(HAVE_POSIX_FADVISE)` (unset on Windows) —
 `[[maybe_unused]]` there instead, since commenting the name would
 break the other platform's compile. Several sites looked like false
 positives but weren't: verify each site's actual body rather than
@@ -60,7 +61,7 @@ assume the pattern — one function's "unused" param was used by a
 *different* override of the same virtual in the same file, and
 several others' usage was inside a `/* doesn't work */` block
 comment, not live code. `/wd4100` **stays in `src/CMakeLists.txt`**
-until all 314 are done — 116 remain, the long tail of 1–2-site files.
+until all 314 are done — 62 remain, all files with exactly 1 site.
 **Remaining:** `C4100` continues; `C4244`/`C4267` (numeric conversion
 / narrowing, ~4.4k hits) are the real debt — each needs a real look
 for actual truncation, not a mechanical pass; still not measured for
