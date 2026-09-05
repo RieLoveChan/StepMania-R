@@ -711,3 +711,55 @@
   untouched; only `tests/CMakeLists.txt` gained the new source file.
   This closes out `NoteData`/`NoteDataUtil` in the ADR 0006 phase 2
   sequence -- only a `NotesLoader*` corpus remains.
+
+* **Backlog items 1/17 — NotesLoader characterization tests; Tier 1
+  now empty** (`69803e8ca1`, 2026-09-05). Last file of ADR 0006 phase
+  2. The `NotesLoader*` family's public surface splits cleanly into
+  two halves, and only one is unit-testable without standing up the
+  engine:
+
+  - **The parse primitives** — `MsdFile::ReadFromString` (a pure
+    in-memory tokenizer, zero globals) and the `SMLoader` string→timing
+    helpers (`RowToBeat`, `ParseBPMs`/`ParseStops`,
+    `Process{BPMsAndStops,Delays,TimeSignatures,Tickcounts}`) which,
+    *on valid input*, touch nothing global. These turn simfile text
+    into beats / rows / `TimingData` segments, so they are exactly
+    where the `AGENTS.md` §5 "must keep loading identically" invariant
+    bites. `tests/test_NotesLoader.cpp` pins them, quirks and all:
+    `MsdFile`'s missing-`;` recovery at a line-leading `#`, its `//`
+    comment skip and `\:` escape handling; `GetMainAndSubTitlesFrom
+    FullTitle`'s five separators, the tab-before-`" -"` precedence, and
+    the way the separator's leading space is dropped but its `(`/`-`/
+    `~`/`[` half stays glued to the subtitle; `RowToBeat`'s `r`/`R`
+    suffix → ÷`rowsPerBeat`; `ProcessBPMsAndStops` seeding a row-0 BPM
+    segment and folding a pre-beat-0 stop into `m_fBeat0OffsetInSeconds`
+    rather than keeping it as a stop; `ProcessTimeSignatures`
+    back-filling an implicit `(0,4,4)` when the first entry isn't at
+    beat 0; `ProcessTickcounts` clamping to `ROWS_PER_BEAT` (48).
+
+  - **The file-loading entry points** (`NotesLoader::LoadFromDir`, the
+    per-format `*Loader::LoadFromDir`/`LoadFromSimfile`) — scoped out.
+    `RageFile::Open` hard-asserts `FILEMAN != nullptr`, `RageLog`'s
+    constructor opens files through it, and `RageFileManager`'s
+    constructor calls `LUA->Get()` — so even a bare `LOG` needs
+    `FILEMAN` needs `LUA`. That is `--SelfTest` smoke territory per the
+    characterization-test playbook ("not for code that needs a live
+    GAMESTATE / renderer / audio device"). The `SMLoader` helpers'
+    *error* branches (`"a=b=c"`, zero BPM, zero-length stop, negative
+    beat) all call `LOG->UserLog()` and are out for the same reason.
+
+  A committed simfile corpus driven by `GENERATE(from_range(...))` —
+  the original phase-2 wish — stays open, but its real blocker is a
+  shared Catch2 bootstrap fixture that news up `LUA`/`FILEMAN`/`LOG`
+  once per run; the corpus files are the easy part. The same fixture
+  would unblock salvaging `src/tests/test_file_readers.cpp` and
+  `test_audio_readers.cpp`. Flagged in `baseline.md` and backlog item
+  17 as a phase-3/4 prerequisite.
+
+  All 20 new cases / 65 assertions predicted from a read of
+  `MsdFile.cpp` + `NotesLoaderSM.cpp` held on the first `sm_tests` run
+  — no build or assertion failures. Suite total **311 assertions / 72
+  cases** (up from 246/52). `src/CMakeLists.txt` untouched; only
+  `tests/CMakeLists.txt` gained the source file, so `WITH_TESTS=OFF`
+  is unaffected. **Tier 1 of the backlog is now empty** — the safety
+  net (smoke + harness + pure-ish-core characterization) is complete.

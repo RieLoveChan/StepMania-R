@@ -18,7 +18,14 @@ as new sweeps find things. Numbers/anchors confirmed 2026-09-02.
 
 ## Tier 1 — Blocks safe continuous work
 
-### 1. Safety net — smoke DONE, harness scaffold DONE, coverage OPEN
+**Tier 1 is now empty.** Items 1–3 all closed (2026-09-05): the safety
+net (smoke + Catch2 harness + characterization coverage of the pure-ish
+cores), the MSVC-warning ratchet's mechanical categories, and the 2009
+cppcheck leak list. What remains for the warning ratchet is `C4244`/
+`C4267`, tracked under Tier 3 / item 2 — it needs a scoping conversation,
+not continuous-work unblocking.
+
+### 1. Safety net — DONE 2026-09-05
 - **Headless smoke: DONE** (`f7249f3a95`) — `--SelfTest` flag runs full
   engine init and exits 0; wired into Windows CI (`continue-on-error`
   until it's green a few times, then make fatal).
@@ -26,16 +33,22 @@ as new sweeps find things. Numbers/anchors confirmed 2026-09-02.
   [0006](./adr/0006-test-harness.md) (Catch2 v3 + `sm_engine` OBJECT
   library); `sm_tests` + first `RageUtil` coverage; CI green on
   Windows/macOS/Linux (see item 17).
-- **Unit coverage: IN PROGRESS.** Characterization targets, in order:
-  `RageUtil` (done) → `RageMath` (done, 2026-09-04) → `TimingData`
-  (done, 2026-09-05 — row/measure math + beat<->time conversion via
-  the GAMESTATE/PREFSMAN-free `NoOffset` entry points) → `NoteData`
-  (done, 2026-09-05 — tap/hold storage, track queries, row traversal;
-  the counting/statistics API needs a live GAMESTATE and is out of
-  scope, see item 17) → `NoteDataUtil` (done, 2026-09-05 — the pure
-  transform helpers: hold/roll conversion, simultaneous-note removal,
-  type filtering, row shift/insert/delete, editor-position walking) →
-  `NotesLoader*` (tiny committed corpus) — last phase remaining.
+- **Unit coverage: DONE 2026-09-05.** Characterization targets, in order:
+  `RageUtil` → `RageMath` (2026-09-04) → `TimingData` (2026-09-05 —
+  row/measure math + beat<->time conversion via the GAMESTATE/PREFSMAN-
+  free `NoOffset` entry points) → `NoteData` (2026-09-05 — tap/hold
+  storage, track queries, row traversal; the counting/statistics API
+  needs a live GAMESTATE and is out of scope, see item 17) →
+  `NoteDataUtil` (2026-09-05 — the pure transform helpers) →
+  `NotesLoader*` (2026-09-05 — `tests/test_NotesLoader.cpp`: the
+  parse *primitives* — `MsdFile` tokenizer,
+  `GetMainAndSubTitlesFromFullTitle`, `SMLoader::RowToBeat`/
+  `ParseBPMs`/`ParseStops`/`Process{BPMsAndStops,Delays,
+  TimeSignatures,Tickcounts}` on valid input. Full `LoadFromDir`/
+  `LoadFromSimfile` needs live `FILEMAN`+`LUA` → stays `--SelfTest`
+  smoke; the helpers' `LOG->UserLog` error branches need a live `LOG`.
+  A committed simfile corpus is a future add if/when the harness grows
+  an engine-bootstrap fixture). **311 assertions / 72 cases.**
 
 ### 2. Warnings on but unmeasured / unenforced — ratchet turning, 3 of 5 MSVC categories promoted
 `WITH_WERROR` exists (default OFF, ON in Windows CI) and counts are
@@ -173,7 +186,7 @@ reject it (C++11 narrowing) if clang-cl were ever adopted. Not touched
 clang currently. Rewrite the cases as hex literals / `HRESULT(...)` if
 and when clang-cl support is actually pursued.
 
-### 17. Pick a unit-test framework + write core characterization tests — scaffold DONE (ADR 0006 phase 1), phases 2-4 open
+### 17. Pick a unit-test framework + write core characterization tests — phase 1 (scaffold) + phase 2 (pure-ish core coverage) DONE, phases 3-4 open
 Framework decided: **Catch2 v3** (amalgamated, vendored `extern/Catch2/`
 @ v3.16.0) — ADR [0006](./adr/0006-test-harness.md). Build approach:
 `src/` → OBJECT library `sm_engine`, shared by the exe and a new
@@ -210,10 +223,32 @@ type filtering (`RemoveMines`/`RemoveLifts`/`RemoveAllTapsOfType`/
 track rotation, `InsertRows`/`DeleteRows`, and
 `GetNextEditorPosition`/`GetPrevEditorPosition` treating a hold's tail
 as its own stop distinct from its head. 246 assertions / 52 cases
-total. **Remaining (last phase):** a tiny committed simfile corpus
-for `NotesLoader*` via `GENERATE(from_range(...))`. Salvage the intent
-of the old `test_timing_data` / `test_file_readers` / `test_misc`
-where still meaningful.
+total. `NotesLoader*` done (2026-09-05, `69803e8ca1`,
+`tests/test_NotesLoader.cpp`) — the parse *primitives* that turn
+simfile text into beats/rows/`TimingData`: the `MsdFile` tokenizer
+(`:` param breaks, missing-`;` recovery at the next line's `#`, `//`
+comments, `\:` escape under `bUnescape`), `GetMainAndSubTitlesFrom
+FullTitle` (five separators, tab-before-`" -"` precedence, the
+separator's non-space half stays in the subtitle),
+`SMLoader::RowToBeat` (`r`/`R` suffix → ÷rowsPerBeat), `ParseBPMs`/
+`ParseStops` (split `,` then `=`, row-suffix conversion — valid input
+only), `ProcessBPMsAndStops` (initial BPM at row 0, pre-beat-0 stop →
+song offset not segment), `ProcessDelays`/`ProcessTimeSignatures`
+(implicit-4/4 back-fill)/`ProcessTickcounts` (clamp to
+`ROWS_PER_BEAT`). **Scoped out, deliberately:** full `LoadFromDir`/
+`LoadFromSimfile` needs live `FILEMAN`+`LUA`+more → `--SelfTest` smoke
+territory per the playbook; the `SMLoader` helpers' error/edge
+branches (`"a=b=c"`, zero BPM, zero-length stop, negative beat) all
+call `LOG->UserLog()` and `LOG` is null in the harness. A committed
+simfile corpus + `GENERATE(from_range(...))` over real files stays
+open as a future add — it needs the harness to grow a shared
+engine-bootstrap fixture (`LOG`/`FILEMAN`/`LUA`) first; that fixture
+is the actual blocker, not the corpus. 311 assertions / 72 cases
+total. **ADR 0006 phase 2 (pure-ish core characterization) is
+complete** — phases 3-4 (repeat-collapsing coverage, per-subsystem
+call-site audits) are separate follow-ups, and the old
+`test_file_readers` / `test_audio_readers` intent (RageFile /
+audio-reader round-trips) still awaits that same bootstrap fixture.
 
 ### 16. Pre-floor `#if` guards across `src/arch/` and `src/archutils/` — Windows runtime-version checks DONE
 Now that ADR 0003 sets Windows 11 / current-macOS / current-Linux floors,

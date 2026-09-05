@@ -185,23 +185,41 @@ Per-subsystem breakdown as passes run:
     `RemoveAllButOneTap`, `ShiftLeft`/`ShiftRight`'s wrap-around
     rotation, `InsertRows`/`DeleteRows` round-tripping, and
     `GetNextEditorPosition` treating a hold's tail as its own stop.
-    246 assertions / 52 cases total (up from 94/19).
+  - `tests/test_NotesLoader.cpp` (2026-09-05) — the simfile parse
+    primitives shared by every `.sm`/`.ssc`/`.sma`/`.dwi` loader:
+    `MsdFile::ReadFromString` (`:` param breaks, missing-`;` recovery,
+    `//` comments, `\:` escape, out-of-range `GetParam`),
+    `NotesLoader::GetMainAndSubTitlesFromFullTitle` (five separators,
+    tab-before-`" -"` precedence, separator's non-space half stays in
+    the subtitle), `SMLoader::RowToBeat` (`r`/`R` suffix →
+    ÷rowsPerBeat), `ParseBPMs`/`ParseStops` (valid input only),
+    `ProcessBPMsAndStops` (initial BPM at row 0, pre-beat-0 stop → song
+    offset), `ProcessDelays`/`ProcessTimeSignatures` (implicit-4/4
+    back-fill)/`ProcessTickcounts` (clamp to `ROWS_PER_BEAT`). Full
+    `LoadFromDir`/`LoadFromSimfile` needs live `FILEMAN`+`LUA` (→
+    `--SelfTest`); the helpers' `LOG->UserLog` error branches are out
+    of scope (`LOG` null in the harness).
+    311 assertions / 72 cases total (up from 94/19).
   **Locally verified on Windows** (VS 2022 BuildTools cmake 3.31 — the
   standalone cmake 4.3 install on this box hits a compiler-ID detection
   bug when invoked through the VS generator's regen step, use the
   VS-bundled cmake for this repo):
-  - `WITH_TESTS=ON` Debug + `WITH_WERROR=ON` → `sm_engine` OBJECT lib +
-    `Catch2` + `sm_tests.exe` all build; `sm_tests.exe` → **94 assertions
-    / 19 cases pass**; `ctest` 100%.
+  - `WITH_TESTS=ON` Debug → `sm_engine` OBJECT lib + `Catch2` +
+    `sm_tests.exe` all build; `sm_tests.exe` → **311 assertions / 72
+    cases pass**; `ctest` 100%. (First-landed at 94/19 under
+    `WITH_WERROR=ON`.)
   - `WITH_TESTS=OFF` Release → `StepMania-R.exe` builds clean (the
     OBJECT-library split is transparent when off) + `--SelfTest` exits 0.
   **CI (all 8 jobs green, run 33898309300):** Windows/macOS/Linux × plain
   build + `sm_tests`, plus the Lua.xml validator.
 - `src/tests/`: 7 standalone `test_*.cpp` from ~2004-06 — **Unix/Apple
   only, need uncommitted 30 MB test data, `#error` without altivec/SSE,
-  full of `#if 0`**. Not wireable as-is. Salvage the *intent* (timing
-  data, file readers) into new `tests/` files where still relevant (ADR
-  0006 phases 3–4).
+  full of `#if 0`**. Not wireable as-is. Intent salvaged where still
+  relevant: `test_timing_data.cpp`'s beat↔time cases →
+  `tests/test_TimingData.cpp`; simfile-parse coverage →
+  `tests/test_NotesLoader.cpp`. `test_file_readers.cpp` (RageFile
+  binary/text/seek) and `test_audio_readers.cpp` remain — both need a
+  live `FILEMAN` + committed fixtures, deferred.
 - CI: build on 4 platforms + `xmllint` Lua-doc validation + the Windows
   headless smoke + `windows-tests` / `ubuntu-tests` / `macos-tests`.
 
