@@ -833,7 +833,7 @@ struct LunaCubicSplineN : Luna<CubicSplineN>
 	LCSN_EVAL_SOMETHING(evaluate_third_derivative);
 #undef LCSN_EVAL_SOMETHING
 
-	static void get_element_table_from_stack(T* p, lua_State* L, int s,
+	static void get_element_table_from_stack(T* /* p */, lua_State* L, int s,
 		std::size_t limit, std::vector<float>& ret)
 	{
 		std::size_t elements= lua_objlen(L, s);

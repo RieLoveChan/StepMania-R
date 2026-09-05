@@ -83,7 +83,7 @@ void ArchHooks::MountInitialFilesystems( const RString &sDirOfExecutable )
 	}
 }
 
-void ArchHooks::MountUserFilesystems( const RString &sDirOfExecutable )
+void ArchHooks::MountUserFilesystems( const RString &/* sDirOfExecutable */ )
 {
 	/*
 	 * Look, I know what you're thinking: "Hey, let's put all this stuff into

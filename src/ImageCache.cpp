@@ -91,7 +91,7 @@ void ImageCache::Demand( RString sImageDir )
 }
 
 /* Release images loaded on demand. */
-void ImageCache::Undemand( RString sImageDir )
+void ImageCache::Undemand( RString /* sImageDir */ )
 {
 	--g_iDemandRefcount;
 	if( g_iDemandRefcount != 0 )

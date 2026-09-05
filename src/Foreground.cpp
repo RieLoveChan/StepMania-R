@@ -70,7 +70,7 @@ void Foreground::LoadFromSong( const Song *pSong )
 	this->SortByDrawOrder();
 }
 
-void Foreground::Update( float fDeltaTime )
+void Foreground::Update( float /* fDeltaTime */ )
 {
 	// Calls to Update() should *not* be scaled by music rate unless RateModsAffectFGChanges is enabled. Undo it.
 	const float fRate = PREFSMAN->m_bRateModsAffectTweens ? 1.0f : GAMESTATE->m_SongOptions.GetCurrent().m_fMusicRate;

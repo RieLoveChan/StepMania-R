@@ -614,7 +614,7 @@ bool Song::LoadAutosaveFile()
 /* Fix up song paths. If there's a leading "./", be sure to keep it: it's
  * a signal that the path is from the root directory, not the song directory.
  * Other than a leading "./", song paths must never contain "." or "..". */
-void FixupPath( RString &path, const RString &sSongPath )
+void FixupPath( RString &path, const RString &/* sSongPath */ )
 {
 	// Replace backslashes with slashes in all paths.
 	FixSlashesInPlace( path );

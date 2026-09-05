@@ -242,7 +242,7 @@ void ScreenSelect::HandleMessage( const Message &msg )
 	ScreenWithMenuElements::HandleMessage( msg );
 }
 
-bool ScreenSelect::MenuBack( const InputEventPlus &input )
+bool ScreenSelect::MenuBack( const InputEventPlus &/* input */ )
 {
 	Cancel( SM_GoToPrevScreen );
 	return true;

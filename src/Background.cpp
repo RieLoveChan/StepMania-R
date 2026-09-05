@@ -266,7 +266,7 @@ void BackgroundImpl::Layer::Unload()
 	m_iCurBGChangeIndex = -1;
 }
 
-bool BackgroundImpl::Layer::CreateBackground( const Song *pSong, const BackgroundDef &bd, Actor *pParent )
+bool BackgroundImpl::Layer::CreateBackground( const Song *pSong, const BackgroundDef &bd, Actor */* pParent */ )
 {
 	ASSERT( m_BGAnimations.find(bd) == m_BGAnimations.end() );
 

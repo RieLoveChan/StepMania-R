@@ -264,7 +264,7 @@ static void GetFilterToFileNames( const RString sBaseDir, const Song *pSong, std
 		vsPossibleFileNamesOut.insert( p->first );
 }
 
-void BackgroundUtil::GetGlobalBGAnimations( const Song *pSong, const RString &sMatch, std::vector<RString> &vsPathsOut, std::vector<RString> &vsNamesOut )
+void BackgroundUtil::GetGlobalBGAnimations( const Song */* pSong */, const RString &sMatch, std::vector<RString> &vsPathsOut, std::vector<RString> &vsNamesOut )
 {
 	vsPathsOut.clear();
 	GetDirListing( BG_ANIMS_DIR+sMatch+"*", vsPathsOut, true, true );

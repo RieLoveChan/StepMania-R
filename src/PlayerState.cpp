@@ -220,7 +220,7 @@ const TimingData &PlayerState::GetDisplayedTiming() const
 class LunaPlayerState: public Luna<PlayerState>
 {
 public:
-	static int ApplyPreferredOptionsToOtherLevels(T* p, lua_State* L)
+	static int ApplyPreferredOptionsToOtherLevels(T* p, lua_State* /* L */)
 	{
 		p->m_PlayerOptions.Assign(ModsLevel_Preferred,
 			p->m_PlayerOptions.Get(ModsLevel_Preferred));

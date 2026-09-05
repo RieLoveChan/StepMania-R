@@ -149,7 +149,7 @@ void LifeMeterBar::ChangeLife( TapNoteScore score )
 	ChangeLife( fDeltaLife );
 }
 
-void LifeMeterBar::ChangeLife( HoldNoteScore score, TapNoteScore tscore )
+void LifeMeterBar::ChangeLife( HoldNoteScore score, TapNoteScore /* tscore */ )
 {
 	float fDeltaLife=0.f;
 	DrainType dtype = m_pPlayerState->m_PlayerOptions.GetSong().m_DrainType;

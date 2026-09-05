@@ -638,7 +638,7 @@ unsigned int TZip::write(const char *srcbuf,unsigned int size)
 	return 0;
 }
 
-bool TZip::oseek(unsigned int pos)
+bool TZip::oseek(unsigned int /* pos */)
 {
 	oerr=ZR_SEEK;
 	return false;

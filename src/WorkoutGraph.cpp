@@ -50,7 +50,7 @@ void WorkoutGraph::SetFromCurrentWorkout()
 	SetInternal( 0 );
 }
 
-void WorkoutGraph::SetInternal( int iMinSongsPlayed )
+void WorkoutGraph::SetInternal( int /* iMinSongsPlayed */ )
 {
 	for (Sprite *s : m_vpBars)
 	{

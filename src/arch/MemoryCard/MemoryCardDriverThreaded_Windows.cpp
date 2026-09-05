@@ -187,7 +187,7 @@ bool MemoryCardDriverThreaded_Windows::USBStorageDevicesChanged()
 	return ::GetLogicalDrives() != m_dwLastLogicalDrives;
 }
 
-bool MemoryCardDriverThreaded_Windows::Mount( UsbStorageDevice* pDevice )
+bool MemoryCardDriverThreaded_Windows::Mount( UsbStorageDevice* /* pDevice */ )
 {
 	// nothing to do here...
 	return true;

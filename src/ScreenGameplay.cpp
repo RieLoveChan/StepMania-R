@@ -890,7 +890,7 @@ bool ScreenGameplay::Center1Player() const
 		GAMESTATE->GetCurrentStyle(PLAYER_INVALID)->m_StyleType == StyleType_OnePlayerOneSide;
 }
 
-bool ScreenGameplay::MenuRestart( const InputEventPlus &input )
+bool ScreenGameplay::MenuRestart( const InputEventPlus &/* input */ )
 {
 	if( IsTransitioning() )
 		return false;

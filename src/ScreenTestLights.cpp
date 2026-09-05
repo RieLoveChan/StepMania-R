@@ -125,7 +125,7 @@ bool ScreenTestLights::MenuStart( const InputEventPlus &input )
 	return MenuBack( input );
 }
 
-bool ScreenTestLights::MenuBack( const InputEventPlus &input )
+bool ScreenTestLights::MenuBack( const InputEventPlus &/* input */ )
 {
 	if( IsTransitioning() )
 		return false;

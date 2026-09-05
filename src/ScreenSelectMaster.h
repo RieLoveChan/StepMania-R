@@ -93,7 +93,7 @@ protected:
 	bool ChangePage( int iNewChoice );
 	bool ChangeSelection( PlayerNumber pn, MenuDir dir, int iNewChoice );
 	float DoMenuStart( PlayerNumber pn );
-	virtual bool ProcessMenuStart( PlayerNumber pn ) { return true; }
+	virtual bool ProcessMenuStart( PlayerNumber /* pn */ ) { return true; }
 
 	float GetCursorX( PlayerNumber pn );
 	float GetCursorY( PlayerNumber pn );

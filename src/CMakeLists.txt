@@ -164,7 +164,7 @@ target_compile_options("${SM_ENGINE_TGT}" PRIVATE
   $<$<CXX_COMPILER_ID:AppleClang>:
     -Wall -Wextra -Wno-unused -Wno-unused-parameter -Wno-unknown-pragmas -Wno-undefined-var-template -Wno-deprecated-declarations -Wno-unused-command-line-argument>
   $<$<CXX_COMPILER_ID:MSVC>:
-    /W4 /wd4100 /wd4244 /wd4267>
+    /W4 /wd4244 /wd4267>
 )
 
 # WITH_WERROR (CI): make the above warning set fatal. The StepMania

@@ -371,7 +371,7 @@ bool ScreenEditMenu::MenuStart( const InputEventPlus & )
 	}
 }
 
-bool ScreenEditMenu::MenuBack( const InputEventPlus &input )
+bool ScreenEditMenu::MenuBack( const InputEventPlus &/* input */ )
 {
 	Cancel( SM_GoToPrevScreen );
 	return true;

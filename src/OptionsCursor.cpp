@@ -93,7 +93,7 @@ void OptionsCursor::StopTweening()
 	}
 }
 
-void OptionsCursor::BeginTweening( float fSecs, TweenType tt )
+void OptionsCursor::BeginTweening( float fSecs, TweenType /* tt */ )
 {
 	ActorFrame::BeginTweening( fSecs );
 

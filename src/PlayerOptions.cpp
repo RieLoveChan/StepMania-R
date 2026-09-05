@@ -2223,7 +2223,7 @@ public:
 		return 2;
 	}
 
-	static void SetPerspectiveApproach(T* p, lua_State* L, float speed)
+	static void SetPerspectiveApproach(T* p, lua_State* /* L */, float speed)
 	{
 		p->m_SpeedfPerspectiveTilt= speed;
 		p->m_SpeedfSkew= speed;

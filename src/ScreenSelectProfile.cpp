@@ -272,7 +272,7 @@ public:
 		return 1;
 	}
 
-	static int Cancel( T* p, lua_State *L )
+	static int Cancel( T* p, lua_State */* L */ )
 	{
 		p->Cancel( SM_GoToPrevScreen );
 		return 1;

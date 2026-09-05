@@ -59,7 +59,7 @@ void ScreenTextEntry::SetTextEntrySettings(
 	bool(*Validate)(const RString &sAnswer,RString &sErrorOut),
 	void(*OnOK)(const RString &sAnswer),
 	void(*OnCancel)(),
-	bool bPassword,
+	bool /* bPassword */,
 	bool (*ValidateAppend)(const RString &sAnswerBeforeChar, RString &sAppend),
 	RString (*FormatAnswerForDisplay)(const RString &sAnswer)
 	)

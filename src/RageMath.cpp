@@ -793,7 +793,7 @@ struct LunaRageBezier2D : Luna<RageBezier2D>
 		p->SetFromBezier(FArg(1), FArg(2), FArg(3), FArg(4), FArg(5), FArg(6), FArg(7), FArg(8));
 		COMMON_RETURN_SELF;
 	}
-	static int destroy(T* p, lua_State* L)
+	static int destroy(T* p, lua_State* /* L */)
 	{
 		SAFE_DELETE(p);
 		return 0;

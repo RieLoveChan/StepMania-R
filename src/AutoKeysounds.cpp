@@ -311,7 +311,7 @@ void AutoKeysounds::FinishLoading()
 	m_sSound.LoadSoundReader( m_pChain );
 }
 
-void AutoKeysounds::Update( float fDelta )
+void AutoKeysounds::Update( float /* fDelta */ )
 {
 	// Play keysounds for crossed rows.
 /*

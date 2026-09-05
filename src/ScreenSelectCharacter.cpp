@@ -369,7 +369,7 @@ void ScreenSelectCharacter::MakeSelection( PlayerNumber pn )
 	}
 }
 
-bool ScreenSelectCharacter::MenuBack( const InputEventPlus &input )
+bool ScreenSelectCharacter::MenuBack( const InputEventPlus &/* input */ )
 {
 	Cancel( SM_GoToPrevScreen );
 	return true;

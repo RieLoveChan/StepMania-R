@@ -343,7 +343,7 @@ RageFileBasic *RageFileDriverZip::Open( const RString &sPath, int iMode, int &iE
 }
 
 /* NOP for now.  This could check to see if the ZIP's mtime has changed, and reload. */
-void RageFileDriverZip::FlushDirCache( const RString &sPath )
+void RageFileDriverZip::FlushDirCache( const RString &/* sPath */ )
 {
 
 }

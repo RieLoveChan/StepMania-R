@@ -28,7 +28,7 @@ static int OggRageFile_seek_func( void *datasource, ogg_int64_t offset, int when
 	return f->Seek( (int) offset, whence );
 }
 
-static int OggRageFile_close_func( void *datasource )
+static int OggRageFile_close_func( void */* datasource */ )
 {
 	return 0;
 }

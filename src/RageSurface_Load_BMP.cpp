@@ -190,7 +190,7 @@ static RageSurfaceUtils::OpenResult LoadBMP( RageFile &f, RageSurface *&img, RSt
 	return !sError.empty()? RageSurfaceUtils::OPEN_FATAL_ERROR: RageSurfaceUtils::OPEN_OK;
 }
 
-RageSurfaceUtils::OpenResult RageSurface_Load_BMP( const RString &sPath, RageSurface *&img, bool bHeaderOnly, RString &error )
+RageSurfaceUtils::OpenResult RageSurface_Load_BMP( const RString &sPath, RageSurface *&img, bool /* bHeaderOnly */, RString &error )
 {
 	RageFile f;
 

@@ -290,7 +290,7 @@ void SMLoader::LoadFromTokens(
 			     RString sDescription,
 			     RString sDifficulty,
 			     RString sMeter,
-			     RString sRadarValues,
+			     RString /* sRadarValues */,
 			     RString sNoteData,
 			     Steps &out
 			     )

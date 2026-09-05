@@ -59,7 +59,7 @@ bool ScreenSelectLanguage::MenuStart( const InputEventPlus &input )
 	return true;
 }
 
-bool ScreenSelectLanguage::MenuBack( const InputEventPlus &input )
+bool ScreenSelectLanguage::MenuBack( const InputEventPlus &/* input */ )
 {
 	return false;	// ignore the press
 }

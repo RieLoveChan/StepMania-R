@@ -421,7 +421,7 @@ static const char *GetCheckpointLog( int slotno, int lineno )
 }
 
 /* XXX: iSize check unimplemented */
-void Checkpoints::GetLogs( char *pBuf, int iSize, const char *delim )
+void Checkpoints::GetLogs( char *pBuf, int /* iSize */, const char *delim )
 {
 	pBuf[0] = 0;
 

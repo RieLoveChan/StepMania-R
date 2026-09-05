@@ -106,7 +106,7 @@ static void Deserialize( TapNote &o, const Json::Value &root )
 	o.pn = (PlayerNumber)root["PlayerNumber"].asInt();
 }
 
-static void Deserialize( StepsType st, NoteData &nd, const Json::Value &root )
+static void Deserialize( StepsType /* st */, NoteData &nd, const Json::Value &root )
 {
 	int iTracks = nd.GetNumTracks();
 	nd.SetNumTracks( iTracks );

@@ -1156,7 +1156,7 @@ void ScreenOptions::ChangeValueInRowRelative( int iRow, PlayerNumber pn, int iDe
 	this->AfterChangeValueInRow( iRow, pn );
 }
 
-void ScreenOptions::AfterChangeValueInRow( int iRow, PlayerNumber pn )
+void ScreenOptions::AfterChangeValueInRow( int /* iRow */, PlayerNumber pn )
 {
 	AfterChangeValueOrRow( pn );
 }

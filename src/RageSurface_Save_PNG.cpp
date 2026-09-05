@@ -58,7 +58,7 @@ static void PNG_Error( png_struct *pPng, const char *szError )
 	longjmp( png_jmpbuf(pPng), 1 );
 }
 
-static void PNG_Warning( png_struct *png, const char *warning )
+static void PNG_Warning( png_struct */* png */, const char *warning )
 {
 	LOG->Trace( "saving PNG: warning: %s", warning );
 }

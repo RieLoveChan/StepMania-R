@@ -33,7 +33,7 @@ typedef struct
  * Initialize source --- called by jpeg_read_header
  * before any data is actually read.
  */
-static void init_destination( jpeg::j_compress_ptr cinfo )
+static void init_destination( jpeg::j_compress_ptr /* cinfo */ )
 {
 	/* nop */
 	return;

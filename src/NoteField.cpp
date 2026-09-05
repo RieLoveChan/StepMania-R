@@ -1240,7 +1240,7 @@ public:
 	SET_CALLBACK_GENERIC(set_did_hold_note_callback, m_DidHoldNoteCallback);
 #undef SET_CALLBACK_GENERIC
 
-	static int check_column(lua_State* L, int index, PlayerNumber pn)
+	static int check_column(lua_State* L, int /* index */, PlayerNumber pn)
 	{
 		// 1-indexed columns in lua
 		int col= IArg(1)-1;

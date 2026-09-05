@@ -138,7 +138,7 @@ void SongOptions::FromString( const RString &sMultipleMods )
 	}
 }
 
-bool SongOptions::FromOneModString( const RString &sOneMod, RString &sErrorOut )
+bool SongOptions::FromOneModString( const RString &sOneMod, RString &/* sErrorOut */ )
 {
 	RString sBit = sOneMod;
 	sBit.MakeLower();

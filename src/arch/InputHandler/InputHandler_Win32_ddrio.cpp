@@ -69,7 +69,7 @@ static unsigned int crt_thread_shim(void* outer_ctx)
 
 
 int crt_thread_create(
-	int (*proc)(void*), void* ctx, std::uint32_t stack_sz, unsigned int priority)
+	int (*proc)(void*), void* ctx, std::uint32_t stack_sz, unsigned int /* priority */)
 {
 
 	LOG->Trace("crt_thread_create");

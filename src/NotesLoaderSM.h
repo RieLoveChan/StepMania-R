@@ -141,7 +141,7 @@ struct SMLoader
 				   const int rowsPerBeat = -1);
 
 	virtual void ProcessCombos(TimingData & /* out */,
-				   const RString line,
+				   const RString /* line */,
 				   const int /* rowsPerBeat */ = -1) {}
 
 	/**

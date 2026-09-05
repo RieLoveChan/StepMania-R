@@ -180,7 +180,7 @@ static void GetTimingTags( std::vector<RString> &lines, const TimingData &timing
 	w.Finish();
 }
 
-static void WriteTimingTags( RageFile &f, const TimingData &timing, bool bIsSong = false )
+static void WriteTimingTags( RageFile &f, const TimingData &timing, bool /* bIsSong */ = false )
 {
 	f.PutLine(ssprintf("#BPMS:%s;",
 			   join(",\r\n", timing.ToVectorString(SEGMENT_BPM, 3)).c_str()));

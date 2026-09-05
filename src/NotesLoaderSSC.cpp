@@ -782,7 +782,7 @@ void SSCLoader::ProcessLabels( TimingData &out, const RString sParam )
 	}
 }
 
-void SSCLoader::ProcessCombos( TimingData &out, const RString line, const int rowsPerBeat )
+void SSCLoader::ProcessCombos( TimingData &out, const RString line, const int /* rowsPerBeat */ )
 {
 	std::vector<RString> arrayComboExpressions;
 	split( line, ",", arrayComboExpressions );
