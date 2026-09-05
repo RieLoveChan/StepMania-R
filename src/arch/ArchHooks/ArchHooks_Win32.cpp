@@ -19,8 +19,8 @@
 static HANDLE g_hInstanceMutex;
 static bool g_bIsMultipleInstance = false;
 
-void InvalidParameterHandler( const wchar_t *szExpression, const wchar_t *szFunction, const wchar_t *szFile,
-					  unsigned int iLine, std::uintptr_t pReserved )
+void InvalidParameterHandler( const wchar_t* /* szExpression */, const wchar_t* /* szFunction */, const wchar_t* /* szFile */,
+					  unsigned int /* iLine */, std::uintptr_t /* pReserved */ )
 {
 	FAIL_M( "Invalid parameter" ); //TODO: Make this more informative
 }

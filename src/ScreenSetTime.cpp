@@ -159,25 +159,25 @@ void ScreenSetTime::ChangeSelection( int iDirection )
 		m_soundChangeSelection.Play(true);
 }
 
-bool ScreenSetTime::MenuUp( const InputEventPlus &input )
+bool ScreenSetTime::MenuUp( const InputEventPlus& /* input */ )
 {
 	ChangeSelection( -1 );
 	return true;
 }
 
-bool ScreenSetTime::MenuDown( const InputEventPlus &input )
+bool ScreenSetTime::MenuDown( const InputEventPlus& /* input */ )
 {
 	ChangeSelection( +1 );
 	return true;
 }
 
-bool ScreenSetTime::MenuLeft( const InputEventPlus &input )
+bool ScreenSetTime::MenuLeft( const InputEventPlus& /* input */ )
 {
 	ChangeValue( -1 );
 	return true;
 }
 
-bool ScreenSetTime::MenuRight( const InputEventPlus &input )
+bool ScreenSetTime::MenuRight( const InputEventPlus& /* input */ )
 {
 	ChangeValue( +1 );
 	return true;
@@ -225,13 +225,13 @@ bool ScreenSetTime::MenuStart( const InputEventPlus &input )
 	return true;
 }
 
-bool ScreenSetTime::MenuSelect( const InputEventPlus &input )
+bool ScreenSetTime::MenuSelect( const InputEventPlus& /* input */ )
 {
 	ChangeSelection( -1 );
 	return true;
 }
 
-bool ScreenSetTime::MenuBack( const InputEventPlus &input )
+bool ScreenSetTime::MenuBack( const InputEventPlus& /* input */ )
 {
 	StartTransitioningScreen( SM_GoToPrevScreen );
 	return true;

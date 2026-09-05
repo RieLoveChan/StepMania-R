@@ -66,7 +66,7 @@ public:
 
 		return RELOAD_CHANGED_ALL;
 	}
-	virtual void ImportOption( OptionRow *pRow, const std::vector<PlayerNumber> &vpns, std::vector<bool> vbSelectedOut[NUM_PLAYERS] ) const
+	virtual void ImportOption( OptionRow *pRow, const std::vector<PlayerNumber>& /* vpns */, std::vector<bool> /* vbSelectedOut */ [NUM_PLAYERS] ) const
 	{
 		Trail *pTrail = GAMESTATE->m_pCurTrail[PLAYER_1];
 		Steps *pSteps;
@@ -88,7 +88,7 @@ public:
 		}
 
 	}
-	virtual int ExportOption( const std::vector<PlayerNumber> &vpns, const std::vector<bool> vbSelected[NUM_PLAYERS] ) const
+	virtual int ExportOption( const std::vector<PlayerNumber>& /* vpns */, const std::vector<bool> /* vbSelected */ [NUM_PLAYERS] ) const
 	{
 		return 0;
 	}
@@ -255,7 +255,7 @@ ScreenOptionsEditCourse::~ScreenOptionsEditCourse()
 
 }
 
-void ScreenOptionsEditCourse::ImportOptions( int iRow, const std::vector<PlayerNumber> &vpns )
+void ScreenOptionsEditCourse::ImportOptions( int iRow, const std::vector<PlayerNumber>& /* vpns */ )
 {
 	OptionRow &row = *m_pRows[iRow];
 	if( row.GetRowType() == OptionRow::RowType_Exit )
@@ -297,7 +297,7 @@ void ScreenOptionsEditCourse::ImportOptions( int iRow, const std::vector<PlayerN
 	}
 }
 
-void ScreenOptionsEditCourse::ExportOptions( int iRow, const std::vector<PlayerNumber> &vpns )
+void ScreenOptionsEditCourse::ExportOptions( int /* iRow */, const std::vector<PlayerNumber>& /* vpns */ )
 {
 	FOREACH_ENUM( EditCourseRow, i )
 	{

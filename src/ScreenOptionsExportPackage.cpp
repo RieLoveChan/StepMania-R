@@ -194,7 +194,7 @@ static RString ReplaceInvalidFileNameChars( RString sOldFileName )
 	return sNewFileName;
 }
 
-static bool ExportPackage( RString sPackageName, RString sDirToExport, RString &sErrorOut )
+static bool ExportPackage( RString sPackageName, RString /* sDirToExport */, RString &sErrorOut )
 {
 	// Mount Desktop/ for each OS.
 	RString sDesktopDir = SpecialDirs::GetDesktopDir();
@@ -270,12 +270,12 @@ void ScreenOptionsExportPackageSubPage::ProcessMenuStart( const InputEventPlus &
 		ScreenPrompt::Prompt( SM_None, ssprintf("Failed to export package: %s",sError.c_str()) );
 }
 
-void ScreenOptionsExportPackageSubPage::ImportOptions( int iRow, const std::vector<PlayerNumber> &vpns )
+void ScreenOptionsExportPackageSubPage::ImportOptions( int /* iRow */, const std::vector<PlayerNumber>& /* vpns */ )
 {
 
 }
 
-void ScreenOptionsExportPackageSubPage::ExportOptions( int iRow, const std::vector<PlayerNumber> &vpns )
+void ScreenOptionsExportPackageSubPage::ExportOptions( int /* iRow */, const std::vector<PlayerNumber>& /* vpns */ )
 {
 
 }

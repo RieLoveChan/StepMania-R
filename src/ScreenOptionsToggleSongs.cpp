@@ -60,11 +60,11 @@ void ScreenOptionsToggleSongs::ProcessMenuStart( const InputEventPlus &input )
 	SCREENMAN->SetNewScreen("ScreenOptionsToggleSongsSubPage");
 }
 
-void ScreenOptionsToggleSongs::ImportOptions( int row, const std::vector<PlayerNumber> &vpns )
+void ScreenOptionsToggleSongs::ImportOptions( int /* row */, const std::vector<PlayerNumber>& /* vpns */ )
 {
 
 }
-void ScreenOptionsToggleSongs::ExportOptions( int row, const std::vector<PlayerNumber> &vpns )
+void ScreenOptionsToggleSongs::ExportOptions( int /* row */, const std::vector<PlayerNumber>& /* vpns */ )
 {
 
 }
@@ -103,7 +103,7 @@ void ScreenOptionsToggleSongsSubPage::BeginScreen()
 	ScreenOptions::BeginScreen();
 }
 
-void ScreenOptionsToggleSongsSubPage::ImportOptions( int iRow, const std::vector<PlayerNumber> &vpns )
+void ScreenOptionsToggleSongsSubPage::ImportOptions( int iRow, const std::vector<PlayerNumber>& /* vpns */ )
 {
 	if( iRow >= (int)m_apSongs.size() )	// exit row
 		return;
@@ -114,7 +114,7 @@ void ScreenOptionsToggleSongsSubPage::ImportOptions( int iRow, const std::vector
 	row.SetOneSharedSelection( iSelection );
 }
 
-void ScreenOptionsToggleSongsSubPage::ExportOptions( int iRow, const std::vector<PlayerNumber> &vpns )
+void ScreenOptionsToggleSongsSubPage::ExportOptions( int iRow, const std::vector<PlayerNumber>& /* vpns */ )
 {
 	if( iRow >= (int)m_apSongs.size() )	// exit row
 		return;

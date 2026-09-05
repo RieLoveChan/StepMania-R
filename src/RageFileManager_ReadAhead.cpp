@@ -158,12 +158,12 @@ void RageFileManagerReadAhead::DiscardCache( RageFileBasic *pFile, int iRelative
 #else
 void RageFileManagerReadAhead::Init() { }
 void RageFileManagerReadAhead::Shutdown() { }
-void RageFileManagerReadAhead::ReadAhead( RageFileBasic *pFile, int iBytes ) { }
-void RageFileManagerReadAhead::DiscardCache( RageFileBasic *pFile, int iRelativePosition, int iBytes ) { }
+void RageFileManagerReadAhead::ReadAhead( RageFileBasic* /* pFile */, int /* iBytes */ ) { }
+void RageFileManagerReadAhead::DiscardCache( RageFileBasic* /* pFile */, int /* iRelativePosition */, int /* iBytes */ ) { }
 #endif
 #endif
 
-void RageFileManagerReadAhead::CacheHintStreaming( RageFileBasic *pFile )
+void RageFileManagerReadAhead::CacheHintStreaming( [[maybe_unused]] RageFileBasic *pFile )
 {
 #if defined(HAVE_POSIX_FADVISE)
 	/* This guesses at the actual size of the file on disk, which may be smaller if this file is compressed.

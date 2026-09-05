@@ -2179,14 +2179,14 @@ public:
 	static int GetNumLockedSongs( T* p, lua_State *L ) { lua_pushnumber( L, p->GetNumLockedSongs() ); return 1; }
 	static int GetNumUnlockedSongs( T* p, lua_State *L )    { lua_pushnumber( L, p->GetNumUnlockedSongs() ); return 1; }
 	static int GetNumSelectableAndUnlockedSongs( T* p, lua_State *L )    { lua_pushnumber( L, p->GetNumSelectableAndUnlockedSongs() ); return 1; }
-	static int GetNumAdditionalSongs( T* p, lua_State *L )  { lua_pushnumber( L, 0 ); return 1; }	// deprecated
+	static int GetNumAdditionalSongs( T* /* p */, lua_State *L )  { lua_pushnumber( L, 0 ); return 1; }	// deprecated
 	static int GetNumSongGroups( T* p, lua_State *L )	{ lua_pushnumber( L, p->GetNumSongGroups() ); return 1; }
 	static int GetNumCourses( T* p, lua_State *L )		{ lua_pushnumber( L, p->GetNumCourses() ); return 1; }
-	static int GetNumAdditionalCourses( T* p, lua_State *L ){ lua_pushnumber( L, 0 ); return 1; }	// deprecated
+	static int GetNumAdditionalCourses( T* /* p */, lua_State *L ){ lua_pushnumber( L, 0 ); return 1; }	// deprecated
 	static int GetNumCourseGroups( T* p, lua_State *L )	{ lua_pushnumber( L, p->GetNumCourseGroups() ); return 1; }
 
 	/* Note: this could now be implemented as Luna<Steps>::GetSong */
-	static int GetSongFromSteps( T* p, lua_State *L )
+	static int GetSongFromSteps( T* /* p */, lua_State *L )
 	{
 		Song *pSong = nullptr;
 		if( lua_isnil(L,1) ) { pSong = nullptr; }
@@ -2295,8 +2295,8 @@ public:
 		return 1;
 	}
 
-	static int WasLoadedFromAdditionalSongs( T* p, lua_State *L )	{ lua_pushboolean(L, false); return 1; }	// deprecated
-	static int WasLoadedFromAdditionalCourses( T* p, lua_State *L )	{ lua_pushboolean(L, false); return 1; }	// deprecated
+	static int WasLoadedFromAdditionalSongs( T* /* p */, lua_State *L )	{ lua_pushboolean(L, false); return 1; }	// deprecated
+	static int WasLoadedFromAdditionalCourses( T* /* p */, lua_State *L )	{ lua_pushboolean(L, false); return 1; }	// deprecated
 
 	LunaSongManager()
 	{
