@@ -448,3 +448,17 @@
   come back to zero, since nothing was meant to change there yet).
   `/wd4100` stays suppressed; only 83 of 314 are done, promoting now
   would break `WITH_WERROR=ON` CI on the other 231.
+
+* **Backlog item 2 — C4100 third batch, 159 of 314** (`9844ab3c4b`,
+  2026-09-05). The 19 files sitting at exactly 4 sites each (76 more
+  sites). Same mechanical shape, two more real exceptions found by
+  reading each body instead of assuming: `RageFileManager.cpp`'s
+  `GetDirOfExecutable(argv0)` is genuinely read on non-Windows
+  (`#else` branches) — `[[maybe_unused]]`, not a commented-out name,
+  so the identifier stays valid there; `RageSound.cpp`'s
+  `GetSourceFrameFromHardwareFrame(bApproximate)` is mid-deprecation
+  per an existing TODO ("part of a gradual procedure to remove
+  bApproximate from the code base") — commenting it out here matches
+  that plan rather than jumping ahead of it. 155 sites remain, all in
+  files with 1-3 hits each (the long tail, no more "clear one file,
+  get several" efficiency from here).
