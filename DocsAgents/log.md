@@ -611,3 +611,56 @@
   against the actual `sm_tests` run rather than trusting the hand-trace.
   134 assertions / 28 cases pass (up from 94/19). `src/CMakeLists.txt`
   untouched; only `tests/CMakeLists.txt` gained the new source file.
+
+* **Backlog items 1/17 — NoteData characterization tests**
+  (`6d4e6b5aa0`, 2026-09-05). ADR 0006 phase 2 continues past
+  `TimingData`. A significant chunk of NoteData's public surface turned
+  out to be out of scope: `GetNumTapNotes`, `GetNumMines`,
+  `GetNumHoldNotes`, `GetNumRolls`, `GetNumLifts`, `GetNumFakes`,
+  `GetNumRowsWithTap`, `GetNumRowsWithTapOrHoldHead`,
+  `GetNumRowsWithSimultaneousTaps`, and `GetNumRowsWithSimultaneousPresses`
+  all call `GAMESTATE->GetProcessedTimingData()->IsJudgableAtRow()`
+  either directly or through the private `IsTap`/`IsMine`/`IsLift`/
+  `IsFake` helpers -- a live-GAMESTATE dependency the playbook rules
+  out. `GetNumTapNotesNoTiming()` is the GAMESTATE-free counterpart and
+  is covered instead; `RowNeedsAtLeastSimultaneousPresses` itself is
+  pure (only its caller `GetNumRowsWithSimultaneousPresses` adds the
+  GAMESTATE check), so it's tested directly too.
+
+  New `tests/test_NoteData.cpp` covers: `SetTapNote`/`GetTapNote`
+  roundtrip (including that writing `TAP_EMPTY` over an existing note
+  erases the map entry rather than just resetting its type, and that a
+  negative row is silently ignored), `GetFirstRow`/`GetLastRow`
+  (including a hold's tail extending `GetLastRow` past its head row),
+  the track-scanning family (`GetTapFirst*`/`GetTapLast*`/
+  `GetFirstTrackWith*`/`GetLastTrackWith*` -- confirmed `HoldHead`
+  doesn't count for the plain `*WithTap` variants, only the
+  `*WithTapOrHoldHead` ones), `AddHoldNote`'s overlap-merge (a second
+  hold overlapping an existing one extends it and absorbs the second
+  hold's own head row) and underlying-tap-destruction behavior,
+  `IsHoldNoteAtRow`'s exactly-at-the-head-returns-false quirk (the
+  header already flags this with an "XXX: rename this to
+  IsHoldBodyAtRow" comment) vs. `IsHoldHeadOrBodyAtRow` which does
+  count the head, forward/backward row traversal via
+  `GetNextTapNoteRowForTrack`/`GetPrevTapNoteRowForTrack`,
+  `ClearRangeForTrack` truncating a hold at a range boundary,
+  `GetNumTapNotesNoTiming`, and `RowNeedsAtLeastSimultaneousPresses`
+  counting held (not just tapped) tracks toward the threshold once the
+  direct-note count falls short.
+
+  One authoring mistake caught before building: an early draft of the
+  `RowNeedsAtLeastSimultaneousPresses` test asserted both `CHECK_FALSE`
+  and `CHECK` for the identical threshold-3 call at the same row (the
+  intent -- "one tap alone isn't enough, but adding two held tracks
+  makes it enough" -- needs the assertions split across before/after
+  adding the holds, not both checked against the same end state).
+  Caught by re-reading the function's counting logic by hand before
+  compiling, not by a failed build.
+
+  A hand-trace of `IsHoldHeadOrBodyAtRow`'s missing-default third
+  parameter (`pHeadRow`, no default value in the header) was skipped
+  and caught instead by the compiler (`C2660`) on first build --
+  fixed by passing `nullptr` explicitly.
+
+  193 assertions / 40 cases pass (up from 134/28). `src/CMakeLists.txt`
+  untouched; only `tests/CMakeLists.txt` gained the new source file.

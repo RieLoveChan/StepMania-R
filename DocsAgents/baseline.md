@@ -164,7 +164,17 @@ Per-subsystem breakdown as passes run:
     constant-BPM / BPM-change / stop-holds-the-beat cases for
     `GetBeatFromElapsedTimeNoOffset`/`GetElapsedTimeFromBeatNoOffset`
     (the `NoOffset` entry points, which don't touch GAMESTATE/PREFSMAN).
-    134 assertions / 28 cases total (up from 94/19).
+  - `tests/test_NoteData.cpp` (2026-09-05) — `SetTapNote`/`GetTapNote`
+    roundtrip, `GetFirstRow`/`GetLastRow`, the track-scanning family,
+    `AddHoldNote`'s overlap-merge behavior, `IsHoldNoteAtRow`'s
+    head-exclusive interval, row traversal, `ClearRangeForTrack`
+    truncation, `GetNumTapNotesNoTiming`, and
+    `RowNeedsAtLeastSimultaneousPresses`. NoteData's counting/statistics
+    functions (`GetNumTapNotes`, `GetNumMines`, `GetNumHoldNotes`, ...)
+    turned out to require a live `GAMESTATE`/processed timing data
+    (`IsJudgableAtRow`) and are out of scope here — only the
+    `NoTiming` counterpart is GAMESTATE-free.
+    193 assertions / 40 cases total (up from 94/19).
   **Locally verified on Windows** (VS 2022 BuildTools cmake 3.31 — the
   standalone cmake 4.3 install on this box hits a compiler-ID detection
   bug when invoked through the VS generator's regen step, use the

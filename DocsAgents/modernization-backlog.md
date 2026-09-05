@@ -29,8 +29,11 @@ as new sweeps find things. Numbers/anchors confirmed 2026-09-02.
 - **Unit coverage: IN PROGRESS.** Characterization targets, in order:
   `RageUtil` (done) → `RageMath` (done, 2026-09-04) → `TimingData`
   (done, 2026-09-05 — row/measure math + beat<->time conversion via
-  the GAMESTATE/PREFSMAN-free `NoOffset` entry points) →
-  `NoteData`/`NoteDataUtil` → `NotesLoader*` (tiny committed corpus).
+  the GAMESTATE/PREFSMAN-free `NoOffset` entry points) → `NoteData`
+  (done, 2026-09-05 — tap/hold storage, track queries, row traversal;
+  the counting/statistics API needs a live GAMESTATE and is out of
+  scope, see item 17) → `NoteDataUtil` → `NotesLoader*` (tiny
+  committed corpus).
 
 ### 2. Warnings on but unmeasured / unenforced — ratchet turning, 3 of 5 MSVC categories promoted
 `WITH_WERROR` exists (default OFF, ON in Windows CI) and counts are
@@ -185,12 +188,18 @@ route: `LoadingWindowGtk` OBJECT → STATIC (Linux-only link fix, see
 (2026-09-05, `197ea46f02`) — row/measure math and beat<->time
 conversion via the `NoOffset` entry points (the offset-applying
 wrappers just add a `GAMESTATE`/`PREFSMAN` read on top, so this
-covers the real logic without needing a live engine). 134 assertions
-/ 28 cases total. **Remaining:** `NoteData`/`NoteDataUtil` → a tiny
-committed simfile corpus for `NotesLoader*` via
-`GENERATE(from_range(...))`. Salvage the intent of the old
-`test_timing_data` / `test_file_readers` / `test_misc` where still
-meaningful.
+covers the real logic without needing a live engine). `NoteData` done
+(2026-09-05, `6d4e6b5aa0`) — tap/hold storage, track queries, row
+traversal; its counting/statistics API (`GetNumTapNotes`,
+`GetNumMines`, `GetNumHoldNotes`, `GetNumRowsWithSimultaneousTaps`,
+...) calls `GAMESTATE->GetProcessedTimingData()->IsJudgableAtRow()`
+through `IsTap`/`IsMine`/`IsLift`/`IsFake` and is out of scope for a
+GAMESTATE-free test file — only `GetNumTapNotesNoTiming` (the
+GAMESTATE-free counterpart) is covered. 193 assertions / 40 cases
+total. **Remaining:** `NoteDataUtil` → a tiny committed simfile corpus
+for `NotesLoader*` via `GENERATE(from_range(...))`. Salvage the intent
+of the old `test_timing_data` / `test_file_readers` / `test_misc`
+where still meaningful.
 
 ### 16. Pre-floor `#if` guards across `src/arch/` and `src/archutils/` — Windows runtime-version checks DONE
 Now that ADR 0003 sets Windows 11 / current-macOS / current-Linux floors,
