@@ -291,7 +291,7 @@ static void DoPlayOnce( RString sPath )
 
 static void DoPlayOnceFromDir( RString sPath )
 {
-	if( sPath == "" )
+	if( sPath.empty() )
 		return;
 
 	// make sure there's a slash at the end of this path
@@ -317,7 +317,7 @@ static void DoPlayOnceFromDir( RString sPath )
 	g_Mutex->Lock();
 	std::vector<int> &order = g_DirSoundOrder.insert({sPath, std::vector<int>()}).first->second;
 	// If order is exhausted, repopulate and reshuffle
-	if (order.size() == 0)
+	if (order.empty())
 	{
 		for (int i = 0; i < (int)arraySoundFiles.size(); ++i)
 		{
@@ -356,7 +356,7 @@ static void StartQueuedSounds()
 	g_Mutex->Unlock();
 
 	for( unsigned i = 0; i < aSoundsToPlayOnce.size(); ++i )
-		if( aSoundsToPlayOnce[i] != "" )
+		if( !aSoundsToPlayOnce[i].empty() )
 			DoPlayOnce( aSoundsToPlayOnce[i] );
 
 	for( unsigned i = 0; i < aSoundsToPlayOnceFromDir.size(); ++i )
@@ -365,7 +365,7 @@ static void StartQueuedSounds()
 	for( unsigned i = 0; i < aSoundsToPlayOnceFromAnnouncer.size(); ++i )
 	{
 		RString sPath = aSoundsToPlayOnceFromAnnouncer[i];
-		if( sPath != "" )
+		if( !sPath.empty() )
 		{
 			sPath = ANNOUNCER->GetPathTo( sPath );
 			DoPlayOnceFromDir( sPath );

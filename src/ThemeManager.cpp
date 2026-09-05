@@ -83,7 +83,7 @@ public:
 
 	virtual void Read()
 	{
-		if( m_sName != ""  &&  THEME  &&   THEME->IsThemeLoaded() )
+		if( !m_sName.empty()  &&  THEME  &&   THEME->IsThemeLoaded() )
 		{
 			THEME->GetString( m_sGroup, m_sName, m_currentValue );
 			m_Value.SetFromNil();
@@ -110,7 +110,7 @@ void ThemeManager::Subscribe( IThemeMetric *p )
 	// are updated with current data.  If a metric is created after
 	// a theme is loaded, ThemeManager should update it right away (not just
 	// when the theme changes).
-	if( THEME && THEME->GetCurThemeName().size() )
+	if( THEME && !THEME->GetCurThemeName().empty() )
 		p->Read();
 }
 
@@ -698,7 +698,7 @@ bool ThemeManager::GetPathInfoToRaw( PathInfo &out, const RString &sThemeName_, 
 		}
 	}
 
-	if( asElementPaths.size() == 0 )
+	if( asElementPaths.empty() )
 		return false;	// This isn't fatal.
 
 	FilterFileLanguages( asElementPaths );
@@ -908,7 +908,7 @@ RString ThemeManager::GetMetricsIniPath( const RString &sThemeName )
 bool ThemeManager::HasMetric( const RString &sMetricsGroup, const RString &sValueName )
 {
 	RString sThrowAway;
-	if(sMetricsGroup == "" || sValueName == "")
+	if(sMetricsGroup.empty() || sValueName.empty())
 	{
 		return false;
 	}
@@ -918,7 +918,7 @@ bool ThemeManager::HasMetric( const RString &sMetricsGroup, const RString &sValu
 bool ThemeManager::HasString( const RString &sMetricsGroup, const RString &sValueName )
 {
 	RString sThrowAway;
-	if(sMetricsGroup == "" || sValueName == "")
+	if(sMetricsGroup.empty() || sValueName.empty())
 	{
 		return false;
 	}
@@ -962,7 +962,7 @@ RString ThemeManager::GetMetricsGroupFallback( const RString &sMetricsGroup )
 
 bool ThemeManager::GetMetricRawRecursive( const IniFile &ini, const RString &sMetricsGroup_, const RString &sValueName, RString &sOut )
 {
-	ASSERT( sValueName != "" );
+	ASSERT( !sValueName.empty() );
 	RString sMetricsGroup( sMetricsGroup_ );
 
 	int n = 100;
@@ -1098,7 +1098,7 @@ LuaReference ThemeManager::GetMetricR( const RString &sMetricsGroup, const RStri
 
 void ThemeManager::PushMetric( Lua *L, const RString &sMetricsGroup, const RString &sValueName )
 {
-	if(sMetricsGroup == "" || sValueName == "")
+	if(sMetricsGroup.empty() || sValueName.empty())
 	{
 		LuaHelpers::ReportScriptError("PushMetric:  Attempted to fetch metric with empty group name or empty value name.");
 		lua_pushnil(L);
@@ -1114,7 +1114,7 @@ void ThemeManager::PushMetric( Lua *L, const RString &sMetricsGroup, const RStri
 	else
 	{
 		// Remove unary +, eg. "+50"; Lua doesn't support that.
-		if( sValue.size() >= 1 && sValue[0] == '+' )
+		if( !sValue.empty() && sValue[0] == '+' )
 			sValue.erase( 0, 1 );
 
 		LuaHelpers::RunExpression( L, sValue, sName );
@@ -1238,7 +1238,7 @@ static RString PseudoLocalize( RString s )
 RString ThemeManager::GetString( const RString &sMetricsGroup, const RString &sValueName_ )
 {
 	RString sValueName = sValueName_;
-	if(sMetricsGroup == "" || sValueName == "")
+	if(sMetricsGroup.empty() || sValueName.empty())
 	{
 		LuaHelpers::ReportScriptError("PushMetric:  Attempted to fetch metric with empty group name or empty value name.");
 		return "";
@@ -1335,7 +1335,7 @@ public:
 	{
 		RString group= SArg(1);
 		RString name= SArg(2);
-		if(group == "" || name == "")
+		if(group.empty() || name.empty())
 		{
 			luaL_error(L, "Cannot fetch metric with empty group name or empty value name.");
 		}
@@ -1347,7 +1347,7 @@ public:
 	{
 		RString group= SArg(1);
 		RString name= SArg(2);
-		if(group == "" || name == "")
+		if(group.empty() || name.empty())
 		{
 			luaL_error(L, "Cannot fetch string with empty group name or empty value name.");
 		}

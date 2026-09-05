@@ -417,7 +417,7 @@ ScreenMessage ScreenManager::PopTopScreenInternal( bool bSendLoseFocus )
 		}
 	}
 
-	if( g_ScreenStack.size() )
+	if( !g_ScreenStack.empty() )
 		LOG->MapLog( "ScreenManager::TopScreen", "Top Screen: %s", g_ScreenStack.back().m_pScreen->GetName().c_str() );
 	else
 		LOG->UnmapLog( "ScreenManager::TopScreen" );
@@ -452,7 +452,7 @@ void ScreenManager::Update( float fDeltaTime )
 	 * to load the new screen will come after 4 seconds plus the load time.
 	 *
 	 * So, let's just zero the first update for every screen. */
-	ASSERT( !g_ScreenStack.empty() || m_sDelayedScreen != "" );	// Why play the game if there is nothing showing?
+	ASSERT( !g_ScreenStack.empty() || !m_sDelayedScreen.empty() );	// Why play the game if there is nothing showing?
 
 	Screen* pScreen = g_ScreenStack.empty() ? nullptr : GetTopScreen();
 
@@ -486,7 +486,7 @@ void ScreenManager::Update( float fDeltaTime )
 	/* If we're currently inside a background screen load, and m_sDelayedScreen
 	 * is set, then the screen called SetNewScreen before we finished preparing.
 	 * Postpone it until we're finished loading. */
-	if( m_sDelayedScreen.size() != 0 )
+	if( !m_sDelayedScreen.empty() )
 	{
 		LoadDelayedScreen();
 	}
@@ -498,7 +498,7 @@ void ScreenManager::Draw()
 	 * that'll confuse the "zero out the next update after loading a screen logic.
 	 * If we don't render, don't call BeginFrame or EndFrame. That way, we won't
 	 * clear the buffer, and we won't wait for vsync. */
-	if( g_ScreenStack.size() && g_ScreenStack.back().m_pScreen->IsFirstUpdate() )
+	if( !g_ScreenStack.empty() && g_ScreenStack.back().m_pScreen->IsFirstUpdate() )
 		return;
 
 	if( !DISPLAY->BeginFrame() )
@@ -545,7 +545,7 @@ void ScreenManager::Input( const InputEventPlus &input )
 
 	// Pass input to the topmost screen.  If we have a new top screen pending, don't
 	// send to the old screen, but do send to overlay screens.
-	if( m_sDelayedScreen != "" )
+	if( !m_sDelayedScreen.empty() )
 		return;
 
 	if( g_ScreenStack.empty() )
@@ -655,7 +655,7 @@ void ScreenManager::PersistantScreen( const RString &sScreenName )
 
 void ScreenManager::SetNewScreen( const RString &sScreenName )
 {
-	ASSERT( sScreenName != "" );
+	ASSERT( !sScreenName.empty() );
 	m_sDelayedScreen = sScreenName;
 }
 
@@ -711,7 +711,7 @@ bool ScreenManager::ActivatePreparedScreenAndBackground( const RString &sScreenN
 
 		/* Move the old background back to the prepared list, or delete it if
 		 * it's a blank actor. */
-		if( g_pSharedBGA->GetName() == "" )
+		if( g_pSharedBGA->GetName().empty() )
 			delete g_pSharedBGA;
 		else
 			g_vPreparedBackgrounds.push_back( g_pSharedBGA );
@@ -800,14 +800,14 @@ void ScreenManager::AddNewScreenToTop( const RString &sScreenName, ScreenMessage
 
 	ls.m_SendOnPop = SendOnPop;
 
-	if( g_ScreenStack.size() )
+	if( !g_ScreenStack.empty() )
 		g_ScreenStack.back().m_pScreen->HandleScreenMessage( SM_LoseFocus );
 	PushLoadedScreen( ls );
 }
 
 void ScreenManager::PopTopScreen( ScreenMessage SM )
 {
-	ASSERT( g_ScreenStack.size() > 0 );
+	ASSERT( !g_ScreenStack.empty() );
 
 	m_PopTopScreen = SM;
 }
@@ -917,7 +917,7 @@ public:
 	// which blocks concurrent rendering
 	static void ValidateScreenName(lua_State* L, RString& name)
 	{
-		if(name == "")
+		if(name.empty())
 		{
 			RString errstr= "Screen name is empty.";
 			SCREENMAN->SystemMessage(errstr);

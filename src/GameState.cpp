@@ -62,12 +62,12 @@ class GameStateMessageHandler: public MessageSubscriber
 			RString sJoined;
 			FOREACH_HumanPlayer( pn )
 			{
-				if( sJoined != "" )
+				if( !sJoined.empty() )
 					sJoined += ", ";
 				sJoined += ssprintf( "P%i", pn+1 );
 			}
 
-			if( sJoined == "" )
+			if( sJoined.empty() )
 				sJoined = "none";
 
 			LOG->MapLog( "JOINED", "Players joined: %s", sJoined.c_str() );

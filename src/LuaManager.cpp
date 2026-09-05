@@ -887,7 +887,7 @@ bool LuaHelpers::RunScript( Lua *L, const RString &Script, const RString &Name, 
 
 bool LuaHelpers::RunExpression( Lua *L, const RString &sExpression, const RString &sName )
 {
-	RString sError= ssprintf("Lua runtime error parsing \"%s\": ", sName.size()? sName.c_str():sExpression.c_str());
+	RString sError= ssprintf("Lua runtime error parsing \"%s\": ", !sName.empty()? sName.c_str():sExpression.c_str());
 	if(!LuaHelpers::RunScript(L, "return " + sExpression, sName.empty()? RString("in"):sName, sError, 0, 1, true))
 	{
 		return false;
@@ -898,12 +898,12 @@ bool LuaHelpers::RunExpression( Lua *L, const RString &sExpression, const RStrin
 void LuaHelpers::ParseCommandList( Lua *L, const RString &sCommands, const RString &sName, bool bLegacy )
 {
 	RString sLuaFunction;
-	if( sCommands.size() > 0 && sCommands[0] == '\033' )
+	if( !sCommands.empty() && sCommands[0] == '\033' )
 	{
 		// This is a compiled Lua chunk. Just pass it on directly.
 		sLuaFunction = sCommands;
 	}
-	else if( sCommands.size() > 0 && sCommands[0] == '%' )
+	else if( !sCommands.empty() && sCommands[0] == '%' )
 	{
 		sLuaFunction = "return ";
 		sLuaFunction.append( sCommands.begin()+1, sCommands.end() );

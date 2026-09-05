@@ -911,7 +911,7 @@ private:
 		}
 		lua_setfield(L, -2, "error");
 
-		if (response->errorMsg == "")
+		if (response->errorMsg.empty())
 		{
 			lua_pushnil(L);
 		}

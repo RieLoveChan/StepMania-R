@@ -60,7 +60,7 @@ bool InputQueueCode::EnteredCode( GameController controller ) const
 {
 	if( controller == GameController_Invalid )
 		return false;
-	if( m_aPresses.size() == 0 )
+	if( m_aPresses.empty() )
 		return false;
 
 	RageTimer OldestTimeAllowed;
@@ -175,9 +175,9 @@ bool InputQueueCode::Load( RString sButtonsNames )
 
 		split( sPress, "-", asButtonNames, false );
 
-		if( asButtonNames.size() < 1 )
+		if( asButtonNames.empty() )
 		{
-			if( sButtonsNames != "" )
+			if( !sButtonsNames.empty() )
 				LOG->Trace( "Ignoring empty code \"%s\".", sButtonsNames.c_str() );
 			return false;
 		}

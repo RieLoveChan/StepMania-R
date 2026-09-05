@@ -3335,7 +3335,7 @@ void GameManager::GetDemonstrationStylesForGame( const Game *pGame, std::vector<
 			vpStylesOut.push_back( style );
 	}
 
-	ASSERT( vpStylesOut.size()>0 );	// this Game is missing a Style that can be used with the demonstration
+	ASSERT( !vpStylesOut.empty() );	// this Game is missing a Style that can be used with the demonstration
 }
 
 const Style* GameManager::GetHowToPlayStyleForGame( const Game *pGame )

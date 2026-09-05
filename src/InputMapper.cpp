@@ -1327,7 +1327,7 @@ void InputMappings::WriteMappings( const InputScheme *pInputScheme, RString sFil
 			for( int slot = 0; slot < NUM_USER_GAME_TO_DEVICE_SLOTS; ++slot )	// don't save data from the last (keyboard automap) slot
 				asValues.push_back( m_GItoDI[i][j][slot].ToString() );
 
-			while( asValues.size() && asValues.back() == "" )
+			while( !asValues.empty() && asValues.back().empty() )
 				asValues.erase( asValues.begin()+asValues.size()-1 );
 
 			RString sValueString = join( DEVICE_INPUT_SEPARATOR, asValues );

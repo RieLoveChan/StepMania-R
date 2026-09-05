@@ -428,7 +428,7 @@ RString NoteSkinManager::GetPath( const RString &sButtonName, const RString &sEl
 				 break;	// done searching
 		}
 
-		if( sRealPath == "" )
+		if( sRealPath.empty() )
 		{
 			RString message = ssprintf(
 					"NoteSkinManager:  The redirect \"%s\" points to the file \"%s\", which does not exist. "

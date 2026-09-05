@@ -47,7 +47,7 @@ void AnnouncerManager::GetAnnouncerNames( std::vector<RString>& AddTo )
 
 bool AnnouncerManager::DoesAnnouncerExist( RString sAnnouncerName )
 {
-	if( sAnnouncerName == "" )
+	if( sAnnouncerName.empty() )
 		return true;
 
 	std::vector<RString> asAnnouncerNames;
@@ -113,7 +113,7 @@ static const char *aliases[][2] = {
  * intro". */
 RString AnnouncerManager::GetPathTo( RString sAnnouncerName, RString sFolderName )
 {
-	if(sAnnouncerName == "")
+	if(sAnnouncerName.empty())
 		return RString(); /* announcer disabled */
 
 	const RString AnnouncerPath = GetAnnouncerDirFromName(sAnnouncerName);
@@ -159,10 +159,10 @@ void AnnouncerManager::NextAnnouncer()
 {
 	std::vector<RString> as;
 	GetAnnouncerNames( as );
-	if( as.size()==0 )
+	if( as.empty() )
 		return;
 
-	if( m_sCurAnnouncerName == "" )
+	if( m_sCurAnnouncerName.empty() )
 		SwitchAnnouncer( as[0] );
 	else
 	{

@@ -77,7 +77,7 @@ Character* CharacterManager::GetRandomCharacter()
 {
 	std::vector<Character*> apCharacters;
 	GetCharacters( apCharacters );
-	if( apCharacters.size() )
+	if( !apCharacters.empty() )
 		return apCharacters[RandomInt(apCharacters.size())];
 	else
 		return GetDefaultCharacter();

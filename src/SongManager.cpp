@@ -497,7 +497,7 @@ void SongManager::LoadGroupSymLinks(RString sDir, RString sGroupFolder)
 		else
 		{
 			const std::vector<Steps*>& vpSteps = pNewSong->GetAllSteps();
-			while( vpSteps.size() )
+			while( !vpSteps.empty() )
 				pNewSong->DeleteSteps( vpSteps[0] );
 
 			FOREACH_BackgroundLayer( i )
@@ -1077,7 +1077,7 @@ void SongManager::InitAutogenCourses()
 
 			/* Different artist, or we're at the end. If we have enough entries for
 			 * the last artist, add it. Skip blanks and "Unknown artist". */
-			if( iCurArtistCount >= 3 && sCurArtistTranslit != "" &&
+			if( iCurArtistCount >= 3 && !sCurArtistTranslit.empty() &&
 				sCurArtistTranslit.CompareNoCase("Unknown artist") &&
 				sCurArtist.CompareNoCase("Unknown artist") )
 			{
@@ -1373,7 +1373,7 @@ void SongManager::GetExtraStageInfo( bool bExtra2, const Style *sd, Song*& pSong
 		sGroup = GAMESTATE->m_pCurSong->m_sGroupName;
 	}
 
-	ASSERT_M( sGroup != "", ssprintf("%p '%s' '%s'",
+	ASSERT_M( !sGroup.empty(), ssprintf("%p '%s' '%s'",
 		static_cast<void*>(GAMESTATE->m_pCurSong.Get()),
 		GAMESTATE->m_pCurSong? GAMESTATE->m_pCurSong->GetSongDir().c_str():"",
 		GAMESTATE->m_pCurSong? GAMESTATE->m_pCurSong->m_sGroupName.c_str():"") );
@@ -1498,7 +1498,7 @@ Song* SongManager::GetSongFromDir(RString dir) const
 
 Course* SongManager::GetCourseFromPath( RString sPath ) const
 {
-	if( sPath == "" )
+	if( sPath.empty() )
 		return nullptr;
 
 	for (Course *c : m_pCourses)
@@ -1512,7 +1512,7 @@ Course* SongManager::GetCourseFromPath( RString sPath ) const
 
 Course* SongManager::GetCourseFromName( RString sName ) const
 {
-	if( sName == "" )
+	if( sName.empty() )
 		return nullptr;
 
 	for (Course *c : m_pCourses)
