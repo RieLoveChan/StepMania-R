@@ -420,3 +420,31 @@
   both before declaring the category clean. `C4100`/`C4244`/`C4267`
   remain suppressed; `C4100` is next (mechanical), `C4244`/`C4267` are
   the real ~4.4k-hit debt needing case-by-case review.
+
+* **Backlog item 2 — C4100 measured + first two batches**
+  (`713e58a0f6`, 2026-09-05). `baseline.md`'s "1362" figure for C4100
+  was raw MSBuild lines, which double-counts a header's warning once
+  per including TU; the real count is **314 unique sites**, spread
+  across ~150 files with no concentration (max 11 in one file) — no
+  "fix one file, mostly done" shortcut here, unlike C4189/C4702.
+  Fixed the 12 highest-concentration files (83 sites) using this
+  codebase's existing convention (comment out the unused name,
+  `Type /* name */`) rather than `[[maybe_unused]]`, with one
+  exception: `RageFileManager_ReadAhead.cpp::CacheHintStreaming()`'s
+  parameter is genuinely used, just only inside
+  `#if defined(HAVE_POSIX_FADVISE)` (unset on Windows) —
+  `[[maybe_unused]]` there instead, since commenting the name would
+  break the POSIX branch's compile. Two sites needed the actual body
+  read, not just the pattern assumed: `OptionRowHandler.cpp` has four
+  near-identical `ImportOption(OptionRow*, vpns, vbSelectedOut)`
+  overrides in the same file and only some of them use `vpns`/
+  `vbSelectedOut` — blindly commenting all four the same way would
+  have broken the ones that do; `ScreenOptionsExportPackage.cpp`'s
+  `sDirToExport` grep-matched a "use" that was actually inside a
+  `/* XXX: totally doesn't work. -aj */` block comment, not live code.
+  **Process note:** left `/wd4100` removed from `src/CMakeLists.txt`
+  after the measurement build and almost committed that — caught it
+  before committing by diffing against the last commit (should have
+  come back to zero, since nothing was meant to change there yet).
+  `/wd4100` stays suppressed; only 83 of 314 are done, promoting now
+  would break `WITH_WERROR=ON` CI on the other 231.

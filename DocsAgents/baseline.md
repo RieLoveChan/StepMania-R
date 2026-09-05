@@ -69,16 +69,21 @@ historical (both are 0 and enforced):
 |---|---|---|---|
 | `C4244` | 2736 | conversion, possible loss of data (`double`→`float`, `int`→`char`…) | `static_cast`, review each for real truncation |
 | `C4267` | 1728 | `size_t` → smaller type | same; often `int` loop vars that should be `size_t` |
-| `C4100` | 1362 | unreferenced formal parameter | drop the name / `[[maybe_unused]]` |
+| `C4100` | ~~1362 raw~~ **314 unique** (2026-09-05 recount; 1362 double-counts headers per including TU) | unreferenced formal parameter | drop the name / `[[maybe_unused]]` |
 | ~~`C4189`~~ | ~~26~~ 0 | local var init but unused | **done** — promoted to `-Werror` |
 | ~~`C4702`~~ | ~~10~~ 0 | unreachable code | **done** — promoted to `-Werror` |
 
 C4244+C4267 (~4.4k raw / most of the remaining debt) are the bulk and
 the only ones that can hide real bugs (silent truncation) — highest-value
 to burn down, but each needs a real look (not a mechanical autofix).
-C4100 (unreferenced parameter) is next-most-mechanical (drop the name or
-`[[maybe_unused]]`) — a reasonable next promotion target. Per-subsystem
-counts: TBD as passes run
+
+**C4100 in progress:** 314 unique sites, ~150 files, no concentration
+(max 11/file) — genuinely wide, not a "fix one file, done" case.
+**83 of 314 done** (`713e58a0f6`, 2026-09-05), the 12
+highest-concentration files. `/wd4100` stays in `src/CMakeLists.txt`
+until the remaining 231 (≈140 files) are clear — do **not** promote
+early, a partial promotion breaks the `WITH_WERROR=ON` Windows CI job
+on every remaining site. Per-subsystem counts: TBD as passes run
 ([`playbooks/clang-tidy-subsystem-pass.md`](./playbooks/clang-tidy-subsystem-pass.md)).
 
 # clang-tidy (captured 2026-09-03)

@@ -43,11 +43,26 @@ as a direct `GetNextX()` + `if`; one `[[noreturn]]`-followed-by-dead-code
 cleanup). Verified clean under `/WX` in both Debug and Release (Debug
 surfaced 3 more sites Release's optimizer had folded away — always
 check both configs, not just Release).
-**Remaining:** `C4100` (unreferenced parameter, ~1362 hits) — mechanical
-(`[[maybe_unused]]` or drop the name), reasonable next promotion.
-`C4244`/`C4267` (numeric conversion / narrowing, ~4.4k hits) are the
-real debt — each needs a real look for actual truncation, not a
-mechanical pass; still not measured for Clang/GCC (`baseline.md` TBD).
+**In progress (2026-09-05):** `C4100` (unreferenced parameter). Real
+measured count is **314 unique sites** (not the stale ~1362 raw-line
+figure, which double-counts headers across every including TU) spread
+across ~150 files with no concentration (max 11 in one file) — a wide
+mechanical sweep, no shortcut. **83 of 314 fixed** (`713e58a0f6`), the
+12 highest-concentration files: comment out the unused parameter name
+(`Type /* name */`, this codebase's existing convention), except one
+site genuinely used only under `#if defined(HAVE_POSIX_FADVISE)`
+(unset on Windows) — `[[maybe_unused]]` there instead, since commenting
+the name would break the other platform's compile. Two sites looked
+like false positives but weren't: verify each site's actual body
+rather than assume the pattern — one function's "unused" param was
+used by a *different* override of the same virtual in the same file,
+and another's usage was inside a `/* doesn't work */` block comment,
+not live code. `/wd4100` **stays in `src/CMakeLists.txt`** until all
+314 are done — 231 remain across ~140 files.
+**Remaining:** `C4100` continues; `C4244`/`C4267` (numeric conversion
+/ narrowing, ~4.4k hits) are the real debt — each needs a real look
+for actual truncation, not a mechanical pass; still not measured for
+Clang/GCC (`baseline.md` TBD).
 
 ### 3. Stale cppcheck leak list, never cleared
 `Docs/Devdocs/possible memory leaks.txt` — from 2009. Likely still live:
