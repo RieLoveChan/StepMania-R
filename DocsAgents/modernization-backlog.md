@@ -30,12 +30,24 @@ as new sweeps find things. Numbers/anchors confirmed 2026-09-02.
   `RageUtil` (started) → `RageMath` → `TimingData` →
   `NoteData`/`NoteDataUtil` → `NotesLoader*` (tiny committed corpus).
 
-### 2. Warnings on but unmeasured / unenforced
-`-Wall -Wextra` (GCC/Clang) + `/W4` (MSVC) with blanket suppressions
-(`src/CMakeLists.txt:126-132`); no `-Werror` except `type-limits`.
-**Action:** capture counts into [`baseline.md`](./baseline.md); add a
-`WITH_WERROR` option (default OFF, ON in CI) and promote each warning
-category to `-Werror=<cat>` once it hits zero across `src/` (ADR 0001 §7).
+### 2. Warnings on but unmeasured / unenforced — ratchet turning, 2 of 5 MSVC categories promoted
+`WITH_WERROR` exists (default OFF, ON in Windows CI) and counts are
+captured in [`baseline.md`](./baseline.md) (ADR 0001 §7 mechanism).
+**Done (2026-09-04):** `C4189` (unused local, was 26) and `C4702`
+(unreachable code, was 10) promoted to `-Werror` — all 15 unique hit
+sites fixed by hand first (dead locals removed; two fully-dead
+computation blocks deleted; degenerate `FOREACH_X(v) return ...;`
+loops — which MSVC flags because the body always returns on the first
+iteration, making the loop's back-edge provably unreachable — rewritten
+as a direct `GetNextX()` + `if`; one `[[noreturn]]`-followed-by-dead-code
+cleanup). Verified clean under `/WX` in both Debug and Release (Debug
+surfaced 3 more sites Release's optimizer had folded away — always
+check both configs, not just Release).
+**Remaining:** `C4100` (unreferenced parameter, ~1362 hits) — mechanical
+(`[[maybe_unused]]` or drop the name), reasonable next promotion.
+`C4244`/`C4267` (numeric conversion / narrowing, ~4.4k hits) are the
+real debt — each needs a real look for actual truncation, not a
+mechanical pass; still not measured for Clang/GCC (`baseline.md` TBD).
 
 ### 3. Stale cppcheck leak list, never cleared
 `Docs/Devdocs/possible memory leaks.txt` — from 2009. Likely still live:

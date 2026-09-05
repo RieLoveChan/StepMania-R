@@ -34,7 +34,7 @@ hides. `Program/` holds both (CMake names them per config,
 | CMake minimum | 3.20 | `CMakeLists.txt:1` |
 | C++ standard | 17 (`REQUIRED ON`) | `src/CMakeLists.txt:88` |
 | GCC/Clang warnings | `-Wall -Wextra -Wno-unused -Wno-unused-parameter -Wno-unknown-pragmas -Werror=type-limits` (+ `-Wno-undefined-var-template`, `-Wno-deprecated-declarations` on Clang) | `src/CMakeLists.txt:126-130` |
-| MSVC warnings | `/W4 /wd4100 /wd4189 /wd4244 /wd4267 /wd4702` | `src/CMakeLists.txt:132` |
+| MSVC warnings | `/W4 /wd4100 /wd4244 /wd4267` (C4189/C4702 promoted to `-Werror` 2026-09-04) | `src/CMakeLists.txt:167` |
 | `-Werror` | only `type-limits` today. **Policy (ADR 0001 §7):** curated `-Werror` set that grows; a category is promoted once it is zero across `src/`; enforced via `WITH_WERROR` (ON in CI, OFF by default). `WITH_WERROR` not added yet. | `src/CMakeLists.txt:126-132` |
 | Platform floors | **Windows 11 x64** min; MSVC v143 / VS2022+. macOS: latest + prior, arm64 primary. Linux: current distros. (ADR 0003.) | ADR 0003 |
 | Externals | git submodules; FFmpeg prebuilt for Windows — `avcodec-59`, `avformat-59`, `avutil-57`, `swscale-6` ≈ **FFmpeg 5.x**, built from `extern/ffmpeg` @ `19feb712f5` (backlog 7, closed 2026-09-04). Downloaded + SHA256-verified from GitHub Release `ffmpeg-w32-19feb712f5` into `extern/ffmpeg-w32-prebuilt/` at configure time — no committed blob anymore. | `.gitmodules`, `CMake/SetupFfmpegWin32.cmake`, `StepmaniaCore.cmake:175+` |
@@ -46,24 +46,39 @@ bundled cmake 3.31.
 
 | Config | Warnings | Notes |
 |---|---|---|
-| **As shipped** — `/W4` + `/wd4100 /wd4189 /wd4244 /wd4267 /wd4702` | **0** | The build is clean as configured. |
-| `/W4`, **suppressions removed** | **2814** (MSBuild dedup) | This is the debt behind the five `/wd` flags. |
+| **As shipped** — `/W4` + `/wd4100 /wd4244 /wd4267` | **0** | The build is clean as configured. |
+| `/W4`, **remaining 3 suppressions removed** | **~4098** (MSBuild dedup, C4244+C4267+C4100) | Debt behind the 3 flags still standing. |
 | Clang `-Wall -Wextra` | **TBD** | needs a clang build |
 | GCC `-Wall -Wextra` | **TBD** | Linux, P3 |
 
-Debt breakdown (raw hit lines, incl. header dupes across TUs):
+**`C4189`/`C4702` promoted to `-Werror` (2026-09-04, backlog item 2
+closed for these two):** all 15 hit sites fixed by hand (dead unused
+locals removed; two genuinely dead computation blocks deleted outright;
+degenerate `FOREACH_X(v) return ...;` patterns — which always return on
+the loop's first iteration, making MSVC flag the loop's back-edge as
+unreachable — rewritten as a direct `GetNextX()` call + `if`; one
+`[[noreturn]]`-followed-by-dead-code cleaned up). `/wd4100 /wd4244
+/wd4267` remain (below); this is the ratchet from ADR 0001 §7 actually
+turning.
+
+Debt breakdown (raw hit lines, incl. header dupes across TUs) —
+**as measured before the 2026-09-04 promotion**, C4189/C4702 rows now
+historical (both are 0 and enforced):
 
 | Code | Hits | Meaning | Fix shape |
 |---|---|---|---|
 | `C4244` | 2736 | conversion, possible loss of data (`double`→`float`, `int`→`char`…) | `static_cast`, review each for real truncation |
 | `C4267` | 1728 | `size_t` → smaller type | same; often `int` loop vars that should be `size_t` |
 | `C4100` | 1362 | unreferenced formal parameter | drop the name / `[[maybe_unused]]` |
-| `C4189` | 26 | local var init but unused | delete |
-| `C4702` | 10 | unreachable code | delete / restructure |
+| ~~`C4189`~~ | ~~26~~ 0 | local var init but unused | **done** — promoted to `-Werror` |
+| ~~`C4702`~~ | ~~10~~ 0 | unreachable code | **done** — promoted to `-Werror` |
 
-C4244+C4267 (~4.4k raw / most of the 2814) are the bulk and the only ones
-that can hide real bugs (silent truncation) — highest-value to burn down.
-Per-subsystem counts: TBD as passes run
+C4244+C4267 (~4.4k raw / most of the remaining debt) are the bulk and
+the only ones that can hide real bugs (silent truncation) — highest-value
+to burn down, but each needs a real look (not a mechanical autofix).
+C4100 (unreferenced parameter) is next-most-mechanical (drop the name or
+`[[maybe_unused]]`) — a reasonable next promotion target. Per-subsystem
+counts: TBD as passes run
 ([`playbooks/clang-tidy-subsystem-pass.md`](./playbooks/clang-tidy-subsystem-pass.md)).
 
 # clang-tidy (captured 2026-09-03)
@@ -230,7 +245,7 @@ Cross-cutting: `RString` in 723 files / ~8,429 uses; `GAMESTATE->` at
 3. `grep -oE "warning C[0-9]{4}" log | sort | uniq -c`. MSBuild's
    `N Warning(s)` summary line is the deduped total.
 4. For the "debt behind suppressions": drop
-   `/wd4100 /wd4189 /wd4244 /wd4267 /wd4702` from `src/CMakeLists.txt:132`,
+   `/wd4100 /wd4244 /wd4267` from `src/CMakeLists.txt:167`,
    rebuild, count, `git checkout src/CMakeLists.txt`, reconfigure back.
 
 ## clang-tidy

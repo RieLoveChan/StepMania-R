@@ -398,3 +398,25 @@
   distinguish before touching any `#if 0`: plain dead code, an active
   `#if 0/#else` selector (never remove), and a toolchain-EOL block
   (enable, don't delete).
+
+* **Backlog item 2 — first two MSVC warning categories promoted to
+  `-Werror`** (2026-09-04). `C4189` (unused local) and `C4702`
+  (unreachable code) removed from the `/wd` suppression list; all 15
+  hit sites fixed first. Most were plain dead locals, but a recurring
+  real pattern showed up multiple times: `FOREACH_X(v) return ...;` —
+  a macro-generated `for` loop whose body always returns on its first
+  iteration — makes MSVC prove the loop's back-edge unreachable and
+  warn C4702 *on the loop line itself*, not on any code after it.
+  Fixed by calling the underlying `GetNextX()` once and branching
+  directly, preserving behavior exactly (including, in
+  `ScreenGameplay::SaveReplay()`, a nested case where the *outer* loop
+  needed to keep trying subsequent players when the *inner* one found
+  nothing — a naive flatten would have silently changed that).
+  `RageBitmapTexture.cpp` had an entire block that computed "better"
+  texture dimensions and then did nothing with them (no log, no
+  resize) — deleted outright as dead weight, not just the two flagged
+  locals. Debug and Release surfaced *different* warning sets (Debug's
+  weaker optimizer didn't fold away 3 sites Release did) — checked
+  both before declaring the category clean. `C4100`/`C4244`/`C4267`
+  remain suppressed; `C4100` is next (mechanical), `C4244`/`C4267` are
+  the real ~4.4k-hit debt needing case-by-case review.
