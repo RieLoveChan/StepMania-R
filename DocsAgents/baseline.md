@@ -174,7 +174,18 @@ Per-subsystem breakdown as passes run:
     turned out to require a live `GAMESTATE`/processed timing data
     (`IsJudgableAtRow`) and are out of scope here — only the
     `NoTiming` counterpart is GAMESTATE-free.
-    193 assertions / 40 cases total (up from 94/19).
+  - `tests/test_NoteDataUtil.cpp` (2026-09-05) — `RemoveHoldNotes` /
+    `ChangeRollsToHolds` / `ChangeHoldsToRolls` sub-type filtering,
+    `RemoveJumps`/`RemoveHands` (`RemoveSimultaneousNotes`) — including
+    the removal-order quirk (last pressed track survives, not the
+    first) and that held tracks are never removed but do count toward
+    the threshold — `RemoveMines`/`RemoveLifts`/`RemoveAllTapsOfType`/
+    `RemoveAllTapsExceptForType` type filtering, `RemoveFakes`
+    (GAMESTATE-free via a caller-supplied `TimingData const&`),
+    `RemoveAllButOneTap`, `ShiftLeft`/`ShiftRight`'s wrap-around
+    rotation, `InsertRows`/`DeleteRows` round-tripping, and
+    `GetNextEditorPosition` treating a hold's tail as its own stop.
+    246 assertions / 52 cases total (up from 94/19).
   **Locally verified on Windows** (VS 2022 BuildTools cmake 3.31 — the
   standalone cmake 4.3 install on this box hits a compiler-ID detection
   bug when invoked through the VS generator's regen step, use the

@@ -32,8 +32,10 @@ as new sweeps find things. Numbers/anchors confirmed 2026-09-02.
   the GAMESTATE/PREFSMAN-free `NoOffset` entry points) → `NoteData`
   (done, 2026-09-05 — tap/hold storage, track queries, row traversal;
   the counting/statistics API needs a live GAMESTATE and is out of
-  scope, see item 17) → `NoteDataUtil` → `NotesLoader*` (tiny
-  committed corpus).
+  scope, see item 17) → `NoteDataUtil` (done, 2026-09-05 — the pure
+  transform helpers: hold/roll conversion, simultaneous-note removal,
+  type filtering, row shift/insert/delete, editor-position walking) →
+  `NotesLoader*` (tiny committed corpus) — last phase remaining.
 
 ### 2. Warnings on but unmeasured / unenforced — ratchet turning, 3 of 5 MSVC categories promoted
 `WITH_WERROR` exists (default OFF, ON in Windows CI) and counts are
@@ -195,8 +197,20 @@ traversal; its counting/statistics API (`GetNumTapNotes`,
 ...) calls `GAMESTATE->GetProcessedTimingData()->IsJudgableAtRow()`
 through `IsTap`/`IsMine`/`IsLift`/`IsFake` and is out of scope for a
 GAMESTATE-free test file — only `GetNumTapNotesNoTiming` (the
-GAMESTATE-free counterpart) is covered. 193 assertions / 40 cases
-total. **Remaining:** `NoteDataUtil` → a tiny committed simfile corpus
+GAMESTATE-free counterpart) is covered. `NoteDataUtil` done
+(2026-09-05, `46001925f5`) — the transform helpers that operate
+purely on `NoteData` (and, for `RemoveFakes`, a caller-supplied
+`TimingData const&` instead of the global timing data): hold/roll
+sub-type conversion, `RemoveSimultaneousNotes`
+(`RemoveJumps`/`RemoveHands`) including its removal-order quirk (the
+*last* pressed track survives a cutdown, not the first) and that held
+tracks count toward the threshold but are never themselves removed,
+type filtering (`RemoveMines`/`RemoveLifts`/`RemoveAllTapsOfType`/
+`RemoveAllTapsExceptForType`), `ShiftLeft`/`ShiftRight`'s wrap-around
+track rotation, `InsertRows`/`DeleteRows`, and
+`GetNextEditorPosition`/`GetPrevEditorPosition` treating a hold's tail
+as its own stop distinct from its head. 246 assertions / 52 cases
+total. **Remaining (last phase):** a tiny committed simfile corpus
 for `NotesLoader*` via `GENERATE(from_range(...))`. Salvage the intent
 of the old `test_timing_data` / `test_file_readers` / `test_misc`
 where still meaningful.

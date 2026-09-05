@@ -664,3 +664,50 @@
 
   193 assertions / 40 cases pass (up from 134/28). `src/CMakeLists.txt`
   untouched; only `tests/CMakeLists.txt` gained the new source file.
+
+* **Backlog items 1/17 — NoteDataUtil characterization tests**
+  (`46001925f5`, 2026-09-05). ADR 0006 phase 2 continues past
+  `NoteData`. Unlike `NoteData`'s own counting API, most of
+  `NoteDataUtil`'s transforms operate purely on `NoteData` without
+  touching `GAMESTATE` -- `RemoveFakes` in particular takes a
+  `TimingData const&` parameter instead of reaching for the global
+  timing data, which is exactly what makes it testable here (its
+  sibling `IsJudgableAtRow` was already pinned in the `TimingData`
+  file).
+
+  New `tests/test_NoteDataUtil.cpp` covers: `RemoveHoldNotes`
+  converting only `TapNoteSubType_Hold` heads to plain taps (Rolls
+  untouched), `ChangeRollsToHolds`/`ChangeHoldsToRolls` swapping only
+  the matching sub-type, `RemoveJumps`/`RemoveHands`
+  (`RemoveSimultaneousNotes`) -- hand-traced its per-row removal loop
+  carefully since it has two non-obvious quirks: the *last* pressed
+  track at a row survives a cutdown, not the first (the loop clears
+  tracks in ascending order until enough are gone), and a held track
+  (mid-hold-body, no map entry at that exact row) is never itself
+  removed but does count toward `iTotalTracksPressed` via
+  `GetTracksHeldAtRow` -- `RemoveMines`/`RemoveLifts`/
+  `RemoveAllTapsOfType`/`RemoveAllTapsExceptForType` filtering by exact
+  type, `RemoveFakes` removing both explicit `TapNoteType_Fake` notes
+  and anything landing under a non-judgable timing region (built a
+  `TimingData` with a `FakeSegment` to exercise the latter),
+  `RemoveAllButOneTap`, `ShiftLeft`/`ShiftRight`'s wrap-around track
+  rotation (traced `ShiftTracks`'s `iFrom = i - iShiftBy` wrap formula
+  by hand to get the direction right), `InsertRows`/`DeleteRows`
+  round-tripping via `CopyRange`/`ClearRange`, `RemoveAllTapsOfType`/
+  `ExceptForType`, `GetMaxNonEmptyTrack`, and
+  `GetNextEditorPosition`/`GetPrevEditorPosition` -- traced through
+  four successive calls by hand, including the boundary case where
+  landing exactly on a hold's tail row makes the function report no
+  further position (the `iEndRow == iOriginalRow` guard skips
+  re-reporting the row you're already standing on).
+
+  Every hand-traced prediction across both this file and the earlier
+  `NoteData` file held on the actual `sm_tests` run -- no corrections
+  needed after building, only a missing-argument compile error
+  (`IsHoldHeadOrBodyAtRow` needs `nullptr` for its third parameter,
+  which has no default) caught by the compiler in the prior file.
+
+  246 assertions / 52 cases pass (up from 193/40). `src/CMakeLists.txt`
+  untouched; only `tests/CMakeLists.txt` gained the new source file.
+  This closes out `NoteData`/`NoteDataUtil` in the ADR 0006 phase 2
+  sequence -- only a `NotesLoader*` corpus remains.
