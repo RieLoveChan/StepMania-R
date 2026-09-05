@@ -225,20 +225,8 @@ inline int ssicmp(const CT* pA1, const CT* pA2)
 // -----------------------------------------------------------------------------
 // ssupr/sslwr: Uppercase/Lowercase conversion functions
 // -----------------------------------------------------------------------------
-#if 0
-	template<typename CT>
-	inline void sslwr(CT* pT, std::size_t nLen)
-	{
-		for ( CT* p = pT; static_cast<std::size_t>(p - pT) < nLen; ++p)
-			*p = (CT)sstolower(*p);
-	}
-	template<typename CT>
-	inline void ssupr(CT* pT, std::size_t nLen)
-	{
-		for ( CT* p = pT; static_cast<std::size_t>(p - pT) < nLen; ++p)
-			*p = (CT)sstoupper(*p);
-	}
-#endif
+// A generic template version of these lived here; superseded by the concrete
+// char/wchar_t overloads below (backlog item 15).
 
 inline void sslwr(char *pT, std::size_t nLen)
 {

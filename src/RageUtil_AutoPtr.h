@@ -135,7 +135,10 @@ public:
 			m_pPtr = HiddenPtrTraits<T>::Copy( cpy.m_pPtr );
 	}
 
-#if 0 // broken VC6
+	// Converting constructor/assignment/friend below were disabled for VC6
+	// (whose template support couldn't handle them); the toolchain floor
+	// is MSVC v143 (ADR 0001), so there's nothing left to work around
+	// (backlog item 16).
 	template<class U>
 	HiddenPtr( const HiddenPtr<U> &cpy )
 	{
@@ -144,7 +147,6 @@ public:
 		else
 			m_pPtr = HiddenPtrTraits<U>::Copy( cpy.m_pPtr );
 	}
-#endif
 
 	~HiddenPtr()
 	{
@@ -166,7 +168,6 @@ public:
 		return *this;
 	}
 
-#if 0 // broken VC6
 	template<class U>
 	HiddenPtr<T> &operator=( const HiddenPtr<U> &cpy )
 	{
@@ -174,17 +175,14 @@ public:
 		Swap( t );
 		return *this;
 	}
-#endif
 
 	bool isNull() const { return m_pPtr == nullptr; }
 
 private:
 	T *m_pPtr;
 
-#if 0 // broken VC6
 	template<class U>
 	friend class HiddenPtr;
-#endif
 };
 
 template<class T>
