@@ -133,6 +133,7 @@ Per-subsystem breakdown as passes run:
 | rage (`src/Rage*.cpp`) | `readability-container-size-empty` | ~98 | 0 | `10a1ba54ec` |
 | rage (`src/Rage*`) | `modernize-use-override` | ~65 | 0 | `689e35a486` |
 | singletons (`CMakeData-singletons.cmake`, 25 `.cpp`) | `readability-container-size-empty` | 55 | 0 | `204095fa27` |
+| singletons (`CMakeData-singletons.cmake`, 25 `.cpp`) | `modernize-use-override` | 8 | 0 | `22296571d5` |
 
 > Note: the `singletons` pass was measured with the **VS-bundled
 > clang-tidy 19.1.5** (`…\BuildTools\VC\Tools\Llvm\x64\bin`) — the
