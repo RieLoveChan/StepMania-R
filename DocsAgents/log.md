@@ -792,3 +792,20 @@
   clean + `sm_tests` 311/72 + `StepMania-R_debug --SelfTest` exit 0 is
   proportionate. A Release + `WITH_WERROR` build is the stricter §4
   gate if the maintainer wants it re-run.
+
+* **Backlog item 12 — `clang-tidy-subsystem-pass` #4: singletons ×
+  `modernize-use-override`** (`22296571d5`, 2026-09-05). `--fix` over
+  the 3 singletons `.cpp` with hits: added `override` (and dropped one
+  redundant `virtual`) on 8 members that already override a base
+  virtual — `GameStateMessageHandler::HandleMessage`,
+  `ThreadedMemoryCardWorker`'s dtor + `HandleRequest` /
+  `RequestTimedOut` / `DoHeartbeat`, `LocalizedStringImplThemeMetric`'s
+  `Load` / `Read` / `GetLocalized`. **8 → 0** for this check across the
+  subsystem; all edits in `.cpp`, no headers. Pairs with pass #3 on
+  the same subsystem (mirrors what `rage` got: container-size-empty +
+  use-override). Remaining singletons hits deferred as separate passes
+  because they need review not rubber-stamping:
+  `modernize-use-nullptr` ×6 (all `NetworkManager.cpp` — check for
+  variadic calls) and `bugprone-macro-parentheses` ×8 (`StatsManager`
+  ×4, + `NoteSkinManager` / `ProfileManager` / `ScreenManager` /
+  `UnlockManager` ×1). Same Debug verification as pass #3.
