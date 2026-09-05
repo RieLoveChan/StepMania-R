@@ -55,7 +55,7 @@ GameState*	GAMESTATE = nullptr;	// global and accessible from anywhere in our pr
 
 class GameStateMessageHandler: public MessageSubscriber
 {
-	void HandleMessage( const Message &msg )
+	void HandleMessage( const Message &msg ) override
 	{
 		if( msg.GetName() == "RefreshCreditText" )
 		{
