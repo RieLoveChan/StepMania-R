@@ -74,7 +74,7 @@ class ThreadedMemoryCardWorker: public RageWorkerThread
 {
 public:
 	ThreadedMemoryCardWorker();
-	~ThreadedMemoryCardWorker();
+	~ThreadedMemoryCardWorker() override;
 
 	enum MountThreadState
 	{
@@ -92,9 +92,9 @@ public:
 	bool StorageDevicesChanged( std::vector<UsbStorageDevice> &aOut );
 
 protected:
-	void HandleRequest( int iRequest );
-	void RequestTimedOut();
-	void DoHeartbeat();
+	void HandleRequest( int iRequest ) override;
+	void RequestTimedOut() override;
+	void DoHeartbeat() override;
 
 private:
 	MemoryCardDriver *m_pDriver;
