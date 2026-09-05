@@ -521,3 +521,66 @@
   case-by-case truncation review, not a mechanical pass like C4100.
   Not started; flagged for a future session with a scoping
   conversation first, given the much larger surface area.
+
+* **Backlog item 13 — dropped stale VC6/VC2005 cruft from
+  `arch_setup.h`** (`a26c13e00c`, 2026-09-05). `_CRT_SECURE_NO_DEPRECATE`
+  and `_SCL_SECURE_NO_DEPRECATE` are VC2005-era macro names now
+  superseded/no-op on the MSVC v143 floor (the modern
+  `_CRT_SECURE_NO_WARNINGS` is already set at the CMake level; the SCL
+  checked-iterator feature these suppressed was removed in VS2017).
+  Also removed the ~30-line comment block documenting warnings
+  disabled circa VC6/VC2005/VC2008 -- stale relative to the current
+  `/W4` + `WITH_WERROR` setup (its C4100/C4702 mentions are now
+  `-Werror`, see item 2 above). Kept `_CRT_NONSTDC_NO_WARNINGS`
+  (POSIX-name deprecation, e.g. `strdup` vs `_strdup` -- still
+  functionally relevant). Verified: Release build clean, `--SelfTest`
+  exit 0.
+
+* **Backlog item 3 — stale cppcheck leak list re-triaged, all
+  dismissed** (docs-only, 2026-09-05). `Docs/Devdocs/possible memory
+  leaks.txt` dates to a 2009 cppcheck run against sm4svn and was never
+  re-verified. cppcheck itself isn't installed on the maintainer box,
+  so each of the 11 in-scope entries was checked by hand: read the
+  actual ownership path at the flagged site rather than trusting the
+  tool's report. Findings, grouped by why cppcheck got it wrong (or
+  why it's since been fixed):
+  - **False positives cppcheck can't model:** `ActorFrameTexture.h`'s
+    `m_pRenderTarget` (ownership passed to `TEXTUREMAN`, released via
+    `UnloadTexture` in the destructor -- comment says so explicitly);
+    `AutoKeysounds.h`'s `m_pSharedSound` and
+    `RageSoundReader_PitchChange.h`'s `m_pSpeedChange`/`m_pResample`
+    (both self-documented as "owned by"/"freed by" the reader chain
+    they're threaded into); `RageSoundReader_ChannelSplit.h`'s
+    `m_pImpl` (explicit `m_iRefCount` + `RageSoundSplitterImpl::Release`);
+    `GameSoundManager.cpp`'s `pSound` (freed in `~MusicPlaying`);
+    `LifeMeterTime.h`'s `m_pStream` and `MusicWheelItem.h`'s
+    `m_pTextSectionCount` (both freed in their own class's destructor);
+    `OptionRow.h`'s `m_textTitle` (added as an `ActorFrame` child, freed
+    by `m_Frame.DeleteAllChildren()` in `Clear()`); `RageFile.cpp`'s
+    `pFile` (same Lua-script-managed lifetime -- `PushSelf`/Luna
+    binding, explicit `:destroy()` -- used by every other Luna-wrapped
+    class in this codebase, e.g. the `RageMath.cpp` bezier classes from
+    the C4100 sweep).
+  - **Already fixed since 2009:** `Font.cpp`'s `pPage` (a comment at the
+    exact site says "Create this down here so it doesn't leak if the
+    continue gets triggered" -- the fix predates this re-triage by
+    years); `RageFileDriverDeflate.cpp`'s `mem` (now wrapped in
+    `std::unique_ptr` on entry to `GunzipFile`, so every return path,
+    including early error returns, is RAII-safe).
+  - **No longer applicable:** `AdjustSync.h`'s `s_pTimingDataOriginal`
+    was refactored into `std::vector<TimingData>
+    s_vpTimingDataOriginal` -- value semantics, nothing to leak.
+  - **Not a bug:** `RageThreads.cpp`'s `pLock` in `GetThreadSlotsLock()`
+    is a deliberate Meyer's-singleton program-lifetime static, never
+    meant to be freed before process exit.
+  - **Gone:** `PitchDetectionTestUtil.cpp` and `crypto/CryptRSA.cpp` no
+    longer exist in this tree.
+  - **Out of scope, not evaluated:** `archutils/Unix/CrashHandlerChild.cpp`
+    (`tty`) and `smpackage/ZipArchive/Linux/ZipPlatform.cpp`
+    (`mktemp`/`mkstemp` style note) are non-Windows paths (`AGENTS.md`
+    §3).
+  Updated the leak-list file itself with a triage note at the top
+  (kept the original 2009 list below it for reference, rather than
+  deleting -- `Docs/Devdocs/` is still-consulted reference material per
+  `conventions.md`/`index.md`, not pure historical cruft). No code
+  changed, no rebuild needed.

@@ -71,14 +71,23 @@ truncation, not a mechanical pass; still not measured for Clang/GCC
 (`baseline.md` TBD). Not started — larger scope than C4100, needs a
 scoping conversation before beginning.
 
-### 3. Stale cppcheck leak list, never cleared
-`Docs/Devdocs/possible memory leaks.txt` — from 2009. Likely still live:
-`ActorFrameTexture::m_pRenderTarget`, `AdjustSync::s_pTimingDataOriginal`,
-`AutoKeysounds::m_pSharedSound`, `LifeMeterTime::m_pStream`,
-`MusicWheelItem::m_pTextSectionCount`, `OptionRow::m_textTitle`,
-`Font.cpp` `pPage`, `RageFileDriverDeflate.cpp`.
-**Action:** re-run cppcheck/ASan, confirm which survive, fix or dismiss
-with a note. Small, independent PRs.
+### 3. Stale cppcheck leak list — DONE 2026-09-05, all dismissed
+~~`Docs/Devdocs/possible memory leaks.txt` — from 2009. Re-triaged by
+hand against the current tree (cppcheck itself isn't installed on the
+maintainer box; each site was verified by reading the actual
+ownership path instead). All 11 in-scope entries are either false
+positives (cppcheck can't model this codebase's manual ownership
+idioms — manager-owned resources, sound-reader chains, explicit
+refcounting, Actor-tree AddChild/DeleteAllChildren, Lua-script-managed
+lifetime, or a deliberate Meyer's-singleton) or already fixed since
+2009 (`Font.cpp`'s `pPage`, `RageFileDriverDeflate.cpp`'s `mem` — the
+latter via `std::unique_ptr`). `AdjustSync::s_pTimingDataOriginal` no
+longer exists (refactored to a `std::vector` value member). Two
+referenced files (`PitchDetectionTestUtil.cpp`, `crypto/CryptRSA.cpp`)
+are gone entirely. Two entries are non-Windows paths, left unevaluated
+per `AGENTS.md` §3 (`archutils/Unix/CrashHandlerChild.cpp`,
+`smpackage/ZipArchive/Linux/ZipPlatform.cpp`). Full per-item reasoning
+recorded in the file itself and in `log.md`.~~
 
 ---
 
@@ -301,6 +310,24 @@ picked up. Also: `NoteSkins/Para/` is capitalised but the game name is
 
 ## Closed
 
+- **Item 3** — `Docs/Devdocs/possible memory leaks.txt`, a 2009 cppcheck
+  leak list never re-verified (2026-09-05). Re-triaged all 11 in-scope
+  entries by hand (cppcheck not installed locally; read each ownership
+  path directly). Result: zero live leaks. Most are false positives
+  cppcheck's simple checker can't model — manager-owned resources
+  (`ActorFrameTexture`), sound-reader chains (`AutoKeysounds`,
+  `RageSoundReader_PitchChange`), explicit refcounting
+  (`RageSoundReader_ChannelSplit`), the Actor-tree `AddChild`/
+  `DeleteAllChildren` idiom (`OptionRow`), Lua-script-managed lifetime
+  (`RageFile`), or a deliberate Meyer's-singleton (`RageThreads`'s
+  `GetThreadSlotsLock()`). A few were already fixed since 2009
+  (`Font.cpp`'s `pPage`; `RageFileDriverDeflate.cpp`'s `mem`, now
+  `std::unique_ptr`-owned). `AdjustSync::s_pTimingDataOriginal` no
+  longer exists (refactored to a `std::vector` value member).
+  `PitchDetectionTestUtil.cpp` and `crypto/CryptRSA.cpp` are gone.
+  Two non-Windows entries left unevaluated per `AGENTS.md` §3. Docs-only
+  change — no code touched, no rebuild needed. Full reasoning recorded
+  in the leak-list file itself.
 - **Item 14** — `vcvars64.bat` doesn't wire the Windows SDK
   (2026-09-04). Shipped `Build/dev-env.ps1` (the "ship a project `env`
   helper script" option) instead of repairing the VS install: runs

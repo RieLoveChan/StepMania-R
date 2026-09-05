@@ -1,5 +1,39 @@
 as found by cppcheck against normal sm4svn source (as of 20090527), so
 line numbers will be different in SM5 for some of these.
+
+RE-TRIAGED 2026-09-05 (StepMania-R modernization backlog item 3): every
+entry below was checked by hand against the current source tree. None
+are live bugs:
+  - ActorFrameTexture/AutoKeysounds/RageSoundReader_PitchChange/
+    RageSoundReader_ChannelSplit: false positives -- cppcheck's
+    plain-delete leak checker can't model this codebase's manual
+    ownership idioms (TEXTUREMAN/manager-owned resources, sound-reader
+    chains, explicit refcounting). Ownership is already documented in
+    comments at each site.
+  - Font.cpp / RageFileDriverDeflate.cpp: already fixed since 2009 (a
+    comment at the Font.cpp site notes the fix directly; the Deflate
+    leak was closed by wrapping the pointer in std::unique_ptr).
+  - GameSoundManager.cpp / LifeMeterTime.h / MusicWheelItem.h /
+    OptionRow.h: false positives -- each pointer is freed in an owner's
+    destructor (MusicPlaying, LifeMeterTime, MusicWheelItem) or via the
+    Actor-tree AddChild/DeleteAllChildren idiom (OptionRow); cppcheck
+    doesn't trace through those.
+  - AdjustSync.h: no longer applicable -- s_pTimingDataOriginal was
+    refactored into std::vector<TimingData> s_vpTimingDataOriginal
+    (value semantics, nothing to leak).
+  - RageFile.cpp: false positive -- same Lua-script-managed lifetime
+    (PushSelf/Luna binding, explicit :destroy()) used by every other
+    Luna-wrapped class in this codebase.
+  - RageThreads.cpp: not a bug -- a deliberate Meyer's-singleton
+    program-lifetime static (GetThreadSlotsLock()), never meant to be
+    freed before process exit.
+  - PitchDetectionTestUtil.cpp / crypto/CryptRSA.cpp: files no longer
+    exist in this tree.
+  - archutils/Unix/CrashHandlerChild.cpp / smpackage/ZipArchive/Linux/
+    ZipPlatform.cpp: non-Windows paths, out of scope for the current
+    P1-Windows sweep (see AGENTS.md section 3); not evaluated.
+See DocsAgents/modernization-backlog.md and DocsAgents/log.md for the
+full writeup. Original 2009 list kept below for reference.
 ==================================================================================
 [.\ActorFrameTexture.h:38]: (all) Memory leak: ActorFrameTexture::m_pRenderTarget
 
