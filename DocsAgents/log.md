@@ -763,3 +763,32 @@
   `tests/CMakeLists.txt` gained the source file, so `WITH_TESTS=OFF`
   is unaffected. **Tier 1 of the backlog is now empty** — the safety
   net (smoke + harness + pure-ish-core characterization) is complete.
+
+* **Backlog item 12 — `clang-tidy-subsystem-pass` #3: singletons ×
+  `readability-container-size-empty`** (`204095fa27`, 2026-09-05).
+  `--fix` over the 25 `.cpp` in `src/CMakeData-singletons.cmake`, one
+  check family, no behavior change: `.size()==0` / `.size()<1` /
+  `==""` → `.empty()`; `.size()` / `.size()>0` / `.size()>=1` /
+  `!=""` → `!.empty()`. 14 files touched, **55 → 0** for this check
+  across the subsystem. `RString::empty()` ≡ `==""`; every hunk
+  reviewed — all touched conditionals are empty-guards
+  (announcer/lights/screen-stack/theme-metric paths), no macros,
+  template context, or `auto`-type changes; all edits landed in
+  `.cpp`, zero headers (a `--header-filter` scoped to the 25 singleton
+  header stems kept transitive headers out).
+
+  **Tooling note:** the scratchpad LLVM 23.1.0 from passes #1–2 is gone
+  (session-local `scratchpad/tools/`). Used the **VS-bundled
+  clang-tidy 19.1.5** (`…\BuildTools\VC\Tools\Llvm\x64\bin\`) +
+  VS-bundled `ninja` instead; the existing `build-tidy/
+  compile_commands.json` (Sep 3) still resolved fine. Mechanical
+  checks are version-stable, but `baseline.md`'s repo-wide totals
+  table should be re-measured with one pinned version before its
+  absolute numbers are trusted.
+
+  **Verified on Windows, Debug only** — there is currently no Release
+  `build/` tree on the maintainer box (needs a cold configure); for a
+  pure emptiness-check swap, `build-tests` (`WITH_TESTS=ON`) building
+  clean + `sm_tests` 311/72 + `StepMania-R_debug --SelfTest` exit 0 is
+  proportionate. A Release + `WITH_WERROR` build is the stricter §4
+  gate if the maintainer wants it re-run.
