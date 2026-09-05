@@ -103,11 +103,11 @@ void RageFile_JPEG_skip_input_data( j_decompress_ptr cinfo, long num_bytes )
 		src->file->Seek( src->file->Tell() + num_bytes );
 }
 
-void RageFile_JPEG_term_source( j_decompress_ptr cinfo )
+void RageFile_JPEG_term_source( j_decompress_ptr /* cinfo */ )
 {
 }
 
-static RageSurface *RageSurface_Load_JPEG( RageFile *f, const char *fn, char errorbuf[JMSG_LENGTH_MAX] )
+static RageSurface *RageSurface_Load_JPEG( RageFile *f, const char* /* fn */, char errorbuf[JMSG_LENGTH_MAX] )
 {
 	struct jpeg_decompress_struct cinfo;
 
@@ -196,7 +196,7 @@ static RageSurface *RageSurface_Load_JPEG( RageFile *f, const char *fn, char err
 }
 
 
-RageSurfaceUtils::OpenResult RageSurface_Load_JPEG( const RString &sPath, RageSurface *&ret, bool bHeaderOnly, RString &error )
+RageSurfaceUtils::OpenResult RageSurface_Load_JPEG( const RString &sPath, RageSurface *&ret, bool /* bHeaderOnly */, RString &error )
 {
 	RageFile f;
 	if( !f.Open( sPath ) )

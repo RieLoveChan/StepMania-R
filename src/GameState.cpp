@@ -2956,7 +2956,7 @@ public:
 		lua_pushstring(L, so.GetString());
 		return 1;
 	}
-	static int ApplyPreferredSongOptionsToOtherLevels(T* p, lua_State* L)
+	static int ApplyPreferredSongOptionsToOtherLevels(T* p, lua_State* /* L */)
 	{
 		p->m_SongOptions.Assign(ModsLevel_Preferred,
 			p->m_SongOptions.Get(ModsLevel_Preferred));
@@ -3047,7 +3047,7 @@ public:
 
 	static int SetPreferredSongGroup( T* p, lua_State *L ) { p->m_sPreferredSongGroup.Set( SArg(1) ); COMMON_RETURN_SELF; }
 	DEFINE_METHOD( GetPreferredSongGroup, m_sPreferredSongGroup.Get() );
-	static int GetHumanPlayers( T* p, lua_State *L )
+	static int GetHumanPlayers( T* /* p */, lua_State *L )
 	{
 		std::vector<PlayerNumber> vHP;
 		FOREACH_HumanPlayer( pn )
@@ -3217,7 +3217,7 @@ public:
 		return false;
 	}
 
-	static void ClearIncompatibleStepsAndTrails( T *p, lua_State* L )
+	static void ClearIncompatibleStepsAndTrails( T *p, lua_State* /* L */ )
 	{
 		FOREACH_HumanPlayer( pn )
 		{

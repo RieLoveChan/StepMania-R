@@ -347,7 +347,7 @@ public:
 			luaL_error(L, "File '%s' is not open for writing.", p->GetPath().c_str());
 		}
 	}
-	static int destroy( T* p, lua_State *L )
+	static int destroy( T* p, lua_State* /* L */ )
 	{
 		SAFE_DELETE(p);
 		return 1;
@@ -369,7 +369,7 @@ public:
 		return 1;
 	}
 
-	static int Close( T* p, lua_State *L )
+	static int Close( T* p, lua_State* /* L */ )
 	{
 		p->Close();
 		return 1;
@@ -444,7 +444,7 @@ public:
 		return 1;
 	}
 
-	static int ClearError( T* p, lua_State *L )
+	static int ClearError( T* p, lua_State* /* L */ )
 	{
 		p->ClearError();
 		return 1;

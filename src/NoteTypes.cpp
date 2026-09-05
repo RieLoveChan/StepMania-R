@@ -164,7 +164,7 @@ XNode* TapNoteResult::CreateNode() const
 	return p;
 }
 
-void TapNoteResult::LoadFromNode( const XNode* pNode )
+void TapNoteResult::LoadFromNode( const XNode* /* pNode */ )
 {
 	FAIL_M("TapNoteResult::LoadFromNode() is not implemented");
 }
@@ -175,7 +175,7 @@ XNode* HoldNoteResult::CreateNode() const
 	return new XNode( "HoldNoteResult" );
 }
 
-void HoldNoteResult::LoadFromNode( const XNode* pNode )
+void HoldNoteResult::LoadFromNode( const XNode* /* pNode */ )
 {
 	FAIL_M("HoldNoteResult::LoadFromNode() is not implemented");
 }
@@ -190,7 +190,7 @@ XNode* TapNote::CreateNode() const
 	return p;
 }
 
-void TapNote::LoadFromNode( const XNode* pNode )
+void TapNote::LoadFromNode( const XNode* /* pNode */ )
 {
 	FAIL_M("TapNote::LoadFromNode() is not implemented");
 }

@@ -535,7 +535,7 @@ public:
 		p->m_vPlayedStageStats[iIndex].PushSelf(L);
 		return 1;
 	}
-	static int Reset( T* p, lua_State *L )			{ p->Reset(); return 0; }
+	static int Reset( T* p, lua_State* /* L */ )			{ p->Reset(); return 0; }
 	static int GetAccumPlayedStageStats( T* p, lua_State *L )	{ p->GetAccumPlayedStageStats().PushSelf(L); return 1; }
 	static int GetFinalEvalStageStats( T* p, lua_State *L )
 	{
@@ -560,7 +560,7 @@ public:
 	}
 	static int GetStagesPlayed( T* p, lua_State *L )				{ lua_pushnumber( L, p->m_vPlayedStageStats.size() ); return 1; }
 
-	static int GetBestGrade( T* p, lua_State *L )
+	static int GetBestGrade( T* /* p */, lua_State *L )
 	{
 		Grade g = NUM_Grade;
 		FOREACH_EnabledPlayer( pn )
@@ -569,7 +569,7 @@ public:
 		return 1;
 	}
 
-	static int GetWorstGrade( T* p, lua_State *L )
+	static int GetWorstGrade( T* /* p */, lua_State *L )
 	{
 		Grade g = Grade_Tier01;
 		FOREACH_EnabledPlayer( pn )

@@ -1038,7 +1038,7 @@ class RageCompiledGeometrySWOGL : public RageCompiledGeometry
 {
 public:
 
-	void Allocate( const std::vector<msMesh> &vMeshes ) override
+	void Allocate( const std::vector<msMesh>& /* vMeshes */ ) override
 	{
 		/* Always allocate at least 1 entry, so &x[0] is valid. */
 		const unsigned int verticesCount = std::max<unsigned int>(1u, GetTotalVertices());
@@ -1744,7 +1744,7 @@ void RageDisplay_Legacy::SetTextureMode( TextureUnit tu, TextureMode tm )
 	}
 }
 
-void RageDisplay_Legacy::SetTextureFiltering( TextureUnit tu, bool b )
+void RageDisplay_Legacy::SetTextureFiltering( TextureUnit /* tu */, bool b )
 {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, b ? GL_LINEAR : GL_NEAREST);
 
@@ -2688,7 +2688,7 @@ void RageDisplay_Legacy::SetLineWidth(float fWidth)
 	glLineWidth(fWidth);
 }
 
-RString RageDisplay_Legacy::GetTextureDiagnostics(std::uintptr_t iTexture) const
+RString RageDisplay_Legacy::GetTextureDiagnostics(std::uintptr_t /* iTexture */) const
 {
 	/*
 		s << (bGenerateMipMaps? "gluBuild2DMipmaps":"glTexImage2D");

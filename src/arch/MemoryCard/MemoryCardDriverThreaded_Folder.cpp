@@ -48,7 +48,7 @@ bool MemoryCardDriverThreaded_Folder::FolderExists(RString path)
 	return false;
 }
 
-bool MemoryCardDriverThreaded_Folder::TestWrite( UsbStorageDevice* pDevice )
+bool MemoryCardDriverThreaded_Folder::TestWrite( UsbStorageDevice* /* pDevice */ )
 {
 	//TODO
 
@@ -96,12 +96,12 @@ void MemoryCardDriverThreaded_Folder::GetUSBStorageDevices( std::vector<UsbStora
 	}
 }
 
-bool MemoryCardDriverThreaded_Folder::Mount( UsbStorageDevice* pDevice )
+bool MemoryCardDriverThreaded_Folder::Mount( UsbStorageDevice* /* pDevice */ )
 {
 	return true;
 }
 
-void MemoryCardDriverThreaded_Folder::Unmount( UsbStorageDevice* pDevice )
+void MemoryCardDriverThreaded_Folder::Unmount( UsbStorageDevice* /* pDevice */ )
 {
 	return;
 }

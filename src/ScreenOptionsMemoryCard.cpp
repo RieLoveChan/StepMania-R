@@ -151,12 +151,12 @@ void ScreenOptionsMemoryCard::HandleMessage( const Message &msg )
 	ScreenOptions::HandleMessage( msg );
 }
 
-void ScreenOptionsMemoryCard::ImportOptions( int iRow, const std::vector<PlayerNumber> &vpns )
+void ScreenOptionsMemoryCard::ImportOptions( int /* iRow */, const std::vector<PlayerNumber>& /* vpns */ )
 {
 
 }
 
-void ScreenOptionsMemoryCard::ExportOptions( int iRow, const std::vector<PlayerNumber> &vpns )
+void ScreenOptionsMemoryCard::ExportOptions( int iRow, const std::vector<PlayerNumber>& /* vpns */ )
 {
 	OptionRow &row = *m_pRows[iRow];
 	if( row.GetRowType() == OptionRow::RowType_Exit )

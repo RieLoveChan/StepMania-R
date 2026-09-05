@@ -18,7 +18,7 @@
 #pragma comment(lib, "dsound.lib")
 #endif
 
-BOOL CALLBACK DSound::EnumCallback( LPGUID lpGuid, LPCSTR lpcstrDescription, LPCSTR lpcstrModule, LPVOID lpContext )
+BOOL CALLBACK DSound::EnumCallback( LPGUID /* lpGuid */, LPCSTR lpcstrDescription, LPCSTR lpcstrModule, LPVOID /* lpContext */ )
 {
 	RString sLine = ssprintf( "DirectSound Driver: %s", lpcstrDescription );
 	if( lpcstrModule[0] )
@@ -548,7 +548,7 @@ bool DSoundBuf::get_output_buf( char **pBuffer, unsigned *pBufferSize, int iChun
 	return true;
 }
 
-void DSoundBuf::release_output_buf( char *pBuffer, unsigned iBufferSize )
+void DSoundBuf::release_output_buf( char *pBuffer, unsigned /* iBufferSize */ )
 {
 	memcpy( m_pLockedBuf1, pBuffer, m_iLockedSize1 );
 	memcpy( m_pLockedBuf2, pBuffer+m_iLockedSize1, m_iLockedSize2 );

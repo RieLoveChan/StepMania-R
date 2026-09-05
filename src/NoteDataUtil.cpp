@@ -710,7 +710,7 @@ void LightTransformHelper( const NoteData &in, NoteData &out, const std::vector<
 }
 
 // For every track enabled in "in", enable all tracks in "out".
-void NoteDataUtil::LoadTransformedLights( const NoteData &in, NoteData &out, int iNewNumTracks )
+void NoteDataUtil::LoadTransformedLights( const NoteData &in, NoteData &out, int /* iNewNumTracks */ )
 {
 	// make a new NoteData that is a copy of the input.
 	NoteData bass;
@@ -2696,7 +2696,7 @@ void NoteDataUtil::SnapToNearestNoteType( NoteData &inout, NoteType nt1, NoteTyp
 }
 
 
-void NoteDataUtil::CopyLeftToRight( NoteData &inout )
+void NoteDataUtil::CopyLeftToRight( NoteData& /* inout */ )
 {
 	/* XXX
 	inout.ConvertHoldNotesTo4s();
@@ -2715,7 +2715,7 @@ void NoteDataUtil::CopyLeftToRight( NoteData &inout )
 */
 }
 
-void NoteDataUtil::CopyRightToLeft( NoteData &inout )
+void NoteDataUtil::CopyRightToLeft( NoteData& /* inout */ )
 {
 	/* XXX
 	inout.ConvertHoldNotesTo4s();
