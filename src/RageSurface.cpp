@@ -182,7 +182,7 @@ static int GetBitsFromMask( std::uint32_t mask )
 
 
 void SetupFormat( RageSurfaceFormat &fmt,
-						 int width, int height, int BitsPerPixel, std::uint32_t Rmask, std::uint32_t Gmask, std::uint32_t Bmask, std::uint32_t Amask )
+						 int /* width */, int /* height */, int BitsPerPixel, std::uint32_t Rmask, std::uint32_t Gmask, std::uint32_t Bmask, std::uint32_t Amask )
 {
 	fmt.BitsPerPixel = BitsPerPixel;
 	fmt.BytesPerPixel = BitsPerPixel/8;

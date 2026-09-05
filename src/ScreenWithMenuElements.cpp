@@ -343,7 +343,7 @@ void ScreenWithMenuElements::StopTimer()
 
 REGISTER_SCREEN_CLASS( ScreenWithMenuElementsSimple );
 
-bool ScreenWithMenuElementsSimple::MenuStart( const InputEventPlus &input )
+bool ScreenWithMenuElementsSimple::MenuStart( const InputEventPlus &/* input */ )
 {
 	if( IsTransitioning() )
 		return false;
@@ -354,7 +354,7 @@ bool ScreenWithMenuElementsSimple::MenuStart( const InputEventPlus &input )
 	return true;
 }
 
-bool ScreenWithMenuElementsSimple::MenuBack( const InputEventPlus &input )
+bool ScreenWithMenuElementsSimple::MenuBack( const InputEventPlus &/* input */ )
 {
 	if( IsTransitioning() )
 		return false;

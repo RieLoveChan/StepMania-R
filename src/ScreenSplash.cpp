@@ -34,13 +34,13 @@ void ScreenSplash::HandleScreenMessage( const ScreenMessage SM )
 	ScreenWithMenuElements::HandleScreenMessage( SM );
 }
 
-bool ScreenSplash::MenuBack( const InputEventPlus &input )
+bool ScreenSplash::MenuBack( const InputEventPlus &/* input */ )
 {
 	Cancel( SM_GoToPrevScreen );
 	return true;
 }
 
-bool ScreenSplash::MenuStart( const InputEventPlus &input )
+bool ScreenSplash::MenuStart( const InputEventPlus &/* input */ )
 {
 	if( IsTransitioning() )
 		return false;

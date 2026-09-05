@@ -78,7 +78,7 @@ void InputHandler_Win32_MIDI::GetDevicesAndDescriptions( std::vector<InputDevice
 	}
 }
 
-static void CALLBACK midiCallback( HMIDIIN device, UINT status, DWORD_PTR instancePtr, DWORD_PTR data, DWORD_PTR timestamp )
+static void CALLBACK midiCallback( HMIDIIN /* device */, UINT status, DWORD_PTR instancePtr, DWORD_PTR data, DWORD_PTR /* timestamp */ )
 {
 	if( status == MIM_DATA )
 	{

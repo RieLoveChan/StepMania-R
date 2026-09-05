@@ -10,7 +10,7 @@ void ScreenProfileSave::BeginScreen()
 	ScreenWithMenuElements::BeginScreen();
 }
 
-bool ScreenProfileSave::Input( const InputEventPlus &input )
+bool ScreenProfileSave::Input( const InputEventPlus &/* input */ )
 {
 	return false;
 }
@@ -37,7 +37,7 @@ public:
 		LUA->UnyieldLua();
 		COMMON_RETURN_SELF;
 	}
-	static int HaveProfileToSave( T* p, lua_State *L )
+	static int HaveProfileToSave( T* /* p */, lua_State *L )
 	{
 		LuaHelpers::Push( L, GAMESTATE->HaveProfileToSave() );
 		return 1;

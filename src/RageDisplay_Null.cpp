@@ -134,7 +134,7 @@ public:
 
 	void Allocate( const std::vector<msMesh> & ) {}
 	void Change( const std::vector<msMesh> & ) {}
-	void Draw( int iMeshIndex ) const {}
+	void Draw( int /* iMeshIndex */ ) const {}
 };
 
 RageCompiledGeometry* RageDisplay_Null::CreateCompiledGeometry()
@@ -142,7 +142,7 @@ RageCompiledGeometry* RageDisplay_Null::CreateCompiledGeometry()
 	return new RageCompiledGeometryNull;
 }
 
-void RageDisplay_Null::DeleteCompiledGeometry( RageCompiledGeometry* p )
+void RageDisplay_Null::DeleteCompiledGeometry( RageCompiledGeometry* /* p */ )
 {
 }
 

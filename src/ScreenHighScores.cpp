@@ -301,7 +301,7 @@ void ScreenHighScores::HandleScreenMessage( const ScreenMessage SM )
 	ScreenAttract::HandleScreenMessage( SM );
 }
 
-bool ScreenHighScores::MenuStart( const InputEventPlus &input )
+bool ScreenHighScores::MenuStart( const InputEventPlus &/* input */ )
 {
 	if( !MANUAL_SCROLLING )
 		return false;
@@ -311,7 +311,7 @@ bool ScreenHighScores::MenuStart( const InputEventPlus &input )
 	return true;
 }
 
-bool ScreenHighScores::MenuBack( const InputEventPlus &input )
+bool ScreenHighScores::MenuBack( const InputEventPlus &/* input */ )
 {
 	if( !MANUAL_SCROLLING )
 		return false;

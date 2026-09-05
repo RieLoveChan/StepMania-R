@@ -564,7 +564,7 @@ RString PrefsManager::GetPreferencesSection() const
 class LunaPrefsManager: public Luna<PrefsManager>
 {
 public:
-	static int GetPreference( T* p, lua_State *L )
+	static int GetPreference( T* /* p */, lua_State *L )
 	{
 		RString sName = SArg(1);
 		IPreference *pPref = IPreference::GetPreferenceByName( sName );
@@ -618,7 +618,7 @@ public:
 		LOG->Trace( "Restored preference \"%s\" to default \"%s\"", sName.c_str(), pPref->ToString().c_str() );
 		COMMON_RETURN_SELF;
 	}
-	static int PreferenceExists( T* p, lua_State *L )
+	static int PreferenceExists( T* /* p */, lua_State *L )
 	{
 		RString sName = SArg(1);
 

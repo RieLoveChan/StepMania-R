@@ -174,7 +174,7 @@ void LifeMeterBattery::ChangeLife( TapNoteScore score )
 	BroadcastLifeChanged(bSubtract);
 }
 
-void LifeMeterBattery::ChangeLife( HoldNoteScore score, TapNoteScore tscore )
+void LifeMeterBattery::ChangeLife( HoldNoteScore score, TapNoteScore /* tscore */ )
 {
 	if( m_iLivesLeft == 0 )
 		return;
@@ -213,7 +213,7 @@ void LifeMeterBattery::HandleTapScoreNone()
 	// do nothing
 }
 
-void LifeMeterBattery::ChangeLife( float fDeltaLifePercent )
+void LifeMeterBattery::ChangeLife( float /* fDeltaLifePercent */ )
 {
 }
 

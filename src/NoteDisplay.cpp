@@ -454,7 +454,7 @@ void NoteDisplay::Load( int iColNum, const PlayerState* pPlayerState, float fYRe
 	}
 }
 
-inline float NoteRowToVisibleBeat( const PlayerState *pPlayerState, int iRow )
+inline float NoteRowToVisibleBeat( const PlayerState */* pPlayerState */, int iRow )
 {
 	return NoteRowToBeat(iRow);
 }
@@ -1181,7 +1181,7 @@ void NoteDisplay::DrawHoldBody(const TapNote& tn,
 void NoteDisplay::DrawHold(const TapNote& tn,
 	const NoteFieldRenderArgs& field_args,
 	const NoteColumnRenderArgs& column_args, int iRow, bool bIsBeingHeld,
-	const HoldNoteResult &Result, bool bIsAddition, float fPercentFadeToFail)
+	const HoldNoteResult &/* Result */, bool bIsAddition, float fPercentFadeToFail)
 {
 	int iEndRow = iRow + tn.iDuration;
 	float top_beat= NoteRowToVisibleBeat(m_pPlayerState, iRow);

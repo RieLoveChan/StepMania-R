@@ -13,13 +13,13 @@ bool ScreenInstructions::Input( const InputEventPlus &input )
 	return Screen::Input( input );
 }
 
-bool ScreenInstructions::MenuBack( const InputEventPlus &input )
+bool ScreenInstructions::MenuBack( const InputEventPlus &/* input */ )
 {
 	Cancel( SM_GoToPrevScreen );
 	return true;
 }
 
-bool ScreenInstructions::MenuStart( const InputEventPlus &input )
+bool ScreenInstructions::MenuStart( const InputEventPlus &/* input */ )
 {
 	StartTransitioningScreen( SM_GoToNextScreen );
 	return true;

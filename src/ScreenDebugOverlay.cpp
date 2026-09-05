@@ -1313,7 +1313,7 @@ class DebugLineForceCrash : public IDebugLine
 	virtual RString GetDisplayTitle() { return FORCE_CRASH.GetValue(); }
 	virtual RString GetDisplayValue() { return RString(); }
 	virtual bool IsEnabled() { return false; }
-	virtual void DoAndLog( RString &sMessageOut ) { FAIL_M("DebugLineCrash"); }
+	virtual void DoAndLog( RString &/* sMessageOut */ ) { FAIL_M("DebugLineCrash"); }
 };
 
 class DebugLineUptime : public IDebugLine
@@ -1321,7 +1321,7 @@ class DebugLineUptime : public IDebugLine
 	virtual RString GetDisplayTitle() { return UPTIME.GetValue(); }
 	virtual RString GetDisplayValue() { return SecondsToMMSSMsMsMs(RageTimer::GetTimeSinceStart()); }
 	virtual bool IsEnabled() { return false; }
-	virtual void DoAndLog( RString &sMessageOut ) {}
+	virtual void DoAndLog( RString &/* sMessageOut */ ) {}
 };
 
 /* #ifdef out the lines below if you don't want them to appear on certain

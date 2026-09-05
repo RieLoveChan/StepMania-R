@@ -791,7 +791,7 @@ bool ScreenEvaluation::MenuBack( const InputEventPlus &input )
 	return MenuStart( input );
 }
 
-bool ScreenEvaluation::MenuStart( const InputEventPlus &input )
+bool ScreenEvaluation::MenuStart( const InputEventPlus &/* input */ )
 {
 	if( IsTransitioning() )
 		return false;
@@ -802,7 +802,7 @@ bool ScreenEvaluation::MenuStart( const InputEventPlus &input )
 	return true;
 }
 
-bool ScreenEvaluation::MenuRestart( const InputEventPlus &input )
+bool ScreenEvaluation::MenuRestart( const InputEventPlus &/* input */ )
 {
 	if( IsTransitioning() )
 		return false;

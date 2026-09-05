@@ -784,12 +784,12 @@ static int DelimitorLength( const S &Delimitor )
 	return Delimitor.size();
 }
 
-static int DelimitorLength( char Delimitor )
+static int DelimitorLength( char /* Delimitor */ )
 {
 	return 1;
 }
 
-static int DelimitorLength( wchar_t Delimitor )
+static int DelimitorLength( wchar_t /* Delimitor */ )
 {
 	return 1;
 }

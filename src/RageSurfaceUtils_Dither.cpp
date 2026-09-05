@@ -132,7 +132,7 @@ void RageSurfaceUtils::OrderedDither( const RageSurface *src, RageSurface *dst )
 }
 
 
-static std::uint8_t EDDitherPixel( int x, int y, int intensity, int conv, std::int32_t &accumError )
+static std::uint8_t EDDitherPixel( int /* x */, int /* y */, int intensity, int conv, std::int32_t &accumError )
 {
 	// Convert the number to the destination range.
 	int out_intensity = intensity * conv;

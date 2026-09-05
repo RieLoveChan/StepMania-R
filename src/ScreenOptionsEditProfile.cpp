@@ -64,7 +64,7 @@ ScreenOptionsEditProfile::~ScreenOptionsEditProfile()
 
 }
 
-void ScreenOptionsEditProfile::ImportOptions( int iRow, const std::vector<PlayerNumber> &vpns )
+void ScreenOptionsEditProfile::ImportOptions( int iRow, const std::vector<PlayerNumber> &/* vpns */ )
 {
 	Profile *pProfile = PROFILEMAN->GetLocalProfile( GAMESTATE->m_sEditLocalProfileID );
 	ASSERT( pProfile != nullptr );
@@ -78,7 +78,7 @@ void ScreenOptionsEditProfile::ImportOptions( int iRow, const std::vector<Player
 	}
 }
 
-void ScreenOptionsEditProfile::ExportOptions( int iRow, const std::vector<PlayerNumber> &vpns )
+void ScreenOptionsEditProfile::ExportOptions( int iRow, const std::vector<PlayerNumber> &/* vpns */ )
 {
 	Profile *pProfile = PROFILEMAN->GetLocalProfile( GAMESTATE->m_sEditLocalProfileID );
 	ASSERT( pProfile != nullptr );

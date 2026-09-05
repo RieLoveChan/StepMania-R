@@ -43,12 +43,12 @@ static RString GetPromptText()
 	return s;
 }
 
-static void SaveSyncChanges( void* pThrowAway )
+static void SaveSyncChanges( void* /* pThrowAway */ )
 {
 	AdjustSync::SaveSyncChanges();
 }
 
-static void RevertSyncChanges( void* pThrowAway )
+static void RevertSyncChanges( void* /* pThrowAway */ )
 {
 	AdjustSync::RevertSyncChanges();
 }

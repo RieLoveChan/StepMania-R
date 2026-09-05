@@ -319,7 +319,7 @@ public:
 	int GetResult() const { return m_iResult; }
 
 protected:
-	bool HandleMessage( UINT msg, WPARAM wParam, LPARAM lParam )
+	bool HandleMessage( UINT msg, WPARAM /* wParam */, LPARAM lParam )
 	{
 		if( msg == WM_USER )
 		{
@@ -341,7 +341,7 @@ protected:
 	int m_iResult;
 };
 
-void NetworkStream_Win32::Open( const RString &sHost, int iPort, ConnectionType ct )
+void NetworkStream_Win32::Open( const RString &sHost, int iPort, ConnectionType /* ct */ )
 {
 	m_Mutex.Lock();
 	if( m_State == STATE_CANCELLED )

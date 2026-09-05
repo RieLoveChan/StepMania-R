@@ -368,7 +368,7 @@ void OptionsList::SwitchMenu( int iDir )
 	TweenOnCurrentRow( iDir > 0 );
 }
 
-void OptionsList::MoveItem( const RString &sRowName, int iMove )
+void OptionsList::MoveItem( const RString &/* sRowName */, int /* iMove */ )
 {
 }
 

@@ -408,7 +408,7 @@ void GameSoundManager::Flush()
 	g_Mutex->Unlock();
 }
 
-int MusicThread_start( void *p )
+int MusicThread_start( void */* p */ )
 {
 	while( !g_Shutdown )
 	{
@@ -896,7 +896,7 @@ public:
 	}
 
 	static int StopMusic( T* p, lua_State *L )			{ p->StopMusic(); COMMON_RETURN_SELF; }
-	static int IsTimingDelayed( T* p, lua_State *L )	{ lua_pushboolean( L, g_Playing->m_bTimingDelayed ); return 1; }
+	static int IsTimingDelayed( T* /* p */, lua_State *L )	{ lua_pushboolean( L, g_Playing->m_bTimingDelayed ); return 1; }
 
 	LunaGameSoundManager()
 	{

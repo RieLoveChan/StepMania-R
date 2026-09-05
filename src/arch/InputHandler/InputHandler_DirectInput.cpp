@@ -158,7 +158,7 @@ LCleanup:
 	return bIsXinputDevice;
 }
 
-static BOOL CALLBACK EnumDevicesCallback( const DIDEVICEINSTANCE *pdidInstance, void *pContext )
+static BOOL CALLBACK EnumDevicesCallback( const DIDEVICEINSTANCE *pdidInstance, void */* pContext */ )
 {
 	DIDevice device;
 
@@ -225,7 +225,7 @@ static void CheckForDirectInputDebugMode()
 	}
 }
 
-static BOOL CALLBACK CountDevicesCallback( const DIDEVICEINSTANCE *pdidInstance, void *pContext )
+static BOOL CALLBACK CountDevicesCallback( const DIDEVICEINSTANCE */* pdidInstance */, void *pContext )
 {
 	(*(int*)pContext)++;
 	return DIENUM_CONTINUE;
