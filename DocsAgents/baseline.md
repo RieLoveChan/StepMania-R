@@ -46,47 +46,51 @@ bundled cmake 3.31.
 
 | Config | Warnings | Notes |
 |---|---|---|
-| **As shipped** — `/W4` + `/wd4100 /wd4244 /wd4267` | **0** | The build is clean as configured. |
-| `/W4`, **remaining 3 suppressions removed** | **~4098** (MSBuild dedup, C4244+C4267+C4100) | Debt behind the 3 flags still standing. |
+| **As shipped** — `/W4` + `/wd4244 /wd4267` | **0** | The build is clean as configured. `C4100` no longer suppressed — fixed and enforced (below). |
+| `/W4`, **remaining 2 suppressions removed** | **TBD** (old ~4098 combined figure included C4100, needs remeasurement now that it's 0) | Debt behind the 2 flags still standing. |
 | Clang `-Wall -Wextra` | **TBD** | needs a clang build |
 | GCC `-Wall -Wextra` | **TBD** | Linux, P3 |
 
-**`C4189`/`C4702` promoted to `-Werror` (2026-09-04, backlog item 2
-closed for these two):** all 15 hit sites fixed by hand (dead unused
-locals removed; two genuinely dead computation blocks deleted outright;
-degenerate `FOREACH_X(v) return ...;` patterns — which always return on
-the loop's first iteration, making MSVC flag the loop's back-edge as
-unreachable — rewritten as a direct `GetNextX()` call + `if`; one
-`[[noreturn]]`-followed-by-dead-code cleaned up). `/wd4100 /wd4244
-/wd4267` remain (below); this is the ratchet from ADR 0001 §7 actually
-turning.
+**`C4189`/`C4702`/`C4100` promoted to `-Werror` (2026-09-04/05,
+backlog item 2 closed for these three):** `C4189`/`C4702`'s 15 hit
+sites fixed by hand (dead unused locals removed; two genuinely dead
+computation blocks deleted outright; degenerate `FOREACH_X(v) return
+...;` patterns — which always return on the loop's first iteration,
+making MSVC flag the loop's back-edge as unreachable — rewritten as a
+direct `GetNextX()` call + `if`; one `[[noreturn]]`-followed-by-dead-code
+cleaned up). `C4100`'s 314 unique sites fixed across five commits
+(below). `/wd4244 /wd4267` remain; this is the ratchet from ADR 0001
+§7 actually turning.
 
 Debt breakdown (raw hit lines, incl. header dupes across TUs) —
-**as measured before the 2026-09-04 promotion**, C4189/C4702 rows now
-historical (both are 0 and enforced):
+**as measured before the 2026-09-04 promotion**, C4189/C4702/C4100
+rows now historical (all three are 0 and enforced):
 
 | Code | Hits | Meaning | Fix shape |
 |---|---|---|---|
 | `C4244` | 2736 | conversion, possible loss of data (`double`→`float`, `int`→`char`…) | `static_cast`, review each for real truncation |
 | `C4267` | 1728 | `size_t` → smaller type | same; often `int` loop vars that should be `size_t` |
-| `C4100` | ~~1362 raw~~ **314 unique** (2026-09-05 recount; 1362 double-counts headers per including TU) | unreferenced formal parameter | drop the name / `[[maybe_unused]]` |
+| ~~`C4100`~~ | ~~1362 raw~~ / **314 unique** / 0 | unreferenced formal parameter | **done** — promoted to `-Werror` |
 | ~~`C4189`~~ | ~~26~~ 0 | local var init but unused | **done** — promoted to `-Werror` |
 | ~~`C4702`~~ | ~~10~~ 0 | unreachable code | **done** — promoted to `-Werror` |
 
-C4244+C4267 (~4.4k raw / most of the remaining debt) are the bulk and
+C4244+C4267 (~4.4k raw / the entire remaining debt) are the bulk and
 the only ones that can hide real bugs (silent truncation) — highest-value
 to burn down, but each needs a real look (not a mechanical autofix).
+Not started — larger scope than C4100, a scoping conversation should
+happen before beginning.
 
-**C4100 in progress:** 314 unique sites, ~150 files, no concentration
-(max 11/file) — genuinely wide, not a "fix one file, done" case.
-**252 of 314 done** (`713e58a0f6` + `9844ab3c4b` + `26b7de158b` +
-`3636b80690`, 2026-09-05): the 12 highest-concentration files, then
-the 19 files at exactly 4 sites each, then 13 files at exactly 3
-sites each, then 27 files at exactly 2 sites each. `/wd4100` stays in
-`src/CMakeLists.txt` until the remaining 62 (single-site files) are
-clear — do **not** promote early, a partial promotion breaks the
-`WITH_WERROR=ON` Windows CI job on every remaining site. Per-subsystem
-counts: TBD as passes run
+**C4100 done (2026-09-05):** 314 unique sites, ~150 files, no
+concentration (max 11/file) — genuinely wide, not a "fix one file,
+done" case. Fixed across five commits (`713e58a0f6`, `9844ab3c4b`,
+`26b7de158b`, `3636b80690`, `c1d77d662a`): the 12 highest-concentration
+files, then 19 files at exactly 4 sites each, 13 at exactly 3, 27 at
+exactly 2, and finally 62 single-site files. `/wd4100` is now removed
+from `src/CMakeLists.txt` permanently — verified with a full Release
+rebuild (all of `src/`, not just touched files) showing zero `C4100`,
+plus a clean `sm_tests` rebuild under the existing `WITH_WERROR=ON`
+config and a passing 94-assertion / 19-case run. Per-subsystem counts:
+TBD as passes run
 ([`playbooks/clang-tidy-subsystem-pass.md`](./playbooks/clang-tidy-subsystem-pass.md)).
 
 # clang-tidy (captured 2026-09-03)

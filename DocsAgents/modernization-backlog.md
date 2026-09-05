@@ -30,7 +30,7 @@ as new sweeps find things. Numbers/anchors confirmed 2026-09-02.
   `RageUtil` (started) → `RageMath` → `TimingData` →
   `NoteData`/`NoteDataUtil` → `NotesLoader*` (tiny committed corpus).
 
-### 2. Warnings on but unmeasured / unenforced — ratchet turning, 2 of 5 MSVC categories promoted
+### 2. Warnings on but unmeasured / unenforced — ratchet turning, 3 of 5 MSVC categories promoted
 `WITH_WERROR` exists (default OFF, ON in Windows CI) and counts are
 captured in [`baseline.md`](./baseline.md) (ADR 0001 §7 mechanism).
 **Done (2026-09-04):** `C4189` (unused local, was 26) and `C4702`
@@ -43,29 +43,33 @@ as a direct `GetNextX()` + `if`; one `[[noreturn]]`-followed-by-dead-code
 cleanup). Verified clean under `/WX` in both Debug and Release (Debug
 surfaced 3 more sites Release's optimizer had folded away — always
 check both configs, not just Release).
-**In progress (2026-09-05):** `C4100` (unreferenced parameter). Real
-measured count is **314 unique sites** (not the stale ~1362 raw-line
-figure, which double-counts headers across every including TU) spread
-across ~150 files with no concentration (max 11 in one file) — a wide
-mechanical sweep, no shortcut. **252 of 314 fixed** (`713e58a0f6` +
-`9844ab3c4b` + `26b7de158b` + `3636b80690`), the 12 highest-concentration
-files, then the 19 files at exactly 4 sites each, then 13 files at
-exactly 3 sites each, then 27 files at exactly 2 sites each: comment
-out the unused parameter name (`Type /* name */`, this codebase's
-existing convention), except one site genuinely used only under
+**Done (2026-09-05):** `C4100` (unreferenced parameter). Real measured
+count was **314 unique sites** (not the stale ~1362 raw-line figure,
+which double-counts headers across every including TU) spread across
+~150 files with no concentration (max 11 in one file) — a wide
+mechanical sweep across five commits (`713e58a0f6`, `9844ab3c4b`,
+`26b7de158b`, `3636b80690`, `c1d77d662a`), highest-concentration files
+first down to the 62 single-site files last. Convention: comment out
+the unused parameter name (`Type /* name */`, this codebase's existing
+style), except one site genuinely used only under
 `#if defined(HAVE_POSIX_FADVISE)` (unset on Windows) —
 `[[maybe_unused]]` there instead, since commenting the name would
 break the other platform's compile. Several sites looked like false
 positives but weren't: verify each site's actual body rather than
-assume the pattern — one function's "unused" param was used by a
-*different* override of the same virtual in the same file, and
-several others' usage was inside a `/* doesn't work */` block
-comment, not live code. `/wd4100` **stays in `src/CMakeLists.txt`**
-until all 314 are done — 62 remain, all files with exactly 1 site.
-**Remaining:** `C4100` continues; `C4244`/`C4267` (numeric conversion
-/ narrowing, ~4.4k hits) are the real debt — each needs a real look
-for actual truncation, not a mechanical pass; still not measured for
-Clang/GCC (`baseline.md` TBD).
+assume the pattern — used by a *different* override of the same
+virtual in the same file, or usage only inside a `/* doesn't work */`
+block comment, or a near-duplicate signature where only one of two
+overloads/declarations actually triggered the warning.
+`/wd4100` **removed from `src/CMakeLists.txt` permanently** —
+promoted to `-Werror` alongside `C4189`/`C4702`. Verified with a full
+Release rebuild (not just the touched files) showing zero `C4100`
+across all of `src/`, plus `sm_tests` clean under the existing
+`WITH_WERROR=ON` config.
+**Remaining:** `C4244`/`C4267` (numeric conversion / narrowing, ~4.4k
+hits) are the real debt — each needs a real look for actual
+truncation, not a mechanical pass; still not measured for Clang/GCC
+(`baseline.md` TBD). Not started — larger scope than C4100, needs a
+scoping conversation before beginning.
 
 ### 3. Stale cppcheck leak list, never cleared
 `Docs/Devdocs/possible memory leaks.txt` — from 2009. Likely still live:

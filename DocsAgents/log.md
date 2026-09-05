@@ -492,3 +492,32 @@
   rebuild), `--SelfTest` exit 0, `sm_tests` 94 assertions / 19 cases
   pass. `src/CMakeLists.txt` zero-diff before commit. 62 sites remain,
   every one in a different file (the true single-hit tail).
+
+* **Backlog item 2 — C4100 closed, 314 of 314; promoted to -Werror**
+  (`c1d77d662a`, 2026-09-05). The last 62 single-site files. Two spots
+  needed extra care to avoid editing the wrong overload/declaration:
+  `ScreenTextEntry.cpp` has `SetTextEntrySettings` and `TextEntry`
+  with near-identical parameter lists (only the former's `bPassword`
+  goes unused -- confirmed by checking each function's own body, not
+  just the flagged column); `InputHandler_Win32_ddrio.cpp`'s
+  `crt_thread_create` has a forward declaration and a definition with
+  the same signature, only the definition (with a body) triggers the
+  warning. With all 314 originally-measured sites fixed, `/wd4100` is
+  removed from `src/CMakeLists.txt` permanently -- promoted to
+  `-Werror` alongside `C4189`/`C4702`.
+
+  Verification went beyond the per-batch spot check this time: a full
+  Release rebuild with `/wd4100` removed showed **zero** `C4100`
+  across the *entire* `src/` tree, not just the 62 touched files --
+  confirming no site was missed anywhere in the codebase, including
+  files never touched by any of the five C4100 commits. `sm_tests`
+  was then rebuilt under the existing `WITH_WERROR=ON` `build-tests`
+  config (a second full recompile, since the CMakeLists.txt flag
+  change touches every translation unit) -- zero warnings under
+  `/WX`, 94 assertions / 19 cases pass. `--SelfTest` exit 0.
+
+  Backlog item 2 now has only `C4244`/`C4267` (numeric
+  conversion/narrowing, ~4.4k raw hits) open -- real debt needing
+  case-by-case truncation review, not a mechanical pass like C4100.
+  Not started; flagged for a future session with a scoping
+  conversation first, given the much larger surface area.
