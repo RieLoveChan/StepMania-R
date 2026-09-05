@@ -79,7 +79,7 @@ bool ScreenBookkeeping::Input( const InputEventPlus &input )
 	return Screen::Input( input );	// default handler
 }
 
-bool ScreenBookkeeping::MenuLeft( const InputEventPlus &input )
+bool ScreenBookkeeping::MenuLeft( const InputEventPlus& /* input */ )
 {
 	m_iViewIndex--;
 	CLAMP( m_iViewIndex, 0, m_vBookkeepingViews.size()-1 );
@@ -88,7 +88,7 @@ bool ScreenBookkeeping::MenuLeft( const InputEventPlus &input )
 	return true;
 }
 
-bool ScreenBookkeeping::MenuRight( const InputEventPlus &input )
+bool ScreenBookkeeping::MenuRight( const InputEventPlus& /* input */ )
 {
 	m_iViewIndex++;
 	CLAMP( m_iViewIndex, 0, m_vBookkeepingViews.size()-1 );
@@ -97,7 +97,7 @@ bool ScreenBookkeeping::MenuRight( const InputEventPlus &input )
 	return true;
 }
 
-bool ScreenBookkeeping::MenuStart( const InputEventPlus &input )
+bool ScreenBookkeeping::MenuStart( const InputEventPlus& /* input */ )
 {
 	if( IsTransitioning() )
 		return false;
@@ -107,7 +107,7 @@ bool ScreenBookkeeping::MenuStart( const InputEventPlus &input )
 	return true;
 }
 
-bool ScreenBookkeeping::MenuBack( const InputEventPlus &input )
+bool ScreenBookkeeping::MenuBack( const InputEventPlus& /* input */ )
 {
 	if( IsTransitioning() )
 		return false;

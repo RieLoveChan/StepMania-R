@@ -229,7 +229,7 @@ static int GetScore(int p, int Z, std::int64_t S, int n)
 
 }
 
-void ScoreKeeperNormal::AddTapScore( TapNoteScore tns )
+void ScoreKeeperNormal::AddTapScore( TapNoteScore /* tns */ )
 {
 }
 
@@ -241,7 +241,7 @@ void ScoreKeeperNormal::AddHoldScore( HoldNoteScore hns )
 		AddScoreInternal( TNS_W4 ); // required for subtractive score display to work properly.
 }
 
-void ScoreKeeperNormal::AddTapRowScore( TapNoteScore score, const NoteData &nd, int iRow )
+void ScoreKeeperNormal::AddTapRowScore( TapNoteScore score, const NoteData& /* nd */, int /* iRow */ )
 {
 	AddScoreInternal( score );
 }
@@ -418,7 +418,7 @@ void ScoreKeeperNormal::HandleTapScore( const TapNote &tn )
 	AddTapScore( tns );
 }
 
-void ScoreKeeperNormal::HandleHoldCheckpointScore( const NoteData &nd, int iRow, int iNumHoldsHeldThisRow, int iNumHoldsMissedThisRow )
+void ScoreKeeperNormal::HandleHoldCheckpointScore( const NoteData& /* nd */, int iRow, int iNumHoldsHeldThisRow, int iNumHoldsMissedThisRow )
 {
 	HandleTapNoteScoreInternal(iNumHoldsMissedThisRow == 0 ? TNS_CheckpointHit:TNS_CheckpointMiss,
 							   TNS_CheckpointHit, iRow);

@@ -128,7 +128,7 @@ std::size_t zipRead(void *pOpaque, mz_uint64 file_ofs, void *pBuf, std::size_t n
 	return f->Read(pBuf, n);
 }
 
-std::size_t zipWriteFile(void *pOpaque, mz_uint64 file_ofs, const void *pBuf, std::size_t n)
+std::size_t zipWriteFile(void *pOpaque, mz_uint64 /* file_ofs */, const void *pBuf, std::size_t n)
 {
 	RageFile *f = static_cast<RageFile*>(pOpaque);
 
@@ -278,13 +278,13 @@ class RageFileDriverMountpoints: public RageFileDriver
 {
 public:
 	RageFileDriverMountpoints(): RageFileDriver( new FilenameDB ) { }
-	RageFileBasic *Open( const RString &sPath, int iMode, int &iError ) override
+	RageFileBasic *Open( const RString& /* sPath */, int iMode, int &iError ) override
 	{
 		iError = (iMode == RageFile::WRITE)? ERROR_WRITING_NOT_SUPPORTED:ENOENT;
 		return nullptr;
 	}
 	/* Never flush FDB, except in LoadFromDrivers. */
-	void FlushDirCache( const RString &sPath ) override { }
+	void FlushDirCache( const RString& /* sPath */ ) override { }
 
 	void LoadFromDrivers( const std::vector<LoadedDriver *> &apDrivers )
 	{
@@ -335,7 +335,7 @@ static RString ReadlinkRecursive( RString sPath )
 }
 #endif
 
-static RString GetDirOfExecutable( RString argv0 )
+static RString GetDirOfExecutable( [[maybe_unused]] RString argv0 )
 {
 	// argv[0] can be wrong in most OS's; try to avoid using it.
 

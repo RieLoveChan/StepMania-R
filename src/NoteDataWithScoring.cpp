@@ -119,7 +119,7 @@ bool NoteDataWithScoring::IsRowCompletelyJudged( const NoteData &in, unsigned ro
 namespace
 {
 // Return the ratio of actual combo to max combo.
-float GetActualVoltageRadarValue( const NoteData &in, float fSongSeconds, const PlayerStageStats &pss )
+float GetActualVoltageRadarValue( const NoteData& /* in */, float fSongSeconds, const PlayerStageStats &pss )
 {
 	/* STATSMAN->m_CurStageStats.iMaxCombo is unrelated to GetNumTapNotes:
 	 * m_bComboContinuesBetweenSongs might be on, and the way combo is counted
@@ -132,7 +132,7 @@ float GetActualVoltageRadarValue( const NoteData &in, float fSongSeconds, const 
 }
 
 // Return the ratio of actual to possible dance points.
-float GetActualChaosRadarValue( const NoteData &in, float fSongSeconds, const PlayerStageStats &pss )
+float GetActualChaosRadarValue( const NoteData& /* in */, float /* fSongSeconds */, const PlayerStageStats &pss )
 {
 	const int iPossibleDP = pss.m_iPossibleDancePoints;
 	if ( iPossibleDP == 0 )
@@ -200,7 +200,7 @@ struct garv_state
 	{}
 };
 
-static void DoRowEndRadarActualCalc(garv_state& state, RadarValues& out)
+static void DoRowEndRadarActualCalc(garv_state& state, RadarValues& /* out */)
 {
 	if(state.judgable && state.last_tns_on_row != TapNoteScore_Invalid)
 	{

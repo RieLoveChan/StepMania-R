@@ -261,12 +261,12 @@ void ScreenOptionsManageCourses::ProcessMenuStart( const InputEventPlus & )
 	}
 }
 
-void ScreenOptionsManageCourses::ImportOptions( int iRow, const std::vector<PlayerNumber> &vpns )
+void ScreenOptionsManageCourses::ImportOptions( int /* iRow */, const std::vector<PlayerNumber>& /* vpns */ )
 {
 
 }
 
-void ScreenOptionsManageCourses::ExportOptions( int iRow, const std::vector<PlayerNumber> &vpns )
+void ScreenOptionsManageCourses::ExportOptions( int /* iRow */, const std::vector<PlayerNumber>& /* vpns */ )
 {
 
 }

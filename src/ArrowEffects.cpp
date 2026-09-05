@@ -1147,7 +1147,7 @@ float ArrowEffects::GetAlpha( const PlayerState* pPlayerState, int iCol, float f
 	return (fPercentVisible>0.5f) ? 1.0f : 0.0f;
 }
 
-float ArrowEffects::GetGlow( const PlayerState* pPlayerState, int iCol, float fYOffset, float fPercentFadeToFail, float fYReverseOffsetPixels, float fDrawDistanceBeforeTargetsPixels, float fFadeInPercentOfDrawFar)
+float ArrowEffects::GetGlow( const PlayerState* pPlayerState, int iCol, float fYOffset, float fPercentFadeToFail, float fYReverseOffsetPixels, float /* fDrawDistanceBeforeTargetsPixels */, float /* fFadeInPercentOfDrawFar */)
 {
 	// Get the YPos without reverse (that is, factor in EFFECT_TIPSY).
 	float fYPosWithoutReverse = ArrowEffects::GetYPos(pPlayerState, iCol, fYOffset, fYReverseOffsetPixels, false );
@@ -1360,7 +1360,7 @@ float ArrowEffects::GetZoom( const PlayerState* pPlayerState, float fYOffset, in
 	return fZoom;
 }
 
-float ArrowEffects::GetZoomVariable( float fYOffset, int iCol, float fCurZoom )
+float ArrowEffects::GetZoomVariable( float fYOffset, int /* iCol */, float fCurZoom )
 {
 	float fZoom = fCurZoom;
 	if( curr_options->m_fEffects[PlayerOptions::EFFECT_PULSE_INNER] != 0 || curr_options->m_fEffects[PlayerOptions::EFFECT_PULSE_OUTER] != 0 )
@@ -1435,7 +1435,7 @@ ThemeMetric<float> GRAY_ARROWS_Y_REVERSE( "Player", "ReceptorArrowsYReverse" );
 namespace
 {
 	/* Update() need to be exposed to use ArrowEffects off ScreenGameplay. It is harmless.	 */
-	int Update( lua_State *L )	{ ArrowEffects::Update(); return 0; }
+	int Update( lua_State* /* L */ )	{ ArrowEffects::Update(); return 0; }
 
 	// Provide a reasonable default value for fYReverseOffset
 	float YReverseOffset( lua_State *L, int argnum )

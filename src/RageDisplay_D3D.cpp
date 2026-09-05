@@ -609,7 +609,7 @@ void RageDisplay_D3D::EndFrame()
 	RageDisplay::EndFrame();
 }
 
-bool RageDisplay_D3D::SupportsTextureFormat( RagePixelFormat pixfmt, bool realtime )
+bool RageDisplay_D3D::SupportsTextureFormat( RagePixelFormat pixfmt, bool /* realtime */ )
 {
 	// Some cards (Savage) don't support alpha in palettes.
 	// Don't allow paletted textures if this is the case.
@@ -779,7 +779,7 @@ void RageDisplay_D3D::SendCurrentMatrices()
 class RageCompiledGeometrySWD3D : public RageCompiledGeometry
 {
 public:
-	void Allocate( const std::vector<msMesh> &vMeshes ) override
+	void Allocate( const std::vector<msMesh>& /* vMeshes */ ) override
 	{
 		m_vVertex.resize( std::max<unsigned int>(1u, GetTotalVertices()) );
 		m_vTriangles.resize( std::max<unsigned int>(1u, GetTotalTriangles()) );
@@ -1379,7 +1379,7 @@ void RageDisplay_D3D::DeleteTexture( std::uintptr_t iTexHandle )
 std::uintptr_t RageDisplay_D3D::CreateTexture(
 	RagePixelFormat pixfmt,
 	RageSurface* img,
-	bool bGenerateMipMaps )
+	bool /* bGenerateMipMaps */ )
 {
 	HRESULT hr;
 	IDirect3DTexture9* pTex;
@@ -1478,7 +1478,7 @@ void RageDisplay_D3D::SetSphereEnvironmentMapping( TextureUnit tu, bool b )
 	g_bSphereMapping[tu] = b;
 }
 
-void RageDisplay_D3D::SetCelShaded( int stage )
+void RageDisplay_D3D::SetCelShaded( int /* stage */ )
 {
 	// todo: implement me!
 }

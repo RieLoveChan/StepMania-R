@@ -284,12 +284,12 @@ void ScreenOptionsManageEditSteps::ProcessMenuStart( const InputEventPlus & )
 	}
 }
 
-void ScreenOptionsManageEditSteps::ImportOptions( int iRow, const std::vector<PlayerNumber> &vpns )
+void ScreenOptionsManageEditSteps::ImportOptions( int /* iRow */, const std::vector<PlayerNumber>& /* vpns */ )
 {
 
 }
 
-void ScreenOptionsManageEditSteps::ExportOptions( int iRow, const std::vector<PlayerNumber> &vpns )
+void ScreenOptionsManageEditSteps::ExportOptions( int /* iRow */, const std::vector<PlayerNumber>& /* vpns */ )
 {
 
 }

@@ -44,12 +44,12 @@ WheelItemBase::WheelItemBase(RString sType)
 	Load(sType);
 }
 
-void WheelItemBase::Load( RString sType )
+void WheelItemBase::Load( RString /* sType */ )
 {
 	m_colorLocked = RageColor(0,0,0,0.25f);
 }
 
-void WheelItemBase::LoadFromWheelItemData( const WheelItemBaseData* pWID, int iIndex, bool bHasFocus, int iDrawIndex )
+void WheelItemBase::LoadFromWheelItemData( const WheelItemBaseData* pWID, int /* iIndex */, bool /* bHasFocus */, int /* iDrawIndex */ )
 {
 	ASSERT( pWID != nullptr );
 	m_pData = pWID;

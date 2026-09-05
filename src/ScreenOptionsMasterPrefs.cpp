@@ -162,7 +162,7 @@ void MovePref<bool>( int &iSel, bool bToSel, const ConfOption *pConfOption )
 	}
 }
 
-static void MoveNop( int &iSel, bool bToSel, const ConfOption *pConfOption )
+static void MoveNop( int &iSel, bool bToSel, const ConfOption* /* pConfOption */ )
 {
 	if( bToSel )
 		iSel = 0;
@@ -217,7 +217,7 @@ static void LanguageChoices( std::vector<RString> &out )
 	}
 }
 
-static void Language( int &sel, bool ToSel, const ConfOption *pConfOption )
+static void Language( int &sel, bool ToSel, const ConfOption* /* pConfOption */ )
 {
 	std::vector<RString> vs;
 	THEME->GetLanguages( vs );
@@ -365,7 +365,7 @@ static void DefaultFailChoices(std::vector<RString>& out)
 	out.push_back("Off");
 }
 
-static void DefaultFailType(int& sel, bool to_sel, const ConfOption* conf_option)
+static void DefaultFailType(int& sel, bool to_sel, const ConfOption* /* conf_option */)
 {
 	if(to_sel)
 	{
@@ -599,7 +599,7 @@ inline res_t operator-(res_t lhs, res_t const &rhs)
 	return lhs;
 }
 
-static void DisplayResolutionM( int &sel, bool ToSel, const ConfOption *pConfOption )
+static void DisplayResolutionM( int &sel, bool ToSel, const ConfOption* /* pConfOption */ )
 {
 	static std::vector<res_t> res_choices;
 

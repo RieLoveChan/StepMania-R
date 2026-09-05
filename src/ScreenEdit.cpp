@@ -4807,7 +4807,7 @@ int ScreenEdit::GetSongOrNotesEnd()
 					GAMESTATE->m_pCurSong->m_fMusicLengthSeconds))));
 }
 
-void ScreenEdit::HandleMainMenuChoice( MainMenuChoice c, const std::vector<int> &iAnswers )
+void ScreenEdit::HandleMainMenuChoice( MainMenuChoice c, const std::vector<int>& /* iAnswers */ )
 {
 	GAMESTATE->SetProcessedTimingData(m_pSteps->GetTimingData());
 	switch( c )
@@ -5593,7 +5593,7 @@ void ScreenEdit::HandleAreaMenuChoice( AreaMenuChoice c, const std::vector<int> 
 		CheckNumberOfNotesAndUndo();
 }
 
-void ScreenEdit::HandleStepsDataChoice( StepsDataChoice c, const std::vector<int> &iAnswers )
+void ScreenEdit::HandleStepsDataChoice( StepsDataChoice /* c */, const std::vector<int>& /* iAnswers */ )
 {
 	return; // nothing is done with the choices. Yet.
 }
@@ -5958,7 +5958,7 @@ void ScreenEdit::HandleTimingDataInformationChoice( TimingDataInformationChoice 
 }
 
 void ScreenEdit::HandleTimingDataChangeChoice(TimingDataChangeChoice choice,
-	const std::vector<int>& answers)
+	const std::vector<int>& /* answers */)
 {
 	TimingSegmentType change_type= TimingSegmentType_Invalid;
 	switch(choice)

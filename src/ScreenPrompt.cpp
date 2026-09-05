@@ -163,7 +163,7 @@ void ScreenPrompt::Change( int dir )
 	m_sndChange.Play(true);
 }
 
-bool ScreenPrompt::MenuLeft( const InputEventPlus &input )
+bool ScreenPrompt::MenuLeft( const InputEventPlus& /* input */ )
 {
 	if( CanGoLeft() )
 	{
@@ -173,7 +173,7 @@ bool ScreenPrompt::MenuLeft( const InputEventPlus &input )
 	return false;
 }
 
-bool ScreenPrompt::MenuRight( const InputEventPlus &input )
+bool ScreenPrompt::MenuRight( const InputEventPlus& /* input */ )
 {
 	if( CanGoRight() )
 	{
@@ -183,7 +183,7 @@ bool ScreenPrompt::MenuRight( const InputEventPlus &input )
 	return false;
 }
 
-bool ScreenPrompt::MenuStart( const InputEventPlus &input )
+bool ScreenPrompt::MenuStart( const InputEventPlus& /* input */ )
 {
 	if( m_Out.IsTransitioning() || m_Cancel.IsTransitioning() )
 		return false;
@@ -192,7 +192,7 @@ bool ScreenPrompt::MenuStart( const InputEventPlus &input )
 	return true;
 }
 
-bool ScreenPrompt::MenuBack( const InputEventPlus &input )
+bool ScreenPrompt::MenuBack( const InputEventPlus& /* input */ )
 {
 	if( m_Out.IsTransitioning() || m_Cancel.IsTransitioning() )
 		return false;

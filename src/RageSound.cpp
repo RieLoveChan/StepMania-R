@@ -144,8 +144,8 @@ class RageSoundReader_Silence: public RageSoundReader
 public:
 	int GetLength() const override { return 0; }
 	int GetLength_Fast() const override { return 0; }
-	int SetPosition( int iFrame ) override  { return 1; }
-	int Read( float *pBuf, int iFrames ) override { return RageSoundReader::END_OF_FILE; }
+	int SetPosition( int /* iFrame */ ) override  { return 1; }
+	int Read( float* /* pBuf */, int /* iFrames */ ) override { return RageSoundReader::END_OF_FILE; }
 	RageSoundReader *Copy() const override { return new RageSoundReader_Silence; }
 	int GetSampleRate() const override { return 44100; }
 	unsigned GetNumChannels() const override { return 1; }
@@ -473,7 +473,7 @@ float RageSound::GetLengthSeconds()
 	return iLength / 1000.f; // ms -> secs
 }
 
-int RageSound::GetSourceFrameFromHardwareFrame( std::int64_t iHardwareFrame, bool *bApproximate ) const
+int RageSound::GetSourceFrameFromHardwareFrame( std::int64_t iHardwareFrame, bool* /* bApproximate */ ) const
 {
 	if( m_HardwareToStreamMap.IsEmpty() || m_StreamToSourceMap.IsEmpty() )
 		return 0;

@@ -24,7 +24,7 @@ int	ScreenMiniMenu::s_iLastRowCode = -1;
 std::vector<int>	ScreenMiniMenu::s_viLastAnswers;
 
 // Hooks for profiling
-void PrepareToLoadScreen( const RString &sScreenName ) {}
+void PrepareToLoadScreen( const RString& /* sScreenName */ ) {}
 void FinishedLoadingScreen() {}
 
 // Settings:
@@ -119,7 +119,7 @@ void ScreenMiniMenu::AfterChangeValueOrRow( PlayerNumber pn )
 	}
 }
 
-void ScreenMiniMenu::ImportOptions( int r, const std::vector<PlayerNumber> &vpns )
+void ScreenMiniMenu::ImportOptions( int r, const std::vector<PlayerNumber>& /* vpns */ )
 {
 	OptionRow &optrow = *m_pRows[r];
 	const MenuRowDef &mr = m_vMenuRows[r];
@@ -127,7 +127,7 @@ void ScreenMiniMenu::ImportOptions( int r, const std::vector<PlayerNumber> &vpns
 		optrow.SetOneSharedSelection( mr.iDefaultChoice );
 }
 
-void ScreenMiniMenu::ExportOptions( int r, const std::vector<PlayerNumber> &vpns )
+void ScreenMiniMenu::ExportOptions( int r, const std::vector<PlayerNumber>& /* vpns */ )
 {
 	if( r == GetCurrentRow() )
 		s_iLastRowCode = m_vMenuRows[r].iRowCode;
@@ -153,7 +153,7 @@ void ScreenMiniMenu::HandleScreenMessage( const ScreenMessage SM )
 	ScreenOptions::HandleScreenMessage( SM );
 }
 
-bool ScreenMiniMenu::FocusedItemEndsScreen( PlayerNumber pn ) const
+bool ScreenMiniMenu::FocusedItemEndsScreen( PlayerNumber /* pn */ ) const
 {
 	return true;
 }

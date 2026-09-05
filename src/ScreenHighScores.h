@@ -61,10 +61,10 @@ public:
 	virtual bool Input( const InputEventPlus &input );
 	virtual bool MenuStart( const InputEventPlus &input );
 	virtual bool MenuBack( const InputEventPlus &input );
-	virtual bool MenuLeft( const InputEventPlus &input )	{ DoScroll(-1); return true; }
-	virtual bool MenuRight( const InputEventPlus &input )	{ DoScroll(+1); return true; }
-	virtual bool MenuUp( const InputEventPlus &input )	{ DoScroll(-1); return true; }
-	virtual bool MenuDown( const InputEventPlus &input )	{ DoScroll(+1); return true; }
+	virtual bool MenuLeft( const InputEventPlus& /* input */ )	{ DoScroll(-1); return true; }
+	virtual bool MenuRight( const InputEventPlus& /* input */ )	{ DoScroll(+1); return true; }
+	virtual bool MenuUp( const InputEventPlus& /* input */ )	{ DoScroll(-1); return true; }
+	virtual bool MenuDown( const InputEventPlus& /* input */ )	{ DoScroll(+1); return true; }
 
 private:
 	void DoScroll( int iDir );
