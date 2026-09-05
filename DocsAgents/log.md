@@ -584,3 +584,30 @@
   deleting -- `Docs/Devdocs/` is still-consulted reference material per
   `conventions.md`/`index.md`, not pure historical cruft). No code
   changed, no rebuild needed.
+
+* **Backlog items 1/17 — TimingData characterization tests**
+  (`197ea46f02`, 2026-09-05). ADR 0006 phase 2 continues past `RageMath`
+  (which turned out to already be done -- `f98d7a489e`, added by the
+  maintainer directly outside an agent session; the backlog just hadn't
+  been updated to reflect it). New `tests/test_TimingData.cpp`: the
+  beat<->row<->time core, exercised through the `NoOffset` entry points
+  (`GetBeatFromElapsedTimeNoOffset`, `GetElapsedTimeFromBeatNoOffset`)
+  that don't touch `GAMESTATE`/`PREFSMAN` -- their offset-applying
+  callers (`GetBeatFromElapsedTime` etc.) are one-line wrappers, so this
+  still pins the real logic without needing a live engine, matching the
+  playbook's "not for code that needs a live GAMESTATE" rule.
+
+  Covers: `NoteRowToMeasureAndBeat` across a time-signature change,
+  `Has*Changes`/`Has*` predicates, `GetActualBPM`'s min/max/clamp,
+  `IsWarpAtRow`'s half-open `[beat, beat+length)` interval, and
+  constant-BPM / BPM-change / stop-holds-the-beat cases for the beat<->
+  time conversion. Read `NoteRowToMeasureAndBeat`'s implementation
+  closely before writing expectations -- its per-segment loop computes
+  `iBeatIndexOut` with the same `rows / rows-per-measure` formula as
+  `iNumMeasuresThisSegment` (not rows-per-beat), which looks like it
+  could misbehave on multi-segment lookups; picked test rows that
+  aligned with segment/measure boundaries to sidestep needing to fully
+  untangle that before pinning behaviour, then verified predictions
+  against the actual `sm_tests` run rather than trusting the hand-trace.
+  134 assertions / 28 cases pass (up from 94/19). `src/CMakeLists.txt`
+  untouched; only `tests/CMakeLists.txt` gained the new source file.

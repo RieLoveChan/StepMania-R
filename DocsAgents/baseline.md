@@ -158,6 +158,13 @@ Per-subsystem breakdown as passes run:
     quirks, RageMatrix Identity/Translation/Scaling/Multiply/Transpose
     (pins the `pOut = pB * pA` argument-order quirk), RageVec3 Normalize/
     Cross/bounds, RageQuadratic Bezier evaluate + slope.
+  - `tests/test_TimingData.cpp` (2026-09-05) — `NoteRowToMeasureAndBeat`
+    across a time-signature change, `Has*Changes`/`Has*` predicates,
+    `GetActualBPM` min/max/clamp, `IsWarpAtRow`'s half-open interval, and
+    constant-BPM / BPM-change / stop-holds-the-beat cases for
+    `GetBeatFromElapsedTimeNoOffset`/`GetElapsedTimeFromBeatNoOffset`
+    (the `NoOffset` entry points, which don't touch GAMESTATE/PREFSMAN).
+    134 assertions / 28 cases total (up from 94/19).
   **Locally verified on Windows** (VS 2022 BuildTools cmake 3.31 — the
   standalone cmake 4.3 install on this box hits a compiler-ID detection
   bug when invoked through the VS generator's regen step, use the

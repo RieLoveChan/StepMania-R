@@ -26,8 +26,10 @@ as new sweeps find things. Numbers/anchors confirmed 2026-09-02.
   [0006](./adr/0006-test-harness.md) (Catch2 v3 + `sm_engine` OBJECT
   library); `sm_tests` + first `RageUtil` coverage; CI green on
   Windows/macOS/Linux (see item 17).
-- **Unit coverage: OPEN.** Characterization targets, in order:
-  `RageUtil` (started) → `RageMath` → `TimingData` →
+- **Unit coverage: IN PROGRESS.** Characterization targets, in order:
+  `RageUtil` (done) → `RageMath` (done, 2026-09-04) → `TimingData`
+  (done, 2026-09-05 — row/measure math + beat<->time conversion via
+  the GAMESTATE/PREFSMAN-free `NoOffset` entry points) →
   `NoteData`/`NoteDataUtil` → `NotesLoader*` (tiny committed corpus).
 
 ### 2. Warnings on but unmeasured / unenforced — ratchet turning, 3 of 5 MSVC categories promoted
@@ -151,14 +153,20 @@ one subsystem + one check family per PR; record in
 - `_WIN32_WINNT 0x0601` → `0x0A00`, `_WIN32_IE 0x0400` → `0x0A00`,
   `#define __STDC__ 0` removed, Win98/ME comment dropped — 2026-09-03
   (`5565039bf7`). Clean rebuild; runtime not yet smoke-tested.
-**Remaining (low priority, warning-suppression territory — bundle with a
-warnings pass):** `_CRT_SECURE_NO_DEPRECATE` / `_SCL_SECURE_NO_DEPRECATE`
-(the latter is a no-op on VS2017+; the former is redundant with the
-CMake-level `_CRT_SECURE_NO_WARNINGS`), the stale VC6/VC2005 comment
-block (lines 9-36).
-Related: `src/archutils/Win32/DirectXErrorList.h` — 12 `case` labels
-(`0x8007xxxx`) that don't fit signed `HRESULT`; MSVC compiles it, clang
-rejects (C++11 narrowing). Rewrite the cases as hex literals / `HRESULT(...)`.
+**Done (2026-09-05, `a26c13e00c`):** dropped `_CRT_SECURE_NO_DEPRECATE`
+(redundant with the CMake-level `_CRT_SECURE_NO_WARNINGS`) and
+`_SCL_SECURE_NO_DEPRECATE` (no-op since VS2017 removed the checked-
+iterator feature it suppressed), plus the stale ~30-line VC6/VC2005
+comment block. Kept `_CRT_NONSTDC_NO_WARNINGS` (still functionally
+relevant — POSIX-name deprecation). `arch_setup.h` itself is now clean.
+**Remaining (speculative, no current failure to verify against):**
+`src/archutils/Win32/DirectXErrorList.h` — 12 `case` labels
+(`0x8007xxxx`) that don't fit signed `HRESULT`; MSVC compiles it fine
+(the only compiler actually used on Windows today), clang would
+reject it (C++11 narrowing) if clang-cl were ever adopted. Not touched
+— no reproducer to verify a fix against, and Windows isn't built with
+clang currently. Rewrite the cases as hex literals / `HRESULT(...)` if
+and when clang-cl support is actually pursued.
 
 ### 17. Pick a unit-test framework + write core characterization tests — scaffold DONE (ADR 0006 phase 1), phases 2-4 open
 Framework decided: **Catch2 v3** (amalgamated, vendored `extern/Catch2/`
@@ -172,9 +180,14 @@ CI jobs for Windows/macOS/Linux × `sm_tests`. All 8 CI jobs green; local
 Windows Release build + `--SelfTest` also verified (§4 gate). Fixed en
 route: `LoadingWindowGtk` OBJECT → STATIC (Linux-only link fix, see
 `log.md` 2026-09-04).
-**Remaining (ADR 0006 phases 2-4):** `RageMath` + `RageUtil`
-numeric/path helpers → `TimingData` (`WithinULP`) → `NoteData`/
-`NoteDataUtil` → a tiny committed simfile corpus for `NotesLoader*` via
+**Progress (ADR 0006 phases 2-4):** `RageMath` done (2026-09-04,
+`f98d7a489e`, wave/matrix/vector/bezier helpers). `TimingData` done
+(2026-09-05, `197ea46f02`) — row/measure math and beat<->time
+conversion via the `NoOffset` entry points (the offset-applying
+wrappers just add a `GAMESTATE`/`PREFSMAN` read on top, so this
+covers the real logic without needing a live engine). 134 assertions
+/ 28 cases total. **Remaining:** `NoteData`/`NoteDataUtil` → a tiny
+committed simfile corpus for `NotesLoader*` via
 `GENERATE(from_range(...))`. Salvage the intent of the old
 `test_timing_data` / `test_file_readers` / `test_misc` where still
 meaningful.
