@@ -462,3 +462,21 @@
   that plan rather than jumping ahead of it. 155 sites remain, all in
   files with 1-3 hits each (the long tail, no more "clear one file,
   get several" efficiency from here).
+
+* **Backlog item 2 — C4100 fourth batch, 198 of 314** (`26b7de158b`,
+  2026-09-05). The 13 files sitting at exactly 3 sites each (39 more
+  sites). Same convention throughout. Two spots needed the full body
+  read rather than trusting the grep-matched signature:
+  `NoteDataUtil.cpp`'s `LoadTransformedLights`/`CopyLeftToRight`/
+  `CopyRightToLeft` and `RageDisplay_OGL.cpp`'s
+  `GetTextureDiagnostics` all had their flagged params referenced only
+  inside `/* ... */` block comments — genuinely dead, not live usage.
+  `GameState.cpp::GetHumanPlayers` was the inverse surprise: it's `p`
+  that's unused, not `L` (`L` is passed on to
+  `LuaHelpers::CreateTableFromArray(vHP, L)`). Verified Release build
+  clean under `WITH_WERROR=ON` (zero C4100 in the 13 files, zero
+  warnings overall in the `sm_tests` rebuild), `--SelfTest` exit 0,
+  `sm_tests` 94 assertions / 19 cases pass. `src/CMakeLists.txt`
+  confirmed zero-diff before commit (the near-miss from the first
+  batch made this a standing check now). 116 sites remain, all in
+  files with 1-2 hits each.

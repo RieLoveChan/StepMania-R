@@ -79,11 +79,12 @@ to burn down, but each needs a real look (not a mechanical autofix).
 
 **C4100 in progress:** 314 unique sites, ~150 files, no concentration
 (max 11/file) — genuinely wide, not a "fix one file, done" case.
-**159 of 314 done** (`713e58a0f6` + `9844ab3c4b`, 2026-09-05): the 12
-highest-concentration files, then the 19 files at exactly 4 sites
-each. `/wd4100` stays in `src/CMakeLists.txt` until the remaining 155
-(long tail of 1–3-site files) are clear — do **not** promote early, a
-partial promotion breaks the `WITH_WERROR=ON` Windows CI job on every
+**198 of 314 done** (`713e58a0f6` + `9844ab3c4b` + `26b7de158b`,
+2026-09-05): the 12 highest-concentration files, then the 19 files at
+exactly 4 sites each, then 13 files at exactly 3 sites each. `/wd4100`
+stays in `src/CMakeLists.txt` until the remaining 116 (long tail of
+1–2-site files) are clear — do **not** promote early, a partial
+promotion breaks the `WITH_WERROR=ON` Windows CI job on every
 remaining site. Per-subsystem counts: TBD as passes run
 ([`playbooks/clang-tidy-subsystem-pass.md`](./playbooks/clang-tidy-subsystem-pass.md)).
 
