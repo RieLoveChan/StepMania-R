@@ -26,6 +26,13 @@ redistributable it goes under `Songs/`, not here.
 
 ## Derived simfile fixtures (when the real song is NOT redistributable)
 
+`dwi-fixture/` -- a 3-chart `.dwi` for `test_NotesLoaderDWI.cpp`,
+derived from a community simfile that isn't clearly redistributable. Only
+`#FILE` / `#TITLE` / `#ARTIST` are changed from the source (verified by
+diff); the note data, `#BPM`, `#GAP`, `#CHANGEBPM`, `#SAMPLESTART`,
+`#RANDSTART` and all three `#SINGLE` blocks are byte-for-byte. DWI has no
+keysounds, so there is nothing else to stub.
+
 `pms-fixture/` -- a 3-chart `.pms` (Pop'n Music, BMS family) set for
 `test_NotesLoaderBMS.cpp`. It is **derived** from a real song, not a copy
 of one: the real Pop'n Music charts + keysound audio are Konami's and
