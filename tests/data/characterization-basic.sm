@@ -1,0 +1,17 @@
+// Characterization corpus file for tests/test_NotesLoaderFull.cpp.
+// Song-level tags only -- no #NOTES block, because parsing #NOTES calls
+// GAMEMAN->StringToStepsType and GAMEMAN is not part of EngineTestEnv.
+// Hand-authored; keep the values in sync with the expectations in the
+// test. Do not "tidy" this file -- it exists to pin loader behaviour.
+#TITLE:Characterization Basic;
+#SUBTITLE:The Subtitle;
+#ARTIST:Test Artist;
+#TITLETRANSLIT:CharBasic;
+#GENRE:Test;
+#CREDIT:test-suite;
+#OFFSET:-0.123000;
+#SAMPLESTART:12.500;
+#SAMPLELENGTH:33.000;
+#SELECTABLE:YES;
+#BPMS:0.000=120.000,8.000=150.000;
+#STOPS:4.000=0.250;
