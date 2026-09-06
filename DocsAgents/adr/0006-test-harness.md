@@ -180,11 +180,17 @@ default OFF, ON in a dedicated CI job. Not built in a normal dev build.
    Configure-validated locally; maintainer build-verifies + merges.
 2. `RageMath` + `RageUtil` numeric/path helpers; a `tests/README` and a
    `playbooks/add-characterization-test.md`.
-3. `TimingData` conversions (`WithinULP`), `NoteData`/`NoteDataUtil`
-   transforms.
-4. Tiny committed simfile corpus (`tests/data/`) + `NotesLoader`
-   parse-regression via `GENERATE(from_range(...))`. Feeds the
-   `AGENTS.md` §5 invariant.
+3. **DONE** (2026-09-05) — `TimingData` conversions,
+   `NoteData`/`NoteDataUtil` transforms; see `baseline.md`.
+4. **`.sm`/`.ssc` DONE** (2026-09-06) — committed corpus at
+   `tests/data/corpus/` + `GENERATE(from_range(...))` parse-regression
+   in `tests/test_NotesLoaderCorpus.cpp`, via the `EngineTestEnv`
+   fixture below. Feeds the `AGENTS.md` §5 invariant for the canonical
+   read + write formats. **Still open:** `.sma` (SMLoader-family, needs
+   format-specific fixtures), and `.dwi`/`.ksf`/`.bms`/`.crs` — those
+   read `PREFSMAN` and only expose `LoadFromDir`, so they need
+   `PREFSMAN` added to `EngineTestEnv` + per-format directory fixtures
+   (backlog item 17).
 
 ## Phase 3-4 enabler: `tests/EngineTestEnv` (2026-09-06)
 
@@ -201,15 +207,25 @@ idempotently constructs, once per `sm_tests` process:
 | `LUA` (`LuaManager`) | `RageFileManager`'s ctor calls `LUA->Get()` | first |
 | `FILEMAN` (`RageFileManager`) | `RageFile` I/O; mounts `tests/data/` at `/testdata` | after `LUA` |
 | `LOG` (`RageLog`) | error branches call `LOG->UserLog`/`LOG->Warn` | after `FILEMAN` (its ctor opens a `RageFile`, which `ASSERT`s `FILEMAN`) |
+| `GAMEMAN` (`GameManager`) | `#STEPSTYPE` → `StepsType` resolution in every real load | after `LUA`; ctor is trivial (Lua registration only — the game/style/`StepsType` tables are file-scope static data) |
 
 A `CATCH_REGISTER_LISTENER` tears them down at `testRunEnded`. Tests that
 never call `Require()` are unaffected. Deliberately **not** provided:
-`PREFSMAN`, `GAMESTATE`, `GAMEMAN`, `THEME`, `SONGMAN`, renderer, audio —
-so a full `#NOTES` parse (needs `GAMEMAN->StringToStepsType`) is still
-out of scope; the `tests/data/` corpus is song-tags only for now.
+`PREFSMAN`, `GAMESTATE`, `THEME`, `SONGMAN`, renderer, audio. The DWI /
+KSF / BMS loaders read `PREFSMAN` (e.g. `DWILoader` checks
+`m_bQuirksMode`) and only expose `LoadFromDir`, so they stay out of
+scope; `.sm` / `.ssc` / `.sma` `LoadFromSimfile` are in.
 Paths reach the fixture through a `file(GENERATE)`d `EngineTestEnvPaths.h`
 (raw string literals, so Windows backslashes need no escaping).
 
-First consumers: `tests/test_NotesLoaderFull.cpp` (the `ParseBPMs`/
-`ParseStops` log-and-skip branches; `SMLoader`/`SSCLoader::LoadFromSimfile`
-over a committed `.sm`/`.ssc`).
+Consumers:
+- `tests/test_NotesLoaderFull.cpp` — the `SMLoader::ParseBPMs`/
+  `ParseStops` log-and-skip branches; first `LoadFromSimfile` over a
+  committed song-tags-only `.sm`/`.ssc`.
+- `tests/test_NotesLoaderCorpus.cpp` — **phase 4 proper**: a
+  `GENERATE(from_range(...))` parse-regression over
+  `tests/data/corpus/` (`.sm` + `.ssc`, charts included), pinning
+  title/subtitle/artist/offset, song BPM, and per-chart
+  `StepsType`/difficulty/meter/track-count/tap-count, plus SSC split
+  (chart-level) timing. This is the `AGENTS.md` §5 invariant in test
+  form.

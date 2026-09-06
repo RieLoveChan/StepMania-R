@@ -18,18 +18,22 @@ changes an observable result.
   first, then refactor.
 - When a maintainer review turns up a behaviour worth freezing.
 
-Not for: code that needs a live `GAMESTATE` / `GAMEMAN` / `THEME` /
-renderer / audio device (that is smoke-test territory, `--SelfTest`).
+Not for: code that needs a live `GAMESTATE` / `PREFSMAN` / `THEME` /
+`SONGMAN` / renderer / audio device (that is smoke-test territory,
+`--SelfTest`).
 Not for asserting what the code *should* do — a characterization test
 records what it *does*; fix bugs in a separate, labelled change with the
 maintainer's sign-off (`AGENTS.md` §5 for anything on the simfile path).
 
 If the code under test only needs to **log**, **read a file**, or
-**touch Lua** — but not the game state — call `EngineTestEnv::Require()`
-(from `tests/EngineTestEnv.h`) at the top of the `TEST_CASE`. It brings
-up `LUA` + `FILEMAN` + `LOG` once per run and mounts `tests/data/` at
-`/testdata` (use `EngineTestEnv::TestDataPath("foo.sm")`). Idempotent;
-tests that don't call it pay nothing. See ADR 0006 "Phase 3-4 enabler".
+**touch Lua**, or **parse a simfile** — but not the game state — call
+`EngineTestEnv::Require()` (from `tests/EngineTestEnv.h`) at the top of
+the `TEST_CASE`. It brings up `LUA` + `FILEMAN` + `LOG` + `GAMEMAN` once
+per run and mounts `tests/data/` at `/testdata` (use
+`EngineTestEnv::TestDataPath("foo.sm")`). Idempotent; tests that don't
+call it pay nothing. `.sm`/`.ssc`/`.sma` `LoadFromSimfile` work under
+it; the `.dwi`/`.ksf`/`.bms` loaders need `PREFSMAN` and are not covered
+yet. See ADR 0006 "Phase 3-4 enabler" + `test_NotesLoaderCorpus.cpp`.
 
 # Files always touched
 
@@ -94,5 +98,6 @@ file goes under `tests/data/` and is read via
 - `2026-09-03` — created alongside ADR
   [0006](../adr/0006-test-harness.md); first file `test_RageUtil.cpp`.
 - `2026-09-06` — added the `EngineTestEnv::Require()` path for tests that
-  need `LUA`/`FILEMAN`/`LOG` (but not the game state) + the `tests/data/`
-  corpus convention.
+  need `LUA`/`FILEMAN`/`LOG`/`GAMEMAN` (but not the game state) + the
+  `tests/data/` corpus convention; phase-4 `.sm`/`.ssc` parse-regression
+  (`test_NotesLoaderCorpus.cpp`).
