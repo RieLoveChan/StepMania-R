@@ -246,14 +246,29 @@ Per-subsystem breakdown as passes run:
     trip real "Unmatched 3" hold-tail warnings from
     `NoteDataUtil::LoadFromSMNoteDataString` — tolerated, counts pinned
     as-is. 236 assertions / 2 visible cases (+1 hidden `[.dump]`).
-    Suite total: **651 assertions / 81 cases** (up from 311/72).
+  - `tests/test_NotesLoaderBMS.cpp` + `tests/data/pms-fixture/`
+    (2026-09-06) — **ADR 0006 phase 4 for `.pms`/BMS-family**, via
+    `BMSLoader::GetApplicableFiles` + `LoadFromDir`. The fixture is
+    **derived, not redistributed**: a real 3-chart `.pms` set
+    (5-button / battle / normal) with note data, timing, `#BPM`/`#BPMxx`
+    and `#WAVxx` channel structure kept byte-for-byte, but title/artist/
+    genre and `#WAV` filenames replaced with placeholders and the
+    keysound audio replaced with 44-byte silent stub WAVs (the parser
+    only `IsAFile`s them). Pins title/artist, BPM, `m_vsKeysoundFile`
+    size (54, from 62 `#WAV` defs — 8 unreferenced), and per chart (3:
+    `pnm-five`, `bm-double7`, `pnm-nine`) type/difficulty/meter/track
+    count/tap count. New StepsType coverage: `pnm-five`, `pnm-nine`,
+    `bm-double7`. 25 assertions / 1 visible case (+1 hidden `[bmsdump]`).
+    Needs `PREFSMAN` in `EngineTestEnv` (`DWILoader`/BMS read prefs).
+    Rationale in `tests/data/README.md`.
+    Suite total: **676 assertions / 82 cases** (up from 311/72).
   **Locally verified on Windows** (VS 2022 BuildTools cmake 3.31 — the
   standalone cmake 4.3 install on this box hits a compiler-ID detection
   bug when invoked through the VS generator's regen step, use the
   VS-bundled cmake for this repo):
   - `WITH_TESTS=ON` Debug → `sm_engine` OBJECT lib + `Catch2` +
     `sm_tests.exe` all build clean under `WITH_WERROR=ON`; `sm_tests.exe`
-    → **651 assertions / 81 cases pass**; `ctest` 100%. (First-landed at
+    → **676 assertions / 82 cases pass**; `ctest` 100%. (First-landed at
     94/19.)
   - `WITH_TESTS=OFF` Release → `StepMania-R.exe` builds clean (the
     OBJECT-library split is transparent when off) + `--SelfTest` exits 0.
