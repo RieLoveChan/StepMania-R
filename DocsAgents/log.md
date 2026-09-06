@@ -878,3 +878,40 @@
   fixture), and `.dwi`/`.ksf`/`.bms`/`.crs` — those read `PREFSMAN` and
   only expose `LoadFromDir`, so they need `PREFSMAN` in `EngineTestEnv`
   + per-format directory fixtures.
+
+* **Test harness — phase 4 pivoted to the real SM5 sample songs; toy
+  simfiles removed.** Maintainer call: for simfiles the regression must
+  use real files, not hand-authored toys (a toy only proves the loader
+  survives input its author already understood, not the `AGENTS.md` §5
+  invariant). Deleted `tests/data/corpus/corpus-{a,b,c}` and
+  `tests/data/characterization-basic.{sm,ssc}`; added
+  `tests/data/README.md` stating the policy.
+  `EngineTestEnv` now also mounts the repo's `Songs/` tree at `/Songs`
+  (`SM_SONGS_DIR` in the generated header) + `EngineTestEnv::SongPath()`.
+  `tests/test_NotesLoaderCorpus.cpp` rewritten: a
+  `GENERATE(from_range(...))` over the committed SM5 sample songs —
+  `Songs/StepMania 5/Goin' Under/` (`.sm` **and** `.ssc`), `MechaTribe
+  Assault/` (`.ssc`), `Springtime/` (`.ssc`) — via `LoadFromSimfile`.
+  Per song: main/sub-title, artist, offset, song BPM at beat 0. Per
+  chart (file order — `Song::AddSteps` preserves it), 39 charts across
+  the 4 files: `m_StepsTypeStr`, `m_StepsType`
+  (== `StringToStepsType(str)`), difficulty, meter,
+  `NoteData::GetNumTracks`, `GetNumTapNotesNoTiming`. Values captured
+  from a hidden `[.dump]` `TEST_CASE` kept in the same file (run
+  `sm_tests "[dump]"` to re-baseline). Second case: Goin' Under `.sm`
+  vs `.ssc` parse to identical charts + tap counts (cross-format §5
+  equivalence — verified: 642/472/352/220/95/649/472/350/217 both
+  ways). Coverage now spans `dance-single`/`-double`/`-solo`/`-couple`/
+  `-threepanel` and `pump-single`/`-halfdouble`.
+  Observed real behaviour, pinned as-is: Springtime's charts emit
+  "Unmatched 3" hold-tail warnings from
+  `NoteDataUtil::LoadFromSMNoteDataString` (tolerated by the loader).
+  `test_NotesLoaderFull.cpp` trimmed to just the `LOG`-dependent
+  error branches (`ParseBPMs`/`ParseStops` + missing-file), since its
+  song-tag pins are now subsumed by the real-file corpus.
+  Suite **402 → 638 assertions** (78 cases, was 80 — two toy-file
+  cases dropped). Verified Windows Debug, clean under `WITH_WERROR=ON`;
+  `ctest` 100%; `src/CMakeLists.txt` untouched.
+  **Still open:** no committed sample exists for `.sma`/`.dwi`/`.ksf`/
+  `.bms`/`.crs` — each needs a real song added under `Songs/` first,
+  and the dir-only loaders still need `PREFSMAN` in `EngineTestEnv`.

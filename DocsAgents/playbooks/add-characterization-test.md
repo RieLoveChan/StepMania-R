@@ -25,15 +25,23 @@ Not for asserting what the code *should* do — a characterization test
 records what it *does*; fix bugs in a separate, labelled change with the
 maintainer's sign-off (`AGENTS.md` §5 for anything on the simfile path).
 
-If the code under test only needs to **log**, **read a file**, or
+If the code under test only needs to **log**, **read a file**,
 **touch Lua**, or **parse a simfile** — but not the game state — call
 `EngineTestEnv::Require()` (from `tests/EngineTestEnv.h`) at the top of
 the `TEST_CASE`. It brings up `LUA` + `FILEMAN` + `LOG` + `GAMEMAN` once
 per run and mounts `tests/data/` at `/testdata` (use
-`EngineTestEnv::TestDataPath("foo.sm")`). Idempotent; tests that don't
-call it pay nothing. `.sm`/`.ssc`/`.sma` `LoadFromSimfile` work under
-it; the `.dwi`/`.ksf`/`.bms` loaders need `PREFSMAN` and are not covered
-yet. See ADR 0006 "Phase 3-4 enabler" + `test_NotesLoaderCorpus.cpp`.
+`EngineTestEnv::TestDataPath(...)`, for non-simfile fixtures) and the
+repo's `Songs/` tree at `/Songs` (use `EngineTestEnv::SongPath(...)`).
+Idempotent; tests that don't call it pay nothing. `.sm`/`.ssc`/`.sma`
+`LoadFromSimfile` work under it; the `.dwi`/`.ksf`/`.bms` loaders need
+`PREFSMAN` and are not covered yet.
+
+**Simfiles: use real ones.** A parse test loads a committed sample song
+from `Songs/` via `SongPath(...)`, never a hand-authored toy — a toy
+only proves the loader survives input its author understood, not the
+`AGENTS.md` §5 invariant. See `tests/data/README.md`, ADR 0006 phase 4,
+and `test_NotesLoaderCorpus.cpp` (note the hidden `[.dump]` case for
+capturing / re-baselining characterization values).
 
 # Files always touched
 
@@ -43,10 +51,11 @@ yet. See ADR 0006 "Phase 3-4 enabler" + `test_NotesLoaderCorpus.cpp`.
 | `tests/CMakeLists.txt` | add the new `.cpp` to `SM_TEST_SRC` |
 | `DocsAgents/baseline.md` | bump the "Tests" note if coverage meaningfully grows |
 
-If the case needs `LUA`/`FILEMAN`/`LOG`: `#include "EngineTestEnv.h"` and
-call `EngineTestEnv::Require()` first (see below). A committed fixture
-file goes under `tests/data/` and is read via
-`EngineTestEnv::TestDataPath(...)`.
+If the case needs `LUA`/`FILEMAN`/`LOG`/`GAMEMAN`: `#include
+"EngineTestEnv.h"` and call `EngineTestEnv::Require()` first (see
+above). Simfile inputs come from a real song under `Songs/` via
+`SongPath(...)`; other fixtures go under `tests/data/` via
+`TestDataPath(...)`.
 
 # Steps
 
@@ -101,3 +110,6 @@ file goes under `tests/data/` and is read via
   need `LUA`/`FILEMAN`/`LOG`/`GAMEMAN` (but not the game state) + the
   `tests/data/` corpus convention; phase-4 `.sm`/`.ssc` parse-regression
   (`test_NotesLoaderCorpus.cpp`).
+- `2026-09-06` — phase-4 corpus repointed to the real SM5 sample songs
+  under `Songs/` (`SongPath`); toy simfiles removed
+  (`tests/data/README.md`).

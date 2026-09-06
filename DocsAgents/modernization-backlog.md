@@ -250,22 +250,29 @@ Catch2 listener tears it down. Retires the "`LOG` is null" scope-out
 above.
 
 **Phase 4 for `.sm`/`.ssc` DONE (2026-09-06,
-`tests/test_NotesLoaderCorpus.cpp` + `tests/data/corpus/`).** A
-`GENERATE(from_range(...))` parse-regression over the committed corpus:
-metadata (main/sub-title, artist, offset), song BPM, and per chart
-`StepsType`/`StepsTypeStr`/difficulty/meter/`NoteData` track count/
-`GetNumTapNotesNoTiming` — plus SSC split (chart-level) timing. `#NOTES`
-parsing works now that `GAMEMAN` is in the fixture. Suite **402
-assertions / 80 cases** (was 311/72). See `log.md` 2026-09-06 and ADR
-0006 phases 3-4 + "Phase 3-4 enabler".
+`tests/test_NotesLoaderCorpus.cpp`).** A `GENERATE(from_range(...))`
+parse-regression over the **real committed SM5 sample songs**
+(`Songs/StepMania 5/{Goin' Under (.sm + .ssc), MechaTribe Assault,
+Springtime}`) — **no toy simfiles** (maintainer call 2026-09-06: for
+simfiles always use the real ones; a toy only proves the loader
+survives input its author understood, not the §5 invariant — see
+`tests/data/README.md`). Pins per-song metadata + BPM and per chart
+(file order, 39 charts) `StepsType`/`StepsTypeStr`/difficulty/meter/
+track count/`GetNumTapNotesNoTiming`, characterization values captured
+from a hidden `[.dump]` case. Plus a Goin' Under `.sm`-vs-`.ssc`
+cross-format equivalence case. `#NOTES` parsing works now that
+`GAMEMAN` is in the fixture; `EngineTestEnv` also mounts the repo
+`Songs/` at `/Songs`. Suite **638 assertions / 78 cases** (was
+311/72). See `log.md` 2026-09-06 and ADR 0006 phases 3-4.
 
 **Still open:**
-- `.sma` corpus (SMLoader-family, `LoadFromSimfile` — just needs a
-  format-correct fixture file).
-- `.dwi` / `.ksf` / `.bms` / `.crs`: these read `PREFSMAN`
-  (`DWILoader` → `m_bQuirksMode`, courses → `m_bFastLoad` etc.) and
-  only expose `LoadFromDir`. Needs `PREFSMAN` added to `EngineTestEnv`
-  + one committed directory fixture per format.
+- `.sma` / `.dwi` / `.ksf` / `.bms` / `.crs`: **no committed sample
+  song exists** for any of them (a real `.dwi`, "Nozex", was floated
+  but not committed). Each needs one small real song added under
+  `Songs/` first. On top of that, `.dwi`/`.ksf`/`.bms` read `PREFSMAN`
+  (`DWILoader` → `m_bQuirksMode`) and only expose `LoadFromDir`, and
+  `.crs` courses reference songs (likely `SONGMAN`) — so `EngineTestEnv`
+  needs `PREFSMAN` (and maybe more) before those can be wired.
 - Salvage `src/tests/test_file_readers.cpp` / `test_audio_readers.cpp`
   (RageFile / audio-reader round-trips) — the `FILEMAN` half is
   available; still needs the round-trip fixtures + cases.
