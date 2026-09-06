@@ -18,11 +18,18 @@ changes an observable result.
   first, then refactor.
 - When a maintainer review turns up a behaviour worth freezing.
 
-Not for: code that needs a live `GAMESTATE` / renderer / audio device
-(that is smoke-test territory, `--SelfTest`). Not for asserting what the
-code *should* do — a characterization test records what it *does*; fix
-bugs in a separate, labelled change with the maintainer's sign-off
-(`AGENTS.md` §5 for anything on the simfile path).
+Not for: code that needs a live `GAMESTATE` / `GAMEMAN` / `THEME` /
+renderer / audio device (that is smoke-test territory, `--SelfTest`).
+Not for asserting what the code *should* do — a characterization test
+records what it *does*; fix bugs in a separate, labelled change with the
+maintainer's sign-off (`AGENTS.md` §5 for anything on the simfile path).
+
+If the code under test only needs to **log**, **read a file**, or
+**touch Lua** — but not the game state — call `EngineTestEnv::Require()`
+(from `tests/EngineTestEnv.h`) at the top of the `TEST_CASE`. It brings
+up `LUA` + `FILEMAN` + `LOG` once per run and mounts `tests/data/` at
+`/testdata` (use `EngineTestEnv::TestDataPath("foo.sm")`). Idempotent;
+tests that don't call it pay nothing. See ADR 0006 "Phase 3-4 enabler".
 
 # Files always touched
 
@@ -31,6 +38,11 @@ bugs in a separate, labelled change with the maintainer's sign-off
 | `tests/test_<Area>.cpp` | new `TEST_CASE`s; new file → also add to `tests/CMakeLists.txt` |
 | `tests/CMakeLists.txt` | add the new `.cpp` to `SM_TEST_SRC` |
 | `DocsAgents/baseline.md` | bump the "Tests" note if coverage meaningfully grows |
+
+If the case needs `LUA`/`FILEMAN`/`LOG`: `#include "EngineTestEnv.h"` and
+call `EngineTestEnv::Require()` first (see below). A committed fixture
+file goes under `tests/data/` and is read via
+`EngineTestEnv::TestDataPath(...)`.
 
 # Steps
 
@@ -81,3 +93,6 @@ bugs in a separate, labelled change with the maintainer's sign-off
 
 - `2026-09-03` — created alongside ADR
   [0006](../adr/0006-test-harness.md); first file `test_RageUtil.cpp`.
+- `2026-09-06` — added the `EngineTestEnv::Require()` path for tests that
+  need `LUA`/`FILEMAN`/`LOG` (but not the game state) + the `tests/data/`
+  corpus convention.

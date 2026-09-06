@@ -186,7 +186,7 @@ reject it (C++11 narrowing) if clang-cl were ever adopted. Not touched
 clang currently. Rewrite the cases as hex literals / `HRESULT(...)` if
 and when clang-cl support is actually pursued.
 
-### 17. Pick a unit-test framework + write core characterization tests — phase 1 (scaffold) + phase 2 (pure-ish core coverage) DONE, phases 3-4 open
+### 17. Pick a unit-test framework + write core characterization tests — phases 1-2 DONE; phase 3-4 bootstrap fixture DONE (2026-09-06), corpus/reader-salvage still open
 Framework decided: **Catch2 v3** (amalgamated, vendored `extern/Catch2/`
 @ v3.16.0) — ADR [0006](./adr/0006-test-harness.md). Build approach:
 `src/` → OBJECT library `sm_engine`, shared by the exe and a new
@@ -239,16 +239,26 @@ song offset not segment), `ProcessDelays`/`ProcessTimeSignatures`
 `LoadFromSimfile` needs live `FILEMAN`+`LUA`+more → `--SelfTest` smoke
 territory per the playbook; the `SMLoader` helpers' error/edge
 branches (`"a=b=c"`, zero BPM, zero-length stop, negative beat) all
-call `LOG->UserLog()` and `LOG` is null in the harness. A committed
-simfile corpus + `GENERATE(from_range(...))` over real files stays
-open as a future add — it needs the harness to grow a shared
-engine-bootstrap fixture (`LOG`/`FILEMAN`/`LUA`) first; that fixture
-is the actual blocker, not the corpus. 311 assertions / 72 cases
-total. **ADR 0006 phase 2 (pure-ish core characterization) is
-complete** — phases 3-4 (repeat-collapsing coverage, per-subsystem
-call-site audits) are separate follow-ups, and the old
-`test_file_readers` / `test_audio_readers` intent (RageFile /
-audio-reader round-trips) still awaits that same bootstrap fixture.
+call `LOG->UserLog()` and `LOG` is null in the harness. 311 assertions
+/ 72 cases total. **ADR 0006 phase 2 (pure-ish core characterization)
+is complete.**
+
+**Bootstrap fixture DONE (2026-09-06, `tests/EngineTestEnv.{h,cpp}` +
+`tests/test_NotesLoaderFull.cpp`).** `EngineTestEnv::Require()` news up
+`LUA` → `FILEMAN` → `LOG` once per `sm_tests` run and mounts
+`tests/data/` at `/testdata`; a Catch2 listener tears it down. This
+retires the "`LOG` is null" scope-out above: the `SMLoader::ParseBPMs`/
+`ParseStops` error branches are now characterized, plus a first real
+`SMLoader`/`SSCLoader::LoadFromSimfile` over a committed `.sm`/`.ssc`
+(song-tags only — `#NOTES` still needs `GAMEMAN`). Suite now **352
+assertions / 78 cases**. See `log.md` 2026-09-06 and ADR 0006
+"Phase 3-4 enabler".
+**Still open:** grow `tests/data/` into a real corpus +
+`GENERATE(from_range(...))` parse-regression over it (phase 4 proper);
+extend the fixture / corpus so `#NOTES` parsing is reachable (needs
+`GAMEMAN`, or a stub); salvage `src/tests/test_file_readers.cpp` /
+`test_audio_readers.cpp` (RageFile / audio-reader round-trips — the
+`FILEMAN` half is now available).
 
 ### 16. Pre-floor `#if` guards across `src/arch/` and `src/archutils/` — Windows runtime-version checks DONE
 Now that ADR 0003 sets Windows 11 / current-macOS / current-Linux floors,

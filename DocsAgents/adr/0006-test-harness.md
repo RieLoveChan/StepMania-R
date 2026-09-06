@@ -185,3 +185,31 @@ default OFF, ON in a dedicated CI job. Not built in a normal dev build.
 4. Tiny committed simfile corpus (`tests/data/`) + `NotesLoader`
    parse-regression via `GENERATE(from_range(...))`. Feeds the
    `AGENTS.md` §5 invariant.
+
+## Phase 3-4 enabler: `tests/EngineTestEnv` (2026-09-06)
+
+Phases 3-4 and the salvage of `src/tests/test_file_readers.cpp` /
+`test_audio_readers.cpp` were all blocked on the same thing: a shared
+way to bring up the engine singletons a test needs to *log*, *read a
+file*, or *touch Lua*, without booting the whole engine.
+
+`tests/EngineTestEnv.{h,cpp}` is that fixture. `EngineTestEnv::Require()`
+idempotently constructs, once per `sm_tests` process:
+
+| Global | Why | Order constraint |
+|---|---|---|
+| `LUA` (`LuaManager`) | `RageFileManager`'s ctor calls `LUA->Get()` | first |
+| `FILEMAN` (`RageFileManager`) | `RageFile` I/O; mounts `tests/data/` at `/testdata` | after `LUA` |
+| `LOG` (`RageLog`) | error branches call `LOG->UserLog`/`LOG->Warn` | after `FILEMAN` (its ctor opens a `RageFile`, which `ASSERT`s `FILEMAN`) |
+
+A `CATCH_REGISTER_LISTENER` tears them down at `testRunEnded`. Tests that
+never call `Require()` are unaffected. Deliberately **not** provided:
+`PREFSMAN`, `GAMESTATE`, `GAMEMAN`, `THEME`, `SONGMAN`, renderer, audio —
+so a full `#NOTES` parse (needs `GAMEMAN->StringToStepsType`) is still
+out of scope; the `tests/data/` corpus is song-tags only for now.
+Paths reach the fixture through a `file(GENERATE)`d `EngineTestEnvPaths.h`
+(raw string literals, so Windows backslashes need no escaping).
+
+First consumers: `tests/test_NotesLoaderFull.cpp` (the `ParseBPMs`/
+`ParseStops` log-and-skip branches; `SMLoader`/`SSCLoader::LoadFromSimfile`
+over a committed `.sm`/`.ssc`).
