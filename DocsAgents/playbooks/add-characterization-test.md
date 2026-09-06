@@ -61,11 +61,14 @@ diffing loader output against the untouched source once (a throwaway
 | `tests/CMakeLists.txt` | add the new `.cpp` to `SM_TEST_SRC` |
 | `DocsAgents/baseline.md` | bump the "Tests" note if coverage meaningfully grows |
 
-If the case needs `LUA`/`FILEMAN`/`LOG`/`GAMEMAN`: `#include
+If the case needs `LUA`/`FILEMAN`/`LOG`/`PREFSMAN`/`GAMEMAN`: `#include
 "EngineTestEnv.h"` and call `EngineTestEnv::Require()` first (see
 above). Simfile inputs come from a real song under `Songs/` via
 `SongPath(...)`; other fixtures go under `tests/data/` via
-`TestDataPath(...)`.
+`TestDataPath(...)`. For a read/write round-trip (e.g. `RageFile`),
+write to `/@mem/...` — `FILEMAN`'s in-memory `mem` driver is mounted
+there and is writable, so no fixture file is needed at all (see
+`test_RageFile.cpp`).
 
 # Steps
 
@@ -130,3 +133,6 @@ above). Simfile inputs come from a real song under `Songs/` via
   fixtures (`tests/data/{pms,dwi}-fixture/`,
   `test_NotesLoader{BMS,DWI}.cpp`) — the copyright-safe pattern for
   non-redistributable source songs.
+- `2026-09-06` — `test_RageFile.cpp`: read/write round-trips via the
+  writable `/@mem` mount, no fixture files (salvages
+  `src/tests/test_file_readers.cpp`).

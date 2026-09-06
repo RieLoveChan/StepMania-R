@@ -257,3 +257,7 @@ Consumers:
   derived `.dwi` fixture (`tests/data/dwi-fixture/`): 3 `dance-single`
   charts, `#GAP`/`#BPM`/`#CHANGEBPM`/`#SAMPLESTART`, the `" ("`
   main/sub title split. Hidden `[dwidump]` case.
+- `tests/test_RageFile.cpp` — `RageFile` read/write/seek/tell/`GetLine`/
+  `AtEOF` through `FILEMAN`'s writable `/@mem` mount (no committed
+  fixtures). Salvages `src/tests/test_file_readers.cpp`; pins the
+  stdio-like EOF semantics.

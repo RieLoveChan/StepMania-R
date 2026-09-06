@@ -304,9 +304,14 @@ against the source. Suite **705 / 83**.
   derived-fixture approach (`tests/data/`). `.sma` slots into the
   existing `kCorpus`; `.ksf` gets a `LoadFromDir` case. `.crs` courses
   reference songs so likely also need `SONGMAN`.
-- Salvage `src/tests/test_file_readers.cpp` / `test_audio_readers.cpp`
-  (RageFile / audio-reader round-trips) — the `FILEMAN` half is
-  available; still needs the round-trip fixtures + cases.
+- `src/tests/test_file_readers.cpp` **DONE (2026-09-06)** →
+  `tests/test_RageFile.cpp`: `RageFile` open/read/write/seek/tell/
+  `GetLine`/`AtEOF` through `FILEMAN`'s `/@mem` writable mount, so each
+  test writes its own file — no committed fixtures. Pinned the
+  stdio-like `AtEOF` semantics (`m_bEOF` only trips on a 0-byte read),
+  `Seek`-past-end clamping, `GetLine` behaviour. 67 assertions / 8
+  cases. `test_audio_readers.cpp` still open — needs committed audio
+  fixtures + real decode.
 
 ### 16. Pre-floor `#if` guards across `src/arch/` and `src/archutils/` — Windows runtime-version checks DONE
 Now that ADR 0003 sets Windows 11 / current-macOS / current-Linux floors,
