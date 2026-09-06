@@ -10,6 +10,7 @@ set(SM_TEST_SRC
     EngineTestEnv.h
     EngineTestEnv.cpp
     test_EngineTestEnv.cpp
+    test_RageFile.cpp
     test_RageUtil.cpp
     test_RageMath.cpp
     test_TimingData.cpp
