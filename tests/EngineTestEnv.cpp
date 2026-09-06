@@ -9,10 +9,10 @@
 
 #include "catch_amalgamated.hpp"
 
-// SM_TESTS_ARGV0 (absolute path to the sm_tests binary) and
-// SM_TEST_DATA_DIR (absolute path to tests/data) come from this generated
-// header -- see tests/CMakeLists.txt. It uses raw string literals so
-// Windows backslashes in the paths are harmless.
+// SM_TESTS_ARGV0 (sm_tests binary), SM_TEST_DATA_DIR (tests/data) and
+// SM_SONGS_DIR (the repo's Songs/ tree) come from this generated header
+// -- see tests/CMakeLists.txt. It uses raw string literals so Windows
+// backslashes in the paths are harmless.
 #include "EngineTestEnvPaths.h"
 
 #ifndef SM_TESTS_ARGV0
@@ -20,6 +20,9 @@
 #endif
 #ifndef SM_TEST_DATA_DIR
 #error "EngineTestEnvPaths.h did not define SM_TEST_DATA_DIR"
+#endif
+#ifndef SM_SONGS_DIR
+#error "EngineTestEnvPaths.h did not define SM_SONGS_DIR"
 #endif
 
 namespace
@@ -70,8 +73,12 @@ namespace
 		if( GAMEMAN == nullptr )
 			GAMEMAN = new GameManager;
 
-		// The committed corpus, read-only, at a fixed vpath.
+		// tests/data/ -> /testdata (non-simfile fixtures); the repo's
+		// Songs/ tree -> /Songs (the real committed simfiles the
+		// parse-regression loads). Both read-only "dir" mounts; lazy, so
+		// mounting Songs/ costs nothing until a path under it is read.
 		FILEMAN->Mount( "dir", SM_TEST_DATA_DIR, "/testdata" );
+		FILEMAN->Mount( "dir", SM_SONGS_DIR, "/Songs" );
 
 		g_bUp = true;
 	}
@@ -107,5 +114,10 @@ namespace EngineTestEnv
 	RString TestDataPath( const RString &sRelative )
 	{
 		return RString( "/testdata/" ) + sRelative;
+	}
+
+	RString SongPath( const RString &sRelative )
+	{
+		return RString( "/Songs/" ) + sRelative;
 	}
 }

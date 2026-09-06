@@ -22,9 +22,11 @@ source_group("" FILES ${SM_TEST_SRC})
 
 add_executable(sm_tests ${SM_TEST_SRC})
 
-# EngineTestEnv needs the absolute path of its own binary (for the
-# RageFileManager ctor's chdir on non-Windows) and of the committed
-# tests/data/ corpus. Emit them into a generated header as raw string
+# EngineTestEnv needs three absolute paths: its own binary (for the
+# RageFileManager ctor's chdir on non-Windows), the tests/data/ tree
+# (non-simfile fixtures), and the repo's Songs/ tree (the real committed
+# simfiles the parse-regression loads -- toy simfiles are not used, see
+# tests/data/README.md). Emit them into a generated header as raw string
 # literals so Windows backslashes need no escaping.
 file(GENERATE
      OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/EngineTestEnvPaths.h"
@@ -32,6 +34,7 @@ file(GENERATE
 #pragma once
 #define SM_TESTS_ARGV0 R\"($<TARGET_FILE:sm_tests>)\"
 #define SM_TEST_DATA_DIR R\"(${CMAKE_CURRENT_SOURCE_DIR}/data)\"
+#define SM_SONGS_DIR R\"(${CMAKE_SOURCE_DIR}/Songs)\"
 ")
 target_include_directories(sm_tests PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
 
