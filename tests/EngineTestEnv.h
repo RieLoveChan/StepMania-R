@@ -45,10 +45,16 @@ namespace EngineTestEnv
 	void Require();
 
 	// Turn a path relative to tests/data/ into the vpath it is mounted
-	// at -- TestDataPath("foo.sm") == "/testdata/foo.sm". Calling this
+	// at -- TestDataPath("foo.txt") == "/testdata/foo.txt". Calling this
 	// does not itself require the environment to be up, but reading the
 	// path obviously does.
 	RString TestDataPath( const RString &sRelative );
+
+	// Same, for the repo's Songs/ tree -- SongPath("StepMania 5/Springtime/Springtime.ssc")
+	// == "/Songs/StepMania 5/Springtime/Springtime.ssc". The parse-
+	// regression loads the real committed simfiles from here; hand-authored
+	// toy simfiles are deliberately not used (tests/data/README.md).
+	RString SongPath( const RString &sRelative );
 }
 
 #endif
