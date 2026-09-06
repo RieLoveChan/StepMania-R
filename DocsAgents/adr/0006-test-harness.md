@@ -189,11 +189,19 @@ default OFF, ON in a dedicated CI job. Not built in a normal dev build.
    proves the loader survives input its author understood, not the
    §5 invariant (`tests/data/README.md`). Feeds `AGENTS.md` §5 for the
    canonical read + write formats, including a cross-format equivalence
-   check (Goin' Under `.sm` vs `.ssc`). **Still open:** `.sma` /
-   `.dwi`/`.ksf`/`.bms` / `.crs` — `EngineTestEnv` now has `PREFSMAN`
-   (2026-09-06), so `LoadFromDir` is reachable; each format just needs
-   a committed sample song under `Songs/` (none exists yet). `.crs`
-   likely also needs `SONGMAN`. Backlog item 17.
+   check (Goin' Under `.sm` vs `.ssc`).
+   **`.pms` / BMS family DONE** (2026-09-06, `test_NotesLoaderBMS.cpp`)
+   via `BMSLoader::LoadFromDir` — the fixture (`tests/data/pms-fixture/`)
+   is **derived, not redistributed**: real 3-chart `.pms` structure
+   (note data, timing, `#BPM`/`#WAVxx` channels) byte-for-byte, with
+   title/artist/genre + `#WAV` filenames scrubbed and keysound audio
+   swapped for 44-byte silent stubs (`tests/data/README.md`). Covers
+   `pnm-five` / `pnm-nine` / `bm-double7`.
+   **Still open:** `.sma` / `.dwi` / `.ksf` / `.crs` — `EngineTestEnv`
+   has `PREFSMAN` so `LoadFromDir`/`LoadFromSimfile` are reachable;
+   each needs a fixture (real song if redistributable, else the same
+   derived approach). `.crs` likely also needs `SONGMAN`. Backlog
+   item 17.
 
 ## Phase 3-4 enabler: `tests/EngineTestEnv` (2026-09-06)
 
@@ -237,3 +245,7 @@ Consumers:
   `.sm`-vs-`.ssc` equivalence case. Characterization values captured
   from a hidden `[.dump]` case in the same file (`sm_tests "[dump]"`
   to re-baseline). This is the `AGENTS.md` §5 invariant in test form.
+- `tests/test_NotesLoaderBMS.cpp` — `BMSLoader::LoadFromDir` over the
+  derived `.pms` fixture (`tests/data/pms-fixture/`): 3 charts
+  (`pnm-five` / `bm-double7` / `pnm-nine`), keysound-file count,
+  metadata, BPM. Hidden `[bmsdump]` case to re-baseline.

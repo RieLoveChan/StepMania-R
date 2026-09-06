@@ -186,7 +186,7 @@ reject it (C++11 narrowing) if clang-cl were ever adopted. Not touched
 clang currently. Rewrite the cases as hex literals / `HRESULT(...)` if
 and when clang-cl support is actually pursued.
 
-### 17. Pick a unit-test framework + write core characterization tests — phases 1-3 DONE; phase 4 DONE for .sm/.ssc (2026-09-06); .sma/.dwi/.ksf/.bms/.crs + reader-salvage still open
+### 17. Pick a unit-test framework + write core characterization tests — phases 1-3 DONE; phase 4 DONE for .sm/.ssc + .pms/BMS (2026-09-06); .sma/.dwi/.ksf/.crs + reader-salvage still open
 Framework decided: **Catch2 v3** (amalgamated, vendored `extern/Catch2/`
 @ v3.16.0) — ADR [0006](./adr/0006-test-harness.md). Build approach:
 `src/` → OBJECT library `sm_engine`, shared by the exe and a new
@@ -273,13 +273,27 @@ pins the bring-up + a few defaults (`m_bQuirksMode` false, `m_bFastLoad`
 true, `m_fGlobalOffsetSeconds` -0.008). Suite **651 / 81**. This
 unblocks the `LoadFromDir` path for `.dwi`/`.ksf`/`.bms`.
 
+**`.pms` / BMS family DONE (2026-09-06, `tests/test_NotesLoaderBMS.cpp`
++ `tests/data/pms-fixture/`).** `BMSLoader::GetApplicableFiles` +
+`LoadFromDir` over a **derived** 3-chart `.pms` set: real note/timing/
+`#WAVxx`-channel structure byte-for-byte, but title/artist/genre and
+`#WAV` filenames scrubbed to placeholders and keysound audio replaced
+with 44-byte silent stub WAVs (the parser only `IsAFile`s them). The
+real Pop'n Music song is Konami's and not redistributable; the derived
+approach keeps the §5 regression honest without shipping copyrighted
+content (`tests/data/README.md`). Pins title/artist, BPM,
+`m_vsKeysoundFile` size (54), and per chart type/difficulty/meter/
+tracks/taps for `pnm-five` / `bm-double7` / `pnm-nine`. Suite
+**676 / 82**.
+
 **Still open:**
-- `.sma` / `.dwi` / `.ksf` / `.bms` / `.crs`: **no committed sample
-  song exists** for any of them (a real `.dwi`, "Nozex", was floated
-  but not committed). Each needs one small real song added under
-  `Songs/` — then `.sma` goes in the existing `kCorpus`, and
-  `.dwi`/`.ksf`/`.bms` get a `LoadFromDir` case (the fixture is ready).
-  `.crs` courses reference songs so likely also need `SONGMAN`.
+- `.sma` / `.dwi` / `.ksf` / `.crs`: no fixture yet. `EngineTestEnv`
+  is ready (`PREFSMAN` in, `LoadFromDir`/`LoadFromSimfile` reachable).
+  For each: a real song under `Songs/` if redistributable, else the
+  same derived-fixture approach as `.pms` (`tests/data/`). `.sma`
+  slots into the existing `kCorpus`; the dir formats get a
+  `LoadFromDir` case. `.crs` courses reference songs so likely also
+  need `SONGMAN`.
 - Salvage `src/tests/test_file_readers.cpp` / `test_audio_readers.cpp`
   (RageFile / audio-reader round-trips) — the `FILEMAN` half is
   available; still needs the round-trip fixtures + cases.

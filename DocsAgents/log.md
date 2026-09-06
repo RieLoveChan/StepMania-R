@@ -935,3 +935,32 @@
   under `WITH_WERROR=ON`, `ctest` 100%, `src/CMakeLists.txt` untouched.
   **Next:** `LoadFromDir` is now reachable for `.dwi`/`.ksf`/`.bms` —
   each just needs a committed sample song under `Songs/` (still none).
+
+* **Test harness — `.pms`/BMS phase-4 coverage via a *derived* fixture
+  (no copyrighted content committed).** Maintainer wants to avoid
+  redistributing copyrighted simfiles. Approach: take a real 3-chart
+  Pop'n Music `.pms` set (5-button / battle / normal), keep the note
+  data, timing, `#BPM`/`#BPMxx` and `#WAVxx` keysound-channel structure
+  **byte-for-byte** (that is what `BMSLoader` parses), and scrub only
+  the identifying bits — `#TITLE`/`#ARTIST`/`#GENRE` → placeholders,
+  every `#WAVxx <file>` → `#WAVxx key<ID>.wav`, mojibake comment line
+  → `;`. Keysound audio → 44-byte silent PCM stub WAVs (one per
+  `#WAVxx` id, 62 of them); the loader only does `IsAFile` on keysounds
+  at parse time, so a silent stub is indistinguishable from the real
+  sample for the parser. Committed at `tests/data/pms-fixture/`
+  (`tests/data/` is not gitignored, unlike `Songs/*` — no `-f`).
+  `tests/test_NotesLoaderBMS.cpp`: `BMSLoader::GetApplicableFiles` +
+  `LoadFromDir`, pinning title/artist/BPM, `m_vsKeysoundFile.size()`
+  (54 — 62 `#WAV` defs, 8 unreferenced, pool shared across the 3
+  files), and per chart (`pnm-five` Hard/7, `bm-double7` Easy/1,
+  `pnm-nine` Medium/6 — all 118 taps) type/difficulty/meter/tracks/
+  taps. Verified the scrub is lossless: the derived fixture produces
+  the exact same loader output as the untouched real folder did in a
+  throwaway probe. New StepsType coverage: `pnm-five`, `pnm-nine`,
+  `bm-double7`. Hidden `[bmsdump]` case to re-baseline. `tests/data/
+  README.md` documents the derived-fixture policy for any format whose
+  source isn't free. Suite **651 → 676 assertions, 81 → 82 cases**;
+  Windows Debug clean under `WITH_WERROR=ON`, `ctest` 100%,
+  `src/CMakeLists.txt` untouched.
+  **Next:** `.sma`/`.dwi`/`.ksf`/`.crs` — same pattern (real song if
+  redistributable, else derived fixture); the harness side is ready.

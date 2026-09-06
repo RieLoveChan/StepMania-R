@@ -43,6 +43,15 @@ only proves the loader survives input its author understood, not the
 and `test_NotesLoaderCorpus.cpp` (note the hidden `[.dump]` case for
 capturing / re-baselining characterization values).
 
+**When the real song can't be redistributed** (BMS-family Pop'n Music
+`.pms`, etc.): commit a *derived* fixture under `tests/data/` instead —
+real note/timing/channel structure byte-for-byte, but scrub
+title/artist/genre + asset filenames to placeholders and replace
+keysound/audio with tiny silent stubs (the parser only `IsAFile`s
+them). See `tests/data/pms-fixture/` + `test_NotesLoaderBMS.cpp`.
+Verify the scrub is lossless by diffing loader output against the
+untouched source once.
+
 # Files always touched
 
 | Path | What changes |
@@ -116,3 +125,6 @@ above). Simfile inputs come from a real song under `Songs/` via
 - `2026-09-06` — `PREFSMAN` added to `EngineTestEnv::Require()`;
   `LoadFromDir` (`.dwi`/`.ksf`/`.bms`) now reachable. Fixture contract
   pinned in `test_EngineTestEnv.cpp`.
+- `2026-09-06` — `.pms`/BMS phase-4 coverage via a *derived* fixture
+  (`tests/data/pms-fixture/`, `test_NotesLoaderBMS.cpp`) — the
+  copyright-safe pattern for non-redistributable source songs.
