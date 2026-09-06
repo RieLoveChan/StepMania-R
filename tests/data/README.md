@@ -20,11 +20,32 @@ tree instead, via `EngineTestEnv::SongPath(...)`:
 | `Songs/StepMania 5/MechaTribe Assault/` | `.ssc` | |
 | `Songs/StepMania 5/Springtime/` | `.ssc` | |
 
-Other formats (`.sma`, `.dwi`, `.ksf`, `.bms`, `.crs`) have no committed
-sample yet -- see `DocsAgents/modernization-backlog.md` item 17. When one
-is added it goes under `Songs/`, not here.
+`.sma` / `.dwi` / `.ksf` / `.crs` have no committed sample yet -- see
+`DocsAgents/modernization-backlog.md` item 17. When the real song is
+redistributable it goes under `Songs/`, not here.
 
-## What does live here
+## Derived simfile fixtures (when the real song is NOT redistributable)
+
+`pms-fixture/` -- a 3-chart `.pms` (Pop'n Music, BMS family) set for
+`test_NotesLoaderBMS.cpp`. It is **derived** from a real song, not a copy
+of one: the real Pop'n Music charts + keysound audio are Konami's and
+cannot be committed to a public repo. So:
+
+- Note data, timing, `#BPM` / `#BPMxx` changes, and the `#WAVxx`
+  keysound-channel structure are kept **byte-for-byte** -- that is what
+  `BMSLoader` actually parses.
+- `#TITLE` / `#ARTIST` / `#GENRE` and every `#WAVxx` filename are
+  replaced with generic placeholders.
+- The keysound audio is replaced with 44-byte silent stub WAVs
+  (`key<ID>.wav`), one per `#WAVxx` id. The loader only does `IsAFile`
+  on them at parse time, so a silent stub is indistinguishable from the
+  real sample for the parser.
+
+This keeps the §5 regression honest (real chart/keysound *structure*)
+without redistributing copyrighted content. Same approach applies to any
+future `.bms` / `.pms` / `.dwi` fixture whose source is not free.
+
+## What else lives here
 
 Non-simfile fixtures: small binary/text inputs for the RageFile /
 audio-reader round-trip tests when those are salvaged (backlog item 17).
