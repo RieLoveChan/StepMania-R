@@ -964,3 +964,30 @@
   `src/CMakeLists.txt` untouched.
   **Next:** `.sma`/`.dwi`/`.ksf`/`.crs` — same pattern (real song if
   redistributable, else derived fixture); the harness side is ready.
+
+* **Test harness — `.dwi` phase-4 coverage (derived fixture).** Same
+  copyright-safe pattern as `.pms`. Source: a community `.dwi` (3
+  `dance-single` charts, `#CHANGEBPM`, `#GAP`, `#SAMPLESTART`,
+  `#RANDSTART`) not clearly redistributable. Scrub touches only 3
+  lines — `#FILE` / `#TITLE` / `#ARTIST` → placeholders — verified by
+  `diff` that the 8-line header (minus those 3) and all three `#SINGLE`
+  note blocks are byte-for-byte. DWI has no keysounds, so no stub
+  audio needed. Committed at `tests/data/dwi-fixture/fixture.dwi`.
+  `tests/test_NotesLoaderDWI.cpp`: `DWILoader::GetApplicableFiles` +
+  `LoadFromDir` (note the 3rd `std::set<RString>& BlacklistedImages`
+  param — pass an empty set). Pins: the `" ("` main/sub split done by
+  `GetMainAndSubTitlesFromFullTitle` (DWI has no native `#SUBTITLE`) →
+  `main="DWI Fixture"`, `sub="(Derived)"`; `m_sMusicFile`; `#GAP:065`
+  → offset -0.065; `#BPM:145` at beat 0 + `#CHANGEBPM:1024=72.5` → 72.5
+  at beat 256 (DWI row/4); `#SAMPLESTART:79.485`; and the 3 charts
+  (`BASIC`/`ANOTHER`/`MANIAC` → `Difficulty_Easy`/3/233,
+  `Difficulty_Medium`/8/443, `Difficulty_Hard`/10/680 taps). Verified
+  the scrub is lossless — the derived fixture produces the exact same
+  loader output (charts, taps, timing) as the untouched source in a
+  throwaway probe; only the scrubbed string fields differ. Hidden
+  `[dwidump]` case to re-baseline. Suite **676 → 705 assertions,
+  82 → 83 cases**; Windows Debug clean under `WITH_WERROR=ON`, `ctest`
+  100%, `src/CMakeLists.txt` untouched.
+  **Next:** `.sma` (slots into `test_NotesLoaderCorpus.cpp`'s
+  `kCorpus`), `.ksf` (`LoadFromDir` case), `.crs` (likely needs
+  `SONGMAN`).
