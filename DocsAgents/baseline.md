@@ -212,37 +212,41 @@ Per-subsystem breakdown as passes run:
   - `tests/EngineTestEnv.{h,cpp}` (2026-09-06) — the shared **engine
     bootstrap fixture**: `EngineTestEnv::Require()` idempotently news up
     `LUA` → `FILEMAN` → `LOG` → `GAMEMAN` (that order is load-bearing)
-    once per `sm_tests` run, mounts `tests/data/` at `/testdata`,
-    silences `LOG` disk output, and a Catch2 listener tears it down at
-    run end. Tests that never call `Require()` pay nothing. `GAMEMAN` is
-    included (ctor is trivial — Lua registration only); `PREFSMAN` /
-    `GAMESTATE` / `THEME` / `SONGMAN` are not.
-  - `tests/test_NotesLoaderFull.cpp` (2026-09-06) — first fixture
-    consumers: the `SMLoader::ParseBPMs`/`ParseStops` error branches
-    that log-and-skip (malformed expression, zero BPM, zero-length
-    stop); and `SMLoader`/`SSCLoader::LoadFromSimfile` over a real
-    committed song-tags-only `.sm`/`.ssc` pinning
-    title/subtitle/artist/offset and the applied `#BPMS`/`#STOPS`
-    timing. 41 assertions / 6 cases.
-  - `tests/test_NotesLoaderCorpus.cpp` + `tests/data/corpus/`
-    (2026-09-06) — **ADR 0006 phase 4 for `.sm`/`.ssc`**: a
-    `GENERATE(from_range(...))` parse-regression over the committed
-    corpus (`corpus-a.sm` single chart, `corpus-b.sm` two charts,
-    `corpus-c.ssc` split chart-level timing). Pins main/sub-title,
-    artist, offset, song BPM, and per chart `StepsType` +
-    `StepsTypeStr` + difficulty + meter + `NoteData` track count +
-    `GetNumTapNotesNoTiming`; a separate case pins SSC split timing
-    (chart BPM 180 vs song BPM 120). The `AGENTS.md` §5 invariant in
-    test form for the canonical read + write formats.
-    50 assertions / 2 cases.
-    Suite total: **402 assertions / 80 cases** (up from 311/72).
+    once per `sm_tests` run, mounts `tests/data/` at `/testdata` and the
+    repo's `Songs/` tree at `/Songs` (both read-only, lazy), silences
+    `LOG` disk output, and a Catch2 listener tears it down at run end.
+    Tests that never call `Require()` pay nothing. `GAMEMAN` is included
+    (ctor is trivial — Lua registration only); `PREFSMAN` / `GAMESTATE`
+    / `THEME` / `SONGMAN` are not.
+  - `tests/test_NotesLoaderFull.cpp` (2026-09-06) — the `SMLoader`
+    parser error/edge branches that need a live `LOG` but no file:
+    `ParseBPMs`/`ParseStops` log-and-skip (malformed expression, zero
+    BPM, zero-length stop) and `LoadFromSimfile` on a missing path
+    returning false. 15 assertions / 4 cases.
+  - `tests/test_NotesLoaderCorpus.cpp` (2026-09-06) — **ADR 0006
+    phase 4 for `.sm`/`.ssc`**: a `GENERATE(from_range(...))`
+    parse-regression over the **real committed SM5 sample songs**
+    (`Songs/StepMania 5/{Goin' Under (.sm + .ssc), MechaTribe Assault,
+    Springtime}`) — no toy simfiles (`tests/data/README.md`). Per song
+    pins main/sub-title, artist, offset, song BPM; per chart (file
+    order, 39 charts total across the 4 files) pins `StepsTypeStr` +
+    `StepsType` + difficulty + meter + `NoteData` track count +
+    `GetNumTapNotesNoTiming`, characterization values captured from the
+    hidden `[.dump]` case. A second case pins that Goin' Under's `.sm`
+    and `.ssc` parse to identical charts + note counts (cross-format
+    §5 equivalence). Covers `dance-single`/`-double`/`-solo`/`-couple`/
+    `-threepanel`, `pump-single`/`-halfdouble`. Springtime's charts
+    trip real "Unmatched 3" hold-tail warnings from
+    `NoteDataUtil::LoadFromSMNoteDataString` — tolerated, counts pinned
+    as-is. 236 assertions / 2 visible cases (+1 hidden `[.dump]`).
+    Suite total: **638 assertions / 78 cases** (up from 311/72).
   **Locally verified on Windows** (VS 2022 BuildTools cmake 3.31 — the
   standalone cmake 4.3 install on this box hits a compiler-ID detection
   bug when invoked through the VS generator's regen step, use the
   VS-bundled cmake for this repo):
   - `WITH_TESTS=ON` Debug → `sm_engine` OBJECT lib + `Catch2` +
     `sm_tests.exe` all build clean under `WITH_WERROR=ON`; `sm_tests.exe`
-    → **402 assertions / 80 cases pass**; `ctest` 100%. (First-landed at
+    → **638 assertions / 78 cases pass**; `ctest` 100%. (First-landed at
     94/19.)
   - `WITH_TESTS=OFF` Release → `StepMania-R.exe` builds clean (the
     OBJECT-library split is transparent when off) + `--SelfTest` exits 0.

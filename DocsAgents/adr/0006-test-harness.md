@@ -182,14 +182,17 @@ default OFF, ON in a dedicated CI job. Not built in a normal dev build.
    `playbooks/add-characterization-test.md`.
 3. **DONE** (2026-09-05) — `TimingData` conversions,
    `NoteData`/`NoteDataUtil` transforms; see `baseline.md`.
-4. **`.sm`/`.ssc` DONE** (2026-09-06) — committed corpus at
-   `tests/data/corpus/` + `GENERATE(from_range(...))` parse-regression
-   in `tests/test_NotesLoaderCorpus.cpp`, via the `EngineTestEnv`
-   fixture below. Feeds the `AGENTS.md` §5 invariant for the canonical
-   read + write formats. **Still open:** `.sma` (SMLoader-family, needs
-   format-specific fixtures), and `.dwi`/`.ksf`/`.bms`/`.crs` — those
-   read `PREFSMAN` and only expose `LoadFromDir`, so they need
-   `PREFSMAN` added to `EngineTestEnv` + per-format directory fixtures
+4. **`.sm`/`.ssc` DONE** (2026-09-06) — `GENERATE(from_range(...))`
+   parse-regression in `tests/test_NotesLoaderCorpus.cpp` over the
+   **real committed SM5 sample songs** (`Songs/StepMania 5/…`), via the
+   `EngineTestEnv` fixture below. Toy simfiles are not used — a toy only
+   proves the loader survives input its author understood, not the
+   §5 invariant (`tests/data/README.md`). Feeds `AGENTS.md` §5 for the
+   canonical read + write formats, including a cross-format equivalence
+   check (Goin' Under `.sm` vs `.ssc`). **Still open:** `.sma`, and
+   `.dwi`/`.ksf`/`.bms`/`.crs` — no committed sample, and the dir-only
+   loaders read `PREFSMAN`, so they need `PREFSMAN` added to
+   `EngineTestEnv` + a committed per-format song under `Songs/`
    (backlog item 17).
 
 ## Phase 3-4 enabler: `tests/EngineTestEnv` (2026-09-06)
@@ -205,7 +208,7 @@ idempotently constructs, once per `sm_tests` process:
 | Global | Why | Order constraint |
 |---|---|---|
 | `LUA` (`LuaManager`) | `RageFileManager`'s ctor calls `LUA->Get()` | first |
-| `FILEMAN` (`RageFileManager`) | `RageFile` I/O; mounts `tests/data/` at `/testdata` | after `LUA` |
+| `FILEMAN` (`RageFileManager`) | `RageFile` I/O; mounts `tests/data/` at `/testdata` and the repo `Songs/` at `/Songs` | after `LUA` |
 | `LOG` (`RageLog`) | error branches call `LOG->UserLog`/`LOG->Warn` | after `FILEMAN` (its ctor opens a `RageFile`, which `ASSERT`s `FILEMAN`) |
 | `GAMEMAN` (`GameManager`) | `#STEPSTYPE` → `StepsType` resolution in every real load | after `LUA`; ctor is trivial (Lua registration only — the game/style/`StepsType` tables are file-scope static data) |
 
@@ -220,12 +223,14 @@ Paths reach the fixture through a `file(GENERATE)`d `EngineTestEnvPaths.h`
 
 Consumers:
 - `tests/test_NotesLoaderFull.cpp` — the `SMLoader::ParseBPMs`/
-  `ParseStops` log-and-skip branches; first `LoadFromSimfile` over a
-  committed song-tags-only `.sm`/`.ssc`.
+  `ParseStops` log-and-skip branches + `LoadFromSimfile` on a missing
+  path (error branches that need a live `LOG`, no file).
 - `tests/test_NotesLoaderCorpus.cpp` — **phase 4 proper**: a
-  `GENERATE(from_range(...))` parse-regression over
-  `tests/data/corpus/` (`.sm` + `.ssc`, charts included), pinning
-  title/subtitle/artist/offset, song BPM, and per-chart
-  `StepsType`/difficulty/meter/track-count/tap-count, plus SSC split
-  (chart-level) timing. This is the `AGENTS.md` §5 invariant in test
-  form.
+  `GENERATE(from_range(...))` parse-regression over the real committed
+  SM5 sample songs (`Songs/StepMania 5/{Goin' Under, MechaTribe
+  Assault, Springtime}`), pinning per-song metadata + song BPM and
+  per-chart (file order) `StepsType`/difficulty/meter/track-count/
+  tap-count — 39 charts across the 4 files — plus a Goin' Under
+  `.sm`-vs-`.ssc` equivalence case. Characterization values captured
+  from a hidden `[.dump]` case in the same file (`sm_tests "[dump]"`
+  to re-baseline). This is the `AGENTS.md` §5 invariant in test form.
