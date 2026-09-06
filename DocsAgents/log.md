@@ -809,3 +809,43 @@
   variadic calls) and `bugprone-macro-parentheses` ×8 (`StatsManager`
   ×4, + `NoteSkinManager` / `ProfileManager` / `ScreenManager` /
   `UnlockManager` ×1). Same Debug verification as pass #3.
+
+## 2026-09-06
+
+* **Test harness — shared engine bootstrap fixture (ADR 0006 phase 3-4
+  enabler).** Added `tests/EngineTestEnv.{h,cpp}`:
+  `EngineTestEnv::Require()` idempotently news up `LUA` → `FILEMAN` →
+  `LOG` once per `sm_tests` run (that order is load-bearing —
+  `RageFileManager`'s ctor calls `LUA->Get()`, and `RageLog`'s ctor
+  opens a `RageFile` that `ASSERT`s `FILEMAN != nullptr`), mounts the
+  new committed `tests/data/` corpus at `/testdata`, turns off `LOG`
+  disk output, and a `CATCH_REGISTER_LISTENER` tears it all down at
+  `testRunEnded`. Tests that never call `Require()` are unaffected.
+  Paths reach the fixture via a `file(GENERATE)`d
+  `EngineTestEnvPaths.h` using raw string literals (Windows backslashes
+  need no escaping). **Deliberately not provided:** `PREFSMAN`,
+  `GAMESTATE`, `GAMEMAN`, `THEME`, `SONGMAN`, renderer, audio — a full
+  `#NOTES` parse still needs `GAMEMAN->StringToStepsType` and stays out
+  of scope; the corpus files are song-tags only.
+  First consumers in `tests/test_NotesLoaderFull.cpp` (41 assertions /
+  6 cases): the `SMLoader::ParseBPMs`/`ParseStops` log-and-skip error
+  branches (malformed expression / zero BPM / zero-length stop — these
+  were called out as out-of-scope in `test_NotesLoader.cpp` *only*
+  because `LOG` was null), and `SMLoader`/`SSCLoader::LoadFromSimfile`
+  over a real committed `.sm`/`.ssc` pinning title/subtitle/artist/
+  offset + the applied `#BPMS`/`#STOPS` timing (SM defers via
+  `ProcessBPMsAndStops`; SSC applies per-tag). Also folded the "missing
+  file → logs + returns false" branch.
+  `src/CMakeLists.txt` untouched — only `tests/CMakeLists.txt` gains
+  the new sources + the generated-header wiring, so `WITH_TESTS=OFF` is
+  unaffected. Verified on Windows, Debug: `cmake --build build-tests
+  --target sm_tests` clean under `WITH_WERROR=ON`, then
+  `Program/sm_tests.exe` → **352 assertions / 78 cases pass** (up from
+  311/72), `ctest` 100%. A Release / `--SelfTest` gate is unnecessary
+  for an additive `tests/`-only change (same reasoning as the
+  clang-tidy passes). Predicted-vs-actual: all 41 assertions held on
+  the first `sm_tests` run — one compile fix en route (`SAFE_DELETE`
+  needs `#include "RageUtil.h"`, not pulled by `global.h`).
+  Unblocks the rest of ADR 0006 phase 4 (grow the corpus +
+  `GENERATE(from_range(...))`) and the `src/tests/test_file_readers` /
+  `test_audio_readers` salvage (they need the same `FILEMAN`).

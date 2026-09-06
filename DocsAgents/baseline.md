@@ -206,18 +206,31 @@ Per-subsystem breakdown as passes run:
     `ProcessBPMsAndStops` (initial BPM at row 0, pre-beat-0 stop → song
     offset), `ProcessDelays`/`ProcessTimeSignatures` (implicit-4/4
     back-fill)/`ProcessTickcounts` (clamp to `ROWS_PER_BEAT`). Full
-    `LoadFromDir`/`LoadFromSimfile` needs live `FILEMAN`+`LUA` (→
-    `--SelfTest`); the helpers' `LOG->UserLog` error branches are out
-    of scope (`LOG` null in the harness).
-    311 assertions / 72 cases total (up from 94/19).
+    `LoadFromDir` needs live `FILEMAN`+`LUA`+`GAMEMAN` for `#NOTES`;
+    valid-input-only, with the `LOG->UserLog` error branches deferred to
+    `test_NotesLoaderFull.cpp` (they need a live `LOG`).
+  - `tests/EngineTestEnv.{h,cpp}` + `tests/test_NotesLoaderFull.cpp`
+    (2026-09-06) — the shared **engine bootstrap fixture**:
+    `EngineTestEnv::Require()` idempotently news up `LUA` → `FILEMAN` →
+    `LOG` (that order is load-bearing) once per `sm_tests` run, mounts
+    the committed `tests/data/` corpus at `/testdata`, silences `LOG`
+    disk output, and a Catch2 listener tears it down at run end. Tests
+    that never call `Require()` pay nothing. First consumers in
+    `test_NotesLoaderFull.cpp`: the `SMLoader::ParseBPMs`/`ParseStops`
+    error branches that log-and-skip (malformed expression, zero BPM,
+    zero-length stop); and `SMLoader`/`SSCLoader::LoadFromSimfile` over
+    a real committed `.sm`/`.ssc` (song-tags only — no `#NOTES`, so no
+    `GAMEMAN`) pinning title/subtitle/artist/offset and the applied
+    `#BPMS`/`#STOPS` timing. 41 assertions / 6 cases.
+    Suite total: **352 assertions / 78 cases** (up from 311/72).
   **Locally verified on Windows** (VS 2022 BuildTools cmake 3.31 — the
   standalone cmake 4.3 install on this box hits a compiler-ID detection
   bug when invoked through the VS generator's regen step, use the
   VS-bundled cmake for this repo):
   - `WITH_TESTS=ON` Debug → `sm_engine` OBJECT lib + `Catch2` +
-    `sm_tests.exe` all build; `sm_tests.exe` → **311 assertions / 72
-    cases pass**; `ctest` 100%. (First-landed at 94/19 under
-    `WITH_WERROR=ON`.)
+    `sm_tests.exe` all build clean under `WITH_WERROR=ON`; `sm_tests.exe`
+    → **352 assertions / 78 cases pass**; `ctest` 100%. (First-landed at
+    94/19.)
   - `WITH_TESTS=OFF` Release → `StepMania-R.exe` builds clean (the
     OBJECT-library split is transparent when off) + `--SelfTest` exits 0.
   **CI (all 8 jobs green, run 33898309300):** Windows/macOS/Linux × plain
@@ -227,9 +240,11 @@ Per-subsystem breakdown as passes run:
   full of `#if 0`**. Not wireable as-is. Intent salvaged where still
   relevant: `test_timing_data.cpp`'s beat↔time cases →
   `tests/test_TimingData.cpp`; simfile-parse coverage →
-  `tests/test_NotesLoader.cpp`. `test_file_readers.cpp` (RageFile
-  binary/text/seek) and `test_audio_readers.cpp` remain — both need a
-  live `FILEMAN` + committed fixtures, deferred.
+  `tests/test_NotesLoader.cpp` + `tests/test_NotesLoaderFull.cpp`.
+  `test_file_readers.cpp` (RageFile binary/text/seek) and
+  `test_audio_readers.cpp` remain — both need a live `FILEMAN` +
+  committed fixtures; `tests/EngineTestEnv.h` now provides the `FILEMAN`
+  half, so salvaging them is down to writing the fixtures + cases.
 - CI: build on 4 platforms + `xmllint` Lua-doc validation + the Windows
   headless smoke + `windows-tests` / `ubuntu-tests` / `macos-tests`.
 
