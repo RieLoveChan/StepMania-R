@@ -15,7 +15,8 @@ set(SM_TEST_SRC
     test_NoteData.cpp
     test_NoteDataUtil.cpp
     test_NotesLoader.cpp
-    test_NotesLoaderFull.cpp)
+    test_NotesLoaderFull.cpp
+    test_NotesLoaderCorpus.cpp)
 
 source_group("" FILES ${SM_TEST_SRC})
 
