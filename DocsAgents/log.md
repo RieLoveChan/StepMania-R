@@ -915,3 +915,23 @@
   **Still open:** no committed sample exists for `.sma`/`.dwi`/`.ksf`/
   `.bms`/`.crs` — each needs a real song added under `Songs/` first,
   and the dir-only loaders still need `PREFSMAN` in `EngineTestEnv`.
+
+* **Test harness — `PREFSMAN` added to `EngineTestEnv` (unblocks the
+  dir-only loaders).** Construction order is now `LUA → FILEMAN → LOG →
+  PREFSMAN → GAMEMAN`; teardown reversed because `~PrefsManager` calls
+  `LUA->UnsetGlobal("PREFSMAN")`. `PrefsManager`'s ctor registers a few
+  hundred `Preference<T>` objects, reads `Data/{Defaults,Preferences,
+  Static}.ini` via `FILEMAN` (none mounted → graceful miss, every pref
+  keeps its compiled default) and registers with `LUA`; the dtor only
+  unregisters from `LUA`, no disk write. Adding it did **not** move any
+  existing corpus pin — the `.sm`/`.ssc` `LoadFromSimfile` path does not
+  read `PREFSMAN` — confirming it is safe in the always-on `Require()`.
+  New `tests/test_EngineTestEnv.cpp` (3 cases / 13 assertions): the
+  five singletons come up, `Require()` is idempotent, and the `PREFSMAN`
+  defaults the dir loaders will read are pinned (`m_bQuirksMode` false,
+  `m_bFastLoad` true, `m_fGlobalOffsetSeconds` -0.008). Header doc + ADR
+  0006 enabler table updated (`PREFSMAN` row, teardown-order note).
+  Suite **638 → 651 assertions, 78 → 81 cases**; Windows Debug clean
+  under `WITH_WERROR=ON`, `ctest` 100%, `src/CMakeLists.txt` untouched.
+  **Next:** `LoadFromDir` is now reachable for `.dwi`/`.ksf`/`.bms` —
+  each just needs a committed sample song under `Songs/` (still none).

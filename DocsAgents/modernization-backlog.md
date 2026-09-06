@@ -265,14 +265,21 @@ cross-format equivalence case. `#NOTES` parsing works now that
 `Songs/` at `/Songs`. Suite **638 assertions / 78 cases** (was
 311/72). See `log.md` 2026-09-06 and ADR 0006 phases 3-4.
 
+**`PREFSMAN` added to `EngineTestEnv` (2026-09-06).** Construction is
+now `LUA → FILEMAN → LOG → PREFSMAN → GAMEMAN` (teardown reversed —
+`~PrefsManager` calls `LUA->UnsetGlobal`). No `.ini` is mounted so every
+preference keeps its compiled default; `tests/test_EngineTestEnv.cpp`
+pins the bring-up + a few defaults (`m_bQuirksMode` false, `m_bFastLoad`
+true, `m_fGlobalOffsetSeconds` -0.008). Suite **651 / 81**. This
+unblocks the `LoadFromDir` path for `.dwi`/`.ksf`/`.bms`.
+
 **Still open:**
 - `.sma` / `.dwi` / `.ksf` / `.bms` / `.crs`: **no committed sample
   song exists** for any of them (a real `.dwi`, "Nozex", was floated
   but not committed). Each needs one small real song added under
-  `Songs/` first. On top of that, `.dwi`/`.ksf`/`.bms` read `PREFSMAN`
-  (`DWILoader` → `m_bQuirksMode`) and only expose `LoadFromDir`, and
-  `.crs` courses reference songs (likely `SONGMAN`) — so `EngineTestEnv`
-  needs `PREFSMAN` (and maybe more) before those can be wired.
+  `Songs/` — then `.sma` goes in the existing `kCorpus`, and
+  `.dwi`/`.ksf`/`.bms` get a `LoadFromDir` case (the fixture is ready).
+  `.crs` courses reference songs so likely also need `SONGMAN`.
 - Salvage `src/tests/test_file_readers.cpp` / `test_audio_readers.cpp`
   (RageFile / audio-reader round-trips) — the `FILEMAN` half is
   available; still needs the round-trip fixtures + cases.
