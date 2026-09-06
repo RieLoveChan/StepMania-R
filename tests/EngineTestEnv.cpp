@@ -5,6 +5,7 @@
 #include "LuaManager.h"
 #include "RageFileManager.h"
 #include "RageLog.h"
+#include "PrefsManager.h"
 #include "GameManager.h"
 
 #include "catch_amalgamated.hpp"
@@ -64,6 +65,18 @@ namespace
 			LOG->SetFlushing( false );
 		}
 
+		// PrefsManager: registers a few hundred Preference<T> objects and
+		// tries to read Data/{Defaults,Preferences,Static}.ini -- none of
+		// which are mounted here, so every preference keeps its compiled
+		// default (deterministic, and independent of the dev's local
+		// Preferences.ini). Needed by the dir-only loaders (DWILoader
+		// reads m_bQuirksMode, courses read m_bFastLoad, ...). The ctor
+		// touches LUA (global registration) and FILEMAN (the .ini reads,
+		// which no-op on miss); the dtor only unregisters from LUA, so
+		// LUA must outlive it -- the reverse-order teardown handles that.
+		if( PREFSMAN == nullptr )
+			PREFSMAN = new PrefsManager;
+
 		// GameManager's ctor is trivial -- it only registers GAMEMAN with
 		// Lua; every game/style/StepsType table it serves is file-scope
 		// static data in GameManager.cpp. It is here (not in the "not
@@ -89,7 +102,9 @@ namespace
 			return;
 		// Reverse of construction order. SAFE_DELETE nulls each global,
 		// so a later Require() in the same process would rebuild cleanly.
+		// PREFSMAN's dtor calls LUA->UnsetGlobal, so it must go before LUA.
 		SAFE_DELETE( GAMEMAN );
+		SAFE_DELETE( PREFSMAN );
 		SAFE_DELETE( LOG );
 		SAFE_DELETE( FILEMAN );
 		SAFE_DELETE( LUA );

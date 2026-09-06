@@ -14,18 +14,21 @@
 //                                 branches in the parsers actually run
 //                                 instead of dereferencing a null LOG.
 //                                 Disk output is turned off.
+//   PREFSMAN (PrefsManager)    -- read by the dir-only loaders (DWILoader
+//                                 -> m_bQuirksMode, courses -> m_bFastLoad)
+//                                 and various Song/Steps paths. No .ini is
+//                                 mounted, so every preference keeps its
+//                                 compiled default (deterministic).
 //   GAMEMAN  (GameManager)     -- ctor is trivial (Lua registration only;
 //                                 all game/style/StepsType tables are
 //                                 file-scope static data), and any real
 //                                 simfile load resolves #STEPSTYPE
 //                                 through GAMEMAN->StringToStepsType.
 //
-// What it deliberately does NOT construct: PREFSMAN, GAMESTATE, THEME,
-// SONGMAN, the renderer, the audio device. Anything that needs those
-// stays --SelfTest smoke-test territory (AGENTS.md, ADR 0006). Notably
-// the DWI / KSF / BMS loaders and Song::LoadFromSongDir read PREFSMAN,
-// so they are still out of scope; the .sm / .ssc / .sma LoadFromSimfile
-// entry points are not.
+// What it deliberately does NOT construct: GAMESTATE, THEME, SONGMAN, the
+// renderer, the audio device. Anything that needs those stays --SelfTest
+// smoke-test territory (AGENTS.md, ADR 0006). Song::LoadFromSongDir (the
+// full song-directory load, with cache) still needs more than this.
 //
 // Usage: call EngineTestEnv::Require() at the top of any TEST_CASE that
 // needs the above. It is idempotent -- the first call constructs, later
@@ -39,9 +42,12 @@
 
 namespace EngineTestEnv
 {
-	// Idempotent. Constructs LUA -> FILEMAN -> LOG on first call. That
-	// order is load-bearing: RageFileManager's ctor calls LUA->Get(),
-	// and RageLog's ctor opens a RageFile, which asserts FILEMAN != null.
+	// Idempotent. On first call constructs, in this order:
+	//   LUA -> FILEMAN -> LOG -> PREFSMAN -> GAMEMAN
+	// The order is load-bearing: RageFileManager's ctor calls LUA->Get();
+	// RageLog's ctor opens a RageFile, which asserts FILEMAN != null;
+	// PrefsManager's ctor reads .ini files via FILEMAN and registers with
+	// LUA. Teardown is the reverse (PREFSMAN's dtor calls LUA->UnsetGlobal).
 	void Require();
 
 	// Turn a path relative to tests/data/ into the vpath it is mounted
