@@ -5,6 +5,7 @@
 #include "LuaManager.h"
 #include "RageFileManager.h"
 #include "RageLog.h"
+#include "GameManager.h"
 
 #include "catch_amalgamated.hpp"
 
@@ -60,6 +61,15 @@ namespace
 			LOG->SetFlushing( false );
 		}
 
+		// GameManager's ctor is trivial -- it only registers GAMEMAN with
+		// Lua; every game/style/StepsType table it serves is file-scope
+		// static data in GameManager.cpp. It is here (not in the "not
+		// provided" list) because it needs no init of its own and any
+		// real simfile load resolves its #STEPSTYPE through
+		// GAMEMAN->StringToStepsType. Needs LUA.
+		if( GAMEMAN == nullptr )
+			GAMEMAN = new GameManager;
+
 		// The committed corpus, read-only, at a fixed vpath.
 		FILEMAN->Mount( "dir", SM_TEST_DATA_DIR, "/testdata" );
 
@@ -72,6 +82,7 @@ namespace
 			return;
 		// Reverse of construction order. SAFE_DELETE nulls each global,
 		// so a later Require() in the same process would rebuild cleanly.
+		SAFE_DELETE( GAMEMAN );
 		SAFE_DELETE( LOG );
 		SAFE_DELETE( FILEMAN );
 		SAFE_DELETE( LUA );

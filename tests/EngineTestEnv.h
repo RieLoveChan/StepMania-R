@@ -14,12 +14,18 @@
 //                                 branches in the parsers actually run
 //                                 instead of dereferencing a null LOG.
 //                                 Disk output is turned off.
+//   GAMEMAN  (GameManager)     -- ctor is trivial (Lua registration only;
+//                                 all game/style/StepsType tables are
+//                                 file-scope static data), and any real
+//                                 simfile load resolves #STEPSTYPE
+//                                 through GAMEMAN->StringToStepsType.
 //
-// What it deliberately does NOT construct: PREFSMAN, GAMESTATE, GAMEMAN,
-// THEME, SONGMAN, the renderer, the audio device. Anything that needs
-// those stays --SelfTest smoke-test territory (AGENTS.md, ADR 0006). In
-// particular a full "#NOTES" parse calls GAMEMAN->StringToStepsType and
-// is out of scope for this fixture.
+// What it deliberately does NOT construct: PREFSMAN, GAMESTATE, THEME,
+// SONGMAN, the renderer, the audio device. Anything that needs those
+// stays --SelfTest smoke-test territory (AGENTS.md, ADR 0006). Notably
+// the DWI / KSF / BMS loaders and Song::LoadFromSongDir read PREFSMAN,
+// so they are still out of scope; the .sm / .ssc / .sma LoadFromSimfile
+// entry points are not.
 //
 // Usage: call EngineTestEnv::Require() at the top of any TEST_CASE that
 // needs the above. It is idempotent -- the first call constructs, later
