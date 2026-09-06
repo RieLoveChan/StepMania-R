@@ -197,11 +197,15 @@ default OFF, ON in a dedicated CI job. Not built in a normal dev build.
    title/artist/genre + `#WAV` filenames scrubbed and keysound audio
    swapped for 44-byte silent stubs (`tests/data/README.md`). Covers
    `pnm-five` / `pnm-nine` / `bm-double7`.
-   **Still open:** `.sma` / `.dwi` / `.ksf` / `.crs` — `EngineTestEnv`
-   has `PREFSMAN` so `LoadFromDir`/`LoadFromSimfile` are reachable;
-   each needs a fixture (real song if redistributable, else the same
-   derived approach). `.crs` likely also needs `SONGMAN`. Backlog
-   item 17.
+   **`.dwi` DONE** (2026-09-06, `test_NotesLoaderDWI.cpp` +
+   `tests/data/dwi-fixture/`) — `DWILoader::LoadFromDir` over a derived
+   fixture (only `#FILE`/`#TITLE`/`#ARTIST` changed from source; DWI
+   has no keysounds). Pins the `" ("` main/sub split, `#GAP`→offset,
+   `#BPM` + `#CHANGEBPM`, `#SAMPLESTART`, 3 `dance-single` charts.
+   **Still open:** `.sma` / `.ksf` / `.crs` — `EngineTestEnv` has
+   `PREFSMAN` so the loaders are reachable; each needs a fixture (real
+   song if redistributable, else the same derived approach). `.crs`
+   likely also needs `SONGMAN`. Backlog item 17.
 
 ## Phase 3-4 enabler: `tests/EngineTestEnv` (2026-09-06)
 
@@ -249,3 +253,7 @@ Consumers:
   derived `.pms` fixture (`tests/data/pms-fixture/`): 3 charts
   (`pnm-five` / `bm-double7` / `pnm-nine`), keysound-file count,
   metadata, BPM. Hidden `[bmsdump]` case to re-baseline.
+- `tests/test_NotesLoaderDWI.cpp` — `DWILoader::LoadFromDir` over the
+  derived `.dwi` fixture (`tests/data/dwi-fixture/`): 3 `dance-single`
+  charts, `#GAP`/`#BPM`/`#CHANGEBPM`/`#SAMPLESTART`, the `" ("`
+  main/sub title split. Hidden `[dwidump]` case.

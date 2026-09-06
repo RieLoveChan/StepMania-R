@@ -261,14 +261,26 @@ Per-subsystem breakdown as passes run:
     `bm-double7`. 25 assertions / 1 visible case (+1 hidden `[bmsdump]`).
     Needs `PREFSMAN` in `EngineTestEnv` (`DWILoader`/BMS read prefs).
     Rationale in `tests/data/README.md`.
-    Suite total: **676 assertions / 82 cases** (up from 311/72).
+  - `tests/test_NotesLoaderDWI.cpp` + `tests/data/dwi-fixture/`
+    (2026-09-06) — **ADR 0006 phase 4 for `.dwi`**, via
+    `DWILoader::GetApplicableFiles` + `LoadFromDir`. Derived fixture
+    (only `#FILE`/`#TITLE`/`#ARTIST` changed from source, diff-verified;
+    note data + `#BPM`/`#GAP`/`#CHANGEBPM`/`#SAMPLESTART`/`#RANDSTART` +
+    all 3 `#SINGLE` blocks byte-for-byte; DWI has no keysounds).
+    Pins the `GetMainAndSubTitlesFromFullTitle` `" ("` split
+    (`main`/`sub`), artist, music file, `#GAP`→offset (-0.065),
+    `#BPM` 145 + `#CHANGEBPM` 72.5 at beat 256, `#SAMPLESTART` 79.485,
+    and the 3 `dance-single` charts (`BASIC`/`ANOTHER`/`MANIAC` →
+    Easy/3/233, Medium/8/443, Hard/10/680 taps). 29 assertions /
+    1 visible case (+1 hidden `[dwidump]`).
+    Suite total: **705 assertions / 83 cases** (up from 311/72).
   **Locally verified on Windows** (VS 2022 BuildTools cmake 3.31 — the
   standalone cmake 4.3 install on this box hits a compiler-ID detection
   bug when invoked through the VS generator's regen step, use the
   VS-bundled cmake for this repo):
   - `WITH_TESTS=ON` Debug → `sm_engine` OBJECT lib + `Catch2` +
     `sm_tests.exe` all build clean under `WITH_WERROR=ON`; `sm_tests.exe`
-    → **676 assertions / 82 cases pass**; `ctest` 100%. (First-landed at
+    → **705 assertions / 83 cases pass**; `ctest` 100%. (First-landed at
     94/19.)
   - `WITH_TESTS=OFF` Release → `StepMania-R.exe` builds clean (the
     OBJECT-library split is transparent when off) + `--SelfTest` exits 0.

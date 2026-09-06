@@ -48,9 +48,10 @@ capturing / re-baselining characterization values).
 real note/timing/channel structure byte-for-byte, but scrub
 title/artist/genre + asset filenames to placeholders and replace
 keysound/audio with tiny silent stubs (the parser only `IsAFile`s
-them). See `tests/data/pms-fixture/` + `test_NotesLoaderBMS.cpp`.
-Verify the scrub is lossless by diffing loader output against the
-untouched source once.
+them). See `tests/data/{pms,dwi}-fixture/` +
+`test_NotesLoader{BMS,DWI}.cpp`. Verify the scrub is lossless by
+diffing loader output against the untouched source once (a throwaway
+`[.probe]` `TEST_CASE` pointed at the local `Songs/` copy).
 
 # Files always touched
 
@@ -125,6 +126,7 @@ above). Simfile inputs come from a real song under `Songs/` via
 - `2026-09-06` — `PREFSMAN` added to `EngineTestEnv::Require()`;
   `LoadFromDir` (`.dwi`/`.ksf`/`.bms`) now reachable. Fixture contract
   pinned in `test_EngineTestEnv.cpp`.
-- `2026-09-06` — `.pms`/BMS phase-4 coverage via a *derived* fixture
-  (`tests/data/pms-fixture/`, `test_NotesLoaderBMS.cpp`) — the
-  copyright-safe pattern for non-redistributable source songs.
+- `2026-09-06` — `.pms`/BMS and `.dwi` phase-4 coverage via *derived*
+  fixtures (`tests/data/{pms,dwi}-fixture/`,
+  `test_NotesLoader{BMS,DWI}.cpp`) — the copyright-safe pattern for
+  non-redistributable source songs.
