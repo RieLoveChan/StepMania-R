@@ -186,7 +186,7 @@ reject it (C++11 narrowing) if clang-cl were ever adopted. Not touched
 clang currently. Rewrite the cases as hex literals / `HRESULT(...)` if
 and when clang-cl support is actually pursued.
 
-### 17. Pick a unit-test framework + write core characterization tests — phases 1-2 DONE; phase 3-4 bootstrap fixture DONE (2026-09-06), corpus/reader-salvage still open
+### 17. Pick a unit-test framework + write core characterization tests — phases 1-3 DONE; phase 4 DONE for .sm/.ssc (2026-09-06); .sma/.dwi/.ksf/.bms/.crs + reader-salvage still open
 Framework decided: **Catch2 v3** (amalgamated, vendored `extern/Catch2/`
 @ v3.16.0) — ADR [0006](./adr/0006-test-harness.md). Build approach:
 `src/` → OBJECT library `sm_engine`, shared by the exe and a new
@@ -243,22 +243,32 @@ call `LOG->UserLog()` and `LOG` is null in the harness. 311 assertions
 / 72 cases total. **ADR 0006 phase 2 (pure-ish core characterization)
 is complete.**
 
-**Bootstrap fixture DONE (2026-09-06, `tests/EngineTestEnv.{h,cpp}` +
-`tests/test_NotesLoaderFull.cpp`).** `EngineTestEnv::Require()` news up
-`LUA` → `FILEMAN` → `LOG` once per `sm_tests` run and mounts
-`tests/data/` at `/testdata`; a Catch2 listener tears it down. This
-retires the "`LOG` is null" scope-out above: the `SMLoader::ParseBPMs`/
-`ParseStops` error branches are now characterized, plus a first real
-`SMLoader`/`SSCLoader::LoadFromSimfile` over a committed `.sm`/`.ssc`
-(song-tags only — `#NOTES` still needs `GAMEMAN`). Suite now **352
-assertions / 78 cases**. See `log.md` 2026-09-06 and ADR 0006
-"Phase 3-4 enabler".
-**Still open:** grow `tests/data/` into a real corpus +
-`GENERATE(from_range(...))` parse-regression over it (phase 4 proper);
-extend the fixture / corpus so `#NOTES` parsing is reachable (needs
-`GAMEMAN`, or a stub); salvage `src/tests/test_file_readers.cpp` /
-`test_audio_readers.cpp` (RageFile / audio-reader round-trips — the
-`FILEMAN` half is now available).
+**Bootstrap fixture DONE (2026-09-06, `tests/EngineTestEnv.{h,cpp}`).**
+`EngineTestEnv::Require()` news up `LUA` → `FILEMAN` → `LOG` → `GAMEMAN`
+once per `sm_tests` run and mounts `tests/data/` at `/testdata`; a
+Catch2 listener tears it down. Retires the "`LOG` is null" scope-out
+above.
+
+**Phase 4 for `.sm`/`.ssc` DONE (2026-09-06,
+`tests/test_NotesLoaderCorpus.cpp` + `tests/data/corpus/`).** A
+`GENERATE(from_range(...))` parse-regression over the committed corpus:
+metadata (main/sub-title, artist, offset), song BPM, and per chart
+`StepsType`/`StepsTypeStr`/difficulty/meter/`NoteData` track count/
+`GetNumTapNotesNoTiming` — plus SSC split (chart-level) timing. `#NOTES`
+parsing works now that `GAMEMAN` is in the fixture. Suite **402
+assertions / 80 cases** (was 311/72). See `log.md` 2026-09-06 and ADR
+0006 phases 3-4 + "Phase 3-4 enabler".
+
+**Still open:**
+- `.sma` corpus (SMLoader-family, `LoadFromSimfile` — just needs a
+  format-correct fixture file).
+- `.dwi` / `.ksf` / `.bms` / `.crs`: these read `PREFSMAN`
+  (`DWILoader` → `m_bQuirksMode`, courses → `m_bFastLoad` etc.) and
+  only expose `LoadFromDir`. Needs `PREFSMAN` added to `EngineTestEnv`
+  + one committed directory fixture per format.
+- Salvage `src/tests/test_file_readers.cpp` / `test_audio_readers.cpp`
+  (RageFile / audio-reader round-trips) — the `FILEMAN` half is
+  available; still needs the round-trip fixtures + cases.
 
 ### 16. Pre-floor `#if` guards across `src/arch/` and `src/archutils/` — Windows runtime-version checks DONE
 Now that ADR 0003 sets Windows 11 / current-macOS / current-Linux floors,

@@ -849,3 +849,32 @@
   Unblocks the rest of ADR 0006 phase 4 (grow the corpus +
   `GENERATE(from_range(...))`) and the `src/tests/test_file_readers` /
   `test_audio_readers` salvage (they need the same `FILEMAN`).
+
+* **Test harness — ADR 0006 phase 4 for `.sm`/`.ssc` (committed corpus
+  + parse-regression).** Added `GAMEMAN` to `EngineTestEnv::Require()`
+  (its ctor is trivial — Lua registration only; the game/style/
+  `StepsType` tables are file-scope static data), which makes full
+  `#NOTES`/`#NOTEDATA` parsing reachable — `SMLoader::LoadFromTokens`
+  and SSC's `SetStepsType` both resolve `#STEPSTYPE` through
+  `GAMEMAN->StringToStepsType`.
+  New `tests/data/corpus/` (`corpus-a.sm` one dance-single chart,
+  `corpus-b.sm` two charts, `corpus-c.ssc` with split chart-level
+  timing) + `tests/test_NotesLoaderCorpus.cpp`: a
+  `GENERATE(from_range(kCorpus))` case loads each file through its real
+  loader and pins main/sub-title, artist, offset, song BPM at beat 0,
+  and per chart `m_StepsType` (== `StringToStepsType(str)`),
+  `m_StepsTypeStr`, difficulty, meter, `NoteData::GetNumTracks`, and
+  `GetNumTapNotesNoTiming` (the `GAMESTATE`-free tap count). A second
+  case pins SSC split timing: the `#NOTEDATA` `#BPMS` (180) populates
+  the chart's own `m_Timing` and wins over the song `#BPMS` (120).
+  This is the `AGENTS.md` §5 invariant in test form for the canonical
+  read + write formats.
+  Predicted-vs-actual: all 50 new assertions held on the first
+  `sm_tests` run (arithmetic check: 45 from the 3 generator iterations
+  + 5 from the split-timing case). Suite **352 → 402 assertions,
+  78 → 80 cases**; `ctest` 100%. Verified Windows Debug, clean under
+  `WITH_WERROR=ON`; `src/CMakeLists.txt` untouched.
+  **Still open (backlog item 17):** `.sma` (needs a format-correct
+  fixture), and `.dwi`/`.ksf`/`.bms`/`.crs` — those read `PREFSMAN` and
+  only expose `LoadFromDir`, so they need `PREFSMAN` in `EngineTestEnv`
+  + per-format directory fixtures.
