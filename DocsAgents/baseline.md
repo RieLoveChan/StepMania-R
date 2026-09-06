@@ -211,13 +211,20 @@ Per-subsystem breakdown as passes run:
     `test_NotesLoaderFull.cpp` (they need a live `LOG`).
   - `tests/EngineTestEnv.{h,cpp}` (2026-09-06) — the shared **engine
     bootstrap fixture**: `EngineTestEnv::Require()` idempotently news up
-    `LUA` → `FILEMAN` → `LOG` → `GAMEMAN` (that order is load-bearing)
-    once per `sm_tests` run, mounts `tests/data/` at `/testdata` and the
-    repo's `Songs/` tree at `/Songs` (both read-only, lazy), silences
-    `LOG` disk output, and a Catch2 listener tears it down at run end.
-    Tests that never call `Require()` pay nothing. `GAMEMAN` is included
-    (ctor is trivial — Lua registration only); `PREFSMAN` / `GAMESTATE`
-    / `THEME` / `SONGMAN` are not.
+    `LUA` → `FILEMAN` → `LOG` → `PREFSMAN` → `GAMEMAN` (that order is
+    load-bearing) once per `sm_tests` run, mounts `tests/data/` at
+    `/testdata` and the repo's `Songs/` tree at `/Songs` (both
+    read-only, lazy), silences `LOG` disk output, and a Catch2 listener
+    tears it down at run end (reverse order — `PREFSMAN`'s dtor calls
+    `LUA->UnsetGlobal`). Tests that never call `Require()` pay nothing.
+    `GAMEMAN` ctor is trivial (Lua registration only); `PREFSMAN` comes
+    up with compiled defaults (no `.ini` mounted — deterministic, and
+    independent of the dev's `Preferences.ini`). `GAMESTATE` / `THEME` /
+    `SONGMAN` are not provided.
+  - `tests/test_EngineTestEnv.cpp` (2026-09-06) — contract test for the
+    fixture: `Require()` brings up all five singletons and is
+    idempotent; `PREFSMAN` defaults (`m_bQuirksMode` false, `m_bFastLoad`
+    true, `m_fGlobalOffsetSeconds` -0.008). 13 assertions / 3 cases.
   - `tests/test_NotesLoaderFull.cpp` (2026-09-06) — the `SMLoader`
     parser error/edge branches that need a live `LOG` but no file:
     `ParseBPMs`/`ParseStops` log-and-skip (malformed expression, zero
@@ -239,14 +246,14 @@ Per-subsystem breakdown as passes run:
     trip real "Unmatched 3" hold-tail warnings from
     `NoteDataUtil::LoadFromSMNoteDataString` — tolerated, counts pinned
     as-is. 236 assertions / 2 visible cases (+1 hidden `[.dump]`).
-    Suite total: **638 assertions / 78 cases** (up from 311/72).
+    Suite total: **651 assertions / 81 cases** (up from 311/72).
   **Locally verified on Windows** (VS 2022 BuildTools cmake 3.31 — the
   standalone cmake 4.3 install on this box hits a compiler-ID detection
   bug when invoked through the VS generator's regen step, use the
   VS-bundled cmake for this repo):
   - `WITH_TESTS=ON` Debug → `sm_engine` OBJECT lib + `Catch2` +
     `sm_tests.exe` all build clean under `WITH_WERROR=ON`; `sm_tests.exe`
-    → **638 assertions / 78 cases pass**; `ctest` 100%. (First-landed at
+    → **651 assertions / 81 cases pass**; `ctest` 100%. (First-landed at
     94/19.)
   - `WITH_TESTS=OFF` Release → `StepMania-R.exe` builds clean (the
     OBJECT-library split is transparent when off) + `--SelfTest` exits 0.

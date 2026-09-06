@@ -189,11 +189,11 @@ default OFF, ON in a dedicated CI job. Not built in a normal dev build.
    proves the loader survives input its author understood, not the
    §5 invariant (`tests/data/README.md`). Feeds `AGENTS.md` §5 for the
    canonical read + write formats, including a cross-format equivalence
-   check (Goin' Under `.sm` vs `.ssc`). **Still open:** `.sma`, and
-   `.dwi`/`.ksf`/`.bms`/`.crs` — no committed sample, and the dir-only
-   loaders read `PREFSMAN`, so they need `PREFSMAN` added to
-   `EngineTestEnv` + a committed per-format song under `Songs/`
-   (backlog item 17).
+   check (Goin' Under `.sm` vs `.ssc`). **Still open:** `.sma` /
+   `.dwi`/`.ksf`/`.bms` / `.crs` — `EngineTestEnv` now has `PREFSMAN`
+   (2026-09-06), so `LoadFromDir` is reachable; each format just needs
+   a committed sample song under `Songs/` (none exists yet). `.crs`
+   likely also needs `SONGMAN`. Backlog item 17.
 
 ## Phase 3-4 enabler: `tests/EngineTestEnv` (2026-09-06)
 
@@ -210,14 +210,17 @@ idempotently constructs, once per `sm_tests` process:
 | `LUA` (`LuaManager`) | `RageFileManager`'s ctor calls `LUA->Get()` | first |
 | `FILEMAN` (`RageFileManager`) | `RageFile` I/O; mounts `tests/data/` at `/testdata` and the repo `Songs/` at `/Songs` | after `LUA` |
 | `LOG` (`RageLog`) | error branches call `LOG->UserLog`/`LOG->Warn` | after `FILEMAN` (its ctor opens a `RageFile`, which `ASSERT`s `FILEMAN`) |
+| `PREFSMAN` (`PrefsManager`) | dir-only loaders read it (`DWILoader` → `m_bQuirksMode`, courses → `m_bFastLoad`); Song/Steps paths too | after `LUA` + `FILEMAN` (ctor registers with `LUA`, reads `Data/*.ini` via `FILEMAN` — none mounted, so compiled defaults stand). Dtor calls `LUA->UnsetGlobal` → torn down before `LUA` |
 | `GAMEMAN` (`GameManager`) | `#STEPSTYPE` → `StepsType` resolution in every real load | after `LUA`; ctor is trivial (Lua registration only — the game/style/`StepsType` tables are file-scope static data) |
 
-A `CATCH_REGISTER_LISTENER` tears them down at `testRunEnded`. Tests that
-never call `Require()` are unaffected. Deliberately **not** provided:
-`PREFSMAN`, `GAMESTATE`, `THEME`, `SONGMAN`, renderer, audio. The DWI /
-KSF / BMS loaders read `PREFSMAN` (e.g. `DWILoader` checks
-`m_bQuirksMode`) and only expose `LoadFromDir`, so they stay out of
-scope; `.sm` / `.ssc` / `.sma` `LoadFromSimfile` are in.
+A `CATCH_REGISTER_LISTENER` tears them down at `testRunEnded`, in reverse
+construction order. Tests that never call `Require()` are unaffected.
+Deliberately **not** provided: `GAMESTATE`, `THEME`, `SONGMAN`, renderer,
+audio. `Song::LoadFromSongDir` (the full song-directory load, with the
+cache) still needs more than this; `LoadFromSimfile` for `.sm`/`.ssc`/
+`.sma` and `LoadFromDir` for `.dwi`/`.ksf`/`.bms` are now reachable —
+the only thing missing for the dir formats is a committed sample song
+(backlog item 17).
 Paths reach the fixture through a `file(GENERATE)`d `EngineTestEnvPaths.h`
 (raw string literals, so Windows backslashes need no escaping).
 

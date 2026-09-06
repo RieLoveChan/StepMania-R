@@ -18,9 +18,8 @@ changes an observable result.
   first, then refactor.
 - When a maintainer review turns up a behaviour worth freezing.
 
-Not for: code that needs a live `GAMESTATE` / `PREFSMAN` / `THEME` /
-`SONGMAN` / renderer / audio device (that is smoke-test territory,
-`--SelfTest`).
+Not for: code that needs a live `GAMESTATE` / `THEME` / `SONGMAN` /
+renderer / audio device (that is smoke-test territory, `--SelfTest`).
 Not for asserting what the code *should* do — a characterization test
 records what it *does*; fix bugs in a separate, labelled change with the
 maintainer's sign-off (`AGENTS.md` §5 for anything on the simfile path).
@@ -28,13 +27,14 @@ maintainer's sign-off (`AGENTS.md` §5 for anything on the simfile path).
 If the code under test only needs to **log**, **read a file**,
 **touch Lua**, or **parse a simfile** — but not the game state — call
 `EngineTestEnv::Require()` (from `tests/EngineTestEnv.h`) at the top of
-the `TEST_CASE`. It brings up `LUA` + `FILEMAN` + `LOG` + `GAMEMAN` once
-per run and mounts `tests/data/` at `/testdata` (use
+the `TEST_CASE`. It brings up `LUA` + `FILEMAN` + `LOG` + `PREFSMAN` +
+`GAMEMAN` once per run and mounts `tests/data/` at `/testdata` (use
 `EngineTestEnv::TestDataPath(...)`, for non-simfile fixtures) and the
 repo's `Songs/` tree at `/Songs` (use `EngineTestEnv::SongPath(...)`).
 Idempotent; tests that don't call it pay nothing. `.sm`/`.ssc`/`.sma`
-`LoadFromSimfile` work under it; the `.dwi`/`.ksf`/`.bms` loaders need
-`PREFSMAN` and are not covered yet.
+`LoadFromSimfile` **and** `.dwi`/`.ksf`/`.bms` `LoadFromDir` are all
+reachable under it — the dir formats just have no committed sample song
+in `Songs/` yet. `.crs` courses likely also need `SONGMAN`.
 
 **Simfiles: use real ones.** A parse test loads a committed sample song
 from `Songs/` via `SongPath(...)`, never a hand-authored toy — a toy
@@ -113,3 +113,6 @@ above). Simfile inputs come from a real song under `Songs/` via
 - `2026-09-06` — phase-4 corpus repointed to the real SM5 sample songs
   under `Songs/` (`SongPath`); toy simfiles removed
   (`tests/data/README.md`).
+- `2026-09-06` — `PREFSMAN` added to `EngineTestEnv::Require()`;
+  `LoadFromDir` (`.dwi`/`.ksf`/`.bms`) now reachable. Fixture contract
+  pinned in `test_EngineTestEnv.cpp`.
