@@ -991,3 +991,26 @@
   **Next:** `.sma` (slots into `test_NotesLoaderCorpus.cpp`'s
   `kCorpus`), `.ksf` (`LoadFromDir` case), `.crs` (likely needs
   `SONGMAN`).
+
+* **Test harness — `RageFile` coverage; salvages
+  `src/tests/test_file_readers.cpp` (backlog item 17).**
+  `tests/test_RageFile.cpp` — `RageFile` open / read / write / seek /
+  tell / `GetLine` / `AtEOF` exercised end-to-end through `FILEMAN`'s
+  in-memory `mem` driver (mounted at `/@mem` by the `RageFileManager`
+  ctor — it is writable, so each test writes its own file; **no
+  committed fixtures needed**, unlike the 2004-era original which
+  wanted ~30 MB of uncommitted data). 8 cases / 67 assertions.
+  Characterization highlights pinned:
+  - `AtEOF()` is stdio-like: `m_bEOF` (RageFileObj) is set **only** by a
+    read whose `ReadInternal`/`FillReadBuf` returns 0. Reading *exactly*
+    to the end, or a short read that still returns >0 bytes, does **not**
+    trip EOF — the next (zero-byte) read does.
+  - `Seek(offsetPastEnd)` clamps to and returns the file size.
+  - `GetLine` strips the trailing `\n`, returns the final unterminated
+    line, then returns 0 (and `AtEOF` is true) — this buffered path
+    *does* set EOF on end, unlike the large unbuffered `Read`.
+  - `Read(RString&, -1)` reads from the current position to end.
+  Suite **705 → 772 assertions, 83 → 91 cases**; Windows Debug clean
+  under `WITH_WERROR=ON`, `ctest` 100%, `src/CMakeLists.txt` untouched.
+  `src/tests/test_audio_readers.cpp` is still the open half of item 17's
+  reader salvage — it needs committed audio fixtures + real decode.

@@ -274,13 +274,25 @@ Per-subsystem breakdown as passes run:
     Easy/3/233, Medium/8/443, Hard/10/680 taps). 29 assertions /
     1 visible case (+1 hidden `[dwidump]`).
     Suite total: **705 assertions / 83 cases** (up from 311/72).
+  - `tests/test_RageFile.cpp` (2026-09-06) — salvages the intent of the
+    2004-era `src/tests/test_file_readers.cpp`: `RageFile` open / read /
+    write / seek / tell / `GetLine` / `AtEOF`, end-to-end through
+    `FILEMAN`'s in-memory `mem` driver (`/@mem`, mounted by the
+    `RageFileManager` ctor — writable, so each test writes its own
+    file, no committed fixtures). Pins the stdio-like EOF semantics
+    (`m_bEOF` only trips on a read that returns **0** — reading exactly
+    to the end, or a short read, does not set it), `Seek` past end
+    clamping to the file size, `GetLine` stripping the `\n` and
+    returning a final unterminated line, `Read(RString&, -1)` reading
+    the rest. 67 assertions / 8 cases.
+    Suite total: **772 assertions / 91 cases** (up from 311/72).
   **Locally verified on Windows** (VS 2022 BuildTools cmake 3.31 — the
   standalone cmake 4.3 install on this box hits a compiler-ID detection
   bug when invoked through the VS generator's regen step, use the
   VS-bundled cmake for this repo):
   - `WITH_TESTS=ON` Debug → `sm_engine` OBJECT lib + `Catch2` +
     `sm_tests.exe` all build clean under `WITH_WERROR=ON`; `sm_tests.exe`
-    → **705 assertions / 83 cases pass**; `ctest` 100%. (First-landed at
+    → **772 assertions / 91 cases pass**; `ctest` 100%. (First-landed at
     94/19.)
   - `WITH_TESTS=OFF` Release → `StepMania-R.exe` builds clean (the
     OBJECT-library split is transparent when off) + `--SelfTest` exits 0.
@@ -293,10 +305,10 @@ Per-subsystem breakdown as passes run:
   `tests/test_TimingData.cpp`; simfile-parse coverage →
   `tests/test_NotesLoader.cpp` + `tests/test_NotesLoaderFull.cpp` +
   `tests/test_NotesLoaderCorpus.cpp`.
-  `test_file_readers.cpp` (RageFile binary/text/seek) and
-  `test_audio_readers.cpp` remain — both need a live `FILEMAN` +
-  committed fixtures; `tests/EngineTestEnv.h` now provides the `FILEMAN`
-  half, so salvaging them is down to writing the fixtures + cases.
+  `test_file_readers.cpp` (RageFile binary/text/seek) **salvaged**
+  2026-09-06 → `tests/test_RageFile.cpp` (via the `/@mem` writable
+  mount, no fixtures needed). `test_audio_readers.cpp` still open —
+  it needs committed audio fixtures + real decode.
 - CI: build on 4 platforms + `xmllint` Lua-doc validation + the Windows
   headless smoke + `windows-tests` / `ubuntu-tests` / `macos-tests`.
 
