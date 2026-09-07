@@ -141,3 +141,6 @@ there and is writable, so no fixture file is needed at all (see
   `src/tests/test_audio_readers.cpp`). Added
   `ActorUtil::InitFileTypeLists()` to `EngineTestEnv` for the
   `OpenFile` autodetect factory.
+- `2026-09-06` — `test_IniFile.cpp`: `.ini` reader/writer parse quirks
+  + `RenameKey`/`DeleteKey`/round-trip, from strings via `/@mem`
+  (no fixtures).

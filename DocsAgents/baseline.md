@@ -297,14 +297,28 @@ Per-subsystem breakdown as passes run:
     Pins sample rate / channels / `GetLength` (ms) / PCM16→float
     (`/32768`) / `SetPosition`, and that `OpenFile` returns null on a
     non-audio file. 27 assertions / 3 cases.
-    Suite total: **799 assertions / 94 cases** (up from 311/72).
+  - `tests/test_IniFile.cpp` (2026-09-06) — `IniFile`, the `.ini`
+    reader/writer behind `Preferences.ini` / keymaps / `Static.ini` /
+    the theme-metrics fallback / the legacy `[Char Widths]`→`[main]`
+    fixup; load-bearing and previously untested. Parses strings via
+    `/@mem` (no fixtures). Pins: `[section]` / `key=value`, the quirk
+    that **the key name is trimmed but whitespace right after `=` is
+    kept**, comment prefixes (`;` `#` `//` `--`, but a lone `/`/`-`
+    is a value line), `key=value` before any section is dropped,
+    trailing-`\` line continuation, malformed (no `=`) lines are
+    skipped-with-`LOG->Warn`, repeated `[section]` merges,
+    `GetValue<int/float/bool>` conversion + missing-key false,
+    `WriteFile`/`ReadFile` round-trip, `DeleteKey`/`DeleteValue`,
+    `RenameKey` (moves the section; false on target-exists or
+    source-absent). 76 assertions / 11 cases.
+    Suite total: **875 assertions / 105 cases** (up from 311/72).
   **Locally verified on Windows** (VS 2022 BuildTools cmake 3.31 — the
   standalone cmake 4.3 install on this box hits a compiler-ID detection
   bug when invoked through the VS generator's regen step, use the
   VS-bundled cmake for this repo):
   - `WITH_TESTS=ON` Debug → `sm_engine` OBJECT lib + `Catch2` +
     `sm_tests.exe` all build clean under `WITH_WERROR=ON`; `sm_tests.exe`
-    → **799 assertions / 94 cases pass**; `ctest` 100%. (First-landed at
+    → **875 assertions / 105 cases pass**; `ctest` 100%. (First-landed at
     94/19.)
   - `WITH_TESTS=OFF` Release → `StepMania-R.exe` builds clean (the
     OBJECT-library split is transparent when off) + `--SelfTest` exits 0.
