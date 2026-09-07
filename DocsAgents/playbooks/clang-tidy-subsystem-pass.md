@@ -29,6 +29,12 @@ one PR.
 Run clang-tidy as: `clang-tidy.exe -p build-tidy --quiet --extra-arg-before=/Y- <file>`
 (`/Y-` disables the never-built PCH — required, else every file errors).
 
+> **Git Bash mangles `/Y-`.** MSYS path-conversion rewrites the bare
+> `/Y-` to `C:/Program Files/Git/Y-`, and clang-tidy then errors with
+> "PCH file 'global.pch' not found". Export
+> `MSYS_NO_PATHCONV=1` and `MSYS2_ARG_CONV_EXCL='*'` before invoking, or
+> run from PowerShell.
+
 # Files touched
 
 Only files under the chosen subsystem's `src/...` glob, plus:
@@ -106,3 +112,9 @@ Only files under the chosen subsystem's `src/...` glob, plus:
   `macro-parentheses` 197 lead (all autofix). Tooling recipe (Ninja
   `build-tidy`, manual MSVC/SDK env, `--extra-arg-before=/Y-`) in
   `baseline.md` → "How to (re)generate".
+- 2026-09-06 — passes #5 (`use-nullptr` × `NetworkManager.cpp`, 6→0) and
+  #6 (`macro-parentheses` × 4 singleton macros, 8→4 — `StatsManager`'s
+  4 are `::`-scoped / stringize, unfixable). #6 was hand-applied, not
+  `--fix`, so each of the 8 sites could be judged individually — the
+  right call for a check that "catches real precedence bugs". Added the
+  Git-Bash `/Y-` path-conversion gotcha above.

@@ -1093,3 +1093,36 @@
   - Errors: `"Unterminated comment"`; unclosed root → non-empty error.
   Suite **875 → 918 assertions, 105 → 117 cases**; Windows Debug clean
   under `WITH_WERROR=ON`, `ctest` 100%, `src/CMakeLists.txt` untouched.
+
+* **clang-tidy-subsystem-pass #5 + #6 (the two deferred `singletons`
+  passes, backlog item 12).**
+  **#5 — `modernize-use-nullptr` × `NetworkManager.cpp`**
+  (`ef9fd6ad0b`). `--fix`, `NULL` → `nullptr` at the 6 sites: two
+  `luaL_Reg` sentinel rows (`{NULL, NULL}` → `{nullptr, nullptr}`) and
+  the `libname` arg of two `luaL_register(L, NULL, ...)` calls. The
+  earlier "review variadic calls" caveat does not apply — `luaL_Reg`'s
+  members and `luaL_register`'s 2nd param are all typed pointers, no
+  varargs. **6 → 0.**
+  **#6 — `bugprone-macro-parentheses` × 4 singleton macros**
+  (`f252da54b1`). Hand-applied (not `--fix`) so each of the 8 flagged
+  sites could be judged:
+  - Fixed (real latent precedence bug if ever called with an
+    expression): `NoteSkinManager` `FOR_NOTESKIN` `SArg(n+1)` →
+    `SArg((n)+1)`; `ProfileManager` `FIXED_PROFILE_CHARACTER_ID`
+    `int(i+1)` → `int((i)+1)`; `UnlockManager` `UNLOCK` `x.c_str()` →
+    `(x).c_str()`. Plus `ScreenManager` `PLAY_CRITICAL` `snd.Play(...)`
+    → `(snd).Play(...)` (defensive; `snd` is always a plain lvalue).
+  - **Left, deliberately:** `StatsManager`'s 4 (`ADD_BOOLEAN_OPTION` /
+    `ADD_FLOAT_OPTION`). The `name` arg is used as `PlayerOptions::name`
+    — parenthesising after `::` is a syntax error, so clang-tidy's
+    fixit there would break the build; the `#name` stringize and the
+    always-plain `parent` / `opts` args carry no real risk. **8 → 4**
+    for the check; the remaining 4 are unfixable false positives.
+  Verified Windows Debug: `build-tests` (`WITH_WERROR=ON`) clean — all
+  5 macro-using TUs recompiled, `StatsManager.cpp` did not; `sm_tests`
+  918/117 unchanged, `ctest` 100%. **Tooling:** VS-bundled clang-tidy
+  19.1.5 + the existing `build-tidy/compile_commands.json`; note Git
+  Bash mangles `--extra-arg-before=/Y-` unless
+  `MSYS_NO_PATHCONV=1` / `MSYS2_ARG_CONV_EXCL='*'` is exported first.
+  Remaining deferred `singletons` tidy hits: none tracked — these were
+  the last two.
