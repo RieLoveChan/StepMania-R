@@ -43,11 +43,15 @@
 namespace EngineTestEnv
 {
 	// Idempotent. On first call constructs, in this order:
-	//   LUA -> FILEMAN -> LOG -> PREFSMAN -> GAMEMAN
+	//   LUA -> ActorUtil::InitFileTypeLists() -> FILEMAN -> LOG
+	//       -> PREFSMAN -> GAMEMAN
 	// The order is load-bearing: RageFileManager's ctor calls LUA->Get();
 	// RageLog's ctor opens a RageFile, which asserts FILEMAN != null;
 	// PrefsManager's ctor reads .ini files via FILEMAN and registers with
-	// LUA. Teardown is the reverse (PREFSMAN's dtor calls LUA->UnsetGlobal).
+	// LUA. InitFileTypeLists() populates the static extension<->filetype
+	// maps (needed by the sound/image readers). Teardown is the reverse
+	// (PREFSMAN's dtor calls LUA->UnsetGlobal); the filetype maps are
+	// static and left as-is.
 	void Require();
 
 	// Turn a path relative to tests/data/ into the vpath it is mounted
