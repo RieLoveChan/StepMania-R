@@ -1041,3 +1041,28 @@
   Both 2004-era reader scaffolds (`test_file_readers` +
   `test_audio_readers`) are now covered by fixture-free `tests/`
   characterization.
+
+* **Test harness — `IniFile` characterization (safety-net extension).**
+  `tests/test_IniFile.cpp` — the `.ini` reader/writer under
+  `Preferences.ini`, keymaps, `Static.ini`, the theme-metrics fallback
+  and the legacy `[Char Widths]`→`[main]` fixup (`Font.cpp`). It was
+  load-bearing and completely untested. 11 cases / 76 assertions,
+  parsed from strings via the writable `/@mem` mount (no fixtures).
+  Quirks pinned bug-for-bug:
+  - **Key name is `Trim()`'d, but `value` is `line.Right(...)` computed
+    from the *untrimmed* key length**, so whitespace immediately after
+    `=` stays in the value (`k = v ` → key `"k"`, value `" v "`).
+  - Comment prefixes: `;` `#`, and `//`/`--` (only when `line[0] ==
+    line[1]`). A *lone* leading `/` or `-` is NOT a comment — it falls
+    through to key=value.
+  - `key=value` before any `[section]` is silently dropped (no
+    `[<empty>]` node).
+  - Trailing `\` joins the next line (backslash removed).
+  - A line with no `=` → `LOG->Warn`, dropped, parsing continues.
+  - Repeated `[section]` merges into the existing node.
+  - `RenameKey` returns **false** (no warning) when the source is
+    absent or the target already exists — rename-if-present is the
+    normal call pattern.
+  All 76 held on the first run. Suite **799 → 875 assertions,
+  94 → 105 cases**; Windows Debug clean under `WITH_WERROR=ON`,
+  `ctest` 100%, `src/CMakeLists.txt` untouched.

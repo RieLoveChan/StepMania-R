@@ -266,3 +266,7 @@ Consumers:
   PCM WAV written to `/@mem` (no fixture). Both
   `RageSoundReader_WAV::Open` and the `OpenFile` autodetect factory.
   Salvages `src/tests/test_audio_readers.cpp`.
+- `tests/test_IniFile.cpp` — the `.ini` reader/writer (`Preferences.ini`
+  et al.), parsed from strings via `/@mem`. Pins the parse quirks
+  (trimmed key / untrimmed value, comment prefixes, pre-section drop,
+  `\`-continuation) and `RenameKey`/`DeleteKey`/round-trip.

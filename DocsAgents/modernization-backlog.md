@@ -321,6 +321,14 @@ against the source. Suite **705 / 83**.
   PCM16→float / `SetPosition`. 27 assertions / 3 cases.
   **Reader salvage complete** — both old reader tests are now covered.
 
+**Pure-core coverage keeps growing (2026-09-06):** `tests/test_IniFile.cpp`
+— `IniFile` (`.ini` reader/writer under `Preferences.ini` / keymaps /
+`Static.ini` / theme-metrics fallback / the `[Char Widths]`→`[main]`
+fixup), previously untested. 76 assertions / 11 cases, strings via
+`/@mem`. Pinned the parse quirks (trimmed key vs untrimmed value,
+comment prefixes, pre-section drop, `\`-continuation, `LOG->Warn` on
+missing `=`) + `RenameKey`/`DeleteKey`/round-trip. Suite **875 / 105**.
+
 ### 16. Pre-floor `#if` guards across `src/arch/` and `src/archutils/` — Windows runtime-version checks DONE
 Now that ADR 0003 sets Windows 11 / current-macOS / current-Linux floors,
 sweep for `#if`/`#ifdef` guards handling below-floor OSes: `_WIN32_WINNT`
