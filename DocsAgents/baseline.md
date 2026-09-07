@@ -311,14 +311,28 @@ Per-subsystem breakdown as passes run:
     `WriteFile`/`ReadFile` round-trip, `DeleteKey`/`DeleteValue`,
     `RenameKey` (moves the section; false on target-exists or
     source-absent). 76 assertions / 11 cases.
-    Suite total: **875 assertions / 105 cases** (up from 311/72).
+  - `tests/test_XmlFile.cpp` (2026-09-06) — the engine's hand-rolled
+    XML parser (`XmlFileUtil::Load` / `GetXML` over `XNode`), behind
+    Profiles / `Lua.xml` / theme metrics / NoteSkins metadata / stats;
+    previously untested. Parses from strings (no fixtures, no FILEMAN).
+    Pins: `Load` makes the passed node the root element; attributes in
+    all three quote styles (`"` `'` and unquoted); `GetChild` returns
+    the first same-named child; **element text is captured only before
+    the first child (no mixed content)**; the five named entities
+    (`&amp; &lt; &gt; &quot; &apos;`) decode in text and attrs but
+    **numeric refs (`&#65;`) do not**; comments and the `<?xml?>`
+    prolog are skipped; `<x/>` ≡ `<x></x>`; `GetXML` re-encodes
+    entities and round-trips; errors for unterminated comment
+    (`"Unterminated comment"`) and unclosed root; a name-only
+    attribute is kept with an empty value. 43 assertions / 12 cases.
+    Suite total: **918 assertions / 117 cases** (up from 311/72).
   **Locally verified on Windows** (VS 2022 BuildTools cmake 3.31 — the
   standalone cmake 4.3 install on this box hits a compiler-ID detection
   bug when invoked through the VS generator's regen step, use the
   VS-bundled cmake for this repo):
   - `WITH_TESTS=ON` Debug → `sm_engine` OBJECT lib + `Catch2` +
     `sm_tests.exe` all build clean under `WITH_WERROR=ON`; `sm_tests.exe`
-    → **875 assertions / 105 cases pass**; `ctest` 100%. (First-landed at
+    → **918 assertions / 117 cases pass**; `ctest` 100%. (First-landed at
     94/19.)
   - `WITH_TESTS=OFF` Release → `StepMania-R.exe` builds clean (the
     OBJECT-library split is transparent when off) + `--SelfTest` exits 0.

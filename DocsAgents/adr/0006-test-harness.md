@@ -270,3 +270,8 @@ Consumers:
   et al.), parsed from strings via `/@mem`. Pins the parse quirks
   (trimmed key / untrimmed value, comment prefixes, pre-section drop,
   `\`-continuation) and `RenameKey`/`DeleteKey`/round-trip.
+- `tests/test_XmlFile.cpp` — the hand-rolled XML parser
+  (`XmlFileUtil::Load`/`GetXML` over `XNode`), from strings (no
+  fixture, no `FILEMAN`). Pins text-only-before-first-child, the
+  five-named-entities-only decode, unquoted/name-only attrs, prolog +
+  comment skipping, `GetXML` round-trip, error strings.

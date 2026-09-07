@@ -1066,3 +1066,30 @@
   All 76 held on the first run. Suite **799 → 875 assertions,
   94 → 105 cases**; Windows Debug clean under `WITH_WERROR=ON`,
   `ctest` 100%, `src/CMakeLists.txt` untouched.
+
+* **Test harness — `XmlFile` characterization (safety-net extension).**
+  `tests/test_XmlFile.cpp` — the engine's hand-rolled XML parser
+  (`XmlFileUtil::Load` / `GetXML` over `XNode`), behind Profiles,
+  `Lua.xml`, theme metrics, NoteSkins metadata and stats. Previously
+  untested. 12 cases / 43 assertions; `XmlFileUtil::Load` takes an
+  `RString` so no fixture and no `FILEMAN` (only `LOG`, for the error
+  paths). Predictions from a read of `LoadInternal`/`LoadAttributes`
+  all held on the first run. Quirks pinned:
+  - `Load(&node, xml, err)` makes `node` **the root element itself**
+    (no document wrapper); the `<?xml?>` prolog and `<!-- -->`
+    comments are skipped and it recurses.
+  - **Element text is only captured before the first child element** —
+    `<r>lead<c/>trail</r>` keeps `"lead"`, drops `"trail"` (no mixed
+    content).
+  - Only the five named entities (`&amp; &lt; &gt; &quot; &apos;`)
+    decode, in both text and attribute values. Numeric character
+    references (`&#65;`, `&#x41;`) are left verbatim.
+  - Attributes accept `"..."`, `'...'` **and unquoted** (`c=three`,
+    ended by space or `>`); a name-only attribute (`<r flag .../>`) is
+    kept with an empty value.
+  - `GetChild(name)` returns the first same-named child;
+    `GetChildrenBegin/End` iterate in document order.
+  - `GetXML` re-encodes the entities and round-trips through `Load`.
+  - Errors: `"Unterminated comment"`; unclosed root → non-empty error.
+  Suite **875 → 918 assertions, 105 → 117 cases**; Windows Debug clean
+  under `WITH_WERROR=ON`, `ctest` 100%, `src/CMakeLists.txt` untouched.

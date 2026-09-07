@@ -321,13 +321,20 @@ against the source. Suite **705 / 83**.
   PCM16→float / `SetPosition`. 27 assertions / 3 cases.
   **Reader salvage complete** — both old reader tests are now covered.
 
-**Pure-core coverage keeps growing (2026-09-06):** `tests/test_IniFile.cpp`
-— `IniFile` (`.ini` reader/writer under `Preferences.ini` / keymaps /
-`Static.ini` / theme-metrics fallback / the `[Char Widths]`→`[main]`
-fixup), previously untested. 76 assertions / 11 cases, strings via
-`/@mem`. Pinned the parse quirks (trimmed key vs untrimmed value,
-comment prefixes, pre-section drop, `\`-continuation, `LOG->Warn` on
-missing `=`) + `RenameKey`/`DeleteKey`/round-trip. Suite **875 / 105**.
+**Pure-core coverage keeps growing (2026-09-06):**
+- `tests/test_IniFile.cpp` — `IniFile` (`.ini` reader/writer under
+  `Preferences.ini` / keymaps / `Static.ini` / theme-metrics fallback /
+  the `[Char Widths]`→`[main]` fixup), previously untested. 76
+  assertions / 11 cases, strings via `/@mem`. Pinned the parse quirks
+  (trimmed key vs untrimmed value, comment prefixes, pre-section drop,
+  `\`-continuation, `LOG->Warn` on missing `=`) +
+  `RenameKey`/`DeleteKey`/round-trip.
+- `tests/test_XmlFile.cpp` — the hand-rolled XML parser
+  (`XmlFileUtil::Load`/`GetXML`), previously untested. 43 assertions /
+  12 cases, from strings. Pinned: node-is-root, text-only-before-first
+  -child, five-named-entities-only (no numeric refs), unquoted +
+  name-only attrs, prolog/comment skipping, `GetXML` round-trip.
+Suite **918 / 117**.
 
 ### 16. Pre-floor `#if` guards across `src/arch/` and `src/archutils/` — Windows runtime-version checks DONE
 Now that ADR 0003 sets Windows 11 / current-macOS / current-Linux floors,
