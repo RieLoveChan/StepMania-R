@@ -136,3 +136,8 @@ there and is writable, so no fixture file is needed at all (see
 - `2026-09-06` — `test_RageFile.cpp`: read/write round-trips via the
   writable `/@mem` mount, no fixture files (salvages
   `src/tests/test_file_readers.cpp`).
+- `2026-09-06` — `test_RageSoundReader.cpp`: WAV decode from a
+  synthetic in-test PCM WAV, no fixture (salvages
+  `src/tests/test_audio_readers.cpp`). Added
+  `ActorUtil::InitFileTypeLists()` to `EngineTestEnv` for the
+  `OpenFile` autodetect factory.

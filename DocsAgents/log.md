@@ -1014,3 +1014,30 @@
   under `WITH_WERROR=ON`, `ctest` 100%, `src/CMakeLists.txt` untouched.
   `src/tests/test_audio_readers.cpp` is still the open half of item 17's
   reader salvage — it needs committed audio fixtures + real decode.
+
+* **Test harness — WAV sound-reader coverage; salvages
+  `src/tests/test_audio_readers.cpp` (backlog item 17). Reader salvage
+  now complete.** `tests/test_RageSoundReader.cpp` decodes a
+  **synthetic** 16-bit PCM mono WAV — a canonical 44-byte-header WAV
+  built byte by byte in the test with a deterministic periodic sample
+  pattern, so there is no copyrighted audio and no committed fixture
+  (the 2004 original wanted MP3/OGG files it didn't ship). Written to
+  `/@mem`, decoded back through two entry points:
+  - `RageSoundReader_WAV::Open(RageFileBasic*)` directly (bypasses the
+    factory) — pins `GetSampleRate` (44100), `GetNumChannels` (1),
+    `GetLength` (100 — milliseconds), PCM16→float (`sample/32768`,
+    checked within a 0.001 margin), and `SetPosition(frame)` + re-read.
+  - `RageSoundReader_FileReader::OpenFile(path, error)` — the
+    format-autodetect factory; same results. It consults
+    `ActorUtil::GetTypeExtensionList(FT_Sound)`, which is empty unless
+    `ActorUtil::InitFileTypeLists()` has run — so that call was added to
+    `EngineTestEnv::BringUp()` (after `LUA`, before `FILEMAN`, matching
+    `sm_main()`; manager-free static-map setup; not idempotent but
+    `BringUp()` runs once). Also pins that `OpenFile` returns `nullptr`
+    + a non-empty error on a non-audio file.
+  All 27 assertions held on the first run. Suite **772 → 799
+  assertions, 91 → 94 cases**; Windows Debug clean under
+  `WITH_WERROR=ON`, `ctest` 100%, `src/CMakeLists.txt` untouched.
+  Both 2004-era reader scaffolds (`test_file_readers` +
+  `test_audio_readers`) are now covered by fixture-free `tests/`
+  characterization.
