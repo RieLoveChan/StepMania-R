@@ -13,6 +13,7 @@ set(SM_TEST_SRC
     test_RageFile.cpp
     test_RageSoundReader.cpp
     test_IniFile.cpp
+    test_XmlFile.cpp
     test_RageUtil.cpp
     test_RageMath.cpp
     test_TimingData.cpp
