@@ -7,6 +7,7 @@
 #include "RageLog.h"
 #include "PrefsManager.h"
 #include "GameManager.h"
+#include "ActorUtil.h"      // InitFileTypeLists
 
 #include "catch_amalgamated.hpp"
 
@@ -41,6 +42,13 @@ namespace
 		//     FILEMAN != nullptr, so FILEMAN must exist.
 		if( LUA == nullptr )
 			LUA = new LuaManager;
+
+		// Populates the static extension<->filetype maps. Manager-free
+		// (sm_main() calls it here, before FILEMAN); needed by the
+		// file-type-aware readers -- RageSoundReader_FileReader::OpenFile
+		// consults GetTypeExtensionList(FT_Sound). NOT idempotent (its
+		// reverse-map build push_back()s), but BringUp() runs once.
+		ActorUtil::InitFileTypeLists();
 
 		if( FILEMAN == nullptr )
 		{
