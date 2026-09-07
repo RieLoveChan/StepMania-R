@@ -310,8 +310,16 @@ against the source. Suite **705 / 83**.
   test writes its own file — no committed fixtures. Pinned the
   stdio-like `AtEOF` semantics (`m_bEOF` only trips on a 0-byte read),
   `Seek`-past-end clamping, `GetLine` behaviour. 67 assertions / 8
-  cases. `test_audio_readers.cpp` still open — needs committed audio
-  fixtures + real decode.
+  cases.
+- `src/tests/test_audio_readers.cpp` **DONE (2026-09-06)** →
+  `tests/test_RageSoundReader.cpp`: the WAV decoder, from a synthetic
+  PCM WAV built in the test (deterministic samples — no copyrighted
+  audio, no committed fixture) written to `/@mem` and decoded back.
+  Both `RageSoundReader_WAV::Open` and the `OpenFile` autodetect
+  factory (which needed `ActorUtil::InitFileTypeLists()` added to
+  `EngineTestEnv`). Pinned sample rate / channels / `GetLength` (ms) /
+  PCM16→float / `SetPosition`. 27 assertions / 3 cases.
+  **Reader salvage complete** — both old reader tests are now covered.
 
 ### 16. Pre-floor `#if` guards across `src/arch/` and `src/archutils/` — Windows runtime-version checks DONE
 Now that ADR 0003 sets Windows 11 / current-macOS / current-Linux floors,

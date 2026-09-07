@@ -217,9 +217,10 @@ file*, or *touch Lua*, without booting the whole engine.
 `tests/EngineTestEnv.{h,cpp}` is that fixture. `EngineTestEnv::Require()`
 idempotently constructs, once per `sm_tests` process:
 
-| Global | Why | Order constraint |
+| Global / step | Why | Order constraint |
 |---|---|---|
 | `LUA` (`LuaManager`) | `RageFileManager`'s ctor calls `LUA->Get()` | first |
+| `ActorUtil::InitFileTypeLists()` | populates the static extension↔filetype maps; `RageSoundReader_FileReader::OpenFile` (and image/movie readers) consult them | after `LUA`; manager-free; not idempotent, so relies on `BringUp()` running once |
 | `FILEMAN` (`RageFileManager`) | `RageFile` I/O; mounts `tests/data/` at `/testdata` and the repo `Songs/` at `/Songs` | after `LUA` |
 | `LOG` (`RageLog`) | error branches call `LOG->UserLog`/`LOG->Warn` | after `FILEMAN` (its ctor opens a `RageFile`, which `ASSERT`s `FILEMAN`) |
 | `PREFSMAN` (`PrefsManager`) | dir-only loaders read it (`DWILoader` → `m_bQuirksMode`, courses → `m_bFastLoad`); Song/Steps paths too | after `LUA` + `FILEMAN` (ctor registers with `LUA`, reads `Data/*.ini` via `FILEMAN` — none mounted, so compiled defaults stand). Dtor calls `LUA->UnsetGlobal` → torn down before `LUA` |
@@ -261,3 +262,7 @@ Consumers:
   `AtEOF` through `FILEMAN`'s writable `/@mem` mount (no committed
   fixtures). Salvages `src/tests/test_file_readers.cpp`; pins the
   stdio-like EOF semantics.
+- `tests/test_RageSoundReader.cpp` — the WAV decoder from a synthetic
+  PCM WAV written to `/@mem` (no fixture). Both
+  `RageSoundReader_WAV::Open` and the `OpenFile` autodetect factory.
+  Salvages `src/tests/test_audio_readers.cpp`.

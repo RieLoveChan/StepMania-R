@@ -211,8 +211,9 @@ Per-subsystem breakdown as passes run:
     `test_NotesLoaderFull.cpp` (they need a live `LOG`).
   - `tests/EngineTestEnv.{h,cpp}` (2026-09-06) — the shared **engine
     bootstrap fixture**: `EngineTestEnv::Require()` idempotently news up
-    `LUA` → `FILEMAN` → `LOG` → `PREFSMAN` → `GAMEMAN` (that order is
-    load-bearing) once per `sm_tests` run, mounts `tests/data/` at
+    `LUA` → `ActorUtil::InitFileTypeLists()` → `FILEMAN` → `LOG` →
+    `PREFSMAN` → `GAMEMAN` (that order is load-bearing) once per
+    `sm_tests` run, mounts `tests/data/` at
     `/testdata` and the repo's `Songs/` tree at `/Songs` (both
     read-only, lazy), silences `LOG` disk output, and a Catch2 listener
     tears it down at run end (reverse order — `PREFSMAN`'s dtor calls
@@ -285,14 +286,25 @@ Per-subsystem breakdown as passes run:
     clamping to the file size, `GetLine` stripping the `\n` and
     returning a final unterminated line, `Read(RString&, -1)` reading
     the rest. 67 assertions / 8 cases.
-    Suite total: **772 assertions / 91 cases** (up from 311/72).
+  - `tests/test_RageSoundReader.cpp` (2026-09-06) — salvages the core of
+    the 2004-era `src/tests/test_audio_readers.cpp`: the WAV decoder,
+    from a **synthetic** PCM WAV (deterministic samples built in the
+    test — no copyrighted audio, no committed fixture — written to
+    `/@mem` and decoded back). Covers both `RageSoundReader_WAV::Open`
+    directly and the format-autodetecting
+    `RageSoundReader_FileReader::OpenFile` factory (which needs the
+    extension→filetype maps, hence `InitFileTypeLists` in the fixture).
+    Pins sample rate / channels / `GetLength` (ms) / PCM16→float
+    (`/32768`) / `SetPosition`, and that `OpenFile` returns null on a
+    non-audio file. 27 assertions / 3 cases.
+    Suite total: **799 assertions / 94 cases** (up from 311/72).
   **Locally verified on Windows** (VS 2022 BuildTools cmake 3.31 — the
   standalone cmake 4.3 install on this box hits a compiler-ID detection
   bug when invoked through the VS generator's regen step, use the
   VS-bundled cmake for this repo):
   - `WITH_TESTS=ON` Debug → `sm_engine` OBJECT lib + `Catch2` +
     `sm_tests.exe` all build clean under `WITH_WERROR=ON`; `sm_tests.exe`
-    → **772 assertions / 91 cases pass**; `ctest` 100%. (First-landed at
+    → **799 assertions / 94 cases pass**; `ctest` 100%. (First-landed at
     94/19.)
   - `WITH_TESTS=OFF` Release → `StepMania-R.exe` builds clean (the
     OBJECT-library split is transparent when off) + `--SelfTest` exits 0.
@@ -305,10 +317,13 @@ Per-subsystem breakdown as passes run:
   `tests/test_TimingData.cpp`; simfile-parse coverage →
   `tests/test_NotesLoader.cpp` + `tests/test_NotesLoaderFull.cpp` +
   `tests/test_NotesLoaderCorpus.cpp`.
-  `test_file_readers.cpp` (RageFile binary/text/seek) **salvaged**
-  2026-09-06 → `tests/test_RageFile.cpp` (via the `/@mem` writable
-  mount, no fixtures needed). `test_audio_readers.cpp` still open —
-  it needs committed audio fixtures + real decode.
+  `test_file_readers.cpp` **salvaged** 2026-09-06 →
+  `tests/test_RageFile.cpp` (via the `/@mem` writable mount, no
+  fixtures). `test_audio_readers.cpp` **salvaged** 2026-09-06 →
+  `tests/test_RageSoundReader.cpp` (synthetic PCM WAV built in the
+  test, no fixture). **The `src/tests/` reader salvage is now
+  complete** — the remaining `src/tests/*` files are the old
+  `test_lua` / rendering / pitch scaffolds, not worth wiring.
 - CI: build on 4 platforms + `xmllint` Lua-doc validation + the Windows
   headless smoke + `windows-tests` / `ubuntu-tests` / `macos-tests`.
 
