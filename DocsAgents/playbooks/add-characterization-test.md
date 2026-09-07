@@ -144,3 +144,6 @@ there and is writable, so no fixture file is needed at all (see
 - `2026-09-06` — `test_IniFile.cpp`: `.ini` reader/writer parse quirks
   + `RenameKey`/`DeleteKey`/round-trip, from strings via `/@mem`
   (no fixtures).
+- `2026-09-06` — `test_XmlFile.cpp`: the hand-rolled XML parser
+  (`XmlFileUtil::Load`/`GetXML`), from strings (no fixture, no
+  `FILEMAN`).
