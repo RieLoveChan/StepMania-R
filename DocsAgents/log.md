@@ -1104,7 +1104,7 @@
   members and `luaL_register`'s 2nd param are all typed pointers, no
   varargs. **6 → 0.**
   **#6 — `bugprone-macro-parentheses` × 4 singleton macros**
-  (`f252da54b1`). Hand-applied (not `--fix`) so each of the 8 flagged
+  (`2d8227fbe8`). Hand-applied (not `--fix`) so each of the 8 flagged
   sites could be judged:
   - Fixed (real latent precedence bug if ever called with an
     expression): `NoteSkinManager` `FOR_NOTESKIN` `SArg(n+1)` →
