@@ -569,7 +569,7 @@ public:
 	static int x ## ForNoteSkin( T* p, lua_State *L ) \
 	{ \
 		const RString sOldNoteSkin = p->GetCurrentNoteSkin(); \
-		RString nsname= SArg(n+1); \
+		RString nsname= SArg((n)+1); \
 		if(!p->DoesNoteSkinExist(nsname)) \
 		{ \
 			luaL_error(L, "Noteskin \"%s\" does not exist.", nsname.c_str()); \
