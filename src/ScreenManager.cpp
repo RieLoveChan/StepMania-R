@@ -888,7 +888,7 @@ void ScreenManager::ZeroNextUpdate()
 { \
 	RageSoundParams p; \
 	p.m_bIsCriticalSound = true; \
-	snd.Play(false, &p); \
+	(snd).Play(false, &p); \
 }
 
 /* Always play these sounds, even if we're in a silent attract loop. */
