@@ -361,11 +361,11 @@ static void registerHttpRequestMetatable(lua_State *L)
 	const luaL_Reg HttpRequest_meta[] = {
 		{"__gc", HttpRequestFuture::Collect},
 		{"Cancel", HttpRequestFuture::Cancel},
-		{NULL, NULL},
+		{nullptr, nullptr},
 	};
 
 	luaL_newmetatable(L, "HttpRequestFuture");
-	luaL_register(L, NULL, HttpRequest_meta);
+	luaL_register(L, nullptr, HttpRequest_meta);
 	lua_pushvalue(L, -1);
 	lua_setfield(L, -2, "__index");
 	lua_pop(L, 1);
@@ -379,11 +379,11 @@ static void registerWebSocketMetatable(lua_State *L)
 		{"__gc", WebSocketHandle::Collect},
 		{"Close", WebSocketHandle::Close},
 		{"Send", WebSocketHandle::Send},
-		{NULL, NULL},
+		{nullptr, nullptr},
 	};
 
 	luaL_newmetatable(L, "WebSocketHandle");
-	luaL_register(L, NULL, WebSocket_meta);
+	luaL_register(L, nullptr, WebSocket_meta);
 	lua_pushvalue(L, -1);
 	lua_setfield(L, -2, "__index");
 	lua_pop(L, 1);
