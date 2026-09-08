@@ -560,7 +560,7 @@ bool Profile::GetDefaultModifiers( const Game* pGameType, RString &sModifiersOut
 
 void Profile::SetDefaultModifiers( const Game* pGameType, const RString &sModifiers )
 {
-	if( sModifiers == "" )
+	if( sModifiers.empty() )
 		m_sDefaultModifiers.erase( pGameType->m_szName );
 	else
 		m_sDefaultModifiers[pGameType->m_szName] = sModifiers;
@@ -803,7 +803,7 @@ void Profile::GetAllUsedHighScoreNames(std::set<RString>& names)
 					high_score != sub_entry->second.hsl.vHighScores.end(); \
 					++high_score) \
 			{ \
-				if(high_score->GetName().size() > 0) \
+				if(!high_score->GetName().empty()) \
 				{ \
 					names.insert(high_score->GetName()); \
 				} \

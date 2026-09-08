@@ -47,12 +47,12 @@ void StageStats::Init()
 
 void StageStats::AssertValid( PlayerNumber pn ) const
 {
-	ASSERT( m_vpPlayedSongs.size() != 0 );
-	ASSERT( m_vpPossibleSongs.size() != 0 );
+	ASSERT( !m_vpPlayedSongs.empty() );
+	ASSERT( !m_vpPossibleSongs.empty() );
 	if( m_vpPlayedSongs[0] )
 		CHECKPOINT_M( m_vpPlayedSongs[0]->GetTranslitFullTitle() );
 	ASSERT( m_player[pn].m_iStepsPlayed > 0 );
-	ASSERT( m_player[pn].m_vpPossibleSteps.size() != 0 );
+	ASSERT( !m_player[pn].m_vpPossibleSteps.empty() );
 	ASSERT( m_player[pn].m_vpPossibleSteps[0] != nullptr );
 	ASSERT_M( m_playMode < NUM_PlayMode, ssprintf("playmode %i", m_playMode) );
 	ASSERT_M( m_player[pn].m_vpPossibleSteps[0]->GetDifficulty() < NUM_Difficulty, ssprintf("Invalid Difficulty %i", m_player[pn].m_vpPossibleSteps[0]->GetDifficulty()) );
@@ -62,11 +62,11 @@ void StageStats::AssertValid( PlayerNumber pn ) const
 
 void StageStats::AssertValid( MultiPlayer pn ) const
 {
-	ASSERT( m_vpPlayedSongs.size() != 0 );
-	ASSERT( m_vpPossibleSongs.size() != 0 );
+	ASSERT( !m_vpPlayedSongs.empty() );
+	ASSERT( !m_vpPossibleSongs.empty() );
 	if( m_vpPlayedSongs[0] )
 		CHECKPOINT_M( m_vpPlayedSongs[0]->GetTranslitFullTitle() );
-	ASSERT( m_multiPlayer[pn].m_vpPossibleSteps.size() != 0 );
+	ASSERT( !m_multiPlayer[pn].m_vpPossibleSteps.empty() );
 	ASSERT( m_multiPlayer[pn].m_vpPossibleSteps[0] != nullptr );
 	ASSERT_M( m_playMode < NUM_PlayMode, ssprintf("playmode %i", m_playMode) );
 	ASSERT_M( m_player[pn].m_vpPossibleSteps[0]->GetDifficulty() < NUM_Difficulty, ssprintf("difficulty %i", m_player[pn].m_vpPossibleSteps[0]->GetDifficulty()) );
@@ -182,7 +182,7 @@ void StageStats::FinalizeScores( bool bSummary )
 		default: break;
 	}
 
-	if( PREFSMAN->m_sTestInitialScreen.Get() != "" )
+	if( !PREFSMAN->m_sTestInitialScreen.Get().empty() )
 	{
 		FOREACH_PlayerNumber( pn )
 		{

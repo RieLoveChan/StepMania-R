@@ -521,7 +521,7 @@ void Font::LoadFontPageSettings( FontPageSettings &cfg, IniFile &ini, const RStr
 				wchar_t c;
 				if( sCodepoint.substr(0, 2) == "U+" && IsHexVal(sCodepoint.substr(2)) )
 					sscanf( sCodepoint.substr(2).c_str(), "%lc", &c );
-				else if( sCodepoint.size() > 0 &&
+				else if( !sCodepoint.empty() &&
 						utf8_get_char_len(sCodepoint[0]) == int(sCodepoint.size()) )
 				{
 					c = utf8_get_char( sCodepoint.c_str() );
@@ -829,7 +829,7 @@ void Font::Load( const RString &sIniPath, RString sChars )
 		for(unsigned i = 0; i < ImportList.size(); ++i)
 		{
 			RString sPath = THEME->GetPathF( "", ImportList[i], true );
-			if( sPath == "" )
+			if( sPath.empty() )
 			{
 				RString s = ssprintf( "Font \"%s\" imports a font \"%s\" that doesn't exist", sIniPath.c_str(), ImportList[i].c_str() );
 				Dialog::OK( s );

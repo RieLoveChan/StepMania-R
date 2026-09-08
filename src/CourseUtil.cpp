@@ -216,7 +216,7 @@ void CourseUtil::AutogenEndlessFromGroup( const RString &sGroupName, Difficulty 
 	FOREACH_ENUM( Difficulty,dc)
 		out.m_iCustomMeter[dc] = -1;
 
-	if( sGroupName == "" )
+	if( sGroupName.empty() )
 	{
 		out.m_sMainTitle = "All Songs";
 		// this sounds reasonable... -aj
@@ -266,8 +266,8 @@ void CourseUtil::AutogenOniFromArtist( const RString &sArtistName, RString sArti
 	FOREACH_ENUM( Difficulty,cd)
 		out.m_iCustomMeter[cd] = -1;
 
-	ASSERT( sArtistName != "" );
-	ASSERT( aSongs.size() > 0 );
+	ASSERT( !sArtistName.empty() );
+	ASSERT( !aSongs.empty() );
 
 	/* "Artist Oni" is a little repetitive; "by Artist" stands out less, and
 	 * lowercasing "by" puts more emphasis on the artist's name. It also sorts

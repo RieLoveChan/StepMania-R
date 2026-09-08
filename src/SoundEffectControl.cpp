@@ -35,7 +35,7 @@ void SoundEffectControl::SetSoundReader( RageSoundReader *pPlayer )
 
 void SoundEffectControl::Update( float fDeltaTime )
 {
-	if( SOUND_PROPERTY == "" )
+	if( SOUND_PROPERTY.GetValue().empty() )
 		return;
 
 	float fLevel = INPUTMAPPER->GetLevel( GAME_BUTTON_EFFECT_UP, m_pPlayerState->m_PlayerNumber );

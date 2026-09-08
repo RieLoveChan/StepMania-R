@@ -67,7 +67,7 @@ RString OptionRowHandler::OptionTitle() const
 RString OptionRowHandler::GetThemedItemText( int iChoice ) const
 {
 	RString s = m_Def.m_vsChoices[iChoice];
-	if( s == "" )
+	if( s.empty() )
 		return "";
 	bool bTheme = false;
 
@@ -128,7 +128,7 @@ static LocalizedString OFF ( "OptionRowHandler", "Off" );
 #define CHECK_WRONG_NUM_ARGS(num) \
 	ROW_INVALID_IF(command.m_vsArgs.size() != num, "Wrong number of args to option row.", false);
 #define CHECK_BLANK_ARG \
-	ROW_INVALID_IF(sParam.size() == 0, "Blank arg to Steps row.", false);
+	ROW_INVALID_IF(sParam.empty(), "Blank arg to Steps row.", false);
 
 // begin OptionRow handlers
 class OptionRowHandlerList : public OptionRowHandler
@@ -214,9 +214,9 @@ public:
 				mc.Load( 0, ParseCommands(ENTRY_MODE(sParam, col)) );
 				/* If the row has just one entry, use the name of the row as the name of the
 				 * entry. If it has more than one, each one must be specified explicitly. */
-				if( mc.m_sName == "" && NumCols == 1 )
+				if( mc.m_sName.empty() && NumCols == 1 )
 					mc.m_sName = sParam;
-				if( mc.m_sName == "" )
+				if( mc.m_sName.empty() )
 				{
 					LuaHelpers::ReportScriptErrorFmt("List \"%s\", choice %i has no name.", sParam.c_str(), col+1);
 					mc.m_sName= "";
@@ -473,12 +473,12 @@ class OptionRowHandlerListSteps : public OptionRowHandlerList
 					s = pSteps->GetChartName();
 				}
 				// TODO: find a way to make this use lua or metrics.
-				if (s == "" || s == "blank" || s == "Blank")
+				if (s.empty() || s == "blank" || s == "Blank")
 				{
 					if( pSteps->GetDifficulty() == Difficulty_Edit )
 					{
 						s = pSteps->GetChartName();
-						if (s == "" || s == "blank" || s == "Blank")
+						if (s.empty() || s == "blank" || s == "Blank")
 							s = pSteps->GetDescription();
 					}
 					else
@@ -486,7 +486,7 @@ class OptionRowHandlerListSteps : public OptionRowHandlerList
 						if( pSteps->IsAnEdit() )
 						{
 							s = pSteps->GetChartName();
-							if (s == "" || s == "blank" || s == "Blank")
+							if (s.empty() || s == "blank" || s == "Blank")
 								s = pSteps->GetDescription();
 						}
 						else
@@ -724,7 +724,7 @@ class OptionRowHandlerListStyles: public OptionRowHandlerList
 
 		std::vector<const Style*> vStyles;
 		GAMEMAN->GetStylesForGame( GAMESTATE->m_pCurGame, vStyles );
-		ASSERT( vStyles.size() != 0 );
+		ASSERT( !vStyles.empty() );
 		for (Style const *s : vStyles)
 		{
 			m_Def.m_vsChoices.push_back( GAMEMAN->StyleToLocalizedString(s) );
@@ -749,7 +749,7 @@ class OptionRowHandlerListGroups: public OptionRowHandlerList
 
 		std::vector<RString> vSongGroups;
 		SONGMAN->GetSongGroupNames( vSongGroups );
-		ASSERT( vSongGroups.size() != 0 );
+		ASSERT( !vSongGroups.empty() );
 
 		{
 			m_Def.m_vsChoices.push_back( "AllGroups" );
@@ -1554,7 +1554,7 @@ OptionRowHandler* OptionRowHandlerUtil::Make( const Commands &cmds )
 {
 	OptionRowHandler* pHand = nullptr;
 
-	ROW_INVALID_IF(cmds.v.size() == 0, "No commands for constructing row.", nullptr);
+	ROW_INVALID_IF(cmds.v.empty(), "No commands for constructing row.", nullptr);
 	const RString &name = cmds.v[0].GetName();
 	ROW_INVALID_IF(name != "gamecommand" && cmds.v.size() != 1,
 		"Row must be constructed from single command.", nullptr);

@@ -109,7 +109,7 @@ void ImageCache::Undemand( RString /* sImageDir */ )
  * not be updated if the original file changes, for efficiency. */
 void ImageCache::LoadImage( RString sImageDir, RString sImagePath )
 {
-	if( sImagePath == "" )
+	if( sImagePath.empty() )
 		return; // nothing to do
 	if( PREFSMAN->m_ImageCache != IMGCACHE_LOW_RES_PRELOAD &&
 	    PREFSMAN->m_ImageCache != IMGCACHE_LOW_RES_LOAD_ON_DEMAND )
@@ -275,7 +275,7 @@ RageTextureID ImageCache::LoadCachedImage( RString sImageDir, RString sImagePath
 	RageTextureID ID( GetImageCachePath(sImageDir,sImagePath) );
 
 	std::size_t Found = sImagePath.find("_blank");
-	if( sImagePath == "" || Found!=RString::npos )
+	if( sImagePath.empty() || Found!=RString::npos )
 		return ID;
 
 	//LOG->Trace( "ImageCache::LoadCachedImage(%s): %s", sImagePath.c_str(), ID.filename.c_str() );
