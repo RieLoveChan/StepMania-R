@@ -62,10 +62,22 @@ Rework `RageLog` in phases. Format model:
 2. `Debug` level + per-category thresholds + `--LogLevel` flag +
    `Log::Category` enum and a `LOG_*` macro layer that captures
    `file:line`.
+   **PARTIALLY DONE (2026-09-08, `156c075ff3`):** `RageLog::Debug()`
+   + `[DEBUG]` tag; `enum RageLog::LogLevel` (Trace<Debug<Info<Warn<
+   Error) with `LogLevelFromString`/`ToString`; `SetLogLevel()` — a
+   global minimum-level filter in `Write()` (default Trace = no
+   change); `PrefsManager::m_sLogLevel` + `--LogLevel=<name>` in
+   `ApplyLogPreferences()`. Verified: `--SelfTest` exit 0 at every
+   level; `--LogLevel=warn` → 0 boot lines. `test_RageLog.cpp` covers
+   the enum + parsing.
+   **Still open:** **per-category** thresholds (`--LogLevel=gl:off,
+   font:trace`), the `Log::Category` enum, and the `LOG_*` `file:line`
+   macro layer — the category taxonomy is a design call, deferred.
 3. Repeat-collapsing in `AddToRecentLogs` / `Write`.
 4. **Call-site audit** (long tail, per subsystem, like the tidy passes):
    `LOG->Warn` that are really `Trace` (expected fallback) → demote;
-   genuine failures → `LOG->Error`; add category tags.
+   genuine failures → `LOG->Error`; add category tags. (Also where
+   `LOG->Debug()` call sites first appear.)
 
 ## The `Char Widths` bug (fixed in Phase 1)
 
