@@ -1337,3 +1337,38 @@
   call-site migration — bare `LOG->` → `LOG_*` + real categories,
   `Warn`→`Trace`/`Error` triage) remain; phase 4 is what makes the
   per-category filter and the `file:line` column actually visible.
+
+* **Logging overhaul phase 3 — consecutive-identical-line collapsing
+  (`65fbca7bf5`).** `RageLog::Write` folds a run of identical
+  consecutive lines: occurrences 1 and 2 print verbatim, 3+ are
+  suppressed and, when the run ends (a different line arrives, or the
+  dtor), replaced with `[TRACE] (previous line repeated N more times)`
+  (N = suppressed count = occurrences − 2). A mere pair therefore
+  produces no note. The summary inherits the run's tag + `where` bits
+  (a `[WARN]` run's note is `[WARN]` and lands in info.txt). Identity =
+  the tagged message minus the timestamp — level and category are part
+  of it (a Trace "x" and a Warn "x" don't merge). Time-log /
+  userlog.txt lines and multi-line messages never collapse.
+  Implementation: the per-line emit moved out of `Write()` into
+  `EmitLine()`; `SpillRepeat()` emits the pending note and is called on
+  a line change and in `~RageLog` (before the final flush) so a run
+  pending at exit isn't lost; `m_sLastEmit` / `m_sLastTag` /
+  `m_iLastWhere` / `m_iRepeatCount` hold the state, under the existing
+  `g_Mutex`.
+  **Bug fixed en route (found by an expanded test):** `SetLogLevelSpec`
+  now resets to defaults (global Trace, all per-category overrides
+  cleared) before applying the tokens — the spec is the *complete*
+  config. `--LogLevel=sound:error` = global trace + sound:error; write
+  `--LogLevel=warn,sound:error` to keep a raised global. Previously a
+  per-cat-only spec accumulated and there was no way to clear a
+  category back to "unset".
+  **Verified (Windows Debug):** `sm_tests` 1002→1004 / 124, `ctest`
+  100%, clean under `WITH_WERROR=ON`. `StepMania-R_debug --SelfTest`
+  exit 0; `log.txt` 460 → 438 lines, 4 collapse notes, the biggest
+  eating 16 repeats of the `glTexImage2D (… 256x256 …)` trace — the
+  exact case ADR 0005's context table measured (68 glTexImage2D lines).
+  No un-collapsed run of ≥ 3 identical lines remains.
+  **Logging overhaul phases 1-3 are done.** Phase 4 (call-site
+  migration to `LOG_*` + categories, `Warn`→`Trace`/`Error` triage) is
+  the long tail, per subsystem — and what finally lights up the
+  per-category filter and the `file:line` column.
