@@ -101,7 +101,7 @@ bool RageSurfaceFormat::operator== ( const RageSurfaceFormat &rhs ) const
 		return false;
 
 	if( BytesPerPixel == 1 )
-		if( memcmp( palette.get(), rhs.palette.get(), sizeof(RageSurfaceFormat) ) )
+		if( memcmp( palette.get(), rhs.palette.get(), sizeof(RageSurfacePalette) ) )
 			return false;
 
 	return true;
