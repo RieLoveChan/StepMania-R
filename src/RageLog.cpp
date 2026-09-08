@@ -68,28 +68,26 @@ static RageMutex *g_Mutex;
 
 /* staticlog gets info.txt
  * crashlog gets log.txt */
+/* Destination bits for Write(). The severity is passed separately as a
+ * LogLevel now (ADR 0005). */
 enum
 {
-	/* If this is set, the message will also be written to info.txt. (info and warnings) */
+	/* Also write to info.txt / the crash staticlog / stdout (Info+). */
 	WRITE_TO_INFO = 0x01,
 
-	/* If this is set, the message will also be written to userlog.txt. (user warnings only) */
+	/* Write to userlog.txt (user warnings only). */
 	WRITE_TO_USER_LOG = 0x02,
 
-	/* Whether this line is a warning. */
-	WRITE_LOUD = 0x04,
-	WRITE_TO_TIME= 0x08,
-
-	/* Whether this line is an error (implies WRITE_LOUD). See ADR 0005. */
-	WRITE_ERROR = 0x10,
-
-	/* Whether this line is a Debug trace (below Trace). See ADR 0005. */
-	WRITE_DEBUG = 0x20
+	/* Write to timelog.txt. */
+	WRITE_TO_TIME = 0x08
 };
 
 RageLog::RageLog(): m_bLogToDisk(false), m_bInfoToDisk(false),
 m_bUserLogToDisk(false), m_bFlush(false), m_bShowLogOutput(false)
 {
+	for( int i = 0; i < Log::NUM_Category; ++i )
+		m_CategoryLevel[i] = -1;	// unset -> follow the global minimum
+
 	g_fileLog = new RageFile;
 	g_fileInfo = new RageFile;
 	g_fileUserLog = new RageFile;
@@ -191,9 +189,46 @@ void RageLog::SetLogLevel( LogLevel l )
 	m_MinLevel = l;
 }
 
+void RageLog::SetCategoryLevel( Log::Category c, LogLevel l )
+{
+	if( c < Log::General || c >= Log::NUM_Category )
+		return;
+	if( l < LogLevel_Trace || l >= NUM_LogLevel )
+		l = LogLevel_Trace;
+	m_CategoryLevel[c] = (signed char)l;
+}
+
+RageLog::LogLevel RageLog::GetEffectiveLevel( Log::Category c ) const
+{
+	if( c >= Log::General && c < Log::NUM_Category && m_CategoryLevel[c] >= 0 )
+		return (LogLevel)m_CategoryLevel[c];
+	return m_MinLevel;
+}
+
+void RageLog::SetLogLevelSpec( const RString &spec )
+{
+	std::vector<RString> tokens;
+	split( spec, ",", tokens, true );
+	for( RString tok : tokens )
+	{
+		Trim( tok );
+		std::size_t colon = tok.find( ':' );
+		if( colon == std::string::npos )
+		{
+			SetLogLevel( LogLevelFromString( tok ) );
+		}
+		else
+		{
+			Log::Category c = Log::CategoryFromString( tok.substr( 0, colon ) );
+			if( c != Log::General || tok.substr( 0, colon ) == "general" )
+				SetCategoryLevel( c, LogLevelFromString( tok.substr( colon + 1 ) ) );
+		}
+	}
+}
+
 static const char *g_LogLevelNames[RageLog::NUM_LogLevel] =
 {
-	"trace", "debug", "info", "warn", "error"
+	"trace", "debug", "info", "warn", "error", "off"
 };
 
 RageLog::LogLevel RageLog::LogLevelFromString( const RString &s )
@@ -212,6 +247,31 @@ const char *RageLog::LogLevelToString( LogLevel l )
 	if( l < LogLevel_Trace || l >= NUM_LogLevel )
 		l = LogLevel_Trace;
 	return g_LogLevelNames[l];
+}
+
+static const char *g_CategoryNames[Log::NUM_Category] =
+{
+	"general",
+	"arch", "file", "lua", "theme", "font", "gl", "sound", "input",
+	"song", "steps", "actor", "screen", "profile", "net", "cache"
+};
+
+Log::Category Log::CategoryFromString( const RString &s )
+{
+	RString t = s;
+	t.MakeLower();
+	Trim( t );
+	for( int i = 0; i < NUM_Category; ++i )
+		if( t == g_CategoryNames[i] )
+			return (Category)i;
+	return General;
+}
+
+const char *Log::CategoryToString( Category c )
+{
+	if( c < General || c >= NUM_Category )
+		c = General;
+	return g_CategoryNames[c];
 }
 
 /* Enable or disable display of output to stdout, or a console window in Windows. */
@@ -242,7 +302,7 @@ void RageLog::Trace( const char *fmt, ... )
 	RString sBuff = vssprintf( fmt, va );
 	va_end( va );
 
-	Write( 0, sBuff );
+	Write( 0, LogLevel_Trace, Log::General, sBuff );
 }
 
 void RageLog::Debug( const char *fmt, ... )
@@ -252,7 +312,7 @@ void RageLog::Debug( const char *fmt, ... )
 	RString sBuff = vssprintf( fmt, va );
 	va_end( va );
 
-	Write( WRITE_DEBUG, sBuff );
+	Write( 0, LogLevel_Debug, Log::General, sBuff );
 }
 
 /* Use this for more important information; it'll always be included
@@ -264,7 +324,7 @@ void RageLog::Info( const char *fmt, ... )
 	RString sBuff = vssprintf( fmt, va );
 	va_end( va );
 
-	Write( WRITE_TO_INFO, sBuff );
+	Write( WRITE_TO_INFO, LogLevel_Info, Log::General, sBuff );
 }
 
 void RageLog::Warn( const char *fmt, ... )
@@ -274,7 +334,7 @@ void RageLog::Warn( const char *fmt, ... )
 	RString sBuff = vssprintf( fmt, va );
 	va_end( va );
 
-	Write( WRITE_TO_INFO | WRITE_LOUD, sBuff );
+	Write( WRITE_TO_INFO, LogLevel_Warn, Log::General, sBuff );
 }
 
 void RageLog::Error( const char *fmt, ... )
@@ -284,7 +344,7 @@ void RageLog::Error( const char *fmt, ... )
 	RString sBuff = vssprintf( fmt, va );
 	va_end( va );
 
-	Write( WRITE_TO_INFO | WRITE_LOUD | WRITE_ERROR, sBuff );
+	Write( WRITE_TO_INFO, LogLevel_Error, Log::General, sBuff );
 }
 
 void RageLog::Time(const char *fmt, ...)
@@ -294,7 +354,7 @@ void RageLog::Time(const char *fmt, ...)
 	RString sBuff = vssprintf(fmt, va);
 	va_end(va);
 
-	Write(WRITE_TO_TIME, sBuff);
+	Write( WRITE_TO_TIME, LogLevel_Info, Log::General, sBuff );
 }
 
 void RageLog::UserLog( const RString &sType, const RString &sElement, const char *fmt, ... )
@@ -307,44 +367,58 @@ void RageLog::UserLog( const RString &sType, const RString &sElement, const char
 	if( !sType.empty() )
 		sBuf = ssprintf( "%s \"%s\" %s", sType.c_str(), sElement.c_str(), sBuf.c_str() );
 
-	Write( WRITE_TO_USER_LOG, sBuf );
+	Write( WRITE_TO_USER_LOG, LogLevel_Info, Log::General, sBuf );
 }
 
-void RageLog::Write( int where, const RString &sLine )
+void RageLog::LogLine( LogLevel level, Log::Category cat,
+	const char *file, int line, const char *fmt, ... )
+{
+	if( level < GetEffectiveLevel( cat ) )
+		return;
+
+	va_list va;
+	va_start( va, fmt );
+	RString sMsg = vssprintf( fmt, va );
+	va_end( va );
+
+	/* Ignore everything up to and including the first "src/". */
+	const char *slash = file ? strstr( file, "src/" ) : nullptr;
+	if( slash )
+		file = slash + 4;
+
+	/* "<cat>  <file>:<line>  <msg>" -- the [LEVEL] tag and timestamp are
+	 * added by Write(). */
+	RString sLine = ssprintf( "%-7s %s:%d  %s",
+		Log::CategoryToString( cat ), file ? file : "?", line, sMsg.c_str() );
+
+	int where = ( level >= LogLevel_Info ) ? WRITE_TO_INFO : 0;
+	Write( where, level, cat, sLine );
+}
+
+void RageLog::Write( int where, LogLevel level, Log::Category cat, const RString &sLine )
 {
 	LockMut( *g_Mutex );
 
-	/* Drop lines below the configured minimum level (SetLogLevel /
-	 * --LogLevel). The time log and userlog.txt have their own
-	 * destinations and are never filtered here. ADR 0005. */
-	if( !(where & (WRITE_TO_TIME | WRITE_TO_USER_LOG)) )
-	{
-		LogLevel lvl;
-		if( where & WRITE_ERROR )		lvl = LogLevel_Error;
-		else if( where & WRITE_LOUD )		lvl = LogLevel_Warn;
-		else if( where & WRITE_TO_INFO )		lvl = LogLevel_Info;
-		else if( where & WRITE_DEBUG )		lvl = LogLevel_Debug;
-		else					lvl = LogLevel_Trace;
-		if( lvl < m_MinLevel )
-			return;
-	}
+	/* Drop lines below the effective minimum level (global, or the
+	 * per-category override). The time log and userlog.txt have their
+	 * own destinations and are never filtered here. ADR 0005. */
+	if( !(where & (WRITE_TO_TIME | WRITE_TO_USER_LOG)) && level < GetEffectiveLevel( cat ) )
+		return;
 
 	/* Bracketed, fixed-width level tag on every line. Replaces the old
 	 * ///// warning frame; makes the log greppable by severity
 	 * (grep '\[WARN\]', grep -E '\[(WARN|ERROR)\]'). See ADR 0005. */
 	const char *sTag;
-	if( where & WRITE_ERROR )
-		sTag = "[ERROR] ";
-	else if( where & WRITE_LOUD )
-		sTag = "[WARN]  ";
-	else if( where & WRITE_TO_INFO )
-		sTag = "[INFO]  ";
-	else if( where & (WRITE_TO_TIME | WRITE_TO_USER_LOG) )
+	if( where & (WRITE_TO_TIME | WRITE_TO_USER_LOG) )
 		sTag = ""; // time log and userlog.txt keep their own format
-	else if( where & WRITE_DEBUG )
-		sTag = "[DEBUG] ";
-	else
-		sTag = "[TRACE] ";
+	else switch( level )
+	{
+		case LogLevel_Error:	sTag = "[ERROR] ";	break;
+		case LogLevel_Warn:	sTag = "[WARN]  ";	break;
+		case LogLevel_Info:	sTag = "[INFO]  ";	break;
+		case LogLevel_Debug:	sTag = "[DEBUG] ";	break;
+		default:		sTag = "[TRACE] ";	break;
+	}
 
 	std::vector<RString> asLines;
 	split( sLine, "\n", asLines, false );
