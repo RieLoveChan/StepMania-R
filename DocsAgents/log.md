@@ -1211,3 +1211,42 @@
   **Phase 4 status:** `.sm`/`.ssc`/`.pms`/`.dwi`/`.ksf` done; `.sma`
   (needs a real `.sma` song) and `.crs` (courses reference songs →
   likely `SONGMAN`) remain.
+
+* **Bug-hunt — `bugprone-integer-division` + `bugprone-suspicious-string-compare`
+  (backlog item 12's "look at each" set). One real bug fixed.**
+  Ran both checks over all of `src/` (parallel clang-tidy driver,
+  `build-tidy/compile_commands.json`, `MSYS_NO_PATHCONV=1`) and re-read
+  every hit in context. 27 hit lines; 25 in-scope.
+  **Fixed (`f5005b8754`):** `RageSurfaceFormat::operator==` — for a
+  paletted format it did
+  `memcmp(palette.get(), rhs.palette.get(), sizeof(RageSurfaceFormat))`,
+  but `palette` is a `RageSurfacePalette` (`RageSurfaceColor[256]`,
+  1024 B), not a `RageSurfaceFormat` (~128 B). Only ~1/8 of the palette
+  was compared → two 8-bit formats whose palettes differ past color
+  ~index 32 wrongly compared equal. → `sizeof(RageSurfacePalette)`.
+  Left the adjacent `memcmp(nullptr, ...)` UB (guarded by the
+  `BytesPerPixel == 1` invariant) alone to keep the fix single-purpose.
+  **`suspicious-string-compare` — the rest are not defects:** every
+  other hit is idiomatic `if( memcmp(a, b, n) )` used as "are they
+  different" (`RageDisplay:674`, `RageFileDriverZip:119` ZIP EOCD
+  signature scan, the `arch/Sound/RageSoundDriver_WDMKS` /
+  `RageSoundDriver_WaveOut` format-tag checks, `Win32/CrashHandlerChild`,
+  `Win32/mapconv`). clang-tidy just wants an explicit `!= 0`; no bug.
+  **`integer-division` — no fixes, all in rendering / UI positioning:**
+  `ActorMultiVertex:373` (`v/num_splines` — deliberate segment index,
+  paired with `v%num_splines` on the line above), `WheelBase:143`
+  (`i - NUM_WHEEL_ITEMS/2` — integer offset from the centre item),
+  `ScreenOptions:681` (explicit `(int)NUM_ROWS_SHOWN` cast, deliberate),
+  `ScreenEdit:1459` (**false positive** — `SCREEN_HEIGHT` is
+  `ScreenDimensions::GetScreenHeight()`, returns `float`). `Font:125`/
+  `:132` (baseline/top off by 0.5 px for odd `m_iLineSpacing`),
+  `NoteField:512` (marker bar off-centre 0.5 px for odd `GetWidth()`),
+  `SnapDisplay:27`/`:28` (`m_iNumCols/2` — snap indicators 0.5 arrow too
+  close to centre for odd column counts, e.g. pump-5), `ScreenSelectCharacter:264`
+  (`MAX_CHAR_ICONS_TO_SHOW/2` — half-icon vertical offset if that metric
+  is odd) are **genuine sub-pixel / half-unit imprecision**, but each
+  "fix" moves an on-screen element on a path with no unit test and no
+  `--SelfTest` render coverage — an `AGENTS.md` §4 observable-behavior
+  change. Flagged here for the maintainer; not touched.
+  Verdict recorded in `baseline.md`'s clang-tidy table so the next agent
+  doesn't re-hunt.
