@@ -439,7 +439,7 @@ plain dead `#if 0 ... #endif` (candidate for removal), an active
 other branch is live), and a toolchain-EOL block like the VC6 ones
 above (enable, don't delete).
 
-### 18. Logging overhaul — phases 1-2 DONE, phases 3-4 open
+### 18. Logging overhaul — phases 1-3 DONE, phase 4 open
 Phase 1 (`c82d0e9058`): bracketed level tags, `Error()` level, no
 `/////`, `Char Widths` fixed. `--SelfTest` log 695→467 lines, clean.
 **Phase 2 DONE (2026-09-08, `156c075ff3` + `3a53baad5f`):**
@@ -452,8 +452,13 @@ global); `SetLogLevelSpec` parses `--LogLevel=warn,gl:off,font:trace`
 (pref `PrefsManager::m_sLogLevel`, `--LogLevel` override in
 `ApplyLogPreferences`). `Write()` refactored to explicit
 `(LogLevel, Log::Category)`. `test_RageLog.cpp` covers it.
+**Phase 3 DONE (2026-09-08, `65fbca7bf5`):** `RageLog::Write` collapses
+runs of identical consecutive lines — first two verbatim, 3rd+ folded
+into `[TRACE] (previous line repeated N more times)` at the run's end.
+`--SelfTest` `log.txt` 460→438, the biggest note eating 16 `glTexImage2D`
+repeats. (Also fixed: `SetLogLevelSpec` resets before applying — the
+spec is the whole config.)
 **Remaining (ADR [0005](./adr/0005-logging-overhaul.md)):**
-- Ph3: repeat-collapsing (`… (repeated N×)`).
 - Ph4: call-site audit per subsystem — bare `LOG->Trace/Warn/…` →
   `LOG_*` + a real `Log::Category`; `Warn`→`Trace` (expected fallback)
   / `Warn`→`Error` (real failure); this is what makes the per-category

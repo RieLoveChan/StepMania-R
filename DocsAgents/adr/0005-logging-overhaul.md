@@ -85,6 +85,18 @@ Rework `RageLog` in phases. Format model:
    `LOG->` → `LOG_*` + a real category); until then the per-category
    filter has nothing to act on.
 3. Repeat-collapsing in `AddToRecentLogs` / `Write`.
+   **DONE (2026-09-08, `65fbca7bf5`).** `RageLog::Write` folds a run of
+   identical consecutive lines: first two print verbatim, 3rd+ are
+   suppressed and replaced at the run's end (different line, or
+   shutdown) with `[TRACE] (previous line repeated N more times)`. The
+   note inherits the run's tag + destinations. Identity = tagged
+   message minus timestamp (level + category count). Time-log /
+   userlog.txt / multi-line messages never collapse. Per-line emit
+   pulled into `EmitLine()`; `SpillRepeat()` flushes the pending note
+   (line-change + dtor). Verified: `--SelfTest` `log.txt` 460→438
+   lines, the biggest note folding 16 `glTexImage2D` repeats.
+   (Also fixed here: `SetLogLevelSpec` now resets to defaults before
+   applying — the spec is the complete config.)
 4. **Call-site audit** (long tail, per subsystem, like the tidy passes):
    `LOG->Warn` that are really `Trace` (expected fallback) → demote;
    genuine failures → `LOG->Error`; add category tags. (Also where

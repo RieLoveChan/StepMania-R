@@ -310,7 +310,7 @@ Per-subsystem breakdown as passes run:
     `double-a/-b`. New StepsType coverage: `pump-double`. 30 assertions
     / 1 visible case (+1 hidden `[ksfdump]`). Verified identical to the
     untouched source folder.
-    Suite total: **1002 assertions / 124 cases** (up from 311/72).
+    Suite total: **1004 assertions / 124 cases** (up from 311/72).
   - `tests/test_RageLog.cpp` (2026-09-08) — `RageLog`'s level/category
     plumbing (ADR 0005 phase 2): the `LogLevel` (Trace<…<Error<Off) and
     `Log::Category` enums + their string round-trips (case-insensitive,
@@ -319,7 +319,7 @@ Per-subsystem breakdown as passes run:
     via `GetEffectiveLevel` — a category can sit below the global; and a
     smoke that every `LOG_*` macro expands + routes (incl. a filtered
     category). The write path (files / console / crash staticlog) stays
-    `--SelfTest` territory. 33 assertions / 6 cases.
+    `--SelfTest` territory (incl. the phase-3 consecutive-line collapsing, seen in `--SelfTest` output). 35 assertions / 6 cases.
   - `tests/test_RageFile.cpp` (2026-09-06) — salvages the intent of the
     2004-era `src/tests/test_file_readers.cpp`: `RageFile` open / read /
     write / seek / tell / `GetLine` / `AtEOF`, end-to-end through
@@ -377,7 +377,7 @@ Per-subsystem breakdown as passes run:
   VS-bundled cmake for this repo):
   - `WITH_TESTS=ON` Debug → `sm_engine` OBJECT lib + `Catch2` +
     `sm_tests.exe` all build clean under `WITH_WERROR=ON`; `sm_tests.exe`
-    → **1002 assertions / 124 cases pass**; `ctest` 100%. (First-landed at
+    → **1004 assertions / 124 cases pass**; `ctest` 100%. (First-landed at
     94/19.)
   - `WITH_TESTS=OFF` Release → `StepMania-R.exe` builds clean (the
     OBJECT-library split is transparent when off) + `--SelfTest` exits 0.
