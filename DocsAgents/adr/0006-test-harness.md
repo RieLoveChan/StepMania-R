@@ -202,10 +202,17 @@ default OFF, ON in a dedicated CI job. Not built in a normal dev build.
    fixture (only `#FILE`/`#TITLE`/`#ARTIST` changed from source; DWI
    has no keysounds). Pins the `" ("` main/sub split, `#GAP`→offset,
    `#BPM` + `#CHANGEBPM`, `#SAMPLESTART`, 3 `dance-single` charts.
-   **Still open:** `.sma` / `.ksf` / `.crs` — `EngineTestEnv` has
-   `PREFSMAN` so the loaders are reachable; each needs a fixture (real
-   song if redistributable, else the same derived approach). `.crs`
-   likely also needs `SONGMAN`. Backlog item 17.
+   **`.ksf` DONE** (2026-09-08, `test_NotesLoaderKSF.cpp` +
+   `tests/data/Fixture Artist - KSF Fixture/`) — `KSFLoader::LoadFromDir`
+   over a derived 4-chart Pump It Up fixture (only `#TITLE`/`#ARTIST`/
+   `#STEPMAKER`/`#SONGFILE` scrubbed). Needs `song.SetSongDir()` (no
+   `Dirname` fallback); the artist comes from the dir name (KSFLoader
+   ignores `#ARTIST`); the filename drives type+difficulty. Covers
+   `pump-single` + `pump-double`.
+   **Still open:** `.sma` / `.crs` — `EngineTestEnv` has `PREFSMAN` so
+   the loaders are reachable; each needs a fixture (real song if
+   redistributable, else the same derived approach). `.crs` likely also
+   needs `SONGMAN`. Backlog item 17.
 
 ## Phase 3-4 enabler: `tests/EngineTestEnv` (2026-09-06)
 
@@ -258,6 +265,10 @@ Consumers:
   derived `.dwi` fixture (`tests/data/dwi-fixture/`): 3 `dance-single`
   charts, `#GAP`/`#BPM`/`#CHANGEBPM`/`#SAMPLESTART`, the `" ("`
   main/sub title split. Hidden `[dwidump]` case.
+- `tests/test_NotesLoaderKSF.cpp` — `KSFLoader::LoadFromDir` over the
+  derived `.ksf` fixture (`tests/data/Fixture Artist - KSF Fixture/`):
+  4 `pump-single`/`pump-double` charts, `#BPM`, `#STARTTIME`→offset;
+  pins that artist comes from the dir name. Hidden `[ksfdump]` case.
 - `tests/test_RageFile.cpp` — `RageFile` read/write/seek/tell/`GetLine`/
   `AtEOF` through `FILEMAN`'s writable `/@mem` mount (no committed
   fixtures). Salvages `src/tests/test_file_readers.cpp`; pins the
