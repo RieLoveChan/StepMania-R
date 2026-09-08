@@ -1126,3 +1126,51 @@
   `MSYS_NO_PATHCONV=1` / `MSYS2_ARG_CONV_EXCL='*'` is exported first.
   Remaining deferred `singletons` tidy hits: none tracked — these were
   the last two.
+
+## 2026-09-08
+
+* **clang-tidy-subsystem-pass — `data-structures`,
+  `readability-container-size-empty` (item 12). Recovered + verified +
+  committed (`64e89eeabc`).**
+  The sweep was done by an earlier session that ran in a toolchain-less
+  Linux VM (no MSVC / CMake / clang-tidy reachable) and had to leave the
+  edits uncommitted with no §4 verification. A follow-up session on the
+  maintainer's Windows box picked the loose edits up, fixed one
+  mis-fire, verified, and committed.
+  **Scope:** `src/CMakeData-data.cmake` (the `data-structures` subsystem
+  group), minus the simfile parse/write path (`NotesLoader*`/
+  `NotesWriter*`/`TimingData`/`NoteData*`/`Song*`/`Steps*`, excluded by
+  name), minus `CourseLoaderCRS.cpp` / `CourseWriterCRS.cpp` (`.crs` is
+  a protected on-disk format per `AGENTS.md` §5 and there is no course
+  regression corpus yet — **still open**, ~14 hits left there).
+  **Method:** hand-applied (not `--fix`) — `grep` for
+  `X.size() (==|!=|>) 0` and `X (==|!=) ""` across the remaining 65
+  files, each hit read in context and edited by line number (several
+  sites share identical text on multiple lines in one file, e.g. three
+  `s == "" || s == "blank" || s == "Blank"` in `OptionRowHandler.cpp`).
+  **57 sites / 15 files:** `BackgroundUtil` (2), `CodeDetector` (1),
+  `CommonMetrics` (1), `Course` (7), `CourseUtil` (3), `Font` (2),
+  `GameCommand` (14), `ImageCache` (2), `OptionRowHandler` (10),
+  `PlayerStageStats` (2), `Profile` (2), `RandomSample` (2),
+  `SampleHistory` (1), `SoundEffectControl` (1), `StageStats` (7).
+  All are `.size()`/`.length()` `== 0`/`!= 0`/`> 0` → `.empty()` /
+  `!.empty()`, or `RString == ""`/`!= ""` → the same — textual,
+  semantics-preserving.
+  **Mis-fire fixed on integration:** `SoundEffectControl.cpp:38` had
+  `SOUND_PROPERTY == ""` rewritten to `SOUND_PROPERTY.empty()`, but
+  `SOUND_PROPERTY` is a `ThemeMetric<RString>` (no `.empty()`).
+  Corrected to `SOUND_PROPERTY.GetValue().empty()` — the shape
+  `StageStats.cpp` already uses for
+  `PREFSMAN->m_sTestInitialScreen.Get().empty()`. `container-size-empty`
+  is only safe on real containers / `RString`; a `ThemeMetric` /
+  `Preference` needs `.GetValue()` / `.Get()` first. Future
+  hand-applied passes of this check: watch for `ThemeMetric` /
+  `Preference` operands.
+  **Verified (Windows Debug):** all 15 TUs force-recompiled clean under
+  `WITH_WERROR=ON` (future mtime bump so MSBuild rebuilt them),
+  `sm_tests` 918/117 unchanged, `ctest` 100%.
+  **Gotcha for a Linux-VM-bridged session:** `device_bash` does not
+  necessarily reach the toolchain a prior Claude Code session on the
+  Windows box had — `which clang-tidy cmake ninja` first; if absent,
+  land the diff and leave the §4 verification for a follow-up on the
+  real box (as happened here), don't claim the gate was met.

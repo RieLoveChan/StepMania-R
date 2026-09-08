@@ -165,6 +165,11 @@ and cross-platform — a dedicated ADR-scoped effort, not a casual pass.
 **Action:** [`playbooks/clang-tidy-subsystem-pass.md`](./playbooks/clang-tidy-subsystem-pass.md),
 one subsystem + one check family per PR; record in
 [`baseline.md`](./baseline.md).
+**Passes landed:** see the per-subsystem table in `baseline.md`
+(`rage`/`singletons`/`data-structures`). **Still open in `data-structures`:**
+`readability-container-size-empty` in `CourseLoaderCRS.cpp` /
+`CourseWriterCRS.cpp` (15 hits) — deferred because `.crs` is a protected
+on-disk format (§5) and there's no course regression corpus yet.
 
 ### 13. `src/archutils/Win32/arch_setup.h` legacy — mostly DONE
 - `isnan`/`isfinite` macros removed 2026-09-03 (`37e6766d5e`).
