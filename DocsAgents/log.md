@@ -1290,3 +1290,50 @@
   for a 700-file engine is a maintainer design call, not something to
   guess at. Phases 3 (repeat-collapsing) and 4 (call-site audit)
   untouched.
+
+* **Logging overhaul phase 2 — category layer (`3a53baad5f`). Phase 2
+  now complete.** On top of the global level filter from
+  `156c075ff3`:
+  - `namespace Log { enum Category }` — seed taxonomy: `General` (the
+    default / uncategorised), `Arch File Lua Theme Font Gl Sound Input
+    Song Steps Actor Screen Profile Net Cache`. `CategoryFromString`
+    (lower+trim, unknown → `General`) / `CategoryToString` (the short
+    lowercase name, also the `--LogLevel=<cat>:<lvl>` key).
+  - `LOG_TRACE/DEBUG/INFO/WARN/ERROR( cat, fmt, ... )` macros →
+    `LOG->LogLine( level, cat, __FILE__, __LINE__, ... )`. `LogLine`
+    filters against `GetEffectiveLevel(cat)`, trims the path at the
+    first `src/`, formats `"%-7s %s:%d  %s"` (cat / file:line / msg),
+    and hands it to `Write()`. Bare `LOG->Trace(...)` etc. still work
+    (they log as `Log::General`, no file:line).
+  - Per-category minimum: `signed char m_CategoryLevel[NUM_Category]`,
+    `-1` = "follow global" (set in the ctor loop — an array can't be
+    brace-init'd to -1). A category CAN sit **below** the global
+    (`global=warn` + `font:trace` keeps font). `SetLogLevelSpec` parses
+    the full `--LogLevel` string: split on `,`; a bare token → global
+    (`SetLogLevel`); a `cat:level` token → `SetCategoryLevel`; unknown
+    category ignored, unknown level → Trace. `LogLevel` gained `Off`
+    (past Error) so `gl:off` works.
+  - `RageLog::Write` refactored: `(int where, LogLevel, Log::Category,
+    RString)` — severity is explicit now, not inferred from the
+    `where` bits. Dropped `WRITE_LOUD`/`WRITE_ERROR`/`WRITE_DEBUG`;
+    `WRITE_TO_INFO`/`_USER_LOG`/`_TIME` stay as routing bits. `Write`
+    is private — no external callers, contained refactor. Also fixed a
+    latent `-Wreorder` risk: `m_sLogLevel` sits between
+    `m_bShowLogOutput` and `m_bLogSkips` in both the `PrefsManager`
+    header decl and the ctor list.
+  - `StepMania.cpp` `ApplyLogPreferences` → `SetLogLevelSpec` (was
+    `SetLogLevel(LogLevelFromString(...))`).
+  `test_RageLog.cpp` (6 cases / 33 assertions): both enums + round-trip,
+  `SetLogLevelSpec` (global / per-cat / both / bogus) via
+  `GetEffectiveLevel`, and a `LOG_*` macro smoke.
+  **Verified (Windows Debug):** `sm_tests` 969→1002 / 123→124, `ctest`
+  100%, clean under `WITH_WERROR=ON`. `StepMania-R_debug --SelfTest`
+  exit 0 at every spec: default 460 lines (321 TRACE + 139 INFO),
+  `--LogLevel=info` → 139, `--LogLevel=warn` → 0,
+  `--LogLevel=trace,file:warn` → 460 (unchanged — nothing calls
+  `LOG_*(Log::File, …)` yet, so the per-category filter has nothing to
+  act on: that is phase 4).
+  **Phase 2 is done.** Phase 3 (repeat-collapsing) and phase 4 (the
+  call-site migration — bare `LOG->` → `LOG_*` + real categories,
+  `Warn`→`Trace`/`Error` triage) remain; phase 4 is what makes the
+  per-category filter and the `file:line` column actually visible.

@@ -62,17 +62,28 @@ Rework `RageLog` in phases. Format model:
 2. `Debug` level + per-category thresholds + `--LogLevel` flag +
    `Log::Category` enum and a `LOG_*` macro layer that captures
    `file:line`.
-   **PARTIALLY DONE (2026-09-08, `156c075ff3`):** `RageLog::Debug()`
-   + `[DEBUG]` tag; `enum RageLog::LogLevel` (Trace<Debug<Info<Warn<
-   Error) with `LogLevelFromString`/`ToString`; `SetLogLevel()` — a
-   global minimum-level filter in `Write()` (default Trace = no
-   change); `PrefsManager::m_sLogLevel` + `--LogLevel=<name>` in
-   `ApplyLogPreferences()`. Verified: `--SelfTest` exit 0 at every
-   level; `--LogLevel=warn` → 0 boot lines. `test_RageLog.cpp` covers
-   the enum + parsing.
-   **Still open:** **per-category** thresholds (`--LogLevel=gl:off,
-   font:trace`), the `Log::Category` enum, and the `LOG_*` `file:line`
-   macro layer — the category taxonomy is a design call, deferred.
+   **DONE (2026-09-08).**
+   - `156c075ff3`: `RageLog::Debug()` + `[DEBUG]` tag; `enum
+     RageLog::LogLevel` (Trace<Debug<Info<Warn<Error, later +Off) with
+     `LogLevelFromString`/`ToString`; `SetLogLevel()` global
+     minimum-level filter in `Write()` (default Trace = no change);
+     `PrefsManager::m_sLogLevel` + `--LogLevel=<name>` in
+     `ApplyLogPreferences()`.
+   - `3a53baad5f`: `namespace Log { enum Category }` seed taxonomy
+     (General/Arch/File/Lua/Theme/Font/Gl/Sound/Input/Song/Steps/Actor/
+     Screen/Profile/Net/Cache) + `CategoryFrom/ToString`;
+     `LOG_TRACE/DEBUG/INFO/WARN/ERROR(cat, fmt, ...)` macros →
+     `LogLine()` which stamps `<cat> <file>:<line>`; per-category
+     minimum via `SetCategoryLevel`/`GetEffectiveLevel` (a category can
+     go below the global — `font:trace` keeps font verbose when global
+     is `warn`); `SetLogLevelSpec` parses
+     `--LogLevel=warn,gl:off,font:trace`. `Write()` refactored to take
+     an explicit `(LogLevel, Log::Category)`.
+   Verified: `--SelfTest` exit 0 at every spec; `--LogLevel=warn` → 0
+   boot lines. `test_RageLog.cpp` covers the enums, `SetLogLevelSpec`,
+   and the macro layer. **Phase 4 is the call-site migration** (bare
+   `LOG->` → `LOG_*` + a real category); until then the per-category
+   filter has nothing to act on.
 3. Repeat-collapsing in `AddToRecentLogs` / `Write`.
 4. **Call-site audit** (long tail, per subsystem, like the tidy passes):
    `LOG->Warn` that are really `Trace` (expected fallback) → demote;

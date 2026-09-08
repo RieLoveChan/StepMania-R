@@ -439,22 +439,26 @@ plain dead `#if 0 ... #endif` (candidate for removal), an active
 other branch is live), and a toolchain-EOL block like the VC6 ones
 above (enable, don't delete).
 
-### 18. Logging overhaul — phase 1 DONE, phase 2 partial, phases 3-4 open
+### 18. Logging overhaul — phases 1-2 DONE, phases 3-4 open
 Phase 1 (`c82d0e9058`): bracketed level tags, `Error()` level, no
 `/////`, `Char Widths` fixed. `--SelfTest` log 695→467 lines, clean.
+**Phase 2 DONE (2026-09-08, `156c075ff3` + `3a53baad5f`):**
+`RageLog::Debug()`; `enum RageLog::LogLevel` (Trace<…<Error<Off) global
+minimum filter; `namespace Log { enum Category }` seed taxonomy +
+`CategoryFrom/ToString`; `LOG_TRACE/DEBUG/INFO/WARN/ERROR(cat, ...)`
+macros stamping `<cat> file:line`; per-category minimum
+(`SetCategoryLevel`/`GetEffectiveLevel`, a category can go below the
+global); `SetLogLevelSpec` parses `--LogLevel=warn,gl:off,font:trace`
+(pref `PrefsManager::m_sLogLevel`, `--LogLevel` override in
+`ApplyLogPreferences`). `Write()` refactored to explicit
+`(LogLevel, Log::Category)`. `test_RageLog.cpp` covers it.
 **Remaining (ADR [0005](./adr/0005-logging-overhaul.md)):**
-- Ph2 **partial** (`156c075ff3`, 2026-09-08): `RageLog::Debug()` + a
-  global `enum RageLog::LogLevel` minimum-level filter
-  (`SetLogLevel` / `PrefsManager::m_sLogLevel` / `--LogLevel=<name>`;
-  default Trace = no change; `--LogLevel=warn` → 0 boot lines).
-  `test_RageLog.cpp` covers the enum + string parsing.
-  **Still open:** per-category thresholds
-  (`--LogLevel=gl:off,font:trace`), `Log::Category` enum, `LOG_*`
-  `file:line` macro layer — the category taxonomy is a design call.
 - Ph3: repeat-collapsing (`… (repeated N×)`).
-- Ph4: call-site audit per subsystem — `Warn`→`Trace` (expected
-  fallback) / `Warn`→`Error` (real failure), add category tags; also
-  where `LOG->Debug()` call sites first land.
+- Ph4: call-site audit per subsystem — bare `LOG->Trace/Warn/…` →
+  `LOG_*` + a real `Log::Category`; `Warn`→`Trace` (expected fallback)
+  / `Warn`→`Error` (real failure); this is what makes the per-category
+  filter and the file:line column actually do anything, and where
+  `LOG->Debug()` call sites first land. Long tail, per subsystem.
 
 ### 20. Replace the archaic hard-coded game-type system
 Game types are defined by hand-written `static const Game g_Game_X = {…}`
