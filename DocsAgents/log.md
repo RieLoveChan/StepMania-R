@@ -1250,3 +1250,43 @@
   change. Flagged here for the maintainer; not touched.
   Verdict recorded in `baseline.md`'s clang-tidy table so the next agent
   doesn't re-hunt.
+
+* **Logging overhaul phase 2 — Debug level + runtime `--LogLevel`
+  threshold (ADR 0005, `156c075ff3`). Partial: the global filter, not
+  categories.**
+  - `RageLog::Debug()` + `WRITE_DEBUG` + `[DEBUG]` tag — a level below
+    Trace, log.txt only. No call sites yet (phase 4).
+  - `enum RageLog::LogLevel { Trace, Debug, Info, Warn, Error }` (ADR
+    0005 ordering) + `LogLevelFromString` (five names, lower+trim,
+    unknown → Trace) / `LogLevelToString`.
+  - `SetLogLevel()` → `RageLog::Write()` drops any line whose level is
+    below the minimum, from **all** destinations. The time log and
+    userlog.txt bypass the filter. Default = Trace (no behaviour
+    change).
+  - `PrefsManager::m_sLogLevel` (`"LogLevel"` pref, default `"trace"`;
+    inserted between `m_bShowLogOutput` and `m_bLogSkips` in both the
+    header decl and the ctor initializer list — order matters under
+    `-Wreorder`/`WITH_WERROR`). Applied in `ApplyLogPreferences()`,
+    then overridden by an explicit `GetCommandlineArgument("LogLevel",
+    &s)` — there is **no generic `--<PrefName>=` CLI→pref bridge** in
+    this codebase (the baseline's smoke-test-plan note is a proposal,
+    not reality; `--VideoRenderers`/`--SoundDrivers`/`--game`/`--theme`
+    are each read explicitly), so a new `--Foo` flag needs its own
+    `GetCommandlineArgument` call. Lines emitted before
+    `ApplyLogPreferences()` (arch hooks, LUA, FILEMAN) are already out
+    and unfiltered — inherent.
+  - `tests/test_RageLog.cpp` (5 cases / 21 assertions): enum ordering,
+    string↔enum round-trip + case/whitespace + unknown-string
+    fallback, `SetLogLevel` accepts every level.
+  **Verified (Windows Debug):** `sm_tests` 948→969 / 118→123, `ctest`
+  100%, clean under `WITH_WERROR=ON`. Built the `StepMania` target and
+  ran `StepMania-R_debug --SelfTest --VideoRenderers=null
+  --SoundDrivers=null`: exit 0 at every level; default 459 log lines
+  (321 `[TRACE]` + 138 `[INFO]`), `--LogLevel=info` → 138 (TRACE gone),
+  `--LogLevel=warn` → **0** (a clean phase-1 boot has no warnings).
+  **Still open for phase 2:** per-category thresholds
+  (`--LogLevel=gl:off,font:trace`), the `Log::Category` enum, and the
+  `LOG_*` `file:line` macro layer. Left because the category taxonomy
+  for a 700-file engine is a maintainer design call, not something to
+  guess at. Phases 3 (repeat-collapsing) and 4 (call-site audit)
+  untouched.
