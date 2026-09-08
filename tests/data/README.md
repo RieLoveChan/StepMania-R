@@ -26,6 +26,17 @@ redistributable it goes under `Songs/`, not here.
 
 ## Derived simfile fixtures (when the real song is NOT redistributable)
 
+`Fixture Artist - KSF Fixture/` -- a 4-chart KSF (Pump It Up format) set
+for `test_NotesLoaderKSF.cpp`, derived from a copyrighted Pump It Up
+song. Only `#TITLE` / `#ARTIST` / `#STEPMAKER` / `#SONGFILE` are changed
+(diff-verified); `#BPM`, `#TICKCOUNT`, `#STARTTIME`, `#DIFFICULTY` and
+every `#STEP` block are byte-for-byte. KSF has no keysounds. Two naming
+constraints KSFLoader imposes are preserved: the filename drives type +
+difficulty ("double" in the name -> pump_double + Medium; no keyword ->
+pump_single + Hard), and the artist comes from the *directory* name
+split on " - " (KSFLoader ignores `#ARTIST`), hence the dir name here.
+Verified: identical chart output to the untouched source folder.
+
 `dwi-fixture/` -- a 3-chart `.dwi` for `test_NotesLoaderDWI.cpp`,
 derived from a community simfile that isn't clearly redistributable. Only
 `#FILE` / `#TITLE` / `#ARTIST` are changed from the source (verified by
