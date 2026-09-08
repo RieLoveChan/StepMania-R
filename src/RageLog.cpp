@@ -101,6 +101,8 @@ m_bUserLogToDisk(false), m_bFlush(false), m_bShowLogOutput(false)
 
 RageLog::~RageLog()
 {
+	SpillRepeat();	// don't lose a "(repeated N×)" note pending at exit
+
 	/* Add the mapped log data to info.txt. */
 	const RString AdditionalLog = GetAdditionalLog();
 	std::vector<RString> AdditionalLogLines;
@@ -207,6 +209,14 @@ RageLog::LogLevel RageLog::GetEffectiveLevel( Log::Category c ) const
 
 void RageLog::SetLogLevelSpec( const RString &spec )
 {
+	/* The spec is the complete config: reset to defaults (global Trace,
+	 * no per-category overrides) and rebuild from the tokens. So
+	 * "--LogLevel=sound:error" is (global trace) + sound:error; to keep
+	 * a raised global, spell it: "--LogLevel=warn,sound:error". */
+	m_MinLevel = LogLevel_Trace;
+	for( int i = 0; i < Log::NUM_Category; ++i )
+		m_CategoryLevel[i] = -1;
+
 	std::vector<RString> tokens;
 	split( spec, ",", tokens, true );
 	for( RString tok : tokens )
@@ -395,6 +405,48 @@ void RageLog::LogLine( LogLevel level, Log::Category cat,
 	Write( where, level, cat, sLine );
 }
 
+/* Emit one already-tagged line (no timestamp) to every destination its
+ * `where` bits select. Shared by Write() and the repeat-summary. */
+void RageLog::EmitLine( int where, const RString &sTagged )
+{
+	RString sStr = sTagged;
+
+	if( m_bShowLogOutput || (where&WRITE_TO_INFO) )
+		puts(sStr);
+	if( where & WRITE_TO_INFO )
+		AddToInfo( sStr );
+	if( m_bLogToDisk && (where&WRITE_TO_INFO) && g_fileInfo->IsOpen() )
+		g_fileInfo->PutLine( sStr );
+	if( m_bUserLogToDisk && (where&WRITE_TO_USER_LOG) && g_fileUserLog->IsOpen() )
+		g_fileUserLog->PutLine( sStr );
+
+	/* Timestamp goes on log.txt / timelog.txt / RecentLogs only, not
+	 * info.txt or stdout. */
+	sStr.insert( 0, SecondsToMMSSMsMsMs( RageTimer::GetTimeSinceStart() ) + "  " );
+
+	if( where & WRITE_TO_TIME )
+		g_fileTimeLog->PutLine( sStr );
+
+	AddToRecentLogs( sStr );
+
+	if( m_bLogToDisk && g_fileLog->IsOpen() )
+		g_fileLog->PutLine( sStr );
+}
+
+void RageLog::SpillRepeat()
+{
+	/* Occurrences 1 and 2 of a run are printed verbatim; only the 3rd
+	 * and beyond are folded into this note, so a mere pair of identical
+	 * lines produces no note. */
+	if( m_iRepeatCount >= 2 )
+	{
+		int n = m_iRepeatCount - 1;
+		EmitLine( m_iLastWhere, m_sLastTag +
+			ssprintf( "(previous line repeated %d more time%s)", n, n == 1 ? "" : "s" ) );
+	}
+	m_iRepeatCount = 0;
+}
+
 void RageLog::Write( int where, LogLevel level, Log::Category cat, const RString &sLine )
 {
 	LockMut( *g_Mutex );
@@ -420,37 +472,40 @@ void RageLog::Write( int where, LogLevel level, Log::Category cat, const RString
 		default:		sTag = "[TRACE] ";	break;
 	}
 
-	std::vector<RString> asLines;
-	split( sLine, "\n", asLines, false );
+	/* Consecutive-identical-line collapsing (ADR 0005 phase 3). Only
+	 * single-line, non-time/user lines participate; the time log keeps
+	 * every profiling sample and userlog.txt is already sparse. */
+	const bool bCollapsible = !(where & (WRITE_TO_TIME | WRITE_TO_USER_LOG))
+		&& sLine.find( '\n' ) == RString::npos;
 
-	RString sTimestamp = SecondsToMMSSMsMsMs( RageTimer::GetTimeSinceStart() ) + "  ";
-
-	for( unsigned i = 0; i < asLines.size(); ++i )
+	if( bCollapsible )
 	{
-		RString &sStr = asLines[i];
+		const RString sTagged = RString( sTag ) + sLine;
+		if( sTagged == m_sLastEmit )
+		{
+			++m_iRepeatCount;
+			// Print the 2nd occurrence verbatim; suppress the 3rd on.
+			if( m_iRepeatCount == 1 )
+				EmitLine( where, sTagged );
+			if( m_bFlush || (where & WRITE_TO_INFO) )
+				Flush();
+			return;
+		}
+		SpillRepeat();		// a different line -- close out the run first
+		EmitLine( where, sTagged );
+		m_sLastEmit = sTagged;
+		m_sLastTag = sTag;
+		m_iLastWhere = where;
+	}
+	else
+	{
+		SpillRepeat();
+		m_sLastEmit.clear();	// a multi-line / special line breaks the run
 
-		sStr.insert( 0, sTag );
-
-		if( m_bShowLogOutput || (where&WRITE_TO_INFO) )
-			puts(sStr);
-		if( where & WRITE_TO_INFO )
-			AddToInfo( sStr );
-		if( m_bLogToDisk && (where&WRITE_TO_INFO) && g_fileInfo->IsOpen() )
-			g_fileInfo->PutLine( sStr );
-		if( m_bUserLogToDisk && (where&WRITE_TO_USER_LOG) && g_fileUserLog->IsOpen() )
-			g_fileUserLog->PutLine( sStr );
-
-		/* Add a timestamp to log.txt and RecentLogs, but not the rest of info.txt
-		 * and stdout. */
-		sStr.insert( 0, sTimestamp );
-
-		if(where & WRITE_TO_TIME)
-			g_fileTimeLog->PutLine(sStr);
-
-		AddToRecentLogs( sStr );
-
-		if( m_bLogToDisk && g_fileLog->IsOpen() )
-			g_fileLog->PutLine( sStr );
+		std::vector<RString> asLines;
+		split( sLine, "\n", asLines, false );
+		for( RString &s : asLines )
+			EmitLine( where, RString( sTag ) + s );
 	}
 
 	if( m_bFlush || (where & WRITE_TO_INFO) )

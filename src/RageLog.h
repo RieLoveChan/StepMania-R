@@ -102,7 +102,17 @@ private:
 	 * A category CAN be set below the global level -- e.g. global=warn,
 	 * font:trace keeps font verbose. Initialised to -1 in the ctor. */
 	signed char m_CategoryLevel[Log::NUM_Category];
+
+	/* Consecutive-identical-line collapsing (ADR 0005 phase 3): the last
+	 * emitted tag+message (no timestamp), its destination bits and tag,
+	 * and how many identical lines have been suppressed since. */
+	RString m_sLastEmit, m_sLastTag;
+	int m_iLastWhere = 0;
+	int m_iRepeatCount = 0;
+
 	void Write( int where, LogLevel level, Log::Category cat, const RString &str );
+	void EmitLine( int where, const RString &sTagged );	// one line, no timestamp yet
+	void SpillRepeat();	// emit the pending "(repeated N×)" summary, if any
 	void UpdateMappedLog();
 	void AddToInfo( const RString &buf );
 	void AddToRecentLogs( const RString &buf );

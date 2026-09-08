@@ -75,21 +75,21 @@ TEST_CASE( "RageLog::SetLogLevelSpec: global level, per-category, and both", "[R
 	CHECK( LOG->GetEffectiveLevel( Log::Font )    == RageLog::LogLevel_Trace );
 	CHECK( LOG->GetEffectiveLevel( Log::Sound )   == RageLog::LogLevel_Warn ); // untouched -> global
 
-	// Per-category only, global stays whatever it was ("warn" above).
+	// The spec is the WHOLE config -- a per-cat-only spec resets the
+	// global to the default (trace) and clears other categories.
 	LOG->SetLogLevelSpec( "sound:error" );
 	CHECK( LOG->GetEffectiveLevel( Log::Sound )   == RageLog::LogLevel_Error );
-	CHECK( LOG->GetEffectiveLevel( Log::General ) == RageLog::LogLevel_Warn );
+	CHECK( LOG->GetEffectiveLevel( Log::General ) == RageLog::LogLevel_Trace );
+	CHECK( LOG->GetEffectiveLevel( Log::Font )    == RageLog::LogLevel_Trace ); // cleared
 
-	// Unknown category token is ignored (no crash), unknown level -> Trace.
+	// Unknown category token is ignored (no crash); unknown level -> Trace.
 	LOG->SetLogLevelSpec( "boguscat:warn,gl:boguslevel" );
 	CHECK( LOG->GetEffectiveLevel( Log::Gl ) == RageLog::LogLevel_Trace );
 
-	// Reset to the default so later tests / the run see a quiet-free log.
-	LOG->SetLogLevelSpec( "trace" );
-	LOG->SetCategoryLevel( Log::Gl, RageLog::LogLevel_Trace );
-	LOG->SetCategoryLevel( Log::Font, RageLog::LogLevel_Trace );
-	LOG->SetCategoryLevel( Log::Sound, RageLog::LogLevel_Trace );
+	// Empty / whitespace spec == all defaults.
+	LOG->SetLogLevelSpec( "" );
 	CHECK( LOG->GetEffectiveLevel( Log::General ) == RageLog::LogLevel_Trace );
+	CHECK( LOG->GetEffectiveLevel( Log::Sound )   == RageLog::LogLevel_Trace );
 }
 
 TEST_CASE( "LOG_* macros expand and route without crashing", "[RageLog][macro]" )
@@ -105,7 +105,6 @@ TEST_CASE( "LOG_* macros expand and route without crashing", "[RageLog][macro]" 
 	LOG_WARN(  Log::Net,   "net warn" );
 	LOG_ERROR( Log::Cache, "cache error %d/%d", 2, 3 );
 	LOG_TRACE( Log::Gl,    "this gl line is dropped by gl:off" );
-	LOG->SetLogLevelSpec( "trace" );
-	LOG->SetCategoryLevel( Log::Gl, RageLog::LogLevel_Trace );
+	LOG->SetLogLevelSpec( "" ); // back to all-defaults for the rest of the run
 	SUCCEED();
 }
