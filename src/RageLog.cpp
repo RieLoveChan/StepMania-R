@@ -81,7 +81,10 @@ enum
 	WRITE_TO_TIME= 0x08,
 
 	/* Whether this line is an error (implies WRITE_LOUD). See ADR 0005. */
-	WRITE_ERROR = 0x10
+	WRITE_ERROR = 0x10,
+
+	/* Whether this line is a Debug trace (below Trace). See ADR 0005. */
+	WRITE_DEBUG = 0x20
 };
 
 RageLog::RageLog(): m_bLogToDisk(false), m_bInfoToDisk(false),
@@ -181,6 +184,36 @@ void RageLog::SetFlushing( bool b )
 	m_bFlush = b;
 }
 
+void RageLog::SetLogLevel( LogLevel l )
+{
+	if( l < LogLevel_Trace || l >= NUM_LogLevel )
+		l = LogLevel_Trace;
+	m_MinLevel = l;
+}
+
+static const char *g_LogLevelNames[RageLog::NUM_LogLevel] =
+{
+	"trace", "debug", "info", "warn", "error"
+};
+
+RageLog::LogLevel RageLog::LogLevelFromString( const RString &s )
+{
+	RString t = s;
+	t.MakeLower();
+	Trim( t );
+	for( int i = 0; i < NUM_LogLevel; ++i )
+		if( t == g_LogLevelNames[i] )
+			return (LogLevel)i;
+	return LogLevel_Trace;
+}
+
+const char *RageLog::LogLevelToString( LogLevel l )
+{
+	if( l < LogLevel_Trace || l >= NUM_LogLevel )
+		l = LogLevel_Trace;
+	return g_LogLevelNames[l];
+}
+
 /* Enable or disable display of output to stdout, or a console window in Windows. */
 void RageLog::SetShowLogOutput( bool show )
 {
@@ -210,6 +243,16 @@ void RageLog::Trace( const char *fmt, ... )
 	va_end( va );
 
 	Write( 0, sBuff );
+}
+
+void RageLog::Debug( const char *fmt, ... )
+{
+	va_list	va;
+	va_start( va, fmt );
+	RString sBuff = vssprintf( fmt, va );
+	va_end( va );
+
+	Write( WRITE_DEBUG, sBuff );
 }
 
 /* Use this for more important information; it'll always be included
@@ -271,6 +314,21 @@ void RageLog::Write( int where, const RString &sLine )
 {
 	LockMut( *g_Mutex );
 
+	/* Drop lines below the configured minimum level (SetLogLevel /
+	 * --LogLevel). The time log and userlog.txt have their own
+	 * destinations and are never filtered here. ADR 0005. */
+	if( !(where & (WRITE_TO_TIME | WRITE_TO_USER_LOG)) )
+	{
+		LogLevel lvl;
+		if( where & WRITE_ERROR )		lvl = LogLevel_Error;
+		else if( where & WRITE_LOUD )		lvl = LogLevel_Warn;
+		else if( where & WRITE_TO_INFO )		lvl = LogLevel_Info;
+		else if( where & WRITE_DEBUG )		lvl = LogLevel_Debug;
+		else					lvl = LogLevel_Trace;
+		if( lvl < m_MinLevel )
+			return;
+	}
+
 	/* Bracketed, fixed-width level tag on every line. Replaces the old
 	 * ///// warning frame; makes the log greppable by severity
 	 * (grep '\[WARN\]', grep -E '\[(WARN|ERROR)\]'). See ADR 0005. */
@@ -283,6 +341,8 @@ void RageLog::Write( int where, const RString &sLine )
 		sTag = "[INFO]  ";
 	else if( where & (WRITE_TO_TIME | WRITE_TO_USER_LOG) )
 		sTag = ""; // time log and userlog.txt keep their own format
+	else if( where & WRITE_DEBUG )
+		sTag = "[DEBUG] ";
 	else
 		sTag = "[TRACE] ";
 

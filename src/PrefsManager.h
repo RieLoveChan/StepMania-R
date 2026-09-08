@@ -338,6 +338,10 @@ public:
 	Preference<bool>	m_bLogToDisk;
 	Preference<bool>	m_bForceLogFlush;
 	Preference<bool>	m_bShowLogOutput;
+	// Minimum log level: "trace" (default) / "debug" / "info" / "warn" /
+	// "error". Lines below it are dropped. Also settable per-run with
+	// --LogLevel=warn . ADR 0005 phase 2.
+	Preference<RString>	m_sLogLevel;
 	Preference<bool>	m_bLogSkips;
 	Preference<bool>	m_bLogCheckpoints;
 	Preference<bool>	m_bShowLoadingWindow;
