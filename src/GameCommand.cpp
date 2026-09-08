@@ -101,10 +101,10 @@ bool GameCommand::DescribesCurrentMode( PlayerNumber pn ) const
 				return false;
 	}
 
-	if( m_sAnnouncer != "" && m_sAnnouncer != ANNOUNCER->GetCurAnnouncerName() )
+	if( !m_sAnnouncer.empty() && m_sAnnouncer != ANNOUNCER->GetCurAnnouncerName() )
 		return false;
 
-	if( m_sPreferredModifiers != "" )
+	if( !m_sPreferredModifiers.empty() )
 	{
 		PlayerOptions po = GAMESTATE->m_pPlayerState[pn]->m_PlayerOptions.GetPreferred();
 		SongOptions so = GAMESTATE->m_SongOptions.GetPreferred();
@@ -116,7 +116,7 @@ bool GameCommand::DescribesCurrentMode( PlayerNumber pn ) const
 		if( so != GAMESTATE->m_SongOptions.GetPreferred() )
 			return false;
 	}
-	if( m_sStageModifiers != "" )
+	if( !m_sStageModifiers.empty() )
 	{
 		PlayerOptions po = GAMESTATE->m_pPlayerState[pn]->m_PlayerOptions.GetStage();
 		SongOptions so = GAMESTATE->m_SongOptions.GetStage();
@@ -232,14 +232,14 @@ void GameCommand::LoadOne( const Command& cmd )
 
 	else if( sName == "mod" )
 	{
-		if( m_sPreferredModifiers != "" )
+		if( !m_sPreferredModifiers.empty() )
 			m_sPreferredModifiers += ",";
 		m_sPreferredModifiers += sValue;
 	}
 
 	else if( sName == "stagemod" )
 	{
-		if( m_sStageModifiers != "" )
+		if( !m_sStageModifiers.empty() )
 			m_sStageModifiers += ",";
 		m_sStageModifiers += sValue;
 	}
@@ -620,7 +620,7 @@ bool GameCommand::IsPlayable( RString *why ) const
 		std::vector<Course*> vCourses;
 		SONGMAN->GetAllCourses( vCourses, false );
 
-		if( vCourses.size() == 0 )
+		if( vCourses.empty() )
 		{
 			if( why )
 				*why = "No courses are installed";
@@ -750,12 +750,12 @@ void GameCommand::ApplySelf( const std::vector<PlayerNumber> &vpns ) const
 	if( m_dc != Difficulty_Invalid )
 		for (PlayerNumber const &pn : vpns)
 			GAMESTATE->m_PreferredDifficulty[pn].Set( m_dc );
-	if( m_sAnnouncer != "" )
+	if( !m_sAnnouncer.empty() )
 		ANNOUNCER->SwitchAnnouncer( m_sAnnouncer );
-	if( m_sPreferredModifiers != "" )
+	if( !m_sPreferredModifiers.empty() )
 		for (PlayerNumber const &pn : vpns)
 			GAMESTATE->ApplyPreferredModifiers( pn, m_sPreferredModifiers );
-	if( m_sStageModifiers != "" )
+	if( !m_sStageModifiers.empty() )
 		for (PlayerNumber const &pn : vpns)
 			GAMESTATE->ApplyStageModifiers( pn, m_sStageModifiers );
 	if( m_LuaFunction.IsSet() && !m_LuaFunction.IsNil() )
@@ -772,7 +772,7 @@ void GameCommand::ApplySelf( const std::vector<PlayerNumber> &vpns ) const
 		}
 		LUA->Release(L);
 	}
-	if( m_sScreen != "" && m_bApplyCommitsScreens )
+	if( !m_sScreen.empty() && m_bApplyCommitsScreens )
 		SCREENMAN->SetNewScreen( m_sScreen );
 	if( m_pSong )
 	{
@@ -818,7 +818,7 @@ void GameCommand::ApplySelf( const std::vector<PlayerNumber> &vpns ) const
 		GAMESTATE->m_sPreferredSongGroup.Set( m_sSongGroup );
 	if( m_SortOrder != SortOrder_Invalid )
 		GAMESTATE->m_PreferredSortOrder = m_SortOrder;
-	if( m_sSoundPath != "" )
+	if( !m_sSoundPath.empty() )
 		SOUND->PlayOnce( THEME->GetPathS( "", m_sSoundPath ) );
 	if( m_iWeightPounds != -1 )
 		for (PlayerNumber const &pn : vpns)
@@ -893,9 +893,9 @@ bool GameCommand::IsZero() const
 	if( 	m_pm != PlayMode_Invalid ||
 		m_pStyle != nullptr ||
 		m_dc != Difficulty_Invalid ||
-		m_sAnnouncer != "" ||
-		m_sPreferredModifiers != "" ||
-		m_sStageModifiers != "" ||
+		!m_sAnnouncer.empty() ||
+		!m_sPreferredModifiers.empty() ||
+		!m_sStageModifiers.empty() ||
 		m_pSong != nullptr ||
 		m_pSteps != nullptr ||
 		m_pCourse != nullptr ||

@@ -499,7 +499,7 @@ void PlayerStageStats::UpdateComboList( float fSecond, bool bRollover )
 	if( !cnt )
 		return; // no combo
 
-	if( m_ComboList.size() == 0 || m_ComboList.back().m_cnt >= cnt )
+	if( m_ComboList.empty() || m_ComboList.back().m_cnt >= cnt )
 	{
 		/* If the previous combo (if any) starts on -9999, then we rolled over
 		 * some combo, but missed the first step. Remove it. */
@@ -534,7 +534,7 @@ void PlayerStageStats::UpdateComboList( float fSecond, bool bRollover )
  * m_bComboContinuesBetweenSongs is turned off. */
 PlayerStageStats::Combo_t PlayerStageStats::GetMaxCombo() const
 {
-	if( m_ComboList.size() == 0 )
+	if( m_ComboList.empty() )
 		return Combo_t();
 
 	int m = 0;

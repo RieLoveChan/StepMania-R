@@ -84,11 +84,11 @@ RString CourseEntry::GetTextDescription() const
 		vsEntryDescription.push_back( pSong->GetTranslitFullTitle() );
 	else
 		vsEntryDescription.push_back( "Random" );
-	if( songCriteria.m_vsGroupNames.size() > 0 )
+	if( !songCriteria.m_vsGroupNames.empty() )
 		vsEntryDescription.push_back("Groups: " + join(",", songCriteria.m_vsGroupNames));
 	if( songCriteria.m_bUseSongGenreAllowedList )
 		vsEntryDescription.push_back( join(",",songCriteria.m_vsSongGenreAllowedList) );
-	if( songCriteria.m_vsArtistNames.size() > 0 )
+	if( !songCriteria.m_vsArtistNames.empty() )
 		vsEntryDescription.push_back("Artists: " + join(",", songCriteria.m_vsArtistNames));
 	if( stepsCriteria.m_difficulty != Difficulty_Invalid  &&  stepsCriteria.m_difficulty != Difficulty_Medium )
 		vsEntryDescription.push_back( CourseDifficultyToLocalizedString(stepsCriteria.m_difficulty) );
@@ -540,7 +540,7 @@ bool Course::GetTrailUnsorted( StepsType st, CourseDifficulty cd, Trail &trail )
 			// It looks bad to have the same song 2x in a row in a randomly generated course.
 			// Don't allow the same song to be played 2x in a row, unless there's only
 			// one song in vpPossibleSongs.
-			if( trail.m_vEntries.size() > 0 && vSongAndSteps.size() > 1 )
+			if( !trail.m_vEntries.empty() && vSongAndSteps.size() > 1 )
 			{
 				const TrailEntry &teLast = trail.m_vEntries.back();
 				RemoveIf( vSongAndSteps, SongIsEqual( teLast.pSong ) );
@@ -695,7 +695,7 @@ bool Course::GetTrailUnsorted( StepsType st, CourseDifficulty cd, Trail &trail )
 
 	/* If the course difficulty never actually changed anything, then this difficulty
 	 * is equivalent to Difficulty_Medium; it doesn't exist. */
-	return bCourseDifficultyIsSignificant && trail.m_vEntries.size() > 0;
+	return bCourseDifficultyIsSignificant && !trail.m_vEntries.empty();
 }
 
 void Course::GetTrailUnsortedEndless( const std::vector<CourseEntry> &entries, Trail &trail, StepsType &st,
@@ -779,7 +779,7 @@ void Course::GetTrailUnsortedEndless( const std::vector<CourseEntry> &entries, T
 		{
 			StepsVector& stepsForSong = songStepMap[ss.pSong];
 			// If we haven't noted this song yet, add it to the song list
-			if (stepsForSong.size() == 0)
+			if (stepsForSong.empty())
 			{
 				vpSongs.push_back(ss.pSong);
 			}
@@ -1137,12 +1137,12 @@ RString Course::GetBackgroundPath() const
 
 bool Course::HasBanner() const
 {
-	return GetBannerPath() != ""  &&  IsAFile(GetBannerPath());
+	return !GetBannerPath().empty()  &&  IsAFile(GetBannerPath());
 }
 
 bool Course::HasBackground() const
 {
-	return GetBackgroundPath() != ""  &&  IsAFile(GetBackgroundPath());
+	return !GetBackgroundPath().empty()  &&  IsAFile(GetBackgroundPath());
 }
 
 void Course::UpdateCourseStats( StepsType st )

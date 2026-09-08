@@ -20,7 +20,7 @@ RandomSample::~RandomSample()
 
 bool RandomSample::Load( RString sFilePath, int iMaxToLoad )
 {
-	if( GetExtension(sFilePath) == "" )
+	if( GetExtension(sFilePath).empty() )
 		return LoadSoundDir( sFilePath, iMaxToLoad );
 	else
 		return LoadSound( sFilePath );
@@ -35,7 +35,7 @@ void RandomSample::UnloadAll()
 
 bool RandomSample::LoadSoundDir( RString sDir, int iMaxToLoad )
 {
-	if( sDir == "" )
+	if( sDir.empty() )
 		return true;
 
 #if 0

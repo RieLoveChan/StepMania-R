@@ -143,7 +143,7 @@ void BackgroundUtil::AddBackgroundChange( std::vector<BackgroundChange> &vBackgr
 void BackgroundUtil::GetBackgroundEffects( const RString &_sName, std::vector<RString> &vsPathsOut, std::vector<RString> &vsNamesOut )
 {
 	RString sName = _sName;
-	if( sName == "" )
+	if( sName.empty() )
 		sName = "*";
 
 	vsPathsOut.clear();
@@ -159,7 +159,7 @@ void BackgroundUtil::GetBackgroundEffects( const RString &_sName, std::vector<RS
 void BackgroundUtil::GetBackgroundTransitions( const RString &_sName, std::vector<RString> &vsPathsOut, std::vector<RString> &vsNamesOut )
 {
 	RString sName = _sName;
-	if( sName == "" )
+	if( sName.empty() )
 		sName = "*";
 
 	vsPathsOut.clear();

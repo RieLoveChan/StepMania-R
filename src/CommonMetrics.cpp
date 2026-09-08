@@ -106,7 +106,7 @@ static void RemoveStepsTypes( std::vector<StepsType>& inout, RString sStepsTypes
 {
 	std::vector<RString> v;
 	split( sStepsTypesToRemove, ",", v );
-	if( v.size() == 0 ) return; // Nothing to do!
+	if( v.empty() ) return; // Nothing to do!
 
 	// subtract StepsTypes
 	for (RString const &i : v)

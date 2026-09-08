@@ -69,7 +69,7 @@ bool CodeDetector::EnteredCode( GameController controller, Code code )
 
 void CodeDetector::RefreshCacheItems( RString sClass )
 {
-	if( sClass == "" )
+	if( sClass.empty() )
 		sClass = "CodeDetector";
 	FOREACH_ENUM( Code, c )
 	{
