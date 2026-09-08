@@ -850,6 +850,13 @@ static void ApplyLogPreferences()
 	LOG->SetInfoToDisk( true );
 	LOG->SetUserLogToDisk( true );
 	LOG->SetFlushing( PREFSMAN->m_bForceLogFlush );
+
+	// Log level: the LogLevel preference, overridden by --LogLevel=<name>
+	// for the run. (Lines emitted before this point -- arch hooks, LUA,
+	// FILEMAN -- are already out and cannot be filtered retroactively.)
+	RString sLogLevel = PREFSMAN->m_sLogLevel;
+	GetCommandlineArgument( "LogLevel", &sLogLevel );
+	LOG->SetLogLevel( RageLog::LogLevelFromString( sLogLevel ) );
 	Checkpoints::LogCheckpoints( PREFSMAN->m_bLogCheckpoints );
 }
 

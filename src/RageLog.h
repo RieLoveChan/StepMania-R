@@ -8,8 +8,30 @@ class RageLog
 public:
 	RageLog();
 	~RageLog();
-	
+
+	/* Severity ordering: Trace < Debug < Info < Warn < Error. A line
+	 * below the current minimum level (SetLogLevel) is dropped from all
+	 * destinations. Default minimum is LogLevel_Trace (nothing dropped).
+	 * ADR 0005. */
+	enum LogLevel
+	{
+		LogLevel_Trace,
+		LogLevel_Debug,
+		LogLevel_Info,
+		LogLevel_Warn,
+		LogLevel_Error,
+		NUM_LogLevel
+	};
+	/* Parse a level name ("trace".."error", case-insensitive); an
+	 * unrecognised string returns LogLevel_Trace. */
+	static LogLevel LogLevelFromString( const RString &s );
+	static const char *LogLevelToString( LogLevel l );
+	void SetLogLevel( LogLevel l );	// drop lines below this level
+
 	void Trace( const char *fmt, ... ) PRINTF(2,3);
+	// Debug sits below Trace: even more verbose, off unless the log
+	// level is lowered to it. Goes to log.txt only, like Trace. ADR 0005.
+	void Debug( const char *fmt, ... ) PRINTF(2,3);
 	void Warn( const char *fmt, ... ) PRINTF(2,3);
 	// Error is for serious-but-recoverable failures. For unrecoverable
 	// ones use RageException::Throw (which also logs). See ADR 0005.
@@ -40,6 +62,7 @@ private:
 	bool m_bUserLogToDisk;
 	bool m_bFlush;
 	bool m_bShowLogOutput;
+	LogLevel m_MinLevel = LogLevel_Trace;
 	void Write( int, const RString &str );
 	void UpdateMappedLog();
 	void AddToInfo( const RString &buf );

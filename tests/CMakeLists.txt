@@ -11,6 +11,7 @@ set(SM_TEST_SRC
     EngineTestEnv.cpp
     test_EngineTestEnv.cpp
     test_RageFile.cpp
+    test_RageLog.cpp
     test_RageSoundReader.cpp
     test_IniFile.cpp
     test_XmlFile.cpp
