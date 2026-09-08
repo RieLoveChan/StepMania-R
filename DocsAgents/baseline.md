@@ -110,16 +110,19 @@ once per including TU, so unique counts (esp. `use-override`,
 | `modernize-use-equals-default` | 41 | `{}` body → `= default`. Autofix. |
 | `modernize-use-bool-literals` | 24 | `0/1`→`false/true` for bool. Autofix. |
 | `readability-redundant-member-init` | 22 | drop `m_x(T())`. Autofix. |
-| `bugprone-integer-division` | 14 | `int/int` assigned to float — **look at each**, likely real. |
-| `bugprone-suspicious-string-compare` | 11 | `strcmp` misuse — **look at each**. |
+| `bugprone-integer-division` | 14 | **hunted 2026-09-08 — no fixes.** All in rendering / UI positioning: `ActorMultiVertex`/`WheelBase`/`ScreenOptions` intentional (integer decomposition / explicit `(int)` cast); `ScreenEdit:1459` is a false positive (`SCREEN_HEIGHT` is `float`); `Font`/`NoteField`/`SnapDisplay`/`ScreenSelectCharacter` are genuine ≤0.5 px / half-unit imprecision but "fixing" changes pixel output on untested paths (`AGENTS.md` §4) — flagged for the maintainer, left. |
+| `bugprone-suspicious-string-compare` | 11 | **hunted 2026-09-08 — 1 real bug fixed** (`f5005b8754`): `RageSurfaceFormat::operator==` `memcmp`'d the palette with `sizeof(RageSurfaceFormat)` instead of `sizeof(RageSurfacePalette)` (compared ~128 of 1024 bytes). The rest are idiomatic `if( memcmp(...) )` boolean use (`RageDisplay`/`RageFileDriverZip`/`RageSurface` + the `arch/Sound` drivers + `Win32/CrashHandlerChild` + `mapconv`) — not defects. |
 | `modernize-redundant-void-arg` | 3 | `(void)`→`()`. Autofix. |
 | `modernize-make-unique` | 2 | `new`→`make_unique`. |
 | **Total** | **1187** | |
 
 The top 3 (~1030) are near-mechanical autofixes → obvious first
 `clang-tidy-subsystem-pass` targets. `bugprone-integer-division` and
-`bugprone-suspicious-string-compare` (25) want human eyes — potential real
-bugs.
+`bugprone-suspicious-string-compare` (25) were the "human eyes" set —
+**hunted 2026-09-08** (parallel clang-tidy run over all `src/`, re-read
+each site in context): one real bug fixed (`RageSurface`, `f5005b8754`),
+the rest are intentional / idiomatic / sub-pixel-in-untested-render-code.
+See the per-check rows below for the verdict on each.
 
 **Parse errors:** 12, all from `src/archutils/Win32/DirectXErrorList.h` —
 `case` labels like `0x8007000B` used in a `switch` on signed `HRESULT`
