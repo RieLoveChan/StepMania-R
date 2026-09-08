@@ -294,6 +294,20 @@ Per-subsystem breakdown as passes run:
     Easy/3/233, Medium/8/443, Hard/10/680 taps). 29 assertions /
     1 visible case (+1 hidden `[dwidump]`).
     Suite total: **705 assertions / 83 cases** (up from 311/72).
+  - `tests/test_NotesLoaderKSF.cpp` + `tests/data/Fixture Artist - KSF
+    Fixture/` (2026-09-08) — **ADR 0006 phase 4 for `.ksf`** (Pump It
+    Up), via `KSFLoader::GetApplicableFiles` + `LoadFromDir` (note it
+    needs `song.SetSongDir()` first — no `Dirname` fallback). Derived
+    fixture: only `#TITLE`/`#ARTIST`/`#STEPMAKER`/`#SONGFILE` scrubbed,
+    the rest byte-for-byte. Pins title (from `#TITLE`), artist (from
+    the **directory name** — KSFLoader ignores `#ARTIST`), `#BPM` 220,
+    `#STARTTIME`→offset -0.17, and 4 charts (`pump-double` Medium/17 &
+    26, `pump-single` Hard/17 & 23; 601/895/622/807 taps). Filename
+    drives type+difficulty, so the files are named `single-a/-b` /
+    `double-a/-b`. New StepsType coverage: `pump-double`. 30 assertions
+    / 1 visible case (+1 hidden `[ksfdump]`). Verified identical to the
+    untouched source folder.
+    Suite total: **948 assertions / 118 cases** (up from 311/72).
   - `tests/test_RageFile.cpp` (2026-09-06) — salvages the intent of the
     2004-era `src/tests/test_file_readers.cpp`: `RageFile` open / read /
     write / seek / tell / `GetLine` / `AtEOF`, end-to-end through
@@ -351,7 +365,7 @@ Per-subsystem breakdown as passes run:
   VS-bundled cmake for this repo):
   - `WITH_TESTS=ON` Debug → `sm_engine` OBJECT lib + `Catch2` +
     `sm_tests.exe` all build clean under `WITH_WERROR=ON`; `sm_tests.exe`
-    → **918 assertions / 117 cases pass**; `ctest` 100%. (First-landed at
+    → **948 assertions / 118 cases pass**; `ctest` 100%. (First-landed at
     94/19.)
   - `WITH_TESTS=OFF` Release → `StepMania-R.exe` builds clean (the
     OBJECT-library split is transparent when off) + `--SelfTest` exits 0.

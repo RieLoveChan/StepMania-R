@@ -1174,3 +1174,40 @@
   Windows box had — `which clang-tidy cmake ninja` first; if absent,
   land the diff and leave the §4 verification for a follow-up on the
   real box (as happened here), don't claim the gate was met.
+
+* **Test harness — `.ksf` phase-4 coverage (derived fixture).** Same
+  copyright-safe pattern as `.pms`/`.dwi`. Source: the real "1119.
+  Crash - Crash Day" Pump It Up KSF folder (4 charts). Scrub touches
+  only `#TITLE` / `#ARTIST` / `#STEPMAKER` / `#SONGFILE` — verified by
+  `diff` that `#BPM` / `#TICKCOUNT` / `#STARTTIME` / `#DIFFICULTY` /
+  `#PLAYER` and every `#STEP` block are byte-for-byte. KSF has no
+  keysounds. Committed at `tests/data/Fixture Artist - KSF Fixture/`
+  (dir name deliberate — see below).
+  KSF quirks the test had to work around:
+  - `KSFLoader::LoadFromDir` has **no `Dirname(path)` fallback** (unlike
+    SM/DWI/BMS) — `LoadGlobalData` uses `out.GetSongDir()` directly, so
+    the test must call `song.SetSongDir(dir)` first or every `#WAVxx`-
+    style file resolve gets a relative path and fails.
+  - StepsType **and** Difficulty come from the **filename** (lowercased):
+    `"double"` → `pump_double` + `Difficulty_Medium`; no difficulty
+    keyword → `pump_single` + `Difficulty_Hard` (else branch). So the
+    fixture files are named `single-a/-b.ksf` / `double-a/-b.ksf` to
+    reproduce the source's mapping. Meter still comes from each file's
+    `#DIFFICULTY` tag (kept).
+  - `#ARTIST` is **ignored** by KSFLoader; the artist is taken from the
+    song **directory name** split on `" - "` (`LoadTags` on
+    `asBits[size-2]`). Hence the fixture dir is
+    `Fixture Artist - KSF Fixture` → artist `Fixture Artist`, and
+    `#TITLE` still wins for the title (`LoadTags` only fills blanks).
+  `tests/test_NotesLoaderKSF.cpp` (30 assertions / 1 visible case +
+  hidden `[ksfdump]`): pins title/artist, `#BPM` 220,
+  `#STARTTIME:17`→offset -0.17, and 4 charts — `pump-double` Medium/17
+  & 26, `pump-single` Hard/17 & 23 (601 / 895 / 622 / 807 taps).
+  **New StepsType coverage: `pump-double`.** Verified against the
+  untouched source folder: identical chart output, only the scrubbed
+  strings differ. Suite **918 → 948 assertions, 117 → 118 cases**;
+  Windows Debug clean under `WITH_WERROR=ON`, `ctest` 100%,
+  `src/CMakeLists.txt` untouched.
+  **Phase 4 status:** `.sm`/`.ssc`/`.pms`/`.dwi`/`.ksf` done; `.sma`
+  (needs a real `.sma` song) and `.crs` (courses reference songs →
+  likely `SONGMAN`) remain.

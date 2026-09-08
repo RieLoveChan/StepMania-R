@@ -133,6 +133,11 @@ there and is writable, so no fixture file is needed at all (see
   fixtures (`tests/data/{pms,dwi}-fixture/`,
   `test_NotesLoader{BMS,DWI}.cpp`) — the copyright-safe pattern for
   non-redistributable source songs.
+- `2026-09-08` — `.ksf` (Pump It Up) phase-4 coverage, same derived
+  pattern (`tests/data/Fixture Artist - KSF Fixture/`,
+  `test_NotesLoaderKSF.cpp`). KSF gotchas: `KSFLoader::LoadFromDir`
+  needs `song.SetSongDir()` (no `Dirname` fallback), and derives
+  type/difficulty from the *filename* and artist from the *dir name*.
 - `2026-09-06` — `test_RageFile.cpp`: read/write round-trips via the
   writable `/@mem` mount, no fixture files (salvages
   `src/tests/test_file_readers.cpp`).

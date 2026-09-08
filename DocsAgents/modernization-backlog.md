@@ -191,7 +191,7 @@ reject it (C++11 narrowing) if clang-cl were ever adopted. Not touched
 clang currently. Rewrite the cases as hex literals / `HRESULT(...)` if
 and when clang-cl support is actually pursued.
 
-### 17. Pick a unit-test framework + write core characterization tests — phases 1-3 DONE; phase 4 DONE for .sm/.ssc + .pms/BMS + .dwi (2026-09-06); .sma/.ksf/.crs + reader-salvage still open
+### 17. Pick a unit-test framework + write core characterization tests — phases 1-3 DONE; phase 4 DONE for .sm/.ssc + .pms/BMS + .dwi + .ksf; reader-salvage DONE; .sma/.crs still open
 Framework decided: **Catch2 v3** (amalgamated, vendored `extern/Catch2/`
 @ v3.16.0) — ADR [0006](./adr/0006-test-harness.md). Build approach:
 `src/` → OBJECT library `sm_engine`, shared by the exe and a new
@@ -302,13 +302,27 @@ DWI has no keysounds so nothing else to stub). Pins the
 Easy/3/233, Medium/8/443, Hard/10/680 taps). Scrub verified lossless
 against the source. Suite **705 / 83**.
 
+**`.ksf` DONE (2026-09-08, `tests/test_NotesLoaderKSF.cpp` +
+`tests/data/Fixture Artist - KSF Fixture/`).** Same derived-fixture
+pattern over a 4-chart Pump It Up KSF set — only `#TITLE`/`#ARTIST`/
+`#STEPMAKER`/`#SONGFILE` scrubbed, everything else byte-for-byte
+(KSF has no keysounds). Quirks the fixture had to respect: KSFLoader
+needs `song.SetSongDir()` (no `Dirname` fallback), derives type +
+difficulty from the *filename* (`"double"` → pump_double + Medium; no
+keyword → pump_single + Hard), and derives the artist from the
+*directory name* split on `" - "` (it ignores `#ARTIST`). Pins `#BPM`
+220, `#STARTTIME`→offset -0.17, and 4 charts (pump-double Medium/17 &
+26, pump-single Hard/17 & 23; 601/895/622/807 taps). New StepsType
+coverage: `pump-double`. Verified identical to the untouched source
+folder. Suite **948 / 118**.
+
 **Still open:**
-- `.sma` / `.ksf` / `.crs`: no fixture yet. `EngineTestEnv` is ready
+- `.sma` / `.crs`: no fixture yet. `EngineTestEnv` is ready
   (`PREFSMAN` in, `LoadFromDir`/`LoadFromSimfile` reachable). For each:
   a real song under `Songs/` if redistributable, else the same
   derived-fixture approach (`tests/data/`). `.sma` slots into the
-  existing `kCorpus`; `.ksf` gets a `LoadFromDir` case. `.crs` courses
-  reference songs so likely also need `SONGMAN`.
+  existing `kCorpus`; `.crs` courses reference songs so likely also
+  need `SONGMAN`.
 - `src/tests/test_file_readers.cpp` **DONE (2026-09-06)** →
   `tests/test_RageFile.cpp`: `RageFile` open/read/write/seek/tell/
   `GetLine`/`AtEOF` through `FILEMAN`'s `/@mem` writable mount, so each
