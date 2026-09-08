@@ -136,6 +136,7 @@ Per-subsystem breakdown as passes run:
 | singletons (`CMakeData-singletons.cmake`, 25 `.cpp`) | `modernize-use-override` | 8 | 0 | `22296571d5` |
 | singletons — `NetworkManager.cpp` | `modernize-use-nullptr` | 6 | 0 | `ef9fd6ad0b` |
 | singletons — 4 macros (`NoteSkin`/`Profile`/`Screen`/`UnlockManager`) | `bugprone-macro-parentheses` | 8 | 4 (StatsManager's 4 are `::`-scoped / stringize — unfixable, left) | `2d8227fbe8` |
+| data-structures — 15 non-parse-path files (`CMakeData-data.cmake`; `BackgroundUtil`/`CodeDetector`/`CommonMetrics`/`Course`/`CourseUtil`/`Font`/`GameCommand`/`ImageCache`/`OptionRowHandler`/`PlayerStageStats`/`Profile`/`RandomSample`/`SampleHistory`/`SoundEffectControl`/`StageStats`) | `readability-container-size-empty` | 57 | 0 | `64e89eeabc` |
 
 > Note: the `singletons` pass was measured with the **VS-bundled
 > clang-tidy 19.1.5** (`…\BuildTools\VC\Tools\Llvm\x64\bin`) — the
@@ -144,6 +145,22 @@ Per-subsystem breakdown as passes run:
 > `use-nullptr`) are stable across those versions; re-measure the
 > repo-wide totals table with one fixed tool version before trusting its
 > absolute numbers.
+
+> Note on the `data-structures` row: the fixes were found and applied by
+> hand (`grep` for `X.size() (==|!=|>) 0` / `X (==|!=) ""`, each site
+> read in context — not clang-tidy `--fix`), because the session that
+> did the sweep ran in a toolchain-less Linux VM. One mis-fire was
+> corrected when the pass was verified + committed on Windows
+> (`SoundEffectControl.cpp`: `SOUND_PROPERTY.empty()` →
+> `SOUND_PROPERTY.GetValue().empty()` — `ThemeMetric<RString>` has no
+> `.empty()`). Deliberately **left untouched** (still open):
+> `CourseLoaderCRS.cpp` / `CourseWriterCRS.cpp` (14 more hits) — `.crs`
+> is a protected on-disk format (`AGENTS.md` §5) and there is no course
+> regression corpus yet; the simfile parse-path files
+> (`NotesLoader*`/`NotesWriter*`/`TimingData`/`NoteData*`/`Song*`/
+> `Steps*`) are excluded by name for the same reason. Verified on
+> Windows Debug: all 15 TUs force-recompiled clean under
+> `WITH_WERROR=ON`, `sm_tests` 918/117, `ctest` 100%.
 
 # Tests
 
