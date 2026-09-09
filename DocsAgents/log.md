@@ -1473,3 +1473,21 @@
   non-platform subsystem group. Any residual hits would be pure-header
   declarations a `.cpp` TU never instantiates — a header-touching
   sweep is a separate, larger call.
+
+* **clang-tidy-subsystem-pass — `data` non-parse-path,
+  `modernize-use-nullptr` (item 12, `66954c15cd`).** `CreateZip.cpp`
+  (12: `TZip` ctor init list `zfis(0)`/`hfin(0)` and `0`-literal
+  pointer comparisons `pfout!=0`, `hfin!=0`, `bufin!=0`, `fn==0`,
+  `zfi->cextra!=0` in the bundled zip writer) and `DisplaySpec.cpp`
+  (1: `luaL_openlib( L, 0, … )` name arg). **Ran `clang-tidy` directly
+  on the two files** (not the `data` group) so the single hit in
+  `NotesLoaderSM.cpp` — AGENTS.md §5 parse path — is left alone.
+  Semantics-identical. **Verified (Windows Debug):** `sm_tests` clean
+  under `WITH_WERROR=ON`, 1004 / 124, `ctest` 100%.
+  Remaining low-value mechanical checks measured but **not run**:
+  `modernize-use-equals-default` (actor 12 / screen 9 / data 5 /
+  file-types 2 / globals 1 — deliberately skipped, matches the
+  `rage`/`singletons` precedent: churny out-of-line `= default` for
+  marginal gain), `modernize-use-bool-literals` (actor 1 / data 2 /
+  file-types 2 — trivial, deferred), `readability-redundant-string-init`
+  (0 everywhere).
