@@ -1709,3 +1709,27 @@
     `FromString<bool>("true")` case). All 6 catch sites now
     `if( LOG )`. Backlog item 21 closed.
   Suite **5321/157 → 5428/167.**
+
+* **ADR 0006 — engine-config coverage (2026-09-09, cont.).**
+  - `1ff0eb549a` — `tests/test_GameManager.cpp` (new). The
+    string→StepsType/Game/Style table lookups (GAMEMAN via fixture).
+    `StringToStepsType` case-insensitive + every type round-trips its
+    `GetStepsTypeInfo().szName`; `StringToGame` dance/pump/kb7;
+    `GameAndStringToStyle(dance,"single"/"double")` → Style with the
+    right `m_StepsType` / `m_iColsPerPlayer` (4/8);
+    `GetStylesForGame`/`GetStepsTypesForGame` non-empty + round-trip via
+    `GetGameForStyle`.
+  - `c76ee6f0ae` — `tests/test_RageColor.cpp` (new). The `"1,0,0.5"` /
+    `"#FF8000"` colour codec. 3-or-4 comma floats; `#RRGGBB`/`#RRGGBBAA`
+    case-insensitive; **parse failure resets the colour to opaque
+    white** (pinned side effect); `ToString` picks `#RRGGBB` vs
+    `#RRGGBBAA` by rounded alpha, upper-case, clamps; 8-bit round-trip;
+    `NormalizeColorString`.
+  - `452c60f997` — `tests/test_SongOptions.cpp` (new). The per-song mod
+    set (`SongOptions::FromOneModString` has no NOTESKIN/GAMESTATE dep,
+    unlike `PlayerOptions`). `xMusic` rate token, on/off keyword mods
+    (clap / autosync* / haste), unknown mod silently ignored, `Init()`
+    reset, `GetString`/`FromString` round-trip via `operator==`.
+  Suite **5428/167 → 5594/182**. (`PlayerOptions::FromString` needs
+  `NOTESKIN` — deferred until `EngineTestEnv` grows a NoteSkinManager
+  bring-up.)
