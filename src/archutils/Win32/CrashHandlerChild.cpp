@@ -653,10 +653,10 @@ class CrashDialog: public WindowsDialogBox
 {
 public:
 	CrashDialog( const RString &sCrashReport, const CompleteCrashData &CrashData );
-	~CrashDialog();
+	~CrashDialog() override;
 
 protected:
-	virtual INT_PTR HandleMessage( UINT msg, WPARAM wParam, LPARAM lParam );
+	INT_PTR HandleMessage( UINT msg, WPARAM wParam, LPARAM lParam ) override;
 
 private:
 	void SetDialogInitial();

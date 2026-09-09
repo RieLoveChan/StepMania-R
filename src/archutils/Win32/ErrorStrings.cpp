@@ -8,7 +8,7 @@ RString werr_ssprintf( int err, const char *fmt, ... )
 {
 	char buf[1024] = "";
 	FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-		0, err, 0, buf, sizeof(buf), nullptr);
+		nullptr, err, 0, buf, sizeof(buf), nullptr);
 
 	// Why is FormatMessage returning text ending with \r\n? (who? -aj)
 	// Perhaps it's because you're on Windows, where newlines are \r\n. -aj

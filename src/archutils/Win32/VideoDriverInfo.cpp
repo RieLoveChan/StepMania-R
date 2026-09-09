@@ -50,7 +50,7 @@ RString GetPrimaryVideoName()
 RString GetPrimaryVideoDriverName()
 {
 	RString sPrimaryDeviceName = GetPrimaryVideoName();
-	if( sPrimaryDeviceName != "" )
+	if( !sPrimaryDeviceName.empty() )
 		return sPrimaryDeviceName;
 
 	LOG->Warn("GetPrimaryVideoName failed; renderer selection may be wrong");
@@ -88,7 +88,7 @@ bool GetVideoDriverInfo( int iCardno, VideoDriverInfo &info )
 			lst[i] = sTopKey + "\\" + lst[i];
 		}
 
-		if( lst.size() == 0 )
+		if( lst.empty() )
 		{
 			LOG->Warn("GetVideoDriverInfo error: no cards found!");
 			return false;
