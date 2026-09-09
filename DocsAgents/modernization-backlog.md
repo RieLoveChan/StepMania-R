@@ -165,11 +165,27 @@ and cross-platform — a dedicated ADR-scoped effort, not a casual pass.
 **Action:** [`playbooks/clang-tidy-subsystem-pass.md`](./playbooks/clang-tidy-subsystem-pass.md),
 one subsystem + one check family per PR; record in
 [`baseline.md`](./baseline.md).
-**Passes landed:** see the per-subsystem table in `baseline.md`
-(`rage`/`singletons`/`data-structures`). **Still open in `data-structures`:**
-`readability-container-size-empty` in `CourseLoaderCRS.cpp` /
-`CourseWriterCRS.cpp` (15 hits) — deferred because `.crs` is a protected
-on-disk format (§5) and there's no course regression corpus yet.
+**Passes landed:** see the per-subsystem table in `baseline.md`. As of
+2026-09-09 the four mechanical checks (`readability-container-size-empty`,
+`modernize-use-override`, `modernize-use-nullptr`,
+`bugprone-macro-parentheses`) are **clear across every non-platform
+subsystem group outside the §5 parse/write path** (`rage`, `singletons`,
+`actor`, `screen`, `file-types`, `globals`, `data`-non-§5). See
+`baseline.md` → "Full-config re-sweep — 2026-09-09" for the exact
+remainder.
+**Still open, by category:**
+- §5-protected files (`Song*`/`Steps*`/`NotesLoader*`/`NotesWriter*`/
+  `TimingData`/`.crs`) — ~130 hits, blocked on a parse/course
+  regression corpus.
+- `arch/` driver code (`Dialog`, `RageSoundDriver_*`,
+  `InputHandler_DirectInput`, `RageSurface_Load_BMP`, `MovieTexture_*`,
+  …) — a dedicated `arch` subsystem pass, lower priority (`AGENTS.md` §3).
+- `modernize-use-equals-default` (38) and `readability-redundant-member-init`
+  (28) — deferred: `--fix` output is too dirty to land without a
+  coupled `clang-format` run, which ADR 0002 says must be its own
+  change.
+- `bugprone-integer-division` (14) — flagged for the maintainer
+  (sub-pixel render maths on untested paths), see `baseline.md`.
 
 ### 13. `src/archutils/Win32/arch_setup.h` legacy — mostly DONE
 - `isnan`/`isfinite` macros removed 2026-09-03 (`37e6766d5e`).

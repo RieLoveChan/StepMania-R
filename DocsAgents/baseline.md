@@ -177,6 +177,31 @@ Per-subsystem breakdown as passes run:
 > Windows Debug: all 15 TUs force-recompiled clean under
 > `WITH_WERROR=ON`, `sm_tests` 918/117, `ctest` 100%.
 
+## Full-config re-sweep — 2026-09-09 (after the batch above)
+
+Repo `.clang-tidy` full check set, VS-bundled clang-tidy 19.1.5, over
+the same 421 non-platform `.cpp` (raw hit **lines**):
+
+| Check | Hits | Where they are now |
+|---|---:|---|
+| `readability-container-size-empty` | 144 | ~100 in AGENTS.md §5 files (`Song`/`SongUtil`/`NotesLoaderBMS`/`CourseWriterCRS`/…); the rest a long tail in `arch/` driver code (`Dialog`, `RageSoundDriver_WDMKS`, `RageSurface_Load_BMP` 8, `InputHandler_DirectInput`, …) — a future `arch` subsystem pass. All non-`arch`, non-§5 subsystem groups are clear. |
+| `modernize-use-equals-default` | 38 | **deferred** — scattered 1-2/file; `--fix` writes out-of-line `Foo()\n= default;` and needs hand-rejoin, churny for the payoff. Matches the `rage`/`singletons` precedent of skipping it. |
+| `readability-redundant-member-init` | 28 | **deferred** — `--fix` leaves dangling commas / orphan blank continuation lines in the member-init list (tried on `Course`/`Font`/`ScreenGameplay`/… 2026-09-09, reverted). Needs either a formatter pass in the same commit (ADR 0002 says separate) or all-hand cleanup. |
+| `modernize-use-override` | 16 | all in `MovieTexture_Null`/`MovieTexture_Generic`/`RageDisplay_Null` — `arch` render stubs. |
+| `bugprone-macro-parentheses` | 15 | all §5 (`StatsManager` `::`-scoped unfixable, `StepsUtil`/`Song`/`SongCacheIndex`) or the 2 reverted `Profile`/`OptionRowHandler` mis-fires. Effectively done. |
+| `bugprone-integer-division` | 14 | unchanged — see the 2026-09-08 verdict row above (flagged for maintainer, not touched). |
+| `modernize-use-nullptr` | 13 | all in `arch` (`IXSocketMbedTLS`, `InputHandler_DirectInput`, `RageSoundDriver_*`) + 1 §5 (`NotesLoaderSM`). |
+| `modernize-use-bool-literals` | 11 | 1/file across `arch` + `RageSurfaceUtils`/`ThemeManager`/`RageDisplay_OGL` — trivial, deferred with the rest. |
+| `bugprone-suspicious-string-compare` | 8 | idiomatic `if( memcmp(...) )` — see 2026-09-08 row (not defects). |
+
+Net: the four mechanical checks (`container-size-empty`, `use-override`,
+`use-nullptr`, `macro-parentheses`) are **clear across every
+non-platform subsystem group outside the §5 parse/write path**. What
+remains is (a) §5-protected files — need a regression corpus first,
+(b) `arch/` driver code — its own lower-priority pass (`AGENTS.md` §3),
+(c) two checks whose `--fix` output is too dirty to land without a
+coupled formatter run.
+
 # Tests
 
 - **Headless smoke test: EXISTS** as of `f7249f3a95` (2026-09-03).
