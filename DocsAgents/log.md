@@ -1748,3 +1748,27 @@
     does NOT lower-case** despite the header comment; comment corrected
     in the same commit.
   Suite **5594/182 → 5662/193**.
+
+* **ADR 0006 — parse-primitive coverage (2026-09-09, cont.).**
+  - `bb0a2b93e9` — `test_RageUtil.cpp` +4 cases for `split()`/`join()`
+    (under every simfile parse / command / config line): single- and
+    multi-char delimiters, `bIgnoreEmpty` on/off, empty-source → empty
+    vector, `join` is the exact inverse of `split(...,false)`.
+  - `af37ddb551` — `tests/test_Difficulty.cpp` (new).
+    `StringToDifficulty` (canonical names, `CompareNoCase`) round-trips
+    `DifficultyToString`; `OldStyleStringToDifficulty` maps the legacy
+    alias table the BMS/DWI/KSF loaders lean on
+    (another→Medium, maniac→Hard, oni→Challenge, …).
+  Suite **5662/193 → 5730/200**.
+
+  **2026-09-09 test-coverage sweep, tallied:** starting from 1004/124,
+  the session added `test_RageFileDeflate` / `test_RageFileErrors` /
+  `test_Zip` / `test_RageSurface` / `test_DateTime` / `test_GameManager`
+  / `test_RageColor` / `test_SongOptions` / `test_DeviceInput` /
+  `test_Command` / `test_Difficulty` (11 new files) plus new cases in
+  `test_RageFile` (GetLine boundary, `RageFileDriverSlice`),
+  `test_RageMath` (`RageBezier2D`), `test_RageUtil` (`StringConversion`,
+  `split`/`join`) → **5730 assertions / 200 cases**. Fixed en route:
+  `RageSurfaceFormat::operator==` memcmp, `StringToInt/Long/LLong`
+  null-`LOG` deref, `Command::GetName` stale comment; filed backlog
+  item 19 (`CreateZip` STOREs uncompressed).
