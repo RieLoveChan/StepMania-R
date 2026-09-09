@@ -126,17 +126,15 @@ TEST_CASE("StringConversion::FromString<float> parses a leading number and rejec
 
 TEST_CASE("StringConversion::FromString<bool> is StringToInt() != 0, empty -> false-return", "[RageUtil][conv]")
 {
-	// Only numeric inputs here: FromString<bool> routes a non-numeric
-	// string through StringToInt() -> std::stoi(), whose invalid_argument
-	// path logs via LOG->Warn -- which needs a live engine (see
-	// test_IniFile / the EngineTestEnv-based suites). "true" therefore is
-	// NOT recognised as a bool by this code, but exercising that needs
-	// the fixture, so it is not asserted in this pure file.
 	bool v = true;
 	CHECK(StringConversion::FromString("0", v));  CHECK(v == false);
 	CHECK(StringConversion::FromString("1", v));  CHECK(v == true);
 	CHECK(StringConversion::FromString("5", v));  CHECK(v == true);
 	CHECK(StringConversion::FromString("-3", v)); CHECK(v == true);
+	// "true" is not recognised: StringToInt("true") fails the stoi parse
+	// and returns the exception value (0) -> false. (The stoi catch path
+	// is LOG-guarded, so this no longer needs a live engine.)
+	CHECK(StringConversion::FromString("true", v)); CHECK(v == false);
 	// Empty string: the call returns false and leaves v alone.
 	v = true;
 	CHECK_FALSE(StringConversion::FromString("", v));
