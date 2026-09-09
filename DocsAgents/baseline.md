@@ -228,11 +228,25 @@ across ALL of `src/`** except:
 `MAKE(type)` (param used as a type) and `Profile.cpp` `LOAD_NODE(X)`
 (param also `#X` / `Load##X##FromNode`).
 
-Still open, unchanged: `modernize-use-equals-default` (38),
-`readability-redundant-member-init` (28) — dirty `--fix`, need a
-coupled `clang-format` (ADR 0002 → separate change);
-`modernize-use-bool-literals` (11) — trivial, deferred;
-`bugprone-integer-division` (14) — maintainer-flagged.
+`modernize-use-override` and `modernize-use-bool-literals` are **also
+now clear** across all of `src/` outside §5 (`use-bool-literals`
+`3be07f669d` — `while(1)`/`return 0` in bool fns/`= 0` bool assigns
+across 17 files; `use-override` finished with the `MovieTexture_*` /
+`RageDisplay_Null` stubs).
+
+**Every mechanical check with a clean autofix is now clear outside the
+§5 parse path + vendored `ixwebsocket`.** The only tidy debt left in
+first-party non-§5 code:
+- `modernize-use-equals-default` (38) + `readability-redundant-member-init`
+  (28) — `--fix` output too dirty (out-of-line `= default`, dangling
+  init-list commas); need a coupled `clang-format`, which ADR 0002 says
+  is its own change → **maintainer call.**
+- `bugprone-integer-division` (14) — maintainer-flagged (sub-pixel
+  render maths on untested paths).
+- `bugprone-suspicious-string-compare` (8) — idiomatic `if(memcmp(...))`,
+  not defects (2026-09-08 verdict).
+- 4 unfixable `bugprone-macro-parentheses` (`StatsManager` ×2,
+  `OptionRowHandler` MAKE, `Profile` LOAD_NODE).
 
 # Tests
 
