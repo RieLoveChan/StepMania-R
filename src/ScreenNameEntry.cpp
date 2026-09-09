@@ -118,7 +118,7 @@ float ScreenNameEntry::ScrollingText::GetClosestCharYOffset( float fFakeBeat ) c
 REGISTER_SCREEN_CLASS( ScreenNameEntry );
 ScreenNameEntry::ScreenNameEntry()
 {
-	if( PREFSMAN->m_sTestInitialScreen.Get() != "" )
+	if( !PREFSMAN->m_sTestInitialScreen.Get().empty() )
 	{
 		GAMESTATE->m_bSideIsJoined[PLAYER_1] = true;
 		GAMESTATE->m_bSideIsJoined[PLAYER_2] = true;
@@ -132,7 +132,7 @@ ScreenNameEntry::ScreenNameEntry()
 			ss.m_vpPossibleSongs = ss.m_vpPlayedSongs;
 			ss.m_player[PLAYER_1].m_pStyle = GAMESTATE->GetCurrentStyle(PLAYER_1);
 			ss.m_playMode = GAMESTATE->m_PlayMode;
-			ASSERT( ss.m_vpPlayedSongs[0]->GetAllSteps().size() != 0 );
+			ASSERT( !ss.m_vpPlayedSongs[0]->GetAllSteps().empty() );
 			StepsType st = GAMESTATE->GetCurrentStyle(PLAYER_1)->m_StepsType;
 
 			FOREACH_PlayerNumber( p )
@@ -194,7 +194,7 @@ void ScreenNameEntry::Init()
 	{
 		GAMESTATE->GetRankingFeats( p, aFeats[p] );
 		GAMESTATE->JoinPlayer( p );
-		m_bStillEnteringName[p] = aFeats[p].size()>0;
+		m_bStillEnteringName[p] = !aFeats[p].empty();
 	}
 
 	if( !AnyStillEntering() )

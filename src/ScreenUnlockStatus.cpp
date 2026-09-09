@@ -109,7 +109,7 @@ void ScreenUnlockStatus::Init()
 		
 					RString title = pSong->GetDisplayMainTitle();
 					RString subtitle = pSong->GetDisplaySubTitle();
-					if( subtitle != "" )
+					if( !subtitle.empty() )
 						title = title + "\n" + subtitle;
 					text->SetMaxWidth( MaxWidth );
 					text->SetText( title );
@@ -240,7 +240,7 @@ void ScreenUnlockStatus::Init()
 			RString title = pSong->GetDisplayMainTitle();
 			RString subtitle = pSong->GetDisplaySubTitle();
 
-			if( subtitle != "" )
+			if( !subtitle.empty() )
 				title = title + "\n" + subtitle;
 			NewText->SetZoom(UNLOCK_TEXT_SCROLL_ZOOM);
 			NewText->SetMaxWidth( MaxWidth );
@@ -313,19 +313,19 @@ void ScreenUnlockStatus::Init()
 
 ScreenUnlockStatus::~ScreenUnlockStatus()
 {
-	while (Unlocks.size() > 0)
+	while (!Unlocks.empty())
 	{
 		Sprite* entry = Unlocks[Unlocks.size()-1];
 		SAFE_DELETE(entry);
 		Unlocks.pop_back();
 	}
-	while (item.size() > 0)
+	while (!item.empty())
 	{
 		BitmapText* entry = item[item.size()-1];
 		SAFE_DELETE(entry);
 		item.pop_back();
 	}
-	while (ItemIcons.size() > 0)
+	while (!ItemIcons.empty())
 	{
 		Sprite* entry = ItemIcons[ItemIcons.size()-1];
 		SAFE_DELETE(entry);

@@ -77,7 +77,7 @@ class InputList: public BitmapText
 			}
 
 			RString sComment = INPUTFILTER->GetButtonComment( di );
-			if( sComment != "" )
+			if( !sComment.empty() )
 				sTemp += " - " + sComment;
 
 			asInputs.push_back( sTemp );

@@ -75,7 +75,7 @@ static LocalizedString PROFILE_NAME_BLANK	( "ScreenEditMenu", "Profile name cann
 static LocalizedString PROFILE_NAME_CONFLICTS	( "ScreenEditMenu", "The name you chose conflicts with another profile. Please use a different name." );
 static bool ValidateLocalProfileName( const RString &sAnswer, RString &sErrorOut )
 {
-	if( sAnswer == "" )
+	if( sAnswer.empty() )
 	{
 		sErrorOut = PROFILE_NAME_BLANK;
 		return false;
@@ -201,7 +201,7 @@ void ScreenOptionsManageProfiles::HandleScreenMessage( const ScreenMessage SM )
 	{
 		if( !ScreenTextEntry::s_bCancelledLast )
 		{
-			ASSERT( ScreenTextEntry::s_sLastAnswer != "" );	// validate should have assured this
+			ASSERT( !ScreenTextEntry::s_sLastAnswer.empty() );	// validate should have assured this
 
 			RString sNewName = ScreenTextEntry::s_sLastAnswer;
 			ASSERT( GAMESTATE->m_sEditLocalProfileID.Get().empty() );
@@ -243,7 +243,7 @@ void ScreenOptionsManageProfiles::HandleScreenMessage( const ScreenMessage SM )
 	{
 		if( !ScreenTextEntry::s_bCancelledLast )
 		{
-			ASSERT( ScreenTextEntry::s_sLastAnswer != "" );	// validate should have assured this
+			ASSERT( !ScreenTextEntry::s_sLastAnswer.empty() );	// validate should have assured this
 
 			RString sNewName = ScreenTextEntry::s_sLastAnswer;
 			PROFILEMAN->RenameLocalProfile( GAMESTATE->m_sEditLocalProfileID, sNewName );

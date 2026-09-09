@@ -757,7 +757,7 @@ void ScreenMapControllers::SaveToDisk()
 
 void ScreenMapControllers::SetListMode()
 {
-	if(m_SetList.size() < 1)
+	if(m_SetList.empty())
 	{
 		m_NoSetListPrompt->PlayCommand("TweenOn");
 		m_AutoDismissNoSetListPromptSecs= THEME->GetMetricF(m_sName, "AutoDismissNoSetListPromptSecs");

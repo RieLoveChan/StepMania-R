@@ -960,7 +960,7 @@ void ScreenGameplay::InitSongQueues()
 			const PlayerOptions &p = pi->GetPlayerState()->m_PlayerOptions.GetCurrent();
 
 			if (p.m_fNoAttack == 0 && p.m_fRandAttack == 0 &&
-			    pSteps->m_Attacks.size() > 0 )
+			    !pSteps->m_Attacks.empty() )
 			{
 				pi->m_asModifiersQueue.push_back( pSteps->m_Attacks );
 			}
@@ -1402,7 +1402,7 @@ void ScreenGameplay::LoadLights()
 	StepsType st = GAMEMAN->GetHowToPlayStyleForGame( GAMESTATE->m_pCurGame )->m_StepsType;
 
 	Difficulty d1 = Difficulty_Invalid;
-	if( asDifficulties.size() > 0 )
+	if( !asDifficulties.empty() )
 	{
 		if( asDifficulties[0].CompareNoCase("selected") == 0 )
 		{

@@ -245,7 +245,7 @@ void Screen::HandleScreenMessage( const ScreenMessage SM )
 		else
 		{
 			RString ToScreen= (SM == SM_GoToNextScreen? GetNextScreenName():GetPrevScreen());
-			if(ToScreen == "")
+			if(ToScreen.empty())
 			{
 				LuaHelpers::ReportScriptError("Error:  Tried to go to empty screen.");
 			}

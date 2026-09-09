@@ -94,7 +94,7 @@ void ScreenHowToPlay::Init()
 	// Display a character
 	std::vector<Character*> vpCharacters;
 	CHARMAN->GetCharacters( vpCharacters );
-	if( (bool)USE_CHARACTER && vpCharacters.size() && HaveAllCharAnimations() )
+	if( (bool)USE_CHARACTER && !vpCharacters.empty() && HaveAllCharAnimations() )
 	{
 		Character* displayChar;
 		if( !CHARACTER_NAME.GetValue().empty() && CHARMAN->GetCharacterFromID(CHARACTER_NAME.GetValue()) )
@@ -103,7 +103,7 @@ void ScreenHowToPlay::Init()
 			displayChar = CHARMAN->GetRandomCharacter();
 
 		RString sModelPath = displayChar->GetModelPath();
-		if( sModelPath != "" )
+		if( !sModelPath.empty() )
 		{
 			m_pmCharacter = new Model;
 			m_pmCharacter->SetName( "Character" );
