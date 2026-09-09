@@ -1927,7 +1927,7 @@ void ScreenEdit::UpdateTextInfo()
 		sText += ssprintf( STEP_AUTHOR_FORMAT.GetValue(), STEP_AUTHOR.GetValue().c_str(), m_pSteps->GetCredit().c_str() );
 		//sText += ssprintf( CHART_STYLE_FORMAT.GetValue(), CHART_STYLE.GetValue().c_str(), m_pSteps->GetChartStyle().c_str() );
 		sText += ssprintf( MAIN_TITLE_FORMAT.GetValue(), MAIN_TITLE.GetValue().c_str(), m_pSong->m_sMainTitle.c_str() );
-		if( m_pSong->m_sSubTitle.size() )
+		if( !m_pSong->m_sSubTitle.empty() )
 			sText += ssprintf( SUBTITLE_FORMAT.GetValue(), SUBTITLE.GetValue().c_str(), m_pSong->m_sSubTitle.c_str() );
 		sText += ssprintf( SEGMENT_TYPE_FORMAT.GetValue(), SEGMENT_TYPE.GetValue().c_str(), TimingSegmentTypeToString(currentCycleSegment).c_str() );
         const RString tapnoteType = TapNoteTypeToString( m_selectedTap.type );
@@ -4007,7 +4007,7 @@ void ScreenEdit::HandleScreenMessage( const ScreenMessage SM )
 	{
 		RString mod = ScreenTextEntry::s_sLastAnswer;
 		Trim(mod);
-		if (mod.length() > 0)
+		if (!mod.empty())
 		{
 			AttackArray &attacks =
 			(GAMESTATE->m_bIsUsingStepTiming ? m_pSteps->m_Attacks : m_pSong->m_Attacks);
@@ -4026,7 +4026,7 @@ void ScreenEdit::HandleScreenMessage( const ScreenMessage SM )
 		split(attack.sModifiers, ",", mods);
 		RString mod = ScreenTextEntry::s_sLastAnswer;
 		Trim(mod);
-		if (mod.length() > 0)
+		if (!mod.empty())
 		{
 			mods[modInProcess - 2] = mod;
 		}
@@ -4034,7 +4034,7 @@ void ScreenEdit::HandleScreenMessage( const ScreenMessage SM )
 		{
 			mods.erase(mods.begin() + (modInProcess - 2));
 		}
-		if (mods.size() > 0)
+		if (!mods.empty())
 		{
 			attack.sModifiers = join(",", mods);
 		}
@@ -4086,7 +4086,7 @@ void ScreenEdit::HandleScreenMessage( const ScreenMessage SM )
 	{
 		RString mod = ScreenTextEntry::s_sLastAnswer;
 		Trim(mod);
-		if (mod.length() > 0)
+		if (!mod.empty())
 		{
 			AttackArray &attacks =
 			(GAMESTATE->m_bIsUsingStepTiming ? m_pSteps->m_Attacks : m_pSong->m_Attacks);
@@ -6145,7 +6145,7 @@ void ScreenEdit::SetupCourseAttacks()
 				GAMESTATE->m_pCurSteps[PLAYER_1]->m_Attacks :
 				GAMESTATE->m_pCurSong->m_Attacks;
 
-			if (attacks.size() > 0)
+			if (!attacks.empty())
 			{
 				for (Attack &attack : attacks)
 				{

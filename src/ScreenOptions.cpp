@@ -553,11 +553,11 @@ void ScreenOptions::HandleScreenMessage( const ScreenMessage SM )
 
 		// If the selected option sets a screen, honor it.
 		RString sThisScreen = GetNextScreenForFocusedItem( GAMESTATE->GetMasterPlayerNumber() );
-		if( sThisScreen != "" )
+		if( !sThisScreen.empty() )
 			m_sNextScreen = sThisScreen;
 
 		// If options set a NextScreen or one is specified in metrics, then fade out
-		if( GetNextScreenName() == "" )
+		if( GetNextScreenName().empty() )
 		{
 			LuaHelpers::ReportScriptErrorFmt( "%s::HandleScreenMessage: Tried to fade out, but we have no next screen", m_sName.c_str() );
 			return;
@@ -1167,7 +1167,7 @@ bool ScreenOptions::MoveRowRelative( PlayerNumber pn, int iDir, bool bRepeat )
 	//LOG->Trace( "MoveRowRelative(pn %i, dir %i, rep %i)", pn, iDir, bRepeat );
 
 	int iDest = -1;
-	ASSERT( m_pRows.size() != 0 );
+	ASSERT( !m_pRows.empty() );
 	for( int r=1; r<(int)m_pRows.size(); r++ )
 	{
 		int iDelta = r*iDir;

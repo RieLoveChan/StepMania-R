@@ -38,7 +38,7 @@ void ScreenGameplaySyncMachine::Init()
 	// Needs proper StepsType -freem
 	std::vector<Steps*> vpSteps;
 	SongUtil::GetPlayableSteps( &m_Song, vpSteps );
-	ASSERT_M(vpSteps.size() > 0, "No playable steps for ScreenGameplaySyncMachine");
+	ASSERT_M(!vpSteps.empty(), "No playable steps for ScreenGameplaySyncMachine");
 	Steps *pSteps = vpSteps[0];
 	GAMESTATE->m_pCurSteps[GAMESTATE->GetFirstHumanPlayer()].Set( pSteps );
 

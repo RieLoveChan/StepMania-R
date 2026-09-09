@@ -67,7 +67,7 @@ bool ScreenTitleMenu::Input( const InputEventPlus &input )
 		{
 			ANNOUNCER->NextAnnouncer();
 			RString sName = ANNOUNCER->GetCurAnnouncerName();
-			if( sName=="" ) sName = "(none)";
+			if( sName.empty() ) sName = "(none)";
 			SCREENMAN->SystemMessage( ANNOUNCER_.GetValue()+": "+sName );
 			SCREENMAN->SetNewScreen( m_sName );
 			bHandled = true;

@@ -1387,7 +1387,7 @@ bool ScreenSelectMusic::MenuStart( const InputEventPlus &input )
 					{
 						/* Since m_vpSteps is sorted by Difficulty, the first
 						 * entry should be the easiest. */
-						ASSERT( m_vpSteps.size() != 0 );
+						ASSERT( !m_vpSteps.empty() );
 						Steps *pSteps = m_vpSteps[0];
 
 						FOREACH_PlayerNumber( p )

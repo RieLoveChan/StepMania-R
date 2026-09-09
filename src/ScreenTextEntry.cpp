@@ -721,7 +721,7 @@ void ScreenTextEntryVisual::MoveX( int iDir )
 
 		sKey = g_szKeys[m_iFocusY][m_iFocusX];
 	}
-	while( sKey == "" );
+	while( sKey.empty() );
 
 	m_sndChange.Play(true);
 	PositionCursor();
@@ -742,7 +742,7 @@ void ScreenTextEntryVisual::MoveY( int iDir )
 			for( int i=0; true; i++ )
 			{
 				sKey = g_szKeys[m_iFocusY][m_iFocusX];
-				if( sKey != "" )
+				if( !sKey.empty() )
 					break;
 
 				// UGLY: Probe one space to the left before looking to the right
@@ -753,7 +753,7 @@ void ScreenTextEntryVisual::MoveY( int iDir )
 
 		sKey = g_szKeys[m_iFocusY][m_iFocusX];
 	}
-	while( sKey == "" );
+	while( sKey.empty() );
 
 	m_sndChange.Play(true);
 	PositionCursor();

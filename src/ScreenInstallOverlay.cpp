@@ -172,7 +172,7 @@ void ScreenInstallOverlay::Update( float fDeltaTime )
 {
 	Screen::Update(fDeltaTime);
 	PlayAfterLaunchInfo playAfterLaunchInfo;
-	while( CommandLineActions::ToProcess.size() > 0 )
+	while( !CommandLineActions::ToProcess.empty() )
 	{
 		CommandLineActions::CommandLineArgs args = CommandLineActions::ToProcess.back();
 		CommandLineActions::ToProcess.pop_back();
@@ -187,7 +187,7 @@ void ScreenInstallOverlay::Update( float fDeltaTime )
 		Song* pSong = nullptr;
 		GAMESTATE->Reset();
 		RString sInitialScreen;
-		if( playAfterLaunchInfo.sSongDir.length() > 0 )
+		if( !playAfterLaunchInfo.sSongDir.empty() )
 			pSong = SONGMAN->GetSongFromDir( playAfterLaunchInfo.sSongDir );
 		if( pSong )
 		{

@@ -42,10 +42,10 @@ void ScreenJukebox::SetSong()
 			if( pCourse->m_vEntries[i].IsFixedSong() )
 				vSongs.push_back( pCourse->m_vEntries[i].songID.ToSong() );
 
-	if ( vSongs.size() == 0 )
+	if ( vSongs.empty() )
 		vSongs = SONGMAN->GetSongs( GAMESTATE->m_sPreferredSongGroup );
 	// Still nothing?
-	if( vSongs.size() == 0 )
+	if( vSongs.empty() )
 		return;
 
 
@@ -114,7 +114,7 @@ void ScreenJukebox::SetSong()
 			{
 				Course *lCourse = apCourses[j];
 				const CourseEntry *pEntry = lCourse->FindFixedSong( pSong );
-				if( pEntry == nullptr || pEntry->attacks.size() == 0 )
+				if( pEntry == nullptr || pEntry->attacks.empty() )
 					continue;
 
 				if( !ALLOW_ADVANCED_MODIFIERS )

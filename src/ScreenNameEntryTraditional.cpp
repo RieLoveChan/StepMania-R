@@ -84,7 +84,7 @@ void ScreenNameEntryTraditional::BeginScreen()
 		GAMESTATE->GetRankingFeats( pn, aFeats );
 
 		bool bNoStagesLeft = GAMESTATE->m_iPlayerStageTokens[pn] <= 0;
-		m_bEnteringName[pn] = ( aFeats.size() > 0 ||
+		m_bEnteringName[pn] = ( !aFeats.empty() ||
 				       PROFILEMAN->ProfileFromMemoryCardIsNew(pn) ) && bNoStagesLeft;
 		m_bFinalized[pn] = !m_bEnteringName[pn];
 	}
@@ -231,7 +231,7 @@ bool ScreenNameEntryTraditional::Backspace( PlayerNumber pn )
 	if( m_bFinalized[pn] )
 		return false;	// ignore
 
-	if( !m_sSelection[pn].size()  )
+	if( m_sSelection[pn].empty()  )
 		return false;
 
 	m_sSelection[pn].erase( m_sSelection[pn].size()-1, 1 );

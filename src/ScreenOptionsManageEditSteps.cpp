@@ -154,7 +154,7 @@ void ScreenOptionsManageEditSteps::HandleScreenMessage( const ScreenMessage SM )
 	{
 		if( !ScreenTextEntry::s_bCancelledLast )
 		{
-			ASSERT( ScreenTextEntry::s_sLastAnswer != "" );	// validate should have assured this
+			ASSERT( !ScreenTextEntry::s_sLastAnswer.empty() );	// validate should have assured this
 
 			Steps *pSteps = GAMESTATE->m_pCurSteps[PLAYER_1];
 			Song *pSong = pSteps->m_pSong;

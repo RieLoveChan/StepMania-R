@@ -104,7 +104,7 @@ void ScreenTestSound::UpdateText(int n)
 		s[n].s.GetParams().StopMode == RageSoundParams::M_CONTINUE?
 			"Continue until stopped":
 			"Loop",
-		pos.size()? pos.c_str(): "none playing",
+		!pos.empty()? pos.c_str(): "none playing",
 		selected == n? "^^^^^^":""
 		));
 }

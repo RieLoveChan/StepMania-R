@@ -138,7 +138,7 @@ void ScreenOptionsCourseOverview::HandleScreenMessage( const ScreenMessage SM )
 	{
 		if( !ScreenTextEntry::s_bCancelledLast )
 		{
-			ASSERT( ScreenTextEntry::s_sLastAnswer != "" );	// validate should have assured this
+			ASSERT( !ScreenTextEntry::s_sLastAnswer.empty() );	// validate should have assured this
 
 			if( EditCourseUtil::RenameAndSave( GAMESTATE->m_pCurCourse, ScreenTextEntry::s_sLastAnswer ) )
 			{
@@ -151,7 +151,7 @@ void ScreenOptionsCourseOverview::HandleScreenMessage( const ScreenMessage SM )
 	{
 		if( !ScreenTextEntry::s_bCancelledLast )
 		{
-			ASSERT( ScreenTextEntry::s_sLastAnswer != "" ); // validate should have assured this
+			ASSERT( !ScreenTextEntry::s_sLastAnswer.empty() ); // validate should have assured this
 
 			if( !EditCourseUtil::RenameAndSave(GAMESTATE->m_pCurCourse, ScreenTextEntry::s_sLastAnswer) )
 			{

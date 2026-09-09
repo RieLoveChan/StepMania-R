@@ -135,7 +135,7 @@ void ScreenEvaluation::Init()
 			{
 				std::vector<Trail*> apTrails;
 				GAMESTATE->m_pCurCourse->GetAllTrails( apTrails );
-				if( apTrails.size() )
+				if( !apTrails.empty() )
 					GAMESTATE->m_pCurTrail[p].Set( apTrails[0] );
 			}
 			ss.m_player[p].m_vpPossibleSteps.push_back( GAMESTATE->m_pCurSteps[PLAYER_1] );
