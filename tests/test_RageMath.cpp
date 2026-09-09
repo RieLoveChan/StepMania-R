@@ -166,3 +166,72 @@ TEST_CASE("RageQuadratic evaluates a Bezier set up as an ease curve", "[RageMath
 	CHECK(q.GetSlope(0.0f) == Approx(0.0f));
 	CHECK(q.GetSlope(1.0f) == Approx(0.0f));
 }
+
+TEST_CASE("RageQuadratic GetBezierStart/End shortcuts match Evaluate(0)/(1)", "[RageMath][bezier]")
+{
+	RageQuadratic q;
+	q.SetFromBezier(2.0f, 5.0f, -3.0f, 4.0f); // arbitrary control values
+
+	CHECK(q.GetBezierStart() == Approx(q.Evaluate(0.0f)));
+	CHECK(q.GetBezierEnd()   == Approx(q.Evaluate(1.0f)));
+	CHECK(q.GetBezierStart() == Approx(2.0f)); // first control point
+	CHECK(q.GetBezierEnd()   == Approx(4.0f)); // last control point
+}
+
+TEST_CASE("RageQuadratic SetFromBezier / GetBezier round-trip", "[RageMath][bezier]")
+{
+	const float in[4] = { 1.0f, -2.5f, 3.25f, 0.5f };
+	RageQuadratic q;
+	q.SetFromBezier(in[0], in[1], in[2], in[3]);
+
+	float out[4] = { 0, 0, 0, 0 };
+	q.GetBezier(out[0], out[1], out[2], out[3]);
+	for (int i = 0; i < 4; ++i)
+		CHECK(out[i] == Approx(in[i]));
+}
+
+TEST_CASE("RageBezier2D: a straight diagonal maps EvaluateYFromX(x) == x", "[RageMath][bezier]")
+{
+	RageBezier2D b;
+	// control points on the line y = x: (0,0) (1/3,1/3) (2/3,2/3) (1,1)
+	b.SetFromBezier(0.0f, 0.0f,
+	                1.0f/3, 1.0f/3,
+	                2.0f/3, 2.0f/3,
+	                1.0f, 1.0f);
+
+	for (float x : { 0.0f, 0.25f, 0.5f, 0.75f, 1.0f })
+	{
+		CAPTURE(x);
+		CHECK(b.EvaluateYFromX(x) == Approx(x).margin(0.001));
+	}
+
+	float px = -1, py = -1;
+	b.Evaluate(0.5f, &px, &py);
+	CHECK(px == Approx(0.5f));
+	CHECK(py == Approx(0.5f));
+}
+
+TEST_CASE("RageBezier2D: an asymmetric ease curve is monotone and slow at the start", "[RageMath][bezier]")
+{
+	RageBezier2D b;
+	// x advances linearly; y stays flat then rushes to 1 (control y: 0,0,0,1)
+	b.SetFromBezier(0.0f, 0.0f,
+	                1.0f/3, 0.0f,
+	                2.0f/3, 0.0f,
+	                1.0f, 1.0f);
+
+	CHECK(b.EvaluateYFromX(0.0f) == Approx(0.0f).margin(0.001));
+	CHECK(b.EvaluateYFromX(1.0f) == Approx(1.0f).margin(0.001));
+
+	// Slow start: at the midpoint of x, y is well below the midpoint.
+	CHECK(b.EvaluateYFromX(0.5f) < 0.3f);
+
+	// Monotone non-decreasing across the domain.
+	float prev = -1.0f;
+	for (int i = 0; i <= 20; ++i)
+	{
+		const float y = b.EvaluateYFromX(i / 20.0f);
+		CHECK(y >= prev - 0.001f);
+		prev = y;
+	}
+}
