@@ -278,6 +278,12 @@ Consumers:
   byte-exact + CRC32(input)==CRC32(output) at several block sizes,
   `RageFileObjInflate::Seek`, "deflate shrinks". Salvages
   `TestDeflate()` from `src/tests/test_file_readers.cpp`.
+- `tests/test_RageFileErrors.cpp` — a self-registering in-test VFS
+  driver ("ERRTEST") that fails the read/write/flush crossing a byte
+  threshold. Pins that mid-stream driver errors propagate as
+  `RageFile::Read`/`Write` → -1 with `GetError()` set, that `Flush()`
+  surfaces `FlushInternal`'s error, and that `IniFile::ReadFile`/
+  `WriteFile` carry it up. Salvages `src/tests/test_file_errors.cpp`.
 - `tests/test_RageSoundReader.cpp` — the WAV decoder from a synthetic
   PCM WAV written to `/@mem` (no fixture). Both
   `RageSoundReader_WAV::Open` and the `OpenFile` autodetect factory.
