@@ -6344,7 +6344,7 @@ struct EditHelpLine
 		EditButton eb9 = EditButton_Invalid )
 	{
 		szEnglishDescription = _szEnglishDescription;
-#define PUSH_IF_VALID( x ) if( x != EditButton_Invalid ) veb.push_back( x );
+#define PUSH_IF_VALID( x ) if( (x) != EditButton_Invalid ) veb.push_back( x );
 		PUSH_IF_VALID( eb0 );
 		PUSH_IF_VALID( eb1 );
 		PUSH_IF_VALID( eb2 );

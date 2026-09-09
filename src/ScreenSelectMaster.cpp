@@ -35,10 +35,10 @@ REGISTER_SCREEN_CLASS( ScreenSelectMaster );
 
 #define GetActiveElementPlayerNumbers( vpns ) \
 if( SHARED_SELECTION ) { \
-	vpns.push_back( PLAYER_1 ); \
+	(vpns).push_back( PLAYER_1 ); \
 } else { \
 	FOREACH_HumanPlayer( p ) \
-		vpns.push_back( p ); \
+		(vpns).push_back( p ); \
 }
 
 ScreenSelectMaster::ScreenSelectMaster()
