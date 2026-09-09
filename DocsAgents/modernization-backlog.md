@@ -135,6 +135,18 @@ Travis badges were already removed.~~
 
 ## Tier 3 — Risk; deliberate decisions (see ADR 0001, ADR 0003)
 
+### 19. `CreateZip` stores every entry uncompressed (found 2026-09-09)
+`tests/test_Zip.cpp` pins it: `CreateZip`/`TZip` (the bundled Info-ZIP
+writer in `src/CreateZip.cpp`) emits `STORED` for every file —
+`m_iCompressionMethod == STORED`, compressed size == uncompressed size,
+even for a 20k run of one byte. Its deflate path is not wired. So
+`.smzip` packages produced by the engine's own exporter are effectively
+uncompressed. Not a correctness bug (`STORED` is valid ZIP, and
+`RageFileDriverZip` reads it back byte-exact), but a size inefficiency.
+**Action:** maintainer decision — either wire `TZip`'s deflate, or
+route the exporter through `RageFileObjDeflate` (which works — see
+`tests/test_RageFileDeflate.cpp`), or accept STORED and close this.
+
 ---
 
 ## Tier 4 — Hotspots (where ongoing passes concentrate; not bugs)
