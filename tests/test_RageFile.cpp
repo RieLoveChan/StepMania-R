@@ -17,6 +17,7 @@
 
 #include "catch_amalgamated.hpp"
 
+#include <algorithm>
 #include <string>
 
 namespace
@@ -187,5 +188,112 @@ TEST_CASE( "RageFile Read with default bytes=-1 reads the rest of the file", "[R
 	CHECK( r.Read( rest ) == 677 );
 	CHECK( rest.size() == 677u );
 	CHECK( static_cast<unsigned char>( rest[0] ) == ( 100 & 0xFF ) );
+	CHECK( r.AtEOF() );
+}
+
+// The RageFileObj read buffer is BSIZE = 1024. GetLine has hand-rolled
+// logic for a line/newline that straddles a buffer refill (including the
+// "\r\n split across the boundary" hack). Sweep line lengths across 1024
+// and 2048, both Unix "\n" and DOS "\r\n". Salvage of test_file_readers.cpp
+// TestText() (its buffer was 256; here it is 1024).
+TEST_CASE( "RageFile GetLine across the 1024-byte read-buffer boundary", "[RageFile][mem][text]" )
+{
+	EngineTestEnv::Require();
+
+	const int len = GENERATE( 1, 1022, 1023, 1024, 1025, 1026, 2046, 2047, 2048, 2049 );
+	const bool dos = GENERATE( false, true );
+	CAPTURE( len, dos );
+
+	const char *eol = dos ? "\r\n" : "\n";
+	const int kLines = 6;
+
+	// Line i is 'A'+i repeated `len` times, so mistakes in stripping /
+	// re-adding \r show up as a wrong char count or a stray \r.
+	std::string file;
+	for( int i = 0; i < kLines; ++i )
+	{
+		file.append( static_cast<std::size_t>( len ), static_cast<char>( 'A' + i ) );
+		file += eol;
+	}
+	// A final line with no terminator.
+	file += "tail";
+
+	const RString path = WriteMem( "rf_boundary.txt", file );
+	RageFile r;
+	REQUIRE( r.Open( path, RageFile::READ ) );
+
+	RString line;
+	for( int i = 0; i < kLines; ++i )
+	{
+		CAPTURE( i );
+		REQUIRE( r.GetLine( line ) > 0 );
+		REQUIRE( line.size() == static_cast<std::size_t>( len ) );
+		CHECK( line[0] == static_cast<char>( 'A' + i ) );
+		CHECK( line[line.size() - 1] == static_cast<char>( 'A' + i ) );
+		CHECK( line.find( '\r' ) == RString::npos ); // \r must be stripped, not just \n
+	}
+	REQUIRE( r.GetLine( line ) > 0 );
+	CHECK( line == "tail" );
+	CHECK( r.GetLine( line ) == 0 );
+	CHECK( r.AtEOF() );
+}
+
+// GetLine strips a trailing \r only when it immediately precedes the \n.
+// A bare \r in the middle of a line is data.
+TEST_CASE( "RageFile GetLine keeps a bare \\r that is not part of \\r\\n", "[RageFile][mem][text]" )
+{
+	EngineTestEnv::Require();
+	const RString path = WriteMem( "rf_bare_cr.txt", "a\rb\nc\r\nd\n" );
+
+	RageFile r;
+	REQUIRE( r.Open( path, RageFile::READ ) );
+
+	RString line;
+	REQUIRE( r.GetLine( line ) > 0 );
+	CHECK( line == RString( "a\rb" ) );   // interior \r survives
+	REQUIRE( r.GetLine( line ) > 0 );
+	CHECK( line == "c" );                 // trailing \r before \n stripped
+	REQUIRE( r.GetLine( line ) > 0 );
+	CHECK( line == "d" );
+	CHECK( r.GetLine( line ) == 0 );
+}
+
+// Text lines, then a raw binary block, then a final unterminated line --
+// the read buffer holds a mix and Tell() must stay exact throughout.
+TEST_CASE( "RageFile interleaved text + binary block, Tell stays exact", "[RageFile][mem][text][binary]" )
+{
+	EngineTestEnv::Require();
+
+	std::string file = "first\nsecond\n";
+	const std::string block = RampBytes( 4096 );
+	file += block;
+	file += "last";
+
+	const RString path = WriteMem( "rf_mixed.dat", file );
+	RageFile r;
+	REQUIRE( r.Open( path, RageFile::READ ) );
+
+	RString line;
+	REQUIRE( r.GetLine( line ) > 0 );
+	CHECK( line == "first" );
+	REQUIRE( r.GetLine( line ) > 0 );
+	CHECK( line == "second" );
+	CHECK( r.Tell() == 13 ); // "first\n" (6) + "second\n" (7)
+
+	// Read the binary block back in uneven bites (700 + 700 + ... + rem).
+	std::string got;
+	char buf[1024];
+	while( got.size() < block.size() )
+	{
+		const int want = std::min<int>( 700, static_cast<int>( block.size() - got.size() ) );
+		REQUIRE( r.Read( buf, want ) == want );
+		got.append( buf, static_cast<std::size_t>( want ) );
+	}
+	CHECK( got == block );
+	CHECK( r.Tell() == 13 + 4096 );
+
+	REQUIRE( r.GetLine( line ) > 0 );
+	CHECK( line == "last" );
+	CHECK( r.GetLine( line ) == 0 );
 	CHECK( r.AtEOF() );
 }
