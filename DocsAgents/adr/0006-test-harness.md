@@ -307,3 +307,21 @@ Consumers:
   fixture, no `FILEMAN`). Pins text-only-before-first-child, the
   five-named-entities-only decode, unquoted/name-only attrs, prolog +
   comment skipping, `GetXML` round-trip, error strings.
+- `tests/test_DateTime.cpp` — the y/m/d/h/m/s value type. `GetString`
+  omits an all-zero time; `FromString` round-trips it and does **not**
+  validate the fields; comparison ordering.
+- `tests/test_GameManager.cpp` — `StringToStepsType` / `StringToGame` /
+  `GameAndStringToStyle` table lookups + `GetStylesForGame` /
+  `GetStepsTypesForGame` (GAMEMAN from the fixture).
+- `tests/test_RageColor.cpp` — the `"1,0,0.5"` / `"#FF8000"` colour
+  codec; parse failure resets to opaque white; `ToString` /
+  `NormalizeColorString`.
+- `tests/test_SongOptions.cpp` — the per-song mod set
+  (`xMusic` / clap / autosync* / haste), unknown-mod ignore,
+  `GetString`/`FromString` round-trip. (`PlayerOptions` needs
+  `NOTESKIN` — not yet in `EngineTestEnv`.)
+- `RageMath` bezier: `test_RageMath.cpp` also covers `RageQuadratic`
+  shortcuts + `RageBezier2D::EvaluateYFromX`.
+- `RageUtil` conv: `test_RageUtil.cpp` also covers
+  `StringConversion::FromString`/`ToString<T>` (the `Preference<T>`
+  codec).
