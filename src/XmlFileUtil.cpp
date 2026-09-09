@@ -143,7 +143,7 @@ RString::size_type LoadAttributes( XNode *pNode, const RString &xml, RString &sE
 		SetString( xml, iOffset, iEnd, &sName );
 
 		// add new attribute
-		DEBUG_ASSERT( sName.size() );
+		DEBUG_ASSERT( !sName.empty() );
 		XNodeValue *pAttr = pNode->AppendAttr( sName );
 		iOffset = iEnd;
 
@@ -583,7 +583,7 @@ namespace
 			// Use legacy parsing
 			LuaHelpers::ParseCommandList( L, sExpression, sFile, true );
 		}
-		else if( sExpression.size() > 0 && sExpression[0] == '@' )
+		else if( !sExpression.empty() && sExpression[0] == '@' )
 		{
 			// Lua expression
 			sExpression.erase( 0, 1 );
@@ -631,7 +631,7 @@ void XmlFileUtil::CompileXNodeTree( XNode *pNode, const RString &sFile )
 	aToCompile.push_back( pNode );
 
 	Lua *L = LUA->Get();
-	while( aToCompile.size() )
+	while( !aToCompile.empty() )
 	{
 		pNode = aToCompile.back();
 		aToCompile.pop_back();
