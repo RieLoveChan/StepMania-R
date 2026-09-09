@@ -214,7 +214,7 @@ reject it (C++11 narrowing) if clang-cl were ever adopted. Not touched
 clang currently. Rewrite the cases as hex literals / `HRESULT(...)` if
 and when clang-cl support is actually pursued.
 
-### 17. Pick a unit-test framework + write core characterization tests — phases 1-3 DONE; phase 4 DONE for .sm/.ssc + .pms/BMS + .dwi + .ksf; reader-salvage DONE; .sma/.crs still open
+### 17. Pick a unit-test framework + write core characterization tests — phases 1-3 DONE; phase 4 DONE for .sm/.ssc + .pms/BMS + .dwi + .ksf; reader-salvage DONE (incl. file_errors); .sma/.crs still open
 Framework decided: **Catch2 v3** (amalgamated, vendored `extern/Catch2/`
 @ v3.16.0) — ADR [0006](./adr/0006-test-harness.md). Build approach:
 `src/` → OBJECT library `sm_engine`, shared by the exe and a new
@@ -370,7 +370,20 @@ folder. Suite **948 / 118**.
   factory (which needed `ActorUtil::InitFileTypeLists()` added to
   `EngineTestEnv`). Pinned sample rate / channels / `GetLength` (ms) /
   PCM16→float / `SetPosition`. 27 assertions / 3 cases.
-  **Reader salvage complete** — both old reader tests are now covered.
+- `src/tests/test_file_errors.cpp` **DONE (2026-09-09)** →
+  `tests/test_RageFileErrors.cpp`: a small in-test VFS driver
+  ("ERRTEST", a modern-interface port of the 2004 `RageFileDriverTest`
+  — `FilenameDB.AddFile` + a self-registering `FileDriverEntry` +
+  `RageFileObj` subclass) serves one file from a `std::string` and
+  fails the read/write/flush that crosses a byte threshold. Pins that
+  a mid-stream driver error propagates as `Read`/`Write` → -1 with
+  `GetError()=="Fake error"`, that `Flush()` surfaces `FlushInternal`'s
+  error, and that `IniFile::ReadFile`/`WriteFile` return false + carry
+  the error up. 6 cases.
+  **Reader salvage complete** — all three old file/audio test files are
+  now covered. Still in `src/tests/`: `test_vector.cpp` (macOS/altivec,
+  §3 — skip), `test_threads.cpp` (`RageThreads`, backlog item 11 —
+  ADR-scoped).
 
 **Pure-core coverage keeps growing (2026-09-06):**
 - `tests/test_IniFile.cpp` — `IniFile` (`.ini` reader/writer under
