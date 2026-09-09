@@ -3082,7 +3082,7 @@ void Player::HandleTapRowScore( unsigned row )
 		SetCombo( iCurCombo, iCurMissCombo );
 	}
 
-#define CROSSED( x ) (iOldCombo<x && iCurCombo>=x)
+#define CROSSED( x ) (iOldCombo<(x) && iCurCombo>=(x))
 	if ( CROSSED(100) )
 		SCREENMAN->PostMessageToTopScreen( SM_100Combo, 0 );
 	else if( CROSSED(200) )
@@ -3374,7 +3374,7 @@ void Player::SetCombo( unsigned int iCombo, unsigned int iMisses )
 	bool b250Milestone = false;
 	bool b1000Milestone = false;
 
-#define MILESTONE_CHECK(amount) ((iCombo / amount) > (m_iLastSeenCombo / amount))
+#define MILESTONE_CHECK(amount) ((iCombo / (amount)) > (m_iLastSeenCombo / (amount)))
 	if(m_iLastSeenCombo < 600)
 	{
 		b25Milestone= MILESTONE_CHECK(25);

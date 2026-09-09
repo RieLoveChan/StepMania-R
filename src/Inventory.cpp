@@ -18,9 +18,9 @@ void ReloadItems();
 
 #define NUM_ITEM_TYPES			THEME->GetMetricF("Inventory","NumItemTypes")
 #define ITEM_DURATION_SECONDS	THEME->GetMetricF("Inventory","ItemDurationSeconds")
-#define ITEM_COMBO( i )			THEME->GetMetricI("Inventory",ssprintf("Item%dCombo",i+1))
-#define ITEM_EFFECT( i )		THEME->GetMetric ("Inventory",ssprintf("Item%dEffect",i+1))
-#define ITEM_LEVEL( i )			THEME->GetMetricI("Inventory",ssprintf("Item%dLevel",i+1))
+#define ITEM_COMBO( i )			THEME->GetMetricI("Inventory",ssprintf("Item%dCombo",(i)+1))
+#define ITEM_EFFECT( i )		THEME->GetMetric ("Inventory",ssprintf("Item%dEffect",(i)+1))
+#define ITEM_LEVEL( i )			THEME->GetMetricI("Inventory",ssprintf("Item%dLevel",(i)+1))
 ThemeMetric<float> ITEM_USE_RATE_SECONDS("Inventory","ItemUseRateSeconds");
 
 #define ITEM_USE_PROBABILITY (1.f/ITEM_USE_RATE_SECONDS)
@@ -107,8 +107,8 @@ void Inventory::Update( float fDelta )
 		m_iLastSeenCombo = STATSMAN->m_CurStageStats.m_player[pn].m_iCurCombo;
 		unsigned int iNewCombo = m_iLastSeenCombo;
 
-#define CROSSED(i) (iOldCombo<i)&&(iNewCombo>=i)
-#define BROKE_ABOVE(i) (iNewCombo<iOldCombo)&&(iOldCombo>=i)
+#define CROSSED(i) (iOldCombo<(i))&&(iNewCombo>=(i))
+#define BROKE_ABOVE(i) (iNewCombo<iOldCombo)&&(iOldCombo>=(i))
 
 		for( unsigned i=0; i<g_Items.size(); i++ )
 		{

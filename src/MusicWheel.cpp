@@ -32,8 +32,8 @@ static Preference<bool> g_bMoveRandomToEnd( "MoveRandomToEnd", false );
 static Preference<bool> g_bPrecacheAllSorts( "PreCacheAllWheelSorts", false);
 
 #define NUM_WHEEL_ITEMS		((int)std::ceil(NUM_WHEEL_ITEMS_TO_DRAW+2))
-#define WHEEL_TEXT(s)		THEME->GetString( "MusicWheel", ssprintf("%sText",s.c_str()) );
-#define CUSTOM_ITEM_WHEEL_TEXT(s)		THEME->GetString( "MusicWheel", ssprintf("CustomItem%sText",s.c_str()) );
+#define WHEEL_TEXT(s)		THEME->GetString( "MusicWheel", ssprintf("%sText",(s).c_str()) );
+#define CUSTOM_ITEM_WHEEL_TEXT(s)		THEME->GetString( "MusicWheel", ssprintf("CustomItem%sText",(s).c_str()) );
 
 static RString SECTION_COLORS_NAME( std::size_t i )	{ return ssprintf("SectionColor%d",int(i+1)); }
 static RString CHOICE_NAME( RString s )		{ return ssprintf("Choice%s",s.c_str()); }

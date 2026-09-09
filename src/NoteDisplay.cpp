@@ -339,8 +339,8 @@ void NCSplineHandler::MakeWeightedAverage(NCSplineHandler& out,
 		const NCSplineHandler& from, const NCSplineHandler& to, float between)
 {
 #define BOOLS_FROM_CLOSEST(closest) \
-	out.m_spline_mode= closest.m_spline_mode; \
-	out.m_subtract_song_beat_from_curr= closest.m_subtract_song_beat_from_curr;
+	out.m_spline_mode= (closest).m_spline_mode; \
+	out.m_subtract_song_beat_from_curr= (closest).m_subtract_song_beat_from_curr;
 	if(between >= 0.5f)
 	{
 		BOOLS_FROM_CLOSEST(to);
@@ -1585,9 +1585,9 @@ void NoteColumnRenderer::DrawPrimitives()
 		}
 	}
 #define DTS_INNER(pn, tap_set, draw_func, disp) \
-	if(!tap_set[pn].empty()) \
+	if(!(tap_set)[pn].empty()) \
 	{ \
-		any_upcoming|= disp->draw_func(*m_field_render_args, m_column_render_args, tap_set[pn]); \
+		any_upcoming|= (disp)->draw_func(*m_field_render_args, m_column_render_args, (tap_set)[pn]); \
 	}
 #define DRAW_TAP_SET(tap_set, draw_func) \
 	FOREACH_PlayerNumber(pn) \
