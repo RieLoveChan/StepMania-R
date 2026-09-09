@@ -8,7 +8,7 @@
 
 
 #define CODE_NAMES		THEME->GetMetric (sType,"CodeNames")
-#define CODE( s )		THEME->GetMetric (sType,ssprintf("Code%s",s.c_str()))
+#define CODE( s )		THEME->GetMetric (sType,ssprintf("Code%s",(s).c_str()))
 void InputQueueCodeSet::Load( const RString &sType )
 {
 	//

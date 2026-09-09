@@ -46,7 +46,7 @@ struct HighScoreImpl
 
 bool HighScoreImpl::operator==( const HighScoreImpl& other ) const
 {
-#define COMPARE(x)	if( x!=other.x )	return false;
+#define COMPARE(x)	if( (x)!=other.x )	return false;
 	COMPARE( sName );
 	COMPARE( grade );
 	COMPARE( iScore );

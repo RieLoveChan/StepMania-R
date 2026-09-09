@@ -23,7 +23,7 @@ void TrailEntry::GetAttackArray( AttackArray &out ) const
 
 bool TrailEntry::operator== ( const TrailEntry &rhs ) const
 {
-#define EQUAL(a) (a==rhs.a)
+#define EQUAL(a) ((a)==rhs.a)
 	return
 		EQUAL(pSong) &&
 		EQUAL(pSteps) &&

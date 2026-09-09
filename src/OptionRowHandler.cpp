@@ -26,7 +26,7 @@
 #include <vector>
 
 #define ENTRY(s)		THEME->GetMetric ("ScreenOptionsMaster",s)
-#define ENTRY_MODE(s,i)		THEME->GetMetric ("ScreenOptionsMaster",ssprintf("%s,%i",(s).c_str(),(i+1)))
+#define ENTRY_MODE(s,i)		THEME->GetMetric ("ScreenOptionsMaster",ssprintf("%s,%i",(s).c_str(),((i)+1)))
 #define ENTRY_DEFAULT(s)	THEME->GetMetric ("ScreenOptionsMaster",(s) + "Default")
 #define NOTE_SKIN_SORT_ORDER	THEME->GetMetric ("ScreenOptionsMaster","NoteSkinSortOrder")
 #define STEPS_ROW_LAYOUT_TYPE	THEME->GetMetric("ScreenOptionsMaster","StepsRowLayoutType")
@@ -126,7 +126,7 @@ static LocalizedString OFF ( "OptionRowHandler", "Off" );
 	}
 
 #define CHECK_WRONG_NUM_ARGS(num) \
-	ROW_INVALID_IF(command.m_vsArgs.size() != num, "Wrong number of args to option row.", false);
+	ROW_INVALID_IF(command.m_vsArgs.size() != (num), "Wrong number of args to option row.", false);
 #define CHECK_BLANK_ARG \
 	ROW_INVALID_IF(sParam.empty(), "Blank arg to Steps row.", false);
 

@@ -334,7 +334,7 @@ void AdjustSync::GetSyncChangeTextSong( std::vector<RString> &vsAddTo )
 	if( GAMESTATE->m_pCurSong.Get() )
 	{
 #define SEGMENTS_MISMATCH_MESSAGE(orig, test, segments_name) \
-	if(orig.size() != test.size()) \
+	if((orig).size() != (test).size()) \
 	{ \
 		LuaHelpers::ReportScriptError("The sync overlay's " #segments_name " segment list is a different size from the song's.  Please report this bug with steps to reproduce it."); \
 	}

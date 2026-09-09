@@ -185,7 +185,7 @@ bool SongOptions::FromOneModString( const RString &sOneMod, RString &/* sErrorOu
 
 bool SongOptions::operator==( const SongOptions &other ) const
 {
-#define COMPARE(x) { if( x != other.x ) return false; }
+#define COMPARE(x) { if( (x) != other.x ) return false; }
 	COMPARE( m_fMusicRate );
 	COMPARE( m_fHaste );
 	COMPARE( m_bAssistClap );

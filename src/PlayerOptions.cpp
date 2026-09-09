@@ -1409,7 +1409,7 @@ float PlayerOptions::GetReversePercentForColumn( int iCol ) const
 
 bool PlayerOptions::operator==( const PlayerOptions &other ) const
 {
-#define COMPARE(x) { if( x != other.x ) return false; }
+#define COMPARE(x) { if( (x) != other.x ) return false; }
 	COMPARE(m_LifeType);
 	COMPARE(m_DrainType);
 	COMPARE(m_ModTimerType);
