@@ -1687,3 +1687,25 @@
     is EOF though the underlying file has more, `Seek` is slice-relative
     + clamps, `Write` → -1.
   Suite **5145/142 → 5321/157**.
+
+* **ADR 0006 — pure-value-type coverage + a crash fix it turned up
+  (2026-09-09, cont.).**
+  - `2bb5800f5c` — `tests/test_DateTime.cpp` (new). The y/m/d/h/m/s
+    value type (profile + high-score timestamps). 6 cases: `Init()`
+    zeroes all; `GetString` omits the time half iff h==m==s==0;
+    `FromString` parses both forms, internal repr is tm-style
+    (`tm_year -= 1900`, `tm_mon -= 1`); `FromString` round-trips
+    `GetString`; `FromString` **does not validate** (`2025-02-30`,
+    `2025-13-99 25:61:61` parse as-is — pins the header's own "XXX
+    illegal date" question); comparison orders y→mon→mday→h→m→s.
+  - `ff8ed52a26` — `test_RageUtil.cpp` +4 cases for
+    `StringConversion::FromString`/`ToString<T>` (the `Preference<T>`
+    codec): int/float leading-number + trailing-junk-ignored + failure
+    zeroes; float rejects non-finite; bool is `StringToInt(s) != 0`;
+    `ToString<bool>` is `"0"`/`"1"`, `ToString<float>` is `"%f"`.
+  - `1bff388838` — **fix**: `RageUtil.cpp` `StringToInt`/`Long`/`LLong`
+    caught `std::sto*` exceptions and called `LOG->Warn(...)` with no
+    null check → segfault if `LOG` isn't up yet (found writing the
+    `FromString<bool>("true")` case). All 6 catch sites now
+    `if( LOG )`. Backlog item 21 closed.
+  Suite **5321/157 → 5428/167.**
