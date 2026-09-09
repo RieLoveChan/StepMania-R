@@ -1772,3 +1772,26 @@
   `RageSurfaceFormat::operator==` memcmp, `StringToInt/Long/LLong`
   null-`LOG` deref, `Command::GetName` stale comment; filed backlog
   item 19 (`CreateZip` STOREs uncompressed).
+
+* **ADR 0006 — util-layer codec coverage, batch 3 (2026-09-09, cont.).**
+  - `2cd997e9b9` — `tests/test_TimeFormat.cpp` (new). `SecondsTo*`
+    formatters (`HHMMSS` builds from a total-minutes count;
+    `*MsMs`/`*MsMsMs` clamp the fractional field, never carry) + `Commify`
+    (digit grouping, sign / decimal left alone).
+  - `cd27409e10` — `tests/test_Grade.cpp` (new). `GradeToString` /
+    `StringToGrade`. **Finding: `StringToGrade` upper-cases its input
+    for the FAILED/NODATA checks but runs the `"Tier%02d"` sscanf on the
+    ORIGINAL string** — so `"failed"` works but `"tier03"` does not.
+  - `53efa38c2e` — `test_RageUtil.cpp` +4 cases for `Regex` (PCRE
+    wrapper): anchored/unanchored `Compare`, the capture-group-only
+    out-vector (`out[0]` == group 1), `Replace` `\${n}` placeholders,
+    copy-ctor recompile.
+  - `0f4bad5070` — `test_RageUtil.cpp` +3 cases: **`Capitalize` touches
+    only the first codepoint** (not the whole string — the file's own
+    header quirk note was wrong and is fixed); `BeginsWith`/`EndsWith`
+    case-sensitive anchors; `URLEncode` keeps `'!'..'z'` verbatim.
+  Suite **5730/205 → 5830/216**. The 2026-09-09 characterization sweep
+  now spans deflate/zip/errors, RageSurface, RageBezier2D,
+  RageFileDriverSlice, DateTime, GameManager, RageColor, SongOptions,
+  DeviceInput, Command, Difficulty, Grade, TimeFormat, StringConversion,
+  split/join, Regex, and the small string helpers.
