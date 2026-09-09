@@ -1491,3 +1491,16 @@
   marginal gain), `modernize-use-bool-literals` (actor 1 / data 2 /
   file-types 2 — trivial, deferred), `readability-redundant-string-init`
   (0 everywhere).
+
+* **clang-tidy-subsystem-pass — `rage`, `bugprone-macro-parentheses`
+  (item 12, `b65fa92d65`).** Only 3 hits in the whole `rage` group,
+  each a file-local macro: `RageSurface.cpp` `COMP(a)` →
+  `(a) != rhs.a`; `RageSurface_Load_GIF.cpp` `ReadOK(file,buffer,len)`
+  → `(file).Read(…)`; `RageUtil.cpp` `TONUMBER_NICE`'s `dest= …` →
+  `(dest)= …`. Every call site of all three passes a plain identifier,
+  so purely defensive — re-measured clean, `sm_tests` 1004 / 124,
+  `ctest` 100%. **Not yet run** (larger, needs per-hunk review — the
+  check's `--fix` skips stringize / `::`-scoped / member-access
+  operands and can mis-wrap declaration-name params, cf. the
+  `StatsManager` residue from `2d8227fbe8`): `bugprone-macro-parentheses`
+  on `actor` (37), `screen` (34), `data` (120).
