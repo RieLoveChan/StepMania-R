@@ -167,7 +167,7 @@ void InputHandler_Win32_RTIO::InputThread()
 		}
 
 		for (auto msg : msgs) {
-			if (msg.length() < 1) continue;
+			if (msg.empty()) continue;
 			if (msg[0] == 'c') {
 				LOG->Trace("RTIO: Received init ack: %s", msg.c_str());
 				continue;

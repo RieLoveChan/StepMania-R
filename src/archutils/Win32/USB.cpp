@@ -34,7 +34,7 @@ static RString GetUSBDevicePath( int iNum )
 	}
 
 	unsigned long iSize;
-	SetupDiGetDeviceInterfaceDetail( DeviceInfo, &DeviceInterface, nullptr, 0, &iSize, 0 );
+	SetupDiGetDeviceInterfaceDetail( DeviceInfo, &DeviceInterface, nullptr, 0, &iSize, nullptr );
 
 	PSP_INTERFACE_DEVICE_DETAIL_DATA DeviceDetail = (PSP_INTERFACE_DEVICE_DETAIL_DATA) malloc( iSize );
 	DeviceDetail->cbSize = sizeof(SP_INTERFACE_DEVICE_DETAIL_DATA);
@@ -54,7 +54,7 @@ bool USBDevice::Open( int iVID, int iPID, int iBlockSize, int iNum, void (*pfnIn
 	DWORD iIndex = 0;
 
 	RString path;
-	while( (path = GetUSBDevicePath(iIndex++)) != "" )
+	while( !(path = GetUSBDevicePath(iIndex++)).empty() )
 	{
 		HANDLE h = CreateFile( path, GENERIC_READ,
 			FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, 0, nullptr );

@@ -77,11 +77,11 @@ int crt_thread_create(
 	struct shim_ctx sctx;
 	std::uintptr_t thread_id;
 
-	sctx.barrier = CreateEvent(NULL, TRUE, FALSE, NULL);
+	sctx.barrier = CreateEvent(nullptr, TRUE, FALSE, nullptr);
 	sctx.proc = proc;
 	sctx.ctx = ctx;
 
-	thread_id = _beginthreadex(NULL, stack_sz, crt_thread_shim, &sctx, 0, NULL);
+	thread_id = _beginthreadex(nullptr, stack_sz, crt_thread_shim, &sctx, 0, nullptr);
 
 	WaitForSingleObject(sctx.barrier, INFINITE);
 	CloseHandle(sctx.barrier);
