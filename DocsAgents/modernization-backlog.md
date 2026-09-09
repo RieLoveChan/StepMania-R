@@ -173,19 +173,26 @@ subsystem group outside the §5 parse/write path** (`rage`, `singletons`,
 `actor`, `screen`, `file-types`, `globals`, `data`-non-§5). See
 `baseline.md` → "Full-config re-sweep — 2026-09-09" for the exact
 remainder.
-**Still open, by category:**
+**Still open, by category (updated 2026-09-09 after the arch/Win32 pass):**
 - §5-protected files (`Song*`/`Steps*`/`NotesLoader*`/`NotesWriter*`/
-  `TimingData`/`.crs`) — ~130 hits, blocked on a parse/course
+  `TimingData`/`.crs`) — ~95 hits, blocked on a parse/course
   regression corpus.
-- `arch/` driver code (`Dialog`, `RageSoundDriver_*`,
-  `InputHandler_DirectInput`, `RageSurface_Load_BMP`, `MovieTexture_*`,
-  …) — a dedicated `arch` subsystem pass, lower priority (`AGENTS.md` §3).
+- vendored `ixwebsocket` subtree (`src/IX*.cpp`) — ~13 hits, don't
+  touch vendored code.
 - `modernize-use-equals-default` (38) and `readability-redundant-member-init`
   (28) — deferred: `--fix` output is too dirty to land without a
   coupled `clang-format` run, which ADR 0002 says must be its own
-  change.
+  change. `modernize-use-bool-literals` (11) — trivial, deferred with
+  them.
 - `bugprone-integer-division` (14) — flagged for the maintainer
   (sub-pixel render maths on untested paths), see `baseline.md`.
+- 4 unfixable `bugprone-macro-parentheses` sites (`StatsManager` ×2
+  `::`-scoped, `OptionRowHandler` MAKE(type), `Profile` LOAD_NODE(X)).
+**Done:** `arch/` + `archutils/Win32/` driver code is now cleared for
+`container-size-empty` / `use-override` / `use-nullptr` /
+`macro-parentheses` (Windows-only TUs — `AGENTS.md` §3 allows Windows
+platform work). The four mechanical checks are clear across all of
+`src/` outside the two blocked buckets above.
 
 ### 13. `src/archutils/Win32/arch_setup.h` legacy — mostly DONE
 - `isnan`/`isfinite` macros removed 2026-09-03 (`37e6766d5e`).

@@ -202,6 +202,38 @@ remains is (a) §5-protected files — need a regression corpus first,
 (c) two checks whose `--fix` output is too dirty to land without a
 coupled formatter run.
 
+### Update — arch/Win32 driver pass done (2026-09-09, later same day)
+
+The `arch/` + `archutils/Win32/` tail from row (b) is now **cleared**
+for the four mechanical checks (commits `137b83938f` `dc4e2d0387`
+`e1e924b155` `f9bc763307` `7a127f1af9` `b98c278a09`): the `_Null`
+drivers, crash-handler + video-info files, Win32 input / lights / USB
+drivers, and the Win32 sound / display / window / movie drivers — all
+Windows-only TUs, recompiled clean under `WITH_WERROR=ON`, `sm_tests`
+1004/124 + `ctest` 100% after each. Plus the final non-§5 stragglers
+(`ScreenNameEntryTraditional`, `ScreenOptionsMasterPrefs`,
+`RageUtil` json helper).
+
+**`container-size-empty` / `use-override` / `use-nullptr` are now clear
+across ALL of `src/`** except:
+- AGENTS.md §5 parse path (`Song*`/`Steps*`/`NotesLoader*`/
+  `NotesWriter*`/`TimingData`/`.crs`) — ~95 hits, blocked on a
+  parse/course regression corpus.
+- vendored `ixwebsocket` subtree (`src/IX*.cpp`) — ~13 hits, don't
+  touch vendored code.
+
+`bugprone-macro-parentheses` residual = 4 documented unfixable sites:
+`StatsManager.cpp` ×2 (`::`-scoped / stringize macro params) and the
+2 `--fix` mis-fires that were reverted — `OptionRowHandler.cpp`
+`MAKE(type)` (param used as a type) and `Profile.cpp` `LOAD_NODE(X)`
+(param also `#X` / `Load##X##FromNode`).
+
+Still open, unchanged: `modernize-use-equals-default` (38),
+`readability-redundant-member-init` (28) — dirty `--fix`, need a
+coupled `clang-format` (ADR 0002 → separate change);
+`modernize-use-bool-literals` (11) — trivial, deferred;
+`bugprone-integer-division` (14) — maintainer-flagged.
+
 # Tests
 
 - **Headless smoke test: EXISTS** as of `f7249f3a95` (2026-09-03).
