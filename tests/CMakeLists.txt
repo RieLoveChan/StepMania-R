@@ -23,6 +23,7 @@ set(SM_TEST_SRC
     test_GameManager.cpp
     test_SongOptions.cpp
     test_DeviceInput.cpp
+    test_Command.cpp
     test_RageUtil.cpp
     test_RageMath.cpp
     test_RageColor.cpp
