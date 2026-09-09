@@ -149,6 +149,9 @@ Per-subsystem breakdown as passes run:
 | screen (`CMakeData-screen.cmake`, non-platform TUs) | `modernize-use-override` | 182 (174 in `ScreenDebugOverlay`) | 0 | `e78aa164ef` |
 | data non-parse-path (`CreateZip`, `DisplaySpec`) | `modernize-use-nullptr` | 13 | 0 | `66954c15cd` |
 | rage — `RageSurface` / `RageSurface_Load_GIF` / `RageUtil` local macros | `bugprone-macro-parentheses` | 3 | 0 | `b65fa92d65` |
+| actor (`CMakeData-actor.cmake`) | `bugprone-macro-parentheses` | 37 (15 files) | 0 | `ce1e1552fa` |
+| screen (`CMakeData-screen.cmake`) | `bugprone-macro-parentheses` | 34 (9 files) | 0 | `99b8713986` |
+| data non-parse-path (19 TUs; `Song`/`SongCacheIndex`/`StepsUtil` excluded) | `bugprone-macro-parentheses` | ~110 | 4 protected + 2 reverted mis-fires (`OptionRowHandler` MAKE, `Profile` LOAD_NODE) | `f6cfa5bab6` |
 
 > Note: the `singletons` pass was measured with the **VS-bundled
 > clang-tidy 19.1.5** (`…\BuildTools\VC\Tools\Llvm\x64\bin`) — the
