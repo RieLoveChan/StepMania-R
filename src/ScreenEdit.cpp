@@ -2760,7 +2760,7 @@ bool ScreenEdit::InputEdit( const InputEventPlus &input, EditButton EditB )
 					}
 				}
 
-#define FILL_ENABLED( x )	menu.rows[x].bEnabled	= menu.rows[x].choices.size() > 0;
+#define FILL_ENABLED( x )	menu.rows[x].bEnabled	= !menu.rows[x].choices.empty();
 				FILL_ENABLED( transition );
 				FILL_ENABLED( effect );
 				FILL_ENABLED( file1_song_bganimation );
