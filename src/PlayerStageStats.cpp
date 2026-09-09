@@ -503,7 +503,7 @@ void PlayerStageStats::UpdateComboList( float fSecond, bool bRollover )
 	{
 		/* If the previous combo (if any) starts on -9999, then we rolled over
 		 * some combo, but missed the first step. Remove it. */
-		if( m_ComboList.size() && m_ComboList.back().m_fStartSecond == -9999 )
+		if( !m_ComboList.empty() && m_ComboList.back().m_fStartSecond == -9999 )
 			m_ComboList.erase( m_ComboList.begin()+m_ComboList.size()-1, m_ComboList.end() );
 
 		// This is a new combo.
