@@ -34,7 +34,7 @@ public:
 	{
 		m_iEntryIndex = iEntryIndex;
 	}
-	virtual ReloadChanged Reload()
+	ReloadChanged Reload() override
 	{
 		m_Def.m_vsChoices.clear();
 		m_vpSteps.clear();
@@ -66,7 +66,7 @@ public:
 
 		return RELOAD_CHANGED_ALL;
 	}
-	virtual void ImportOption( OptionRow *pRow, const std::vector<PlayerNumber>& /* vpns */, std::vector<bool> /* vbSelectedOut */ [NUM_PLAYERS] ) const
+	void ImportOption( OptionRow *pRow, const std::vector<PlayerNumber>& /* vpns */, std::vector<bool> /* vbSelectedOut */ [NUM_PLAYERS] ) const override
 	{
 		Trail *pTrail = GAMESTATE->m_pCurTrail[PLAYER_1];
 		Steps *pSteps;
@@ -88,7 +88,7 @@ public:
 		}
 
 	}
-	virtual int ExportOption( const std::vector<PlayerNumber>& /* vpns */, const std::vector<bool> /* vbSelected */ [NUM_PLAYERS] ) const
+	int ExportOption( const std::vector<PlayerNumber>& /* vpns */, const std::vector<bool> /* vbSelected */ [NUM_PLAYERS] ) const override
 	{
 		return 0;
 	}

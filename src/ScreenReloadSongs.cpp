@@ -21,7 +21,7 @@ public:
 	{
 	}
 
-	void SetText( RString str )
+	void SetText( RString str ) override
 	{
 		m_BitmapText.SetText( str );
 		Paint();
