@@ -21,6 +21,7 @@ set(SM_TEST_SRC
     test_XmlFile.cpp
     test_DateTime.cpp
     test_GameManager.cpp
+    test_SongOptions.cpp
     test_RageUtil.cpp
     test_RageMath.cpp
     test_RageColor.cpp
