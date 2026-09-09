@@ -531,23 +531,23 @@ class XNodeLuaValue: public XNodeValue
 {
 public:
 	LuaReference m_Value;
-	XNodeValue *Copy() const { return new XNodeLuaValue( *this ); }
+	XNodeValue *Copy() const override { return new XNodeLuaValue( *this ); }
 
 	template<typename T>
 	T GetValue() const { T val; GetValue(val); return val; }
 
-	void GetValue( RString &out ) const;
-	void GetValue( int &out ) const;
-	void GetValue( float &out ) const;
-	void GetValue( bool &out ) const;
-	void GetValue( unsigned &out ) const;
-	void PushValue( lua_State *L ) const;
+	void GetValue( RString &out ) const override;
+	void GetValue( int &out ) const override;
+	void GetValue( float &out ) const override;
+	void GetValue( bool &out ) const override;
+	void GetValue( unsigned &out ) const override;
+	void PushValue( lua_State *L ) const override;
 
-	void SetValue( const RString &v );
-	void SetValue( int v );
-	void SetValue( float v );
-	void SetValue( unsigned v );
-	void SetValueFromStack( lua_State *L );
+	void SetValue( const RString &v ) override;
+	void SetValue( int v ) override;
+	void SetValue( float v ) override;
+	void SetValue( unsigned v ) override;
+	void SetValueFromStack( lua_State *L ) override;
 };
 
 void XNodeLuaValue::PushValue( lua_State *L ) const
