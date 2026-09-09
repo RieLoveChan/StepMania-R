@@ -1653,3 +1653,16 @@
   `deflate`, `audio_readers`, `file_errors`). Remaining there:
   `test_vector.cpp` (macOS/altivec, §3 — skip), `test_threads.cpp`
   (`RageThreads`, item 11 — ADR-scoped). Suite **1004/124 → 5145/142**.
+
+* **ADR 0006 — `tests/test_Zip.cpp` (new, `7d6374067e`).** The `.smzip`
+  package path (`CreateZip` writer → `RageFileDriverZip` read-only VFS)
+  had zero coverage. All in `/@mem`: write source files, build the
+  archive, load it back, extract every entry byte-for-byte. 4 cases:
+  round-trip byte-exact, missing entry → nullptr, `Open(WRITE)` →
+  `ERROR_WRITING_NOT_SUPPORTED`, `Load` of a non-zip → false.
+  **Characterization finding → backlog item 19:** this `CreateZip`
+  build emits `STORED` for every entry (compressed size == uncompressed,
+  `m_iCompressionMethod == STORED`) — its bundled Info-ZIP deflate is
+  not wired, so engine-produced `.smzip`s are uncompressed. Maintainer
+  decision (wire it / route through `RageFileObjDeflate` / accept).
+  Suite **5145/142 → 5197/146**.
