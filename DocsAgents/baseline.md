@@ -147,6 +147,7 @@ Per-subsystem breakdown as passes run:
 | data — non-parse-path leftovers (`Course`/`GameCommand`/`OptionRowHandler`/`PlayerStageStats`) | `readability-container-size-empty` | 5 | 0 (85 protected parse/write + `.crs` hits deliberately left) | `1dc470ed24` |
 | file-types (`XmlFileUtil`) + data non-parse-path (`ImageCache`/`LocalizedString`/`OptionRowHandler`) | `modernize-use-override` | 60 | 0 | `3e83e3a3b5` |
 | screen (`CMakeData-screen.cmake`, non-platform TUs) | `modernize-use-override` | 182 (174 in `ScreenDebugOverlay`) | 0 | `e78aa164ef` |
+| data non-parse-path (`CreateZip`, `DisplaySpec`) | `modernize-use-nullptr` | 13 | 0 | `66954c15cd` |
 
 > Note: the `singletons` pass was measured with the **VS-bundled
 > clang-tidy 19.1.5** (`…\BuildTools\VC\Tools\Llvm\x64\bin`) — the
