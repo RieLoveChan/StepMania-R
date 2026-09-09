@@ -1406,3 +1406,26 @@
   overriders + virtual dtors with `override`. **Verified (Windows
   Debug):** `sm_tests` clean under `WITH_WERROR=ON`, 1004 / 124,
   `ctest` 100%.
+
+* **clang-tidy-subsystem-pass — `screen`,
+  `readability-container-size-empty` (item 12, `8c65198efb`).** Same
+  tool/flags over `src/CMakeData-screen.cmake` minus platform TUs. **66
+  warnings / 47 sites / 23 files** (Screen, ScreenDemonstration,
+  ScreenEdit ×6, ScreenEnding, ScreenEvaluation, ScreenGameplay ×2,
+  ScreenGameplaySyncMachine, ScreenHowToPlay ×2, ScreenInstallOverlay
+  ×2, ScreenJukebox ×3, ScreenMapControllers, ScreenNameEntry ×3,
+  ScreenNameEntryTraditional ×2, ScreenOptions ×2,
+  ScreenOptionsCourseOverview ×2, ScreenOptionsManageEditSteps,
+  ScreenOptionsManageProfiles ×3, ScreenSelectMusic, ScreenTestInput,
+  ScreenTestSound, ScreenTextEntry ×3, ScreenTitleMenu,
+  ScreenUnlockStatus ×5). `.size()`/`.length()` vs `0`/`1` and
+  `RString ==`/`!= ""` → `.empty()` / `!.empty()` — autofix, every hunk
+  reviewed. A few land in `ASSERT()` / `ASSERT_M()` operands and two in
+  `do { … } while( sKey.empty() )` loop conditions
+  (`ScreenTextEntryVisual::MoveX`/`MoveY`) — still pure predicate
+  rewrites. Note: `PREFSMAN->m_sTestInitialScreen.Get() != ""` sites
+  became `.Get().empty()` (the `.Get()` was already there — this check
+  *is* safe once the operand is a real `RString`; contrast the
+  `data-structures` `ThemeMetric` mis-fire). **Verified (Windows
+  Debug):** `sm_tests` clean under `WITH_WERROR=ON`, 1004 / 124,
+  `ctest` 100%.

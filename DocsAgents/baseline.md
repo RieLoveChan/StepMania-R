@@ -142,6 +142,7 @@ Per-subsystem breakdown as passes run:
 | data-structures — 15 non-parse-path files (`CMakeData-data.cmake`; `BackgroundUtil`/`CodeDetector`/`CommonMetrics`/`Course`/`CourseUtil`/`Font`/`GameCommand`/`ImageCache`/`OptionRowHandler`/`PlayerStageStats`/`Profile`/`RandomSample`/`SampleHistory`/`SoundEffectControl`/`StageStats`) | `readability-container-size-empty` | 57 | 0 | `64e89eeabc` |
 | actor (`CMakeData-actor.cmake`, non-platform TUs) | `readability-container-size-empty` | 47 (23 files) | 0 | `460435731a` |
 | actor (`CMakeData-actor.cmake`, non-platform TUs) | `modernize-use-override` | 23 (5 files) | 0 | `99e9c35e15` |
+| screen (`CMakeData-screen.cmake`, non-platform TUs) | `readability-container-size-empty` | 66 (47 sites / 23 files) | 0 | `8c65198efb` |
 
 > Note: the `singletons` pass was measured with the **VS-bundled
 > clang-tidy 19.1.5** (`…\BuildTools\VC\Tools\Llvm\x64\bin`) — the
