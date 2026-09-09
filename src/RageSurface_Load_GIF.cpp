@@ -13,7 +13,7 @@
 #define LOCALCOLORMAP	0x80
 #define BitSet(byte, bit)	(((byte) & (bit)) == (bit))
 
-#define	ReadOK(file,buffer,len)	(file.Read( buffer, len, 1) != 0)
+#define	ReadOK(file,buffer,len)	((file).Read( buffer, len, 1) != 0)
 
 #define LM_to_uint(a,b)			(((b)<<8)|(a))
 

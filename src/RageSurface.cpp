@@ -109,7 +109,7 @@ bool RageSurfaceFormat::operator== ( const RageSurfaceFormat &rhs ) const
 
 bool RageSurfaceFormat::Equivalent( const RageSurfaceFormat &rhs ) const
 {
-#define COMP(a) if( a != rhs.a ) return false;
+#define COMP(a) if( (a) != rhs.a ) return false;
 	COMP( BytesPerPixel );
 	COMP( Rmask );
 	COMP( Gmask );
