@@ -123,15 +123,15 @@ class NetworkStream_Win32: public NetworkStream
 {
 public:
 	NetworkStream_Win32();
-	~NetworkStream_Win32();
+	~NetworkStream_Win32() override;
 
-	void Open( const RString &sHost, int iPort, ConnectionType ct = CONN_TCP );
-	void Shutdown();
-	void Close();
-	int Read( void *pBuffer, std::size_t iSize );
-	void Write( const void *pBuffer, std::size_t iSize );
+	void Open( const RString &sHost, int iPort, ConnectionType ct = CONN_TCP ) override;
+	void Shutdown() override;
+	void Close() override;
+	int Read( void *pBuffer, std::size_t iSize ) override;
+	void Write( const void *pBuffer, std::size_t iSize ) override;
 
-	void Cancel();
+	void Cancel() override;
 
 private:
 	int WaitForCompletionOrCancellation( int iEvent );
@@ -319,7 +319,7 @@ public:
 	int GetResult() const { return m_iResult; }
 
 protected:
-	bool HandleMessage( UINT msg, WPARAM /* wParam */, LPARAM lParam )
+	bool HandleMessage( UINT msg, WPARAM /* wParam */, LPARAM lParam ) override
 	{
 		if( msg == WM_USER )
 		{
@@ -604,7 +604,7 @@ void NetworkPostData::CreateMimeData( const std::map<RString, RString> &mapNameT
 		sOut += d.second;
 		sOut += "\r\n";
 	}
-	if( sOut.size() )
+	if( !sOut.empty() )
 		sOut += "--" + sMimeBoundaryOut + "--\r\n";
 
 }
@@ -621,11 +621,11 @@ void NetworkPostData::HttpThread()
 		"User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322)\r\n"
 		"Host: %s\r\n"
 		"Cache-Control: no-cache\r\n",
-		sData.size()? "POST":"GET",
+		!sData.empty()? "POST":"GET",
 		m_sPath.c_str(),
 		m_sHost.c_str() );
 
-	if( sData.size() )
+	if( !sData.empty() )
 	{
 		// sBuf += "Content-Type: application/x-www-form-urlencoded\r\n"
 		sBuf += "Content-Type: multipart/form-data; boundary=" + sMimeBoundary + "\r\n";
@@ -633,7 +633,7 @@ void NetworkPostData::HttpThread()
 	}
 	sBuf += "\r\n";
 
-	if( sData.size() )
+	if( !sData.empty() )
 		sBuf += sData;
 
 	/* The "progress" is currently faked; it shows when we've connected, and when

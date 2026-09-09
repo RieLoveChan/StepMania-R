@@ -394,7 +394,7 @@ long __stdcall CrashHandler::ExceptionHandler( EXCEPTION_POINTERS *pExc )
 	 * Allocate a new stack, and run the exception handler in it, to increase
 	 * the chances of success. */
 	HANDLE hExceptionHandler = CreateThread(nullptr, 1024 * 32, MainExceptionHandler, reinterpret_cast<LPVOID>(pExc), 0, nullptr);
-	if (hExceptionHandler == NULL)
+	if (hExceptionHandler == nullptr)
 	{
 		TerminateProcess(GetCurrentProcess(), 0);
 		return EXCEPTION_EXECUTE_HANDLER;

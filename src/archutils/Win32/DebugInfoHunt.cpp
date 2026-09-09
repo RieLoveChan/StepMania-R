@@ -32,7 +32,7 @@ static void GetDisplayDriverDebugInfo()
 {
 	RString sPrimaryDeviceName = GetPrimaryVideoName();
 
-	if( sPrimaryDeviceName == "" )
+	if( sPrimaryDeviceName.empty() )
 		LOG->Info( "Primary display driver could not be determined." );
 
 	bool LoggedSomething = false;
@@ -42,7 +42,7 @@ static void GetDisplayDriverDebugInfo()
 		if( !GetVideoDriverInfo(i, info) )
 			break;
 
-		if( sPrimaryDeviceName == "" )	// failed to get primary display name (NT4)
+		if( sPrimaryDeviceName.empty() )	// failed to get primary display name (NT4)
 		{
 			LogVideoDriverInfo( info );
 			LoggedSomething = true;
