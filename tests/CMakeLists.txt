@@ -14,6 +14,7 @@ set(SM_TEST_SRC
     test_RageFileDeflate.cpp
     test_RageFileErrors.cpp
     test_Zip.cpp
+    test_RageSurface.cpp
     test_RageLog.cpp
     test_RageSoundReader.cpp
     test_IniFile.cpp
