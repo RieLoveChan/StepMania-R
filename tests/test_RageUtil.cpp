@@ -162,3 +162,65 @@ TEST_CASE("StringConversion::ToString<T> and the FromString round-trip", "[RageU
 		CHECK(back == b);
 	}
 }
+
+// split() / join() -- the workhorses under every simfile parse, command
+// string and config line. Pins: an empty source yields an empty vector
+// even with bIgnoreEmpty=false; bIgnoreEmpty controls whether empty
+// fields survive; join is the exact inverse when empties are kept.
+TEST_CASE("split on a single-char delimiter, with and without bIgnoreEmpty", "[RageUtil][split]")
+{
+	std::vector<RString> v;
+
+	split("a,b,c", ",", v, true);
+	REQUIRE(v.size() == 3);
+	CHECK(v[0] == "a"); CHECK(v[1] == "b"); CHECK(v[2] == "c");
+
+	v.clear();
+	split("a,,c", ",", v, /*bIgnoreEmpty=*/true);
+	REQUIRE(v.size() == 2);
+	CHECK(v[0] == "a"); CHECK(v[1] == "c");
+
+	v.clear();
+	split("a,,c", ",", v, /*bIgnoreEmpty=*/false);
+	REQUIRE(v.size() == 3);
+	CHECK(v[0] == "a"); CHECK(v[1] == ""); CHECK(v[2] == "c");
+
+	v.clear();
+	split(",a,", ",", v, /*bIgnoreEmpty=*/false);
+	REQUIRE(v.size() == 3);
+	CHECK(v[0] == ""); CHECK(v[1] == "a"); CHECK(v[2] == "");
+
+	v.clear();
+	split(",a,", ",", v, /*bIgnoreEmpty=*/true);
+	REQUIRE(v.size() == 1);
+	CHECK(v[0] == "a");
+}
+
+TEST_CASE("split on an empty source yields an empty vector regardless of bIgnoreEmpty", "[RageUtil][split]")
+{
+	std::vector<RString> v;
+	split("", ",", v, false);
+	CHECK(v.empty());
+	split("", ",", v, true);
+	CHECK(v.empty());
+}
+
+TEST_CASE("split on a multi-character delimiter", "[RageUtil][split]")
+{
+	std::vector<RString> v;
+	split("aXXbXXc", "XX", v, true);
+	REQUIRE(v.size() == 3);
+	CHECK(v[0] == "a"); CHECK(v[1] == "b"); CHECK(v[2] == "c");
+}
+
+TEST_CASE("join is the inverse of split when empty fields are kept", "[RageUtil][split]")
+{
+	CHECK(join(",", std::vector<RString>{}) == "");
+	CHECK(join(",", std::vector<RString>{ "a" }) == "a");
+	CHECK(join(",", std::vector<RString>{ "a", "b", "c" }) == "a,b,c");
+	CHECK(join("::", std::vector<RString>{ "x", "y" }) == "x::y");
+
+	std::vector<RString> v;
+	split("a,,c,d", ",", v, /*bIgnoreEmpty=*/false);
+	CHECK(join(",", v) == "a,,c,d");
+}
