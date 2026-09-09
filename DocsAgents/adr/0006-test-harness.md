@@ -284,6 +284,16 @@ Consumers:
   `RageFile::Read`/`Write` → -1 with `GetError()` set, that `Flush()`
   surfaces `FlushInternal`'s error, and that `IniFile::ReadFile`/
   `WriteFile` carry it up. Salvages `src/tests/test_file_errors.cpp`.
+- `tests/test_Zip.cpp` — `CreateZip` (the bundled Info-ZIP writer) →
+  `RageFileDriverZip` (read-only ZIP VFS) round-trip in `/@mem`:
+  entries byte-exact, missing entry → nullptr, `Open(WRITE)` →
+  `ERROR_WRITING_NOT_SUPPORTED`, non-zip → `Load` false. Pins that this
+  `CreateZip` build STOREs every entry (backlog item 19).
+- `tests/test_RageSurface.cpp` — `RageSurface` + `RageSurfaceUtils` pure
+  helpers (built in memory, no image files / GL):
+  `decode/encodepixel`, `Set/GetRawRGBAV`, `GetBitsPerChannel`,
+  `RageSurfaceFormat::operator==`/`Equivalent` (regression pin for the
+  `f5005b8754` palette-`memcmp` fix), `Blit`, `ConvertSurface`.
 - `tests/test_RageSoundReader.cpp` — the WAV decoder from a synthetic
   PCM WAV written to `/@mem` (no fixture). Both
   `RageSoundReader_WAV::Open` and the `OpenFile` autodetect factory.
