@@ -19,6 +19,7 @@ set(SM_TEST_SRC
     test_RageSoundReader.cpp
     test_IniFile.cpp
     test_XmlFile.cpp
+    test_LuaHelpers.cpp
     test_DateTime.cpp
     test_GameManager.cpp
     test_SongOptions.cpp
