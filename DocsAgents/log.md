@@ -1540,3 +1540,25 @@
   `bugprone-macro-parentheses` is now clear across `rage` / `actor` /
   `screen` / `data`(non-§5) / `singletons`(partial, `2d8227fbe8`);
   `file-types` and `globals` had 0.
+
+* **clang-tidy — `container-size-empty` stragglers + full re-sweep
+  (item 12).**
+  - `aa85b33a91` — `ScreenEdit.cpp` `FILL_ENABLED(x)` macro (16
+    expansion-site hits, one macro-body edit `.size() > 0` →
+    `!….empty()`) — finishes `screen` for this check.
+  - `b98c278a09` — `arch/Dialog/Dialog.cpp` (10, autofix: `ASSERT` +
+    the `sID`-guard family) and the `FATAL_ERROR(s)` macro body in
+    `RageSurface_Load_BMP.cpp` (8) + `RageSoundReader_WAV.cpp` (3,
+    covered by `test_RageSoundReader.cpp`) hand-fixed to
+    `sError.empty()`.
+  - `770ca77f9e` — docs: 2026-09-09 full-config re-sweep table in
+    `baseline.md` + `modernization-backlog.md` item 12 status. **The
+    four mechanical checks (`container-size-empty`, `use-override`,
+    `use-nullptr`, `macro-parentheses`) are now clear across every
+    non-platform subsystem group outside the §5 parse/write path.**
+    Remainder bucketed: §5-protected (needs a regression corpus),
+    `arch/` driver internals (own lower-priority pass), and two checks
+    (`use-equals-default` 38, `redundant-member-init` 28) whose `--fix`
+    output is too dirty to land without a coupled `clang-format` run
+    (ADR 0002 → separate change). `bugprone-integer-division` (14)
+    stays maintainer-flagged.
