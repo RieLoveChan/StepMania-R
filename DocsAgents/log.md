@@ -1733,3 +1733,18 @@
   Suite **5428/167 → 5594/182**. (`PlayerOptions::FromString` needs
   `NOTESKIN` — deferred until `EngineTestEnv` grows a NoteSkinManager
   bring-up.)
+
+* **ADR 0006 — codec coverage (2026-09-09, cont.).**
+  - `2c43c42de1` — `tests/test_DeviceInput.cpp` (new). `DeviceInput::
+    ToString`/`FromString` (Keymaps.ini codec). Invalid device →
+    `""`; `"<device>_<button>"` round-trips for keyboard + joystick;
+    rejects no-`_` / trailing-`_`; an `"a_b"`-shaped string with
+    unresolvable names still returns true with Invalid parts.
+  - `39013b52c1` — `tests/test_Command.cpp` (new). The Actor command
+    mini-language (`ParseCommands`/`Command::Load`/`GetName`/`GetArg`).
+    `;` / `,` splitting, empty args kept, `GetArg` past end → empty,
+    empty/`;`-only → no commands, non-legacy quote handling vs legacy
+    blind split. **Finding: `Command::GetName()` only `Trim()`s — it
+    does NOT lower-case** despite the header comment; comment corrected
+    in the same commit.
+  Suite **5594/182 → 5662/193**.
