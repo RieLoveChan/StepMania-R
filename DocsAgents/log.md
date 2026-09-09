@@ -1617,3 +1617,39 @@
   → own change); `integer-division` (14) is maintainer-flagged;
   `suspicious-string-compare` (8) is idiomatic `memcmp`; 4
   `macro-parentheses` are genuinely unfixable.
+
+* **ADR 0006 — `src/tests/` reader-salvage completed (item 17).** Three
+  commits after the clang-tidy batch:
+  - `68dc667855` — `tests/test_RageFileDeflate.cpp` (new). The
+    `RageFileObjDeflate`/`RageFileObjInflate` raw-deflate layer (zlib
+    `-MAX_WBITS`, used for gzip'd assets + compressed caches) had zero
+    coverage. 9 cases: byte-exact round-trip + `CRC32(in)==CRC32(out)`
+    over compressible / repeating / incompressible / tiny payloads at
+    several read/write block sizes; "deflate shrinks a 100k run to
+    <1/10"; write-chunk size not observable; `Inflate::Seek`; and error
+    paths (corrupt stream → hard error or detectably-bad decode, never
+    the full payload intact; truncated stream → short read, correct
+    prefix). Pins two gotchas found writing it:
+    `RageFileObjDeflate::FlushInternal` emits `Z_FINISH` (ends the
+    stream) and the dtor calls it too — **never call `Flush()`
+    yourself**; `RageFileObj::Read(RString&,int)` trims to the count
+    read but does **not** clear the buffer first, so a reused `RString`
+    returns stale bytes.
+  - `2349d3b802` — extended `tests/test_RageFile.cpp` (+3 cases). The
+    `RageFileObj` read buffer is `BSIZE=1024`; `GetLine` has hand-rolled
+    logic for a line/newline straddling a refill (incl. the `\r\n`-split
+    hack). Sweeps line lengths 1..2049 × {`\n`, `\r\n`} asserting exact
+    char count and `\r` stripped; bare interior `\r` survives, trailing
+    `\r` before `\n` stripped; text→4096-byte binary block→text with
+    `Tell()` exact across the transition.
+  - `e0083906fe` — `tests/test_RageFileErrors.cpp` (new, salvage of
+    `test_file_errors.cpp`). A self-registering in-test VFS driver
+    ("ERRTEST" — `FilenameDB.AddFile` + file-scope `FileDriverEntry` +
+    a `RageFileObj` subclass on the modern `*Internal` interface) that
+    fails the read/write/flush crossing a byte threshold. 6 cases pin
+    error propagation through `RageFile::Read`/`Write`/`Flush` and
+    `IniFile::ReadFile`/`WriteFile`.
+  **Reader salvage from `src/tests/` is complete** (`file_readers`,
+  `deflate`, `audio_readers`, `file_errors`). Remaining there:
+  `test_vector.cpp` (macOS/altivec, §3 — skip), `test_threads.cpp`
+  (`RageThreads`, item 11 — ADR-scoped). Suite **1004/124 → 5145/142**.
