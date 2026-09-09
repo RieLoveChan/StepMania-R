@@ -1243,7 +1243,7 @@ void Course::CalculateRadarValues()
 
 bool Course::Matches( RString sGroup, RString sCourse ) const
 {
-	if( sGroup.size() && sGroup.CompareNoCase(this->m_sGroupName) != 0)
+	if( !sGroup.empty() && sGroup.CompareNoCase(this->m_sGroupName) != 0)
 		return false;
 
 	RString sFile = m_sPath;

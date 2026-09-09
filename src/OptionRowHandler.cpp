@@ -160,7 +160,7 @@ public:
 		{
 			// Parse the basic configuration metric.
 			Commands lCmds = ParseCommands( ENTRY(sParam) );
-			ROW_INVALID_IF(lCmds.v.size() < 1, "Row command is empty.", false);
+			ROW_INVALID_IF(lCmds.v.empty(), "Row command is empty.", false);
 
 			m_Def.m_bOneChoiceForAllPlayers = false;
 			ROW_INVALID_IF(lCmds.v[0].m_vsArgs.size() != 1, "Row command has invalid args to number of entries.", false);
@@ -1567,7 +1567,7 @@ OptionRowHandler* OptionRowHandlerUtil::Make( const Commands &cmds )
 	{
 		const Command &command = cmds.v[0];
 		RString sParam = command.GetArg(1).s;
-		ROW_INVALID_IF(command.m_vsArgs.size() != 2 || !sParam.size(),
+		ROW_INVALID_IF(command.m_vsArgs.size() != 2 || sParam.empty(),
 			"list row command must be 'list,name' or 'list,type'.", nullptr);
 
 		if(	 sParam.CompareNoCase("NoteSkins")==0 )		MAKE( OptionRowHandlerListNoteSkins )

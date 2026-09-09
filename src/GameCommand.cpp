@@ -682,7 +682,7 @@ void GameCommand::Apply( PlayerNumber pn ) const
 
 void GameCommand::Apply( const std::vector<PlayerNumber> &vpns ) const
 {
-	if( m_Commands.v.size() )
+	if( !m_Commands.v.empty() )
 	{
 		// We were filled using a GameCommand from metrics. Apply the options in order.
 		for (Command const &cmd : m_Commands.v)
