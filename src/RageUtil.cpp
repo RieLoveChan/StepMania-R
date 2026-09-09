@@ -2696,7 +2696,7 @@ void luafunc_approach_internal(lua_State* L, int valind, int goalind, int speedi
 	{ \
 		luaL_error(L, "approach: " #num_name " for approach %d is not a number.", process_index); \
 	} \
-	dest= lua_tonumber(L, index);
+	(dest)= lua_tonumber(L, index);
 	float val= 0;
 	float goal= 0;
 	float speed= 0;
