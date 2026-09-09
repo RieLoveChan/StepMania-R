@@ -1666,3 +1666,24 @@
   not wired, so engine-produced `.smzip`s are uncompressed. Maintainer
   decision (wire it / route through `RageFileObjDeflate` / accept).
   Suite **5145/142 → 5197/146**.
+
+* **ADR 0006 — more pure-core coverage (2026-09-09, cont.).**
+  - `aeec1a8578` — `tests/test_RageSurface.cpp` (new). The in-memory
+    image type + `RageSurfaceUtils` pixel/format helpers (on every
+    texture-load path). 6 cases: `decode/encodepixel` round-trip 1..4
+    bpp; `Set/GetRawRGBAV` channel round-trip + explicit RGBA8888 bit
+    layout; `GetBitsPerChannel`; **`RageSurfaceFormat::operator==` /
+    `Equivalent` — regression pin for `f5005b8754`** (a change to
+    palette entry 250 was missed by the wrong-`sizeof` memcmp); `Blit`
+    overlap byte-exact + rows past `src->h` untouched; `ConvertSurface`
+    32→16(RGBA4444)→32 within the 4-bit quantisation.
+  - `572d67086e` — `test_RageMath.cpp` +4 cases. `RageQuadratic`
+    `GetBezierStart/End` shortcuts, `SetFromBezier`/`GetBezier`
+    round-trip; `RageBezier2D` (the Newton-Raphson x→t→y solve behind
+    `Tween::InterpolateBezier2D`) — straight diagonal → `EvaluateYFromX(x)
+    == x`; an asymmetric ease is monotone + slow at the start.
+  - `4551f5468a` — `test_RageFile.cpp` +1 case. `RageFileDriverSlice`
+    window: `GetFileSize`==window, reads yield only the window, past-end
+    is EOF though the underlying file has more, `Seek` is slice-relative
+    + clamps, `Write` → -1.
+  Suite **5145/142 → 5321/157**.
