@@ -84,7 +84,7 @@ RageSoundDriver_DSound_Software::RageSoundDriver_DSound_Software()
 RString RageSoundDriver_DSound_Software::Init()
 {
 	RString sError = ds.Init();
-	if( sError != "" )
+	if( !sError.empty() )
 		return sError;
 
 	/* If we're emulated, we're better off with the WaveOut driver; DS
@@ -102,7 +102,7 @@ RString RageSoundDriver_DSound_Software::Init()
 	if( m_iSampleRate == 0 )
 		m_iSampleRate = 44100;
 	sError = m_pPCM->Init( ds, DSoundBuf::HW_DONT_CARE, channels, m_iSampleRate, 16, g_iMaxWriteahead );
-	if( sError != "" )
+	if( !sError.empty() )
 		return sError;
 
 	LOG->Info( "Software mixing at %i hz", m_iSampleRate );

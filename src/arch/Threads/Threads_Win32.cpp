@@ -364,7 +364,7 @@ void EventImpl_Win32::Signal()
 		return;
 	}
 
-	ReleaseSemaphore( m_WakeupSema, 1, 0 );
+	ReleaseSemaphore( m_WakeupSema, 1, nullptr );
 
 	LeaveCriticalSection( &m_iNumWaitingLock );
 
@@ -382,7 +382,7 @@ void EventImpl_Win32::Broadcast()
 		return;
 	}
 
-	ReleaseSemaphore( m_WakeupSema, m_iNumWaiting, 0 );
+	ReleaseSemaphore( m_WakeupSema, m_iNumWaiting, nullptr );
 
 	LeaveCriticalSection( &m_iNumWaitingLock );
 

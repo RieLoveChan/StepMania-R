@@ -141,7 +141,7 @@ RString RageSoundDriver_WaveOut::Init()
 		std::vector<RString> portNames;
 		split(PREFSMAN->m_iSoundDevice.Get(), ",", portNames, true);
 		for (const RString& device : portNames) {
-			int id = StringToInt(device, /*pos=*/0, /*base=*/10, /*exceptVal=*/-1);
+			int id = StringToInt(device, /*pos=*/nullptr, /*base=*/10, /*exceptVal=*/-1);
 			if (id != -1) {
 				deviceIds.push_back(id);
 			}

@@ -332,7 +332,7 @@ std::unique_ptr<WinWdmPin> WinWdmFilter::CreatePin( unsigned long iPinId, RStrin
 
 		free( pItem );
 
-		if( sError != "" )
+		if( !sError.empty() )
 			return nullptr;
 	}
 
@@ -361,7 +361,7 @@ std::unique_ptr<WinWdmPin> WinWdmFilter::CreatePin( unsigned long iPinId, RStrin
 
 		free( pItem );
 
-		if( sError != "" )
+		if( !sError.empty() )
 			return nullptr;
 	}
 
@@ -403,7 +403,7 @@ std::unique_ptr<WinWdmPin> WinWdmFilter::CreatePin( unsigned long iPinId, RStrin
 	free( pDataRangesItem );
 	pDataRangesItem = nullptr;
 
-	if( pPin->m_dataRangesItem.size() == 0 )
+	if( pPin->m_dataRangesItem.empty() )
 	{
 		sError = "Pin has no supported audio data ranges";
 		return nullptr;
@@ -837,7 +837,7 @@ static bool BuildFilterList( std::vector<WinWdmFilter*> &aFilters, RString &sErr
 		if( hKey != INVALID_HANDLE_VALUE )
 		{
 			DWORD type;
-			if( RegQueryValueEx(hKey, "FriendlyName", 0, &type, (BYTE*) szFriendlyName, &sizeFriendlyName) != ERROR_SUCCESS )
+			if( RegQueryValueEx(hKey, "FriendlyName", nullptr, &type, (BYTE*) szFriendlyName, &sizeFriendlyName) != ERROR_SUCCESS )
 				strcpy( szFriendlyName, "(error)" );
 			RegCloseKey( hKey );
 		}
@@ -1243,7 +1243,7 @@ std::int64_t RageSoundDriver_WDMKS::GetPosition() const
 	RString sError;
 	WdmGetPropertySimple( m_pStream->m_pPlaybackPin->m_hHandle, &KSPROPSETID_Audio, KSPROPERTY_AUDIO_POSITION,
 		&pos, sizeof(pos), nullptr, 0, sError );
-	ASSERT_M( sError == "", sError );
+	ASSERT_M( sError.empty(), sError );
 
 	pos.PlayOffset /= m_pStream->m_iBytesPerOutputSample * m_pStream->m_iDeviceOutputChannels;
 	return pos.PlayOffset;
