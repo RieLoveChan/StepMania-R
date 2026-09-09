@@ -35,7 +35,7 @@ void ScreenNameEntryTraditional::Init()
 			ss.m_vpPlayedSongs.push_back( apSongs[rand()%apSongs.size()] );
 			ss.m_vpPossibleSongs = ss.m_vpPlayedSongs;
 			ss.m_playMode = GAMESTATE->m_PlayMode;
-			ASSERT( ss.m_vpPlayedSongs[0]->GetAllSteps().size() );
+			ASSERT( !ss.m_vpPlayedSongs[0]->GetAllSteps().empty() );
 
 			FOREACH_PlayerNumber( p )
 			{
