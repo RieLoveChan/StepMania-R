@@ -1394,3 +1394,15 @@
   `data-structures` mis-fire class), so `--fix` was safe to trust here.
   **Verified (Windows Debug):** `sm_tests` Debug clean under
   `WITH_WERROR=ON`; 1004 assertions / 124 cases pass; `ctest` 100%.
+
+* **clang-tidy-subsystem-pass — `actor`, `modernize-use-override`
+  (item 12, `99e9c35e15`).** Same tool/flags,
+  `--checks=-*,modernize-use-override`. **23 sites / 5 files:**
+  Actor (1), BPMDisplay (2), Background (8), GraphDisplay (8),
+  Tween (12). Every hit is a helper class defined *inside* the `.cpp`
+  (`HiddenActor`, `SongBPMDisplay`, `BrightnessOverlay` /
+  `BackgroundImpl`, `GraphLine` / `GraphBody`, the `Tween*` structs) —
+  no header touched. Fix drops redundant `virtual` and annotates
+  overriders + virtual dtors with `override`. **Verified (Windows
+  Debug):** `sm_tests` clean under `WITH_WERROR=ON`, 1004 / 124,
+  `ctest` 100%.

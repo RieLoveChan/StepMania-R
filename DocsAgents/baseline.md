@@ -141,6 +141,7 @@ Per-subsystem breakdown as passes run:
 | singletons — 4 macros (`NoteSkin`/`Profile`/`Screen`/`UnlockManager`) | `bugprone-macro-parentheses` | 8 | 4 (StatsManager's 4 are `::`-scoped / stringize — unfixable, left) | `2d8227fbe8` |
 | data-structures — 15 non-parse-path files (`CMakeData-data.cmake`; `BackgroundUtil`/`CodeDetector`/`CommonMetrics`/`Course`/`CourseUtil`/`Font`/`GameCommand`/`ImageCache`/`OptionRowHandler`/`PlayerStageStats`/`Profile`/`RandomSample`/`SampleHistory`/`SoundEffectControl`/`StageStats`) | `readability-container-size-empty` | 57 | 0 | `64e89eeabc` |
 | actor (`CMakeData-actor.cmake`, non-platform TUs) | `readability-container-size-empty` | 47 (23 files) | 0 | `460435731a` |
+| actor (`CMakeData-actor.cmake`, non-platform TUs) | `modernize-use-override` | 23 (5 files) | 0 | `99e9c35e15` |
 
 > Note: the `singletons` pass was measured with the **VS-bundled
 > clang-tidy 19.1.5** (`…\BuildTools\VC\Tools\Llvm\x64\bin`) — the
