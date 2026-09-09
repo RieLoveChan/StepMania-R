@@ -1449,3 +1449,27 @@
   All `.size()`/`.length()`/`< 1`/`!size()` in bool/comparison context
   → `.empty()` / `!.empty()`. **Verified (Windows Debug):** `sm_tests`
   clean under `WITH_WERROR=ON`, 1004 / 124, `ctest` 100% after each.
+
+* **clang-tidy-subsystem-pass — `modernize-use-override`, three groups
+  (item 12).**
+  - `3e83e3a3b5` — `file-types` (`XmlFileUtil`: `XNodeLuaValue`, 12) +
+    `data` non-parse-path (`ImageCache`: `ImageTexture`, 4;
+    `LocalizedString`: `LocalizedStringImplDefault`, 2;
+    `OptionRowHandler`: the `OptionRowHandler*` subclass family, 42).
+    60 sites.
+  - `e78aa164ef` — `screen`, 182 sites, **174 of them in
+    `ScreenDebugOverlay.cpp`** (the `IDebugLine` subclass family), plus
+    `ScreenOptionsEditCourse` (3), `ScreenReloadSongs` (1),
+    `ScreenTestInput` (4).
+  Every site is a helper class defined *inside* the `.cpp` deriving
+  from a virtual base — **no header touched** in any of the three
+  groups (checked via `git diff --stat`: `.cpp` only). Fix drops
+  redundant `virtual`, annotates overriders + virtual dtors with
+  `override`. **Verified (Windows Debug):** `sm_tests` clean under
+  `WITH_WERROR=ON`, 1004 / 124, `ctest` 100% after each.
+  With `rage` (`689e35a486`), `singletons` (`22296571d5`), `actor`
+  (`99e9c35e15`), and these three, `modernize-use-override` at the
+  `-p build-tidy` / `.cpp`-scope level is now clear across every
+  non-platform subsystem group. Any residual hits would be pure-header
+  declarations a `.cpp` TU never instantiates — a header-touching
+  sweep is a separate, larger call.
