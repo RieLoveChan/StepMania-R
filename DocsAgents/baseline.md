@@ -143,6 +143,8 @@ Per-subsystem breakdown as passes run:
 | actor (`CMakeData-actor.cmake`, non-platform TUs) | `readability-container-size-empty` | 47 (23 files) | 0 | `460435731a` |
 | actor (`CMakeData-actor.cmake`, non-platform TUs) | `modernize-use-override` | 23 (5 files) | 0 | `99e9c35e15` |
 | screen (`CMakeData-screen.cmake`, non-platform TUs) | `readability-container-size-empty` | 66 (47 sites / 23 files) | 0 | `8c65198efb` |
+| file-types (`XmlFile`, `XmlFileUtil`) + globals (`StepMania.cpp`) | `readability-container-size-empty` | 11 | 0 | `f06f0e0218` |
+| data — non-parse-path leftovers (`Course`/`GameCommand`/`OptionRowHandler`/`PlayerStageStats`) | `readability-container-size-empty` | 5 | 0 (85 protected parse/write + `.crs` hits deliberately left) | `1dc470ed24` |
 
 > Note: the `singletons` pass was measured with the **VS-bundled
 > clang-tidy 19.1.5** (`…\BuildTools\VC\Tools\Llvm\x64\bin`) — the
