@@ -1429,3 +1429,23 @@
   `data-structures` `ThemeMetric` mis-fire). **Verified (Windows
   Debug):** `sm_tests` clean under `WITH_WERROR=ON`, 1004 / 124,
   `ctest` 100%.
+
+* **clang-tidy-subsystem-pass — `file-types` + `globals` + `data`
+  leftovers, `readability-container-size-empty` (item 12).** Three
+  small commits together:
+  - `f06f0e0218` — `file-types` (`XmlFile.cpp`, `XmlFileUtil.cpp`) +
+    `globals` (`StepMania.cpp`), 11 sites. The four
+    `DEBUG_ASSERT( sName.size() )` in XmlFile/XmlFileUtil were
+    hand-applied (clang-tidy `--fix` skips macro arguments); the rest
+    autofixed. `XmlFile` has a characterization net
+    (`tests/test_XmlFile.cpp`).
+  - `1dc470ed24` — `data` non-parse-path leftovers the hand-applied
+    `64e89eeabc` sweep missed: `Course::Matches`, `GameCommand::Apply`,
+    `OptionRowHandler` ×2 (both `ROW_INVALID_IF(...)` macro args),
+    `PlayerStageStats`. 5 sites, hand-applied — a `--fix` over the
+    whole `data` group would also rewrite the AGENTS.md §5-protected
+    `NotesLoader*`/`NotesWriter*`/`Song*`/`Steps*`/`TimingData` and
+    `.crs` TUs (~85 more hits in the group, left untouched).
+  All `.size()`/`.length()`/`< 1`/`!size()` in bool/comparison context
+  → `.empty()` / `!.empty()`. **Verified (Windows Debug):** `sm_tests`
+  clean under `WITH_WERROR=ON`, 1004 / 124, `ctest` 100% after each.
