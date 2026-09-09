@@ -164,7 +164,7 @@ namespace VDDebugInfo
 
 			if( VDDebugInfoInitFromMemory(pctx) )
 				return true;
-		} while(0);
+		} while(false);
 
 		VDDebugInfoDeinit(pctx);
 		return false;

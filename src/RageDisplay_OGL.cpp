@@ -651,7 +651,7 @@ static void CheckPalettedTextures()
 			sError = ssprintf( "GL_COLOR_TABLE_FORMAT returned %s instead of GL_RGBA8", GLToString(iRealFormat).c_str() );
 			break;
 		}
-	} while(0);
+	} while(false);
 #undef GL_CHECK_ERROR
 
 	if (sError.empty())

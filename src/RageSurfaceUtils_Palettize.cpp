@@ -176,7 +176,7 @@ void RageSurfaceUtils::Palettize( RageSurface *&pImg, int iColors, bool bDither 
 	// Map the colors in the image to their closest match in the new colormap.
 	acolorhash_hash acht;
 
-	bool fs_direction = 0;
+	bool fs_direction = false;
 	pixerror_t *thiserr = nullptr, *nexterr = nullptr;
 
 	if( bDither )

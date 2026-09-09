@@ -1077,7 +1077,7 @@ float ThemeManager::GetMetricF( const RString &sMetricsGroup, const RString &sVa
 
 bool ThemeManager::GetMetricB( const RString &sMetricsGroup, const RString &sValueName )
 {
-	bool bRet = 0;
+	bool bRet = false;
 	GetAndConvertMetric( sMetricsGroup, sValueName, bRet );
 	return bRet;
 }

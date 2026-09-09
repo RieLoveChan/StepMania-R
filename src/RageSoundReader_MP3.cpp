@@ -312,7 +312,7 @@ bool RageSoundReader_MP3::handle_first_frame()
 		mad->bitrate = (int)(bytes * 8 / (mad->length/1000.f));
 
 		if( mad->xingtag.type == xing::XING )
-			ret = 1;
+			ret = true;
 	}
 
 	/* If there's no Xing tag, mad->length will be filled in by _open. */

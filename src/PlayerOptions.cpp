@@ -1252,7 +1252,7 @@ void NextBool( bool bValues[], int size )
 	if( index == size-1 )	// if true, then the last float in the list was selected
 		;	// leave all off
 	else
-		bValues[index+1] = 1;
+		bValues[index+1] = true;
 }
 
 void PlayerOptions::NextAccel()

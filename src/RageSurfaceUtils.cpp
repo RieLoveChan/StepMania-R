@@ -676,7 +676,7 @@ void RageSurfaceUtils::Blit( const RageSurface *src, RageSurface *dst, int width
 			break;
 
 		FAIL_M("We don't do RGBA->PAL");
-	} while(0);
+	} while(false);
 
 	/* The destination surface may be larger than the source. For example, we may be
 	 * blitting a 200x200 image onto a 256x256 surface for OpenGL. Normally, that extra

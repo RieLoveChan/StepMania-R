@@ -45,7 +45,7 @@ bool GetFileVersion( RString sFile, RString &sOut )
 			break;
 
 		sOut = RString( str, len-1 );
-	} while(0);
+	} while(false);
 
 	// Get the size and date.
 	struct stat st;
@@ -114,7 +114,7 @@ bool GetProcessFileName( std::uint32_t iProcessID, RString &sName )
 		}
 
 		sName = werr_ssprintf( GetLastError(), "Module32First" );
-	} while(0);
+	} while(false);
 
 	// This method only works in NT/2K/XP.
 	do {
@@ -167,7 +167,7 @@ bool GetProcessFileName( std::uint32_t iProcessID, RString &sName )
 
 			sName = werr_ssprintf( GetLastError(), "GetProcessImageFileName" );
 		}
-	} while(0);
+	} while(false);
 
 	return false;
 }
