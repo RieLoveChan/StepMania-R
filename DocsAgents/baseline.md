@@ -148,6 +148,7 @@ Per-subsystem breakdown as passes run:
 | file-types (`XmlFileUtil`) + data non-parse-path (`ImageCache`/`LocalizedString`/`OptionRowHandler`) | `modernize-use-override` | 60 | 0 | `3e83e3a3b5` |
 | screen (`CMakeData-screen.cmake`, non-platform TUs) | `modernize-use-override` | 182 (174 in `ScreenDebugOverlay`) | 0 | `e78aa164ef` |
 | data non-parse-path (`CreateZip`, `DisplaySpec`) | `modernize-use-nullptr` | 13 | 0 | `66954c15cd` |
+| rage — `RageSurface` / `RageSurface_Load_GIF` / `RageUtil` local macros | `bugprone-macro-parentheses` | 3 | 0 | `b65fa92d65` |
 
 > Note: the `singletons` pass was measured with the **VS-bundled
 > clang-tidy 19.1.5** (`…\BuildTools\VC\Tools\Llvm\x64\bin`) — the
