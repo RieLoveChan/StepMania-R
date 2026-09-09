@@ -12,7 +12,7 @@ public:
 	void Load( const RString &sCommand );
 
 	RString GetOriginalCommandString() const;	// used when reporting an error in number of args
-	RString GetName() const;	// the command name is the first argument in all-lowercase
+	RString GetName() const;	// the first argument, Trim()'d (NOT lower-cased -- callers that need case-insensitive matching lower-case it themselves)
 
 	void Clear() { m_vsArgs.clear(); }
 
