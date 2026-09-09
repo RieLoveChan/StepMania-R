@@ -346,13 +346,22 @@ folder. Suite **948 / 118**.
   derived-fixture approach (`tests/data/`). `.sma` slots into the
   existing `kCorpus`; `.crs` courses reference songs so likely also
   need `SONGMAN`.
-- `src/tests/test_file_readers.cpp` **DONE (2026-09-06)** →
-  `tests/test_RageFile.cpp`: `RageFile` open/read/write/seek/tell/
-  `GetLine`/`AtEOF` through `FILEMAN`'s `/@mem` writable mount, so each
-  test writes its own file — no committed fixtures. Pinned the
-  stdio-like `AtEOF` semantics (`m_bEOF` only trips on a 0-byte read),
-  `Seek`-past-end clamping, `GetLine` behaviour. 67 assertions / 8
-  cases.
+- `src/tests/test_file_readers.cpp` **DONE (2026-09-06, extended
+  2026-09-09)** → `tests/test_RageFile.cpp`: `RageFile` open/read/write/
+  seek/tell/`GetLine`/`AtEOF` through `FILEMAN`'s `/@mem` writable
+  mount, so each test writes its own file — no committed fixtures.
+  Pinned the stdio-like `AtEOF` semantics (`m_bEOF` only trips on a
+  0-byte read), `Seek`-past-end clamping, `GetLine` behaviour. 67
+  assertions / 8 cases.
+  Plus `tests/test_RageFileDeflate.cpp` (2026-09-09) — the salvage of
+  `TestDeflate()`: `RageFileObjDeflate`/`RageFileObjInflate` raw-deflate
+  round-trip over `RageFileObjMem` (byte-exact + CRC32 in==out, several
+  read/write block sizes, `RageFileObjInflate::Seek`). Also pins two
+  gotchas found doing it: `RageFileObjDeflate::FlushInternal` emits
+  `Z_FINISH` (ends the stream) and the dtor calls it too — never call
+  `Flush()` yourself; and `RageFileObj::Read(RString&,int)` trims to the
+  count read but does **not** clear the buffer first, so a reused
+  `RString` returns stale bytes. 7 cases.
 - `src/tests/test_audio_readers.cpp` **DONE (2026-09-06)** →
   `tests/test_RageSoundReader.cpp`: the WAV decoder, from a synthetic
   PCM WAV built in the test (deterministic samples — no copyrighted

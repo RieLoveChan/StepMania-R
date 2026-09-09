@@ -273,6 +273,11 @@ Consumers:
   `AtEOF` through `FILEMAN`'s writable `/@mem` mount (no committed
   fixtures). Salvages `src/tests/test_file_readers.cpp`; pins the
   stdio-like EOF semantics.
+- `tests/test_RageFileDeflate.cpp` — `RageFileObjDeflate` /
+  `RageFileObjInflate` raw-deflate round-trip over `RageFileObjMem`:
+  byte-exact + CRC32(input)==CRC32(output) at several block sizes,
+  `RageFileObjInflate::Seek`, "deflate shrinks". Salvages
+  `TestDeflate()` from `src/tests/test_file_readers.cpp`.
 - `tests/test_RageSoundReader.cpp` — the WAV decoder from a synthetic
   PCM WAV written to `/@mem` (no fixture). Both
   `RageSoundReader_WAV::Open` and the `OpenFile` autodetect factory.

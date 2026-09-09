@@ -393,7 +393,10 @@ first-party non-§5 code:
     `double-a/-b`. New StepsType coverage: `pump-double`. 30 assertions
     / 1 visible case (+1 hidden `[ksfdump]`). Verified identical to the
     untouched source folder.
-    Suite total: **1004 assertions / 124 cases** (up from 311/72).
+    Suite total: **4318 assertions / 131 cases** (up from 311/72).
+    `tests/test_RageFileDeflate.cpp` (2026-09-09) added the
+    `RageFileObjDeflate`/`Inflate` raw-deflate round-trip — 7 cases,
+    salvage of `TestDeflate()`.
   - `tests/test_RageLog.cpp` (2026-09-08) — `RageLog`'s level/category
     plumbing (ADR 0005 phase 2): the `LogLevel` (Trace<…<Error<Off) and
     `Log::Category` enums + their string round-trips (case-insensitive,
@@ -460,7 +463,7 @@ first-party non-§5 code:
   VS-bundled cmake for this repo):
   - `WITH_TESTS=ON` Debug → `sm_engine` OBJECT lib + `Catch2` +
     `sm_tests.exe` all build clean under `WITH_WERROR=ON`; `sm_tests.exe`
-    → **1004 assertions / 124 cases pass**; `ctest` 100%. (First-landed at
+    → **4318 assertions / 131 cases pass**; `ctest` 100%. (First-landed at
     94/19.)
   - `WITH_TESTS=OFF` Release → `StepMania-R.exe` builds clean (the
     OBJECT-library split is transparent when off) + `--SelfTest` exits 0.
@@ -475,7 +478,8 @@ first-party non-§5 code:
   `tests/test_NotesLoaderCorpus.cpp`.
   `test_file_readers.cpp` **salvaged** 2026-09-06 →
   `tests/test_RageFile.cpp` (via the `/@mem` writable mount, no
-  fixtures). `test_audio_readers.cpp` **salvaged** 2026-09-06 →
+  fixtures) + `tests/test_RageFileDeflate.cpp` (2026-09-09, the
+  `TestDeflate()` round-trip). `test_audio_readers.cpp` **salvaged** 2026-09-06 →
   `tests/test_RageSoundReader.cpp` (synthetic PCM WAV built in the
   test, no fixture). **The `src/tests/` reader salvage is now
   complete** — the remaining `src/tests/*` files are the old
