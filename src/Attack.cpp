@@ -51,7 +51,7 @@ void Attack::GetRealtimeAttackBeats( const Song *pSong, const PlayerState* pPlay
 
 bool Attack::operator== ( const Attack &rhs ) const
 {
-#define EQUAL(a) (a==rhs.a)
+#define EQUAL(a) ((a)==rhs.a)
 	return
 		EQUAL(level) &&
 		EQUAL(fStartSecond) &&

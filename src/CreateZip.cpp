@@ -158,7 +158,7 @@ typedef unsigned IPos; // A Pos is an index in the character window. Pos is used
 // Error return values.  The values 0..4 and 12..18 follow the conventions
 // of PKZIP.   The values 4..10 are all assigned to "insufficient memory"
 // by PKZIP, so the codes 5..10 are used here for other purposes.
-#define ZE_MISS         -1      // used by procname(), zipbare()
+#define ZE_MISS         (-1)      // used by procname(), zipbare()
 #define ZE_OK           0       // success
 #define ZE_EOF          2       // unexpected end of zip file
 #define ZE_FORM         3       // zip file structure error
@@ -326,16 +326,16 @@ typedef unsigned IPos; // A Pos is an index in the character window. Pos is used
 
 // Output a 16 bit value to the bit stream, lower (oldest) byte first
 #define PUTSHORT(state,w) \
-{ if (state.bs.out_offset >= state.bs.out_size-1) \
-	state.flush_outbuf(state.param,state.bs.out_buf, &state.bs.out_offset); \
-	state.bs.out_buf[state.bs.out_offset++] = (char) ((w) & 0xff); \
-	state.bs.out_buf[state.bs.out_offset++] = (char) ((ush)(w) >> 8); \
+{ if ((state).bs.out_offset >= (state).bs.out_size-1) \
+	(state).flush_outbuf((state).param,(state).bs.out_buf, &(state).bs.out_offset); \
+	(state).bs.out_buf[(state).bs.out_offset++] = (char) ((w) & 0xff); \
+	(state).bs.out_buf[(state).bs.out_offset++] = (char) ((ush)(w) >> 8); \
 }
 
 #define PUTBYTE(state,b) \
-{ if (state.bs.out_offset >= state.bs.out_size) \
-	state.flush_outbuf(state.param,state.bs.out_buf, &state.bs.out_offset); \
-	state.bs.out_buf[state.bs.out_offset++] = (char) (b); \
+{ if ((state).bs.out_offset >= (state).bs.out_size) \
+	(state).flush_outbuf((state).param,(state).bs.out_buf, &(state).bs.out_offset); \
+	(state).bs.out_buf[(state).bs.out_offset++] = (char) (b); \
 }
 
 
@@ -527,7 +527,7 @@ const ulg crc_table[256] = {
 };
 
 #define CRC32(c, b) (crc_table[((int)(c) ^ (b)) & 0xff] ^ ((c) >> 8))
-#define DO1(buf)  crc = CRC32(crc, *buf++)
+#define DO1(buf)  crc = CRC32(crc, *(buf)++)
 #define DO2(buf)  DO1(buf); DO1(buf)
 #define DO4(buf)  DO2(buf); DO2(buf)
 #define DO8(buf)  DO4(buf); DO4(buf)

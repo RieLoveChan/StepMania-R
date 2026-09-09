@@ -191,11 +191,11 @@ void GameCommand::LoadOne( const Command& cmd )
 	} \
 	else \
 	{ \
-		member= value; \
+		(member)= value; \
 	}
 
 #define CHECK_INVALID_VALUE(member, value, invalid_value, value_name) \
-	CHECK_INVALID_COND(member, value, (value == invalid_value), ssprintf("Invalid "#value_name" \"%s\".", sValue.c_str()));
+	CHECK_INVALID_COND(member, value, ((value) == (invalid_value)), ssprintf("Invalid "#value_name" \"%s\".", sValue.c_str()));
 
 	if( sName == "style" )
 	{

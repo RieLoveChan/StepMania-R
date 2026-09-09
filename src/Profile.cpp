@@ -53,8 +53,8 @@ static Preference<bool> g_bProfileDataCompress( "ProfileDataCompress", false );
 static ThemeMetric<RString> UNLOCK_AUTH_STRING( "Profile", "UnlockAuthString" );
 #define GUID_SIZE_BYTES 8
 
-#define MAX_EDITABLE_INI_SIZE_BYTES			2*1024		// 2KB
-#define MAX_PLAYER_STATS_XML_SIZE_BYTES                 100*1024*1024   // 100MB
+#define MAX_EDITABLE_INI_SIZE_BYTES			(2*1024)		// 2KB
+#define MAX_PLAYER_STATS_XML_SIZE_BYTES                 (100*1024*1024)   // 100MB
 
 const int DEFAULT_WEIGHT_POUNDS	= 120;
 const float DEFAULT_BIRTH_YEAR= 1995;
@@ -792,7 +792,7 @@ void Profile::GetAllUsedHighScoreNames(std::set<RString>& names)
 {
 #define GET_NAMES_FROM_MAP(main_member, main_key_type, main_value_type, sub_member, sub_key_type, sub_value_type) \
 	for(std::map<main_key_type, main_value_type>::iterator main_entry= \
-				main_member.begin(); main_entry != main_member.end(); ++main_entry) \
+				(main_member).begin(); main_entry != (main_member).end(); ++main_entry) \
 	{ \
 		for(std::map<sub_key_type, sub_value_type>::iterator sub_entry= \
 					main_entry->second.sub_member.begin(); \
@@ -886,10 +886,10 @@ void Profile::MergeScoresFromOtherProfile(Profile* other, bool skip_totals,
 			++main_entry) \
 	{ \
 		std::map<main_key_type, main_value_type>::iterator this_entry= \
-			main_member.find(main_entry->first); \
-		if(this_entry == main_member.end()) \
+			(main_member).find(main_entry->first); \
+		if(this_entry == (main_member).end()) \
 		{ \
-			main_member[main_entry->first]= main_entry->second; \
+			(main_member)[main_entry->first]= main_entry->second; \
 		} \
 		else \
 		{ \
@@ -958,8 +958,8 @@ void Profile::swap(Profile& other)
 #define SWAP_STR_MEMBER(member_name) member_name.swap(other.member_name)
 #define SWAP_GENERAL(member_name) std::swap(member_name, other.member_name)
 #define SWAP_ARRAY(member_name, size) \
-	for(int i= 0; i < size; ++i) { \
-		std::swap(member_name[i], other.member_name[i]); } \
+	for(int i= 0; i < (size); ++i) { \
+		std::swap((member_name)[i], other.member_name[i]); } \
 	SWAP_GENERAL(m_ListPriority);
 	SWAP_STR_MEMBER(m_sDisplayName);
 	SWAP_STR_MEMBER(m_sCharacterID);

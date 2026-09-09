@@ -58,7 +58,7 @@ bool StyleID::IsValid() const
 
 bool StyleID::operator<( const StyleID &rhs ) const
 {
-#define COMP(a) if(a<rhs.a) return true; if(a>rhs.a) return false;
+#define COMP(a) if((a)<rhs.a) return true; if((a)>rhs.a) return false;
 	COMP(sGame);
 	COMP(sStyle);
 #undef COMP

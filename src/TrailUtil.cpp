@@ -85,7 +85,7 @@ bool TrailID::IsValid() const
 
 bool TrailID::operator<( const TrailID &rhs ) const
 {
-#define COMP(a) if(a<rhs.a) return true; if(a>rhs.a) return false;
+#define COMP(a) if((a)<rhs.a) return true; if((a)>rhs.a) return false;
 	COMP(st);
 	COMP(cd);
 #undef COMP

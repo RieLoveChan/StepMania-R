@@ -15,7 +15,7 @@
 
 bool BackgroundDef::operator<( const BackgroundDef &other ) const
 {
-#define COMPARE(x) if( x < other.x ) return true; else if( x > other.x ) return false;
+#define COMPARE(x) if( (x) < other.x ) return true; else if( (x) > other.x ) return false;
 	COMPARE( m_sEffect );
 	COMPARE( m_sFile1 );
 	COMPARE( m_sFile2 );
