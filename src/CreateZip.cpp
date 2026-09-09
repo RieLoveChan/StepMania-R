@@ -545,7 +545,7 @@ ulg crc32(ulg crc, const uch *buf, std::size_t len)
 class TZip
 {
 public:
-	TZip() : pfout(nullptr),ooffset(0),oerr(false),writ(0),hasputcen(false),zfis(0),hfin(0)
+	TZip() : pfout(nullptr),ooffset(0),oerr(false),writ(0),hasputcen(false),zfis(nullptr),hfin(nullptr)
 	{
 	}
 	~TZip() = default;
@@ -601,7 +601,7 @@ public:
 
 ZRESULT TZip::Start(RageFile *f)
 {
-	if (pfout!=0 || writ!=0 || oerr!=ZR_OK || hasputcen)
+	if (pfout!=nullptr || writ!=0 || oerr!=ZR_OK || hasputcen)
 		return ZR_NOTINITED;
 	//
 	pfout = f;
@@ -671,8 +671,8 @@ ZRESULT TZip::Close()
 
 ZRESULT TZip::open_file(const TCHAR *fn)
 {
-	hfin=0; bufin=0; crc=CRCVAL_INITIAL; isize=0; csize=0; ired=0;
-	if (fn==0)
+	hfin=nullptr; bufin=nullptr; crc=CRCVAL_INITIAL; isize=0; csize=0; ired=0;
+	if (fn==nullptr)
 		return ZR_ARGS;
 	hfin = new RageFile();
 	if( !hfin->Open(fn) )
@@ -687,7 +687,7 @@ ZRESULT TZip::open_file(const TCHAR *fn)
 
 ZRESULT TZip::open_dir()
 {
-	hfin=0; bufin=0; crc=CRCVAL_INITIAL; isize=0; csize=0; ired=0;
+	hfin=nullptr; bufin=nullptr; crc=CRCVAL_INITIAL; isize=0; csize=0; ired=0;
 	attr= ZIP_ATTR_DIRECTORY2 | ZIP_ATTR_READABLE | ZIP_ATTR_WRITEABLE | ZIP_ATTR_DIRECTORY;
 	isize = 0;
 	return set_times();
@@ -724,7 +724,7 @@ ZRESULT TZip::set_times()
 
 unsigned TZip::read(char *srcbuf, unsigned size)
 {
-	if (bufin!=0)
+	if (bufin!=nullptr)
 	{
 		if (posin>=lenin) return 0; // end of input
 		ulg red = lenin-posin;
@@ -736,7 +736,7 @@ unsigned TZip::read(char *srcbuf, unsigned size)
 		crc = crc32(crc, (uch*)srcbuf, red);
 		return red;
 	}
-	else if (hfin!=0)
+	else if (hfin!=nullptr)
 	{
 		int red = hfin->Read(srcbuf,size);
 		if (red <= 0)
@@ -754,7 +754,7 @@ unsigned TZip::read(char *srcbuf, unsigned size)
 
 ZRESULT TZip::iclose()
 {
-	if (hfin!=0)
+	if (hfin!=nullptr)
 		SAFE_DELETE( hfin);
 	bool mismatch = (isize!=-1 && isize!=ired);
 	isize=ired; // and crc has been being updated anyway
@@ -969,7 +969,7 @@ ZRESULT TZip::AddCentral()
 		numentries++;
 		//
 		TZipFileInfo *zfinext = zfi->nxt;
-		if (zfi->cextra!=0) delete[] zfi->cextra;
+		if (zfi->cextra!=nullptr) delete[] zfi->cextra;
 		delete zfi;
 		zfi = zfinext;
 	}
