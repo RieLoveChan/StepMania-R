@@ -25,6 +25,7 @@ set(SM_TEST_SRC
     test_DeviceInput.cpp
     test_Command.cpp
     test_Difficulty.cpp
+    test_Grade.cpp
     test_TimeFormat.cpp
     test_RageUtil.cpp
     test_RageMath.cpp
