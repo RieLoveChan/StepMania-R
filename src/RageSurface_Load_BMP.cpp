@@ -23,7 +23,7 @@ enum
 /* When returning error, the first error encountered takes priority. */
 #define FATAL_ERROR(s) \
 { \
-	if( sError.size() == 0 ) sError = (s); \
+	if( sError.empty() ) sError = (s); \
 	return RageSurfaceUtils::OPEN_FATAL_ERROR; \
 }
 

@@ -467,7 +467,7 @@ RString ReadString( RageFileBasic &f, int iSize, RString &sError )
 
 #define FATAL_ERROR(s) \
 { \
-	if( sError.size() == 0 ) sError = (s); \
+	if( sError.empty() ) sError = (s); \
 	SetError( sError ); \
 	return OPEN_FATAL_ERROR; \
 }

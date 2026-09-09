@@ -21,7 +21,7 @@ DialogDriver *MakeDialogDriver()
 	std::vector<RString> asDriversToTry;
 	split( sDrivers, ",", asDriversToTry, true );
 
-	ASSERT( asDriversToTry.size() != 0 );
+	ASSERT( !asDriversToTry.empty() );
 
 	RString sDriver;
 	DialogDriver *pRet = nullptr;
@@ -46,7 +46,7 @@ DialogDriver *MakeDialogDriver()
 		}
 
 		RString sError = pRet->Init();
-		if( sError != "" )
+		if( !sError.empty() )
 		{
 			if( LOG )
 				LOG->Info( "Couldn't load driver %s: %s", asDriversToTry[i].c_str(), sError.c_str() );
@@ -101,12 +101,12 @@ void Dialog::IgnoreMessage( RString sID )
 #if !defined(SMPACKAGE)
 	if( PREFSMAN == nullptr )
 	{
-		if( sID != "" && LOG )
+		if( !sID.empty() && LOG )
 			LOG->Warn( "Dialog: message \"%s\" set ID too early for ignorable messages", sID.c_str() );
 		return;
 	}
 
-	if( sID == "" )
+	if( sID.empty() )
 		return;
 
 	if( MessageIsIgnored(sID) )
@@ -127,7 +127,7 @@ void Dialog::Error( RString sMessage, RString sID )
 	if( LOG )
 		LOG->Trace( "Dialog: \"%s\" [%s]", sMessage.c_str(), sID.c_str() );
 
-	if( sID != "" && MessageIsIgnored(sID) )
+	if( !sID.empty() && MessageIsIgnored(sID) )
 		return;
 
 	RageThread::SetIsShowingDialog( true );
@@ -149,7 +149,7 @@ void Dialog::OK( RString sMessage, RString sID )
 	if( LOG )
 		LOG->Trace( "Dialog: \"%s\" [%s]", sMessage.c_str(), sID.c_str() );
 
-	if( sID != "" && MessageIsIgnored(sID) )
+	if( !sID.empty() && MessageIsIgnored(sID) )
 		return;
 
 	RageThread::SetIsShowingDialog( true );
@@ -170,7 +170,7 @@ Dialog::Result Dialog::OKCancel( RString sMessage, RString sID )
 	if( LOG )
 		LOG->Trace( "Dialog: \"%s\" [%s]", sMessage.c_str(), sID.c_str() );
 
-	if( sID != "" && MessageIsIgnored(sID) )
+	if( !sID.empty() && MessageIsIgnored(sID) )
 		return g_NullDriver.OKCancel( sMessage, sID );
 
 	RageThread::SetIsShowingDialog( true );
@@ -194,7 +194,7 @@ Dialog::Result Dialog::AbortRetryIgnore( RString sMessage, RString sID )
 	if( LOG )
 		LOG->Trace( "Dialog: \"%s\" [%s]", sMessage.c_str(), sID.c_str() );
 
-	if( sID != "" && MessageIsIgnored(sID) )
+	if( !sID.empty() && MessageIsIgnored(sID) )
 		return g_NullDriver.AbortRetryIgnore( sMessage, sID );
 
 	RageThread::SetIsShowingDialog( true );
@@ -218,7 +218,7 @@ Dialog::Result Dialog::AbortRetry( RString sMessage, RString sID )
 	if( LOG )
 		LOG->Trace( "Dialog: \"%s\" [%s]", sMessage.c_str(), sID.c_str() );
 
-	if( sID != "" && MessageIsIgnored(sID) )
+	if( !sID.empty() && MessageIsIgnored(sID) )
 		return g_NullDriver.AbortRetry( sMessage, sID );
 
 	RageThread::SetIsShowingDialog( true );
@@ -242,7 +242,7 @@ Dialog::Result Dialog::YesNo( RString sMessage, RString sID )
 	if( LOG )
 		LOG->Trace( "Dialog: \"%s\" [%s]", sMessage.c_str(), sID.c_str() );
 
-	if( sID != "" && MessageIsIgnored(sID) )
+	if( !sID.empty() && MessageIsIgnored(sID) )
 		return g_NullDriver.YesNo( sMessage, sID );
 
 	RageThread::SetIsShowingDialog( true );
