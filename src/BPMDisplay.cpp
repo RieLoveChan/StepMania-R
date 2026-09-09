@@ -65,7 +65,7 @@ void BPMDisplay::Update( float fDeltaTime )
 
 	if( !(bool)CYCLE )
 		return;
-	if( m_BPMS.size() == 0 )
+	if( m_BPMS.empty() )
 		return; // no bpm
 
 	m_fPercentInState -= fDeltaTime / m_fCycleTime;

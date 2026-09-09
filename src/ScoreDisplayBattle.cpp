@@ -51,7 +51,7 @@ void ScoreDisplayBattle::Update( float fDelta )
 		{
 			m_iLastSeenInventory[s] = sNewModifier;
 
-			if( sNewModifier == "" )
+			if( sNewModifier.empty() )
 			{
 				m_ItemIcon[s].RunCommands( ActorUtil::ParseActorCommands( "linear,0.25;zoom,0" ) );
 			}

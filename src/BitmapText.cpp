@@ -631,7 +631,7 @@ bool BitmapText::StringWillUseAlternate( const RString& sText, const RString& sA
 	ASSERT( m_pFont != nullptr );
 
 	// Can't use the alternate if there isn't one.
-	if( !sAlternateText.size() )
+	if( sAlternateText.empty() )
 		return false;
 
 	// False if the alternate isn't needed.

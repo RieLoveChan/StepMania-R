@@ -81,7 +81,7 @@ bool WheelNotifyIcon::EarlyAbortDraw() const
 
 void WheelNotifyIcon::Update( float fDeltaTime )
 {
-	if( m_vIconsToShow.size() > 0 )
+	if( !m_vIconsToShow.empty() )
 	{
 		/* We should probably end up parsing the vector and then dynamically
 		 * insert flag icons based on "priority". Easy to do, hopefully

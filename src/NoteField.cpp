@@ -652,7 +652,7 @@ float FindFirstDisplayedBeat( const PlayerState* pPlayerState, int iDrawDistance
 
 	float fLow = 0, fHigh = pPlayerState->GetDisplayedPosition().m_fSongBeat;
 
-	bool bHasCache = pPlayerState->m_CacheNoteStat.size() > 0;
+	bool bHasCache = !pPlayerState->m_CacheNoteStat.empty();
 
 	if( !bHasCache )
 	{

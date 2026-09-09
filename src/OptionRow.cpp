@@ -172,7 +172,7 @@ void OptionRow::ChoicesChanged( RowType type, bool reset_focus )
 		vbSelected.resize( m_pHand->m_Def.m_vsChoices.size(), false );
 
 		// set select the first item if a SELECT_ONE row
-		if( vbSelected.size() && m_pHand->m_Def.m_selectType == SELECT_ONE )
+		if( !vbSelected.empty() && m_pHand->m_Def.m_selectType == SELECT_ONE )
 			vbSelected[0] = true;
 	}
 
@@ -915,7 +915,7 @@ void OptionRow::HandleMessage( const Message &msg )
 
 void OptionRow::ImportOptions( const std::vector<PlayerNumber> &vpns )
 {
-	ASSERT( m_pHand->m_Def.m_vsChoices.size() > 0 );
+	ASSERT( !m_pHand->m_Def.m_vsChoices.empty() );
 
 	for (PlayerNumber const &p : vpns)
 	{
@@ -936,7 +936,7 @@ void OptionRow::ImportOptions( const std::vector<PlayerNumber> &vpns )
 
 int OptionRow::ExportOptions( const std::vector<PlayerNumber> &vpns, bool bRowHasFocus[NUM_PLAYERS] )
 {
-	ASSERT( m_pHand->m_Def.m_vsChoices.size() > 0 );
+	ASSERT( !m_pHand->m_Def.m_vsChoices.empty() );
 
 	int iChangeMask = 0;
 

@@ -116,10 +116,10 @@ void FadingBanner::BeforeChange( bool bLowResToHighRes )
 bool FadingBanner::LoadFromCachedBanner( const RString &path )
 {
 	// If we're already on the given banner, don't fade again.
-	if( path != "" && m_Banner[m_iIndexLatest].GetTexturePath() == path )
+	if( !path.empty() && m_Banner[m_iIndexLatest].GetTexturePath() == path )
 		return false;
 
-	if( path == "" )
+	if( path.empty() )
 	{
 		LoadFallback();
 		return false;

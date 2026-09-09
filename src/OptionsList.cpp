@@ -111,7 +111,7 @@ void OptionListRow::SetTextFromHandler( const OptionRowHandler *pHandler )
 		RString sText = pHandler->GetThemedItemText( i );
 
 		RString sDest = pHandler->GetScreen( i );
-		if( m_pOptions->m_setDirectRows.find(sDest) != m_pOptions->m_setDirectRows.end() && sDest.size() )
+		if( m_pOptions->m_setDirectRows.find(sDest) != m_pOptions->m_setDirectRows.end() && !sDest.empty() )
 		{
 			const OptionRowHandler *pTarget = m_pOptions->m_Rows[sDest];
 			if( pTarget->m_Def.m_selectType == SELECT_ONE )
@@ -133,7 +133,7 @@ void OptionListRow::SetUnderlines( const std::vector<bool> &aSelections, const O
 
 		bool bSelected = aSelections[i];
 		RString sDest = pHandler->GetScreen( i );
-		if( sDest.size() )
+		if( !sDest.empty() )
 		{
 			/* This is a submenu.  Underline the row if its options have been changed
 			 * from the default. */
@@ -270,7 +270,7 @@ void OptionsList::Open()
 	MESSAGEMAN->Broadcast( msg );
 
 	/* Push the initial menu. */
-	ASSERT( m_asMenuStack.size() == 0 );
+	ASSERT( m_asMenuStack.empty() );
 	Push( TOP_MENU );
 
 	this->FinishTweening();
@@ -396,7 +396,7 @@ bool OptionsList::Input( const InputEventPlus &input )
 				return false;
 
 			RString sDest = pHandler->GetScreen( m_iMenuStackSelection );
-			if( m_setDirectRows.find(sDest) != m_setDirectRows.end() && sDest.size() )
+			if( m_setDirectRows.find(sDest) != m_setDirectRows.end() && !sDest.empty() )
 			{
 				const OptionRowHandler *pTarget = m_Rows[sDest];
 				std::vector<bool> &bTargetSelections = m_bSelections[sDest];
@@ -707,7 +707,7 @@ bool OptionsList::Start()
 	}
 
 	RString sDest = pHandler->GetScreen( m_iMenuStackSelection );
-	if( sDest.size() )
+	if( !sDest.empty() )
 	{
 		Push( sDest );
 		TweenOnCurrentRow( true );
