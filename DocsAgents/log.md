@@ -1372,3 +1372,25 @@
   migration to `LOG_*` + categories, `Warn`→`Trace`/`Error` triage) is
   the long tail, per subsystem — and what finally lights up the
   per-category filter and the `file:line` column.
+
+## 2026-09-09
+
+* **clang-tidy-subsystem-pass — `actor`,
+  `readability-container-size-empty` (item 12, `460435731a`).**
+  `clang-tidy --fix` (VS-bundled 19.1.5, `-p build-tidy`,
+  `--extra-arg-before=/Y-`, `--checks=-*,readability-container-size-empty`)
+  over `src/CMakeData-actor.cmake` minus platform TUs. **47 sites / 23
+  files:** ActorMultiVertex, ActorScroller, ActorUtil (4),
+  AttackDisplay (2), BGAnimation, BPMDisplay, Background, Banner (5),
+  BitmapText, EditMenu (2), FadingBanner (2), ModIcon, ModIconRow,
+  Model (5), MusicWheel (5), NoteField, OptionRow (3), OptionsList (5),
+  Player, ScoreDisplayBattle, ScoreDisplayCalories, WheelBase,
+  WheelNotifyIcon. All `.size()`/`.length()` `== 0`/`> 0`/`< 1` and
+  `RString ==`/`!= ""` → `.empty()` / `!.empty()` — autofix, every hunk
+  reviewed, semantics-identical (no §4 behavior concern). `Player.cpp`
+  was the only gameplay-hot TU touched: one guard in
+  `ApplyRandomAttack` (`m_RandomAttacks.size() < 1` → `.empty()`).
+  No `ThemeMetric` / `Preference` operands in this batch (the
+  `data-structures` mis-fire class), so `--fix` was safe to trust here.
+  **Verified (Windows Debug):** `sm_tests` Debug clean under
+  `WITH_WERROR=ON`; 1004 assertions / 124 cases pass; `ctest` 100%.
