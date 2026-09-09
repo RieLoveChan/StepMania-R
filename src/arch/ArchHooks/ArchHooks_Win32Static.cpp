@@ -201,7 +201,7 @@ static LANGID GetLanguageID()
 	HINSTANCE hDLL = LoadLibrary( "kernel32.dll" );
 	if( hDLL )
 	{
-		typedef LANGID(GET_USER_DEFAULT_UI_LANGUAGE)(void);
+		typedef LANGID(GET_USER_DEFAULT_UI_LANGUAGE)();
 
 		GET_USER_DEFAULT_UI_LANGUAGE *pGetUserDefaultUILanguage = (GET_USER_DEFAULT_UI_LANGUAGE*) GetProcAddress( hDLL, "GetUserDefaultUILanguage" );
 		if( pGetUserDefaultUILanguage )
