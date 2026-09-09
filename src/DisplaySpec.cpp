@@ -136,7 +136,7 @@ namespace
 	void register_DisplaySpecs(lua_State *L)
 	{
 		luaL_newmetatable( L, DISPLAYSPECS );
-		luaL_openlib( L, 0, DisplaySpecs_meta, 0 );
+		luaL_openlib( L, nullptr, DisplaySpecs_meta, 0 );
 		lua_pop( L, 1 );
 	}
 }
