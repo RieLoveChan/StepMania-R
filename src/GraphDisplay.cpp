@@ -25,7 +25,7 @@ class GraphLine: public Actor
 public:
 	enum { iSubdivisions = 4 };
 	enum { iCircleVertices = iSubdivisions+2 };
-	void DrawPrimitives()
+	void DrawPrimitives() override
 	{
 		Actor::SetGlobalRenderStates();	// set Actor-specified render states
 
@@ -105,7 +105,7 @@ public:
 
 	}
 
-	virtual GraphLine *Copy() const;
+	GraphLine *Copy() const override;
 
 private:
 	std::vector<RageSpriteVertex> m_Quads;
@@ -126,13 +126,13 @@ public:
 			m_Slices[i].t = RageVector2( 0,0 );
 		}
 	}
-	~GraphBody()
+	~GraphBody() override
 	{
 		TEXTUREMAN->UnloadTexture( m_pTexture );
 		m_pTexture = nullptr;
 	}
 
-	void DrawPrimitives()
+	void DrawPrimitives() override
 	{
 		Actor::SetGlobalRenderStates();	// set Actor-specified render states
 

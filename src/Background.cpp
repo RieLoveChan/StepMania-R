@@ -53,7 +53,7 @@ class BrightnessOverlay: public ActorFrame
 {
 public:
 	BrightnessOverlay();
-	void Update( float fDeltaTime );
+	void Update( float fDeltaTime ) override;
 
 	void FadeToActualBrightness();
 	void SetActualBrightness();
@@ -75,14 +75,14 @@ class BackgroundImpl : public ActorFrame
 {
 public:
 	BackgroundImpl();
-	~BackgroundImpl();
+	~BackgroundImpl() override;
 	void Init();
 
 	virtual void LoadFromSong( const Song *pSong );
 	virtual void Unload();
 
-	virtual void Update( float fDeltaTime );
-	virtual void DrawPrimitives();
+	void Update( float fDeltaTime ) override;
+	void DrawPrimitives() override;
 
 	void FadeToActualBrightness() { m_Brightness.FadeToActualBrightness(); }
 	void SetBrightness( float fBrightness ) { m_Brightness.Set(fBrightness); } /* overrides pref and Cover */
