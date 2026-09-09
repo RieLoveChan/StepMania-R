@@ -118,3 +118,19 @@ Only files under the chosen subsystem's `src/...` glob, plus:
   `--fix`, so each of the 8 sites could be judged individually — the
   right call for a check that "catches real precedence bugs". Added the
   Git-Bash `/Y-` path-conversion gotcha above.
+- 2026-09-09 — batch: `container-size-empty` + `use-override` cleared
+  across `actor` / `screen` / `file-types` / `globals` / `data`(non-§5);
+  `use-nullptr` on `data`(`CreateZip`/`DisplaySpec`);
+  `bugprone-macro-parentheses` on `rage` / `actor` / `screen` /
+  `data`(non-§5). **`macro-parentheses --fix` mis-fire modes seen
+  (always diff-review, never trust blind):**
+  1. param used as a *type* — `MAKE(type)` → `(type) *p = new (type)`
+     (invalid; placement-new). Revert that hunk.
+  2. param used as a *declaration name* that is also `#X` / `A##X##B` —
+     `LOAD_NODE(X)` → `const XNode* (X) = …` (compiles but wrong intent).
+     Revert.
+  Both revert cleanly; the rest of the file's hunks stay. `--fix`
+  correctly skips stringize and `rhs.member` occurrences on its own.
+  For a `data`-style group that mixes §5 parse-path TUs with safe ones,
+  run `clang-tidy` **per file** on an explicit safe list rather than
+  `--fix` over the whole `CMakeData-*.cmake`.

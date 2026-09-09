@@ -1504,3 +1504,39 @@
   operands and can mis-wrap declaration-name params, cf. the
   `StatsManager` residue from `2d8227fbe8`): `bugprone-macro-parentheses`
   on `actor` (37), `screen` (34), `data` (120).
+
+* **clang-tidy-subsystem-pass — `bugprone-macro-parentheses`, actor +
+  screen + data (item 12).** Done in three commits after the small
+  `rage` one:
+  - `ce1e1552fa` — `actor`, 37 sites / 15 files. Metric-name builders
+    (`ssprintf("...P%d...",p+1)` → `(p)+1`), `s.c_str()` → `(s).c_str()`,
+    combo-threshold `CROSSED`/`MILESTONE_CHECK` macros, and struct-compare
+    / render-dispatch object wraps (`Actor` COMPARE, `NoteDisplay`
+    DTS_INNER, `NoteField` OPEN_CALLBACK_BLOCK, `OptionRow`
+    ERASE/INSERT_ONE_BOOL, …).
+  - `99b8713986` — `screen`, 34 sites / 9 files. `ScreenSelectCharacter`
+    has the bulk (its whole `P%d…Command(p)` family); `ScreenRanking`'s
+    10 `ROW_SPACING_**row` row-position macros; the rest are the same
+    metric-name / `.c_str()` / object-operand shapes.
+  - `f6cfa5bab6` — `data`, ~110 sites / 19 non-parse-path TUs (**run
+    per-file** so the 4 hits in `Song.cpp` / `SongCacheIndex.cpp` /
+    `StepsUtil.cpp` — AGENTS.md §5 — stay untouched). `operator==`/`<`
+    `COMPARE`/`EQUAL`/`COMP` macros across `Attack`/`DateTime`/
+    `HighScore`/`PlayerOptions`/`SongOptions`/`StyleUtil`/`Trail`/
+    `TrailUtil`/`BackgroundUtil`; `CodeDetector`'s scroll-speed/toggle
+    ternaries; `CreateZip`'s bundled `PUTSHORT`/`PUTBYTE`/`DO1`/`ZE_MISS`;
+    `Profile`'s map-iteration + `SWAP_ARRAY` macros; `CubicSpline`
+    `UNNAN`/`BOOLS_FROM_CLOSEST`.
+    **Two `--fix` mis-fires caught in review and reverted** — the check
+    wraps a param even where it names a declaration or a type:
+    `OptionRowHandler.cpp` `MAKE(type)` (`(type) *p = new (type)` — not
+    valid) and `Profile.cpp` `LOAD_NODE(X)` (`X` is also `#X` /
+    `Load##X##FromNode`, must stay a bare identifier). This is the
+    documented failure mode — **always diff-review `macro-parentheses`
+    `--fix`, never trust it blind.**
+  All applied wraps are defensive (every call site passes a plain
+  identifier/enum today). **Verified (Windows Debug):** `sm_tests`
+  clean under `WITH_WERROR=ON`, 1004 / 124, `ctest` 100% after each.
+  `bugprone-macro-parentheses` is now clear across `rage` / `actor` /
+  `screen` / `data`(non-§5) / `singletons`(partial, `2d8227fbe8`);
+  `file-types` and `globals` had 0.
