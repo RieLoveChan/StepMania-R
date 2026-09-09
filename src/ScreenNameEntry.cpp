@@ -43,7 +43,7 @@
 #define NUM_CHARS_TO_DRAW_TOTAL		THEME->GetMetricI(m_sName,"NumCharsToDrawTotal")
 #define FAKE_BEATS_PER_SEC		THEME->GetMetricF(m_sName,"FakeBeatsPerSec")
 #define MAX_RANKING_NAME_LENGTH		THEME->GetMetricI(m_sName,"MaxRankingNameLength")
-#define PLAYER_X( p, styleType )	THEME->GetMetricF(m_sName,ssprintf("PlayerP%d%sX",p+1,StyleTypeToString(styleType).c_str()))
+#define PLAYER_X( p, styleType )	THEME->GetMetricF(m_sName,ssprintf("PlayerP%d%sX",(p)+1,StyleTypeToString(styleType).c_str()))
 
 // cache for frequently used metrics
 static float	g_fCharsZoomSmall;

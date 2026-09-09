@@ -425,7 +425,7 @@ void ScreenTextEntry::TextEntrySettings::FromStack( lua_State *L )
 	lua_getfield(L, iTab, #memname); \
 	if(lua_isfunction(L, -1)) \
 	{ \
-		memname.SetFromStack(L); \
+		(memname).SetFromStack(L); \
 	} \
 	else if(!lua_isnil(L, -1)) \
 	{ \
