@@ -32,7 +32,7 @@ class HiddenActor: public Actor
 {
 public:
 	HiddenActor() { SetVisible(false); }
-	virtual HiddenActor *Copy() const;
+	HiddenActor *Copy() const override;
 };
 REGISTER_ACTOR_CLASS_WITH_NAME( HiddenActor, Actor );
 

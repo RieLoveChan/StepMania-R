@@ -278,8 +278,8 @@ class SongBPMDisplay: public BPMDisplay
 {
 public:
 	SongBPMDisplay();
-	virtual SongBPMDisplay *Copy() const;
-	virtual void Update( float fDeltaTime );
+	SongBPMDisplay *Copy() const override;
+	void Update( float fDeltaTime ) override;
 
 private:
 	float m_fLastGameStateBPM;
