@@ -662,7 +662,7 @@ void ActorMultiVertex::FinishTweening()
 
 void ActorMultiVertex::AMV_TweenState::SetDrawState( DrawMode dm, int first, int num )
 {
-	if(first >= (int)vertices.size() && vertices.size() > 0)
+	if(first >= (int)vertices.size() && !vertices.empty())
 	{
 		LuaHelpers::ReportScriptErrorFmt("ActorMultiVertex:SetDrawState: FirstToDraw > vertices.size(), %d > %u", FirstToDraw + 1, (unsigned int)vertices.size() );
 		return;

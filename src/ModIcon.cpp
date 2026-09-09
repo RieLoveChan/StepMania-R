@@ -61,7 +61,7 @@ void ModIcon::Set( const RString &_sText )
 
 	sText.Replace( " ", "\n" );
 
-	bool bVacant = (sText=="");
+	bool bVacant = (sText.empty());
 	m_sprFilled->SetVisible( !bVacant );
 	m_sprEmpty->SetVisible( bVacant );
 

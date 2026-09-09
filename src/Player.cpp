@@ -3472,7 +3472,7 @@ void Player::IncrementComboOrMissCombo(bool bComboOrMissCombo)
 
 RString Player::ApplyRandomAttack()
 {
-	if( GAMESTATE->m_RandomAttacks.size() < 1 )
+	if( GAMESTATE->m_RandomAttacks.empty() )
 		return "";
 
 	int iAttackToUse = GetRandomInt() % GAMESTATE->m_RandomAttacks.size();

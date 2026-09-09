@@ -55,7 +55,7 @@ void AttackDisplay::Init( const PlayerState* pPlayerState )
 	for( std::set<RString>::const_iterator it = attacks.begin(); it != attacks.end(); ++it )
 	{
 		const RString path = THEME->GetPathG( "AttackDisplay", GetAttackPieceName( *it ), true );
-		if( path == "" )
+		if( path.empty() )
 		{
 			LOG->Trace( "Couldn't find \"%s\"", GetAttackPieceName( *it ).c_str() );
 			continue;
@@ -99,7 +99,7 @@ void AttackDisplay::Update( float fDelta )
 void AttackDisplay::SetAttack( const RString &sText )
 {
 	const RString path = THEME->GetPathG( "AttackDisplay", GetAttackPieceName(sText), true );
-	if( path == "" )
+	if( path.empty() )
 		return;
 
 	m_sprAttack.SetDiffuseAlpha( 1 );

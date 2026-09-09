@@ -30,7 +30,7 @@ Banner::Banner()
 // Ugly: if sIsBanner is false, we're actually loading something other than a banner.
 void Banner::Load( RageTextureID ID, bool bIsBanner )
 {
-	if( ID.filename == "" )
+	if( ID.filename.empty() )
 	{
 		LoadFallback();
 		return;
@@ -124,7 +124,7 @@ void Banner::LoadMode()
 void Banner::LoadFromSongGroup( RString sSongGroup )
 {
 	RString sGroupBannerPath = SONGMAN->GetSongGroupBannerPath( sSongGroup );
-	if( sGroupBannerPath != "" )			Load( sGroupBannerPath );
+	if( !sGroupBannerPath.empty() )			Load( sGroupBannerPath );
 	else						LoadGroupFallback();
 	m_bScrolling = false;
 }
@@ -132,7 +132,7 @@ void Banner::LoadFromSongGroup( RString sSongGroup )
 void Banner::LoadFromCourse( const Course *pCourse )		// nullptr means no course
 {
 	if( pCourse == nullptr )				LoadFallback();
-	else if( pCourse->GetBannerPath() != "" )	Load( pCourse->GetBannerPath() );
+	else if( !pCourse->GetBannerPath().empty() )	Load( pCourse->GetBannerPath() );
 	else						LoadCourseFallback();
 
 	m_bScrolling = false;
@@ -141,7 +141,7 @@ void Banner::LoadFromCourse( const Course *pCourse )		// nullptr means no course
 void Banner::LoadCardFromCharacter( const Character *pCharacter )
 {
 	if( pCharacter == nullptr )			LoadFallback();
-	else if( pCharacter->GetCardPath() != "" )	Load( pCharacter->GetCardPath() );
+	else if( !pCharacter->GetCardPath().empty() )	Load( pCharacter->GetCardPath() );
 	else						LoadFallback();
 
 	m_bScrolling = false;
@@ -150,7 +150,7 @@ void Banner::LoadCardFromCharacter( const Character *pCharacter )
 void Banner::LoadIconFromCharacter( const Character *pCharacter )
 {
 	if( pCharacter == nullptr )			LoadFallbackCharacterIcon();
-	else if( pCharacter->GetIconPath() != "" )	Load( pCharacter->GetIconPath(), false );
+	else if( !pCharacter->GetIconPath().empty() )	Load( pCharacter->GetIconPath(), false );
 	else						LoadFallbackCharacterIcon();
 
 	m_bScrolling = false;

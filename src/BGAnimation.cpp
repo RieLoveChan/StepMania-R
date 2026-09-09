@@ -133,7 +133,7 @@ void BGAnimation::LoadFromAniDir( const RString &_sAniDir )
 
 		// loading a directory of layers
 		std::vector<RString> asImagePaths;
-		ASSERT( sAniDir != "" );
+		ASSERT( !sAniDir.empty() );
 
 		GetDirListing( sAniDir+"*.png", asImagePaths, false, true );
 		GetDirListing( sAniDir+"*.jpg", asImagePaths, false, true );

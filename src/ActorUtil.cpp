@@ -128,7 +128,7 @@ namespace
 			return "BitmapText";
 
 		RString sFile;
-		if (pActor->GetAttrValue("File", sFile) && sFile != "")
+		if (pActor->GetAttrValue("File", sFile) && !sFile.empty())
 		{
 			// Backward compatibility hacks for "special" filenames
 			if (sFile.EqualsNoCase("songbackground"))
@@ -199,7 +199,7 @@ Actor *ActorUtil::LoadFromNode( const XNode* _pNode, Actor *pParentActor )
 	if( iter == g_pmapRegistrees->end() )
 	{
 		RString sFile;
-		if (bLegacy && node.GetAttrValue("File", sFile) && sFile != "")
+		if (bLegacy && node.GetAttrValue("File", sFile) && !sFile.empty())
 		{
 			RString sPath;
 			// Handle absolute paths correctly
@@ -600,7 +600,7 @@ FileType ActorUtil::GetFileType( const RString &sPath )
 	{
 		return conversion_entry->second;
 	}
-	else if(sPath.size() > 0 && sPath[sPath.size()-1] == '/')
+	else if(!sPath.empty() && sPath[sPath.size()-1] == '/')
 	{
 		return FT_Directory;
 	}
@@ -645,7 +645,7 @@ namespace
 	}
 	static void name_error(Actor* p, lua_State* L)
 	{
-		if(p->GetName() == "")
+		if(p->GetName().empty())
 		{
 			luaL_error(L, "LoadAllCommands requires the actor to have a name.");
 		}

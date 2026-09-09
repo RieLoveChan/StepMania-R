@@ -55,7 +55,7 @@ void EditMenu::StripLockedStepsAndDifficulty( std::vector<StepsAndDifficulty> &v
 
 void EditMenu::GetSongsToShowForGroup( const RString &sGroup, std::vector<Song*> &vpSongsOut )
 {
-	if(sGroup == "")
+	if(sGroup.empty())
 	{
 		vpSongsOut.clear();
 		return;
@@ -392,7 +392,7 @@ void EditMenu::OnRowValueChanged( EditMenuRow row )
 	{
 	case ROW_GROUP:
 		m_pSongs.clear();
-		if(GetSelectedGroup() == "")
+		if(GetSelectedGroup().empty())
 		{
 			m_textValue[ROW_GROUP].SetText(THEME->GetString(m_sName, "No Group Selected."));
 			if(SHOW_GROUPS.GetValue())

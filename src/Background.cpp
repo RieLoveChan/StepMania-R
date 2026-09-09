@@ -725,7 +725,7 @@ void BackgroundImpl::Layer::UpdateCurBGChange( const Song *pSong, float fLastMus
 {
 	ASSERT( fCurrentTime != GameState::MUSIC_SECONDS_INVALID );
 
-	if( m_aBGChanges.size() == 0 )
+	if( m_aBGChanges.empty() )
 		return;
 
 	TimingData::GetBeatArgs beat_info;

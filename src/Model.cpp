@@ -61,7 +61,7 @@ void Model::Clear()
 
 void Model::Load( const RString &sFile )
 {
-	if( sFile == "" ) return;
+	if( sFile.empty() ) return;
 
 	RString sExt = GetExtension(sFile);
 	sExt.MakeLower();
@@ -235,7 +235,7 @@ void Model::LoadMaterialsFromMilkshapeAscii( const RString &_sPath )
 				sscanf( sLine, "\"%255[^\"]\"", szName );
 				RString sDiffuseTexture = szName;
 
-				if( sDiffuseTexture == "" )
+				if( sDiffuseTexture.empty() )
 				{
 					Material.diffuse.LoadBlank();
 				}
@@ -257,7 +257,7 @@ void Model::LoadMaterialsFromMilkshapeAscii( const RString &_sPath )
 				sscanf( sLine, "\"%255[^\"]\"", szName );
 				RString sAlphaTexture = szName;
 
-				if( sAlphaTexture == "" )
+				if( sAlphaTexture.empty() )
 				{
 					Material.alpha.LoadBlank();
 				}
@@ -587,7 +587,7 @@ void Model::AdvanceFrame( float fDeltaTime )
 	m_fCurFrame += FRAMES_PER_SECOND * fDeltaTime * m_fCurAnimationRate;
 	if( m_fCurFrame < 0 || m_fCurFrame >= m_pCurAnimation->nTotalFrames )
 	{
-		if( m_sDefaultAnimation != "" )
+		if( !m_sDefaultAnimation.empty() )
 		{
 			this->PlayAnimation( m_sDefaultAnimation, m_fDefaultAnimationRate );
 			/* XXX: add to m_fCurFrame the wrapover from the previous
@@ -608,7 +608,7 @@ void Model::SetBones( const msAnimation* pAnimation, float fFrame, std::vector<m
 	for( std::size_t i = 0; i < pAnimation->Bones.size(); ++i )
 	{
 		const msBone *pBone = &pAnimation->Bones[i];
-		if( pBone->PositionKeys.size() == 0 && pBone->RotationKeys.size() == 0 )
+		if( pBone->PositionKeys.empty() && pBone->RotationKeys.empty() )
 		{
 			vpBones[i].m_Final = vpBones[i].m_Absolute;
 			continue;

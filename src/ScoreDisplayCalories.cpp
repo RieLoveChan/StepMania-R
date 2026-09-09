@@ -18,7 +18,7 @@ ScoreDisplayCalories::ScoreDisplayCalories()
 
 ScoreDisplayCalories::~ScoreDisplayCalories()
 {
-	if( m_sMessageOnStep != "" )
+	if( !m_sMessageOnStep.empty() )
 		MESSAGEMAN->Unsubscribe( this, m_sMessageOnStep );
 }
 

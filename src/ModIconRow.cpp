@@ -162,7 +162,7 @@ void ModIconRow::SetFromGameState()
 		// search for a vacant spot
 		for( int j=iPreferredCol; j<NUM_OPTION_ICONS; j++ )
 		{
-			if( vsText[j] != "" )
+			if( !vsText[j].empty() )
 			{
 				continue;
 			}

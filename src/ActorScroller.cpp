@@ -171,7 +171,7 @@ void ActorScroller::UpdateInternal( float fDeltaTime )
 	ActorFrame::UpdateInternal( fDeltaTime );
 
 	// If we have no children, the code below will busy loop.
-	if( !m_SubActors.size() )
+	if( m_SubActors.empty() )
 		return;
 
 	// handle pause

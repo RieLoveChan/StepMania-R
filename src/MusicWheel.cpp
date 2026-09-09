@@ -198,7 +198,7 @@ void MusicWheel::BeginScreen()
 		if(!GAMESTATE->IsCourseMode())
 		{
 			std::vector<Song*> vTemp = SONGMAN->GetSongs(GAMESTATE->m_sPreferredSongGroup);
-			ASSERT(vTemp.size() > 0);
+			ASSERT(!vTemp.empty());
 			GAMESTATE->m_pCurSong.Set(vTemp[0]);
 		};
 		SetOpenSection(GAMESTATE->m_sPreferredSongGroup);
@@ -335,7 +335,7 @@ bool MusicWheel::SelectSong( const Song *p )
 
 	unsigned i;
 	std::vector<MusicWheelItemData *> &from = getWheelItemsData(GAMESTATE->m_SortOrder);
-	if (GAMESTATE->sLastOpenSection != "" && (GAMESTATE->m_SortOrder == SORT_PREFERRED || GAMESTATE->m_SortOrder == SORT_METER)) {
+	if (!GAMESTATE->sLastOpenSection.empty() && (GAMESTATE->m_SortOrder == SORT_PREFERRED || GAMESTATE->m_SortOrder == SORT_METER)) {
 		// Return to the last open section if it is defined and exists in the current sort
 		for( i=0; i<from.size(); i++ )
 		{
@@ -931,7 +931,7 @@ void MusicWheel::BuildWheelItemDatas( std::vector<MusicWheelItemData *> &arrayWh
 					sLastSection = sThisSection;
 				}
 
-				RageColor c = ( pCourse->m_sGroupName.size() == 0 ) ? pCourse->GetColor() : SONGMAN->GetCourseColor(pCourse);
+				RageColor c = ( pCourse->m_sGroupName.empty() ) ? pCourse->GetColor() : SONGMAN->GetCourseColor(pCourse);
 				arrayWheelItemDatas.push_back( new MusicWheelItemData(WheelItemDataType_Course, nullptr, sThisSection, pCourse, c, 0) );
 			}
 			break;
@@ -1385,7 +1385,7 @@ bool MusicWheel::Select()	// return true if this selection ends the screen
 			return false;
 		case WheelItemDataType_Custom:
 			GetCurWheelItemData(m_iSelection)->m_pAction->ApplyToAllPlayers();
-			if( GetCurWheelItemData(m_iSelection)->m_pAction->m_sScreen != "" )
+			if( !GetCurWheelItemData(m_iSelection)->m_pAction->m_sScreen.empty() )
 				return true;
 			else
 				return false;
@@ -1467,7 +1467,7 @@ void MusicWheel::SetOpenSection( RString group )
 
 		// In certain situations (e.g. simulating Pump it Up or IIDX),
 		// themes may want to hide inactive section headings as well.
-		if( HIDE_INACTIVE_SECTIONS && d.m_Type == WheelItemDataType_Section && group != "" ) {
+		if( HIDE_INACTIVE_SECTIONS && d.m_Type == WheelItemDataType_Section && !group.empty() ) {
 			// Based on the HideActiveSectionTitle metric, we either
 			// hide all section titles, or only those which are not
 			// currently open.
