@@ -23,6 +23,7 @@ set(SM_TEST_SRC
     test_GameManager.cpp
     test_RageUtil.cpp
     test_RageMath.cpp
+    test_RageColor.cpp
     test_TimingData.cpp
     test_NoteData.cpp
     test_NoteDataUtil.cpp
