@@ -2583,7 +2583,7 @@ int LuaFunc_JsonEncode(lua_State* L)
 						lua_pop(L, 1);
 					}
 
-					if (obj.size() < 1)
+					if (obj.empty())
 					{
 						return Json::Value(Json::arrayValue);
 					}

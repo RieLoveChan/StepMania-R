@@ -32,7 +32,7 @@ static void GetPrefsDefaultModifiers( PlayerOptions &po, SongOptions &so )
 static void SetPrefsDefaultModifiers( const PlayerOptions &po, const SongOptions &so )
 {
 	std::vector<RString> as;
-#define remove_empty_back() if(as.back() == "") { as.pop_back(); }
+#define remove_empty_back() if(as.back().empty()) { as.pop_back(); }
 	as.push_back(po.GetString());
 	remove_empty_back();
 	as.push_back(so.GetString());
