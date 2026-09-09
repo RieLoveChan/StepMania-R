@@ -184,6 +184,93 @@ TEST_CASE( "RageFileObjDeflate: write chunk size changes nothing observable", "[
 	CHECK( rb == crcB );
 }
 
+TEST_CASE( "RageFileObjInflate never returns clean, complete data from a corrupted stream", "[RageFile][deflate][error]" )
+{
+	EngineTestEnv::Require();
+
+	// Mixed content so the compressed form is not trivially tiny.
+	std::string plain = PseudoRandomBytes( 20000, 0xABCDu ) + std::string( 20000, 'q' );
+	std::uint32_t crc = 0;
+	RString compressed = Deflate( plain, crc );
+	REQUIRE( compressed.size() > 200 );
+
+	// Smash a chunk a little way in. Depending on which part of the
+	// bitstream is hit, zlib may raise Z_DATA_ERROR (-> Read() returns
+	// -1 with GetError() set) OR decode a wrong/short amount. What must
+	// NOT happen: the full original payload comes back intact.
+	for( int i = 40; i < 120; ++i )
+		compressed[i] = static_cast<char>( compressed[i] ^ 0xFF );
+
+	RageFileObjMem mem;
+	mem.PutString( compressed );
+	mem.Seek( 0 );
+	RageFileObjInflate infl( &mem, static_cast<int>( plain.size() ) );
+	infl.EnableCRC32();
+
+	std::string out;
+	char buf[8192];
+	int ret = 0;
+	for( ;; )
+	{
+		ret = infl.Read( buf, sizeof( buf ) );
+		if( ret <= 0 )
+			break;
+		out.append( buf, static_cast<std::size_t>( ret ) );
+	}
+
+	const bool hardError = ( ret == -1 );
+	CAPTURE( hardError, out.size(), infl.GetError() );
+	if( hardError )
+	{
+		CHECK_FALSE( infl.GetError().empty() );
+	}
+	else
+	{
+		// No hard error -> the data must still be detectably bad:
+		// wrong length, or right length but wrong bytes (CRC mismatch).
+		bool bad = ( out.size() != plain.size() );
+		if( !bad )
+		{
+			std::uint32_t got = 0;
+			REQUIRE( infl.GetCRC32( &got ) );
+			bad = ( got != crc ) || ( out != plain );
+		}
+		CHECK( bad );
+	}
+}
+
+TEST_CASE( "RageFileObjInflate on a truncated stream does not over-report bytes", "[RageFile][deflate][error]" )
+{
+	EngineTestEnv::Require();
+
+	const std::string plain( 60000, 'w' );
+	std::uint32_t crc = 0;
+	const RString whole = Deflate( plain, crc );
+	REQUIRE( whole.size() > 40 );
+
+	const RString truncated = whole.Left( static_cast<int>( whole.size() ) - 20 );
+
+	RageFileObjMem mem;
+	mem.PutString( truncated );
+	mem.Seek( 0 );
+	RageFileObjInflate infl( &mem, static_cast<int>( plain.size() ) );
+
+	std::string out;
+	char buf[8192];
+	int ret = 0;
+	for( ;; )
+	{
+		ret = infl.Read( buf, sizeof( buf ) );
+		if( ret <= 0 )
+			break;
+		out.append( buf, static_cast<std::size_t>( ret ) );
+	}
+	// Either a hard error, or a short read -- but never MORE than the
+	// real payload, and whatever we did get is a correct prefix.
+	CHECK( out.size() < plain.size() );
+	CHECK( plain.compare( 0, out.size(), out ) == 0 );
+}
+
 TEST_CASE( "RageFileObjInflate::Seek rewinds / repositions the decompressed stream", "[RageFile][deflate][seek]" )
 {
 	EngineTestEnv::Require();
