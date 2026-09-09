@@ -1594,3 +1594,26 @@
   residual = 4 documented unfixable sites (`StatsManager` ×2,
   `OptionRowHandler` MAKE, `Profile` LOAD_NODE). See `baseline.md`
   "Update — arch/Win32 driver pass done".
+
+* **clang-tidy — `modernize-use-bool-literals` (item 12, `3be07f669d`).**
+  23 sites / 17 files: `return 0;` in bool functions (`CsvFile`,
+  `IniFile`), `while(1)` / `do…while(0)` → `while(true)`/`while(false)`
+  (`Player`, `RageDisplay_D3D`/`_OGL`, `RageFileDriverDirect`,
+  `RageSurfaceUtils` ×2, Win32 crash-handler / `GetFileInformation` /
+  `GraphicsWindow` loops), `= 0`/`= 1` bool assigns (`PlayerOptions`
+  `NextBool`, `RageSoundReader_MP3`, `RageSurfaceUtils_Palettize`,
+  `ThemeManager::GetMetricB`, ddrio `LightsState { 0 }` → `{ false }`).
+  1 §5 hit (`NotesLoaderSM`) left. `IniFile` covered by
+  `test_IniFile.cpp`. `sm_tests` 1004/124, `ctest` 100%.
+
+  **Backlog item 12 — clean autonomous lane exhausted.** Final
+  full-config sweep (2026-09-09): every mechanical check with a clean
+  `--fix` (`container-size-empty`, `use-override`, `use-nullptr`,
+  `use-bool-literals`, `macro-parentheses`, `redundant-void-arg`) is
+  clear across all first-party `src/` outside the §5 parse path (~95
+  hits, needs a corpus) and vendored `ixwebsocket` (~13). What's left
+  needs a human decision: `use-equals-default` (38) +
+  `redundant-member-init` (28) want a coupled `clang-format` (ADR 0002
+  → own change); `integer-division` (14) is maintainer-flagged;
+  `suspicious-string-compare` (8) is idiomatic `memcmp`; 4
+  `macro-parentheses` are genuinely unfixable.
