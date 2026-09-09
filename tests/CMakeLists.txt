@@ -20,6 +20,7 @@ set(SM_TEST_SRC
     test_IniFile.cpp
     test_XmlFile.cpp
     test_DateTime.cpp
+    test_GameManager.cpp
     test_RageUtil.cpp
     test_RageMath.cpp
     test_TimingData.cpp
