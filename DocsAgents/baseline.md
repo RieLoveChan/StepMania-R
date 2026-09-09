@@ -393,7 +393,7 @@ first-party non-§5 code:
     `double-a/-b`. New StepsType coverage: `pump-double`. 30 assertions
     / 1 visible case (+1 hidden `[ksfdump]`). Verified identical to the
     untouched source folder.
-    Suite total: **5594 assertions / 182 cases** (up from 311/72).
+    Suite total: **5636 assertions / 187 cases** (up from 311/72).
     `tests/test_RageFileDeflate.cpp` (2026-09-09) added the
     `RageFileObjDeflate`/`Inflate` raw-deflate round-trip — 7 cases,
     salvage of `TestDeflate()`.
@@ -463,7 +463,7 @@ first-party non-§5 code:
   VS-bundled cmake for this repo):
   - `WITH_TESTS=ON` Debug → `sm_engine` OBJECT lib + `Catch2` +
     `sm_tests.exe` all build clean under `WITH_WERROR=ON`; `sm_tests.exe`
-    → **5594 assertions / 182 cases pass**; `ctest` 100%. (First-landed at
+    → **5636 assertions / 187 cases pass**; `ctest` 100%. (First-landed at
     94/19.)
   - `WITH_TESTS=OFF` Release → `StepMania-R.exe` builds clean (the
     OBJECT-library split is transparent when off) + `--SelfTest` exits 0.
