@@ -2,7 +2,7 @@
 //
 // These pin the engine's CURRENT behaviour, bug-for-bug — including the
 // quirks (see GetExtension with a slash after the dot, and Capitalize
-// upper-casing the whole string). If a refactor changes an outcome here,
+// only touching the first codepoint). If a refactor changes an outcome here,
 // that is a signal to stop and decide whether the change is intended, not
 // a licence to edit the expectation. See
 // DocsAgents/adr/0006-test-harness.md and
@@ -276,4 +276,40 @@ TEST_CASE("Regex copy constructor keeps the compiled pattern usable", "[RageUtil
 	Regex copy(orig);
 	CHECK(copy.Compare("hello world"));
 	CHECK_FALSE(copy.Compare("say hello"));
+}
+
+// Capitalize / BeginsWith / EndsWith / URLEncode -- small string
+// helpers with names that don't quite match what they do.
+TEST_CASE("Capitalize upper-cases only the first codepoint", "[RageUtil][string]")
+{
+	// (RageUtil.cpp: Capitalize -> UnicodeDoUpper, which processes ONE
+	// codepoint. MakeUpper is the whole-string one.)
+	CHECK(Capitalize("hello world") == "Hello world");
+	CHECK(Capitalize("MiXeD") == "MiXeD");   // first letter already upper -> unchanged
+	CHECK(Capitalize("123abc") == "123abc"); // first char is a digit -> unchanged
+	CHECK(Capitalize("") == "");
+}
+
+TEST_CASE("BeginsWith / EndsWith are plain substring anchors (case-sensitive)", "[RageUtil][string]")
+{
+	CHECK(BeginsWith("foobar", "foo"));
+	CHECK_FALSE(BeginsWith("foobar", "Foo"));   // case-sensitive
+	CHECK_FALSE(BeginsWith("foo", "foobar"));   // prefix longer than string
+	CHECK(BeginsWith("foo", "foo"));            // whole string
+
+	CHECK(EndsWith("foobar", "bar"));
+	CHECK_FALSE(EndsWith("foobar", "Bar"));
+	CHECK_FALSE(EndsWith("bar", "foobar"));
+	CHECK(EndsWith("bar", "bar"));
+}
+
+TEST_CASE("URLEncode keeps printable ASCII '!'..'z' and %XX-escapes the rest", "[RageUtil][string]")
+{
+	CHECK(URLEncode("abcXYZ") == "abcXYZ");
+	CHECK(URLEncode("a b") == "a%20b");          // space escaped
+	CHECK(URLEncode("a\tb") == "a%09b");         // tab escaped
+	// '[' '\' ']' '^' '_' '`' are all within '!'..'z' so they pass through.
+	CHECK(URLEncode("[x]") == "[x]");
+	// '{' '|' '}' are above 'z' -> escaped.
+	CHECK(URLEncode("{x}") == "%7Bx%7D");
 }
