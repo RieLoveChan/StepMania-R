@@ -224,3 +224,56 @@ TEST_CASE("join is the inverse of split when empty fields are kept", "[RageUtil]
 	split("a,,c,d", ",", v, /*bIgnoreEmpty=*/false);
 	CHECK(join(",", v) == "a,,c,d");
 }
+
+// Regex -- the PCRE wrapper used across simfile parsing, SongOptions,
+// XmlFileUtil, etc. Note the capture-group indexing quirk: Compare()
+// fills the out-vector from group 1 onward, so asMatches[0] is the
+// FIRST parenthesised group, not the whole match.
+TEST_CASE("Regex::Compare: whole-string match, true/false", "[RageUtil][regex]")
+{
+	Regex digits("^[0-9]+$");
+	CHECK(digits.Compare("12345"));
+	CHECK_FALSE(digits.Compare("12a45"));
+	CHECK_FALSE(digits.Compare(""));
+
+	Regex anywhere("ab");
+	CHECK(anywhere.Compare("xxabxx")); // not anchored -> substring match
+	CHECK_FALSE(anywhere.Compare("xxbaxx"));
+}
+
+TEST_CASE("Regex::Compare fills the out-vector with capture groups (index 0 == group 1)", "[RageUtil][regex]")
+{
+	// [.] is a literal dot without the backslash-escaping headaches.
+	Regex ver("^([0-9]+)[.]([0-9]+)$");
+	std::vector<RString> m;
+	REQUIRE(ver.Compare("12.34", m));
+	REQUIRE(m.size() == 2);
+	CHECK(m[0] == "12"); // first () group
+	CHECK(m[1] == "34"); // second () group
+
+	m.clear();
+	CHECK_FALSE(ver.Compare("12-34", m));
+}
+
+TEST_CASE("Regex::Replace substitutes the numbered placeholders with capture groups", "[RageUtil][regex]")
+{
+	// Replace() replaces literal "\${N}" tokens; \${0} maps to the first
+	// capture group, \${1} to the second (Compare fills from group 1).
+	Regex kv("^(.+)=(.+)$");
+	RString out;
+	REQUIRE(kv.Replace("\\${0}:\\${1}", "key=value", out));
+	CHECK(out == "key:value");
+
+	// No match -> Replace returns false and leaves out untouched.
+	out = "unchanged";
+	CHECK_FALSE(kv.Replace("x", "no equals here", out));
+	CHECK(out == "unchanged");
+}
+
+TEST_CASE("Regex copy constructor keeps the compiled pattern usable", "[RageUtil][regex]")
+{
+	Regex orig("^hello");
+	Regex copy(orig);
+	CHECK(copy.Compare("hello world"));
+	CHECK_FALSE(copy.Compare("say hello"));
+}
