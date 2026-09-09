@@ -1890,10 +1890,10 @@ int StringToInt( const std::string& str, std::size_t* pos, int base, int exceptV
     return std::stoi(str, pos, base);
   }
   catch (const std::invalid_argument & e) {
-    LOG->Warn( "stoi(%s): %s", str.c_str(), e.what() );
+    if( LOG ) LOG->Warn( "stoi(%s): %s", str.c_str(), e.what() );
   }
   catch (const std::out_of_range & e) {
-    LOG->Warn( "stoi(%s): %s", str.c_str(), e.what() );
+    if( LOG ) LOG->Warn( "stoi(%s): %s", str.c_str(), e.what() );
   }
   return exceptVal;
 }
@@ -1905,10 +1905,10 @@ long StringToLong( const std::string& str, std::size_t* pos, int base, long exce
     return std::stol(str, pos, base);
   }
   catch (const std::invalid_argument & e) {
-    LOG->Warn( "stol(%s): %s", str.c_str(), e.what() );
+    if( LOG ) LOG->Warn( "stol(%s): %s", str.c_str(), e.what() );
   }
   catch (const std::out_of_range & e) {
-    LOG->Warn( "stol(%s): %s", str.c_str(), e.what() );
+    if( LOG ) LOG->Warn( "stol(%s): %s", str.c_str(), e.what() );
   }
   return exceptVal;
 }
@@ -1920,10 +1920,10 @@ long long StringToLLong( const std::string& str, std::size_t* pos, int base, lon
     return std::stoll(str, pos, base);
   }
   catch (const std::invalid_argument & e) {
-    LOG->Warn( "stoll(%s): %s", str.c_str(), e.what() );
+    if( LOG ) LOG->Warn( "stoll(%s): %s", str.c_str(), e.what() );
   }
   catch (const std::out_of_range & e) {
-    LOG->Warn( "stoll(%s): %s", str.c_str(), e.what() );
+    if( LOG ) LOG->Warn( "stoll(%s): %s", str.c_str(), e.what() );
   }
   return exceptVal;
 }

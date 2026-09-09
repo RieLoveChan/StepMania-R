@@ -147,6 +147,15 @@ uncompressed. Not a correctness bug (`STORED` is valid ZIP, and
 route the exporter through `RageFileObjDeflate` (which works — see
 `tests/test_RageFileDeflate.cpp`), or accept STORED and close this.
 
+### 21. `StringToInt` / `StringToLong` / `StringToLLong` deref `LOG` on the error path — FIXED 2026-09-09
+~~`RageUtil.cpp:1886+` — the `std::sto*` `try` blocks caught
+`invalid_argument`/`out_of_range` and called `LOG->Warn(...)` with no
+null check on `LOG`, so any call with a non-numeric string before `LOG`
+was constructed segfaulted (hit while writing `test_RageUtil.cpp`'s
+`StringConversion::FromString<bool>("true")` case).~~ Fixed: all 6 catch
+sites now `if( LOG ) LOG->Warn(...)`. Covered by the restored `"true"`
+case in `test_RageUtil.cpp`.
+
 ---
 
 ## Tier 4 — Hotspots (where ongoing passes concentrate; not bugs)
