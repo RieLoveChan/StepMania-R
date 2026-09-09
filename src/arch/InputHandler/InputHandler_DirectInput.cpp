@@ -55,7 +55,7 @@ static BOOL IsXInputDevice(const GUID* pGuidProductFromDirectInput)
 {
 	IWbemLocator*           pIWbemLocator = nullptr;
 	IEnumWbemClassObject*   pEnumDevices = nullptr;
-	IWbemClassObject*       pDevices[20] = { 0 };
+	IWbemClassObject*       pDevices[20] = { nullptr };
 	IWbemServices*          pIWbemServices = nullptr;
 	BSTR                    bstrNamespace = nullptr;
 	BSTR                    bstrDeviceID = nullptr;
@@ -84,7 +84,7 @@ static BOOL IsXInputDevice(const GUID* pGuidProductFromDirectInput)
 	bstrDeviceID = SysAllocString(L"DeviceID");          if (bstrDeviceID == nullptr)  goto LCleanup;
 
 	// Connect to WMI
-	hr = pIWbemLocator->ConnectServer(bstrNamespace, nullptr, nullptr, 0L,
+	hr = pIWbemLocator->ConnectServer(bstrNamespace, nullptr, nullptr, nullptr,
 		0L, nullptr, nullptr, &pIWbemServices);
 	if (FAILED(hr) || pIWbemServices == nullptr)
 		goto LCleanup;
@@ -971,7 +971,7 @@ void InputHandler_DInput::InputThreadMain()
 	while( !m_bShutdown )
 	{
 		CHECKPOINT;
-		if( BufferedDevices.size() )
+		if( !BufferedDevices.empty() )
 		{
 			// Update buffered devices.
 			PollAndAcquireDevices( true );
@@ -992,7 +992,7 @@ void InputHandler_DInput::InputThreadMain()
 		CHECKPOINT;
 
 		// If we have no buffered devices, we didn't delay at WaitForMultipleObjectsEx.
-		if( BufferedDevices.size() == 0 )
+		if( BufferedDevices.empty() )
 			usleep( 50000 );
 		CHECKPOINT;
 	}

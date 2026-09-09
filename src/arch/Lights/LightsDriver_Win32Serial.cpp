@@ -22,10 +22,10 @@ LightsDriver_Win32Serial::LightsDriver_Win32Serial()
 	serialPort = CreateFile(RString("\\\\.\\").append(sComPort).c_str(),
 		GENERIC_WRITE,
 		0,
-		NULL,
+		nullptr,
 		OPEN_EXISTING,
 		0,
-		NULL);
+		nullptr);
 
 	if (serialPort == INVALID_HANDLE_VALUE) {
 		MessageBox(nullptr, "Could not find a device on the configured COM port.", "ERROR", MB_OK);
@@ -79,7 +79,7 @@ void LightsDriver_Win32Serial::Set(const LightsState* ls)
 		if (memcmp(buffer, lastOutput, FULL_SEXTET_COUNT) != 0)
 		{
 			DWORD bytesWritten = 0;
-			WriteFile(serialPort, buffer, FULL_SEXTET_COUNT, &bytesWritten, NULL);
+			WriteFile(serialPort, buffer, FULL_SEXTET_COUNT, &bytesWritten, nullptr);
 
 			// Remember last message
 			memcpy(lastOutput, buffer, FULL_SEXTET_COUNT);
