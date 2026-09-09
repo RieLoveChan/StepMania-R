@@ -41,7 +41,7 @@ void OptionsCursor::Load( const RString &sMetricsGroup, bool bLoadCanGos )
 {
 #define LOAD_SPR( spr, name ) \
 	spr.Load( THEME->GetPathG(sMetricsGroup,name) ); \
-	spr->SetName( name ); \
+	(spr)->SetName( name ); \
 	ActorUtil::LoadAllCommandsAndSetXYAndOnCommand( spr, sMetricsGroup ); \
 	this->AddChild( spr );
 

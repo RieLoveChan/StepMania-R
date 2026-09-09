@@ -908,10 +908,10 @@ void OptionRow::HandleMessage( const Message &msg )
  * Remove it, and readd it below. */
 #define ERASE_ONE_BOOL_AT_FRONT_IF_NEEDED( vbSelected ) \
 	if( GetFirstItemGoesDown() ) \
-		vbSelected.erase( vbSelected.begin() );
+		(vbSelected).erase( (vbSelected).begin() );
 #define INSERT_ONE_BOOL_AT_FRONT_IF_NEEDED( vbSelected ) \
 	if( GetFirstItemGoesDown() ) \
-		vbSelected.insert( vbSelected.begin(), false );
+		(vbSelected).insert( (vbSelected).begin(), false );
 
 void OptionRow::ImportOptions( const std::vector<PlayerNumber> &vpns )
 {

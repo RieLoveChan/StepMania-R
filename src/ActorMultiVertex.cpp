@@ -257,7 +257,7 @@ void ActorMultiVertex::DrawPrimitives()
 			// which makes any value other than 1 into 0.  Thus, the explicit
 			// conversions.  -Kyz
 #define MULT_COLOR_ELEMENTS(color_a, color_b) \
-	color_a= static_cast<std::uint8_t>(static_cast<float>(color_a) * color_b);
+	color_a= static_cast<std::uint8_t>(static_cast<float>(color_a) * (color_b));
 			// RageVColor * RageColor
 			MULT_COLOR_ELEMENTS(TS.vertices[i].c.b, m_pTempState->diffuse[0].b);
 			MULT_COLOR_ELEMENTS(TS.vertices[i].c.r, m_pTempState->diffuse[0].r);

@@ -1096,10 +1096,10 @@ void NoteField::FadeToFail()
 // return values, since the code would be identical in all of them. -Kyz
 
 #define OPEN_CALLBACK_BLOCK(member_name) \
-	if(!from_lua && !member_name.IsNil()) \
+	if(!from_lua && !(member_name).IsNil()) \
 	{ \
 		Lua* L= LUA->Get(); \
-		member_name.PushSelf(L);
+		(member_name).PushSelf(L);
 
 #define OPEN_RUN_BLOCK(arg_count) \
 	RString error= "Error running callback: "; \

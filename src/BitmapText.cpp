@@ -29,7 +29,7 @@ REGISTER_ACTOR_CLASS( BitmapText );
  * fading are annoying to optimize, but rarely used. Iterating over every
  * character in Draw() is dumb. */
 #define NUM_RAINBOW_COLORS	THEME->GetMetricI("BitmapText","NumRainbowColors")
-#define RAINBOW_COLOR(n)	THEME->GetMetricC("BitmapText",ssprintf("RainbowColor%i", n+1))
+#define RAINBOW_COLOR(n)	THEME->GetMetricC("BitmapText",ssprintf("RainbowColor%i", (n)+1))
 
 static std::vector<RageColor> RAINBOW_COLORS;
 
@@ -603,7 +603,7 @@ void BitmapText::UpdateBaseZoom()
 	// Factor in the non-base zoom so that maxwidth will be in terms of theme
 	// pixels when zoom is used.
 #define APPLY_DIMENSION_ZOOM(dimension_max, dimension_get, dimension_zoom_get, base_zoom_set) \
-	if(dimension_max == 0) \
+	if((dimension_max) == 0) \
 	{ \
 		base_zoom_set(1); \
 	} \
@@ -616,7 +616,7 @@ void BitmapText::UpdateBaseZoom()
 		} \
 		if(dimension != 0) \
 		{ \
-			const float zoom= std::fmin(1, dimension_max / dimension); \
+			const float zoom= std::fmin(1, (dimension_max) / dimension); \
 			base_zoom_set(zoom); \
 		} \
 	}

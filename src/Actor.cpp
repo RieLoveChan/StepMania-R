@@ -1435,7 +1435,7 @@ void Actor::TweenState::Init()
 
 bool Actor::TweenState::operator==( const TweenState &other ) const
 {
-#define COMPARE( x )	if( x != other.x ) return false;
+#define COMPARE( x )	if( (x) != other.x ) return false;
 	COMPARE( pos );
 	COMPARE( rotation );
 	COMPARE( quat );

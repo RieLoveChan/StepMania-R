@@ -14,8 +14,8 @@
 #include "XmlFile.h"
 #include "PlayerStageStats.h"
 
-#define SHIFT_X(pc)	THEME->GetMetricF(sMetricsGroup, ssprintf("ShiftP%iX", pc+1))
-#define SHIFT_Y(pc)	THEME->GetMetricF(sMetricsGroup, ssprintf("ShiftP%iY", pc+1))
+#define SHIFT_X(pc)	THEME->GetMetricF(sMetricsGroup, ssprintf("ShiftP%iX", (pc)+1))
+#define SHIFT_Y(pc)	THEME->GetMetricF(sMetricsGroup, ssprintf("ShiftP%iY", (pc)+1))
 
 static const char *PaneCategoryNames[] = {
 	"NumSteps",
