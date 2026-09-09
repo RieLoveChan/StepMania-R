@@ -236,7 +236,7 @@ void StepMania::ApplyGraphicOptions()
 	VideoModeParams params;
 	GetPreferredVideoModeParams( params );
 	RString sError = DISPLAY->SetVideoMode( params, bNeedReload );
-	if( sError != "" )
+	if( !sError.empty() )
 		RageException::Throw( "%s", sError.c_str() );
 
 	update_centering();
@@ -369,7 +369,7 @@ void StepMania::ResetGame()
 ThemeMetric<RString>	INITIAL_SCREEN	("Common","InitialScreen");
 RString StepMania::GetInitialScreen()
 {
-	if(PREFSMAN->m_sTestInitialScreen.Get() != "" &&
+	if(!PREFSMAN->m_sTestInitialScreen.Get().empty() &&
 		SCREENMAN->IsScreenNameValid(PREFSMAN->m_sTestInitialScreen))
 	{
 		return PREFSMAN->m_sTestInitialScreen;
@@ -534,7 +534,7 @@ bool CheckVideoDefaultSettings()
 		Regex regex( sDriverRegex );
 		if( regex.Compare(sVideoDriver) )
 		{
-			LOG->Trace( "Card matches '%s'.", sDriverRegex.size()? sDriverRegex.c_str():"(unknown card)" );
+			LOG->Trace( "Card matches '%s'.", !sDriverRegex.empty()? sDriverRegex.c_str():"(unknown card)" );
 			break;
 		}
 	}
@@ -544,7 +544,7 @@ bool CheckVideoDefaultSettings()
 	}
 
 	bool bSetDefaultVideoParams = false;
-	if( PREFSMAN->m_sVideoRenderers.Get() == "" )
+	if( PREFSMAN->m_sVideoRenderers.Get().empty() )
 	{
 		bSetDefaultVideoParams = true;
 		LOG->Trace( "Applying defaults for %s.", sVideoDriver.c_str() );
@@ -776,7 +776,7 @@ static void MountTreeOfZips( const RString &dir )
 	std::vector<RString> dirs;
 	dirs.push_back( dir );
 
-	while( dirs.size() )
+	while( !dirs.empty() )
 	{
 		RString path = dirs.back();
 		dirs.pop_back();

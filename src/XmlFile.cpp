@@ -132,7 +132,7 @@ const XNode *XNode::GetChild( const RString &sName ) const
 
 XNode *XNode::AppendChild( XNode *node )
 {
-	DEBUG_ASSERT( node->m_sName.size() );
+	DEBUG_ASSERT( !node->m_sName.empty() );
 	m_children_by_name.insert(make_pair(node->m_sName, node));
 	m_childs.push_back( node );
 	return node;
@@ -191,7 +191,7 @@ bool XNode::RemoveAttr( const RString &sName )
  * If bOverwrite is false and a node already exists with that name, the new value will be deleted. */
 XNodeValue *XNode::AppendAttrFrom( const RString &sName, XNodeValue *pValue, bool bOverwrite )
 {
-	DEBUG_ASSERT( sName.size() );
+	DEBUG_ASSERT( !sName.empty() );
 	std::pair<XAttrs::iterator, bool> ret = m_attrs.insert( make_pair(sName, (XNodeValue *) nullptr) );
 	if( !ret.second ) // already existed
 	{
@@ -213,7 +213,7 @@ XNodeValue *XNode::AppendAttrFrom( const RString &sName, XNodeValue *pValue, boo
 
 XNodeValue *XNode::AppendAttr( const RString &sName )
 {
-	DEBUG_ASSERT( sName.size() );
+	DEBUG_ASSERT( !sName.empty() );
 	std::pair<XAttrs::iterator, bool> ret = m_attrs.insert( make_pair(sName, (XNodeValue *) nullptr) );
 	if( ret.second )
 		ret.first->second = new XNodeStringValue;
