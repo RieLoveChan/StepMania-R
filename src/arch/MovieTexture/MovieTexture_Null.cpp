@@ -11,14 +11,14 @@
 class MovieTexture_Null : public RageMovieTexture {
 public:
 	MovieTexture_Null(RageTextureID ID);
-	virtual ~MovieTexture_Null();
-	void Invalidate() { texHandle = 0; }
-	std::uintptr_t GetTexHandle() const { return texHandle; }
-	void Update(float /* delta */) { }
-	void Reload() { }
-	void SetPosition(float /* seconds */) { }
-	void SetPlaybackRate(float) { }
-	void SetLooping(bool looping=true) { loop = looping; }
+	~MovieTexture_Null() override;
+	void Invalidate() override { texHandle = 0; }
+	std::uintptr_t GetTexHandle() const override { return texHandle; }
+	void Update(float /* delta */) override { }
+	void Reload() override { }
+	void SetPosition(float /* seconds */) override { }
+	void SetPlaybackRate(float) override { }
+	void SetLooping(bool looping=true) override { loop = looping; }
 
 private:
 	bool playing;
