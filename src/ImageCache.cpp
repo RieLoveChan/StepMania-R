@@ -190,7 +190,7 @@ void ImageCache::ReadFromDisk()
 struct ImageTexture: public RageTexture
 {
 	std::uintptr_t m_uTexHandle;
-	std::uintptr_t GetTexHandle() const { return m_uTexHandle; };	// accessed by RageDisplay
+	std::uintptr_t GetTexHandle() const override { return m_uTexHandle; };	// accessed by RageDisplay
 	/* This is a reference to a pointer in g_ImagePathToImage. */
 	RageSurface *&m_pImage;
 	int m_iWidth, m_iHeight;
@@ -201,7 +201,7 @@ struct ImageTexture: public RageTexture
 		Create();
 	}
 
-	~ImageTexture()
+	~ImageTexture() override
 	{
 		Destroy();
 	}
@@ -257,13 +257,13 @@ struct ImageTexture: public RageTexture
 		m_uTexHandle = 0;
 	}
 
-	void Reload()
+	void Reload() override
 	{
 		Destroy();
 		Create();
 	}
 
-	void Invalidate()
+	void Invalidate() override
 	{
 		m_uTexHandle = 0; /* don't Destroy() */
 	}
