@@ -528,7 +528,7 @@ RString RageDisplay_D3D::TryVideoMode( const VideoModeParams &_p, bool &bNewDevi
 	SetPresentParametersFromVideoModeParams( p, &g_d3dpp );
 
 	// Display the window immediately, so we don't display the desktop ...
-	while( 1 )
+	while( true )
 	{
 		// Try the video mode.
 		RString sErr = SetD3DParams( bNewDeviceOut );

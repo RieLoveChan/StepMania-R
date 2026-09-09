@@ -1882,7 +1882,7 @@ int Player::GetClosestNoteDirectional( int col, int iStartRow, int iEndRow, bool
 				break;
 
 			return begin->first;
-		} while(0);
+		} while(false);
 
 		if( bForward )
 			++begin;

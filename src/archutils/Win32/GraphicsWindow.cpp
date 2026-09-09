@@ -318,7 +318,7 @@ void GraphicsWindow::CreateGraphicsWindow( const VideoModeParams &p, bool bForce
 		}
 
 		SetWindowTextA( g_hWndMain, ConvertUTF8ToACP(p.sWindowTitle) );
-	} while(0);
+	} while(false);
 
 	// Update the window icon.
 	if( g_hIcon != nullptr )
@@ -457,7 +457,7 @@ void GraphicsWindow::Initialize( bool bD3D )
 		m_bWideWindowClass = false;
 		if( !RegisterClassA( &WindowClassA ) )
 			RageException::Throw( "%s", werr_ssprintf( GetLastError(), "RegisterClass" ).c_str() );
-	} while(0);
+	} while(false);
 
 	g_iQueryCancelAutoPlayMessage = RegisterWindowMessage( "QueryCancelAutoPlay" );
 }

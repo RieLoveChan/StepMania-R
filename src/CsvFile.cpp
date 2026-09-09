@@ -21,7 +21,7 @@ bool CsvFile::ReadFile( const RString &sPath )
 	{
 		LOG->Trace( "Reading '%s' failed: %s", m_sPath.c_str(), f.GetError().c_str() );
 		m_sError = f.GetError();
-		return 0;
+		return false;
 	}
 
 	return ReadFile( f );

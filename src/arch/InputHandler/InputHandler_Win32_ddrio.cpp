@@ -266,8 +266,8 @@ int InputHandler_Win32_ddrio::InputThread_Start( void *p )
 void InputHandler_Win32_ddrio::InputThreadMain()
 {
 	std::uint32_t prevInput = 0, newInput = 0;
-	LightsState prevLS = { 0 };
-	LightsState newLS = { 0 };
+	LightsState prevLS = { false };
+	LightsState newLS = { false };
 
 	while (!m_bShutdown)
 	{

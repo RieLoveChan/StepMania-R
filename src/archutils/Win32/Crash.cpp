@@ -275,7 +275,7 @@ void RunChild()
 
 	/* The parent process needs to access this process briefly. When it's done,
 	 * it'll close the handle. Wait until we see that before exiting. */
-	while(1)
+	while(true)
 	{
 		/* Ugly: the new process can't execute GetModuleFileName on this process,
 		 * since GetModuleFileNameEx might not be available. Run the requests here. */

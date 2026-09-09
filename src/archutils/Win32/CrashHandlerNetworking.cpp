@@ -191,7 +191,7 @@ NetworkStream_Win32::~NetworkStream_Win32()
  * code; on success, return 0. */
 int NetworkStream_Win32::WaitForCompletionOrCancellation( int iEvent )
 {
-	while(1)
+	while(true)
 	{
 		int iRet = WaitForSingleObject( m_hCompletionEvent, INFINITE );
 		if( iRet != WAIT_OBJECT_0 )
@@ -587,7 +587,7 @@ NetworkPostData::~NetworkPostData()
 void NetworkPostData::CreateMimeData( const std::map<RString, RString> &mapNameToData, RString &sOut, RString &sMimeBoundaryOut )
 {
 	// Find a non-conflicting mime boundary.
-	while(1)
+	while(true)
 	{
 		sMimeBoundaryOut = ssprintf( "--%08i", rand() );
 		for (auto const &d : mapNameToData)
@@ -670,7 +670,7 @@ void NetworkPostData::HttpThread()
 	// Parse the results.
 	int iStart = 0, iSize = -1;
 	std::map<RString, RString> mapHeaders;
-	while( 1 )
+	while( true )
 	{
 		split( sResult, "\n", iStart, iSize, false );
 		if( iStart == (int) sResult.size() )

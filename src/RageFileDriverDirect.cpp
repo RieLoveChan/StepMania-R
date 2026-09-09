@@ -383,7 +383,7 @@ RageFileObjDirect::~RageFileObjDirect()
 		// Success.
 		return;
 #endif
-	} while(0);
+	} while(false);
 
 	// The write or the rename failed. Delete the incomplete temporary file.
 	DoRemove( MakeTempFilename(m_sPath) );
