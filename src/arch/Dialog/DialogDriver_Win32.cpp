@@ -100,7 +100,7 @@ static RString GetWindowTitle()
 
 void DialogDriver_Win32::OK( RString sMessage, RString sID )
 {
-	g_bAllowHush = sID != "";
+	g_bAllowHush = !sID.empty();
 	g_sMessage = sMessage;
 	AppInstance handle;
 #if !defined(SMPACKAGE)
@@ -114,7 +114,7 @@ void DialogDriver_Win32::OK( RString sMessage, RString sID )
 
 Dialog::Result DialogDriver_Win32::OKCancel( RString sMessage, RString sID )
 {
-	g_bAllowHush = sID != "";
+	g_bAllowHush = !sID.empty();
 	g_sMessage = sMessage;
 	AppInstance handle;
 

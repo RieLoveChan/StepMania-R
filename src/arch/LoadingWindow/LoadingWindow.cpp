@@ -19,7 +19,7 @@ LoadingWindow *LoadingWindow::Create()
 	std::vector<RString> DriversToTry;
 	split( drivers, ",", DriversToTry, true );
 
-	ASSERT( DriversToTry.size() != 0 );
+	ASSERT( !DriversToTry.empty() );
 
 	RString Driver;
 	LoadingWindow *ret = nullptr;
@@ -43,7 +43,7 @@ LoadingWindow *LoadingWindow::Create()
 			continue;
 
 		RString sError = ret->Init();
-		if( sError != "" )
+		if( !sError.empty() )
 		{
 			LOG->Info( "Couldn't load driver %s: %s", DriversToTry[i].c_str(), sError.c_str() );
 			SAFE_DELETE( ret );

@@ -26,7 +26,7 @@ BOOL CALLBACK DSound::EnumCallback( LPGUID /* lpGuid */, LPCSTR lpcstrDescriptio
 		sLine += ssprintf( " %s", lpcstrModule );
 
 		RString sPath = FindSystemFile( lpcstrModule );
-		if( sPath != "" )
+		if( !sPath.empty() )
 		{
 			RString sVersion;
 			if( GetFileVersion(sPath, sVersion) )
@@ -116,7 +116,7 @@ RString DSound::Init()
 	if( !bShownInfo )
 	{
 		bShownInfo = true;
-		DirectSoundEnumerate( EnumCallback, 0 );
+		DirectSoundEnumerate( EnumCallback, nullptr );
 
 		DSCAPS Caps;
 		Caps.dwSize = sizeof(Caps);

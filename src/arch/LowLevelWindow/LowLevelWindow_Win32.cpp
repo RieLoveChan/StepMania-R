@@ -322,14 +322,14 @@ class RenderTarget_Win32 : public RenderTarget
 {
 public:
 	RenderTarget_Win32( LowLevelWindow_Win32 *pWind );
-	virtual ~RenderTarget_Win32();
+	~RenderTarget_Win32() override;
 
-	void Create( const RenderTargetParam &param, int &iTextureWidthOut, int &iTextureHeightOut );
-	std::uintptr_t GetTexture() const { return static_cast<std::uintptr_t>(m_texHandle); }
-	void StartRenderingTo();
-	void FinishRenderingTo();
+	void Create( const RenderTargetParam &param, int &iTextureWidthOut, int &iTextureHeightOut ) override;
+	std::uintptr_t GetTexture() const override { return static_cast<std::uintptr_t>(m_texHandle); }
+	void StartRenderingTo() override;
+	void FinishRenderingTo() override;
 
-	virtual bool InvertY() const { return true; }
+	bool InvertY() const override { return true; }
 
 private:
 	LowLevelWindow_Win32 *m_pWind;
@@ -418,8 +418,8 @@ void RenderTarget_Win32::FinishRenderingTo()
 	BOOL successful = wglMakeCurrent(m_hOldDeviceContext, m_hOldRenderContext);
 	ASSERT_M( successful == TRUE, "wglMakeCurrent failed in RenderTarget_Win32::FinishRenderingTo()" );
 
-	m_hOldDeviceContext = 0;
-	m_hOldRenderContext = 0;
+	m_hOldDeviceContext = nullptr;
+	m_hOldRenderContext = nullptr;
 }
 
 RenderTarget* LowLevelWindow_Win32::CreateRenderTarget()

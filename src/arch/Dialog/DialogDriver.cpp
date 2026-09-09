@@ -23,7 +23,7 @@ DialogDriver *DialogDriver::Create()
 	std::vector<RString> asDriversToTry;
 	split( sDrivers, ",", asDriversToTry, true );
 
-	ASSERT( asDriversToTry.size() != 0 );
+	ASSERT( !asDriversToTry.empty() );
 
 	for (RString const &Driver : asDriversToTry)
 	{

@@ -42,7 +42,7 @@ MovieTexture_Generic::MovieTexture_Generic( RageTextureID ID, MovieDecoder *pDec
 RString MovieTexture_Generic::Init()
 {
 	RString sError = m_pDecoder->Open(GetID().filename);
-	if (sError != "")
+	if (!sError.empty())
 		return sError;
 
 	CreateTexture();
@@ -140,7 +140,7 @@ public:
 		m_uTexHandle = 0;
 		CreateTexture();
 	}
-	virtual ~RageMovieTexture_Generic_Intermediate()
+	~RageMovieTexture_Generic_Intermediate() override
 	{
 		if( m_uTexHandle )
 		{
@@ -149,14 +149,14 @@ public:
 		}
 	}
 
-	virtual void Invalidate() { m_uTexHandle = 0; }
-	virtual void Reload() { }
-	virtual std::uintptr_t GetTexHandle() const
+	void Invalidate() override { m_uTexHandle = 0; }
+	void Reload() override { }
+	std::uintptr_t GetTexHandle() const override
 	{
 		return m_uTexHandle;
 	}
 
-	bool IsAMovie() const { return true; }
+	bool IsAMovie() const override { return true; }
 private:
 	void CreateTexture()
 	{
