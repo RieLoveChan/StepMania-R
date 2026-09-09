@@ -24,6 +24,7 @@ set(SM_TEST_SRC
     test_SongOptions.cpp
     test_DeviceInput.cpp
     test_Command.cpp
+    test_Difficulty.cpp
     test_RageUtil.cpp
     test_RageMath.cpp
     test_RageColor.cpp
