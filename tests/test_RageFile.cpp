@@ -14,6 +14,7 @@
 #include "EngineTestEnv.h"
 
 #include "RageFile.h"
+#include "RageFileDriverSlice.h"
 
 #include "catch_amalgamated.hpp"
 
@@ -296,4 +297,46 @@ TEST_CASE( "RageFile interleaved text + binary block, Tell stays exact", "[RageF
 	CHECK( line == "last" );
 	CHECK( r.GetLine( line ) == 0 );
 	CHECK( r.AtEOF() );
+}
+
+// RageFileDriverSlice presents pFile[offset : offset+size] as a
+// standalone file (used by RageFileDriverZip to hand out STORED
+// entries). Seek/Tell/EOF are all relative to the slice.
+TEST_CASE( "RageFileDriverSlice exposes only its window of the underlying file", "[RageFile][mem][slice]" )
+{
+	EngineTestEnv::Require();
+	const std::string data = RampBytes( 1000 );
+	const RString path = WriteMem( "rf_slice.bin", data );
+
+	auto *base = new RageFile;
+	REQUIRE( base->Open( path, RageFile::READ ) );
+
+	const int off = 300, len = 200;
+	RageFileDriverSlice slice( base, off, len );
+	slice.DeleteFileWhenFinished(); // slice now owns `base`
+
+	CHECK( slice.GetFileSize() == len );
+
+	// A full read yields exactly data[off : off+len].
+	RString got;
+	CHECK( slice.Read( got, len ) == len );
+	CHECK( std::string( got.data(), got.size() ) == data.substr( off, len ) );
+
+	// Reading further is EOF even though the underlying file has 500 more bytes.
+	char tail[16];
+	CHECK( slice.Read( tail, sizeof( tail ) ) == 0 );
+	CHECK( slice.AtEOF() );
+
+	// Seek is slice-relative: 0 is the first windowed byte.
+	CHECK( slice.Seek( 0 ) == 0 );
+	char b = 0;
+	CHECK( slice.Read( &b, 1 ) == 1 );
+	CHECK( static_cast<unsigned char>( b ) == ( off & 0xFF ) );
+
+	// Seek past the window clamps to the window size.
+	CHECK( slice.Seek( len + 999 ) == len );
+	CHECK( slice.Read( &b, 1 ) == 0 );
+
+	// The slice is read-only.
+	CHECK( slice.Write( "x", 1 ) == -1 );
 }
