@@ -1562,3 +1562,35 @@
     output is too dirty to land without a coupled `clang-format` run
     (ADR 0002 → separate change). `bugprone-integer-division` (14)
     stays maintainer-flagged.
+
+* **clang-tidy — `arch/` + `archutils/Win32/` driver pass (item 12,
+  same day).** Cleared the arch/driver tail for the four mechanical
+  checks across six commits:
+  - `137b83938f` — `_Null` drivers (`RageDisplay_Null`
+    `RageCompiledGeometryNull`, `MovieTexture_Null`) `use-override` +
+    one `modernize-redundant-void-arg` in `ArchHooks_Win32Static`.
+  - `dc4e2d0387` — `archutils/Win32` crash-handler + video-info
+    (`Crash`, `CrashHandlerChild`, `CrashHandlerNetworking`,
+    `DebugInfoHunt`, `ErrorStrings`, `VideoDriverInfo`).
+  - `e1e924b155` — Win32 input / lights / USB drivers
+    (`InputHandler_DirectInput` + `_Win32_RTIO` + `_ddrio`,
+    `LightsDriver_Win32Serial`, `USB`). Notable: `use-nullptr`
+    correctly wrapped `StringToInt`'s `std::size_t* pos` arg and left
+    the genuine integer `0L` (`lSecurityFlags`) alone.
+  - `f9bc763307` — Win32 sound / display / window / movie drivers
+    (`RageDisplay_D3D` `Present(0,0,0,0)`, `LowLevelWindow_Win32`
+    `RenderTarget_Win32`, `MovieTexture_Generic`, the DSound/WDMKS/
+    WaveOut `Init()` error checks, `Threads_Win32`, `GraphicsWindow`,
+    `MemoryCardDriver` COMPARE macro).
+  - `7a127f1af9` — final non-§5 stragglers (`ScreenNameEntryTraditional`
+    ASSERT, `ScreenOptionsMasterPrefs` `remove_empty_back` macro,
+    `RageUtil` `Json::Value obj.size() < 1`).
+  - `b98c278a09` (logged above).
+  All Windows-only TUs recompiled clean under `WITH_WERROR=ON`,
+  `sm_tests` 1004/124 + `ctest` 100% after each. **Result:
+  `container-size-empty` / `use-override` / `use-nullptr` are now clear
+  across all of `src/` except the §5 parse path (~95, needs corpus) and
+  the vendored `ixwebsocket` subtree (~13).** `macro-parentheses`
+  residual = 4 documented unfixable sites (`StatsManager` ×2,
+  `OptionRowHandler` MAKE, `Profile` LOAD_NODE). See `baseline.md`
+  "Update — arch/Win32 driver pass done".
