@@ -1894,3 +1894,16 @@
   `StepMania-R.exe` links clean, `--SelfTest` exit 0. Left
   `src/update_check/check_sm5.php` (netcode still names
   `/stepmania/check_sm5.php`).
+
+* **Checked `src/archutils/Win32/ddk/` — kept (backlog item 26).**
+  The `.lib` files under `x86/`/`x64/` are unreferenced by any
+  `*.cmake`/`CMakeLists.txt` (the Win32 build links `dbghelp`/`setupapi`/
+  `hid` as bare names off the Windows SDK `LIBPATH`, `src/CMakeLists.txt`
+  ~392-420), so they look dead. But the **headers** in the dir are still
+  load-bearing: `src/archutils/Win32/USB.cpp` hard-codes
+  `#include "archutils/Win32/ddk/setupapi.h"` and `.../ddk/hidsdi.h`, and
+  the only include path is `src/`, so they resolve here rather than to
+  the SDK. Migrating USB.cpp to the SDK headers is a Win32 USB/HID input
+  behavior-risk change, not a mechanical sweep, so the directory stays
+  untouched pending a maintainer decision. Backlog item 26 updated with
+  the finding. A staged experimental `git rm -r` of the dir was reverted.

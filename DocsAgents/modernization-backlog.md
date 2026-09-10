@@ -228,10 +228,19 @@ removal — do NOT blanket-delete:
   which the build/packaging actually invokes.
 - **`Program/parallel_lights_io.dll`** — shipped lights-I/O DLL; may be
   loaded at runtime by a lights driver. **Verify before touching.**
-- **`src/archutils/Win32/ddk/{x86,x64}/{dbghelp,hid,setupapi}.lib`** —
-  Windows DDK import libs; the Win32 build links `dbghelp.lib` etc.
-  Check whether CMake uses these committed copies or the system SDK
-  ones (if system → these are dead).
+- **`src/archutils/Win32/ddk/`** — checked 2026-09-10. The `.lib` files
+  (`{x86,x64}/{dbghelp,hid,setupapi}.lib`) do appear dead: nothing in
+  any `*.cmake`/`CMakeLists.txt` references `ddk`, and the Win32 build
+  links `dbghelp`/`setupapi`/`hid` as bare names off the Windows SDK
+  `LIBPATH` (`src/CMakeLists.txt:392-420`). BUT the **headers** in this
+  dir are load-bearing: `src/archutils/Win32/USB.cpp` has hard-coded
+  `#include "archutils/Win32/ddk/setupapi.h"` and `.../ddk/hidsdi.h`
+  (the only include path is `src/`, so these resolve here, not to the
+  SDK). So the directory must stay until USB.cpp is migrated to SDK
+  headers — a Win32 USB/HID input behavior-risk change, not a sweep
+  item. Removing only the 6 `.lib` files is safe but low value
+  (~380 KB) and leaves the dir half-populated; deferred to a
+  maintainer call. Left entirely as-is for now.
 - **`Xcode/Libraries/*.a`** — committed macOS static libs. `AGENTS.md`
   §3 — leave to a macOS-focused pass.
 
