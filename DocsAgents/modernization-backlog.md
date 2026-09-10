@@ -498,10 +498,27 @@ folder. Suite **948 / 118**.
   `#ROWSPERBEAT:4;` (no `=`) is an OOB read → crash. Left as-is per the
   "current behavior is the reference" decision; flagged for the
   maintainer.
-- `.crs`: no fixture yet. `EngineTestEnv` is ready (`PREFSMAN` in,
-  `LoadFromDir` reachable) but courses reference songs so likely also
-  need `SONGMAN`. Real course under `Songs/` if redistributable, else
-  the derived-fixture approach (`tests/data/`).
+- `.crs`: no fixture yet. `EngineTestEnv` now brings up `SONGMAN`
+  (ctor only, no `InitAll`), `GAMESTATE`, `MESSAGEMAN`, `NOTESKIN` and a
+  constructed-but-not-switched `THEME` (2026-09-10), so `CourseLoader`
+  is reachable — still needs a fixture, and courses reference songs so
+  the fixture may need `SONGMAN` populated with a stub song or two. Real
+  course under `Songs/` if redistributable, else the derived-fixture
+  approach (`tests/data/`).
+- **Headless theme metrics** (new sub-item, 2026-09-10): the fixture
+  leaves `THEME` constructed but does NOT call `SwitchThemeAndLanguage`
+  — that runs the theme's Lua (`Themes/{_fallback,default}/Scripts/*`)
+  and SIGSEGVs headlessly (theme code assumes renderer / `SCREENMAN` /
+  sound). So `ThemeMetric<T>` / `CommonMetrics::*` stay unset and a test
+  that reads a metric *value* asserts. Blocks the last mile of
+  `PlayerOptions::FromString` (`CommonMetrics::DEFAULT_NOTESKIN_NAME`)
+  and `RadarValues` / theme-metric tests. Needs a smaller mechanism: a
+  scripts-free minimal test theme mounted into `/Themes` with
+  `FallbackTheme=` (fallback disabled) and just the handful of metrics
+  those tests need, OR a stub `ILocalizedStringImpl` / metric provider
+  registered for the harness. Its own task — the crash root-cause was
+  not chased down (engine and test link separate CRTs, so the
+  `fprintf`-marker bisect could not see past `SwitchThemeAndLanguage`).
 - `src/tests/test_file_readers.cpp` **DONE (2026-09-06, extended
   2026-09-09)** → `tests/test_RageFile.cpp`: `RageFile` open/read/write/
   seek/tell/`GetLine`/`AtEOF` through `FILEMAN`'s `/@mem` writable

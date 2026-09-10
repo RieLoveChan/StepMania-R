@@ -1949,3 +1949,31 @@
   `split(expr,"=")[1]` with no size check -> a malformed
   `#ROWSPERBEAT:4;` (no `=`) is an OOB read / crash. Flagged in backlog
   item 17 for the maintainer.
+
+* **EngineTestEnv fixture extended: MESSAGEMAN + GAMESTATE + THEME
+  (ctor only) + NOTESKIN + SONGMAN (backlog item 17).** Maintainer asked
+  for THEME/NOTESKIN/MESSAGEMAN/SONGMAN to unblock PlayerOptions /
+  RadarValues / theme-metric / `.crs` coverage. Landed:
+  - `tests/CMakeLists.txt`: generate `SM_THEMES_DIR` / `SM_NOTESKINS_DIR`
+    absolute paths; `EngineTestEnv` mounts the repo `Themes/` at
+    `/Themes` and `NoteSkins/` at `/NoteSkins` (relative `"Themes/*"`
+    resolves against the VFS root).
+  - `EngineTestEnv::BringUp()` now also constructs, in `sm_main` order:
+    `MESSAGEMAN`, `GAMESTATE` (ctor only — it deliberately skips
+    `Reset()`), `GAMEMAN` (already there), `THEME` (**ctor only**),
+    `NOTESKIN`, `SONGMAN` (**no `InitAll()`**). Teardown reverse.
+  - **`THEME` is not switched to a theme.**
+    `SwitchThemeAndLanguage("default"/"_fallback", ...)` SIGSEGVs in the
+    headless harness — it runs the theme's Lua scripts + refreshes the
+    screen-dimension metric cache, and theme code assumes a live engine.
+    Root cause not isolated (engine vs test link separate CRTs, so
+    `fprintf` markers inside `ThemeManager` produced no output). So
+    `THEME != nullptr` but `IsThemeLoaded()` is false and every
+    `ThemeMetric` stays unset — reading a metric *value* still asserts.
+    Filed as a sub-item of backlog 17 (needs a scripts-free minimal test
+    theme or a stub metric provider).
+  - `test_EngineTestEnv.cpp`: contract check now covers all ten
+    singletons + a "THEME constructed but not loaded" case.
+  **Verified:** `sm_tests` 5912/221 -> **5925/222**, `ctest` 100%,
+  Release `StepMania-R.exe` links clean, `--SelfTest` exit 0. The +5
+  managers cost ~0s of run time (no theme load, no song scan).

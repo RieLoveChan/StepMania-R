@@ -411,6 +411,16 @@ first-party non-§5 code:
     song level) while pre-`#NOTES` tags land on song timing. 73
     assertions / 1 visible case (+1 hidden `[smadump]`).
     Suite total: **5912 assertions / 221 cases**.
+  - `tests/EngineTestEnv.{h,cpp}` (2026-09-10) — fixture extended with
+    `MESSAGEMAN` + `GAMESTATE` (ctor only, no `Reset()`) + `THEME` (ctor
+    only, **no `SwitchThemeAndLanguage`** — it SIGSEGVs headlessly) +
+    `NOTESKIN` + `SONGMAN` (no `InitAll`), plus `/Themes` + `/NoteSkins`
+    mounts. Unblocks code that needs those managers non-null (the
+    `PlayerOptions` mod `ASSERT`, `LuaHelpers` error reporting, `.crs`).
+    Reading a real theme metric *value* is still blocked — no theme is
+    loaded (backlog item 17). `test_EngineTestEnv.cpp` grew the contract
+    check to all ten singletons + a "THEME not loaded" case.
+    Suite total: **5925 assertions / 222 cases**.
   - `tests/test_RageLog.cpp` (2026-09-08) — `RageLog`'s level/category
     plumbing (ADR 0005 phase 2): the `LogLevel` (Trace<…<Error<Off) and
     `Log::Category` enums + their string round-trips (case-insensitive,
