@@ -40,7 +40,8 @@ set(SM_TEST_SRC
     test_NotesLoaderBMS.cpp
     test_NotesLoaderDWI.cpp
     test_NotesLoaderKSF.cpp
-    test_NotesLoaderSMA.cpp)
+    test_NotesLoaderSMA.cpp
+    test_NotesLoaderCRS.cpp)
 
 source_group("" FILES ${SM_TEST_SRC})
 
