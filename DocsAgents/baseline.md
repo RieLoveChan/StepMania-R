@@ -397,6 +397,20 @@ first-party non-§5 code:
     `tests/test_RageFileDeflate.cpp` (2026-09-09) added the
     `RageFileObjDeflate`/`Inflate` raw-deflate round-trip — 7 cases,
     salvage of `TestDeflate()`.
+  - `tests/test_NotesLoaderSMA.cpp` (2026-09-10) — **ADR 0006 phase 4
+    for `.sma`**, via `SMALoader::LoadFromDir`. No real `.sma` file
+    exists anywhere (extinct 2009-2011 SMA-editor format); the
+    maintainer searched, found none, and ruled the current read
+    behavior the reference. The fixture (`tests/data/sma-fixture/`) is
+    **synthetic** — hand-authored to hit the SMA-only tags:
+    `#ROWSPERBEAT` `r`-suffix row→beat division vs bare-value =
+    literal-beat, `#BEATSPERMEASURE` (4/4 back-filled at row 0 ahead of
+    the first given segment), `#SPEED` `32s` → `UNIT_SECONDS`,
+    `#MULTIPLIER` 2-field (miss==combo) vs 3-field. Also pins the quirk
+    that `#BPMS`/`#STOPS` come out on the **Steps** timing (empty at
+    song level) while pre-`#NOTES` tags land on song timing. 73
+    assertions / 1 visible case (+1 hidden `[smadump]`).
+    Suite total: **5912 assertions / 221 cases**.
   - `tests/test_RageLog.cpp` (2026-09-08) — `RageLog`'s level/category
     plumbing (ADR 0005 phase 2): the `LogLevel` (Trace<…<Error<Off) and
     `Log::Category` enums + their string round-trips (case-insensitive,

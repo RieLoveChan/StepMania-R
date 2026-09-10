@@ -133,6 +133,16 @@ there and is writable, so no fixture file is needed at all (see
   fixtures (`tests/data/{pms,dwi}-fixture/`,
   `test_NotesLoader{BMS,DWI}.cpp`) — the copyright-safe pattern for
   non-redistributable source songs.
+- `2026-09-10` — `.sma` phase-4 coverage via a *synthetic* fixture
+  (`tests/data/sma-fixture/`, `test_NotesLoaderSMA.cpp`). A third
+  fixture tier for when no real file exists at all: the maintainer
+  could not find a single `.sma` anywhere, so the current `SMALoader`
+  read is taken as the reference and the fixture is invented to pin it.
+  Gotcha found while writing it: `SMALoader::LoadFromSimfile` routes
+  `#BPMS`/`#STOPS` onto the *Steps* timing (via `ProcessBPMsAndStops`
+  after `#NOTES`), not `song.m_SongTiming` — query the right
+  `TimingData`, and never call `GetBPMAtBeat` on a timing with zero BPM
+  segments (it SIGSEGVs; read the segment vector directly).
 - `2026-09-08` — `.ksf` (Pump It Up) phase-4 coverage, same derived
   pattern (`tests/data/Fixture Artist - KSF Fixture/`,
   `test_NotesLoaderKSF.cpp`). KSF gotchas: `KSFLoader::LoadFromDir`

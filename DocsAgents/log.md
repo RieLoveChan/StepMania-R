@@ -1929,3 +1929,23 @@
   (accurate for their date); `stepmania/stepmania`'s branch is still
   legitimately called `5_1-new`, so the fork-point references in
   ADR 0002 / index.md stay too.
+
+* **`.sma` characterization test landed -- ADR 0006 phase 4 (backlog
+  item 17).** After an extended search the maintainer confirmed no real
+  `.sma` simfile exists anywhere (extinct 2009-2011 SMA-editor format),
+  and decided the current `SMALoader` read behavior is the reference.
+  New `tests/test_NotesLoaderSMA.cpp` + a **synthetic** fixture
+  `tests/data/sma-fixture/fixture.sma` (invented, not derived -- nothing
+  to derive from) pin the SMA-only tags: `#ROWSPERBEAT` row<->beat
+  translation (`8r` -> row/4, bare `24` -> literal beat 24),
+  `#BEATSPERMEASURE` (4/4 back-filled at row 0), `#SPEED` `32s` ->
+  `SpeedSegment::UNIT_SECONDS`, `#MULTIPLIER` 2-field (miss==combo) vs
+  3-field. Also pins the quirk that `#BPMS`/`#STOPS` come out on the
+  Steps timing (empty at song level) while pre-`#NOTES` tags land on
+  song timing. Suite 5839/220 -> **5912/221**; `ctest` 100%; Release
+  `StepMania-R.exe` links clean; `--SelfTest` exit 0.
+  Latent bug noted, NOT fixed (§5, and "current behavior is the
+  reference"): `SMALoader`'s `#ROWSPERBEAT` handler does
+  `split(expr,"=")[1]` with no size check -> a malformed
+  `#ROWSPERBEAT:4;` (no `=`) is an OOB read / crash. Flagged in backlog
+  item 17 for the maintainer.

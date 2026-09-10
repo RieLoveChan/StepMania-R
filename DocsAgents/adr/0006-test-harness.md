@@ -209,10 +209,20 @@ default OFF, ON in a dedicated CI job. Not built in a normal dev build.
    `Dirname` fallback); the artist comes from the dir name (KSFLoader
    ignores `#ARTIST`); the filename drives type+difficulty. Covers
    `pump-single` + `pump-double`.
-   **Still open:** `.sma` / `.crs` — `EngineTestEnv` has `PREFSMAN` so
-   the loaders are reachable; each needs a fixture (real song if
-   redistributable, else the same derived approach). `.crs` likely also
-   needs `SONGMAN`. Backlog item 17.
+   **`.sma` DONE** (2026-09-10, `test_NotesLoaderSMA.cpp` +
+   `tests/data/sma-fixture/`) — `SMALoader::LoadFromDir` over a
+   **synthetic** fixture. No real `.sma` file exists anywhere (extinct
+   2009-2011 SMA-editor format); after an extended search the maintainer
+   found none, and decided the current read behavior is the reference.
+   The synthetic fixture pins the SMA-only tags: `#ROWSPERBEAT` row⇔beat
+   translation (`8r` → row/4, bare `24` → beat 24), `#BEATSPERMEASURE`
+   (with the 4/4 back-fill), `#SPEED` `s`-suffix → `UNIT_SECONDS`,
+   `#MULTIPLIER` 2-vs-3-field combo/miss. Also pins the quirk that
+   `#BPMS`/`#STOPS` land on the *Steps* timing (empty at song level)
+   while pre-`#NOTES` tags land on song timing.
+   **Still open:** `.crs` — `EngineTestEnv` has `PREFSMAN` so the loader
+   is reachable but likely also needs `SONGMAN`; needs a fixture.
+   Backlog item 17.
 
 ## Phase 3-4 enabler: `tests/EngineTestEnv` (2026-09-06)
 
@@ -269,6 +279,12 @@ Consumers:
   derived `.ksf` fixture (`tests/data/Fixture Artist - KSF Fixture/`):
   4 `pump-single`/`pump-double` charts, `#BPM`, `#STARTTIME`→offset;
   pins that artist comes from the dir name. Hidden `[ksfdump]` case.
+- `tests/test_NotesLoaderSMA.cpp` — `SMALoader::LoadFromDir` over a
+  **synthetic** `.sma` fixture (`tests/data/sma-fixture/`, no real file
+  exists — maintainer decision 2026-09-10). Pins the SMA-only tags
+  (`#ROWSPERBEAT` `r`-suffix row translation, `#BEATSPERMEASURE` 4/4
+  back-fill, `#SPEED` `s`→seconds unit, `#MULTIPLIER` combo/miss) and
+  the song-vs-Steps timing split. Hidden `[smadump]` case.
 - `tests/test_RageFile.cpp` — `RageFile` read/write/seek/tell/`GetLine`/
   `AtEOF` through `FILEMAN`'s writable `/@mem` mount (no committed
   fixtures). Salvages `src/tests/test_file_readers.cpp`; pins the
