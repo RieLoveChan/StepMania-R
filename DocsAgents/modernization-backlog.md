@@ -25,6 +25,31 @@ cppcheck leak list. What remains for the warning ratchet is `C4244`/
 `C4267`, tracked under Tier 3 / item 2 — it needs a scoping conversation,
 not continuous-work unblocking.
 
+### 27. `sm_tests` dies on the first engine assert on Unix/macOS — CI test jobs are informational
+`sm_tests` links the whole engine. On Unix/macOS, any engine
+`ASSERT`/`ASSERT_M`/`FAIL_M`/`RageException::Throw` routes through
+`sm_crash()` (`src/global.cpp`) → `CrashHandler::ForceCrash`
+(`src/archutils/Unix/CrashHandler.cpp`) → `RunCrashHandler`, which sees
+`g_pCrashHandlerArgv0 == nullptr` (because `CrashHandlerHandleArgs` is
+only called from `ArchHooks_{Unix,MacOSX}::Init()`, and the Catch2
+`main()` never boots `ArchHooks`) and does `_exit(1)` after printing
+`Crash handler failed: CrashHandlerHandleArgs was not called`. Result:
+the first assert any test trips kills the whole binary before Catch2 can
+report the failure or run the rest — and a few tests trip one *only* on
+Unix (seen: `test_NotesLoaderCorpus.cpp` loading real songs,
+`test_RageFile.cpp` RageFileDriverSlice). Green on Windows (all 226
+cases). Pre-existing — red since before the 2026-09-10 work.
+**2026-09-10:** `ubuntu-tests` / `macos-tests` "Run tests" steps set
+`continue-on-error: true` so the workflow run is not red while this is
+open; the jobs still execute and log. Windows unit tests stay the hard
+gate.
+**Fix needs a Unix/macOS box** (the maintainer's is Windows). Two parts:
+(a) give `sm_tests` a `main()` that either calls
+`CrashHandler::CrashHandlerHandleArgs(argc, argv)` or compiles the
+engine test objects with `-DCRASH_HANDLER` off so `sm_crash` falls back
+to plain `std::abort()` (which Catch2 *can* catch and report per-test);
+(b) then triage the handful of asserts that only fire on Unix.
+
 ### 1. Safety net — DONE 2026-09-05
 - **Headless smoke: DONE** (`f7249f3a95`) — `--SelfTest` flag runs full
   engine init and exits 0; wired into Windows CI (`continue-on-error`
@@ -502,19 +527,24 @@ folder. Suite **948 / 118**.
   `CourseLoaderCRS::LoadFromBuffer` over inline course text — no fixture
   file, no SONGINDEX (the `bFromCache=true` path skips the cache probe).
   Pins metadata, `#SONG` resolution vs an empty `SONGMAN`, difficulty /
-  meter-range parsing, modifier keywords. Two findings, NOT fixed (§5,
-  characterization only):
-  - **`#STYLE` is dead code.** `LoadFromMsd`'s dispatch has
+  meter-range parsing, modifier keywords. Findings:
+  - **`#STYLE` was dead code — FIXED 2026-09-10.** `LoadFromMsd`'s
+    recognised-tag guard was
     `else if( !eq("DISPLAYCOURSE") || !eq("COMBO") || !eq("COMBOMODE") )`
     — always true (no name equals all three), so `#STYLE`, the
-    RADAR-cache branch and the "unexpected value" log after it are
-    unreachable. The `||` should be `&&`. Test pins `m_setStyles` stays
-    empty.
-  - **2-part `#SONG:Group/Song` refs crash headlessly.** `SONGMAN->
-    FindSong(group, song)` → `GetSongs(group)` → a `FOREACH_EnabledPlayer`
-    loop that dereferences `PROFILEMAN` (null in the fixture). Not a
-    real-engine bug (PROFILEMAN always exists by course-load time); the
-    test just sticks to 1-part title refs (which resolve via `GROUP_ALL`).
+    RADAR-cache branch and the "unexpected value" log after it were
+    unreachable and `#STYLE` on a course did nothing. Changed to
+    `eq(A) || eq(B) || eq(C)` and moved the `#STYLE` handler above the
+    `bFromCache` catch-all (otherwise a buffer/cache load routes
+    `#STYLE` into the radar-cache parse). Test now checks `#STYLE`
+    populates `m_setStyles`. §5 change — Windows-verified, and the test
+    is the old-vs-new record.
+  - **2-part `#SONG:Group/Song` refs crash headlessly** (not fixed — not
+    a real-engine bug). `SONGMAN->FindSong(group, song)` →
+    `GetSongs(group)` → a `FOREACH_EnabledPlayer` loop that dereferences
+    `PROFILEMAN` (null in the fixture). `PROFILEMAN` always exists by
+    course-load time in the real engine; the test sticks to 1-part title
+    refs (resolve via `GROUP_ALL`).
 - **Headless theme metrics** (new sub-item, 2026-09-10): the fixture
   leaves `THEME` constructed but does NOT call `SwitchThemeAndLanguage`
   — that runs the theme's Lua (`Themes/{_fallback,default}/Scripts/*`)
