@@ -131,7 +131,7 @@ install step, `StepMania-R` exe names). Fixed the matching 2.8.12 line and
 `Build/StepMania.sln` path in `DocsAgents/build.md`. Root `README.md`
 Travis badges were already removed.~~
 
-### 22. Dead autotools build system — propose full removal
+### 22. Dead autotools build system — DONE 2026-09-10
 The tree still carries a complete GNU autotools build: root `configure.ac`
 (`AC_PREREQ(2.59)` — 2003; `AC_INIT(StepMania, 5.0, …, http://stepmania.com)`
 — still identifies as *upstream*), `autogen.sh`, `autoconf/` aux dir, and
@@ -141,15 +141,21 @@ The tree still carries a complete GNU autotools build: root `configure.ac`
 regenerates or runs `configure`. `src/Makefile.am` still lists sources by
 hand (drifts from `CMakeData-*.cmake` on every add) and its only unique
 content was the `src/tests/` autotools test harness.
-**Partial (2026-09-10):** `src/tests/` (the 2004-era standalone `main()`
-harnesses — `test_{vector,threads,misc,file_readers,audio_readers,
-file_errors,timing_data}`; all salvaged into the CMake `tests/` suite,
-see item 17) deleted, and its `all_test_SOURCES`/`TESTS` block cut from
-`src/Makefile.am`.
-**Action (maintainer greenlight — whole build-system removal):** delete
-`configure.ac`, `autogen.sh`, `autoconf/`, and every first-party
-`Makefile.am` (leave `extern/*/Makefile.am` — those belong to vendored
-libs). ~2–3k lines. Do it as its own commit.
+~~**Action:** delete `configure.ac`, `autogen.sh`, `autoconf/`, and
+every first-party `Makefile.am`.~~ **Done 2026-09-10** — removed
+`Makefile.am` (root), `src/Makefile.am`, `configure.ac`, `autogen.sh`,
+`autoconf/` (`config.rpath` + `m4/*.m4`), `Utils/make-src-archive.sh`
+(the `autoreconf -if` + `make dist` helper), and the autotools-output
+block from `.gitignore` (`configure`, `aclocal.m4`, `config.status`,
+`autom4te.cache`, `Makefile.in`, `src/config.h{,.in}`, `src/stamp-h1`,
+…). ~3.9k lines. `extern/*/Makefile.am` kept (vendored). First done
+`src/tests/` (`604af60680` prior, item 17 harnesses). **Verified:**
+CMake reconfigure + `sm_tests` clean, suite 5839/220, `ctest` 100%;
+Release `StepMania-R.exe` links clean under `WITH_WERROR=ON`;
+`--SelfTest` exit 0. Nothing in CI / CMake / docs referenced any of it.
+Left alone (not autotools-*system*, no live caller either — orphan
+scripts, own cleanup if wanted): `Utils/CreatePackage.pl`,
+`Utils/install-stepmania.pl`.
 
 ### 23. Dead `src/smpackage/` MFC tool — DONE 2026-09-10
 `src/smpackage/` is the old standalone "SMPackage" installer/exporter
