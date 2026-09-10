@@ -5,17 +5,17 @@
 // course format straight from a string: no SONGINDEX cache probe, no file
 // I/O. EngineTestEnv brings up SONGMAN (empty -- InitAll() is not called),
 // so song-reference resolution runs but every lookup misses. These tests
-// PIN that current behaviour, bug-for-bug. Two quirks they lock in on
+// PIN that current behaviour, bug-for-bug. One quirk they lock in on
 // purpose:
 //
-//   * #STYLE is silently dropped. The dispatch has
-//       else if( !eq("DISPLAYCOURSE") || !eq("COMBO") || !eq("COMBOMODE") )
-//     which is always true (a name can't equal all three), so the #STYLE
-//     / #RADAR-cache / "unexpected value" branches after it are dead.
-//     Flagged for the maintainer -- the || should be &&.
 //   * #SONG:BEST<n> uses `iChooseIndex > iNumSongs` (not >=), so with an
 //     empty SONGMAN "BEST1" (index 0) is ACCEPTED while "BEST2" is
 //     rejected. Off-by-one, pinned as-is.
+//
+// (A second quirk this file originally pinned -- #STYLE silently dropped
+// because the recognised-tag guard was `!eq(A) || !eq(B) || !eq(C)`,
+// always true -- was FIXED to `eq(A) || eq(B) || eq(C)`; #STYLE now
+// populates m_setStyles, which these tests check.)
 //
 // Not covered: a 2-part "#SONG:Group/Song" reference. Resolving it goes
 // SONGMAN->FindSong -> GetSongs(group) -> a FOREACH_EnabledPlayer loop
@@ -88,8 +88,11 @@ TEST_CASE( "CourseLoaderCRS parses course metadata", "[NotesLoader][CourseLoader
 	// Challenge/Edit, so "Difficult" is Difficulty_Hard (not "Hard").
 	CHECK( c.m_iCustomMeter[Difficulty_Hard] == 9 );
 
-	// #STYLE is silently ignored (dead-branch bug, see file header).
-	CHECK( c.m_setStyles.empty() );
+	// #STYLE:dance-single,dance-double -> both land in m_setStyles.
+	// (Was silently dropped before the recognised-tag-guard fix.)
+	CHECK( c.m_setStyles.size() == 2 );
+	CHECK( c.m_setStyles.count( "dance-single" ) == 1 );
+	CHECK( c.m_setStyles.count( "dance-double" ) == 1 );
 
 	// m_sPath / m_sGroupName are only set by LoadFromCRSFile, not by
 	// LoadFromMsd, so via LoadFromBuffer they stay empty.
