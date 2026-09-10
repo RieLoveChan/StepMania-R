@@ -210,6 +210,30 @@ Left: `src/update_check/check_sm5.php` — server-side script,
 `NetworkSyncManager.cpp` still references `/stepmania/check_sm5.php` as
 the update endpoint; leave until the netcode's update-check is
 revisited.
+Also removed (`f13444d740`): stale committed
+`src/archutils/Win32/mapconv.exe` (mapconv is CMake-built;
+`*.exe` is already gitignored).
+
+### 26. Committed binary blobs in the repo — audit / propose removal
+`git ls-files` still tracks a pile of committed binaries outside
+`extern/` and `Build/`. Each needs a "is this a real dep?" check before
+removal — do NOT blanket-delete:
+- **`Utils/Graphviz/`** (~16 files: `dot.exe`, `neato.exe`, DLLs) and
+  **`Utils/doxygen/{doxygen,hhc}.exe`** — a bundled Graphviz+Doxygen
+  install for `doxygen_run.bat` call-graphs. Doc tooling, not the game
+  build. Candidate: drop, document "install graphviz/doxygen yourself".
+- **`Utils/{Bitmap Font Builder.exe, PngAlphaView.exe, forfiles.exe,
+  pngcrush.exe, upx.exe, crush}`** — bundled dev/asset utilities.
+  `forfiles.exe` is a Windows built-in (pointless to bundle). Audit
+  which the build/packaging actually invokes.
+- **`Program/parallel_lights_io.dll`** — shipped lights-I/O DLL; may be
+  loaded at runtime by a lights driver. **Verify before touching.**
+- **`src/archutils/Win32/ddk/{x86,x64}/{dbghelp,hid,setupapi}.lib`** —
+  Windows DDK import libs; the Win32 build links `dbghelp.lib` etc.
+  Check whether CMake uses these committed copies or the system SDK
+  ones (if system → these are dead).
+- **`Xcode/Libraries/*.a`** — committed macOS static libs. `AGENTS.md`
+  §3 — leave to a macOS-focused pass.
 
 ---
 
