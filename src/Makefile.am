@@ -762,83 +762,9 @@ if HAVE_GTK
  GtkModule_so_SOURCES = arch/LoadingWindow/LoadingWindow_GtkModule.cpp
 endif
 
-all_test_SOURCES += \
-		$(ArchUtils) \
-		$(RageFile) \
-		$(Lua) \
-		$(ArchHooks) \
-		$(Threads) \
-		$(Dialog) \
-		tests/test_misc.cpp tests/test_misc.h \
-		IniFile.cpp IniFile.h \
-		XmlFile.cpp XmlFile.h \
-		Command.cpp Command.h \
-		DateTime.cpp DateTime.h \
-		EnumHelper.cpp EnumHelper.h \
-		PrefsManager.cpp PrefsManager.h \
-		Preference.cpp Preference.h \
-		LocalizedString.cpp LocalizedString.h \
-		LuaBinding.cpp LuaBinding.h \
-		LuaManager.cpp LuaManager.h \
-		LuaReference.cpp LuaReference.h \
-		SpecialFiles.cpp SpecialFiles.h \
-		RageException.cpp \
-		RageLog.cpp \
-		RageThreads.cpp \
-		RageTimer.cpp RageTimer.h \
-		RageUtil.cpp \
-		RageUtil_FileDB.cpp RageUtil_FileDB.h \
-		global.cpp global.h \
-		RageUtil_WorkerThread.cpp RageUtil_WorkerThread.h \
-		MessageManager.cpp MessageManager.h
 
-TESTS += test_audio_readers
-test_audio_readers_SOURCES = \
-		$(RageSoundFileReaders) \
-		$(all_test_SOURCES) \
-		tests/test_audio_readers.cpp \
-		RageSoundUtil.cpp RageSoundUtil.h RageSoundMixBuffer.cpp RageSoundMixBuffer.h \
-		RageSoundReader.cpp RageSoundReader.h \
-		RageSoundReader_FileReader.cpp RageSoundReader_FileReader.h \
-		RageSoundReader_Pan.cpp RageSoundReader_Pan.h \
-		RageSoundReader_Preload.cpp RageSoundReader_Preload.h \
-		RageSoundReader_Resample_Good.cpp RageSoundReader_Resample_Good.h \
-		RageSoundReader_Chain.cpp RageSoundReader_Chain.h
-
-test_audio_readers_LDADD = $(AUDIO_LIBS)
-
-TESTS += test_file_readers
-test_file_readers_SOURCES = \
-		$(all_test_SOURCES) \
-		tests/test_file_readers.cpp
-
-TESTS += test_file_errors
-test_file_errors_SOURCES = \
-		$(all_test_SOURCES) \
-		tests/test_file_errors.cpp \
-		MsdFile.cpp MsdFile.h \
-		CryptManager.cpp CryptManager.h
-
-test_file_errors_LDADD = \
-		libtomcrypt.a libtommath.a
-
-TESTS += test_timing_data
-test_timing_data_SOURCES = \
-		$(all_test_SOURCES) \
-		tests/test_timing_data.cpp \
-		TimingData.cpp TimingData.h
-
-#TESTS += test_notedata
-#test_notedata_SOURCES = \
-#		$(all_test_SOURCES) \
-#		tests/test_notedata.cpp \
-#		NoteData.cpp NoteData.h NoteDataUtil.cpp NoteDataUtil.h \
-#		NewNoteData.cpp NewNoteData.h \
-#		NoteTypes.cpp NoteTypes.h \
-#		TimingData.cpp TimingData.h
-#NewNoteDataUtil.cpp NewNoteDataUtil.h
-
-TESTS += test_threads
-test_threads_SOURCES = \
-		$(all_test_SOURCES) \
-		tests/test_threads.cpp
+# NOTE: the autotools test targets (test_audio_readers / test_file_readers /
+# test_file_errors / test_timing_data / test_threads, driven off src/tests/)
+# were removed 2026-09-10. Their intent lives in the CMake `sm_tests` suite
+# (tests/, WITH_TESTS). This whole autotools build (configure.ac + Makefile.am)
+# is dead -- CI and docs are CMake-only. See DocsAgents/modernization-backlog.md.

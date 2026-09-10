@@ -131,6 +131,26 @@ install step, `StepMania-R` exe names). Fixed the matching 2.8.12 line and
 `Build/StepMania.sln` path in `DocsAgents/build.md`. Root `README.md`
 Travis badges were already removed.~~
 
+### 22. Dead autotools build system — propose full removal
+The tree still carries a complete GNU autotools build: root `configure.ac`
+(`AC_PREREQ(2.59)` — 2003; `AC_INIT(StepMania, 5.0, …, http://stepmania.com)`
+— still identifies as *upstream*), `autogen.sh`, `autoconf/` aux dir, and
+`Makefile.am` in the repo root + `src/` (+ each first-party subtree).
+**It is dead:** CI (`.github/workflows/ci.yml`), `AGENTS.md`,
+`DocsAgents/build.md` and the `Build/` docs are 100% CMake; nothing
+regenerates or runs `configure`. `src/Makefile.am` still lists sources by
+hand (drifts from `CMakeData-*.cmake` on every add) and its only unique
+content was the `src/tests/` autotools test harness.
+**Partial (2026-09-10):** `src/tests/` (the 2004-era standalone `main()`
+harnesses — `test_{vector,threads,misc,file_readers,audio_readers,
+file_errors,timing_data}`; all salvaged into the CMake `tests/` suite,
+see item 17) deleted, and its `all_test_SOURCES`/`TESTS` block cut from
+`src/Makefile.am`.
+**Action (maintainer greenlight — whole build-system removal):** delete
+`configure.ac`, `autogen.sh`, `autoconf/`, and every first-party
+`Makefile.am` (leave `extern/*/Makefile.am` — those belong to vendored
+libs). ~2–3k lines. Do it as its own commit.
+
 ---
 
 ## Tier 3 — Risk; deliberate decisions (see ADR 0001, ADR 0003)
