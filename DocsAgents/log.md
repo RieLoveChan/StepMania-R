@@ -2005,3 +2005,29 @@
   `LoadFromCRSFile` does), so via `LoadFromBuffer` those stay empty.
   **Verified:** `sm_tests` 5925/222 -> **5961/226**, `ctest` 100%,
   Release `StepMania-R.exe` links clean, `--SelfTest` exit 0.
+
+* **Fixed the `#STYLE` dead-code bug in `CourseLoaderCRS` + made the Unix
+  CI test jobs informational.**
+  - `CourseLoaderCRS::LoadFromMsd`: the recognised-tag guard was
+    `else if( !eq("DISPLAYCOURSE") || !eq("COMBO") || !eq("COMBOMODE") )`,
+    which is always true, so `#STYLE`, the `bFromCache` RADAR-cache
+    branch and the "unexpected value" log were all dead -- `#STYLE` on a
+    course silently did nothing. Corrected to
+    `eq(A) || eq(B) || eq(C)` and moved the `#STYLE` handler *above* the
+    `bFromCache` catch-all (a `LoadFromBuffer`/cache load has
+    `bFromCache=true`, so `#STYLE` would otherwise be eaten by the
+    radar-cache parse before reaching its handler).
+    `test_NotesLoaderCRS.cpp`'s metadata case now checks
+    `#STYLE:dance-single,dance-double` -> both land in `m_setStyles`.
+    §5 change, Windows-verified (`sm_tests` 5963/226, `ctest` 100%,
+    Release + `--SelfTest` green). Backlog item 17 updated.
+  - **CI:** the Ubuntu + macOS `sm_tests` "Run tests" steps are
+    `continue-on-error: true`. Root cause (new backlog item 27): on
+    Unix/macOS any engine `ASSERT`/`FAIL_M` -> `sm_crash()` ->
+    `CrashHandler::ForceCrash` -> `RunCrashHandler`, which `_exit(1)`s
+    because `CrashHandlerHandleArgs` was never called (Catch2's `main()`
+    doesn't boot `ArchHooks`). So the first assert any test trips kills
+    the binary before Catch2 can report -- and a couple of tests
+    (`Corpus`, `RageFileDriverSlice`) trip one only on Unix. Pre-existing
+    (red before the 2026-09-10 work); the suite is green on Windows, the
+    primary platform. Fixing it needs a Unix/macOS box.

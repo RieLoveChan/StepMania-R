@@ -228,11 +228,15 @@ default OFF, ON in a dedicated CI job. Not built in a normal dev build.
    accepted / `BEST2` rejected — off-by-one; `GRADEBEST`/`*` accepted;
    1-part title miss rejected), old-style difficulty aliases + `lo..hi`
    meter ranges + the `3..6` fallback, and the `#SONG` modifier-column
-   keywords. Two current-behavior quirks pinned bug-for-bug: `#STYLE` is
-   silently dropped (a dead `else if( !eq(A) || !eq(B) || !eq(C) )`
-   branch — always true), and 2-part `#SONG:Group/Song` refs are *not*
-   covered because resolving them needs `PROFILEMAN` (null here). Both
-   flagged for the maintainer.
+   keywords. Writing it surfaced a real bug, **now fixed**: the
+   recognised-tag guard was `else if( !eq(A) || !eq(B) || !eq(C) )`
+   (always true), so `#STYLE`, the RADAR-cache branch and the
+   "unexpected value" log were all dead — `#STYLE` on a course did
+   nothing. Fixed to `eq(A) || eq(B) || eq(C)` and moved the `#STYLE`
+   handler above the `bFromCache` catch-all; the test now checks
+   `#STYLE` populates `m_setStyles`. Still not covered: 2-part
+   `#SONG:Group/Song` refs (resolving them needs `PROFILEMAN`, null in
+   the fixture — not a real-engine bug).
    **ADR 0006 phase 4 is now complete for every simfile/course format
    the engine loads.**
 
@@ -320,8 +324,9 @@ Consumers:
   no SONGINDEX/cache probe). Pins course metadata, `#SONG` entry
   resolution vs an empty `SONGMAN` (the `BEST<n>` off-by-one), the
   difficulty/meter-range parsing, and the `#SONG` modifier keywords.
-  Locks in two quirks: `#STYLE` silently dropped (dead `||` branch) and
-  2-part `Group/Song` refs uncovered (need `PROFILEMAN`). Hidden
+  Its `#STYLE` case pins the fix for the dead recognised-tag guard
+  (`!eq||!eq||!eq`, always true — `#STYLE` used to do nothing). 2-part
+  `Group/Song` refs stay uncovered (need `PROFILEMAN`). Hidden
   `[crsdump]` case.
 - `tests/test_RageFile.cpp` — `RageFile` read/write/seek/tell/`GetLine`/
   `AtEOF` through `FILEMAN`'s writable `/@mem` mount (no committed
