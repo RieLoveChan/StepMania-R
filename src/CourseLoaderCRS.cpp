@@ -163,20 +163,10 @@ bool CourseLoaderCRS::LoadFromMsd( const RString &sPath, const MsdFile &msd, Cou
 			attacks.clear();
 			out.m_vEntries.push_back( new_entry );
 		}
-		else if( !sValueName.EqualsNoCase("DISPLAYCOURSE") || !sValueName.EqualsNoCase("COMBO") ||
-			 !sValueName.EqualsNoCase("COMBOMODE") )
+		else if( sValueName.EqualsNoCase("DISPLAYCOURSE") || sValueName.EqualsNoCase("COMBO") ||
+			 sValueName.EqualsNoCase("COMBOMODE") )
 		{
-			// Ignore
-		}
-
-		else if( bFromCache && !sValueName.EqualsNoCase("RADAR") )
-		{
-			StepsType st = (StepsType) StringToInt(sParams[1]);
-			CourseDifficulty cd = (CourseDifficulty) StringToInt( sParams[2] );
-
-			RadarValues rv;
-			rv.FromString( sParams[3] );
-			out.m_RadarCache[Course::CacheEntry(st, cd)] = rv;
+			// Ignore -- recognised-but-unused tags.
 		}
 		else if( sValueName.EqualsNoCase("STYLE") )
 		{
@@ -186,6 +176,15 @@ bool CourseLoaderCRS::LoadFromMsd( const RString &sPath, const MsdFile &msd, Cou
 			for (RString const &s : asStyles)
 				out.m_setStyles.insert( s );
 
+		}
+		else if( bFromCache && !sValueName.EqualsNoCase("RADAR") )
+		{
+			StepsType st = (StepsType) StringToInt(sParams[1]);
+			CourseDifficulty cd = (CourseDifficulty) StringToInt( sParams[2] );
+
+			RadarValues rv;
+			rv.FromString( sParams[3] );
+			out.m_RadarCache[Course::CacheEntry(st, cd)] = rv;
 		}
 		else
 		{
