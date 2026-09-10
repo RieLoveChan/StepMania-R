@@ -180,6 +180,37 @@ untouched) is unaffected. `Utils/make-src-archive.sh`'s
 `./src/smpackage*` line goes with item 22 (that script is autotools
 `make dist` flow).
 
+### 24. Dead in-tree `src/libtomcrypt/` + `src/libtommath/` copies — DONE 2026-09-10
+The fork moved libtomcrypt/libtommath to `extern/` git **submodules**
+(`638ce07d84` "Add missing submodules"); the crypto targets are defined
+in `extern/CMakeLists.txt` → `CMakeProject-tomcrypt.cmake` /
+`-tommath.cmake`, sourced from `extern/libtomcrypt/src/...` with the
+public include dir `extern/libtomcrypt/src/headers` (that's what
+`CryptManager.cpp`'s `#include <tomcrypt.h>` resolves to). The old
+**in-tree copies** `src/libtomcrypt/` + `src/libtommath/` (658 files,
+~161k lines, ~10 MB; last touched pre-submodule by "Upgrade to
+libtomcrypt 1.18.2") had **zero CMake reference** and their own dead
+`libtomcrypt_VS2008.vcproj`.
+~~**Action:** `git rm -r src/libtomcrypt src/libtommath`.~~ **Done** —
+658 files / ~161k lines removed. **Verified:** CMake reconfigure clean,
+`tomcrypt.lib` + `tommath.lib` still build from `extern/`,
+`StepMania-R.exe` links clean (Release, `WITH_WERROR=ON`), `sm_tests`
+5839/220, `--SelfTest` exit 0.
+
+### 25. Misc orphan files — DONE 2026-09-10
+Small dead files with no build role: `src/smpackage-net2008.vcproj`
+(orphaned by item 23), `src/verify_signature/` (C++/C#/Java reference
+impls of `.smzip` signature checking, not built, no reference),
+`src/archutils/Win32/verinc.{c,exe,sln,vcproj}` (pre-CMake
+version-increment tool + a **committed `.exe`**; CMake generates the
+version stub from `src/verstub.in.cpp` via `StepmaniaCore.cmake:352`),
+`CMake/VerStubUtil.cmake` (`configure_file`s a non-existent
+`src/version_updater/verstub.cpp.in`; not `include()`d anywhere).
+Left: `src/update_check/check_sm5.php` — server-side script,
+`NetworkSyncManager.cpp` still references `/stepmania/check_sm5.php` as
+the update endpoint; leave until the netcode's update-check is
+revisited.
+
 ---
 
 ## Tier 3 — Risk; deliberate decisions (see ADR 0001, ADR 0003)
