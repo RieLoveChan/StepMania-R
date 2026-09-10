@@ -1849,3 +1849,21 @@
   `RageFileManager::Unzip` miniz). **Verified:** `sm_tests` + `[zip]`
   reader tests pass, Release `StepMania-R.exe` links clean under
   `WITH_WERROR=ON`, `--SelfTest` exit 0.
+
+* **Deleted the dead autotools build system (backlog item 22).** CI,
+  `AGENTS.md`, `DocsAgents/build.md` and `Build/` docs are 100% CMake;
+  `configure.ac` still had `AC_INIT(StepMania, 5.0, … http://stepmania.com)`
+  (pre-fork, `AC_PREREQ(2.59)` = 2003) and `SUBDIRS = bundle src` where
+  `bundle/` doesn't even exist. Removed `Makefile.am` (root),
+  `src/Makefile.am`, `configure.ac`, `autogen.sh`, `autoconf/`
+  (`config.rpath` + `m4/` ×18), `Utils/make-src-archive.sh` (the
+  `autoreconf -if` + `make dist` script), and the autotools-output
+  block from `.gitignore`. ~3.9k lines; `extern/*/Makefile.am` kept
+  (belong to vendored libs). No CMake / CI / doc referenced any of it —
+  verified nothing reads `configure.ac` or the first-party `Makefile.am`
+  for version/sources (the stepmania CMake build takes its version from
+  `CMake/SMDefs.cmake`; only `extern/{ogg,vorbis,pcre}/CMakeLists.txt`
+  parse *their own* `configure.ac`). **Verified:** CMake reconfigure +
+  `sm_tests` clean, suite 5839/220, `ctest` 100%; Release
+  `StepMania-R.exe` links clean under `WITH_WERROR=ON`; `--SelfTest`
+  exit 0.

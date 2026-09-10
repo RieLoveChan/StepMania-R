@@ -100,20 +100,7 @@ nsis_strings_temp.inc
 
 # Linux General Files
 .dirstamp
-Makefile
-stepmania
-Makefile.in
-config.status
 _build/*
-aclocal.m4
-autoconf/*
-autom4te.cache/*
-configure
-src/Makefile.in
-src/Makefile
-src/config.h
-src/config.h.in
-src/stamp-h1
 GtkModule.so
 StepMania
 core
