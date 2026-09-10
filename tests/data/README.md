@@ -20,9 +20,10 @@ tree instead, via `EngineTestEnv::SongPath(...)`:
 | `Songs/StepMania 5/MechaTribe Assault/` | `.ssc` | |
 | `Songs/StepMania 5/Springtime/` | `.ssc` | |
 
-`.sma` / `.dwi` / `.ksf` / `.crs` have no committed sample yet -- see
-`DocsAgents/modernization-backlog.md` item 17. When the real song is
-redistributable it goes under `Songs/`, not here.
+`.dwi` / `.ksf` have derived fixtures (below); `.sma` has a *synthetic*
+one (below -- no real `.sma` exists anywhere); `.crs` has no sample yet.
+See `DocsAgents/modernization-backlog.md` item 17. When a real
+redistributable song turns up it goes under `Songs/`, not here.
 
 ## Derived simfile fixtures (when the real song is NOT redistributable)
 
@@ -62,6 +63,19 @@ cannot be committed to a public repo. So:
 This keeps the §5 regression honest (real chart/keysound *structure*)
 without redistributing copyrighted content. Same approach applies to any
 future `.bms` / `.pms` / `.dwi` fixture whose source is not free.
+
+## Synthetic simfile fixtures (when NO real file exists at all)
+
+`sma-fixture/` -- a 1-chart `.sma` for `test_NotesLoaderSMA.cpp`. Unlike
+the derived fixtures above, this one is **invented from scratch**: the
+`.sma` format is an extinct 2009-2011 SMA-editor variant and no real
+file could be found anywhere. Per the maintainer's 2026-09-10 decision,
+`SMALoader`'s current read behavior is taken as correct and this file
+exists only to pin it against regression of the shared `SMLoader` base.
+It deliberately exercises the SMA-only tags (`#ROWSPERBEAT`,
+`#BEATSPERMEASURE`, `#SPEED` with the `s` seconds suffix, `#MULTIPLIER`)
+-- see the header comment in the test for the pinned semantics. Every
+value in it is made up; there is no source to diff against.
 
 ## What else lives here
 
