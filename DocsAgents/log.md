@@ -1879,3 +1879,18 @@
   reconfigure clean, `tomcrypt.lib`/`tommath.lib` still build from
   `extern/`, Release `StepMania-R.exe` links clean (`WITH_WERROR=ON`),
   `sm_tests` 5839/220, `--SelfTest` exit 0.
+
+* **Deleted misc orphan files (backlog item 25).**
+  `src/smpackage-net2008.vcproj` (orphaned by item 23),
+  `src/verify_signature/` (C++/C#/Java reference impls of `.smzip`
+  signature checking — not built, unreferenced),
+  `src/archutils/Win32/verinc.{c,exe,sln,vcproj}` (pre-CMake
+  version-increment tool + a **committed `verinc.exe`**; CMake generates
+  the version stub from `src/verstub.in.cpp` per `StepmaniaCore.cmake`),
+  `CMake/VerStubUtil.cmake` (`configure_file`s a non-existent
+  `src/version_updater/verstub.cpp.in`, not `include()`d anywhere). Also
+  fixed the stale `src/ver.h` comment that pointed at `verinc.c`. ~2k
+  lines. **Verified:** reconfigure + `sm_tests` 5839/220 clean, Release
+  `StepMania-R.exe` links clean, `--SelfTest` exit 0. Left
+  `src/update_check/check_sm5.php` (netcode still names
+  `/stepmania/check_sm5.php`).
