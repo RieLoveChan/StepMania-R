@@ -194,46 +194,16 @@ static RString ReplaceInvalidFileNameChars( RString sOldFileName )
 	return sNewFileName;
 }
 
-static bool ExportPackage( RString sPackageName, RString /* sDirToExport */, RString &sErrorOut )
+static bool ExportPackage( RString /* sPackageName */, RString /* sDirToExport */, RString &sErrorOut )
 {
-	// Mount Desktop/ for each OS.
-	RString sDesktopDir = SpecialDirs::GetDesktopDir();
-	RString fn = sDesktopDir+sPackageName;
-	RageFile f;
-	if( !f.Open(fn, RageFile::WRITE) )
-	{
-		sErrorOut = ssprintf( "Couldn't open %s for writing: %s", fn.c_str(), f.GetError().c_str() );
-		return false;
-	}
-
-	// XXX: totally doesn't work. -aj
-	/*
-	RageFileObjZip zip( &f );
-	zip.Start();
-	zip.SetGlobalComment( sComment );
-
-	std::vector<RString> vs;
-	GetDirListingRecursive( sDirToExport, "*", vs );
-	SMPackageUtil::StripIgnoredSmzipFiles( vs );
-	LOG->Trace("Adding files...");
-	for (RString &s : vs)
-	{
-		if( !zip.AddFile( s ) )
-		{
-			sErrorOut = ssprintf( "Couldn't add file: %s", s.c_str() );
-			return false;
-		}
-	}
-
-	LOG->Trace("Writing zip...");
-	if( zip.Finish() == -1 )
-	{
-		sErrorOut = ssprintf( "Couldn't write to file %s", fn.c_str(), f.GetError().c_str() );
-		return false;
-	}
-
-	return true;
-	*/
+	// Package (.smzip) export is not implemented. The old body used a
+	// long-gone RageFileObjZip API and had been #if 0'd out for years
+	// ("XXX: totally doesn't work. -aj"); the CreateZip fork it might
+	// have been ported to was STORED-only and is now deleted. If this
+	// comes back, wire it through miniz's mz_zip_writer_* APIs (they are
+	// already vendored for reading -- flip MINIZ_NO_ARCHIVE_WRITING_APIS
+	// in extern/miniz/miniz.h).
+	sErrorOut = "Package export is not implemented in this build.";
 	return false;
 }
 

@@ -284,11 +284,14 @@ Consumers:
   `RageFile::Read`/`Write` → -1 with `GetError()` set, that `Flush()`
   surfaces `FlushInternal`'s error, and that `IniFile::ReadFile`/
   `WriteFile` carry it up. Salvages `src/tests/test_file_errors.cpp`.
-- `tests/test_Zip.cpp` — `CreateZip` (the bundled Info-ZIP writer) →
-  `RageFileDriverZip` (read-only ZIP VFS) round-trip in `/@mem`:
-  entries byte-exact, missing entry → nullptr, `Open(WRITE)` →
-  `ERROR_WRITING_NOT_SUPPORTED`, non-zip → `Load` false. Pins that this
-  `CreateZip` build STOREs every entry (backlog item 19).
+- `tests/test_Zip.cpp` — `RageFileDriverZip` (read-only ZIP VFS). The
+  test archive is assembled by a ~90-line in-file minimal ZIP writer
+  (one STORED entry + one DEFLATED entry compressed with
+  `RageFileObjDeflate`), written to `/@mem`, then read back: entries
+  byte-exact, CRC32 + method + size fields parsed correctly, missing
+  entry → nullptr, `Open(WRITE)` → `ERROR_WRITING_NOT_SUPPORTED`,
+  non-zip → `Load` false. (The engine has no ZIP *writer* — `CreateZip`
+  was dead STORED-only code, deleted; see backlog item 19.)
 - `tests/test_RageSurface.cpp` — `RageSurface` + `RageSurfaceUtils` pure
   helpers (built in memory, no image files / GL):
   `decode/encodepixel`, `Set/GetRawRGBAV`, `GetBitsPerChannel`,

@@ -1795,3 +1795,28 @@
   RageFileDriverSlice, DateTime, GameManager, RageColor, SongOptions,
   DeviceInput, Command, Difficulty, Grade, TimeFormat, StringConversion,
   split/join, Regex, and the small string helpers.
+
+## 2026-09-10
+
+* **Deleted `src/CreateZip.{cpp,h}` — dead STORED-only ZIP writer
+  (backlog item 19 closed).** Traced the `.smzip` code paths after
+  `test_Zip.cpp` flagged that `CreateZip`/`TZip` emits `STORED` for
+  every entry: **nothing live calls it.** Its only would-be caller,
+  `ScreenOptionsExportPackage::ExportPackage()`, had its whole body
+  `#if 0`'d out for years ("XXX: totally doesn't work. -aj", using a
+  `RageFileObjZip` class that no longer exists) and always returned
+  false. Removed the 1126-line 2009 SM4-beta Info-ZIP fork (with its
+  hand-rolled `crc32`) + its `CMakeData-data.cmake` / `Makefile.am`
+  entries; replaced the dead `ExportPackage()` comment block with a
+  one-line stub. Rebuilt `tests/test_Zip.cpp` around a ~90-line in-file
+  minimal ZIP writer (STORED + a DEFLATED entry via
+  `RageFileObjDeflate` + zlib `crc32`), so `RageFileDriverZip` — the
+  reader — stays fully characterized with no engine writer.
+  **Decompression is already current** and untouched: zlib **1.3.2**
+  (`RageFileObjInflate`, the VFS `.smzip`/`.gz` path) + **miniz 2.2.0 /
+  MZ_VERSION 10.2.0** (`RageFileManager::Unzip`, the Lua bulk
+  extractor). If package export is ever wanted back, wire it through
+  `mz_zip_writer_*` (drop `MINIZ_NO_ARCHIVE_WRITING_APIS`).
+  **Verified:** `sm_engine` (all of `src/`) + `sm_tests` clean under
+  Debug `WITH_WERROR=ON`, suite 5839/220, `ctest` 100%; **Release**
+  `StepMania-R.exe` links clean under `WITH_WERROR=ON`.
