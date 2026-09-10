@@ -24,11 +24,32 @@
 //                                 file-scope static data), and any real
 //                                 simfile load resolves #STEPSTYPE
 //                                 through GAMEMAN->StringToStepsType.
+//   MESSAGEMAN (MessageManager) -- trivial ctor; also stops LuaHelpers'
+//                                 script-error path from dereferencing a
+//                                 null MESSAGEMAN.
+//   GAMESTATE (GameState)      -- constructed but NOT Reset() (its ctor
+//                                 skips that on purpose), so the pointer
+//                                 is valid but GAMESTATE->GetCurrentGame()
+//                                 and friends are still not safe to call.
+//   THEME    (ThemeManager)    -- CONSTRUCTED ONLY. No theme is switched
+//                                 in: SwitchThemeAndLanguage() runs the
+//                                 theme's Lua and SIGSEGVs headlessly.
+//                                 So the pointer is valid, but every
+//                                 ThemeMetric<T> / CommonMetrics::* stays
+//                                 unset -- reading a metric value still
+//                                 asserts. (Backlog item 17.)
+//   NOTESKIN (NoteSkinManager) -- trivial ctor; non-null unblocks the
+//                                 PlayerOptions mod-processing ASSERT and
+//                                 NOTESKIN->... calls.
+//   SONGMAN  (SongManager)     -- constructed; InitAll() (the slow song
+//                                 scan) is NOT called, so it holds no
+//                                 songs/courses until a test adds them.
 //
-// What it deliberately does NOT construct: GAMESTATE, THEME, SONGMAN, the
-// renderer, the audio device. Anything that needs those stays --SelfTest
-// smoke-test territory (AGENTS.md, ADR 0006). Song::LoadFromSongDir (the
-// full song-directory load, with cache) still needs more than this.
+// What it deliberately does NOT do: switch a theme, populate SONGMAN,
+// bring up the renderer or the audio device. Anything that needs those
+// stays --SelfTest smoke-test territory (AGENTS.md, ADR 0006).
+// Song::LoadFromSongDir (the full song-directory load, with cache) still
+// needs more than this.
 //
 // Usage: call EngineTestEnv::Require() at the top of any TEST_CASE that
 // needs the above. It is idempotent -- the first call constructs, later
@@ -44,14 +65,17 @@ namespace EngineTestEnv
 {
 	// Idempotent. On first call constructs, in this order:
 	//   LUA -> ActorUtil::InitFileTypeLists() -> FILEMAN -> LOG
-	//       -> PREFSMAN -> GAMEMAN
+	//       -> PREFSMAN -> (mount Themes/, NoteSkins/) -> MESSAGEMAN
+	//       -> GAMESTATE -> GAMEMAN -> THEME (ctor only) -> NOTESKIN
+	//       -> SONGMAN
 	// The order is load-bearing: RageFileManager's ctor calls LUA->Get();
 	// RageLog's ctor opens a RageFile, which asserts FILEMAN != null;
 	// PrefsManager's ctor reads .ini files via FILEMAN and registers with
 	// LUA. InitFileTypeLists() populates the static extension<->filetype
-	// maps (needed by the sound/image readers). Teardown is the reverse
-	// (PREFSMAN's dtor calls LUA->UnsetGlobal); the filetype maps are
-	// static and left as-is.
+	// maps (needed by the sound/image readers). MESSAGEMAN precedes
+	// GAMESTATE (matches sm_main). Teardown is the reverse -- every
+	// manager whose dtor calls LUA->UnsetGlobal is destroyed before LUA;
+	// the filetype maps are static and left as-is.
 	void Require();
 
 	// Turn a path relative to tests/data/ into the vpath it is mounted
