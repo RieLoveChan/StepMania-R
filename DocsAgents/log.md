@@ -1835,3 +1835,17 @@
   (`configure.ac` still says `AC_INIT(StepMania, 5.0, …
   http://stepmania.com)` — pre-fork; CI/docs are CMake-only) as its own
   maintainer-greenlit commit.
+
+* **Deleted `src/smpackage/` — dead MFC "SMPackage" tool (backlog item
+  23).** 110 files / ~19k LOC: the old standalone installer/exporter GUI
+  (`CDialog`/`CTreeCtrl`/`afxwin.h`) + a bundled 3rd-party `ZipArchive/`
+  (`mfc/` + `stl/` + `Linux/` variants, VS2003/2008 `.vcproj`,
+  `borland.zip`), `res/`, `.rc`. No CMake reference, no live `src/` code
+  uses it or `SMPackageUtil`, `baseline.md`'s tidy sweep already
+  excluded it, last commit msg was *"I still can't get SMPackage to
+  compile"*, MFC isn't in a standard modern VS. Its only feature —
+  `.smzip` export — was already dead (item 19). **`.smzip` load is a
+  separate, untouched path** (`RageFileDriverZip` "ZIP" VFS driver +
+  `RageFileManager::Unzip` miniz). **Verified:** `sm_tests` + `[zip]`
+  reader tests pass, Release `StepMania-R.exe` links clean under
+  `WITH_WERROR=ON`, `--SelfTest` exit 0.
