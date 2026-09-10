@@ -1907,3 +1907,13 @@
   behavior-risk change, not a mechanical sweep, so the directory stays
   untouched pending a maintainer decision. Backlog item 26 updated with
   the finding. A staged experimental `git rm -r` of the dir was reverted.
+
+* **Full-tree green check after the 2026-09-10 dead-weight sweep.**
+  Combined verification covering every deletion in the sweep (CreateZip,
+  `src/tests/`, autotools, `src/smpackage/`, `src/libtomcrypt/` +
+  `src/libtommath/`, misc orphans, `mapconv.exe`; the `ddk/` deletion
+  was reverted — its headers are used by `USB.cpp`):
+  `cmake -S . -B build-tests` and `-B Build` reconfigure clean;
+  `sm_tests` builds and runs **5839 assertions / 220 cases, all pass**;
+  `ctest -C Debug` 100%; Release `StepMania-R.exe` links clean;
+  `--SelfTest` exit 0. Tree is green.

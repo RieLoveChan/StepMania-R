@@ -327,8 +327,9 @@ remainder.
 - `modernize-use-equals-default` (38) and `readability-redundant-member-init`
   (28) — deferred: `--fix` output is too dirty to land without a
   coupled `clang-format` run, which ADR 0002 says must be its own
-  change. `modernize-use-bool-literals` (11) — trivial, deferred with
-  them.
+  change. `modernize-use-bool-literals` — DONE 2026-09-09
+  (`3be07f669d`, closeout `3479323da9`), the diff was clean enough to
+  land on its own.
 - `bugprone-integer-division` (14) — flagged for the maintainer
   (sub-pixel render maths on untested paths), see `baseline.md`.
 - 4 unfixable `bugprone-macro-parentheses` sites (`StatsManager` ×2
