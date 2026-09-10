@@ -241,16 +241,34 @@ idempotently constructs, once per `sm_tests` process:
 | `FILEMAN` (`RageFileManager`) | `RageFile` I/O; mounts `tests/data/` at `/testdata` and the repo `Songs/` at `/Songs` | after `LUA` |
 | `LOG` (`RageLog`) | error branches call `LOG->UserLog`/`LOG->Warn` | after `FILEMAN` (its ctor opens a `RageFile`, which `ASSERT`s `FILEMAN`) |
 | `PREFSMAN` (`PrefsManager`) | dir-only loaders read it (`DWILoader` → `m_bQuirksMode`, courses → `m_bFastLoad`); Song/Steps paths too | after `LUA` + `FILEMAN` (ctor registers with `LUA`, reads `Data/*.ini` via `FILEMAN` — none mounted, so compiled defaults stand). Dtor calls `LUA->UnsetGlobal` → torn down before `LUA` |
+| `PREFSMAN` also mounts the repo `Themes/` at `/Themes` and `NoteSkins/` at `/NoteSkins` | so `ThemeManager`/`NoteSkinManager` can list them (relative `"Themes/*"` resolves against the VFS root) | after `FILEMAN` |
+| `MESSAGEMAN` (`MessageManager`) | trivial ctor; also stops `LuaHelpers`' script-error path (`ScriptErrorMessage` → `MESSAGEMAN->Broadcast`) from dereferencing null | after `LUA`; before `GAMESTATE` (matches `sm_main`) |
+| `GAMESTATE` (`GameState`) | many `GAMESTATE->` paths; **ctor only, not `Reset()`** (its ctor skips that deliberately) so `GetCurrentGame()` etc. are still unsafe | after `MESSAGEMAN` |
 | `GAMEMAN` (`GameManager`) | `#STEPSTYPE` → `StepsType` resolution in every real load | after `LUA`; ctor is trivial (Lua registration only — the game/style/`StepsType` tables are file-scope static data) |
+| `THEME` (`ThemeManager`) | **constructed only — no `SwitchThemeAndLanguage()`** | after `GAMEMAN` |
+| `NOTESKIN` (`NoteSkinManager`) | trivial ctor; non-null unblocks the `PlayerOptions` mod-processing `ASSERT` | after `THEME` |
+| `SONGMAN` (`SongManager`) | ctor registers + `Load()`s a few `ThemeMetric`s (no-op while no theme is loaded); **`InitAll()` NOT called** — holds no songs/courses | after `THEME` |
 
 A `CATCH_REGISTER_LISTENER` tears them down at `testRunEnded`, in reverse
-construction order. Tests that never call `Require()` are unaffected.
-Deliberately **not** provided: `GAMESTATE`, `THEME`, `SONGMAN`, renderer,
-audio. `Song::LoadFromSongDir` (the full song-directory load, with the
-cache) still needs more than this; `LoadFromSimfile` for `.sm`/`.ssc`/
-`.sma` and `LoadFromDir` for `.dwi`/`.ksf`/`.bms` are now reachable —
-the only thing missing for the dir formats is a committed sample song
-(backlog item 17).
+construction order (every manager whose dtor calls `LUA->UnsetGlobal` is
+destroyed before `LUA`). Tests that never call `Require()` are unaffected.
+
+**`THEME` is constructed but no theme is switched in.**
+`SwitchThemeAndLanguage()` runs the whole theme's Lua
+(`Themes/{_fallback,default}/Scripts/*.lua`) and refreshes the
+screen-dimension metric cache, and that path **SIGSEGVs in the headless
+harness** — theme code assumes a live engine (renderer, `SCREENMAN`,
+sound). So `THEME != nullptr` (unblocks anything that only needs the
+pointer), but `THEME->IsThemeLoaded()` is false and every
+`ThemeMetric<T>` / `CommonMetrics::*` stays unset — a test that reads an
+actual metric *value* still hits the `m_Value.IsSet()` assert. A
+headless way to load metric *values* (a scripts-free minimal test theme,
+or a stub metric provider) is tracked under backlog item 17.
+
+Still not provided at all: the renderer and the audio device.
+`Song::LoadFromSongDir` (the full song-directory load, with the cache)
+still needs more than this; `LoadFromSimfile` for `.sm`/`.ssc`/`.sma`
+and `LoadFromDir` for `.dwi`/`.ksf`/`.bms` are reachable.
 Paths reach the fixture through a `file(GENERATE)`d `EngineTestEnvPaths.h`
 (raw string literals, so Windows backslashes need no escaping).
 
