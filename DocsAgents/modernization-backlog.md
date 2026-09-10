@@ -360,7 +360,7 @@ reject it (C++11 narrowing) if clang-cl were ever adopted. Not touched
 clang currently. Rewrite the cases as hex literals / `HRESULT(...)` if
 and when clang-cl support is actually pursued.
 
-### 17. Pick a unit-test framework + write core characterization tests — phases 1-3 DONE; phase 4 DONE for .sm/.ssc + .pms/BMS + .dwi + .ksf + .sma; reader-salvage DONE (incl. file_errors); only .crs still open
+### 17. Pick a unit-test framework + write core characterization tests — phases 1-3 DONE; phase 4 DONE for every format (.sm/.ssc + .pms/BMS + .dwi + .ksf + .sma + .crs); reader-salvage DONE (incl. file_errors)
 Framework decided: **Catch2 v3** (amalgamated, vendored `extern/Catch2/`
 @ v3.16.0) — ADR [0006](./adr/0006-test-harness.md). Build approach:
 `src/` → OBJECT library `sm_engine`, shared by the exe and a new
@@ -498,13 +498,23 @@ folder. Suite **948 / 118**.
   `#ROWSPERBEAT:4;` (no `=`) is an OOB read → crash. Left as-is per the
   "current behavior is the reference" decision; flagged for the
   maintainer.
-- `.crs`: no fixture yet. `EngineTestEnv` now brings up `SONGMAN`
-  (ctor only, no `InitAll`), `GAMESTATE`, `MESSAGEMAN`, `NOTESKIN` and a
-  constructed-but-not-switched `THEME` (2026-09-10), so `CourseLoader`
-  is reachable — still needs a fixture, and courses reference songs so
-  the fixture may need `SONGMAN` populated with a stub song or two. Real
-  course under `Songs/` if redistributable, else the derived-fixture
-  approach (`tests/data/`).
+- `.crs` **DONE 2026-09-10** (`test_NotesLoaderCRS.cpp`). Uses
+  `CourseLoaderCRS::LoadFromBuffer` over inline course text — no fixture
+  file, no SONGINDEX (the `bFromCache=true` path skips the cache probe).
+  Pins metadata, `#SONG` resolution vs an empty `SONGMAN`, difficulty /
+  meter-range parsing, modifier keywords. Two findings, NOT fixed (§5,
+  characterization only):
+  - **`#STYLE` is dead code.** `LoadFromMsd`'s dispatch has
+    `else if( !eq("DISPLAYCOURSE") || !eq("COMBO") || !eq("COMBOMODE") )`
+    — always true (no name equals all three), so `#STYLE`, the
+    RADAR-cache branch and the "unexpected value" log after it are
+    unreachable. The `||` should be `&&`. Test pins `m_setStyles` stays
+    empty.
+  - **2-part `#SONG:Group/Song` refs crash headlessly.** `SONGMAN->
+    FindSong(group, song)` → `GetSongs(group)` → a `FOREACH_EnabledPlayer`
+    loop that dereferences `PROFILEMAN` (null in the fixture). Not a
+    real-engine bug (PROFILEMAN always exists by course-load time); the
+    test just sticks to 1-part title refs (which resolve via `GROUP_ALL`).
 - **Headless theme metrics** (new sub-item, 2026-09-10): the fixture
   leaves `THEME` constructed but does NOT call `SwitchThemeAndLanguage`
   — that runs the theme's Lua (`Themes/{_fallback,default}/Scripts/*`)
