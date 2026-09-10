@@ -421,6 +421,18 @@ first-party non-§5 code:
     loaded (backlog item 17). `test_EngineTestEnv.cpp` grew the contract
     check to all ten singletons + a "THEME not loaded" case.
     Suite total: **5925 assertions / 222 cases**.
+  - `tests/test_NotesLoaderCRS.cpp` (2026-09-10) — **ADR 0006 phase 4
+    for `.crs`** (courses), the last open format. Via
+    `CourseLoaderCRS::LoadFromBuffer` over inline course text (no
+    fixture files; `bFromCache=true`, so no SONGINDEX). Pins metadata,
+    `#SONG` resolution vs an empty `SONGMAN` (`BEST1` in / `BEST2` out —
+    off-by-one; `GRADEBEST`/`*` in), old-style difficulty aliases +
+    `lo..hi` ranges + `3..6` fallback, and modifier-column keywords.
+    Locks in `#STYLE` being silently dropped (dead `||` branch, flagged)
+    and leaves 2-part `Group/Song` refs uncovered (need `PROFILEMAN`).
+    36 assertions / 4 visible cases (+1 hidden `[crsdump]`).
+    Suite total: **5961 assertions / 226 cases**. Every simfile/course
+    format the engine loads now has a phase-4 parse-regression.
   - `tests/test_RageLog.cpp` (2026-09-08) — `RageLog`'s level/category
     plumbing (ADR 0005 phase 2): the `LogLevel` (Trace<…<Error<Off) and
     `Log::Category` enums + their string round-trips (case-insensitive,

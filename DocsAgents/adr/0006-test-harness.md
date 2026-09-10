@@ -220,9 +220,21 @@ default OFF, ON in a dedicated CI job. Not built in a normal dev build.
    `#MULTIPLIER` 2-vs-3-field combo/miss. Also pins the quirk that
    `#BPMS`/`#STOPS` land on the *Steps* timing (empty at song level)
    while pre-`#NOTES` tags land on song timing.
-   **Still open:** `.crs` — `EngineTestEnv` has `PREFSMAN` so the loader
-   is reachable but likely also needs `SONGMAN`; needs a fixture.
-   Backlog item 17.
+   **`.crs` DONE** (2026-09-10, `test_NotesLoaderCRS.cpp`) —
+   `CourseLoaderCRS::LoadFromBuffer` (→ `LoadFromMsd`, `bFromCache=true`)
+   over inline course text, no fixture files. Pins metadata (`#COURSE`,
+   `#SCRIPTER`, `#REPEAT`, `#LIVES`, `#BANNER`, `#METER` 2- and 3-param),
+   `#SONG` entry resolution against the empty `SONGMAN` (`BEST1`
+   accepted / `BEST2` rejected — off-by-one; `GRADEBEST`/`*` accepted;
+   1-part title miss rejected), old-style difficulty aliases + `lo..hi`
+   meter ranges + the `3..6` fallback, and the `#SONG` modifier-column
+   keywords. Two current-behavior quirks pinned bug-for-bug: `#STYLE` is
+   silently dropped (a dead `else if( !eq(A) || !eq(B) || !eq(C) )`
+   branch — always true), and 2-part `#SONG:Group/Song` refs are *not*
+   covered because resolving them needs `PROFILEMAN` (null here). Both
+   flagged for the maintainer.
+   **ADR 0006 phase 4 is now complete for every simfile/course format
+   the engine loads.**
 
 ## Phase 3-4 enabler: `tests/EngineTestEnv` (2026-09-06)
 
@@ -303,6 +315,14 @@ Consumers:
   (`#ROWSPERBEAT` `r`-suffix row translation, `#BEATSPERMEASURE` 4/4
   back-fill, `#SPEED` `s`→seconds unit, `#MULTIPLIER` combo/miss) and
   the song-vs-Steps timing split. Hidden `[smadump]` case.
+- `tests/test_NotesLoaderCRS.cpp` — `CourseLoaderCRS::LoadFromBuffer`
+  over inline course text (no fixture files; `bFromCache=true` path, so
+  no SONGINDEX/cache probe). Pins course metadata, `#SONG` entry
+  resolution vs an empty `SONGMAN` (the `BEST<n>` off-by-one), the
+  difficulty/meter-range parsing, and the `#SONG` modifier keywords.
+  Locks in two quirks: `#STYLE` silently dropped (dead `||` branch) and
+  2-part `Group/Song` refs uncovered (need `PROFILEMAN`). Hidden
+  `[crsdump]` case.
 - `tests/test_RageFile.cpp` — `RageFile` read/write/seek/tell/`GetLine`/
   `AtEOF` through `FILEMAN`'s writable `/@mem` mount (no committed
   fixtures). Salvages `src/tests/test_file_readers.cpp`; pins the

@@ -1977,3 +1977,31 @@
   **Verified:** `sm_tests` 5912/221 -> **5925/222**, `ctest` 100%,
   Release `StepMania-R.exe` links clean, `--SelfTest` exit 0. The +5
   managers cost ~0s of run time (no theme load, no song scan).
+
+* **`.crs` characterization test landed -- ADR 0006 phase 4 COMPLETE
+  (backlog item 17).** `.crs` was the last format without a phase-4
+  parse-regression. `tests/test_NotesLoaderCRS.cpp` drives
+  `CourseLoaderCRS::LoadFromBuffer` (-> `LoadFromMsd`, `bFromCache=true`)
+  over inline course text -- no fixture files, no SONGINDEX cache probe,
+  no file I/O. `EngineTestEnv`'s new empty `SONGMAN` makes song-ref
+  resolution run (and miss). Pins: metadata (`#COURSE`/`#SCRIPTER`/
+  `#REPEAT`/`#LIVES`/`#BANNER`/`#METER` 2- & 3-param), `#SONG` entry
+  resolution (`BEST1` accepted / `BEST2` rejected -- `> iNumSongs` not
+  `>=`; `GRADEBEST`/`*` accepted; 1-part title miss rejected;
+  `m_bIncomplete`), old-style difficulty aliases + `lo..hi` meter ranges
+  + the `3..6` fallback, and the `#SONG` modifier column
+  (`showcourse`/`noshowcourse`/`nodifficult`/rest).
+  Two findings, NOT fixed (§5 -- characterization only, both flagged in
+  backlog item 17):
+  - `#STYLE` is unreachable: the dispatch's
+    `else if( !eq("DISPLAYCOURSE") || !eq("COMBO") || !eq("COMBOMODE") )`
+    is always true, so `#STYLE` + the RADAR-cache branch + the
+    "unexpected value" log are dead. `||` should be `&&`.
+  - 2-part `#SONG:Group/Song` refs SIGSEGV in the harness:
+    `SONGMAN->FindSong(g,s)` -> `GetSongs(g)` -> `FOREACH_EnabledPlayer`
+    -> null `PROFILEMAN`. Not a real-engine bug; the test uses 1-part
+    refs (resolve via `GROUP_ALL`, safe).
+  Also learned `LoadFromMsd` never sets `m_sPath` / `m_sGroupName` (only
+  `LoadFromCRSFile` does), so via `LoadFromBuffer` those stay empty.
+  **Verified:** `sm_tests` 5925/222 -> **5961/226**, `ctest` 100%,
+  Release `StepMania-R.exe` links clean, `--SelfTest` exit 0.
