@@ -469,10 +469,11 @@ first-party non-§5 code:
     OBJECT-library split is transparent when off) + `--SelfTest` exits 0.
   **CI (all 8 jobs green, run 33898309300):** Windows/macOS/Linux × plain
   build + `sm_tests`, plus the Lua.xml validator.
-- `src/tests/`: 7 standalone `test_*.cpp` from ~2004-06 — **Unix/Apple
-  only, need uncommitted 30 MB test data, `#error` without altivec/SSE,
-  full of `#if 0`**. Not wireable as-is. Intent salvaged where still
-  relevant: `test_timing_data.cpp`'s beat↔time cases →
+- `src/tests/` (deleted 2026-09-10): had been 7 standalone `test_*.cpp`
+  from ~2004-06 — **Unix/Apple only, need uncommitted 30 MB test data,
+  `#error` without altivec/SSE, full of `#if 0`**. Never wireable as-is.
+  Intent salvaged where still relevant before deletion:
+  `test_timing_data.cpp`'s beat↔time cases →
   `tests/test_TimingData.cpp`; simfile-parse coverage →
   `tests/test_NotesLoader.cpp` + `tests/test_NotesLoaderFull.cpp` +
   `tests/test_NotesLoaderCorpus.cpp`.
@@ -482,7 +483,7 @@ first-party non-§5 code:
   `TestDeflate()` round-trip). `test_audio_readers.cpp` **salvaged** 2026-09-06 →
   `tests/test_RageSoundReader.cpp` (synthetic PCM WAV built in the
   test, no fixture). **The `src/tests/` reader salvage is now
-  complete** — the remaining `src/tests/*` files are the old
+  complete** — the files left at deletion time were the old
   `test_lua` / rendering / pitch scaffolds, not worth wiring.
 - CI: build on 4 platforms + `xmllint` Lua-doc validation + the Windows
   headless smoke + `windows-tests` / `ubuntu-tests` / `macos-tests`.

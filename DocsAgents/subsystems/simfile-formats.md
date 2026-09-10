@@ -59,5 +59,6 @@ Writers".
   keep loading other songs.
 - Parsing helpers: `MsdFile.*` (`#TAG:value;` MSD parser) underlies
   SM/SSC/DWI.
-- There are loader tests: `src/tests/test_file_readers.cpp`,
-  `test_timing_data.cpp`.
+- There are loader tests under `tests/`: `test_NotesLoader*.cpp`
+  (SM/SSC/BMS/DWI/KSF + `Corpus`/`Full`), `test_TimingData.cpp`,
+  `test_RageFile*.cpp`.

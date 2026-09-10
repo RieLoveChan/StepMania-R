@@ -71,7 +71,7 @@ usually read-only). If the value is timing, it also belongs in
 - **Corpus regression test the parse path** (`AGENTS.md` §5) before
   pushing — load→save→load a set of real simfiles, diff the parsed
   state. The simfile invariant is not just "review it later".
-- Add a case to `src/tests/test_timing_data.cpp` (or a new loader test)
+- Add a case to `tests/test_TimingData.cpp` (or a new loader test)
   if the tag is timing-related.
 - Then commit + push. Spot-check to note: create a tiny `.ssc` with the
   tag, load/save/reload, confirm it survives and takes effect. Anything

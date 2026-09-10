@@ -48,4 +48,6 @@ Defined by dependencies in `src/StepMania.cpp`. `ShutdownGame()` (~line
 - Many managers expose Lua tables of the same name (`GAMESTATE`, `THEME`,
   `PREFSMAN`, `SCREENMAN`) — a C++ change often needs a matching binding
   update.
-- Tests in `src/tests/` that need a manager must stand it up manually.
+- Tests under `tests/` that need a manager get it from the shared
+  `EngineTestEnv` fixture (`LUA`/`FILEMAN`/`LOG`/`PREFSMAN`/`GAMEMAN`);
+  anything outside that set still has to be stood up by the test itself.
