@@ -99,7 +99,8 @@ Two layers:
   [`playbooks/add-characterization-test.md`](./playbooks/add-characterization-test.md).
 
 The old `src/tests/` `test_*.cpp` (2004-era, Unix-only, uncommitted data)
-are **not** wired and are being replaced file-by-file under `tests/`.
+were never wired into CMake; their still-relevant coverage was salvaged
+into `tests/` and the directory was deleted (2026-09-10).
 
 CI additionally validates the Lua docs XML:
 ```
