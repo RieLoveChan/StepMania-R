@@ -580,7 +580,7 @@ Cross-cutting: `RString` in 723 files / ~8,429 uses; `GAMESTATE->` at
    **`/Y-` is required** — the compile commands carry `/Yuglobal.h` and
    the PCH is never built, which otherwise fails every file.
 3. Repo-wide: filter `compile_commands.json` `.file` to `src\` minus
-   `libtomcrypt|libtommath|smpackage|extern|Texture Font Generator`
+   `libtomcrypt|libtommath|extern|Texture Font Generator`
    (~422 files), run in parallel (`ForEach-Object -Parallel`), aggregate
    the `[check-name]` tags. Script: `scratchpad/run_tidy.ps1`.
 

@@ -151,7 +151,7 @@ see item 17) deleted, and its `all_test_SOURCES`/`TESTS` block cut from
 `Makefile.am` (leave `extern/*/Makefile.am` — those belong to vendored
 libs). ~2–3k lines. Do it as its own commit.
 
-### 23. Dead `src/smpackage/` MFC tool — propose removal
+### 23. Dead `src/smpackage/` MFC tool — DONE 2026-09-10
 `src/smpackage/` is the old standalone "SMPackage" installer/exporter
 GUI: **85 `.cpp`/`.h`, ~19,000 LOC** of MFC (`CDialog`/`CTreeCtrl`/
 `afxwin.h`) + a bundled `ZipArchive/` 3rd-party lib (`mfc/` + `stl/` +
@@ -165,9 +165,14 @@ commit message is *"I still can't get SMPackage to compile"*
 cannot build on the maintainer's box regardless. The only feature it
 provided — `.smzip` export — is separately dead
 (`ScreenOptionsExportPackage`, see item 19).
-**Action (maintainer greenlight):** `git rm -r src/smpackage`; drop the
-`./src/smpackage*` line from the (also-dead) `Utils/make-src-archive.sh`.
-Its own commit.
+~~**Action:** `git rm -r src/smpackage`.~~ **Done 2026-09-10** —
+110 files / ~19k LOC removed. Verified: CMake `sm_tests` builds clean,
+`[zip]` reader tests pass, Release `StepMania-R.exe` links clean under
+`WITH_WERROR=ON`, `--SelfTest` exit 0. The `.smzip` **load** path
+(`RageFileDriverZip` + `RageFileManager::Unzip`, both current-lib and
+untouched) is unaffected. `Utils/make-src-archive.sh`'s
+`./src/smpackage*` line goes with item 22 (that script is autotools
+`make dist` flow).
 
 ---
 
