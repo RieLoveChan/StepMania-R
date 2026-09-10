@@ -1820,3 +1820,18 @@
   **Verified:** `sm_engine` (all of `src/`) + `sm_tests` clean under
   Debug `WITH_WERROR=ON`, suite 5839/220, `ctest` 100%; **Release**
   `StepMania-R.exe` links clean under `WITH_WERROR=ON`.
+
+* **Deleted `src/tests/` — the 2004-era standalone test harnesses
+  (backlog item 22, partial).** `test_vector` / `test_threads` /
+  `test_misc` / `test_file_readers` / `test_audio_readers` /
+  `test_file_errors` / `test_timing_data` — pre-Catch2 `main()`
+  programs, built only by the dead autotools `src/Makefile.am`, needing
+  uncommitted 30 MB of test data, `#error`-ing without altivec/SSE.
+  Every one's intent is now in the CMake `tests/` suite (item 17
+  reader-salvage + phase 2 pure-core coverage). Removed the files and
+  cut the `all_test_SOURCES` / `TESTS` block from `src/Makefile.am`.
+  CMake build untouched (nothing referenced `src/tests/`). Filed
+  backlog item 22 proposing removal of the whole dead autotools system
+  (`configure.ac` still says `AC_INIT(StepMania, 5.0, …
+  http://stepmania.com)` — pre-fork; CI/docs are CMake-only) as its own
+  maintainer-greenlit commit.
