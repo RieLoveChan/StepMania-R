@@ -151,6 +151,24 @@ see item 17) deleted, and its `all_test_SOURCES`/`TESTS` block cut from
 `Makefile.am` (leave `extern/*/Makefile.am` — those belong to vendored
 libs). ~2–3k lines. Do it as its own commit.
 
+### 23. Dead `src/smpackage/` MFC tool — propose removal
+`src/smpackage/` is the old standalone "SMPackage" installer/exporter
+GUI: **85 `.cpp`/`.h`, ~19,000 LOC** of MFC (`CDialog`/`CTreeCtrl`/
+`afxwin.h`) + a bundled `ZipArchive/` 3rd-party lib (`mfc/` + `stl/` +
+`Linux/` variants, VS2003/VS2008 `.vcproj`, `borland.zip`), + `res/` +
+`.rc`. ~1.1 MB.
+**It is dead:** no CMake reference anywhere; no live `src/` code
+includes any smpackage header or `SMPackageUtil`; `baseline.md`'s
+clang-tidy sweep already excludes it as non-first-party; last real
+commit message is *"I still can't get SMPackage to compile"*
+(`7187efeab4`). MFC is not in a standard modern VS install, so it
+cannot build on the maintainer's box regardless. The only feature it
+provided — `.smzip` export — is separately dead
+(`ScreenOptionsExportPackage`, see item 19).
+**Action (maintainer greenlight):** `git rm -r src/smpackage`; drop the
+`./src/smpackage*` line from the (also-dead) `Utils/make-src-archive.sh`.
+Its own commit.
+
 ---
 
 ## Tier 3 — Risk; deliberate decisions (see ADR 0001, ADR 0003)
