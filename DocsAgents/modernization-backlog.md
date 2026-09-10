@@ -360,7 +360,7 @@ reject it (C++11 narrowing) if clang-cl were ever adopted. Not touched
 clang currently. Rewrite the cases as hex literals / `HRESULT(...)` if
 and when clang-cl support is actually pursued.
 
-### 17. Pick a unit-test framework + write core characterization tests — phases 1-3 DONE; phase 4 DONE for .sm/.ssc + .pms/BMS + .dwi + .ksf; reader-salvage DONE (incl. file_errors); .sma/.crs still open
+### 17. Pick a unit-test framework + write core characterization tests — phases 1-3 DONE; phase 4 DONE for .sm/.ssc + .pms/BMS + .dwi + .ksf + .sma; reader-salvage DONE (incl. file_errors); only .crs still open
 Framework decided: **Catch2 v3** (amalgamated, vendored `extern/Catch2/`
 @ v3.16.0) — ADR [0006](./adr/0006-test-harness.md). Build approach:
 `src/` → OBJECT library `sm_engine`, shared by the exe and a new
@@ -486,12 +486,22 @@ coverage: `pump-double`. Verified identical to the untouched source
 folder. Suite **948 / 118**.
 
 **Still open:**
-- `.sma` / `.crs`: no fixture yet. `EngineTestEnv` is ready
-  (`PREFSMAN` in, `LoadFromDir`/`LoadFromSimfile` reachable). For each:
-  a real song under `Songs/` if redistributable, else the same
-  derived-fixture approach (`tests/data/`). `.sma` slots into the
-  existing `kCorpus`; `.crs` courses reference songs so likely also
-  need `SONGMAN`.
+- `.sma` **DONE 2026-09-10** (`test_NotesLoaderSMA.cpp` +
+  `tests/data/sma-fixture/`). No real `.sma` exists anywhere (extinct
+  format); maintainer searched, found none, ruled the current read
+  behavior the reference. The fixture is **synthetic** (not derived —
+  nothing to derive from), hand-authored to pin the SMA-only tags
+  (`#ROWSPERBEAT` row translation, `#BEATSPERMEASURE`, `#SPEED`
+  seconds-unit, `#MULTIPLIER`) and the song-vs-Steps timing split.
+  Latent-bug note (NOT fixed, §5): `SMALoader`'s `#ROWSPERBEAT` handler
+  indexes `split(expr,"=")[1]` without a size check, so a malformed
+  `#ROWSPERBEAT:4;` (no `=`) is an OOB read → crash. Left as-is per the
+  "current behavior is the reference" decision; flagged for the
+  maintainer.
+- `.crs`: no fixture yet. `EngineTestEnv` is ready (`PREFSMAN` in,
+  `LoadFromDir` reachable) but courses reference songs so likely also
+  need `SONGMAN`. Real course under `Songs/` if redistributable, else
+  the derived-fixture approach (`tests/data/`).
 - `src/tests/test_file_readers.cpp` **DONE (2026-09-06, extended
   2026-09-09)** → `tests/test_RageFile.cpp`: `RageFile` open/read/write/
   seek/tell/`GetLine`/`AtEOF` through `FILEMAN`'s `/@mem` writable
