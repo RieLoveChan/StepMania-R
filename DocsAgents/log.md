@@ -1867,3 +1867,15 @@
   `sm_tests` clean, suite 5839/220, `ctest` 100%; Release
   `StepMania-R.exe` links clean under `WITH_WERROR=ON`; `--SelfTest`
   exit 0.
+
+* **Deleted dead in-tree `src/libtomcrypt/` + `src/libtommath/`
+  (backlog item 24).** 658 files / ~161k lines / ~10 MB — the
+  pre-submodule in-tree copies of the crypto libs. The fork moved these
+  to `extern/` git submodules; `extern/CMakeLists.txt` builds the
+  `tomcrypt`/`tommath` targets from `extern/libtomcrypt/src/...` and
+  `CryptManager.cpp`'s `#include <tomcrypt.h>` resolves to
+  `extern/libtomcrypt/src/headers`. The `src/` copies had zero CMake
+  reference + a dead `libtomcrypt_VS2008.vcproj`. **Verified:** CMake
+  reconfigure clean, `tomcrypt.lib`/`tommath.lib` still build from
+  `extern/`, Release `StepMania-R.exe` links clean (`WITH_WERROR=ON`),
+  `sm_tests` 5839/220, `--SelfTest` exit 0.
