@@ -1917,3 +1917,15 @@
   `sm_tests` builds and runs **5839 assertions / 220 cases, all pass**;
   `ctest -C Debug` 100%; Release `StepMania-R.exe` links clean;
   `--SelfTest` exit 0. Tree is green.
+
+* **Default branch renamed `5_1-new` → `main-R` (2026-09-10).** Maintainer
+  did the GitHub side (renamed the branch, switched the repo default,
+  the old `origin/5_1-new` is gone). Local side: `git branch -m`,
+  upstream re-pointed to `origin/main-R`, stale ref pruned. `AGENTS.md`
+  §4 step 4 and the `modernization-process` memory now say
+  `git push` → `origin main-R`. CI is unaffected (`ci.yml` is
+  `on: push:` with no branch filter). Historical "merged to `5_1-new`"
+  records in the ADRs / baseline / earlier log entries are left as-is
+  (accurate for their date); `stepmania/stepmania`'s branch is still
+  legitimately called `5_1-new`, so the fork-point references in
+  ADR 0002 / index.md stay too.

@@ -136,7 +136,8 @@ Per change:
    --SoundDrivers=null` → exit 0). Do not push a change you know is broken.
 3. Commit with a message that says **what to spot-check** (the affected
    screen / feature / path) so the maintainer's async review is quick.
-4. `git push` to `origin 5_1-new`. Continue to the next change.
+4. `git push` to `origin main-R` (the default branch; was `5_1-new`
+   until 2026-09-10). Continue to the next change.
 
 The maintainer reviews after the fact and reverts anything wrong. That is
 the safety mechanism — not a blocking gate.
