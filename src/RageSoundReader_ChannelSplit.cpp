@@ -140,7 +140,7 @@ int RageSoundReader_Split::Read( float *pBuf, int iFrames )
 	m_iRequestFrames = iFrames;
 	int iRet = m_pImpl->ReadBuffer();
 
-	int iSamplesAvailable = m_pImpl->m_sBuffer.size();
+	int iSamplesAvailable = static_cast<int>(m_pImpl->m_sBuffer.size());
 	const float *pSrc = &m_pImpl->m_sBuffer[0];
 	if( m_pImpl->m_iBufferPositionFrames < m_iPositionFrame )
 	{
@@ -207,14 +207,14 @@ int RageSoundSplitterImpl::ReadBuffer()
 		m_sBuffer.clear();
 	}
 
-	int iFramesBuffered = m_sBuffer.size() / m_pSource->GetNumChannels();
+	int iFramesBuffered = static_cast<int>(m_sBuffer.size()) / m_pSource->GetNumChannels();
 
 	int iFramesToRead = iMaxFrameRequested - (m_iBufferPositionFrames + iFramesBuffered);
 	if( iFramesToRead <= 0 )
 		return 1; // requested data already buffered
 
 	int iSamplesToRead = iFramesToRead * m_pSource->GetNumChannels();
-	int iOldSizeSamples = m_sBuffer.size();
+	int iOldSizeSamples = static_cast<int>(m_sBuffer.size());
 	m_sBuffer.resize( iOldSizeSamples + iSamplesToRead );
 	int iGotFrames = m_pSource->Read( &m_sBuffer[0] + iOldSizeSamples, iFramesToRead );
 	if( iGotFrames < 0 )

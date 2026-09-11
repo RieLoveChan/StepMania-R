@@ -3432,7 +3432,7 @@ int GameManager::GetIndexFromGame( const Game* pGame )
 	for( std::size_t g=0; g<ARRAYLEN(g_Games); ++g )
 	{
 		if( g_Games[g] == pGame )
-			return g;
+			return static_cast<int>(g);
 	}
 	FAIL_M(ssprintf("Game not found: %s", pGame->m_szName));
 }
@@ -3549,11 +3549,11 @@ public:
 	{
 		std::vector<const Game*> aGames;
 		p->GetEnabledGames( aGames );
-		lua_createtable(L, aGames.size(), 0);
+		lua_createtable(L, static_cast<int>(aGames.size()), 0);
 		for(std::size_t i= 0; i < aGames.size(); ++i)
 		{
 			lua_pushstring(L, aGames[i]->m_szName);
-			lua_rawseti(L, -2, i+1);
+			lua_rawseti(L, -2, static_cast<int>(i+1));
 		}
 		return 1;
 	}

@@ -208,7 +208,7 @@ void LightsManager::Update( float fDeltaTime )
 	if( m_LightsMode == LIGHTSMODE_TEST_AUTO_CYCLE )
 	{
 		m_fTestAutoCycleCurrentIndex += fDeltaTime;
-		m_fTestAutoCycleCurrentIndex = std::fmod( m_fTestAutoCycleCurrentIndex, NUM_CabinetLight*100 );
+		m_fTestAutoCycleCurrentIndex = static_cast<float>(std::fmod( m_fTestAutoCycleCurrentIndex, NUM_CabinetLight*100 ));
 	}
 
 	switch( m_LightsMode )
@@ -413,7 +413,7 @@ void LightsManager::Update( float fDeltaTime )
 
 			std::vector<GameInput> vGI;
 			GetUsedGameInputs( vGI );
-			wrap( index, vGI.size() );
+			wrap( index, static_cast<int>(vGI.size()) );
 
 			ZERO( m_LightsState.m_bGameButtonLights );
 
@@ -498,7 +498,7 @@ void LightsManager::ChangeTestGameButtonLight( int iDir )
 	GetUsedGameInputs( vGI );
 
 	m_iControllerTestManualCycleCurrent += iDir;
-	wrap( m_iControllerTestManualCycleCurrent, vGI.size() );
+	wrap( m_iControllerTestManualCycleCurrent, static_cast<int>(vGI.size()) );
 }
 
 CabinetLight LightsManager::GetFirstLitCabinetLight()

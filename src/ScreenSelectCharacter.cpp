@@ -251,12 +251,12 @@ void ScreenSelectCharacter::AfterValueChange( PlayerNumber pn )
 					}
 
 			int c = m_iSelectedCharacter[pnAffected] - MAX_CHAR_ICONS_TO_SHOW/2;
-			wrap( c, apCharacters.size() );
+			wrap( c, static_cast<int>(apCharacters.size()) );
 
 			for( unsigned i=0; i<MAX_CHAR_ICONS_TO_SHOW; i++ )
 			{
 				c++;
-				wrap( c, apCharacters.size() );
+				wrap( c, static_cast<int>(apCharacters.size()) );
 				Character* pCharacter = apCharacters[c];
 				Banner &banner = m_sprIcons[pnAffected][i];
 				banner.LoadIconFromCharacter( pCharacter );
@@ -309,7 +309,7 @@ void ScreenSelectCharacter::Move( PlayerNumber pn, int deltaValue )
 			std::vector<Character*> apCharacters;
 			CHARMAN->GetCharacters( apCharacters );
 			m_iSelectedCharacter[pnAffected] += deltaValue;
-			wrap( m_iSelectedCharacter[pnAffected], apCharacters.size() );
+			wrap( m_iSelectedCharacter[pnAffected], static_cast<int>(apCharacters.size()) );
 			AfterValueChange(pn);
 			m_soundChange.Play(true);
 			break;

@@ -60,7 +60,7 @@ void WheelNotifyIcon::SetFlags( Flags flags )
 			m_vIconsToShow.push_back( empty );
 	}
 
-	const unsigned int newSize = std::min<unsigned int>(m_vIconsToShow.size(), static_cast<unsigned int>(NUM_ICONS_TO_SHOW));
+	const unsigned int newSize = std::min<unsigned int>(static_cast<unsigned int>(m_vIconsToShow.size()), static_cast<unsigned int>(NUM_ICONS_TO_SHOW));
 	m_vIconsToShow.resize(newSize);
 
 	// Broadcast Set message so items can react. (futures) -aj
@@ -86,7 +86,7 @@ void WheelNotifyIcon::Update( float fDeltaTime )
 		/* We should probably end up parsing the vector and then dynamically
 		 * insert flag icons based on "priority". Easy to do, hopefully
 			- Midiman */
-		const float fSecondFraction = std::fmod( RageTimer::GetTimeSinceStartFast(), 1 );
+		const float fSecondFraction = std::fmod( RageTimer::GetTimeSinceStartFast(), 1.0f );
 		const int index = (int)(fSecondFraction*m_vIconsToShow.size());
 		Sprite::SetState( m_vIconsToShow[index] );
 	}

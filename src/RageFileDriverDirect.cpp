@@ -391,7 +391,7 @@ RageFileObjDirect::~RageFileObjDirect()
 
 int RageFileObjDirect::ReadInternal( void *pBuf, std::size_t iBytes )
 {
-	int iRet = DoRead( m_iFD, pBuf, iBytes );
+	int iRet = DoRead( m_iFD, pBuf, static_cast<unsigned int>(iBytes) );
 	if( iRet == -1 )
 	{
 		SetError( strerror(errno) );
@@ -407,7 +407,7 @@ static int RetriedWrite( int iFD, const void *pBuf, std::size_t iCount )
 	int iTries = 3, iRet;
 	do
 	{
-		iRet = DoWrite( iFD, pBuf, iCount );
+		iRet = DoWrite( iFD, pBuf, static_cast<unsigned int>(iCount) );
 	}
 	while( iRet == -1 && errno == EINTR && iTries-- );
 
@@ -443,7 +443,7 @@ int RageFileObjDirect::WriteInternal( const void *pBuf, std::size_t iBytes )
 		m_bWriteFailed = true;
 		return -1;
 	}
-	return iBytes;
+	return static_cast<int>(iBytes);
 }
 
 int RageFileObjDirect::SeekInternal( int iOffset )

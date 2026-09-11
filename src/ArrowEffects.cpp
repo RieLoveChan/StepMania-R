@@ -438,7 +438,7 @@ static float GetDisplayedBeat( const PlayerState* pPlayerState, float beat )
 {
 	// do a binary search here
 	const std::vector<CacheDisplayedBeat> &data = pPlayerState->m_CacheDisplayedBeat;
-	int max = data.size() - 1;
+	int max = static_cast<int>(data.size()) - 1;
 	int l = 0, r = max;
 	while( l <= r )
 	{
@@ -833,7 +833,7 @@ float ArrowEffects::GetXPos( const PlayerState* pPlayerState, int iColNum, float
 				{
 					// find the middle, and split based on iColNum
 					// it's unknown if this will work for routine.
-					const int iMiddleColumn = std::floor(pStyle->m_iColsPerPlayer/2.0f);
+					const int iMiddleColumn = static_cast<int>(std::floor(pStyle->m_iColsPerPlayer/2.0f));
 					if( iColNum > iMiddleColumn-1 )
 						fPixelOffsetFromCenter += fEffects[PlayerOptions::EFFECT_XMODE]*-(fYOffset);
 					else

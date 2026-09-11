@@ -818,10 +818,10 @@ public:
 		float minDuration = 1.5;
 		if (lua_isnumber(L, 1))
 		{
-			minDuration = lua_tonumber(L, 1);
+			minDuration = static_cast<float>(lua_tonumber(L, 1));
 		}
 		std::vector<ColumnCue> cues = p->GetColumnCues(minDuration);
-		lua_createtable(L, cues.size(), 0);
+		lua_createtable(L, static_cast<int>(cues.size()), 0);
 
 		for (unsigned i = 0; i < cues.size(); i++)
 		{
@@ -835,7 +835,7 @@ public:
 			lua_settable(L, -3);
 
 			lua_pushstring(L, "columns");
-			lua_createtable(L, cues[i].columns.size(), 0);
+			lua_createtable(L, static_cast<int>(cues[i].columns.size()), 0);
 
 			for (unsigned c = 0; c < cues[i].columns.size(); c++)
 			{

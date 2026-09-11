@@ -306,7 +306,7 @@ static int IdenticalChildrenSingleApplier(lua_State* L)
 	// It is the one that would have been in the children table in the old version.
 	// The other args are meant for the function.
 	// The upvalue for this function is the function the theme tried to call.
-	lua_rawgeti(L, 1, lua_objlen(L, 1)); // stack: table, args, obj
+	lua_rawgeti(L, 1, static_cast<int>(lua_objlen(L, 1))); // stack: table, args, obj
 	lua_insert(L, 2); // stack: table, obj, args
 	lua_pushvalue(L, lua_upvalueindex(1)); // stack: table, obj, args, func
 	lua_insert(L, 2); // stack: table, func, obj, args
@@ -334,7 +334,7 @@ static int IdenticalChildrenIndexLayer(lua_State* L)
 		// Its meta table contains the function the theme wanted to run.
 		// The function is then pushed as an upvalue for ICSA as a closure.
 		// The closure is then returned so that when the function call is performed, ICSA is actually called.
-		lua_pushnumber(L, lua_objlen(L, 1)); // stack: 1
+		lua_pushnumber(L, static_cast<lua_Number>(lua_objlen(L, 1))); // stack: 1
 		lua_gettable(L, 1); // stack: object
 		lua_getmetatable(L, -1); // stack: object, obj_meta
 		lua_getfield(L, -1, "__index"); // stack: object, obj_meta, obj_index
@@ -366,7 +366,7 @@ static void CreateChildTable(lua_State* L, Actor* a)
 static void AddToChildTable(lua_State* L, Actor* a)
 {
 	// stack: table_entry
-	int next_index= lua_objlen(L, -1) + 1;
+	int next_index= static_cast<int>(lua_objlen(L, -1)) + 1;
 	a->PushSelf(L); // stack: table_entry, actor
 	lua_rawseti(L, -2, next_index); // stack: table_entry
 }
