@@ -221,7 +221,7 @@ inline std::uint16_t Swap16BE( std::uint16_t n ) { return Endian::big    ? n : S
 class MersenneTwister : public std::mt19937
 {
 public:
-	MersenneTwister( int iSeed = 0 ) : std::mt19937( iSeed == 0 ? time( nullptr ) : iSeed ) {}
+	MersenneTwister( int iSeed = 0 ) : std::mt19937( static_cast<std::mt19937::result_type>( iSeed == 0 ? time( nullptr ) : iSeed ) ) {}
 };
 
 typedef MersenneTwister RandomGen;
@@ -237,7 +237,7 @@ extern RandomGen g_RandomNumberGenerator;
 inline float RandomFloat( float fLow, float fHigh )
 {
 	std::uniform_real_distribution<> dist( fLow, fHigh );
-	return dist( g_RandomNumberGenerator );
+	return static_cast<float>( dist( g_RandomNumberGenerator ) );
 }
 
 /**
@@ -479,7 +479,7 @@ int FindIndex( T1 begin, T1 end, const T2 *p )
 	T1 iter = find( begin, end, p );
 	if( iter == end )
 		return -1;
-	return iter - begin;
+	return static_cast<int>( iter - begin );
 }
 
 /* Useful for objects with no operator-, eg. map::iterator (more convenient than advance). */
