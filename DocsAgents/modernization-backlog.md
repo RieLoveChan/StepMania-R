@@ -347,21 +347,53 @@ bound), `ScreenOptionsMasterPrefs.cpp` (1: a `MoveMap(..., unsigned
 cnt)` call fed `size_t`). All three re-confirmed at zero in the same
 clean rebuild that produced the numbers below; a full sweep of every
 previously-"done" file turned up no further residuals.
+- `RageDisplay_OGL.cpp` (8): a shader-compile helper's `GLint`/
+  `GLsizei` length/count args fed `RString::size()`; two `int`-into-
+  `float` args to `LoadMenuPerspective`; two `std::max<unsigned int>`
+  calls fed `size_t` vertex/triangle totals; a `size_t` old-buffer-size
+  local.
+- `Song.cpp` (7, §5-protected `Song*`, characterization-only): four
+  reverse-loop `size()-1` bounds across `RemoveAutoGenNotes`/
+  `DeleteSteps`/`FreeAllLoadedFromProfile`; a `lua_createtable`/
+  `lua_rawseti` pair serializing background changes to Lua. **One of
+  the four reverse-loop sites was missed on the first pass** (an `Edit`
+  call reporting "2 matches" for the same bare pattern only fixed one
+  of the two ambiguous occurrences by adding disambiguating context --
+  the other, identically-shaped occurrence a few lines later was never
+  revisited) and only caught by the next clean-rebuild verification;
+  fixed and reconfirmed at zero.
+- `ScreenSelectMaster.cpp` (7): a `lua_pushnumber(size_t)` site; a
+  `lua_rawgeti` fed a `size_t` loop counter; a `SET_POS_PART` macro's
+  `lua_tonumber`-into-`float` (fixed once, covers 3 uses); two
+  `wrap(int&, size_t)` sites; a `size_t`-into-`int` local.
+- `RageLog.cpp` (7): a `double`-into-`float` timestamp arg; four
+  `size_t`/`strlen()` values accumulated into `unsigned` log-buffer
+  counters; a `std::min<unsigned int>` call's second arg; a
+  `std::min(size_t, size_t)` result into an `int` log-size local.
+- `RageFileDriverDeflate.cpp` (7): a `size_t` byte-count assigned into
+  zlib's `uInt avail_out`/`avail_in` fields at 2 sites; two pointer-
+  diffs into `int` (inflate progress tracking); a `size_t` returned as
+  `int` from `WriteInternal`.
+- `RageDisplay.cpp` (7): a `std::round()` result into an `int` refresh
+  rate; a `std::ceil()` result into an `int` width; a `size_t` vertex
+  count into `StatsAddVerts(int)`; four mesh-info `size_t` counts/
+  accumulators into `int` fields.
 **Not done:** `/wd4244`/`/wd4267` stay in `src/CMakeLists.txt` until all
-332 remaining sites (136 files) are triaged (same "fix everything, then
-remove the `/wd` flag in one commit" pattern as C4100) — continue
+289 remaining sites (~130 files) are triaged (same "fix everything,
+then remove the `/wd` flag in one commit" pattern as C4100) — continue
 file-by-file, highest concentration first; measure only via
 `--clean-first` with the flag actually removed, dedup with a regex
 that matches BOTH `C4244` and `C4267` (`warning C42(44|67)`, not
 `C424[47]`), never run the measurement rebuild while a file is
-mid-edit, and periodically re-grep every already-"done" file against a
-fresh clean-rebuild log -- the regex bug hid residuals in 3 files for
-several batches before this check caught them. Still not measured for
-Clang/GCC (`baseline.md` TBD, non-Windows). Next concentrations:
-`RageDisplay_OGL.cpp` (8), `Song.cpp`/`ScreenSelectMaster.cpp`/
-`RageLog.cpp`/`RageFileDriverDeflate.cpp`/`RageDisplay.cpp` (7 each),
-`XmlToLua.cpp`/`WheelBase.cpp`/`StatsManager.cpp`/`ScreenOptions.cpp`/
-`Course.cpp`/`ActorMultiTexture.cpp` (6 each).
+mid-edit, watch for `Edit` "N matches" errors resolved by fixing only
+one of several truly-identical occurrences (the `Song.cpp` miss above),
+and periodically re-grep every already-"done" file against a fresh
+clean-rebuild log. Still not measured for Clang/GCC (`baseline.md` TBD,
+non-Windows). Next concentrations: `XmlToLua.cpp`/`WheelBase.cpp`/
+`StatsManager.cpp`/`ScreenOptions.cpp`/`Course.cpp`/
+`ActorMultiTexture.cpp` (6 each), then a wide tail of 4-5-site files
+(`RageFileDriverMemory.cpp`/`NoteDataUtil.cpp`/`LuaManager.cpp`/
+`CryptManager.cpp` at 5, several at 4).
 
 ### 3. Stale cppcheck leak list — DONE 2026-09-05, all dismissed
 ~~`Docs/Devdocs/possible memory leaks.txt` — from 2009. Re-triaged by
