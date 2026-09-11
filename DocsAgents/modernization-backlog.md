@@ -432,12 +432,51 @@ clean-rebuild log (careful: a plain filename grep like `Course.cpp(`
 also matches `ScreenOptionsEditCourse.cpp(` -- a substring false
 positive, not a residual; anchor or eyeball matches before treating them
 as real). Still not measured for Clang/GCC (`baseline.md` TBD,
-non-Windows). Next concentrations: a wide tail of 4-site files
-(`StepMania.cpp`/`SongUtil.cpp`/`ScreenUnlockStatus.cpp`/
-`ScreenServiceAction.cpp`/`ScreenJukebox.cpp`/`ScoreKeeperNormal.cpp`/
-`RageTimer.cpp`/`RageSoundReader_Preload.cpp`/`RageSoundReader_MP3.cpp`/
-`RageMath.cpp`/`RageDisplay_D3D.cpp`), then a long tail of 1-3-site
-files across ~110 remaining files.
+non-Windows).
+- `StepMania.cpp` (4): a `ceil()` result into a window-width `int`; a
+  `MEMORYSTATUS::dwTotalPhys` division into an `int`; an `srand(
+  time(nullptr))` seed narrowing.
+- `SongUtil.cpp` (4): two `SecondsToMMSS(int)` calls in a length-sort
+  label; an `RString::Left` fed a `size_t`-minus arg; a reverse-loop
+  bound.
+- `ScreenUnlockStatus.cpp` (4): two `size_t` unlock counts into
+  `unsigned`; two reverse-loop bounds (the file's own comment explains
+  why they're `int`, not `unsigned`, loop vars).
+- `ScreenServiceAction.cpp` (4): two near-duplicate edit-clearing
+  helpers each with a `size_t` file count and a `count_if` result into
+  `int`.
+- `ScreenJukebox.cpp` (4): three `RandomInt(size_t)` calls; a
+  reverse-loop bound.
+- `ScoreKeeperNormal.cpp` (4): a `size_t` song-count into `int`; two
+  `lua_tointeger()`-into-`int` sites in a toasty-trigger callback.
+- `RageTimer.cpp` (4): two `Difference()` (returns `double`) results
+  narrowed to the class's `float`-returning API; a `std::floor(float)`
+  result into `int64_t` seconds.
+- `RageSoundReader_Preload.cpp` (4): four `m_Buffer->size() /
+  framesize` sites (a repeated frame-count computation) into `int`.
+- `RageSoundReader_MP3.cpp` (4): three MAD-stream pointer-diffs into
+  `int`; an `id3_tag_query` buffer-length arg into `id3_length_t`.
+- `RageMath.cpp` (4): a ternary using `double` literals where the
+  function returns `float` (fixed with `f`-suffixed literals instead of
+  a cast); three `double`-typed intermediate results in a triangle-wave
+  helper cast at each `return`.
+- `RageDisplay_D3D.cpp` (4): a palette-index map lookup's `size_t`
+  value into `int`; two `std::max<unsigned int>` calls fed `size_t`
+  vertex/triangle totals (same pattern as the earlier OGL fix).
+**Not done:** `/wd4244`/`/wd4267` stay in `src/CMakeLists.txt` until all
+189 remaining sites (~110 files) are triaged (same "fix everything,
+then remove the `/wd` flag in one commit" pattern as C4100) — continue
+file-by-file, highest concentration first; measure only via
+`--clean-first` with the flag actually removed, dedup with a regex
+that matches BOTH `C4244` and `C4267` (`warning C42(44|67)`, not
+`C424[47]`), never run the measurement rebuild while a file is
+mid-edit, watch for `Edit` "N matches" errors resolved by fixing only
+one of several truly-identical occurrences, and periodically re-grep
+every already-"done" file against a fresh clean-rebuild log (watch for
+substring false positives on short/common filenames). Next
+concentrations: `OptionRow.cpp`/`JsonUtil.h`/`GraphDisplay.cpp`/
+`AdjustSync.cpp`/`ActorScroller.cpp`/`Actor.cpp` (4 each), then a long
+tail of 1-3-site files across ~100 remaining files.
 
 ### 3. Stale cppcheck leak list — DONE 2026-09-05, all dismissed
 ~~`Docs/Devdocs/possible memory leaks.txt` — from 2009. Re-triaged by
