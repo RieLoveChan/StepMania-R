@@ -2227,3 +2227,33 @@
   sites / 136 files remain.
   Verified: `sm_tests` 5966/226 unchanged, `ctest`/Release/`--SelfTest`
   gate re-run after restoring `/wd4244`/`/wd4267`.
+
+* **item 2 (C4244/C4267) sweep, 6 more files: 332 -> 289 remaining
+  (~130 files).** `RageDisplay_OGL.cpp` (8: a shader-compile helper's
+  `GLint`/`GLsizei` args, two `int`-into-`float` `LoadMenuPerspective`
+  args, two `std::max<unsigned int>` calls, a buffer-size local);
+  `Song.cpp` (7, §5-protected, characterization-only: four reverse-
+  loop bounds, a Lua background-changes serializer);
+  `ScreenSelectMaster.cpp` (7: a `lua_pushnumber`, a `lua_rawgeti`, a
+  `SET_POS_PART` macro fixed once for 3 uses, two `wrap()` sites, a
+  local); `RageLog.cpp` (7: a timestamp arg, four log-buffer counters,
+  a `std::min<unsigned int>` call, a `std::min` result into `int`);
+  `RageFileDriverDeflate.cpp` (7: two zlib `uInt` fields, two pointer-
+  diffs, a `WriteInternal` return); `RageDisplay.cpp` (7: a `round()`
+  result, a `ceil()` result, a vertex count, four mesh-info counters).
+  **A missed-site bug of its own:** an earlier `Edit` call on
+  `Song.cpp` reported "2 matches" for one bare reverse-loop pattern;
+  adding disambiguating context fixed one of the two occurrences, but
+  the *third*, separately-identical occurrence a few lines later was
+  never revisited and shipped unfixed until the next clean-rebuild
+  verification caught it (`Song.cpp` still showed 1 site after the
+  "done" rebuild). Fixed and reconfirmed at zero in a follow-up clean
+  rebuild, along with a full sanity sweep of every other previously-
+  "done" file (no further misses). True total: 289 sites remain.
+  **CI note:** the push landed on Windows CI as a `file DOWNLOAD
+  cannot compute hash on failed download` fetching the prebuilt
+  win32 FFmpeg release asset -- a transient GitHub-hosted-download
+  flake unrelated to this change (Ubuntu/macOS + all unit-test jobs on
+  the same run were green). Re-ran via `gh run rerun --failed`.
+  Verified locally: `sm_tests` 5966/226 unchanged, `ctest`/Release/
+  `--SelfTest` gate re-run after restoring `/wd4244`/`/wd4267`.
