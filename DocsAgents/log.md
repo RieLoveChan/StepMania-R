@@ -2380,3 +2380,41 @@
   `Course.h`) needing the usual characterization re-check.
   Verified: `sm_tests` 5966/226 unchanged, `ctest`/Release/`--SelfTest`
   gate re-run after restoring `/wd4244`/`/wd4267`.
+
+* **item 2 (C4244/C4267) sweep: DONE 2026-09-11.** Fixed the final
+  batch: 54 single-site files (root src/, all §5-adjacent headers/
+  loaders/writers re-verified against their characterization tests),
+  then discovered a fourth methodology trap right at the finish line --
+  every prior "clean" `--clean-first` rebuild had two blind spots: (1)
+  the dedup regex anchored on `^[A-Za-z]:` silently never matched a
+  toolchain path containing a space/paren (`C:\Program Files (x86)\
+  ...`), hiding a genuine site attributed to a std-lib header line
+  (`<algorithm>`'s `std::transform` internals, instantiated from
+  `Song.cpp`'s `::tolower` calls); (2) every prior "complete" rebuild
+  had silently stopped exactly at the alphabetical end of root
+  `src/*.cpp` and never reached `src/arch/`/`src/archutils/Win32/` at
+  all, not a regex bug -- a genuinely incomplete build every single
+  time, never suspected because the log tail always looked plausible.
+  Fixed `Song.cpp`'s two `transform(...,::tolower)` sites (casting
+  lambda, also fixes the classic tolower-with-negative-char UB); 14
+  files / 25 sites across `src/arch/`+`src/archutils/Win32/`
+  (`RageSoundDriver_WDMKS.cpp` 5, `ErrorStrings.cpp` 4,
+  `MovieTexture_FFMpeg.cpp` 3, `CrashHandlerNetworking.cpp` 2,
+  `InputHandler_DirectInput.cpp` 2, nine single-site files -- Win32 API
+  `int`/`DWORD`/`WORD` params fed `size_t`, same recurring patterns).
+  One site was in vendored code (`extern/ffmpeg-w32-prebuilt`'s
+  `libavutil/common.h`, instantiated via `MovieTexture_FFMpeg.cpp`) --
+  not patched; scoped an MSVC-only `#pragma warning(push)`/`disable:
+  4244`/`pop` around just the FFmpeg `#include` block in
+  `MovieTexture_FFMpeg.h` instead (same "leave vendored trees alone"
+  policy as the `ixwebsocket` clang-tidy exclusion, item 12).
+  A genuinely edit-free, full-tree `--clean-first` Debug rebuild now
+  completes with **exit code 0, zero `C4244`/`C4267` warnings
+  anywhere**. `/wd4244`/`/wd4267` **removed from `src/CMakeLists.txt`
+  permanently** -- the MSVC-warning ratchet is now complete: all 5
+  categories (`C4189`, `C4702`, `C4100`, `C4244`, `C4267`) promoted to
+  `-Werror`.
+  Verified: `sm_tests` 5966/226 unchanged; `[NotesLoader]`/`[NoteData]`/
+  `[bms]`-tagged characterization tests (647/47) re-checked identical;
+  `ctest`/Release (clean rebuild)/`--SelfTest` gate green with the
+  suppression flags gone for good.
