@@ -133,17 +133,6 @@ jobs:
       - name: Build tests
         run: cmake --build build-tests --config Debug --target sm_tests
       - name: Run tests
-        # Non-fatal on Unix for now. sm_tests links the whole engine, and
-        # on Unix/macOS any engine ASSERT/FAIL_M routes through sm_crash()
-        # -> CrashHandler::ForceCrash -> RunCrashHandler, which _exit(1)s
-        # immediately because CrashHandlerHandleArgs was never called (the
-        # Catch2 main() never boots ArchHooks). So the first assert any
-        # test trips kills the whole binary before Catch2 can report or
-        # move on -- and a couple of tests do trip one only on Unix. The
-        # suite is green on Windows (the primary platform); this stays
-        # informational until the Unix crash path + the platform-specific
-        # asserts are fixed. See DocsAgents/modernization-backlog.md.
-        continue-on-error: true
         run: ctest --test-dir build-tests -C Debug --output-on-failure
 
   macos-tests:
@@ -161,10 +150,6 @@ jobs:
       - name: Build tests
         run: cmake --build build-tests --config Debug --target sm_tests
       - name: Run tests
-        # Non-fatal on Unix for now -- see the note in the ubuntu-tests
-        # job. sm_crash()/_exit(1) on the first engine assert kills the
-        # binary; green on Windows. DocsAgents/modernization-backlog.md.
-        continue-on-error: true
         run: ctest --test-dir build-tests -C Debug --output-on-failure
 
   validate-xml-docs:
