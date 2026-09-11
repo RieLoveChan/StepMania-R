@@ -24,7 +24,7 @@ public:
 	float PeekDeltaTime() const { return Ago(); }
 
 	static double GetTimeSinceStart( bool bAccurate = true );	// seconds since the program was started
-	static float GetTimeSinceStartFast() { return GetTimeSinceStart(false); }
+	static float GetTimeSinceStartFast() { return static_cast<float>( GetTimeSinceStart(false) ); }
 	static std::uint64_t GetUsecsSinceStart();
 
 	/* Get a timer representing half of the time ago as this one. */
