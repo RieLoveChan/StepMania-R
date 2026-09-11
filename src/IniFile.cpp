@@ -25,7 +25,7 @@ bool IniFile::ReadFile( const RString &sPath )
 	RageFile f;
 	if( !f.Open( m_sPath ) )
 	{
-		LOG->Trace( "Reading '%s' failed: %s", m_sPath.c_str(), f.GetError().c_str() );
+		LOG_TRACE(Log::File, "Reading '%s' failed: %s", m_sPath.c_str(), f.GetError().c_str() );
 		m_sError = f.GetError();
 		return false;
 	}
@@ -49,7 +49,7 @@ bool IniFile::ReadFile( RageFileBasic &f )
 			{
 			case -1:
 				m_sError = f.GetError();
-				LOG->Warn("Error reading line in file '%s': %s", m_sPath.c_str(), m_sError.c_str());
+				LOG_ERROR(Log::File, "Error reading line in file '%s': %s", m_sPath.c_str(), m_sError.c_str());
 				return false;
 			case 0:
 				return true; // eof
@@ -110,7 +110,7 @@ bool IniFile::ReadFile( RageFileBasic &f )
 				}
 				else
 				{
-					LOG->Warn("No '=' found in line of file '%s': %s", m_sPath.c_str(), line.c_str());
+					LOG_WARN(Log::File, "No '=' found in line of file '%s': %s", m_sPath.c_str(), line.c_str());
 				}
 
 				break;
@@ -123,7 +123,7 @@ bool IniFile::WriteFile( const RString &sPath ) const
 	RageFile f;
 	if( !f.Open( sPath, RageFile::WRITE ) )
 	{
-		LOG->Warn( "Writing '%s' failed: %s", sPath.c_str(), f.GetError().c_str() );
+		LOG_ERROR(Log::File, "Writing '%s' failed: %s", sPath.c_str(), f.GetError().c_str() );
 		m_sError = f.GetError();
 		return false;
 	}
@@ -141,7 +141,7 @@ bool IniFile::WriteFile( RageFileBasic &f ) const
 		if( f.PutLine( ssprintf("[%s]", pKey->GetName().c_str()) ) == -1 )
 		{
 			m_sError = f.GetError();
-			LOG->Warn( "Error when writing key to file '%s': %s", m_sPath.c_str(), m_sError.c_str() );
+			LOG_ERROR(Log::File, "Error when writing key to file '%s': %s", m_sPath.c_str(), m_sError.c_str() );
 			return false;
 		}
 
@@ -158,7 +158,7 @@ bool IniFile::WriteFile( RageFileBasic &f ) const
 			if( f.PutLine( ssprintf("%s=%s", sName.c_str(), sValue.c_str()) ) == -1 )
 			{
 				m_sError = f.GetError();
-				LOG->Warn( "Error when writing attribute: %s", m_sError.c_str() );
+				LOG_ERROR(Log::File, "Error when writing attribute: %s", m_sError.c_str() );
 				return false;
 			}
 		}
@@ -166,7 +166,7 @@ bool IniFile::WriteFile( RageFileBasic &f ) const
 		if( f.PutLine( "" ) == -1 )
 		{
 			m_sError = f.GetError();
-			LOG->Warn( "Error when writing newline: %s", m_sError.c_str() );
+			LOG_ERROR(Log::File, "Error when writing newline: %s", m_sError.c_str() );
 			return false;
 		}
 	}
@@ -178,13 +178,13 @@ bool IniFile::DeleteValue(const RString &keyname, const RString &valuename)
 	XNode* pNode = GetChild( keyname );
 	if ( pNode == nullptr )
 	{
-		LOG->Warn("Key '%s' not found when attempting to delete a value.", keyname.c_str());
+		LOG_WARN(Log::File, "Key '%s' not found when attempting to delete a value.", keyname.c_str());
 		return false;
 	}
 	bool result = pNode->RemoveAttr(valuename);
 	if (!result)
 	{
-		LOG->Warn("Value '%s' not found in key '%s'.", valuename.c_str(), keyname.c_str());
+		LOG_WARN(Log::File, "Value '%s' not found in key '%s'.", valuename.c_str(), keyname.c_str());
 	}
 	return result;
 }
@@ -194,13 +194,13 @@ bool IniFile::DeleteKey(const RString &keyname)
 	XNode* pNode = GetChild( keyname );
 	if( pNode == nullptr )
 	{
-		LOG->Warn("Key '%s' not found when attempting to delete a key.", keyname.c_str());
+		LOG_WARN(Log::File, "Key '%s' not found when attempting to delete a key.", keyname.c_str());
 		return false;
 	}
 	bool result = RemoveChild(pNode);
 	if (!result)
 	{
-		LOG->Warn("Error removing key '%s'.", keyname.c_str());
+		LOG_ERROR(Log::File, "Error removing key '%s'.", keyname.c_str());
 	}
 	return result;
 }
