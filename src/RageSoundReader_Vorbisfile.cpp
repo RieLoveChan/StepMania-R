@@ -19,7 +19,7 @@
 static std::size_t OggRageFile_read_func( void *ptr, std::size_t size, std::size_t nmemb, void *datasource )
 {
 	RageFileBasic *f = (RageFileBasic *) datasource;
-	return f->Read( ptr, size, nmemb );
+	return f->Read( ptr, size, static_cast<int>(nmemb) );
 }
 
 static int OggRageFile_seek_func( void *datasource, ogg_int64_t offset, int whence )

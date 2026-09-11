@@ -189,7 +189,7 @@ bool MsdFile::ReadFile( RString sNewPath, bool bUnescape )
 
 void MsdFile::ReadFromString( const RString &sString, bool bUnescape )
 {
-	ReadBuf( sString.c_str(), sString.size(), bUnescape );
+	ReadBuf( sString.c_str(), static_cast<int>(sString.size()), bUnescape );
 }
 
 RString MsdFile::GetParam(unsigned val, unsigned par) const

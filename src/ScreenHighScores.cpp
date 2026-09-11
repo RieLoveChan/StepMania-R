@@ -200,7 +200,7 @@ void ScoreScroller::Load( RString sMetricsGroup )
 	DynamicActorScroller::SetSecondsPerItem( SCROLLER_SECONDS_PER_ITEM );
 	DynamicActorScroller::Load2();
 
-	m_iNumItems = m_vScoreRowItemData.size();
+	m_iNumItems = static_cast<int>(m_vScoreRowItemData.size());
 }
 
 /////////////////////////////////////////////

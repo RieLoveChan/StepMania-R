@@ -577,7 +577,7 @@ void InputHandler_DInput::UpdatePolled( DIDevice &device, const RageTimer &tm )
 						neg = MOUSE_WHEELDOWN; pos = MOUSE_WHEELUP;
 						val = state.lZ;
 						//LOG->Trace("MouseWheel polled: %i",val);
-						INPUTFILTER->UpdateMouseWheel(val);
+						INPUTFILTER->UpdateMouseWheel(static_cast<float>(val));
 						if( val == 0 )
 						{
 							// release all
@@ -676,7 +676,7 @@ void InputHandler_DInput::UpdateBuffered( DIDevice &device, const RageTimer &tm 
 					DeviceButton up = DeviceButton_Invalid, down = DeviceButton_Invalid;
 					if(dev == DEVICE_MOUSE)
 					{
-						float l = int(evtbuf[i].dwData);
+						float l = static_cast<float>(int(evtbuf[i].dwData));
 						POINT cursorPos;
 						GetCursorPos(&cursorPos);
 						// convert screen coordinates to client

@@ -169,7 +169,7 @@ bool RegistryAccess::SetRegValue( const RString &sKey, const RString &sName, con
 
 	strcpy( sz, sVal.c_str() );
 
-	LONG lResult = ::RegSetValueEx(hKey, LPCTSTR(sName), 0, REG_SZ, (LPBYTE)sz, strlen(sz) + 1);
+	LONG lResult = ::RegSetValueEx(hKey, LPCTSTR(sName), 0, REG_SZ, (LPBYTE)sz, static_cast<DWORD>(strlen(sz) + 1));
 	if( lResult != ERROR_SUCCESS )
 		 bSuccess = false;
 

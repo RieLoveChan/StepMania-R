@@ -1675,7 +1675,7 @@ RString Song::GetCacheFile(RString sType)
 	for( RString Image : song_dir_listing )
 	{
 		RString FileExt = GetExtension(Image);
-		transform(FileExt.begin(), FileExt.end(), FileExt.begin(),::tolower);
+		transform(FileExt.begin(), FileExt.end(), FileExt.begin(), [](char c) { return static_cast<char>(::tolower(static_cast<unsigned char>(c))); });
 		for ( RString FindExt : fill_exts )
 		{
 			if(FileExt == FindExt)
@@ -1700,7 +1700,7 @@ RString Song::GetCacheFile(RString sType)
 	for( RString Image : image_list)
 	{
 		// We want to make it lower case.
-		transform(Image.begin(), Image.end(), Image.begin(),::tolower);
+		transform(Image.begin(), Image.end(), Image.begin(), [](char c) { return static_cast<char>(::tolower(static_cast<unsigned char>(c))); });
 		for( std::pair<const int, RString> PreSet : PreSets[sType.c_str()] )
 		{
 			// Search for image using PreSets.

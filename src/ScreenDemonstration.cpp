@@ -52,7 +52,7 @@ void ScreenDemonstration::Init()
 		}
 
 		ASSERT( !vStylePossible.empty() );
-		const Style* pStyle = vStylePossible[ RandomInt(vStylePossible.size()) ];
+		const Style* pStyle = vStylePossible[ RandomInt(static_cast<int>(vStylePossible.size())) ];
 		GAMESTATE->SetCurrentStyle( pStyle, PLAYER_INVALID );
 	}
 

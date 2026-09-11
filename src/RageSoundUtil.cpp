@@ -95,7 +95,7 @@ void RageSoundUtil::ConvertFloatToNativeInt16( const float *pFrom, std::int16_t 
 	for( int i = 0; i < iSamples; ++i )
 	{
 		int iOut = static_cast<int>((pFrom[i] * 32768.0f) + 0.5);
-		pTo[i] = std::clamp( iOut, -32768, 32767 );
+		pTo[i] = static_cast<int16_t>(std::clamp( iOut, -32768, 32767 ));
 	}
 }
 

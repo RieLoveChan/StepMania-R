@@ -9,7 +9,7 @@
 
 int TrailUtil::GetNumSongs( const Trail *pTrail )
 {
-	return pTrail->m_vEntries.size();
+	return static_cast<int>(pTrail->m_vEntries.size());
 }
 
 float TrailUtil::GetTotalSeconds( const Trail *pTrail )

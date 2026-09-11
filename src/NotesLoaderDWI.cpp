@@ -228,7 +228,7 @@ static NoteData ParseNoteData(RString &step1, RString &step2,
 	}
 
 	NoteData newNoteData;
-	newNoteData.SetNumTracks( g_mapDanceNoteToNoteDataColumn.size() );
+	newNoteData.SetNumTracks( static_cast<int>(g_mapDanceNoteToNoteDataColumn.size()) );
 
 	for( int pad=0; pad<2; pad++ )		// foreach pad
 	{

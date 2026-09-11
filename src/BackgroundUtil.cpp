@@ -363,7 +363,7 @@ void BackgroundUtil::GetGlobalRandomMovies(
 
 	for (RString const &s : vsPathsOut)
 	{
-		RString sName = s.Right( s.size() - RANDOMMOVIES_DIR.size() - 1 );
+		RString sName = s.Right( static_cast<int>(s.size() - RANDOMMOVIES_DIR.size() - 1) );
 		vsNamesOut.push_back( sName );
 	}
 	StripCvsAndSvn( vsPathsOut, vsNamesOut );

@@ -283,7 +283,7 @@ void CourseUtil::AutogenOniFromArtist( const RString &sArtistName, RString sArti
 	 * deterministically, so we always get the same set of songs unless the
 	 * song set changes. */
 	{
-		RandomGen rng( GetHashForString( sArtistName ) + aSongs.size() );
+		RandomGen rng( static_cast<int>(GetHashForString( sArtistName ) + aSongs.size()) );
 		std::shuffle( aSongs.begin(), aSongs.end(), rng );
 	}
 

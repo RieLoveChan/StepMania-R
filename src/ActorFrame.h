@@ -29,7 +29,7 @@ public:
 	void TransferChildren( ActorFrame *pTo );
 	Actor* GetChild( const RString &sName );
 	std::vector<Actor*> GetChildren() { return m_SubActors; }
-	int GetNumChildren() const { return m_SubActors.size(); }
+	int GetNumChildren() const { return static_cast<int>(m_SubActors.size()); }
 
 	/** @brief Remove all of the children from the frame. */
 	void RemoveAllChildren();

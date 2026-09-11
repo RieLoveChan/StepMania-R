@@ -156,7 +156,7 @@ RageTexture* AnimatedTexture::GetCurrentTexture()
 
 int AnimatedTexture::GetNumStates() const
 {
-	return vFrames.size();
+	return static_cast<int>(vFrames.size());
 }
 
 void AnimatedTexture::SetState( int iState )

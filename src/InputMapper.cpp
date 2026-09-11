@@ -817,7 +817,7 @@ bool InputMapper::CheckForChangedInputDevicesAndRemap( RString &sMessageOut )
 
 	std::vector<RString> vsCurrent;
 	std::vector<RString> vsCurrentJoysticks;
-	for( int i=vDevices.size()-1; i>=0; i-- )
+	for( int i=static_cast<int>(vDevices.size())-1; i>=0; i-- )
 	{
 		vsCurrent.push_back( vDevices[i].sDesc );
 		if( IsJoystick(vDevices[i].id) )

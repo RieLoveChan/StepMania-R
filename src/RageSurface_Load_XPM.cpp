@@ -67,7 +67,7 @@ RageSurface *RageSurface_Load_XPM( char * const *xpm, RString &error )
 
 		colors.push_back( colorval );
 
-		name_to_color[name] = colors.size()-1;
+		name_to_color[name] = static_cast<int>(colors.size())-1;
 	}
 
 	RageSurface *img;

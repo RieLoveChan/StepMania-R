@@ -82,7 +82,7 @@ RString GetRandomFileInDir( RString sDir )
 	if( asFiles.empty() )
 		return RString();
 	else
-		return asFiles[RandomInt(asFiles.size())];
+		return asFiles[RandomInt(static_cast<int>(asFiles.size()))];
 }
 
 RString Character::GetModelPath() const

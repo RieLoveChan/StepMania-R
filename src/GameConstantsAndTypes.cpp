@@ -60,7 +60,7 @@ RString StepsTypeToString( StepsType st )
 	{
 		if( bCapitalizeNextLetter )
 		{
-			s[i] = toupper(s[i]);
+			s[i] = static_cast<char>(toupper(s[i]));
 			bCapitalizeNextLetter = false;
 		}
 

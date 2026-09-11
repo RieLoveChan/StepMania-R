@@ -15,7 +15,7 @@ public:
 	void Extend( unsigned iSamples ) noexcept;
 	void read_deinterlace( float **pBufs, int channels ) noexcept;
 	float *read() { return m_pMixbuf; }
-	unsigned size() const { return m_iBufUsed; }
+	unsigned size() const { return static_cast<unsigned>(m_iBufUsed); }
 
 	void SetWriteOffset(int iOffset) noexcept;
 	void read(int16_t *pBuf) noexcept;

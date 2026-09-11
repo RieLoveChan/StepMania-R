@@ -357,7 +357,7 @@ static void InitCharAliases()
 		if( iCodepoint == INTERNAL )
 			iCodepoint = iNextInternalUseCodepoint++;
 
-		CharAliases[aliases[n].str] = iCodepoint;
+		CharAliases[aliases[n].str] = static_cast<wchar_t>(iCodepoint);
 	}
 
 	for(aliasmap::const_iterator i = CharAliases.begin(); i != CharAliases.end(); ++i)

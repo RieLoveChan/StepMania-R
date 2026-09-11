@@ -314,7 +314,7 @@ void RageSoundDriver::Update()
 
 			/* Don't log again for at least a second, or we'll burst output
 			 * and possibly cause more underruns. */
-			fNext = RageTimer::GetTimeSinceStart() + 1;
+			fNext = static_cast<float>(RageTimer::GetTimeSinceStart() + 1);
 		}
 	}
 

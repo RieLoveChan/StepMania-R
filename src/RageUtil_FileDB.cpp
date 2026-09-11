@@ -567,7 +567,7 @@ void FilenameDB::GetDirListing( const RString &sPath_, std::vector<RString> &asA
 	if( fn.empty() )
 		fn = "*";
 
-	unsigned iStart = asAddTo.size();
+	unsigned iStart = static_cast<unsigned>(asAddTo.size());
 	GetFilesSimpleMatch( sPath, fn, asAddTo, bOnlyDirs );
 
 	if( bReturnPathToo && iStart < asAddTo.size() )

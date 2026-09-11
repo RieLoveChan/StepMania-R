@@ -61,7 +61,7 @@ bool RSAKeyWrapper::Load( const RString &sKey, RString &sError )
 {
 	Unload();
 
-	int iRet = rsa_import( (const unsigned char *) sKey.data(), sKey.size(), &m_Key );
+	int iRet = rsa_import( (const unsigned char *) sKey.data(), static_cast<unsigned long>(sKey.size()), &m_Key );
 	if( iRet != CRYPT_OK )
 	{
 		memset( &m_Key, 0, sizeof(m_Key) );

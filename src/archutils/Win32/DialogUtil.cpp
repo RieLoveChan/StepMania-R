@@ -38,7 +38,7 @@ static HFONT CreatePointFont(int nPointSize, LPCTSTR lpszFaceName)
 	memset(&logFont, 0, sizeof(LOGFONT));
 	logFont.lfCharSet = DEFAULT_CHARSET;
 	logFont.lfHeight = nPointSize;
-	lstrcpyn(logFont.lfFaceName, lpszFaceName, strlen(logFont.lfFaceName));
+	lstrcpyn(logFont.lfFaceName, lpszFaceName, static_cast<int>(strlen(logFont.lfFaceName)));
 
 	return ::CreatePointFontIndirect(&logFont);
 }

@@ -501,7 +501,7 @@ int NetworkStream_Win32::Read( void *pBuffer, std::size_t iSize )
 	int iRead = 0;
 	while( iSize > 0 )
 	{
-		int iRet = recv( m_Socket, p, iSize, 0 );
+		int iRet = recv( m_Socket, p, static_cast<int>(iSize), 0 );
 		if( iRet > 0 )
 		{
 			p += iRet;
@@ -549,7 +549,7 @@ void NetworkStream_Win32::Write( const void *pBuffer, std::size_t iSize )
 	const char *p = (const char *) pBuffer;
 	while( iSize > 0 )
 	{
-		int iRet = send( m_Socket, p, iSize, 0 );
+		int iRet = send( m_Socket, p, static_cast<int>(iSize), 0 );
 		ASSERT( iRet != 0 );
 		if( iRet > 0 )
 		{

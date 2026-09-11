@@ -89,7 +89,7 @@ int Attack::GetNumAttacks() const
 {
 	std::vector<RString> tmp;
 	split(this->sModifiers, ",", tmp);
-	return tmp.size();
+	return static_cast<int>(tmp.size());
 }
 
 bool AttackArray::ContainsTransformOrTurn() const

@@ -14,10 +14,20 @@ namespace avcodec
 {
 	extern "C"
 	{
+#ifdef _MSC_VER
+// Vendored/prebuilt FFmpeg headers (extern/ffmpeg-w32-prebuilt) trip
+// C4244 in their inline clamp helpers (libavutil/common.h). Don't
+// patch vendored code -- scope the suppression to just this include.
+#pragma warning(push)
+#pragma warning(disable : 4244)
+#endif
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
 #include <libswscale/swscale.h>
 #include <libavutil/pixdesc.h>
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 	}
 };
 

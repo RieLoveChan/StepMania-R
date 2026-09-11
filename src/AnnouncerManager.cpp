@@ -40,7 +40,7 @@ void AnnouncerManager::GetAnnouncerNames( std::vector<RString>& AddTo )
 	StripMacResourceForks( AddTo );
 
 	// strip out the empty announcer folder
-	for( int i=AddTo.size()-1; i>=0; i-- )
+	for( int i=static_cast<int>(AddTo.size())-1; i>=0; i-- )
 		if( !strcasecmp( AddTo[i], EMPTY_ANNOUNCER_NAME ) )
 			AddTo.erase(AddTo.begin()+i, AddTo.begin()+i+1 );
 }

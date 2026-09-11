@@ -573,7 +573,7 @@ public:
 			}
 		}
 		// The themer is expected to check for validity before using.
-		lua_pushnumber(L, rank);
+		lua_pushnumber(L, static_cast<lua_Number>(rank));
 		return 1;
 	}
 

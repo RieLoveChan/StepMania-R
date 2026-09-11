@@ -115,7 +115,7 @@ bool ArchHooks_Win32::CheckForMultipleInstances(int argc, char* argv[])
 		RString sAllArgs = join("|", vsArgs);
 		COPYDATASTRUCT cds;
 		cds.dwData = 0;
-		cds.cbData = sAllArgs.size();
+		cds.cbData = static_cast<DWORD>(sAllArgs.size());
 		cds.lpData = (void*)sAllArgs.data();
 		SendMessage(
 			(HWND)hWnd, // HWND hWnd = handle of destination window

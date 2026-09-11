@@ -516,7 +516,7 @@ bool RtioDevice::WriteMsg(const std::string &msg)
 	snprintf(checksum_str, sizeof(checksum_str), "%02x", checksum);
 	buf += checksum_str;
 
-	int wrote = serial_.Write(buf.c_str(), buf.length());
+	int wrote = serial_.Write(buf.c_str(), static_cast<int>(buf.length()));
 	return wrote == buf.length();
 }
 

@@ -30,13 +30,13 @@ RString ConvertWstringToCodepage( std::wstring s, int iCodePage )
 	if( s.empty() )
 		return RString();
 
-	int iBytes = WideCharToMultiByte( iCodePage, 0, s.data(), s.size(), 
+	int iBytes = WideCharToMultiByte( iCodePage, 0, s.data(), static_cast<int>(s.size()),
 					nullptr, 0, nullptr, FALSE );
 	ASSERT_M( iBytes > 0, werr_ssprintf( GetLastError(), "WideCharToMultiByte" ).c_str() );
 
 	char * buf = new char[iBytes + 1];
 	std::fill(buf, buf + iBytes + 1, '\0');
-	WideCharToMultiByte( CP_ACP, 0, s.data(), s.size(), 
+	WideCharToMultiByte( CP_ACP, 0, s.data(), static_cast<int>(s.size()),
 					buf, iBytes, nullptr, FALSE );
 	RString ret( buf );
 	delete[] buf;
@@ -53,11 +53,11 @@ std::wstring ConvertCodepageToWString( RString s, int iCodePage )
 	if( s.empty() )
 		return std::wstring();
 
-	int iBytes = MultiByteToWideChar( iCodePage, 0, s.data(), s.size(), nullptr, 0 );
+	int iBytes = MultiByteToWideChar( iCodePage, 0, s.data(), static_cast<int>(s.size()), nullptr, 0 );
 	ASSERT_M( iBytes > 0, werr_ssprintf( GetLastError(), "MultiByteToWideChar" ).c_str() );
 
 	wchar_t *pTemp = new wchar_t[iBytes];
-	MultiByteToWideChar( iCodePage, 0, s.data(), s.size(), pTemp, iBytes );
+	MultiByteToWideChar( iCodePage, 0, s.data(), static_cast<int>(s.size()), pTemp, iBytes );
 	std::wstring sRet( pTemp, iBytes );
 	delete [] pTemp;
 

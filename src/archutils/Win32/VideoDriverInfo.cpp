@@ -76,7 +76,7 @@ bool GetVideoDriverInfo( int iCardno, VideoDriverInfo &info )
 
 		RegistryAccess::GetRegSubKeys( sTopKey, lst, ".*", false );
 
-		for( int i=lst.size()-1; i >= 0; --i )
+		for( int i=static_cast<int>(lst.size())-1; i >= 0; --i )
 		{
 			/* Remove all keys that aren't four characters long ("Properties"). */
 			if( lst[i].size() != 4 )

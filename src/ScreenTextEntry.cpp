@@ -413,7 +413,7 @@ void ScreenTextEntry::TextEntrySettings::FromStack( lua_State *L )
 
 	// Get Max Input Length
 	lua_getfield( L, iTab, "MaxInputLength" );
-	iMaxInputLength = lua_tointeger( L, -1 );
+	iMaxInputLength = static_cast<int>(lua_tointeger( L, -1 ));
 	lua_settop( L, iTab );
 
 	// Get Password

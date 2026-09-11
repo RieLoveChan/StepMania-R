@@ -32,7 +32,7 @@ public:
 	void Finish();
 
 	/* Return the number of added sounds. */
-	int GetNumSounds() const { return m_aSounds.size(); }
+	int GetNumSounds() const { return static_cast<int>(m_aSounds.size()); }
 
 	int GetLength() const override;
 	int GetLength_Fast() const override;
