@@ -269,7 +269,7 @@ int Profile::GetAge() const
 {
 	if(m_BirthYear == 0)
 	{
-		return (GetLocalTime().tm_year+1900) - DEFAULT_BIRTH_YEAR;
+		return static_cast<int>( (GetLocalTime().tm_year+1900) - DEFAULT_BIRTH_YEAR );
 	}
 	return (GetLocalTime().tm_year+1900) - m_BirthYear;
 }
@@ -470,9 +470,9 @@ float Profile::GetCoursesPossible( StepsType st, CourseDifficulty cd ) const
 {
 	std::vector<Course*> vpCourses;
 	GetHighScoreCourses( vpCourses );
-	return std::count_if(vpCourses.begin(), vpCourses.end(), [&](Course const *c) {
+	return static_cast<float>( std::count_if(vpCourses.begin(), vpCourses.end(), [&](Course const *c) {
 		return c->GetTrail(st, cd) != nullptr;
-	});
+	}) );
 }
 
 float Profile::GetCoursesActual( StepsType st, CourseDifficulty cd ) const
@@ -1944,9 +1944,9 @@ float Profile::CalculateCaloriesFromHeartRate(float HeartRate, float Duration)
 	*/
 	// Duration passed in is in seconds.  Convert it to minutes to make the code
 	// match the equations from the website.
-	Duration= Duration / 60.0;
-	float kilos= GetCalculatedWeightPounds() / 2.205;
-	float age= GetAge();
+	Duration= static_cast<float>( Duration / 60.0 );
+	float kilos= static_cast<float>( GetCalculatedWeightPounds() / 2.205 );
+	float age= static_cast<float>( GetAge() );
 
 	// Names for the constants in the equations.
 	// Assumes male and unknown voomax.
@@ -1981,9 +1981,9 @@ float Profile::CalculateCaloriesFromHeartRate(float HeartRate, float Duration)
 		weight_factor= 0.1988f;
 		age_factor= 0.2017f;
 	}
-	return ((gender_factor + (heart_factor * HeartRate) +
+	return static_cast<float>( ((gender_factor + (heart_factor * HeartRate) +
 			(voo_factor * m_Voomax) + (weight_factor * kilos) + (age_factor + age))
-		/ 4.184) * Duration;
+		/ 4.184) * Duration );
 }
 
 XNode* Profile::SaveSongScoresCreateNode() const
@@ -2006,7 +2006,7 @@ XNode* Profile::SaveSongScoresCreateNode() const
 
 		XNode* pSongNode = pNode->AppendChild( songID.CreateNode() );
 
-		int jCheck2 = hsSong.m_StepsHighScores.size();
+		int jCheck2 = static_cast<int>( hsSong.m_StepsHighScores.size() );
 		int jCheck1 = 0;
 		for (std::pair<StepsID const, HighScoresForASteps> const &j :hsSong.m_StepsHighScores)
 		{
@@ -2146,7 +2146,7 @@ void Profile::LoadCourseScoresFromNode( const XNode* pCourseScores )
 
 				for (Course *c : vpAllCourses)
 				{
-					RString sOther = c->m_sPath.Right(sFullFileName.size());
+					RString sOther = c->m_sPath.Right(static_cast<int>( sFullFileName.size() ));
 
 					if( sFullFileName.CompareNoCase(sOther) == 0 )
 					{
@@ -2524,7 +2524,7 @@ RString Profile::MakeUniqueFileNameNoExtension( RString sDir, RString sFileNameB
 
 	int iIndex = 0;
 
-	for( int i = files.size()-1; i >= 0; --i )
+	for( int i = static_cast<int>( files.size() )-1; i >= 0; --i )
 	{
 		static Regex re( "^" + sFileNameBeginning + "([0-9]{5})\\....$" );
 		std::vector<RString> matches;
@@ -2651,7 +2651,7 @@ public:
 	{
 		std::set<RString> names;
 		p->GetAllUsedHighScoreNames(names);
-		lua_createtable(L, names.size(), 0);
+		lua_createtable(L, static_cast<int>( names.size() ), 0);
 		int next_name_index= 1;
 		for(std::set<RString>::iterator name= names.begin(); name != names.end();
 				++name)
@@ -2785,12 +2785,12 @@ public:
 	DEFINE_METHOD( GetGUID,		m_sGuid );
 	static int get_songs(T* p, lua_State* L)
 	{
-		lua_createtable(L, p->m_songs.size(), 0);
+		lua_createtable(L, static_cast<int>( p->m_songs.size() ), 0);
 		int song_tab= lua_gettop(L);
 		for(std::size_t i= 0; i < p->m_songs.size(); ++i)
 		{
 			p->m_songs[i]->PushSelf(L);
-			lua_rawseti(L, song_tab, i+1);
+			lua_rawseti(L, song_tab, static_cast<int>( i+1 ));
 		}
 		return 1;
 	}

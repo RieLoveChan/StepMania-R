@@ -567,7 +567,7 @@ bool BMSChart::Load( const RString &chartPath )
 				channel -= 40;
 				flag = true;
 			}
-			int count = data.size() / 2;
+			int count = static_cast<int>( data.size() / 2 );
 			for (int i = 0; i < count; i++)
 			{
 				RString value = data.substr(2 * i, 2);
@@ -677,7 +677,7 @@ int BMSSong::AllocateKeysound( RString filename, RString path )
 		return mapKeysoundToIndex[normalizedFilename];
 	}
 
-	unsigned index = out->m_vsKeysoundFile.size();
+	unsigned index = static_cast<unsigned>( out->m_vsKeysoundFile.size() );
 	out->m_vsKeysoundFile.push_back( normalizedFilename );
 	mapKeysoundToIndex[filename] = index;
 	mapKeysoundToIndex[normalizedFilename] = index;
@@ -924,7 +924,7 @@ void BMSChartReader::ReadHeaders()
 
 void BMSChartReader::CalculateStepsType()
 {
-	nonEmptyTracksCount = nonEmptyTracks.size();
+	nonEmptyTracksCount = static_cast<int>( nonEmptyTracks.size() );
 	out->m_StepsType = DetermineStepsType();
 	if(out->m_StepsType == StepsType_Invalid)
 	{
@@ -1304,8 +1304,8 @@ bool BMSChartReader::ReadNoteData()
 			measureSize = 4.0f;
 			BMSMeasures::iterator it = in->measures.find(trackMeasure);
 			if( it != in->measures.end() ) measureSize = it->second.size * 4.0;
-			adjustedMeasureSize = measureSize;
-			if( trackMeasure < firstNoteMeasure ) adjustedMeasureSize = measureSize = 4.0f;
+			adjustedMeasureSize = static_cast<float>( measureSize );
+			if( trackMeasure < firstNoteMeasure ) adjustedMeasureSize = static_cast<float>( measureSize = 4.0f );
 
 			// measure size adjustment
 			{
@@ -1317,10 +1317,10 @@ bool BMSChartReader::ReadNoteData()
 					num /= 2;
 					den /= 2;
 				}
-				td.SetTimeSignatureAtRow( BeatToNoteRow(measureStartBeat), num, den );
+				td.SetTimeSignatureAtRow( BeatToNoteRow(measureStartBeat), static_cast<int>(num), static_cast<int>(den) );
 
 				// Since BMS measure events only last through the measure, we need to restore the default measure length.
-				td.SetTimeSignatureAtRow(BeatToNoteRow(measureStartBeat + measureSize), 4, 4);
+				td.SetTimeSignatureAtRow(BeatToNoteRow(static_cast<float>(measureStartBeat + measureSize)), 4, 4);
 			}
 			// end measure size adjustment
 		}
@@ -1334,7 +1334,7 @@ bool BMSChartReader::ReadNoteData()
 			unsigned int bpm;
 			if( sscanf(obj.value, "%x", &bpm) == 1 )
 			{
-				if( bpm > 0 ) td.SetBPMAtRow( row, measureAdjust * (currentBPM = bpm) );
+				if( bpm > 0 ) td.SetBPMAtRow( row, measureAdjust * (currentBPM = static_cast<float>(bpm)) );
 			}
 		}
 		else if( channel == 4 ) // bga change
@@ -1596,7 +1596,7 @@ void BMSSongLoader::AddToSong()
 				// XXX: This matches (double), but I haven't seen it used. Again, MORE EXAMPLES NEEDED
 				if( tag.find('l') != tag.npos )
 				{
-					unsigned pos = tag.find('l');
+					unsigned pos = static_cast<unsigned>( tag.find('l') );
 					if( pos > 2 && tag.substr(pos - 2, 4) == "solo" )
 					{
 						// (solo) -- an edit, apparently (Thanks Glenn!)
