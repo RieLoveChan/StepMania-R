@@ -92,7 +92,7 @@ void StepMania::GetPreferredVideoModeParams( VideoModeParams &paramsOut )
 	{
 		//float fRatio = PREFSMAN->m_iDisplayHeight;
 		//iWidth = PREFSMAN->m_iDisplayHeight * fRatio;
-		iWidth = std::ceil(PREFSMAN->m_iDisplayHeight * PREFSMAN->m_fDisplayAspectRatio);
+		iWidth = static_cast<int>(std::ceil(PREFSMAN->m_iDisplayHeight * PREFSMAN->m_fDisplayAspectRatio));
 		// ceil causes the width to come out odd when it shouldn't.
 		// 576 * 1.7778 = 1024.0128, which is rounded to 1025. -Kyz
 		iWidth-= iWidth % 2;
@@ -398,7 +398,7 @@ static void AdjustForChangedSystemCapabilities()
 	MEMORYSTATUS mem;
 	GlobalMemoryStatus(&mem);
 
-	const int Memory = mem.dwTotalPhys / (1024*1024);
+	const int Memory = static_cast<int>(mem.dwTotalPhys / (1024*1024));
 
 	if( g_iLastSeenMemory == Memory )
 		return;
@@ -944,7 +944,7 @@ int sm_main(int argc, char* argv[])
 	if(pLoadingWindow == nullptr)
 		RageException::Throw("%s", COULDNT_OPEN_LOADING_WINDOW.GetValue().c_str());
 
-	srand( time(nullptr) ); // seed number generator
+	srand( static_cast<unsigned int>(time(nullptr)) ); // seed number generator
 
 	/* Do this early, so we have debugging output if anything else fails. LOG and
 	 * Dialog must be set up first. It shouldn't take long, but it might take a

@@ -75,7 +75,7 @@ void ScreenJukebox::SetSong()
 	// Search for a Song and Steps to play during the demo.
 	for( int i=0; i<1000; i++ )
 	{
-		Song* pSong = vSongs[RandomInt(vSongs.size())];
+		Song* pSong = vSongs[RandomInt(static_cast<int>(vSongs.size()))];
 
 		ASSERT( pSong != nullptr );
 		if( !pSong->HasMusic() )
@@ -85,7 +85,7 @@ void ScreenJukebox::SetSong()
 		if( !pSong->ShowInDemonstrationAndRanking() )
 			continue;	// skip
 
-		Difficulty dc = vDifficultiesToShow[ RandomInt(vDifficultiesToShow.size()) ];
+		Difficulty dc = vDifficultiesToShow[ RandomInt(static_cast<int>(vDifficultiesToShow.size())) ];
 		Steps* pSteps = SongUtil::GetStepsByDifficulty( pSong, GAMESTATE->GetCurrentStyle(PLAYER_INVALID)->m_StepsType, dc );
 
 		if( pSteps == nullptr )
@@ -146,7 +146,7 @@ void ScreenJukebox::SetSong()
 
 			if( !apOptions.empty() )
 			{
-				int iIndex = RandomInt( apOptions.size() );
+				int iIndex = RandomInt( static_cast<int>(apOptions.size()) );
 				m_pCourseEntry = apOptions[iIndex];
 				Course *lCourse = apPossibleCourses[iIndex];
 
@@ -305,7 +305,7 @@ void ScreenJukebox::InitSongQueues()
 
 	ASSERT( iIndexToKeep != -1 );
 
-	for( int i=(m_apSongsQueue.size())-1; i>=0; i-- )
+	for( int i=static_cast<int>(m_apSongsQueue.size())-1; i>=0; i-- )
 	{
 		if( i != iIndexToKeep )
 		{

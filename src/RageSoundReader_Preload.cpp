@@ -45,7 +45,7 @@ RageSoundReader_Preload::RageSoundReader_Preload():
 
 int RageSoundReader_Preload::GetTotalFrames() const
 {
-	return m_Buffer->size() / framesize;
+	return static_cast<int>(m_Buffer->size() / framesize);
 }
 
 bool RageSoundReader_Preload::Open( RageSoundReader *pSource )
@@ -130,7 +130,7 @@ int RageSoundReader_Preload::SetPosition( int iFrame )
 
 	if( m_iPosition >= int(m_Buffer->size() / framesize) )
 	{
-		m_iPosition = m_Buffer->size() / framesize;
+		m_iPosition = static_cast<int>(m_Buffer->size() / framesize);
 		return 0;
 	}
 
@@ -144,7 +144,7 @@ int RageSoundReader_Preload::GetNextSourceFrame() const
 
 int RageSoundReader_Preload::Read( float *pBuffer, int iFrames )
 {
-	const int iSizeFrames = m_Buffer->size() / framesize;
+	const int iSizeFrames = static_cast<int>(m_Buffer->size() / framesize);
 	const int iFramesAvail = iSizeFrames - m_iPosition;
 
 	iFrames = std::min( iFrames, iFramesAvail );

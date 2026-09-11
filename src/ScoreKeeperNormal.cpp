@@ -149,7 +149,7 @@ void ScoreKeeperNormal::OnNextSong( int iSongInCourseIndex, const Steps* pSteps,
 	m_iMaxPossiblePoints = 0;
 	if( GAMESTATE->IsCourseMode() )
 	{
-		const int numSongsInCourse = m_apSteps.size();
+		const int numSongsInCourse = static_cast<int>(m_apSteps.size());
 		ASSERT( numSongsInCourse != 0 );
 
 		const int iIndex = iSongInCourseIndex % numSongsInCourse;
@@ -344,7 +344,7 @@ int ScoreKeeperNormal::CalcNextToastyAt(int level)
 	switch(lua_type(L, 1))
 	{
 		case LUA_TNUMBER:
-			amount= lua_tointeger(L, 1);
+			amount= static_cast<int>(lua_tointeger(L, 1));
 			break;
 		case LUA_TFUNCTION:
 			{
@@ -355,7 +355,7 @@ int ScoreKeeperNormal::CalcNextToastyAt(int level)
 				{
 					if(lua_isnumber(L, -1))
 					{
-						amount= lua_tointeger(L, -1);
+						amount= static_cast<int>(lua_tointeger(L, -1));
 					}
 					else
 					{

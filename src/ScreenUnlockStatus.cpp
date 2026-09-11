@@ -30,7 +30,7 @@ void ScreenUnlockStatus::Init()
 {
 	ScreenAttract::Init();
 
-	unsigned iNumUnlocks = UNLOCKMAN->m_UnlockEntries.size();
+	unsigned iNumUnlocks = static_cast<unsigned>(UNLOCKMAN->m_UnlockEntries.size());
 
 	if( !PREFSMAN->m_bUseUnlockSystem || iNumUnlocks == 0 )
 	{
@@ -38,7 +38,7 @@ void ScreenUnlockStatus::Init()
 		return;
 	}
 
-	unsigned NumUnlocks = UNLOCKMAN->m_UnlockEntries.size();
+	unsigned NumUnlocks = static_cast<unsigned>(UNLOCKMAN->m_UnlockEntries.size());
 
 	PointsUntilNextUnlock.LoadFromFont( THEME->GetPathF("Common","normal") );
 	PointsUntilNextUnlock.SetHorizAlign( align_left );
@@ -277,10 +277,10 @@ void ScreenUnlockStatus::Init()
 	// which is still greater than 0.  By typecasting it as
 	// an integer, you can achieve -1, which exits the loop.
 
-	for(int i = item.size() - 1; (int)i >= 0; i--)
+	for(int i = static_cast<int>(item.size()) - 1; (int)i >= 0; i--)
 		this->AddChild(item[i]);
 
-	for(int i = ItemIcons.size() - 1; (int)i >= 0; i--)
+	for(int i = static_cast<int>(ItemIcons.size()) - 1; (int)i >= 0; i--)
 		this->AddChild(ItemIcons[i]);
 
 	PointsUntilNextUnlock.SetName( "PointsDisplay" );
