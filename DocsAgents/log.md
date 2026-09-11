@@ -2143,3 +2143,33 @@
   all ten files fixed so far confirmed at zero.
   Verified: `sm_tests` 5966/226, `ctest` 100%, Release + `--SelfTest`
   green.
+
+* **item 2 (C4244/C4267) sweep, next 4 files: a THIRD methodology
+  correction, 140/69 was wrong the whole time -- true total 528 -> 489
+  remaining (148 files).** The dedup regex used since the start of this
+  sweep (`warning C424[47]`) only ever matches `C4244` -- `C4267` is
+  `"C426"`+`"7"`, a different literal the same pattern cannot match.
+  Every "140/69", "158/72", "187/~75", "297" figure in this sweep
+  silently counted C4244 only and dropped all 388 unique C4267 sites
+  (838 raw lines) the entire time. Corrected regex
+  (`warning C42(44|67)`) on the same clean rebuild: **528 unique sites
+  / 152 files** was the real total going into this batch -- the four
+  files already reported as "5 each" (`ScreenDebugOverlay.cpp`,
+  `RageFileBasic.cpp`, `BitmapText.cpp`, `ActorMultiVertex.cpp`) were
+  actually 5/11/7/16 once C4267 was counted. Fixed all real sites in
+  those four (`ActorMultiVertex.cpp`: Lua bindings pushing `size_t`
+  into `lua_Number`/`int` params, a `size_t` modulo/subtraction into
+  `int` locals, `SetVertex*`/`SetState`/`AddVertices` narrow-int
+  params; `BitmapText.cpp`: an `int`+`float` mix promoting
+  `std::fmin`'s result to `double` -- fixed via a `1.0f` literal
+  instead of an int `1`, plus `size_t`/`unsigned`-into-`int`/`float`
+  narrowing at 5 more sites; `RageFileBasic.cpp`: 2 pointer-diffs and 6
+  `Write`/`Read`-buffer `size_t`-into-`int` sites; `ScreenDebugOverlay
+  .cpp`: 4 iterator-diffs + 1 `double`-into-`float` argument, no extra
+  C4267 beyond the original count). **True current total: 489 unique
+  sites remain across 148 files** (re-verified at zero for these four
+  in a second clean rebuild). Next: `RageUtil.cpp` (25),
+  `SongManager.cpp` (20), `XmlFileUtil.cpp` (14), `ThemeManager.cpp`/
+  `ScreenEdit.cpp`/`RageFileManager.cpp` (11 each).
+  Verified: `sm_tests`/`ctest`/Release/`--SelfTest` gate re-run after
+  restoring `/wd4244`/`/wd4267`.

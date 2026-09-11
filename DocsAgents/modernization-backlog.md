@@ -143,13 +143,30 @@ With it removed, a clean `sm_engine`/`sm_tests` (Debug, `WITH_TESTS=ON`,
   their direct dependents, so it *undercounts the total* (it did catch
   that the touched files themselves were clean, correctly). The
   authoritative number needs `--clean-first` **and** the flag removed
-  together. With both: **140 unique sites remain across 69 files**
-  (all ten files fixed so far confirmed at zero in this same clean
-  rebuild). Next concentrations: `ScreenDebugOverlay.cpp` (5),
-  `RageFileBasic.cpp` (5), `BitmapText.cpp` (5), `ActorMultiVertex.cpp`
-  (5), then a wide tail of 2-4-site files (`StepMania.cpp`,
-  `SongManager.cpp`, `ScreenEdit.cpp`, `RageUtil.cpp`, `RageTimer.cpp`,
-  `RageMath.cpp`, `LuaManager.cpp`, `Course.cpp`, ...).
+  together. With both: 140 sites appeared to remain -- **but this was
+  itself wrong, a third methodology trap:** the dedup regex used to
+  count unique sites (`warning C424[47]`) only matches `C4244`
+  (`"C424"`+`"4"` or `"7"`); `C4267` is `"C426"`+`"7"`, a different
+  literal string the same regex can never match. Every "140/69" figure
+  in this doc and in `log.md`/memory silently counted **C4244 only**
+  and dropped every `C4267` warning -- 838 raw `C4267` lines, 388
+  unique sites, simply never counted. Corrected regex
+  (`warning C42(44|67)`) on the same clean rebuild log: **528 unique
+  sites across 152 files** was the real total at that point (before
+  the batch below). Top concentrations at that point:
+  `ScreenDebugOverlay.cpp`/`RageFileBasic.cpp`/`BitmapText.cpp`/
+  `ActorMultiVertex.cpp` (each previously reported as "5", actually
+  5/11/7/16 once `C4267` was counted too), then `RageUtil.cpp` (25),
+  `SongManager.cpp` (20), `XmlFileUtil.cpp` (14), `ThemeManager.cpp`
+  (11), `ScreenEdit.cpp` (11), `RageFileManager.cpp` (11),
+  `OptionsList.cpp`/`EditMenu.cpp`/`CubicSpline.cpp` (10 each),
+  `TimingData.cpp`/`MusicWheel.cpp`/`CourseLoaderCRS.cpp` (9 each).
+  After fixing all real sites in the four files above (the C4267 sites
+  included): **489 unique sites remain across 148 files** (re-verified
+  clean in the same rebuild). This is the current authoritative count
+  -- treat any earlier "140/69" or "297"/"187"/"158" figure in this doc
+  as superseded; they were never wrong about the C4244 sites they
+  tracked, just silently blind to C4267 the whole time.
 **Done, verified (`sm_tests` 5966/226, `ctest`, Release + `--SelfTest`
 green, `/wd4244`/`/wd4267` still in place while sites remain elsewhere):**
 - `RageUtil.h`/`RageTimer.h`: the 4 header sites (`RageTimer::
@@ -214,6 +231,33 @@ green, `/wd4244`/`/wd4267` still in place while sites remain elsewhere):**
   locals. Re-verified via `sm_tests.exe "[bms]" -s`: 26 assertions / 2
   cases, all pinned values unchanged (e.g. `pnm-nine`'s tap count still
   118).
+- `ActorMultiVertex.cpp` (16 sites, once `C4267` was counted): Lua
+  bindings pushing `std::size_t` (`GetNumVertices`/`GetState`/
+  `GetNumQuadStates`/`GetQuadState`/vertex-loop index) into
+  `lua_pushnumber`'s `lua_Number`/`lua_rawgeti`'s `int`; a `size_t`
+  modulo/subtraction into `int` locals (`spi`, `max`, `size`, `Last`);
+  `VertexIndex` (`size_t`) into three `SetVertex*(int index, ...)`
+  setters; a `size_t` return cast into `SetState(int)`/`AddVertices
+  (int)`.
+- `BitmapText.cpp` (7, once `C4267` was counted): `std::fmin(1, ...)`
+  promoting an `int`+`float` mix to `double` (fixed by using the `1.0f`
+  literal instead of a cast, so the whole macro stays `float`); a
+  `size_t` (`m_vpFontPageTextures.size()`/`m_aVertices` count) into
+  `int` locals ×2; `rnd()%N` (`unsigned int`) into `RageVector3`'s
+  `float` ctor args ×2; `lua_tointeger()` into `Attribute::length`
+  (`int`, not `size_t` -- checked the header).
+- `RageFileBasic.cpp` (11, once `C4267` was counted): a pointer-diff
+  into `int` ×2 (constructor buffer offset, `FillReadBuf`'s available-
+  space calc); `std::size_t iBytes` (a `Write`/`Read` parameter) added
+  into or divided against `int` members/locals across `EmptyWriteBuf`/
+  `Write`/the 3-arg `Write` overload -- 6 sites, all `static_cast<int>`
+  on the `iBytes` operand (these are internal buffer sizes, always well
+  under `INT_MAX` in practice).
+- `ScreenDebugOverlay.cpp` (5, no additional `C4267` beyond the
+  original `C4244` count): three `const_iterator - begin()`
+  pointer-diffs into `int` page/subscriber indices; a `double`
+  (`RageTimer::GetTimeSinceStart()`) into `SecondsToMMSSMsMsMs`'s
+  `float` param.
 **Second methodology trap, corrected:** checking a fix by deleting only
 the touched `.obj` files and rebuilding recompiles just those files
 (plus header-dependents), not the whole tree — it can't surface sites
@@ -225,11 +269,17 @@ batch above was first "confirmed" this way, then a real
 more real sites in those same three files (now all fixed and
 re-confirmed at zero in that same clean rebuild).
 **Not done:** `/wd4244`/`/wd4267` stay in `src/CMakeLists.txt` until all
-140 remaining sites (69 files) are triaged (same "fix everything, then
+489 remaining sites (148 files) are triaged (same "fix everything, then
 remove the `/wd` flag in one commit" pattern as C4100) — continue
 file-by-file, highest concentration first; measure only via
-`--clean-first` with the flag actually removed. Still not measured for
-Clang/GCC (`baseline.md` TBD, non-Windows).
+`--clean-first` with the flag actually removed, dedup with a regex
+that matches BOTH `C4244` and `C4267` (`warning C42(44|67)`, not
+`C424[47]`). Still not measured for Clang/GCC (`baseline.md` TBD,
+non-Windows). Next concentrations: `RageUtil.cpp` (25),
+`SongManager.cpp` (20), `XmlFileUtil.cpp` (14), `ThemeManager.cpp`/
+`ScreenEdit.cpp`/`RageFileManager.cpp` (11 each), `OptionsList.cpp`/
+`EditMenu.cpp`/`CubicSpline.cpp` (10 each), `TimingData.cpp`/
+`MusicWheel.cpp`/`CourseLoaderCRS.cpp` (9 each).
 
 ### 3. Stale cppcheck leak list — DONE 2026-09-05, all dismissed
 ~~`Docs/Devdocs/possible memory leaks.txt` — from 2009. Re-triaged by
