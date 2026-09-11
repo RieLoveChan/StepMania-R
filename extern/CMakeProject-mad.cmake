@@ -54,15 +54,12 @@ if(MSVC)
   # first glance.
   target_compile_definitions("mad" PRIVATE ASO_ZEROCHECK)
   target_compile_definitions("mad" PRIVATE $<$<CONFIG:Debug>:FPM_DEFAULT>)
-  if(SM_WIN32_ARCH MATCHES "x64")
-    target_compile_definitions("mad" PRIVATE $<$<CONFIG:Release>:FPM_64BIT>)
-    target_compile_definitions("mad" PRIVATE $<$<CONFIG:MinSizeRel>:FPM_64BIT>)
-    target_compile_definitions("mad" PRIVATE $<$<CONFIG:RelWithDebInfo>:FPM_64BIT>)
-  else()
-    target_compile_definitions("mad" PRIVATE $<$<CONFIG:Release>:FPM_INTEL>)
-    target_compile_definitions("mad" PRIVATE $<$<CONFIG:MinSizeRel>:FPM_INTEL>)
-    target_compile_definitions("mad" PRIVATE $<$<CONFIG:RelWithDebInfo>:FPM_INTEL>)
-  endif()
+  # SM_WIN32_ARCH is always "x64" (ADR 0003 / item 21 dropped 32-bit
+  # Windows), so this was always taking the FPM_64BIT branch; the
+  # FPM_INTEL (32-bit fixed-point) branch is dead.
+  target_compile_definitions("mad" PRIVATE $<$<CONFIG:Release>:FPM_64BIT>)
+  target_compile_definitions("mad" PRIVATE $<$<CONFIG:MinSizeRel>:FPM_64BIT>)
+  target_compile_definitions("mad" PRIVATE $<$<CONFIG:RelWithDebInfo>:FPM_64BIT>)
   # TODO: Provide a proper define for inline.
   target_compile_definitions("mad" PRIVATE inline=__inline)
 elseif(APPLE OR UNIX)

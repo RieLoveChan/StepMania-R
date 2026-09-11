@@ -122,11 +122,13 @@ check_type_size("long long" SIZEOF_LONG_LONG)
 
 
 if(WIN32)
-  if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-    set(SM_WIN32_ARCH "x64")
-  else()
-    set(SM_WIN32_ARCH "x86")
+  # ADR 0003 (Accepted): no 32-bit targets on any platform, and the
+  # Windows 11 floor doesn't ship a 32-bit edition -- there is nowhere
+  # for an x86 build to run. Backlog item 21.
+  if(NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
+    message(FATAL_ERROR "32-bit Windows is not supported (ADR 0003: no 32-bit targets on any platform).")
   endif()
+  set(SM_WIN32_ARCH "x64")
 endif()
 
 check_compile_features("${SM_CMAKE_DIR}/TestCode"
