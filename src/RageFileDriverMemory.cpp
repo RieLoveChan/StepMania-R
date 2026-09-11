@@ -62,9 +62,9 @@ int RageFileObjMem::ReadInternal( void *buffer, std::size_t bytes )
 	if( bytes == 0 )
 		return 0;
 	memcpy( buffer, &m_pFile->m_sBuf[m_iFilePos], bytes );
-	m_iFilePos += bytes;
+	m_iFilePos += static_cast<int>(bytes);
 
-	return bytes;
+	return static_cast<int>(bytes);
 }
 
 int RageFileObjMem::WriteInternal( const void *buffer, std::size_t bytes )
@@ -73,8 +73,8 @@ int RageFileObjMem::WriteInternal( const void *buffer, std::size_t bytes )
 	m_pFile->m_sBuf.replace( m_iFilePos, bytes, (const char *) buffer, bytes );
 	m_pFile->m_Mutex.Unlock();
 
-	m_iFilePos += bytes;
-	return bytes;
+	m_iFilePos += static_cast<int>(bytes);
+	return static_cast<int>(bytes);
 }
 
 int RageFileObjMem::SeekInternal( int offset )
@@ -86,7 +86,7 @@ int RageFileObjMem::SeekInternal( int offset )
 int RageFileObjMem::GetFileSize() const
 {
 	LockMut(m_pFile->m_Mutex);
-	return m_pFile->m_sBuf.size();
+	return static_cast<int>(m_pFile->m_sBuf.size());
 }
 
 RageFileObjMem::RageFileObjMem( const RageFileObjMem &cpy ):

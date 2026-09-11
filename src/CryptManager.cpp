@@ -43,7 +43,7 @@ static bool HashFile( RageFileBasic &f, unsigned char buf_hash[20], int iHash )
 			return false;
 		}
 
-		iRet = hash_descriptor[iHash].process( &hash, (const unsigned char *) s.data(), s.size() );
+		iRet = hash_descriptor[iHash].process( &hash, (const unsigned char *) s.data(), static_cast<unsigned long>(s.size()) );
 		ASSERT_M( iRet == CRYPT_OK, error_to_string(iRet) );
 	}
 
@@ -340,7 +340,7 @@ bool CryptManager::Verify( RageFileBasic &file, RString sSignature, RString sPub
 	HashFile( file, buf_hash, iHash );
 
 	int iMatch;
-	int iRet = rsa_verify_hash_ex( (const unsigned char *) sSignature.data(), sSignature.size(),
+	int iRet = rsa_verify_hash_ex( (const unsigned char *) sSignature.data(), static_cast<unsigned long>(sSignature.size()),
 			buf_hash, sizeof(buf_hash),
 			LTC_PKCS_1_EMSA, iHash, 0, &iMatch, &key.m_Key );
 
@@ -391,7 +391,7 @@ RString CryptManager::GetMD5ForString( RString sData )
 
 	hash_state hash;
 	hash_descriptor[iHash].init( &hash );
-	hash_descriptor[iHash].process( &hash, (const unsigned char *) sData.data(), sData.size() );
+	hash_descriptor[iHash].process( &hash, (const unsigned char *) sData.data(), static_cast<unsigned long>(sData.size()) );
 	hash_descriptor[iHash].done( &hash, digest );
 
 	return RString( (const char *) digest, sizeof(digest) );
@@ -405,7 +405,7 @@ RString CryptManager::GetSHA1ForString( RString sData )
 
 	hash_state hash;
 	hash_descriptor[iHash].init( &hash );
-	hash_descriptor[iHash].process( &hash, (const unsigned char *) sData.data(), sData.size() );
+	hash_descriptor[iHash].process( &hash, (const unsigned char *) sData.data(), static_cast<unsigned long>(sData.size()) );
 	hash_descriptor[iHash].done( &hash, digest );
 
 	return RString( (const char *) digest, sizeof(digest) );
@@ -436,7 +436,7 @@ RString CryptManager::GetSHA256ForString( RString sData )
 
 	hash_state hash;
 	hash_descriptor[iHash].init( &hash );
-	hash_descriptor[iHash].process( &hash, (const unsigned char *) sData.data(), sData.size() );
+	hash_descriptor[iHash].process( &hash, (const unsigned char *) sData.data(), static_cast<unsigned long>(sData.size()) );
 	hash_descriptor[iHash].done( &hash, digest );
 
 	return RString( (const char *) digest, sizeof(digest) );

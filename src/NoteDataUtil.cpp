@@ -147,7 +147,7 @@ static void LoadFromSMNoteDataStringWithPlayer( NoteData& out, const RString &sS
 					int iHeadRow;
 					if( !out.IsHoldNoteAtRow( iTrack, iIndex, &iHeadRow ) )
 					{
-						int n = std::intptr_t(endLine) - std::intptr_t(beginLine);
+						int n = static_cast<int>(std::intptr_t(endLine) - std::intptr_t(beginLine));
 						LOG->Warn( "Unmatched 3 in \"%.*s\"", n, beginLine );
 					}
 					else
@@ -259,7 +259,7 @@ void NoteDataUtil::LoadFromSMNoteDataString( NoteData &out, const RString &sSMNo
 
 	if( !bComposite )
 	{
-		LoadFromSMNoteDataStringWithPlayer( out, sSMNoteData, 0, sSMNoteData.size(),
+		LoadFromSMNoteDataStringWithPlayer( out, sSMNoteData, 0, static_cast<int>(sSMNoteData.size()),
 						    PLAYER_INVALID, iNumTracks );
 		return;
 	}
@@ -1216,7 +1216,7 @@ void NoteDataUtil::RemoveSimultaneousNotes( NoteData &in, int iMaxSimultaneous, 
 		in.GetTracksHeldAtRow( r, viTracksHeld );
 
 		// remove the first tap note or the first hold note that starts on this row
-		int iTotalTracksPressed = in.GetNumTracksWithTapOrHoldHead(r) + viTracksHeld.size();
+		int iTotalTracksPressed = in.GetNumTracksWithTapOrHoldHead(r) + static_cast<int>(viTracksHeld.size());
 		int iTracksToRemove = std::max( 0, iTotalTracksPressed - iMaxSimultaneous );
 		for( int t=0; iTracksToRemove>0 && t<in.GetNumTracks(); t++ )
 		{
@@ -2577,7 +2577,7 @@ void NoteDataUtil::ConvertTapsToHolds( NoteData &inout, int iSimultaneousHolds, 
 					std::set<int> tracksDown;
 					inout.GetTracksHeldAtRow( r2, tracksDown );
 					inout.GetTapNonEmptyTracks( r2, tracksDown );
-					iTapsLeft -= tracksDown.size();
+					iTapsLeft -= static_cast<int>(tracksDown.size());
 					if( iTapsLeft == 0 )
 						break;	// we found the ending row for this hold
 					else if( iTapsLeft < 0 )
@@ -3231,7 +3231,7 @@ unsigned int NoteDataUtil::GetTotalHoldTicks( NoteData* nd, const TimingData* td
 	// We start with the LAST TimingSegment and work our way backwards.
 	// This way we can continually update end instead of having to lookup when
 	// the next segment starts.
-	for(int i = segments.size() - 1; i >= 0; i--)
+	for(int i = static_cast<int>(segments.size()) - 1; i >= 0; i--)
 	{
 		TickcountSegment *ts = (TickcountSegment*) segments[i];
 		if( ts->GetTicks() > 0)
