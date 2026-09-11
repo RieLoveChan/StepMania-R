@@ -2062,3 +2062,27 @@
   **Verified on both platforms:** Windows `sm_tests` **5966/226**,
   `ctest` 100%, Release + `--SelfTest` green; Linux (container)
   `sm_tests` 5966/226, `ctest` 100%.
+
+* **Item 26 (Utils/ dev-tool binaries) DONE + item 21 (drop 32-bit
+  Windows) DONE + item 2 (C4244/C4267) real measurement + first fix.**
+  - Deleted `Utils/Graphviz/` (20 files) + `Utils/doxygen/*.exe` (dead
+    -- `Docs/Doxyfile` has `HAVE_DOT = NO`) and the misc unused
+    `Utils/*.exe` dev tools; updated `doxygen_run.bat` / 
+    `pngcrushallfiles.bat` to expect their replacements on PATH.
+    `Program/parallel_lights_io.dll` audited and kept -- a real runtime
+    `LoadLibrary` dependency of `LightsDriver_Win32Parallel`.
+  - Dropped 32-bit Windows: `SM_WIN32_ARCH` now `FATAL_ERROR`s on non-64
+    -bit and is otherwise always `"x64"`; removed the now-dead
+    `/arch:SSE2` (MSVC x86) and libmad `FPM_INTEL` (32-bit) branches;
+    `build-ffmpeg-win32.yml` builds/packages x64 only.
+  - Re-measured C4244/C4267 properly (a `--clean-first` full rebuild,
+    counting unique sites, not raw per-TU lines -- the old "~4.4k" was
+    the same double-counting mistake C4100's stale "~1362" was).
+    Release: 0, entirely from 4 lines in `RageUtil.h`/`RageTimer.h`
+    (fixed, `static_cast`). Debug/`WITH_TESTS`: **297 unique sites**
+    across ~80 files -- the real remaining surface; `/wd4244`/`/wd4267`
+    stay until those are triaged file-by-file (top: `NoteField.cpp` 35,
+    `TimingSegments.cpp` 25, `RageSurfaceUtils.cpp` 22,
+    `ScreenOptionsMasterPrefs.cpp` 18).
+  **Verified:** `sm_tests` 5966/226, `ctest` 100%, Release build +
+  `--SelfTest` green after all three changes together.
