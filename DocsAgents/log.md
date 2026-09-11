@@ -2458,3 +2458,26 @@
   is a separate, bigger call. CI-workflow + docs-only change, no C++
   touched -- the push itself is the verification that `ci.yml` still
   parses and every remaining job stays green.
+
+* **item 18 (ADR 0005 phase 4) batch 2, 2026-09-11.** Migrated
+  `CryptManager.cpp` (21 sites -> `Log::General`, since no
+  crypto-specific category exists) and `MemoryCardManager.cpp` (13
+  real sites -> `Log::Profile`, since this subsystem exists to serve
+  `PROFILEMAN`'s removable-media storage; a 14th grep hit at line 219
+  is a pre-existing commented-out `//LOG->Trace("update")`, left
+  untouched). Per-site triage, not a blind sweep: `CryptManager`'s
+  RSA/hash/file-I/O failures -> `LOG_ERROR`; the one-time "keys
+  missing, generating new keys" first-run notice -> `LOG_INFO`
+  (routine, not a failure); the alternate-public-key "signature
+  mismatch" -> `LOG_TRACE` (that path is called once per candidate key
+  while probing for the right one, so most mismatches are expected,
+  matching the pre-existing "trying alternate key" `Trace` right above
+  it -- NOT a tamper signal). `MemoryCardManager`'s "mount failed"
+  `Trace`->`WARN` (a real, if hotplug-flaky, operation failure) and its
+  post-mount "GetFileDriver failed" `Warn`->`ERROR` (an internal
+  inconsistency -- the driver we just mounted can't be found); ~10
+  routine device-tracking/thread-state `Trace` sites just
+  re-categorized, level unchanged. No parsing/behavior logic touched;
+  neither file is §5-protected.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
