@@ -819,11 +819,11 @@ struct LunaCubicSplineN : Luna<CubicSplineN>
 	{ \
 		std::vector<float> pos; \
 		p->something(FArg(1), pos); \
-		lua_createtable(L, pos.size(), 0); \
+		lua_createtable(L, static_cast<int>(pos.size()), 0); \
 		for(std::size_t i= 0; i < pos.size(); ++i) \
 		{ \
 			lua_pushnumber(L, pos[i]); \
-			lua_rawseti(L, -2, i+1); \
+			lua_rawseti(L, -2, static_cast<int>(i+1)); \
 		} \
 		return 1; \
 	}
@@ -842,7 +842,7 @@ struct LunaCubicSplineN : Luna<CubicSplineN>
 		// The same is true for too few elements.
 		for(std::size_t e= 0; e < elements; ++e)
 		{
-			lua_rawgeti(L, s, e+1);
+			lua_rawgeti(L, s, static_cast<int>(e+1));
 			ret.push_back(FArg(-1));
 		}
 		while(ret.size() < limit)
@@ -897,13 +897,13 @@ struct LunaCubicSplineN : Luna<CubicSplineN>
 		lua_createtable(L, 3, 0);
 		for(std::size_t co= 0; co < coeff.size(); ++co)
 		{
-			lua_createtable(L, limit, 0);
+			lua_createtable(L, static_cast<int>(limit), 0);
 			for(std::size_t v= 0; v < limit; ++v)
 			{
 				lua_pushnumber(L, coeff[co][v]);
-				lua_rawseti(L, -2, v+1);
+				lua_rawseti(L, -2, static_cast<int>(v+1));
 			}
-			lua_rawseti(L, -2, co+1);
+			lua_rawseti(L, -2, static_cast<int>(co+1));
 		}
 		return 1;
 	}
@@ -936,7 +936,7 @@ struct LunaCubicSplineN : Luna<CubicSplineN>
 	}
 	static int get_size(T* p, lua_State* L)
 	{
-		lua_pushnumber(L, p->size());
+		lua_pushnumber(L, static_cast<lua_Number>(p->size()));
 		return 1;
 	}
 	static int set_dimension(T* p, lua_State* L)
@@ -956,7 +956,7 @@ struct LunaCubicSplineN : Luna<CubicSplineN>
 	}
 	static int get_dimension(T* p, lua_State* L)
 	{
-		lua_pushnumber(L, p->dimension());
+		lua_pushnumber(L, static_cast<lua_Number>(p->dimension()));
 		return 1;
 	}
 	static int empty(T* p, lua_State* L)

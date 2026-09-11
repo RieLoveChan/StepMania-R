@@ -321,8 +321,8 @@ void NoteField::InitColumnRenderers()
 			m_ColumnRenderers[ncr].m_displays[pn]= &(m_pDisplays[pn]->display[ncr]);
 		}
 		m_ColumnRenderers[ncr].m_displays[PLAYER_INVALID]= &(m_pCurDisplay->display[ncr]);
-		m_ColumnRenderers[ncr].m_column= ncr;
-		m_ColumnRenderers[ncr].m_column_render_args.column= ncr;
+		m_ColumnRenderers[ncr].m_column= static_cast<int>(ncr);
+		m_ColumnRenderers[ncr].m_column_render_args.column= static_cast<int>(ncr);
 		m_ColumnRenderers[ncr].m_field_render_args= &m_FieldRenderArgs;
 	}
 	m_pCurDisplay->m_ReceptorArrowRow.SetColumnRenderers(m_ColumnRenderers);
@@ -618,7 +618,7 @@ static CacheNoteStat GetNumNotesFromBeginning( const PlayerState *pPlayerState, 
 	// XXX: I realized that I have copied and pasted my binary search code 3 times already.
 	//      how can we abstract this?
 	const std::vector<CacheNoteStat> &data = pPlayerState->m_CacheNoteStat;
-	int max = data.size() - 1;
+	int max = static_cast<int>(data.size()) - 1;
 	int l = 0, r = max;
 	while( l <= r )
 	{
@@ -1293,11 +1293,11 @@ public:
 
 	static int get_column_actors(T* p, lua_State* L)
 	{
-		lua_createtable(L, p->m_ColumnRenderers.size(), 0);
+		lua_createtable(L, static_cast<int>(p->m_ColumnRenderers.size()), 0);
 		for(std::size_t i= 0; i < p->m_ColumnRenderers.size(); ++i)
 		{
 			p->m_ColumnRenderers[i].PushSelf(L);
-			lua_rawseti(L, -2, i+1);
+			lua_rawseti(L, -2, static_cast<int>(i+1));
 		}
 		return 1;
 	}

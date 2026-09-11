@@ -618,7 +618,7 @@ static void DisplayResolutionM( int &sel, bool ToSel, const ConfOption* /* pConf
 	}
 
 	res_t sel_res( PREFSMAN->m_iDisplayWidth, PREFSMAN->m_iDisplayHeight );
-	MoveMap( sel, sel_res, ToSel, &res_choices[0], res_choices.size());
+	MoveMap( sel, sel_res, ToSel, &res_choices[0], static_cast<unsigned>(res_choices.size()));
 	if( !ToSel )
 	{
 		PREFSMAN->m_iDisplayWidth.Set( sel_res.w );

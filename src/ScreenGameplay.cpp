@@ -423,7 +423,7 @@ void ScreenGameplay::Init()
 	int player = 1;
 	FOREACH_EnabledPlayerInfo( m_vPlayerInfo, pi )
 	{
-		unsigned int count = pi->m_vpStepsQueue.size();
+		unsigned int count = static_cast<unsigned int>(pi->m_vpStepsQueue.size());
 
 		for (unsigned int i = 0; i < count; i++)
 		{
@@ -3186,7 +3186,7 @@ void ScreenGameplay::SaveReplay()
 			// Files should be of the form "replay#####.xml".
 			int iIndex = 0;
 
-			for( int i = files.size()-1; i >= 0; --i )
+			for( int i = static_cast<int>(files.size())-1; i >= 0; --i )
 			{
 				static Regex re( "^replay([0-9]{5})\\....$" );
 				std::vector<RString> matches;

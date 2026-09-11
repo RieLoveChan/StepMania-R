@@ -67,7 +67,7 @@ void EditMenu::GetSongsToShowForGroup( const RString &sGroup, std::vector<Song*>
 	case EditMode_Practice:
 	case EditMode_CourseMods:
 	case EditMode_Home:
-		for( int i=vpSongsOut.size()-1; i>=0; i-- )
+		for( int i=static_cast<int>(vpSongsOut.size())-1; i>=0; i-- )
 		{
 			const Song* pSong = vpSongsOut[i];
 			if( !pSong->NormallyDisplayed()  ||  pSong->IsTutorial() )
@@ -89,7 +89,7 @@ void EditMenu::GetGroupsToShow( std::vector<RString> &vsGroupsOut )
 		return;
 
 	SONGMAN->GetSongGroupNames( vsGroupsOut );
-	for( int i = vsGroupsOut.size()-1; i>=0; i-- )
+	for( int i = static_cast<int>(vsGroupsOut.size())-1; i>=0; i-- )
 	{
 		const RString &sGroup = vsGroupsOut[i];
 		std::vector<Song*> vpSongs;
@@ -271,13 +271,13 @@ int EditMenu::GetRowSize( EditMenuRow er ) const
 {
 	switch( er )
 	{
-	case ROW_GROUP:		return m_sGroups.size();
-	case ROW_SONG:			return m_pSongs.size();
-	case ROW_STEPS_TYPE:	return m_StepsTypes.size();
-	case ROW_STEPS:		return m_vpSteps.size();
-	case ROW_SOURCE_STEPS_TYPE:	return m_StepsTypes.size();
-	case ROW_SOURCE_STEPS:	return m_vpSourceSteps.size();
-	case ROW_ACTION:		return m_Actions.size();
+	case ROW_GROUP:		return static_cast<int>(m_sGroups.size());
+	case ROW_SONG:			return static_cast<int>(m_pSongs.size());
+	case ROW_STEPS_TYPE:	return static_cast<int>(m_StepsTypes.size());
+	case ROW_STEPS:		return static_cast<int>(m_vpSteps.size());
+	case ROW_SOURCE_STEPS_TYPE:	return static_cast<int>(m_StepsTypes.size());
+	case ROW_SOURCE_STEPS:	return static_cast<int>(m_vpSourceSteps.size());
+	case ROW_ACTION:		return static_cast<int>(m_Actions.size());
 	default: FAIL_M( ssprintf("Non-existant EditMenuRow %i", er) );
 	}
 }
@@ -472,7 +472,7 @@ void EditMenu::OnRowValueChanged( EditMenuRow row )
 
 					// Try to preserve the user's StepsType selection.
 					if(st == orgSel)
-					m_iSelection[ROW_STEPS_TYPE] = m_StepsTypes.size() - 1;
+					m_iSelection[ROW_STEPS_TYPE] = static_cast<int>(m_StepsTypes.size()) - 1;
 				}
 			}
 		}
