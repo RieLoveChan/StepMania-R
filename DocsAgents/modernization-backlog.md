@@ -516,7 +516,27 @@ concentrations: a wide tail of 19 files at 3 sites each
 `LightsManager.cpp`/`InputQueue.cpp`/`GameManager.cpp`/
 `ArrowEffects.cpp`/`ActorFrame.cpp`, plus `ScreenOptionsEditCourse.cpp`
 which is a genuinely separate file from `ScreenOptions.cpp`/
-`Course.cpp` and not yet touched), then ~85 files at 1-2 sites.
+`Course.cpp` and not yet touched).
+**All 19 fixed in one batch (57 sites):** every site was a `size_t`/
+`int64_t`/`double`/`lua_Integer`-family value narrowed into a smaller
+`int`/`unsigned`/`float`/`lua_Number` type at a `wrap()` call, a
+reverse-loop bound, an iterator-diff, a `lua_push*`/`lua_raw*` Lua
+binding, or (×2, both characterization-only) a §5-protected file:
+`Steps.cpp` (a Lua `GetColumnCues` binding) and `NotesLoaderSSC.cpp`
+(a `RadarValues` index, a combo-tag size, a `Left()` tag-prefix
+compare). No logic changes anywhere; `sm_tests` unchanged.
+**Not done:** `/wd4244`/`/wd4267` stay in `src/CMakeLists.txt` until all
+106 remaining sites (~85 files) are triaged (same "fix everything,
+then remove the `/wd` flag in one commit" pattern as C4100) — continue
+file-by-file; measure only via `--clean-first` with the flag actually
+removed, dedup with a regex that matches BOTH `C4244` and `C4267`
+(`warning C42(44|67)`, not `C424[47]`), never run the measurement
+rebuild while a file is mid-edit, watch for `Edit` "N matches" errors
+resolved by fixing only one of several truly-identical occurrences,
+and periodically re-grep every already-"done" file against a fresh
+clean-rebuild log. Remaining files are now all at 1-2 sites each --
+continue picking off the highest-count files, no more meaningful
+"tiers" to group by count.
 
 ### 3. Stale cppcheck leak list — DONE 2026-09-05, all dismissed
 ~~`Docs/Devdocs/possible memory leaks.txt` — from 2009. Re-triaged by
