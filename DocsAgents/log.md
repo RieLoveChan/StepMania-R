@@ -2275,3 +2275,18 @@
   a miss).
   Verified: `sm_tests` 5966/226 unchanged, `ctest`/Release/`--SelfTest`
   gate re-run after restoring `/wd4244`/`/wd4267`.
+
+* **item 2 (C4244/C4267) sweep, 4 more files: 253 -> 233 remaining
+  (~120 files).** `RageFileDriverMemory.cpp` (5: `int m_iFilePos` fed
+  `size_t` byte counts, a `GetFileSize()` return); `NoteDataUtil.cpp`
+  (5, §5-adjacent, characterization-only: an `intptr_t` pointer-diff,
+  a `LoadFromSMNoteDataStringWithPlayer` length arg, a track-pressed
+  count, a taps-left counter, a reverse-loop bound); `LuaManager.cpp`
+  (5: two `FromStack<>` specializations, a thread-pool index, two more
+  `lua_tointeger()`-into-`int` sites); `CryptManager.cpp` (5: five
+  libtomcrypt calls fed a `size_t` where the C API wants `unsigned
+  long`). Sanity-swept every previously-"done" file again -- clean
+  (the `Course.cpp(` / `ScreenOptionsEditCourse.cpp(` false positive
+  noted last batch still applies, still not a real residual).
+  Verified: `sm_tests` 5966/226 unchanged, `ctest`/Release/`--SelfTest`
+  gate re-run after restoring `/wd4244`/`/wd4267`.
