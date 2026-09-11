@@ -164,7 +164,7 @@ bool RageSound::Load( RString sSoundFilePath )
 
 bool RageSound::Load( RString sSoundFilePath, bool bPrecache, const RageSoundLoadParams *pParams )
 {
-	LOG->Trace( "RageSound: Load \"%s\" (precache: %i)", sSoundFilePath.c_str(), bPrecache );
+	LOG_TRACE(Log::Sound, "RageSound: Load \"%s\" (precache: %i)", sSoundFilePath.c_str(), bPrecache );
 
 	if( pParams == nullptr )
 	{
@@ -183,7 +183,7 @@ bool RageSound::Load( RString sSoundFilePath, bool bPrecache, const RageSoundLoa
 		pSound = RageSoundReader_FileReader::OpenFile( sSoundFilePath, error, &bPrebuffer );
 		if( pSound == nullptr )
 		{
-			LOG->Warn( "RageSound::Load: error opening sound \"%s\": %s",
+			LOG_ERROR(Log::Sound, "RageSound::Load: error opening sound \"%s\": %s",
 				sSoundFilePath.c_str(), error.c_str() );
 
 			pSound = new RageSoundReader_Silence;
@@ -289,7 +289,7 @@ int RageSound::GetDataToPlay( float *pBuffer, int iFrames, std::int64_t &iStream
 		{
 			m_sError = m_pSource->GetError();
 			// This error probably indicates an I/O error, rather than a decoding error.
-			LOG->Warn( "Decoding %s failed: %s", GetLoadedFilePath().c_str(), m_sError.c_str() );
+			LOG_ERROR(Log::Sound, "Decoding %s failed: %s", GetLoadedFilePath().c_str(), m_sError.c_str() );
 		}
 
 		if( iGotFrames < 0 )
@@ -334,7 +334,7 @@ void RageSound::StartPlaying()
 	/* If m_StartTime is in the past, then we probably set a start time but took too
 	 * long loading.  We don't want that; log it, since it can be unobvious. */
 	if( !m_Param.m_StartTime.IsZero() && m_Param.m_StartTime.Ago() > 0 )
-		LOG->Trace("Sound \"%s\" has a start time %f seconds in the past",
+		LOG_WARN(Log::Sound, "Sound \"%s\" has a start time %f seconds in the past",
 			GetLoadedFilePath().c_str(), m_Param.m_StartTime.Ago() );
 
 	/* Tell the sound manager to start mixing us. */
@@ -403,7 +403,7 @@ void RageSound::Play(bool is_action, const RageSoundParams *pParams)
 {
 	if( m_pSource == nullptr )
 	{
-		LOG->Warn( "RageSound::Play: sound not loaded" );
+		LOG_ERROR(Log::Sound, "RageSound::Play: sound not loaded" );
 		return;
 	}
 	if(is_action && PREFSMAN->m_MuteActions)
@@ -447,7 +447,7 @@ bool RageSound::Pause( bool bPause )
 {
 	if( m_pSource == nullptr )
 	{
-		LOG->Warn( "RageSound::Pause: sound not loaded" );
+		LOG_ERROR(Log::Sound, "RageSound::Pause: sound not loaded" );
 		return false;
 	}
 
@@ -458,7 +458,7 @@ float RageSound::GetLengthSeconds()
 {
 	if( m_pSource == nullptr )
 	{
-		LOG->Warn( "RageSound::GetLengthSeconds: sound not loaded" );
+		LOG_ERROR(Log::Sound, "RageSound::GetLengthSeconds: sound not loaded" );
 		return -1;
 	}
 
@@ -466,7 +466,7 @@ float RageSound::GetLengthSeconds()
 
 	if( iLength < 0 )
 	{
-		LOG->Warn( "GetLengthSeconds failed on %s: %s", GetLoadedFilePath().c_str(), m_pSource->GetError().c_str() );
+		LOG_ERROR(Log::Sound, "GetLengthSeconds failed on %s: %s", GetLoadedFilePath().c_str(), m_pSource->GetError().c_str() );
 		return -1;
 	}
 
@@ -525,7 +525,7 @@ bool RageSound::SetPositionFrames( int iFrames )
 
 	if( m_pSource == nullptr )
 	{
-		LOG->Warn( "RageSound::SetPositionFrames(%d): sound not loaded", iFrames );
+		LOG_ERROR(Log::Sound, "RageSound::SetPositionFrames(%d): sound not loaded", iFrames );
 		return false;
 	}
 
@@ -534,12 +534,12 @@ bool RageSound::SetPositionFrames( int iFrames )
 	if( iRet == -1 )
 	{
 		m_sError = m_pSource->GetError();
-		LOG->Warn( "SetPositionFrames: seek %s failed: %s", filePath.c_str(), m_sError.c_str() );
+		LOG_ERROR(Log::Sound, "SetPositionFrames: seek %s failed: %s", filePath.c_str(), m_sError.c_str() );
 	}
 	else if( iRet == 0 )
 	{
 		/* Seeked past EOF. */
-		LOG->Warn( "SetPositionFrames: %i samples is beyond EOF in %s",
+		LOG_WARN(Log::Sound, "SetPositionFrames: %i samples is beyond EOF in %s",
 			iFrames, filePath.c_str() );
 	}
 	else
@@ -634,7 +634,7 @@ void RageSound::SetStopModeFromString( const RString &sStopMode )
 	}
 	else
 	{
-		LOG->Warn("Invalid stop mode \"%s\" for sound \"%s\"", sStopMode.c_str(), m_sFilePath.c_str());
+		LOG_WARN(Log::Sound, "Invalid stop mode \"%s\" for sound \"%s\"", sStopMode.c_str(), m_sFilePath.c_str());
 	}
 }
 
