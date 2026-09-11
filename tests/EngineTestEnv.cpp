@@ -9,10 +9,12 @@
 #include "GameManager.h"
 #include "MessageManager.h"
 #include "GameState.h"
+#include "Game.h"
 #include "ThemeManager.h"
 #include "NoteSkinManager.h"
 #include "SongManager.h"
 #include "ActorUtil.h"      // InitFileTypeLists
+#include "arch/Dialog/Dialog.h"
 
 #include "catch_amalgamated.hpp"
 
@@ -37,6 +39,9 @@
 #endif
 #ifndef SM_NOTESKINS_DIR
 #error "EngineTestEnvPaths.h did not define SM_NOTESKINS_DIR"
+#endif
+#ifndef SM_TESTTHEME_DIR
+#error "EngineTestEnvPaths.h did not define SM_TESTTHEME_DIR"
 #endif
 
 namespace
@@ -97,13 +102,25 @@ namespace
 		if( PREFSMAN == nullptr )
 			PREFSMAN = new PrefsManager;
 
+		// Force the null dialog driver. The theme load below reads many
+		// metrics SMRTest doesn't define; each one goes
+		// GetMetricRaw -> ReportScriptError(..., UseAbort=true) ->
+		// Dialog::AbortRetryIgnore. g_bWindowed defaults true, so on
+		// Windows that pops a *modal MessageBox per missing metric* and
+		// hangs. SetWindowed(false) routes every dialog to
+		// DialogDriver_Null, which returns Dialog::ignore.
+		Dialog::SetWindowed( false );
+
 		// Read-only trees the managers below need. Relative paths like
 		// SpecialFiles::THEMES_DIR ("Themes/") resolve against the VFS
-		// root, so mounting the repo's Themes/ at /Themes makes
-		// "Themes/*" listings work without MountInitialFilesystems().
+		// root, so mounting a dir at /Themes makes "Themes/*" listings
+		// work without MountInitialFilesystems(). tests/data/test-theme/
+		// is overlaid on top of the repo Themes/ -- it adds "SMRTest",
+		// the scripts-free minimal theme SwitchThemeAndLanguage loads.
 		FILEMAN->Mount( "dir", SM_TEST_DATA_DIR, "/testdata" );
 		FILEMAN->Mount( "dir", SM_SONGS_DIR, "/Songs" );
 		FILEMAN->Mount( "dir", SM_THEMES_DIR, "/Themes" );
+		FILEMAN->Mount( "dir", SM_TESTTHEME_DIR, "/Themes" );
 		FILEMAN->Mount( "dir", SM_NOTESKINS_DIR, "/NoteSkins" );
 
 		// Messaging system. sm_main() brings this up right after PREFSMAN
@@ -131,41 +148,44 @@ namespace
 		if( GAMEMAN == nullptr )
 			GAMEMAN = new GameManager;
 
-		// ThemeManager -- CONSTRUCTED ONLY, no theme switched in.
-		//
-		// SwitchThemeAndLanguage() is what would make THEME->GetMetric,
-		// CommonMetrics::*, LocalizedString and ThemeMetric<T> return real
-		// values -- but it also runs the whole theme's Lua
-		// (Themes/{_fallback,default}/Scripts/*.lua) and refreshes the
-		// screen-dimension metric cache, and that path SIGSEGVs in this
-		// headless harness (theme code assumes a live engine: renderer,
-		// SCREENMAN, sound). That is the same reason the original fixture
-		// left THEME out entirely.
-		//
-		// So: THEME is non-null (unblocks code that only needs the
-		// pointer, e.g. NOTESKIN paths and the PlayerOptions ASSERT), but
-		// ThemeMetric::Read() stays a no-op (it gates on
-		// THEME->IsThemeLoaded()), so any test that reads an actual
-		// metric value will still hit the "m_Value.IsSet()" assert.
-		// Loading metrics headlessly needs a separate, smaller mechanism
-		// (a scripts-free minimal test theme, or a stub metric provider)
-		// -- tracked in DocsAgents/modernization-backlog.md item 17.
-		if( THEME == nullptr )
-			THEME = new ThemeManager;
-
 		// NoteSkinManager. Trivial ctor (Lua registration + invalid
-		// members); it scans NoteSkins/<game>/ only when
-		// RefreshNoteSkinData(pGame) is called. Needed non-null by
-		// PlayerOptions mod processing (ASSERT) and NOTESKIN->... calls.
+		// members). Must exist before GAMEMAN->GetDefaultGame() below --
+		// that walks GameManager::IsGameEnabled ->
+		// NOTESKIN->DoNoteSkinsExistForGame.
 		if( NOTESKIN == nullptr )
 			NOTESKIN = new NoteSkinManager;
 
-		// SongManager ctor registers with LUA and Load()s a handful of
-		// SongManager ThemeMetrics (group colours). Those Read()s no-op
-		// while no theme is loaded, so the ctor is safe here. InitAll()
-		// (the slow disk scan of every song folder) is deliberately NOT
-		// called; tests that need populated songs/courses must arrange
-		// that themselves.
+		// Give GAMESTATE a current game. GameState's ctor leaves
+		// m_pCurGame null (it defers Reset()); the theme load below reads
+		// CommonMetrics::STEPS_TYPES_TO_SHOW / DIFFICULTIES_TO_SHOW, whose
+		// custom Read() calls GAMEMAN->GetStepsTypesForGame(m_pCurGame,..)
+		// with no null check.
+		if( GAMESTATE->m_pCurGame.Get() == nullptr )
+			GAMESTATE->SetCurGame( GAMEMAN->GetDefaultGame() );
+
+		// ThemeManager + the scripts-free minimal test theme "SMRTest"
+		// (tests/data/test-theme/, mounted over /Themes above).
+		//
+		// A theme MUST be loaded: sm_tests links the whole engine, and
+		// many ctors (Song, SongManager, ...) read ThemeMetric<T> values
+		// via GetValue() -> ASSERT_M( m_Value.IsSet() ), which is fatal
+		// (sm_crash -> _exit(1) on Unix). A real theme can't load
+		// headlessly -- its metric values are Lua expressions that touch
+		// a not-yet-fully-initialised engine. SMRTest has FallbackTheme=
+		// (no inheritance) and no Scripts/, so SwitchThemeAndLanguage
+		// runs almost nothing; undefined metrics resolve
+		// "missing -> Dialog::ignore -> nil". See the theme's metrics.ini.
+		if( THEME == nullptr )
+		{
+			THEME = new ThemeManager;
+			THEME->SwitchThemeAndLanguage( "SMRTest", "en", /*bPseudoLocalize=*/ false );
+		}
+
+		// SongManager. Its ctor Load()s a few SongManager ThemeMetric<int>s
+		// (NUM_SONG_GROUP_COLORS, ...) by value -> GetValue(); SMRTest
+		// defines those, so this is now safe. InitAll() (the slow disk
+		// scan of every song folder) is deliberately NOT called; tests
+		// that need populated songs/courses must arrange that themselves.
 		if( SONGMAN == nullptr )
 			SONGMAN = new SongManager;
 
@@ -182,8 +202,8 @@ namespace
 		// MESSAGEMAN, GAMESTATE, GAMEMAN, THEME, NOTESKIN, SONGMAN) must
 		// be torn down before LUA.
 		SAFE_DELETE( SONGMAN );
-		SAFE_DELETE( NOTESKIN );
 		SAFE_DELETE( THEME );
+		SAFE_DELETE( NOTESKIN );
 		SAFE_DELETE( GAMEMAN );
 		SAFE_DELETE( GAMESTATE );
 		SAFE_DELETE( MESSAGEMAN );

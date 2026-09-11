@@ -64,6 +64,7 @@ file(GENERATE
 #define SM_SONGS_DIR R\"(${CMAKE_SOURCE_DIR}/Songs)\"
 #define SM_THEMES_DIR R\"(${CMAKE_SOURCE_DIR}/Themes)\"
 #define SM_NOTESKINS_DIR R\"(${CMAKE_SOURCE_DIR}/NoteSkins)\"
+#define SM_TESTTHEME_DIR R\"(${CMAKE_CURRENT_SOURCE_DIR}/data/test-theme)\"
 ")
 target_include_directories(sm_tests PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
 

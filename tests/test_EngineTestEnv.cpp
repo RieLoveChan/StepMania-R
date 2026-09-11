@@ -1,8 +1,8 @@
 // Characterization / contract test for the EngineTestEnv fixture itself.
-// Guards the bring-up: which singletons Require() constructs, that
-// PrefsManager comes up with its compiled defaults (no .ini is mounted,
-// so the values must not depend on the developer's Preferences.ini), and
-// the deliberate limits (THEME is constructed but no theme is loaded).
+// Guards the bring-up: which singletons Require() constructs, that the
+// minimal "SMRTest" theme loads, and that PrefsManager comes up with its
+// compiled defaults (no .ini is mounted, so the values must not depend on
+// the developer's Preferences.ini).
 //
 // See DocsAgents/adr/0006-test-harness.md "Phase 3-4 enabler".
 
@@ -19,7 +19,6 @@
 #include "ThemeManager.h"
 #include "NoteSkinManager.h"
 #include "SongManager.h"
-
 #include "catch_amalgamated.hpp"
 
 using Catch::Approx;
@@ -40,16 +39,24 @@ TEST_CASE( "EngineTestEnv::Require brings up the engine singletons", "[EngineTes
 	CHECK( SONGMAN != nullptr );
 }
 
-TEST_CASE( "EngineTestEnv leaves THEME constructed but with no theme loaded", "[EngineTestEnv][theme]" )
+TEST_CASE( "EngineTestEnv loads the minimal SMRTest theme", "[EngineTestEnv][theme]" )
 {
 	EngineTestEnv::Require();
 
-	// SwitchThemeAndLanguage() is intentionally not called (it runs the
-	// theme's Lua and crashes headlessly -- backlog item 17), so no theme
-	// is loaded and metric reads are no-ops rather than real values.
 	REQUIRE( THEME != nullptr );
-	CHECK_FALSE( THEME->IsThemeLoaded() );
-	CHECK( THEME->GetCurThemeName().empty() );
+	CHECK( THEME->IsThemeLoaded() );
+	CHECK( THEME->GetCurThemeName() == "SMRTest" );
+
+	// A concrete value straight out of the test theme's metrics.ini --
+	// proves ThemeMetric reads resolve rather than assert.
+	CHECK( THEME->GetMetricI( "SongManager", "NumSongGroupColors" ) == 1 );
+
+	// GAMESTATE has a current game (needed by the STEPS_TYPES_TO_SHOW /
+	// DIFFICULTIES_TO_SHOW metric reads during the theme load).
+	CHECK( GAMESTATE->m_pCurGame.Get() != nullptr );
+
+	// SONGMAN is up but empty -- InitAll() is never called.
+	CHECK( SONGMAN->GetNumSongs() == 0 );
 }
 
 TEST_CASE( "EngineTestEnv::Require is idempotent", "[EngineTestEnv]" )
