@@ -111,11 +111,38 @@ promoted to `-Werror` alongside `C4189`/`C4702`. Verified with a full
 Release rebuild (not just the touched files) showing zero `C4100`
 across all of `src/`, plus `sm_tests` clean under the existing
 `WITH_WERROR=ON` config.
-**Remaining:** `C4244`/`C4267` (numeric conversion / narrowing, ~4.4k
-hits) are the real debt — each needs a real look for actual
-truncation, not a mechanical pass; still not measured for Clang/GCC
-(`baseline.md` TBD). Not started — larger scope than C4100, needs a
-scoping conversation before beginning.
+**In progress (started 2026-09-11):** `C4244`/`C4267` (numeric
+conversion / narrowing). The old "~4.4k hits" figure was stale/raw
+(same double-counting problem C4100's ~1362 had). Real measured counts,
+from a genuinely clean rebuild (`--clean-first`, `/v:m`, counting
+unique `file(line,col)` sites, not raw per-TU lines):
+- **Release `StepMania` target: 0 sites**, entirely accounted for by
+  4 lines in two headers everything includes
+  (`RageUtil.h`/`RageTimer.h`) — see below.
+- **Debug `sm_engine`/`sm_tests` (`WITH_TESTS=ON`, `WITH_WERROR=ON`):
+  297 unique sites across ~80 files.** Debug surfaces far more than
+  Release here (same "Release's optimizer folds some away" pattern as
+  C4189/C4702, just much bigger for narrowing conversions) — this,
+  not the Release count, is the real remaining surface. Top
+  concentrations: `NoteField.cpp` (35), `TimingSegments.cpp` (25),
+  `RageSurfaceUtils.cpp` (22), `ScreenOptionsMasterPrefs.cpp` (18),
+  `NoteDataWithScoring.cpp` (11), `ScreenGameplay.cpp` (9),
+  `NoteDisplay.cpp` (9). Message-kind breakdown: `int↔float`/
+  `double↔float` (~110, mostly intentional precision loss — cast to
+  document), `__int64`/`size_t → int` (~85, the classic `.size()`
+  returned as `int` pattern — usually safe, but the risky case is a
+  container that could exceed `INT_MAX`), `float → int` (34, real
+  truncation — check each for an intended `floor`/round), a `lua_*`
+  bridge cluster (~40, `lua_Number`/`lua_Integer` narrowing at the
+  Lua/C++ boundary).
+**Done:** the 4 header sites (`RageTimer::GetTimeSinceStartFast`,
+`MersenneTwister`'s seed, `RandomFloat`, `FindIndex`'s iterator-diff
+return) — all intentional narrowing, given explicit `static_cast`s.
+**Not done:** `/wd4244`/`/wd4267` stay in `src/CMakeLists.txt` until
+all 297 Debug sites are triaged (same "fix everything, then remove the
+`/wd` flag in one commit" pattern as C4100) — a file-by-file sweep,
+highest concentration first. Still not measured for Clang/GCC
+(`baseline.md` TBD, non-Windows).
 
 ### 3. Stale cppcheck leak list — DONE 2026-09-05, all dismissed
 ~~`Docs/Devdocs/possible memory leaks.txt` — from 2009. Re-triaged by
@@ -244,16 +271,33 @@ Also removed (`f13444d740`): stale committed
 `git ls-files` still tracks a pile of committed binaries outside
 `extern/` and `Build/`. Each needs a "is this a real dep?" check before
 removal — do NOT blanket-delete:
-- **`Utils/Graphviz/`** (~16 files: `dot.exe`, `neato.exe`, DLLs) and
-  **`Utils/doxygen/{doxygen,hhc}.exe`** — a bundled Graphviz+Doxygen
-  install for `doxygen_run.bat` call-graphs. Doc tooling, not the game
-  build. Candidate: drop, document "install graphviz/doxygen yourself".
+- **`Utils/Graphviz/`** (20 files: `dot.exe`, `neato.exe`, DLLs, `.lefty`
+  scripts) and **`Utils/doxygen/{doxygen,hhc}.exe`** — **DELETED
+  2026-09-11.** Confirmed dead first: `Docs/Doxyfile` has
+  `HAVE_DOT = NO` (Graphviz call-graphs were never even wired on) and a
+  stale `DOT_PATH` pointing at a Linux path from the original author's
+  box, not the bundled Windows binaries. `Utils/doxygen_run.bat` updated
+  to call `doxygen`/`hhc` bare (install your own, on PATH) instead of
+  the bundled copies.
 - **`Utils/{Bitmap Font Builder.exe, PngAlphaView.exe, forfiles.exe,
-  pngcrush.exe, upx.exe, crush}`** — bundled dev/asset utilities.
-  `forfiles.exe` is a Windows built-in (pointless to bundle). Audit
-  which the build/packaging actually invokes.
-- **`Program/parallel_lights_io.dll`** — shipped lights-I/O DLL; may be
-  loaded at runtime by a lights driver. **Verify before touching.**
+  pngcrush.exe, upx.exe, crush}`** — **DELETED 2026-09-11.** None
+  referenced by any build/CI/packaging step (`forfiles.exe` duplicated
+  a Windows built-in; the "call it from doxygen_run.bat" line was
+  already `rem`-commented out). `Utils/pngcrushallfiles.bat` updated to
+  note `pngcrush` must be on PATH now (its `SET PATH=...c:\stepmania\
+  stepmania\utils` line was already a dead absolute path from someone's
+  old machine).
+- **`Program/parallel_lights_io.dll`** — **AUDITED 2026-09-11, KEPT.**
+  `src/arch/Lights/LightsDriver_Win32Parallel.cpp` (compiled in,
+  self-registers via `REGISTER_LIGHTS_DRIVER_CLASS`, user-selectable at
+  runtime by name) does `LoadLibrary("parallel_lights_io.dll")` at
+  runtime -- a real, working (if niche) dependency for anyone who
+  selects the "Win32Parallel" lights driver with actual parallel-port
+  lighting hardware. Not a build-time link dependency (no import lib),
+  so its absence wouldn't break the build, but deleting it would
+  silently break that driver at runtime for whoever still uses it.
+  Leave it; removing it is really "deprecate the Win32Parallel lights
+  driver," a separate, bigger decision.
 - **`src/archutils/Win32/ddk/`** — checked 2026-09-10. The `.lib` files
   (`{x86,x64}/{dbghelp,hid,setupapi}.lib`) do appear dead: nothing in
   any `*.cmake`/`CMakeLists.txt` references `ddk`, and the Win32 build
@@ -630,23 +674,36 @@ functional gates.
 Linux EOL-distro `#ifdef`s — both out of scope for now (`AGENTS.md` §3,
 non-Windows work needs explicit instruction).
 
-### 21. Drop 32-bit Windows (x86) — ADR 0003 already says so, not executed
+### 21. Drop 32-bit Windows (x86) — DONE 2026-09-11
 ADR [0003](./adr/0003-platform-support-floors.md) (Accepted): "No 32-bit
 targets on any platform." Windows 11 (the floor) doesn't even ship a
 32-bit edition, so a Windows-R x86 build has nowhere to run — but the
-x86 build path is still fully present: `SM_WIN32_ARCH` branches in
-`src/CMakeLists.txt`, `StepmaniaCore.cmake`, `tests/CMakeLists.txt`,
-`CMake/Modules/FindDirectX.cmake`, and (as of 2026-09-04) the x86 half
-of the `build-ffmpeg-win32.yml` artifact / `ffmpeg-w32-19feb712f5`
-Release asset (item 7). Found during the item 16 sweep; deliberately
-**not executed yet** — flagged to the maintainer first since it
-intersects with the just-shipped ffmpeg artifact pipeline.
-**Action:** remove the `x86`/Win32 branches from the 4 CMake files
-above, then simplify `build-ffmpeg-win32.yml` to only build x64 (drop
-the second `./configure`/`make` pass and the `x86/` package dir) —
-existing `x64/` Release asset stays valid, no need to re-cut it.
-`AGENTS.md` §4 higher-risk change (build-flag/toolchain scope);
-Windows build verified before/after.
+x86 build path was still fully present. Maintainer approved executing
+it. Changes:
+- `StepmaniaCore.cmake`: `SM_WIN32_ARCH` detection replaced with
+  `message(FATAL_ERROR ...)` on a non-64-bit `CMAKE_SIZEOF_VOID_P`
+  (loud rejection instead of silently mislabeling), then unconditional
+  `set(SM_WIN32_ARCH "x64")`.
+- `src/CMakeLists.txt`: the `if(SM_WIN32_ARCH MATCHES "x86") /arch:SSE2`
+  branch removed (dead now — SSE2 is baseline on x64, that flag only
+  ever mattered for 32-bit MSVC).
+- `extern/CMakeProject-mad.cmake`: the `if(SM_WIN32_ARCH MATCHES "x64")
+  FPM_64BIT else() FPM_INTEL` branch collapsed to the `FPM_64BIT`-only
+  path (`FPM_INTEL`, libmad's 32-bit fixed-point mode, was dead).
+- `tests/CMakeLists.txt` / `CMake/Modules/FindDirectX.cmake`: no change
+  needed — they only *use* `${SM_WIN32_ARCH}` as a path component, so
+  they resolve to `x64` automatically now.
+- `build-ffmpeg-win32.yml`: dropped the `i686-w64-mingw32` toolchain
+  install, the whole "Build x86" step, and the x86 half of packaging —
+  x64-only now. Manual-trigger workflow (item 7), doesn't touch regular
+  CI; the already-cut `x64/` Release asset stays valid.
+- Left alone (out of scope — these are cross-platform CPU-family
+  detection, not "32-bit Windows"): the `CMAKE_SYSTEM_PROCESSOR MATCHES
+  "x86"` branches in `src/CMakeLists.txt` for the Linux backtrace method
+  and the general `CPU_X86`/`CPU_X86_64` compile defines; `extern/
+  libpng/CMakeLists.txt`'s own arch check (vendored).
+Verified: Windows Release build + `sm_tests` (Debug) + `ctest` +
+`--SelfTest` all green after the change (`-A x64` explicit).
 
 ### 15. `#if 0` dead blocks — two batches DONE, ~7 remain (fragile ones)
 First pass (`a2c3d44522`, 2026-09-04): 10 dead blocks across 8 files
