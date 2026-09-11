@@ -2173,3 +2173,37 @@
   `ScreenEdit.cpp`/`RageFileManager.cpp` (11 each).
   Verified: `sm_tests`/`ctest`/Release/`--SelfTest` gate re-run after
   restoring `/wd4244`/`/wd4267`.
+
+* **item 2 (C4244/C4267) sweep, 6 more files: 489 -> 397 remaining (142
+  files).** `RageUtil.cpp` (25: `SmEscape`/`DwiEscape`/`do_split`'s
+  int/size bookkeeping, two `pcre_exec` length args, `Trim*`/
+  `Dirname`'s size-backed counters, `Json::Value::resize`'s
+  `ArrayIndex`, a `TONUMBER_NICE` macro plus `multiapproach`'s
+  `lua_tonumber`-into-float sites); `SongManager.cpp` (20: load-time
+  `SetTotalWork`/`wrap`/`Left`/`Right` calls, eight one-line `GetNum*()`
+  getters, three safe reverse-loop bounds, a `count_if` accumulator);
+  `XmlFileUtil.cpp` (14: a local `SetString(int,int,...)` helper called
+  from 6 sites -- cast at each call site rather than widening the
+  helper, since its `iEnd-1 >= iStart` check relies on signed-underflow
+  behavior an unsigned param would change; two reverse-loop bounds);
+  `ThemeManager.cpp` (11: `Left`/`Right` size-into-int, a reverse-loop
+  bound, two `std::distance` results, a Lua table push);
+  `ScreenEdit.cpp` (11: `RandomInt(size_t)`, an int-division-then-
+  double-multiply zoom expression ×2, a default-choice index, a
+  find-begin pointer-diff, a `MenuRowDef` count param, a track-remap
+  array, a keysound count); `RageFileManager.cpp` (11: a `Seek(int)`
+  fed `mz_uint64` -- already runtime-checked for truncation so the cast
+  is behavior-preserving, three reverse-loop bounds, `Left`/`Right`
+  mount-point arithmetic, three size-into-int driver/file counters).
+  **Caught a measurement mistake mid-batch:** ran the `--clean-first`
+  verification rebuild while `ThemeManager.cpp`/`ScreenEdit.cpp`/
+  `RageFileManager.cpp` were still being edited -- the parallel build
+  compiled those 3 in their pre-fix state, so that run's "489 -> 422"
+  intermediate figure was wrong (RageUtil.cpp/SongManager.cpp did
+  verify clean in it, since those two were already done). Re-ran a
+  second, edit-free `--clean-first` rebuild once all 6 files were done:
+  confirmed all six at zero, true total 397 sites / 142 files. Lesson:
+  never trust a measurement rebuild that overlaps with active edits,
+  even if it's `--clean-first`.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest`/Release/`--SelfTest`
+  gate re-run after restoring `/wd4244`/`/wd4267`.
