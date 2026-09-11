@@ -33,7 +33,7 @@ RageFileObj::RageFileObj( const RageFileObj &cpy ):
 		m_pReadBuffer = new char[BSIZE];
 		memcpy( m_pReadBuffer, cpy.m_pReadBuffer, BSIZE );
 
-		int iOffsetIntoBuffer = cpy.m_pReadBuf - cpy.m_pReadBuffer;
+		int iOffsetIntoBuffer = static_cast<int>(cpy.m_pReadBuf - cpy.m_pReadBuffer);
 		m_pReadBuf = m_pReadBuffer + iOffsetIntoBuffer;
 	}
 	else
@@ -201,7 +201,7 @@ int RageFileObj::Read( void *pBuffer, std::size_t iBytes, int iNmemb )
 	const int iExtra = iRet % iBytes;
 	Seek( Tell()-iExtra );
 
-	return iRet/iBytes;
+	return iRet / static_cast<int>(iBytes);
 }
 
 /* Empty the write buffer to disk.  Return -1 on error, 0 on success. */
@@ -247,11 +247,11 @@ int RageFileObj::Write( const void *pBuffer, std::size_t iBytes )
 		if( m_iWriteBufferUsed + (int)iBytes <= m_iWriteBufferSize )
 		{
 			memcpy( m_pWriteBuffer+m_iWriteBufferUsed, pBuffer, iBytes );
-			m_iWriteBufferUsed += iBytes;
-			m_iFilePos += iBytes;
+			m_iWriteBufferUsed += static_cast<int>(iBytes);
+			m_iFilePos += static_cast<int>(iBytes);
 			if( m_bCRC32Enabled )
 				CRC32( m_iCRC32, pBuffer, iBytes );
-			return iBytes;
+			return static_cast<int>(iBytes);
 		}
 
 		/* We're writing a lot of data, and it won't fit in the buffer.  We already
@@ -272,10 +272,10 @@ int RageFileObj::Write( const void *pBuffer, std::size_t iBytes )
 int RageFileObj::Write( const void *pBuffer, std::size_t iBytes, int iNmemb )
 {
 	/* Simple write.  We never return partial writes. */
-	int iRet = Write( pBuffer, iBytes*iNmemb ) / iBytes;
+	int iRet = Write( pBuffer, iBytes*iNmemb ) / static_cast<int>(iBytes);
 	if( iRet == -1 )
 		return -1;
-	return iRet / iBytes;
+	return iRet / static_cast<int>(iBytes);
 }
 
 int RageFileObj::Flush()
@@ -374,7 +374,7 @@ int RageFileObj::GetLine( RString &sOut )
 			{
 				++p; /* skip \n */
 			}
-			const int iUsed = p-m_pReadBuf;
+			const int iUsed = static_cast<int>(p-m_pReadBuf);
 			if( iUsed )
 			{
 				m_iReadBufAvail -= iUsed;
@@ -441,7 +441,7 @@ int RageFileObj::FillReadBuf()
 	/* The buffer starts at m_Buffer; any data in it starts at m_pReadBuf; space between
 	 * the two is old data that we've read.  (Don't mangle that data; we can use it
 	 * for seeking backwards.) */
-	const int iBufAvail = BSIZE - (m_pReadBuf-m_pReadBuffer) - m_iReadBufAvail;
+	const int iBufAvail = BSIZE - static_cast<int>(m_pReadBuf-m_pReadBuffer) - m_iReadBufAvail;
 	ASSERT_M( iBufAvail >= 0, ssprintf("%p, %p, %i", static_cast<void*>(m_pReadBuf), static_cast<void*>(m_pReadBuffer), BSIZE ) );
 	const int iSize = this->ReadInternal( m_pReadBuf+m_iReadBufAvail, iBufAvail );
 

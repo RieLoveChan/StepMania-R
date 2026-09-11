@@ -201,7 +201,7 @@ void ActorMultiVertex::AddVertex()
 
 void ActorMultiVertex::AddVertices( int Add )
 {
-	int size = AMV_DestTweenState().vertices.size();
+	int size = static_cast<int>( AMV_DestTweenState().vertices.size() );
 	size += Add;
 	for( std::size_t i = 0; i < AMV_Tweens.size(); ++i )
 	{
@@ -369,7 +369,7 @@ void ActorMultiVertex::SetVertsFromSplinesInternal(std::size_t num_splines, std:
 	for(std::size_t v= 0; v < num_verts; ++v)
 	{
 		std::vector<float> pos;
-		const int spi= v%num_splines;
+		const int spi= static_cast<int>(v%num_splines);
 		float part= static_cast<float>(v/num_splines);
 		_splines[spi].evaluate(part * tper[spi], pos);
 		verts[v+first].p.x= pos[0];
@@ -689,7 +689,7 @@ void ActorMultiVertex::AMV_TweenState::MakeWeightedAverage(AMV_TweenState& avera
 
 int ActorMultiVertex::AMV_TweenState::GetSafeNumToDraw( DrawMode dm, int num ) const
 {
-	int max = vertices.size() - FirstToDraw;
+	int max = static_cast<int>( vertices.size() ) - FirstToDraw;
 	// NumToDraw == -1 draws all vertices
 	if( num == -1 || num > max )
 	{
@@ -715,7 +715,7 @@ public:
 		p->SetNumVertices( IArg(1) );
 		COMMON_RETURN_SELF;
 	}
-	static int GetNumVertices( T* p, lua_State *L )		{ lua_pushnumber( L, p->GetNumVertices() ); return 1; }
+	static int GetNumVertices( T* p, lua_State *L )		{ lua_pushnumber( L, static_cast<lua_Number>(p->GetNumVertices()) ); return 1; }
 
 	static void SetVertexFromStack(T* p, lua_State* L, std::size_t VertexIndex, int DataStackIndex)
 	{
@@ -728,7 +728,7 @@ public:
 		std::size_t NumDataParts = lua_objlen(L, DataStackIndex);
 		for(std::size_t i = 0; i < NumDataParts; ++i)
 		{
-			lua_pushnumber(L, i+1);
+			lua_pushnumber(L, static_cast<lua_Number>(i+1));
 			lua_gettable(L, DataStackIndex);
 			int DataPieceIndex = lua_gettop(L);
 			std::size_t DataPieceElements = lua_objlen(L, DataPieceIndex);
@@ -745,7 +745,7 @@ public:
 				float x= FArg(-1);
 				lua_rawgeti(L, DataPieceIndex, 2);
 				float y= FArg(-1);
-				p->SetVertexCoords(VertexIndex, x, y);
+				p->SetVertexCoords(static_cast<int>(VertexIndex), x, y);
 			}
 			else if(DataPieceElements == 3)
 			{
@@ -756,7 +756,7 @@ public:
 				float y= FArg(-1);
 				lua_rawgeti(L, DataPieceIndex, 3);
 				float z= FArg(-1);
-				p->SetVertexPos(VertexIndex, x, y, z);
+				p->SetVertexPos(static_cast<int>(VertexIndex), x, y, z);
 			}
 			else if(DataPieceElements == 4)
 			{
@@ -764,7 +764,7 @@ public:
 				RageColor c;
 				// Does not use FromStackCompat because we are not compatible with passing a color in non-table form.
 				c.FromStack(L, DataPieceIndex);
-				p->SetVertexColor(VertexIndex, c);
+				p->SetVertexColor(static_cast<int>(VertexIndex), c);
 			}
 			else
 			{
@@ -814,10 +814,10 @@ public:
 				COMMON_RETURN_SELF;
 			}
 		}
-		int Last = First + lua_objlen(L, StackIndex );
+		int Last = First + static_cast<int>( lua_objlen(L, StackIndex) );
 		if( Last > (int) p->GetNumVertices())
 		{
-			p->AddVertices( Last - p->GetNumVertices() );
+			p->AddVertices( Last - static_cast<int>( p->GetNumVertices() ) );
 		}
 		for(int n = First; n < Last; ++n)
 		{
@@ -1036,12 +1036,12 @@ public:
 	}
 	static int GetState(T* p, lua_State *L)
 	{
-		lua_pushnumber(L, p->GetState()+1);
+		lua_pushnumber(L, static_cast<lua_Number>(p->GetState()+1));
 		return 1;
 	}
 	static int SetState(T* p, lua_State *L)
 	{
-		p->SetState(ValidStateIndex(p, L, 1));
+		p->SetState(static_cast<int>(ValidStateIndex(p, L, 1)));
 		COMMON_RETURN_SELF;
 	}
 	static int GetStateData(T* p, lua_State *L)
@@ -1094,7 +1094,7 @@ public:
 		new_states.resize(num_states);
 		for(std::size_t i= 0; i < num_states; ++i)
 		{
-			lua_rawgeti(L, 1, i+1);
+			lua_rawgeti(L, 1, static_cast<int>(i+1));
 			FillStateFromLua(L, new_states[i], tex, -1);
 			lua_pop(L, 1);
 		}
@@ -1114,7 +1114,7 @@ public:
 	}
 	static int GetNumQuadStates(T* p, lua_State *L)
 	{
-		lua_pushnumber(L, p->GetNumQuadStates());
+		lua_pushnumber(L, static_cast<lua_Number>(p->GetNumQuadStates()));
 		return 1;
 	}
 	static std::size_t QuadStateIndex(T* p, lua_State *L, int pos)
@@ -1138,7 +1138,7 @@ public:
 	}
 	static int GetQuadState(T* p, lua_State *L)
 	{
-		lua_pushnumber(L, p->GetQuadState(QuadStateIndex(p, L, 1))+1);
+		lua_pushnumber(L, static_cast<lua_Number>(p->GetQuadState(QuadStateIndex(p, L, 1))+1));
 		return 1;
 	}
 	static int SetQuadState(T* p, lua_State *L)
