@@ -122,7 +122,7 @@ RString RageDisplay::SetVideoMode( VideoModeParams p, bool &bNeedReloadTextures 
 	const DisplayMode supported = d.currentMode() != nullptr ? *d.currentMode() : *d.supportedModes().begin();
 	p.width = supported.width;
 	p.height = supported.height;
-	p.rate = std::round(supported.refreshRate);
+	p.rate = static_cast<int>(std::round(supported.refreshRate));
 	if( (err = this->TryVideoMode(p,bNeedReloadTextures)).empty() )
 		return RString();
 	vs.push_back( err );
@@ -789,7 +789,7 @@ bool RageDisplay::SaveScreenshot( RString sPath, GraphicsFileFormat format )
 		int iHeight = 480;
 		// This used to be lrint. However, lrint causes odd resolutions like
 		// 639x480 (4:3) and 853x480 (16:9). ceil gives correct values. -aj
-		int iWidth = std::ceil( iHeight * GetActualVideoModeParams().fDisplayAspectRatio );
+		int iWidth = static_cast<int>(std::ceil( iHeight * GetActualVideoModeParams().fDisplayAspectRatio ));
 		timer.Touch();
 		RageSurfaceUtils::Zoom( surface, iWidth, iHeight );
 //		LOG->Trace( "%ix%i -> %ix%i (%.3f) in %f seconds", surface->w, surface->h, iWidth, iHeight, GetActualVideoModeParams().fDisplayAspectRatio, timer.GetDeltaTime() );
@@ -893,7 +893,7 @@ void RageDisplay::DrawCompiledGeometry( const RageCompiledGeometry *p, int iMesh
 {
 	this->DrawCompiledGeometryInternal( p, iMeshIndex );
 
-	StatsAddVerts( vMeshes[iMeshIndex].Triangles.size() );
+	StatsAddVerts( static_cast<int>(vMeshes[iMeshIndex].Triangles.size()) );
 }
 
 void RageDisplay::DrawLineStrip( const RageSpriteVertex v[], int iNumVerts, float LineWidth )
@@ -993,10 +993,10 @@ void RageCompiledGeometry::Set( const std::vector<msMesh> &vMeshes, bool bNeedsN
 		MeshInfo& meshInfo = m_vMeshInfo[i];
 		meshInfo.m_bNeedsTextureMatrixScale = false;
 
-		meshInfo.iVertexStart = totalVerts;
-		meshInfo.iVertexCount = Vertices.size();
-		meshInfo.iTriangleStart = totalTriangles;
-		meshInfo.iTriangleCount = Triangles.size();
+		meshInfo.iVertexStart = static_cast<int>(totalVerts);
+		meshInfo.iVertexCount = static_cast<int>(Vertices.size());
+		meshInfo.iTriangleStart = static_cast<int>(totalTriangles);
+		meshInfo.iTriangleCount = static_cast<int>(Triangles.size());
 
 		totalVerts += Vertices.size();
 		totalTriangles += Triangles.size();

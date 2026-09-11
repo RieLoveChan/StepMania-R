@@ -121,7 +121,7 @@ void ScreenSelectMaster::Init()
 		{
 			Lua* L= LUA->Get();
 			command.PushSelf(L);
-			lua_pushnumber(L, m_aGameCommands.size());
+			lua_pushnumber(L, static_cast<lua_Number>(m_aGameCommands.size()));
 			RString err= m_sName + "::IconChoicePosFunction: ";
 			if(!LuaHelpers::RunScriptOnStack(L, err, 1, 1, true))
 			{
@@ -139,7 +139,7 @@ void ScreenSelectMaster::Init()
 					std::size_t poses= lua_objlen(L, -1);
 					for(std::size_t p= 1; p <= poses; ++p)
 					{
-						lua_rawgeti(L, -1, p);
+						lua_rawgeti(L, -1, static_cast<int>(p));
 						RageVector3 pos(0.0f, 0.0f, 0.0f);
 						if(!lua_istable(L, -1))
 						{
@@ -149,7 +149,7 @@ void ScreenSelectMaster::Init()
 						{
 #define SET_POS_PART(i, part) \
 							lua_rawgeti(L, -1, i); \
-							pos.part= lua_tonumber(L, -1); \
+							pos.part= static_cast<float>(lua_tonumber(L, -1)); \
 							lua_pop(L, 1);
 							// If part of the position is not provided, we want it to
 							// default to zero, which lua_tonumber does. -Kyz
@@ -308,7 +308,7 @@ void ScreenSelectMaster::Init()
 				m_mapCurrentChoiceToNextChoice[dir][c] = c + add;
 				// Always wrap around MenuDir_Auto.
 				if( dir == MenuDir_Auto || (bool)WRAP_CURSOR )
-					wrap( m_mapCurrentChoiceToNextChoice[dir][c], m_aGameCommands.size() );
+					wrap( m_mapCurrentChoiceToNextChoice[dir][c], static_cast<int>(m_aGameCommands.size()) );
 				else
 					m_mapCurrentChoiceToNextChoice[dir][c] = std::clamp( m_mapCurrentChoiceToNextChoice[dir][c], 0, (int)m_aGameCommands.size()-1 );
 			}
@@ -812,7 +812,7 @@ bool ScreenSelectMaster::ChangeSelection( PlayerNumber pn, MenuDir dir, int iNew
 				if( iPressedDir != iActualDir )	// wrapped
 				{
 					float fItem = scroller.GetCurrentItem();
-					int iNumChoices = m_aGameCommands.size();
+					int iNumChoices = static_cast<int>(m_aGameCommands.size());
 					fItem += iActualDir * iNumChoices;
 					scroller.SetCurrentAndDestinationItem( fItem );
 				}

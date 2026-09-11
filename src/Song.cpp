@@ -1481,7 +1481,7 @@ void Song::RemoveAutoGenNotes()
 {
 	FOREACH_ENUM( StepsType, st )
 	{
-		for( int j=m_vpStepsByType[st].size()-1; j>=0; j-- )
+		for( int j=static_cast<int>(m_vpStepsByType[st].size())-1; j>=0; j-- )
 		{
 			if( m_vpStepsByType[st][j]->IsAutogen() )
 			{
@@ -1491,7 +1491,7 @@ void Song::RemoveAutoGenNotes()
 		}
 	}
 
-	for( int j=m_vpSteps.size()-1; j>=0; j-- )
+	for( int j=static_cast<int>(m_vpSteps.size())-1; j>=0; j-- )
 	{
 		if( m_vpSteps[j]->IsAutogen() )
 		{
@@ -1929,7 +1929,7 @@ void Song::DeleteSteps( const Steps* pSteps, bool bReAutoGen )
 		RemoveAutoGenNotes();
 
 	std::vector<Steps*> &vpSteps = m_vpStepsByType[pSteps->m_StepsType];
-	for( int j=vpSteps.size()-1; j>=0; j-- )
+	for( int j=static_cast<int>(vpSteps.size())-1; j>=0; j-- )
 	{
 		if( vpSteps[j] == pSteps )
 		{
@@ -1939,7 +1939,7 @@ void Song::DeleteSteps( const Steps* pSteps, bool bReAutoGen )
 		}
 	}
 
-	for( int j=m_vpSteps.size()-1; j>=0; j-- )
+	for( int j=static_cast<int>(m_vpSteps.size())-1; j>=0; j-- )
 	{
 		if( m_vpSteps[j] == pSteps )
 		{
@@ -1974,7 +1974,7 @@ void Song::FreeAllLoadedFromProfile( ProfileSlot slot, const std::set<Steps*> *s
 	/* DeleteSteps will remove and recreate autogen notes, which may reorder
 	 * m_vpSteps, so be careful not to skip over entries. */
 	std::vector<Steps*> apToRemove;
-	for( int s=m_vpSteps.size()-1; s>=0; s-- )
+	for( int s=static_cast<int>(m_vpSteps.size())-1; s>=0; s-- )
 	{
 		Steps* pSteps = m_vpSteps[s];
 		if( !pSteps->WasLoadedFromProfile() )
@@ -2327,7 +2327,7 @@ public:
 	static int GetBGChanges(T* p, lua_State* L)
 	{
 		const std::vector<BackgroundChange>& changes= p->GetBackgroundChanges(BACKGROUND_LAYER_1);
-		lua_createtable(L, changes.size(), 0);
+		lua_createtable(L, static_cast<int>(changes.size()), 0);
 		for(std::size_t c= 0; c < changes.size(); ++c)
 		{
 			lua_createtable(L, 0, 8);
@@ -2347,7 +2347,7 @@ public:
 			lua_setfield(L, -2, "color1");
 			LuaHelpers::Push(L, changes[c].m_def.m_sColor2);
 			lua_setfield(L, -2, "color2");
-			lua_rawseti(L, -2, c+1);
+			lua_rawseti(L, -2, static_cast<int>(c+1));
 		}
 		return 1;
 	}
