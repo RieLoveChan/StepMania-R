@@ -25,7 +25,7 @@ Linux back-compat shims cost maintenance for users who don't exist.
 | Platform | Minimum supported | Toolchain |
 |---|---|---|
 | **Windows** (P1) | **Windows 11 x64** | MSVC v143 / Visual Studio 2022 (or newer) |
-| **macOS** (P2) | **latest released macOS and the one before it**; arm64 primary, x86_64 while Apple/Rosetta still ship it | current Xcode |
+| **macOS** (P2) | **latest released macOS and the one before it, arm64 only** — Apple has ended Intel Mac support, so the "x86_64 while Apple/Rosetta still ship it" clause has now lapsed (maintainer confirmed 2026-09-11) | current Xcode |
 | **Linux** (P3) | **current mainstream distros** — target ~Ubuntu 24.04 LTS / current Fedora; glibc ≥ 2.38, GCC ≥ 13 or Clang ≥ 16 | current |
 
 No 32-bit targets on any platform.
@@ -68,3 +68,11 @@ Server 2025.
 - Bug reports from below-floor OSes are closed as out-of-scope.
 - ADR 0001 §9 is now historical; this ADR is the reference for "what OS
   do we support".
+- **2026-09-11:** the macOS x86_64 CI leg (`macos-build-x86_64`,
+  `macos-15-intel`) dropped from `.github/workflows/ci.yml` — `macOS
+  (arm64)` was already a separate job and is now the only macOS build.
+  `CMAKE_OSX_ARCHITECTURES=x86_64` / CPack's `macOS-Intel` packaging
+  path in `CMake/CPackSetup.cmake` and `CMake/SetupFfmpeg.cmake` are
+  left as-is for now (a local Intel-Mac dev build still works; only CI
+  coverage changed) — see backlog item 28 if that path should be
+  removed too.

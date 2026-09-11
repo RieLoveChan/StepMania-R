@@ -2443,3 +2443,18 @@
   file:line, exactly as designed.
   Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
   `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+
+* **item 28 (drop macOS x86_64 from CI) DONE, 2026-09-11.** Maintainer
+  confirmed live that Apple has ended Intel Mac support, tripping the
+  conditional clause ADR 0003 already had on the books ("x86_64 while
+  Apple/Rosetta still ship it"). Removed the `macos-build-x86_64` job
+  from `.github/workflows/ci.yml` (`macos-15-intel` runner); the
+  pre-existing `macos-build-arm64` job is now the only macOS build leg
+  (`macos-tests` unit-test job was already arm64-only). ADR 0003's
+  floor table updated to "macOS: arm64 only". Left alone on purpose:
+  `CMake/CPackSetup.cmake` / `CMake/SetupFfmpeg.cmake` still support
+  building for `CMAKE_OSX_ARCHITECTURES=x86_64` locally -- only CI
+  *coverage* changed, not the buildable-target set; dropping that too
+  is a separate, bigger call. CI-workflow + docs-only change, no C++
+  touched -- the push itself is the verification that `ci.yml` still
+  parses and every remaining job stays green.
