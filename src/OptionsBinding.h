@@ -105,11 +105,11 @@
 	static int func_name(T* p, lua_State* L) \
 	{ \
 		int original_top= lua_gettop(L); \
-		lua_createtable(L, p->m_ ## member.size(), 0); \
+		lua_createtable(L, static_cast<int>(p->m_ ## member.size()), 0); \
 		for(std::size_t n= 0; n < p->m_ ## member.size(); ++n) \
 		{ \
 			lua_pushnumber(L, p->m_ ## member[n]); \
-			lua_rawseti(L, -2, n+1); \
+			lua_rawseti(L, -2, static_cast<int>(n+1)); \
 		} \
 		if(lua_istable(L, 1) && original_top >= 1) \
 		{ \
@@ -120,7 +120,7 @@
 				p->m_ ## member.reserve(size); \
 				for(std::size_t n= 1; n <= size; ++n) \
 				{ \
-					lua_pushnumber(L, n); \
+					lua_pushnumber(L, static_cast<lua_Number>(n)); \
 					lua_gettable(L, 1); \
 					float v= FArg(-1); \
 					p->m_ ## member.push_back(v); \
