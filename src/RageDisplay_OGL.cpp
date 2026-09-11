@@ -261,7 +261,7 @@ static void TurnOffHardwareVBO()
 
 RageDisplay_Legacy::RageDisplay_Legacy()
 {
-	LOG->Trace( "RageDisplay_Legacy::RageDisplay_Legacy()" );
+	LOG_TRACE(Log::Gl, "RageDisplay_Legacy::RageDisplay_Legacy()" );
 	LOG->MapLog("renderer", "Current renderer: OpenGL");
 
 	FixLittleEndian();
@@ -292,7 +292,7 @@ GLhandleARB CompileShader( GLenum ShaderType, RString sFile, std::vector<RString
 	/* XXX: This would not be necessary if it wasn't for the special case for Cel. */
 	if (ShaderType == GL_FRAGMENT_SHADER_ARB && !glewIsSupported("GL_VERSION_2_0"))
 	{
-		LOG->Warn("Fragment shaders not supported by driver. Some effects will not be available.");
+		LOG_WARN(Log::Gl, "Fragment shaders not supported by driver. Some effects will not be available.");
 		return 0;
 	}
 
@@ -301,18 +301,18 @@ GLhandleARB CompileShader( GLenum ShaderType, RString sFile, std::vector<RString
 		RageFile file;
 		if (!file.Open(sFile))
 		{
-			LOG->Warn( "Error compiling shader %s: %s", sFile.c_str(), file.GetError().c_str() );
+			LOG_ERROR(Log::Gl, "Error compiling shader %s: %s", sFile.c_str(), file.GetError().c_str() );
 			return 0;
 		}
 
 		if (file.Read(sBuffer, file.GetFileSize()) == -1)
 		{
-			LOG->Warn( "Error compiling shader %s: %s", sFile.c_str(), file.GetError().c_str() );
+			LOG_ERROR(Log::Gl, "Error compiling shader %s: %s", sFile.c_str(), file.GetError().c_str() );
 			return 0;
 		}
 	}
 
-	LOG->Trace( "Compiling shader %s", sFile.c_str() );
+	LOG_TRACE(Log::Gl, "Compiling shader %s", sFile.c_str() );
 	GLhandleARB hShader = glCreateShaderObjectARB( ShaderType );
 	std::vector<const GLcharARB *> apData;
 	std::vector<GLint> aiLength;
@@ -337,13 +337,13 @@ GLhandleARB CompileShader( GLenum ShaderType, RString sFile, std::vector<RString
 	glGetObjectParameterivARB( hShader, GL_OBJECT_COMPILE_STATUS_ARB, &bCompileStatus );
 	if (!bCompileStatus)
 	{
-		LOG->Warn( "Error compiling shader %s:\n%s", sFile.c_str(), sInfo.c_str() );
+		LOG_ERROR(Log::Gl, "Error compiling shader %s:\n%s", sFile.c_str(), sInfo.c_str() );
 		glDeleteObjectARB( hShader );
 		return 0;
 	}
 
 	if (!sInfo.empty())
-		LOG->Trace( "Messages compiling shader %s:\n%s", sFile.c_str(), sInfo.c_str() );
+		LOG_TRACE(Log::Gl, "Messages compiling shader %s:\n%s", sFile.c_str(), sInfo.c_str() );
 
 	return hShader;
 }
@@ -358,7 +358,7 @@ GLhandleARB LoadShader( GLenum ShaderType, RString sFile, std::vector<RString> a
 		(ShaderType == GL_FRAGMENT_SHADER_ARB && !glewIsSupported("GL_VERSION_2_0")) ||
 		(ShaderType == GL_VERTEX_SHADER_ARB && !glewIsSupported("GL_ARB_vertex_shader")))
 	{
-		LOG->Warn("%s shaders not supported by driver. Some effects will not be available.",
+		LOG_WARN(Log::Gl, "%s shaders not supported by driver. Some effects will not be available.",
 			(ShaderType == GL_FRAGMENT_SHADER_ARB) ? "Fragment" : "Vertex");
 		return 0;
 	}
@@ -393,7 +393,7 @@ GLhandleARB LoadShader( GLenum ShaderType, RString sFile, std::vector<RString> a
 
 	if (!bLinkStatus)
 	{
-		LOG->Warn( "Error linking shader %s: %s", sFile.c_str(), GetInfoLog(hProgram).c_str() );
+		LOG_ERROR(Log::Gl, "Error linking shader %s: %s", sFile.c_str(), GetInfoLog(hProgram).c_str() );
 		glDeleteObjectARB( hProgram );
 		return 0;
 	}
@@ -446,7 +446,7 @@ void InitShaders()
 		g_iAttribTextureMatrixScale = glGetAttribLocationARB( g_bTextureMatrixShader, "TextureMatrixScale" );
 		if (g_iAttribTextureMatrixScale == -1)
 		{
-			LOG->Trace( "Scaling shader link failed: couldn't bind attribute \"TextureMatrixScale\"" );
+			LOG_TRACE(Log::Gl, "Scaling shader link failed: couldn't bind attribute \"TextureMatrixScale\"" );
 			glDeleteObjectARB( g_bTextureMatrixShader );
 			g_bTextureMatrixShader = 0;
 		}
@@ -459,7 +459,7 @@ void InitShaders()
 			GLenum iError = glGetError();
 			if (iError == GL_INVALID_OPERATION)
 			{
-				LOG->Trace( "Scaling shader failed: glVertexAttrib2fARB returned GL_INVALID_OPERATION" );
+				LOG_TRACE(Log::Gl, "Scaling shader failed: glVertexAttrib2fARB returned GL_INVALID_OPERATION" );
 				glDeleteObjectARB( g_bTextureMatrixShader );
 				g_bTextureMatrixShader = 0;
 			}
@@ -484,14 +484,14 @@ RString RageDisplay_Legacy::Init( const VideoModeParams &p, bool bAllowUnacceler
 
 	// Log driver details
 	g_pWind->LogDebugInformation();
-	LOG->Info("OGL Vendor: %s", reinterpret_cast<const char*>(glGetString(GL_VENDOR)));
-	LOG->Info("OGL Renderer: %s", reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
-	LOG->Info("OGL Version: %s", reinterpret_cast<const char*>(glGetString(GL_VERSION)));
-	LOG->Info("OGL Max texture size: %i", GetMaxTextureSize());
-	LOG->Info("OGL Texture units: %i", g_iMaxTextureUnits);
+	LOG_INFO(Log::Gl, "OGL Vendor: %s", reinterpret_cast<const char*>(glGetString(GL_VENDOR)));
+	LOG_INFO(Log::Gl, "OGL Renderer: %s", reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
+	LOG_INFO(Log::Gl, "OGL Version: %s", reinterpret_cast<const char*>(glGetString(GL_VERSION)));
+	LOG_INFO(Log::Gl, "OGL Max texture size: %i", GetMaxTextureSize());
+	LOG_INFO(Log::Gl, "OGL Texture units: %i", g_iMaxTextureUnits);
 
 	/* Pretty-print the extension string: */
-	LOG->Info( "OGL Extensions:" );
+	LOG_INFO(Log::Gl, "OGL Extensions:" );
 	{
 		const char *szExtensionString = (const char *) glGetString(GL_EXTENSIONS);
 		std::vector<RString> asExtensions;
@@ -517,7 +517,7 @@ RString RageDisplay_Legacy::Init( const VideoModeParams &p, bool bAllowUnacceler
 
 			if (iNextToPrint == iLastToPrint)
 			{
-				LOG->Info( "  %s", asExtensions[iNextToPrint].c_str() );
+				LOG_INFO(Log::Gl, "  %s", asExtensions[iNextToPrint].c_str() );
 				++iNextToPrint;
 				continue;
 			}
@@ -533,7 +533,7 @@ RString RageDisplay_Legacy::Init( const VideoModeParams &p, bool bAllowUnacceler
 					sList += ", ";
 				if (iNextToPrint == iLastToPrint || sList.size() + asExtensions[iNextToPrint+1].size() > 120)
 				{
-					LOG->Info( "%s", sList.c_str() );
+					LOG_INFO(Log::Gl, "%s", sList.c_str() );
 					sList = "    ";
 				}
 				++iNextToPrint;
@@ -545,7 +545,7 @@ RString RageDisplay_Legacy::Init( const VideoModeParams &p, bool bAllowUnacceler
 	{
 		if (!bAllowUnacceleratedRenderer)
 			return sError + "  " + OBTAIN_AN_UPDATED_VIDEO_DRIVER.GetValue() + "\n\n";
-		LOG->Warn( "Low-performance OpenGL renderer: %s", sError.c_str() );
+		LOG_WARN(Log::Gl, "Low-performance OpenGL renderer: %s", sError.c_str() );
 	}
 
 #if defined(_WIN32)
@@ -661,7 +661,7 @@ static void CheckPalettedTextures()
 	 * palettes if it can't even get 8-bit ones right. */
 	glColorTableEXT = nullptr;
 	glGetColorTableParameterivEXT = nullptr;
-	LOG->Info( "Paletted textures disabled: %s.", sError.c_str() );
+	LOG_INFO(Log::Gl, "Paletted textures disabled: %s.", sError.c_str() );
 }
 
 static void CheckReversePackedPixels()
@@ -681,7 +681,7 @@ static void CheckReversePackedPixels()
 	else
 	{
 		g_bReversePackedPixelsWorks = false;
-		LOG->Info( "GL_UNSIGNED_SHORT_1_5_5_5_REV failed (%s), disabled",
+		LOG_INFO(Log::Gl, "GL_UNSIGNED_SHORT_1_5_5_5_REV failed (%s), disabled",
 			GLToString(glError).c_str() );
 	}
 }
@@ -713,7 +713,7 @@ void SetupExtensions()
 			/* The minimum GL_MAX_PIXEL_MAP_TABLE is 32; if it's not at least 256,
 			 * we can't fit a palette in it, so we can't send paletted data as input
 			 * for a non-paletted texture. */
-			LOG->Info( "GL_MAX_PIXEL_MAP_TABLE is only %d", int(iMaxTableSize) );
+			LOG_INFO(Log::Gl, "GL_MAX_PIXEL_MAP_TABLE is only %d", int(iMaxTableSize) );
 			g_bColorIndexTableWorks = false;
 		}
 		else
@@ -2235,7 +2235,7 @@ std::uintptr_t RageDisplay_Legacy::CreateTexture(
 			break;
 		// OpenGL 1.2 types
 		default:
-			LOG->Trace( "Can't generate mipmaps for type %s because GLU version %.1f is too old.", GLToString(glImageType).c_str(), g_gluVersion/10.f );
+			LOG_TRACE(Log::Gl, "Can't generate mipmaps for type %s because GLU version %.1f is too old.", GLToString(glImageType).c_str(), g_gluVersion/10.f );
 			bGenerateMipMaps = false;
 			break;
 		}
@@ -2287,7 +2287,7 @@ std::uintptr_t RageDisplay_Legacy::CreateTexture(
 		ASSERT( iRealFormat == GL_RGBA8 );
 	}
 
-	LOG->Trace("%s (format %s, %ix%i, format %s, type %s, pixfmt %i, imgpixfmt %i)",
+	LOG_TRACE(Log::Gl, "%s (format %s, %ix%i, format %s, type %s, pixfmt %i, imgpixfmt %i)",
 		"glTexImage2D",
 		GLToString(glTexFormat).c_str(),
 		pImg->w, pImg->h,
