@@ -268,18 +268,60 @@ batch above was first "confirmed" this way, then a real
 `--clean-first` rebuild (flag genuinely removed) turned up several
 more real sites in those same three files (now all fixed and
 re-confirmed at zero in that same clean rebuild).
+- `RageUtil.cpp` (25): `int len`/`int size` parameters and locals
+  (`SmEscape`/`DwiEscape`/`DelimitorLength`/`do_split`'s begin+size
+  bookkeeping) fed from `RString::size()`/pointer-diffs; two identical
+  `pcre_exec(..., sStr.size(), ...)` calls (`int` length param);
+  `Trim*`/`Dirname`'s size-backed loop counters; `Json::Value::resize`
+  (`ArrayIndex`, not `size_t`); a `TONUMBER_NICE` macro and
+  `multiapproach`'s `mult` local losing `lua_tonumber`'s `double` into
+  `float`; five `lua_rawgeti`/`lua_rawseti`/process-index sites in
+  `multiapproach`'s per-element loop (`size_t i` into `int`).
+- `SongManager.cpp` (20): `SetTotalWork`/`wrap`/`RString::Left`/`Right`
+  size-into-int at load-time call sites; eight one-line `GetNum*()`
+  getters returning `size()`/`count_if()` (`ptrdiff_t`) as `int`; three
+  reverse-loop `size()-1` bounds (safe by construction, same pattern as
+  `Profile.cpp`); a `count_if` accumulated into `int iCount`.
+- `XmlFileUtil.cpp` (14): a local `SetString(int,int,...)` helper
+  called from 6 sites with `RString::size_type` (`size_t`) start/end
+  positions -- cast at each call site rather than widening the helper's
+  params, since its internal `iEnd-1 >= iStart` bounds check relies on
+  signed underflow behavior that unsigned params would change; two
+  reverse-loop `size()-1` bounds.
+- `ThemeManager.cpp` (11): `RString::Left`/`Right` fed `size_t`
+  positions from `.find()`/`.size()` arithmetic; a reverse-loop
+  `size()-1` bound and a `size()`-returning getter; two
+  `std::distance()` (`ptrdiff_t`) results into `int iDist`; a
+  `lua_createtable`/`lua_rawseti` pair pushing theme-fallback names.
+- `ScreenEdit.cpp` (11): `RandomInt(size_t)`; `SCREEN_HEIGHT/480*0.5`
+  promoting to `double` via integer division then multiply, fixed with
+  an outer `static_cast<float>` (×2 identical sites); an `int` beats-
+  per-measure value into a `float`; a `choices.size()-1` default-choice
+  index; a `find()-begin()` pointer-diff into `unsigned pos` plus a
+  `size()` into a keysound-index `int`; a `MenuRowDef` size-derived
+  count param; two `size_t`-indexed track-remap array writes; a
+  `size()` into `numKeysounds`.
+- `RageFileManager.cpp` (11): a `Seek(int)` fed an `mz_uint64` file
+  offset (the call already runtime-checks for truncation via a
+  round-trip compare, so the cast doesn't change behavior); reverse-
+  loop `size()-1` bounds ×3; `RString::Left`/`Right` fed
+  `size_t`-derived mount-point-length arithmetic; three `size()`/
+  `length()` values into `int` locals tracking driver/file counts.
 **Not done:** `/wd4244`/`/wd4267` stay in `src/CMakeLists.txt` until all
-489 remaining sites (148 files) are triaged (same "fix everything, then
+397 remaining sites (142 files) are triaged (same "fix everything, then
 remove the `/wd` flag in one commit" pattern as C4100) — continue
 file-by-file, highest concentration first; measure only via
 `--clean-first` with the flag actually removed, dedup with a regex
 that matches BOTH `C4244` and `C4267` (`warning C42(44|67)`, not
-`C424[47]`). Still not measured for Clang/GCC (`baseline.md` TBD,
-non-Windows). Next concentrations: `RageUtil.cpp` (25),
-`SongManager.cpp` (20), `XmlFileUtil.cpp` (14), `ThemeManager.cpp`/
-`ScreenEdit.cpp`/`RageFileManager.cpp` (11 each), `OptionsList.cpp`/
-`EditMenu.cpp`/`CubicSpline.cpp` (10 each), `TimingData.cpp`/
-`MusicWheel.cpp`/`CourseLoaderCRS.cpp` (9 each).
+`C424[47]`), and never run the measurement rebuild while a file is
+mid-edit -- doing so once (this batch) silently rebuilt 3 files in
+their pre-fix state and produced a wrong intermediate count that had
+to be re-measured from a clean, edit-free tree. Still not measured for
+Clang/GCC (`baseline.md` TBD, non-Windows). Next concentrations:
+`OptionsList.cpp`/`EditMenu.cpp`/`CubicSpline.cpp` (10 each),
+`TimingData.cpp`/`MusicWheel.cpp`/`CourseLoaderCRS.cpp` (9 each),
+`RageDisplay_OGL.cpp` (8), `Song.cpp`/`ScreenSelectMaster.cpp`/
+`RageLog.cpp`/`RageFileDriverDeflate.cpp`/`RageDisplay.cpp` (7 each).
 
 ### 3. Stale cppcheck leak list — DONE 2026-09-05, all dismissed
 ~~`Docs/Devdocs/possible memory leaks.txt` — from 2009. Re-triaged by
