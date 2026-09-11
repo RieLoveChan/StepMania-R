@@ -2109,3 +2109,37 @@
   9, `NoteDisplay.cpp` 9, ... next).
   Verified: `sm_tests` 5966/226, `ctest` 100%, Release + `--SelfTest`
   green.
+
+* **item 2 (C4244/C4267) sweep, next 4 files/macros: 187 -> 158
+  remaining (72 files).** `NoteDataWithScoring.cpp` (§5-adjacent
+  `NoteData*`; `RadarValues` float-backed counts cast both directions,
+  characterization-only, 11 sites); `NoteDisplay.cpp` (degrees-as-
+  double into float rotation, the shared `IsOnScreen()` float-into-int
+  pattern, a pointer-diff into int, 9 sites); `ScreenGameplay.cpp` (int-
+  from-`SafeFArg()` into float margins, an iterator-diff, an enum
+  subtraction, a `lua_pushnumber(size_t)`, 9 sites, 2 of them via the
+  macro below); `OptionsBinding.h`'s `FLOAT_TABLE_INTERFACE` macro
+  (`size()`/`n+1`/bare `size_t` into Lua's `int`/`lua_Number` params --
+  fixed once at the macro, benefits every screen using the interface).
+  Verified: `sm_tests` 5966/226, `ctest` 100%, Release + `--SelfTest`
+  green.
+
+* **item 2 (C4244/C4267) sweep, next 3 files: 158 -> 140 remaining (69
+  files), plus a second methodology correction.** `NetworkManager.cpp`
+  (`lua_tointeger`/`lua_pushnumber` narrowing, 6 sites); `Profile.cpp`
+  (age/calorie-math float chain plus, only found on a genuine clean
+  rebuild, several `size()`/iterator-diff-into-`int` sites, ~10 total);
+  `NotesLoaderBMS.cpp` (§5-protected `NotesLoader*`, characterization-
+  only -- measure-size/time-signature/BPM narrowing plus, again only
+  found on a clean rebuild, a few more `size()`/`find()` sites, ~10
+  total; re-verified via `sm_tests.exe "[bms]" -s`, 26 assertions/2
+  cases unchanged). Second methodology trap: deleting just the touched
+  `.obj` files and rebuilding is an *incremental* build (recompiles
+  those files plus header-dependents only) -- its "0 warnings" is not a
+  full-tree count. Only a genuine `--clean-first` rebuild, with
+  `/wd4244`/`/wd4267` actually removed, is authoritative; that rebuild
+  turned up several more real sites in these same three files (now
+  fixed) and set the true current total at 140 sites / 69 files, with
+  all ten files fixed so far confirmed at zero.
+  Verified: `sm_tests` 5966/226, `ctest` 100%, Release + `--SelfTest`
+  green.
