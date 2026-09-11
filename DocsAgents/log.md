@@ -2335,12 +2335,12 @@
 
 * **item 2 (C4244/C4267) sweep, 19 more files (every remaining 3-site
   file): 163 -> 106 remaining (~85 files).** `WheelNotifyIcon.cpp`,
-  `UnlockManager.cpp`, `Steps.cpp` (SS5-protected, characterization-
+  `UnlockManager.cpp`, `Steps.cpp` (§5-protected, characterization-
   only Lua binding), `ScreenSelectCharacter.cpp`, `ScreenSelect.cpp`,
   `Screen.cpp`, `RageThreads.cpp`, `RageSoundReader_ChannelSplit.cpp`,
   `RageFileDriverReadAhead.cpp`, `RageFileDriverDirect.cpp`,
   `PlayerStageStats.cpp`, `OptionRowHandler.cpp`, `NotesLoaderSSC.cpp`
-  (SS5-protected, characterization-only), `LightsManager.cpp`,
+  (§5-protected, characterization-only), `LightsManager.cpp`,
   `InputQueue.cpp`, `GameManager.cpp`, `ArrowEffects.cpp`,
   `ActorFrame.cpp`, `ScreenOptionsEditCourse.cpp` (a genuinely separate
   file from `ScreenOptions.cpp`/`Course.cpp`, never touched before).
@@ -2352,5 +2352,31 @@
   `ScreenOptions`/`Actor`/`Steps`/`Screen`/`ScreenSelect`) -- clean.
   Remaining files are all at 1-2 sites each now; no more count-based
   tiers to batch by.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest`/Release/`--SelfTest`
+  gate re-run after restoring `/wd4244`/`/wd4267`.
+
+* **item 2 (C4244/C4267) sweep, 26 more files (every remaining 2-site
+  file): 106 -> 54 remaining (all single-site files now).**
+  `StepsUtil.cpp`, `StageStats.cpp`, `Sprite.cpp`, `ScrollBar.cpp`,
+  `ScreenSelectMusic.cpp`, `ScreenOptionsManageProfiles.cpp`,
+  `ScreenMapControllers.cpp`, `ScreenInstallOverlay.cpp`,
+  `SampleHistory.cpp`, `RandomSample.cpp`,
+  `RageUtil_CharConversions.cpp`, `RageSoundReader_SpeedChange.cpp`,
+  `RageSoundReader_Resample_Good.cpp`, `RageSoundReader_Chain.cpp`,
+  `RageModelGeometry.cpp`, `RageFileDriverTimeout.cpp`,
+  `ProfileManager.cpp`, `PlayerOptions.cpp`, `Player.cpp`,
+  `NotesLoaderSMA.cpp` (§5-protected), `NotesLoaderJson.cpp`
+  (§5-protected), `NoteData.cpp` (§5-protected, characterization-
+  only), `MsdFile.h`, `GameSoundManager.cpp`, `CsvFile.cpp`,
+  `CharacterManager.cpp`. Same recurring narrowing patterns throughout
+  -- `wrap()`/`RandomInt()` args, iterator-diffs, reverse-loop bounds,
+  `Left()`/`Right()` length args, Lua bindings. Full sanity sweep incl.
+  every substring-ambiguous file (`Song`/`Course`/`RageDisplay`/
+  `ScreenOptions`/`Actor`/`Steps`/`Screen`/`ScreenSelect`/`Sprite`/
+  `Player`/`NoteData`) -- clean. Remaining 54 files are all single-site
+  now; several are §5-protected headers/loaders/writers
+  (`NotesLoaderSM.cpp`/`NotesLoaderKSF.cpp`/`NotesLoaderDWI.cpp`/
+  `NotesWriterSSC.cpp`/`NotesWriterSM.cpp`/`NoteData.h`/`Profile.h`/
+  `Course.h`) needing the usual characterization re-check.
   Verified: `sm_tests` 5966/226 unchanged, `ctest`/Release/`--SelfTest`
   gate re-run after restoring `/wd4244`/`/wd4267`.
