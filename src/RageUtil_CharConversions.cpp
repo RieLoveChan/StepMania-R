@@ -40,6 +40,14 @@ static bool AttemptJapaneseConversion( RString &sText ) { return CodePageConvert
 #include <errno.h>
 #include <iconv.h>
 
+/* Historically set by autotools' AM_ICONV to "const" on platforms whose
+ * iconv() takes a "const char **" input pointer. Modern glibc / libiconv
+ * / BSD all take "char **", so an empty define is correct; keep the
+ * fallback in case a toolchain still needs it. */
+#ifndef ICONV_CONST
+#define ICONV_CONST
+#endif
+
 static bool ConvertFromCharset( RString &sText, const char *szCharset )
 {
 	iconv_t converter = iconv_open( "UTF-8", szCharset );

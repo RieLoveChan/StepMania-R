@@ -60,6 +60,11 @@
 /* Defined to 1 if the underlying system provides the posix_fadvise function. */
 #cmakedefine HAVE_POSIX_FADVISE 1
 
+/* Defined to 1 if iconv() is available (non-Apple; Apple uses CoreFoundation).
+ * Without this, RageUtil_CharConversions falls back to "no converters", which
+ * silently blanks non-UTF-8 song titles/artists (Korean KSF, Japanese BMS, ...). */
+#cmakedefine HAVE_ICONV 1
+
 /* Defined to 1 if the underlying system provides the pthread_mutex_timedlock function. */
 #cmakedefine HAVE_PTHREAD_MUTEX_TIMEDLOCK 1
 
