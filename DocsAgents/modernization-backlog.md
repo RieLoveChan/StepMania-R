@@ -113,36 +113,57 @@ across all of `src/`, plus `sm_tests` clean under the existing
 `WITH_WERROR=ON` config.
 **In progress (started 2026-09-11):** `C4244`/`C4267` (numeric
 conversion / narrowing). The old "~4.4k hits" figure was stale/raw
-(same double-counting problem C4100's ~1362 had). Real measured counts,
-from a genuinely clean rebuild (`--clean-first`, `/v:m`, counting
-unique `file(line,col)` sites, not raw per-TU lines):
+(same double-counting problem C4100's ~1362 had). Real counts need
+`/wd4244 /wd4267` actually **removed** from `src/CMakeLists.txt` before
+measuring — a `--clean-first` rebuild *with the suppression still in
+place* will show 0 no matter what's fixed, which cost an hour of false
+signal mid-sweep; always check the flag is gone before trusting a 0.
+With it removed, a clean `sm_engine`/`sm_tests` (Debug, `WITH_TESTS=ON`,
+`WITH_WERROR=ON`) rebuild, counting unique `file(line,col)` sites:
 - **Release `StepMania` target: 0 sites**, entirely accounted for by
-  4 lines in two headers everything includes
-  (`RageUtil.h`/`RageTimer.h`) — see below.
-- **Debug `sm_engine`/`sm_tests` (`WITH_TESTS=ON`, `WITH_WERROR=ON`):
-  297 unique sites across ~80 files.** Debug surfaces far more than
-  Release here (same "Release's optimizer folds some away" pattern as
-  C4189/C4702, just much bigger for narrowing conversions) — this,
-  not the Release count, is the real remaining surface. Top
-  concentrations: `NoteField.cpp` (35), `TimingSegments.cpp` (25),
-  `RageSurfaceUtils.cpp` (22), `ScreenOptionsMasterPrefs.cpp` (18),
-  `NoteDataWithScoring.cpp` (11), `ScreenGameplay.cpp` (9),
-  `NoteDisplay.cpp` (9). Message-kind breakdown: `int↔float`/
-  `double↔float` (~110, mostly intentional precision loss — cast to
-  document), `__int64`/`size_t → int` (~85, the classic `.size()`
-  returned as `int` pattern — usually safe, but the risky case is a
-  container that could exceed `INT_MAX`), `float → int` (34, real
-  truncation — check each for an intended `floor`/round), a `lua_*`
-  bridge cluster (~40, `lua_Number`/`lua_Integer` narrowing at the
-  Lua/C++ boundary).
-**Done:** the 4 header sites (`RageTimer::GetTimeSinceStartFast`,
-`MersenneTwister`'s seed, `RandomFloat`, `FindIndex`'s iterator-diff
-return) — all intentional narrowing, given explicit `static_cast`s.
-**Not done:** `/wd4244`/`/wd4267` stay in `src/CMakeLists.txt` until
-all 297 Debug sites are triaged (same "fix everything, then remove the
-`/wd` flag in one commit" pattern as C4100) — a file-by-file sweep,
-highest concentration first. Still not measured for Clang/GCC
-(`baseline.md` TBD, non-Windows).
+  4 lines in two headers everything includes (`RageUtil.h`/
+  `RageTimer.h`) — fixed first (see below), Release never had more.
+- **Debug/tests, before this session's fixes: ~297 sites.** After
+  fixing `NoteField.cpp` (real count 35), `TimingSegments.cpp` (5, not
+  25 — `push_back(int)` into a `vector<float>` at 5 call sites;
+  MSVC's template-instantiation "note: with _Ty=..." context lines
+  inflate the apparent per-file count but not the true `(line,col)`
+  dedup), `RageSurfaceUtils.cpp` (6, not 22, same template-note
+  inflation), `ScreenOptionsMasterPrefs.cpp` (2, not 18, one generic
+  `if constexpr` helper instantiated for many `T`/`U`): **187 unique
+  sites remain across ~75 files.** Next concentrations: `NoteDataWithScoring.cpp`
+  (11, genuinely 11 — no inflation there), `ScreenGameplay.cpp` (9),
+  `NoteDisplay.cpp` (9), `Profile.cpp` (6), `NotesLoaderBMS.cpp` (6),
+  `NetworkManager.cpp` (6).
+**Done, verified (`sm_tests` 5966/226, `ctest`, Release + `--SelfTest`
+green, `/wd4244`/`/wd4267` still in place while sites remain elsewhere):**
+- `RageUtil.h`/`RageTimer.h`: the 4 header sites (`RageTimer::
+  GetTimeSinceStartFast`, `MersenneTwister`'s seed, `RandomFloat`,
+  `FindIndex`'s iterator-diff return).
+- `NoteField.cpp`: two macros fixed at their single definition site
+  covered ~30 of the 35 call-site warnings — `draw_all_segments`'s
+  `side_sign= ... ? -1 : 1` (int ternary into a `float`, now `-1.f`/
+  `1.f`) and `IS_ON_SCREEN`'s two `float`-member-into-`int`-parameter
+  args to `IsOnScreen()` (now `static_cast<int>`). Plus a handful of
+  individual call sites passing the same float members to `int`
+  parameters (`DrawBoard`, `FindFirstDisplayedBeat`/
+  `FindLastDisplayedBeat`), an int-subtraction-into-float, an
+  int-round-tripped-through-`(int)`-then-back-into-a-float member, and
+  a `lua_tonumber()` (`lua_Number`/double) truncated to an index `int`.
+- `TimingSegments.cpp`: `GetCombo()`/`GetMissCombo()`/`GetNum()`/
+  `GetDen()`/`GetUnit()` (ints/enum) pushed into `std::vector<float>
+  GetValues()` results — cast each.
+- `RageSurfaceUtils.cpp`: `std::trunc(float)` (still a `float`) assigned
+  to an `int` pixel index ×2; a clamped `std::lrint` (`long`) assigned
+  to `std::uint8_t` ×2.
+- `ScreenOptionsMasterPrefs.cpp`: `FindClosestEntry<T,U>`'s `if
+  constexpr` helper lambda — one `static_cast<T>` around its call fixes
+  every `T`/`U` instantiation at once.
+**Not done:** `/wd4244`/`/wd4267` stay in `src/CMakeLists.txt` until all
+187 remaining Debug sites are triaged (same "fix everything, then
+remove the `/wd` flag in one commit" pattern as C4100) — continue
+file-by-file, highest concentration first. Still not measured for
+Clang/GCC (`baseline.md` TBD, non-Windows).
 
 ### 3. Stale cppcheck leak list — DONE 2026-09-05, all dismissed
 ~~`Docs/Devdocs/possible memory leaks.txt` — from 2009. Re-triaged by
