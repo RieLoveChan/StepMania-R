@@ -487,7 +487,7 @@ void NoteField::DrawBoard( int iDrawDistanceAfterTargetsPixels, int iDrawDistanc
 		float fTexCoordOffset = m_fBoardOffsetPixels / fBoardGraphicHeightPixels;
 
 		// top half
-		const float fHeight = iDrawDistanceBeforeTargetsPixels - iDrawDistanceAfterTargetsPixels;
+		const float fHeight = static_cast<float>( iDrawDistanceBeforeTargetsPixels - iDrawDistanceAfterTargetsPixels );
 		const float fY = fYPosAt0 - ((iDrawDistanceBeforeTargetsPixels + iDrawDistanceAfterTargetsPixels) / 2.0f);
 
 		pSprite->ZoomToHeight( fHeight );
@@ -765,10 +765,12 @@ void NoteField::CalcPixelsBeforeAndAfterTargets()
 	draw_scale*= 1 + 0.5f * std::abs(curr_options.m_fPerspectiveTilt);
 	draw_scale*= 1 + std::abs(curr_options.m_fEffects[PlayerOptions::EFFECT_MINI]);
 
+	// Truncate to whole pixels, then store back as float -- these members
+	// are float so the rest of the class can do float math with them.
 	m_FieldRenderArgs.draw_pixels_after_targets=
-		(int)(m_FieldRenderArgs.draw_pixels_after_targets * draw_scale);
+		static_cast<float>( static_cast<int>(m_FieldRenderArgs.draw_pixels_after_targets * draw_scale) );
 	m_FieldRenderArgs.draw_pixels_before_targets=
-		(int)(m_FieldRenderArgs.draw_pixels_before_targets * draw_scale);
+		static_cast<float>( static_cast<int>(m_FieldRenderArgs.draw_pixels_before_targets * draw_scale) );
 }
 
 void NoteField::DrawPrimitives()
@@ -784,8 +786,8 @@ void NoteField::DrawPrimitives()
 	if(m_drawing_board_primitive)
 	{
 		CalcPixelsBeforeAndAfterTargets();
-		DrawBoard(m_FieldRenderArgs.draw_pixels_after_targets,
-			m_FieldRenderArgs.draw_pixels_before_targets);
+		DrawBoard(static_cast<int>(m_FieldRenderArgs.draw_pixels_after_targets),
+			static_cast<int>(m_FieldRenderArgs.draw_pixels_before_targets));
 		return;
 	}
 	// Some might prefer an else block, instead of returning from the if, but I
@@ -796,9 +798,9 @@ void NoteField::DrawPrimitives()
 	NoteDisplayCols *cur = m_pCurDisplay;
 	// Probe for first and last notes on the screen
 	float first_beat_to_draw= FindFirstDisplayedBeat(
-		m_pPlayerState, m_FieldRenderArgs.draw_pixels_after_targets);
+		m_pPlayerState, static_cast<int>(m_FieldRenderArgs.draw_pixels_after_targets));
 	float last_beat_to_draw= FindLastDisplayedBeat(
-		m_pPlayerState, m_FieldRenderArgs.draw_pixels_before_targets);
+		m_pPlayerState, static_cast<int>(m_FieldRenderArgs.draw_pixels_before_targets));
 
 	m_pPlayerState->m_fLastDrawnBeat = last_beat_to_draw;
 
@@ -808,7 +810,10 @@ void NoteField::DrawPrimitives()
 	//LOG->Trace( "start = %f.1, end = %f.1", first_beat_to_draw-fSongBeat, last_beat_to_draw-fSongBeat );
 	//LOG->Trace( "Drawing elements %d through %d", m_FieldRenderArgs.first_row, m_FieldRenderArgs.last_row );
 
-#define IS_ON_SCREEN(fBeat)  (first_beat_to_draw <= (fBeat) && (fBeat) <= last_beat_to_draw && IsOnScreen(fBeat, 0, m_FieldRenderArgs.draw_pixels_after_targets, m_FieldRenderArgs.draw_pixels_before_targets))
+// draw_pixels_{after,before}_targets are floats (NoteFieldRenderArgs), but
+// IsOnScreen() takes them as int pixel distances -- explicit truncating
+// casts document that instead of relying on an implicit narrowing.
+#define IS_ON_SCREEN(fBeat)  (first_beat_to_draw <= (fBeat) && (fBeat) <= last_beat_to_draw && IsOnScreen(fBeat, 0, static_cast<int>(m_FieldRenderArgs.draw_pixels_after_targets), static_cast<int>(m_FieldRenderArgs.draw_pixels_before_targets)))
 
 	// Draw Receptors
 	{
@@ -881,7 +886,7 @@ void NoteField::DrawPrimitives()
 		float side_sign= 1;
 #define draw_all_segments(str_exp, name, caps_name)	\
 		horiz_align= caps_name##_IS_LEFT_SIDE ? align_right : align_left; \
-		side_sign= caps_name##_IS_LEFT_SIDE ? -1 : 1; \
+		side_sign= caps_name##_IS_LEFT_SIDE ? -1.f : 1.f; \
 		for(std::size_t i= 0; i < segs[SEGMENT_##caps_name]->size(); ++i) \
 		{ \
 			const name##Segment* seg= To##name((*segs[SEGMENT_##caps_name])[i]); \
@@ -1114,7 +1119,7 @@ static void get_returned_column(Lua* L, PlayerNumber pn, int index, int& col)
 	if(lua_isnumber(L, index))
 	{
 		// 1-indexed columns in lua
-		int tmpcol= lua_tonumber(L, index) - 1;
+		int tmpcol= static_cast<int>( lua_tonumber(L, index) ) - 1;
 		if(tmpcol < 0 || tmpcol >= GAMESTATE->GetCurrentStyle(pn)->m_iColsPerPlayer)
 		{
 			LuaHelpers::ReportScriptErrorFmt(

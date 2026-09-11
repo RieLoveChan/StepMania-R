@@ -58,14 +58,17 @@ int FindClosestEntry( T value, const U *mapping, unsigned cnt )
 	{
 		// Need to use if constexpr here so the compiler doesn't even
 		// attempt to parse the else branch for enums
-		const T val = [&]{
+		// static_cast documents the narrowing some T/U instantiations need
+		// (e.g. T=int, U=float) -- this helper compares heterogeneous
+		// option values, so exact type match isn't guaranteed.
+		const T val = static_cast<T>( [&]{
 				if constexpr (std::is_enum<U>::value) {
 					return Enum::to_integral(mapping[i]);
 				}
 				else {
 					return mapping[i];
 				}
-			}();
+			}() );
 
 		float dist = value < val? (float)(val-value):(float)(value-val);
 		if( have_best && best_dist < dist )

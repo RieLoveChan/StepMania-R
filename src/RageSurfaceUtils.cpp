@@ -424,10 +424,10 @@ void RageSurfaceUtils::BlitTransform( const RageSurface *src, RageSurface *dst,
 			 * pixel[1]; 2 indicates 50% pixel[1], 50% pixel[2] (which is clamped
 			 * to pixel[1]). */
 			int src_x[2], src_y[2];
-			src_x[0] = std::trunc(src_xp - 0.5f);
+			src_x[0] = static_cast<int>( std::trunc(src_xp - 0.5f) );
 			src_x[1] = src_x[0] + 1;
 
-			src_y[0] = std::trunc(src_yp - 0.5f);
+			src_y[0] = static_cast<int>( std::trunc(src_yp - 0.5f) );
 			src_y[1] = src_y[0] + 1;
 
 			// Emulate GL_REPEAT.
@@ -865,10 +865,10 @@ RageSurface *RageSurfaceUtils::PalettizeToGrayscale( const RageSurface *src_surf
 		const unsigned int A = (index & Amask) >> Ashift;
 
 		// if only one intensity value, always fullbright
-		const std::uint8_t ScaledI = Ivalues == 1 ? 255 : std::clamp( std::lrint(I * (255.0f / (Ivalues-1))), 0L, 255L );
+		const std::uint8_t ScaledI = static_cast<std::uint8_t>( Ivalues == 1 ? 255 : std::clamp( std::lrint(I * (255.0f / (Ivalues-1))), 0L, 255L ) );
 
 		// if only one alpha value, always opaque
-		const std::uint8_t ScaledA = Avalues == 1 ? 255 : std::clamp( std::lrint(A * (255.0f / (Avalues-1))), 0L, 255L );
+		const std::uint8_t ScaledA = static_cast<std::uint8_t>( Avalues == 1 ? 255 : std::clamp( std::lrint(A * (255.0f / (Avalues-1))), 0L, 255L ) );
 
 		RageSurfaceColor c;
 		c.r = ScaledI;
