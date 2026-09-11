@@ -25,30 +25,31 @@ cppcheck leak list. What remains for the warning ratchet is `C4244`/
 `C4267`, tracked under Tier 3 / item 2 — it needs a scoping conversation,
 not continuous-work unblocking.
 
-### 27. `sm_tests` dies on the first engine assert on Unix/macOS — CI test jobs are informational
-`sm_tests` links the whole engine. On Unix/macOS, any engine
-`ASSERT`/`ASSERT_M`/`FAIL_M`/`RageException::Throw` routes through
-`sm_crash()` (`src/global.cpp`) → `CrashHandler::ForceCrash`
-(`src/archutils/Unix/CrashHandler.cpp`) → `RunCrashHandler`, which sees
-`g_pCrashHandlerArgv0 == nullptr` (because `CrashHandlerHandleArgs` is
-only called from `ArchHooks_{Unix,MacOSX}::Init()`, and the Catch2
-`main()` never boots `ArchHooks`) and does `_exit(1)` after printing
-`Crash handler failed: CrashHandlerHandleArgs was not called`. Result:
-the first assert any test trips kills the whole binary before Catch2 can
-report the failure or run the rest — and a few tests trip one *only* on
-Unix (seen: `test_NotesLoaderCorpus.cpp` loading real songs,
-`test_RageFile.cpp` RageFileDriverSlice). Green on Windows (all 226
-cases). Pre-existing — red since before the 2026-09-10 work.
-**2026-09-10:** `ubuntu-tests` / `macos-tests` "Run tests" steps set
-`continue-on-error: true` so the workflow run is not red while this is
-open; the jobs still execute and log. Windows unit tests stay the hard
-gate.
-**Fix needs a Unix/macOS box** (the maintainer's is Windows). Two parts:
-(a) give `sm_tests` a `main()` that either calls
-`CrashHandler::CrashHandlerHandleArgs(argc, argv)` or compiles the
-engine test objects with `-DCRASH_HANDLER` off so `sm_crash` falls back
-to plain `std::abort()` (which Catch2 *can* catch and report per-test);
-(b) then triage the handful of asserts that only fire on Unix.
+### 27. `sm_tests` crashed on the first engine assert on Unix — FIXED 2026-09-10
+Diagnosed in a Docker `ubuntu:24.04` container with gdb. Root cause was
+**not** the crash handler: `EngineTestEnv` brought up engine singletons
+without loading a theme, and many engine ctors (`Song`, `SongManager`,
+`ThemeMetricStepsTypesToShow::Read`, ...) read `ThemeMetric<T>` values
+via `GetValue()`, which does `ASSERT_M( m_Value.IsSet() )`. With no
+theme that assert fires → `sm_crash()` → on Unix `_exit(1)` (Windows
+silently tolerates the unset `LuaReference` and returns a default,
+which is why it was Windows-green and Unix-red).
+**Fix:** `EngineTestEnv` now loads **`SMRTest`**, a scripts-free
+minimal theme (`tests/data/test-theme/`, `FallbackTheme=`, no
+`Scripts/`). `SwitchThemeAndLanguage` runs almost nothing; metrics it
+doesn't define resolve "missing → `Dialog::ignore` → nil". Also needed:
+build `NOTESKIN` before `GAMEMAN->GetDefaultGame()`, give `GAMESTATE` a
+current game (`SetCurGame`) before the theme load, and
+`Dialog::SetWindowed(false)` so the per-missing-metric
+`AbortRetryIgnore` doesn't pop a modal MessageBox on Windows.
+Fixed a real Linux bug found along the way: `find_package(Iconv)` never
+set `HAVE_ICONV`, so `RageUtil_CharConversions.cpp` fell to its
+"no converters" `#else` on Linux and **silently blanked non-UTF-8 song
+titles/artists** (Korean KSF, Japanese BMS, CP1252 DWI). Now
+`HAVE_ICONV` is defined when iconv is found and not Apple (Apple keeps
+its CoreFoundation branch); added an `ICONV_CONST` fallback define.
+Full suite green on Windows **and** Linux (`5966 / 226`); the CI
+`continue-on-error` on the Unix test jobs was removed.
 
 ### 1. Safety net — DONE 2026-09-05
 - **Headless smoke: DONE** (`f7249f3a95`) — `--SelfTest` flag runs full
@@ -545,20 +546,14 @@ folder. Suite **948 / 118**.
     `PROFILEMAN` (null in the fixture). `PROFILEMAN` always exists by
     course-load time in the real engine; the test sticks to 1-part title
     refs (resolve via `GROUP_ALL`).
-- **Headless theme metrics** (new sub-item, 2026-09-10): the fixture
-  leaves `THEME` constructed but does NOT call `SwitchThemeAndLanguage`
-  — that runs the theme's Lua (`Themes/{_fallback,default}/Scripts/*`)
-  and SIGSEGVs headlessly (theme code assumes renderer / `SCREENMAN` /
-  sound). So `ThemeMetric<T>` / `CommonMetrics::*` stay unset and a test
-  that reads a metric *value* asserts. Blocks the last mile of
-  `PlayerOptions::FromString` (`CommonMetrics::DEFAULT_NOTESKIN_NAME`)
-  and `RadarValues` / theme-metric tests. Needs a smaller mechanism: a
-  scripts-free minimal test theme mounted into `/Themes` with
-  `FallbackTheme=` (fallback disabled) and just the handful of metrics
-  those tests need, OR a stub `ILocalizedStringImpl` / metric provider
-  registered for the harness. Its own task — the crash root-cause was
-  not chased down (engine and test link separate CRTs, so the
-  `fprintf`-marker bisect could not see past `SwitchThemeAndLanguage`).
+- **Headless theme metrics — DONE 2026-09-10.** `EngineTestEnv` now
+  loads `SMRTest`, a scripts-free minimal theme
+  (`tests/data/test-theme/`, `FallbackTheme=`, no `Scripts/`). See
+  item 27 for the full story (diagnosed in a Docker container with
+  gdb). `THEME->IsThemeLoaded()` is now true, `ThemeMetric` reads
+  resolve, and `SONGMAN` is back in the fixture. `PlayerOptions` /
+  `RadarValues` / theme-metric tests are no longer blocked on this —
+  add them when convenient.
 - `src/tests/test_file_readers.cpp` **DONE (2026-09-06, extended
   2026-09-09)** → `tests/test_RageFile.cpp`: `RageFile` open/read/write/
   seek/tell/`GetLine`/`AtEOF` through `FILEMAN`'s `/@mem` writable
