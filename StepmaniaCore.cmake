@@ -159,6 +159,13 @@ include(ExternalProject)
 find_package(nasm)
 find_package(yasm)
 find_package(Iconv)
+# RageUtil_CharConversions.cpp: #elif defined(HAVE_ICONV) is checked *before*
+# the #elif defined(MACOSX) CoreFoundation branch, so only enable it off Apple
+# -- otherwise macOS would switch converters. On Linux, not defining this means
+# the file falls through to "no converters" and blanks non-UTF-8 metadata.
+if(Iconv_FOUND AND NOT APPLE)
+  set(HAVE_ICONV 1)
+endif()
 
 find_package(Threads)
 if(${Threads_FOUND})
