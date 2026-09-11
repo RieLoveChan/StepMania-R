@@ -27,29 +27,36 @@
 //   MESSAGEMAN (MessageManager) -- trivial ctor; also stops LuaHelpers'
 //                                 script-error path from dereferencing a
 //                                 null MESSAGEMAN.
-//   GAMESTATE (GameState)      -- constructed but NOT Reset() (its ctor
-//                                 skips that on purpose), so the pointer
-//                                 is valid but GAMESTATE->GetCurrentGame()
-//                                 and friends are still not safe to call.
-//   THEME    (ThemeManager)    -- CONSTRUCTED ONLY. No theme is switched
-//                                 in: SwitchThemeAndLanguage() runs the
-//                                 theme's Lua and SIGSEGVs headlessly.
-//                                 So the pointer is valid, but every
-//                                 ThemeMetric<T> / CommonMetrics::* stays
-//                                 unset -- reading a metric value still
-//                                 asserts. (Backlog item 17.)
+//   GAMESTATE (GameState)      -- constructed, and given a current game
+//                                 (GAMEMAN->GetDefaultGame()) but NOT
+//                                 Reset(). The theme load needs a current
+//                                 game; most other GAMESTATE-> paths are
+//                                 still not safe to call.
 //   NOTESKIN (NoteSkinManager) -- trivial ctor; non-null unblocks the
-//                                 PlayerOptions mod-processing ASSERT and
-//                                 NOTESKIN->... calls.
-//   SONGMAN  (SongManager)     -- constructed; InitAll() (the slow song
-//                                 scan) is NOT called, so it holds no
-//                                 songs/courses until a test adds them.
+//                                 PlayerOptions mod-processing ASSERT.
+//                                 Built before GAMEMAN->GetDefaultGame().
+//   THEME    (ThemeManager)    -- switched to "SMRTest", the scripts-free
+//                                 minimal theme in tests/data/test-theme/.
+//                                 A theme MUST be loaded: engine ctors
+//                                 (Song, SongManager, ...) read
+//                                 ThemeMetric<T> via GetValue(), which
+//                                 ASSERT_M( IsSet() ) -- fatal, and on
+//                                 Unix sm_crash()s the binary. A real
+//                                 theme can't load headlessly (its metric
+//                                 values are Lua that touches a live
+//                                 engine); SMRTest sets FallbackTheme= and
+//                                 has no Scripts/, so undefined metrics
+//                                 resolve "missing -> ignore -> nil".
+//   SONGMAN  (SongManager)     -- constructed (its ctor's ThemeMetric
+//                                 reads resolve against SMRTest now).
+//                                 InitAll() (the slow song scan) is NOT
+//                                 called -- it holds no songs/courses.
 //
-// What it deliberately does NOT do: switch a theme, populate SONGMAN,
-// bring up the renderer or the audio device. Anything that needs those
-// stays --SelfTest smoke-test territory (AGENTS.md, ADR 0006).
-// Song::LoadFromSongDir (the full song-directory load, with cache) still
-// needs more than this.
+// What it deliberately does NOT do: call GAMESTATE->Reset(), populate
+// SONGMAN, bring up the renderer or the audio device. Anything that
+// needs those stays --SelfTest smoke-test territory (AGENTS.md,
+// ADR 0006). Song::LoadFromSongDir (the full song-directory load, with
+// cache) still needs more than this.
 //
 // Usage: call EngineTestEnv::Require() at the top of any TEST_CASE that
 // needs the above. It is idempotent -- the first call constructs, later
@@ -65,8 +72,9 @@ namespace EngineTestEnv
 {
 	// Idempotent. On first call constructs, in this order:
 	//   LUA -> ActorUtil::InitFileTypeLists() -> FILEMAN -> LOG
-	//       -> PREFSMAN -> (mount Themes/, NoteSkins/) -> MESSAGEMAN
-	//       -> GAMESTATE -> GAMEMAN -> THEME (ctor only) -> NOTESKIN
+	//       -> PREFSMAN -> (mount /testdata /Songs /Themes /NoteSkins)
+	//       -> MESSAGEMAN -> GAMESTATE -> GAMEMAN -> NOTESKIN
+	//       -> GAMESTATE->SetCurGame(default) -> THEME + switch to SMRTest
 	//       -> SONGMAN
 	// The order is load-bearing: RageFileManager's ctor calls LUA->Get();
 	// RageLog's ctor opens a RageFile, which asserts FILEMAN != null;

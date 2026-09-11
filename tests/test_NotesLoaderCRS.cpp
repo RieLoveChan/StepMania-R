@@ -1,5 +1,5 @@
 // Parse-regression for .crs (courses) via CourseLoaderCRS::LoadFromBuffer
-// (ADR 0006 phase 4 -- the last open format in backlog item 17).
+// (ADR 0006 phase 4).
 //
 // LoadFromBuffer -> LoadFromMsd(..., bFromCache=true) parses the #TAG:val;
 // course format straight from a string: no SONGINDEX cache probe, no file
@@ -188,7 +188,7 @@ TEST_CASE( "dump CRS loader values", "[.][crs][crsdump]" )
 		"#SCRIPTER:x;\n"
 		"#REPEAT:YES;\n"
 		"#METER:7;\n"
-		"#METER:Hard:9;\n"
+		"#METER:Difficult:9;\n"
 		"#STYLE:dance-single;\n"
 		"#SONG:BEST1:Hard:;\n"
 		"#SONG:BEST2:Hard:;\n"
@@ -197,13 +197,11 @@ TEST_CASE( "dump CRS loader values", "[.][crs][crsdump]" )
 		"#SONG:LoneTitle:Hard:;\n" );
 
 	std::printf( "\n=== CRS dump ===\n" );
-	std::printf( "  title=[%s] scripter=[%s] repeat=%d group=[%s]\n",
+	std::printf( "  title=[%s] scripter=[%s] repeat=%d styles=%d incomplete=%d entries=%d\n",
 		c.m_sMainTitle.c_str(), c.m_sScripter.c_str(), (int)c.m_bRepeat,
-		c.m_sGroupName.c_str() );
-	std::printf( "  meter[Medium]=%d meter[Hard]=%d styles=%d incomplete=%d\n",
-		c.m_iCustomMeter[Difficulty_Medium], c.m_iCustomMeter[Difficulty_Hard],
-		(int)c.m_setStyles.size(), (int)c.m_bIncomplete );
-	std::printf( "  entries=%d\n", (int)c.m_vEntries.size() );
+		(int)c.m_setStyles.size(), (int)c.m_bIncomplete, (int)c.m_vEntries.size() );
+	std::printf( "  meter[Medium]=%d meter[Hard]=%d\n",
+		c.m_iCustomMeter[Difficulty_Medium], c.m_iCustomMeter[Difficulty_Hard] );
 	for( size_t i = 0; i < c.m_vEntries.size(); ++i )
 	{
 		const CourseEntry &e = c.m_vEntries[i];
