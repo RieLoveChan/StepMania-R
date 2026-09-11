@@ -2031,3 +2031,34 @@
     (`Corpus`, `RageFileDriverSlice`) trip one only on Unix. Pre-existing
     (red before the 2026-09-10 work); the suite is green on Windows, the
     primary platform. Fixing it needs a Unix/macOS box.
+
+* **Fixed the Linux `sm_tests` crash for real (Docker + gdb) -- backlog
+  item 27 + the item-17 headless-theme sub-item.** Ran `sm_tests` in an
+  `ubuntu:24.04` container under gdb. Root cause was not the crash
+  handler: `EngineTestEnv` brought up engine singletons with no theme
+  loaded, and engine ctors (`Song`, `SongManager`,
+  `ThemeMetricStepsTypesToShow::Read`) read `ThemeMetric<T>` via
+  `GetValue()` -> `ASSERT_M( m_Value.IsSet() )` -> `sm_crash()` ->
+  `_exit(1)` on Unix (Windows silently returns a default).
+  - New `tests/data/test-theme/SMRTest/metrics.ini`: scripts-free
+    minimal theme, `[Global] FallbackTheme=`, ~10 concrete metrics; the
+    rest resolve "missing -> `Dialog::ignore` -> nil".
+  - `EngineTestEnv`: mount the test theme over `/Themes`,
+    `Dialog::SetWindowed(false)` (else the per-missing-metric
+    `AbortRetryIgnore` pops a modal MessageBox on Windows and hangs),
+    build `NOTESKIN` before `GAMEMAN->GetDefaultGame()`,
+    `GAMESTATE->SetCurGame(GAMEMAN->GetDefaultGame())` before the theme
+    load, `THEME->SwitchThemeAndLanguage("SMRTest",...)`, `SONGMAN`
+    restored. `.crs` test + `test_EngineTestEnv` contract updated.
+  - **`HAVE_ICONV` was never defined** (StepmaniaCore.cmake does
+    `find_package(Iconv)` but nothing consumed the result), so
+    `RageUtil_CharConversions.cpp` fell to its `#else` "no converters"
+    branch on Linux and **blanked non-UTF-8 song titles/artists**
+    (Korean KSF, Japanese BMS, CP1252 DWI). Now set when Iconv is found
+    and `NOT APPLE` (Apple keeps CoreFoundation), with an `ICONV_CONST`
+    fallback define, and a `#cmakedefine HAVE_ICONV` in `config.in.hpp`.
+  - `.github/workflows/ci.yml`: the `continue-on-error` on the Unix
+    test jobs (added earlier the same day) is **removed** -- they pass.
+  **Verified on both platforms:** Windows `sm_tests` **5966/226**,
+  `ctest` 100%, Release + `--SelfTest` green; Linux (container)
+  `sm_tests` 5966/226, `ctest` 100%.

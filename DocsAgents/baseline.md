@@ -428,11 +428,20 @@ first-party non-§5 code:
     `#SONG` resolution vs an empty `SONGMAN` (`BEST1` in / `BEST2` out —
     off-by-one; `GRADEBEST`/`*` in), old-style difficulty aliases +
     `lo..hi` ranges + `3..6` fallback, and modifier-column keywords.
-    Locks in `#STYLE` being silently dropped (dead `||` branch, flagged)
-    and leaves 2-part `Group/Song` refs uncovered (need `PROFILEMAN`).
-    36 assertions / 4 visible cases (+1 hidden `[crsdump]`).
-    Suite total: **5961 assertions / 226 cases**. Every simfile/course
+    Its `#STYLE` case pins the fix for the dead recognised-tag guard;
+    2-part `Group/Song` refs stay uncovered (need `PROFILEMAN`).
+    38 assertions / 5 visible cases (+1 hidden `[crsdump]`).
+    Suite total: **5966 assertions / 226 cases**. Every simfile/course
     format the engine loads now has a phase-4 parse-regression.
+  - `tests/EngineTestEnv` — 2026-09-10 (2): the fixture now loads
+    `SMRTest`, a scripts-free minimal theme (`tests/data/test-theme/`),
+    so `ThemeMetric` reads resolve instead of asserting, and `SONGMAN`
+    is back. This is what made `sm_tests` **green on Linux** (it had
+    been `sm_crash()`ing on the first metric read since the harness
+    existed — diagnosed in a Docker container, backlog item 27). Also
+    fixed `HAVE_ICONV` never being defined on Linux, which had been
+    silently blanking non-UTF-8 song titles (`RageUtil_CharConversions`
+    fell to its "no converters" branch).
   - `tests/test_RageLog.cpp` (2026-09-08) — `RageLog`'s level/category
     plumbing (ADR 0005 phase 2): the `LogLevel` (Trace<…<Error<Off) and
     `Log::Category` enums + their string round-trips (case-insensitive,
