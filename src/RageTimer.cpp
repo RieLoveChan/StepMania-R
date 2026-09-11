@@ -79,7 +79,7 @@ float RageTimer::Ago() const
 float RageTimer::GetDeltaTime()
 {
 	const RageTimer Now;
-	const float diff = Difference( Now, *this );
+	const float diff = static_cast<float>(Difference( Now, *this ));
 	*this = Now;
 	return diff;
 }
@@ -106,7 +106,7 @@ RageTimer RageTimer::operator+(float tm) const
 
 float RageTimer::operator-(const RageTimer &rhs) const
 {
-	return Difference(*this, rhs);
+	return static_cast<float>(Difference(*this, rhs));
 }
 
 bool RageTimer::operator<( const RageTimer &rhs ) const
@@ -121,7 +121,7 @@ RageTimer RageTimer::Sum(const RageTimer& lhs, float tm)
 	/* Calculate the seconds and microseconds from the time:
 	 * tm == 5.25  -> secs =  5, us = 5.25  - ( 5) = .25
 	 * tm == -1.25 -> secs = -2, us = -1.25 - (-2) = .75 */
-	std::int64_t seconds = std::floor(tm);
+	std::int64_t seconds = static_cast<std::int64_t>(std::floor(tm));
 	std::int64_t us = static_cast<int64_t>((tm - seconds) * ONE_SECOND_IN_MICROSECONDS_LL);
 
 	// Prevent unnecessarily checking the time

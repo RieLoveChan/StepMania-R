@@ -82,7 +82,7 @@ static void SetPalette( std::uintptr_t TexResource )
 		g_TexResourceToPaletteIndex[TexResource] = iPalIndex;
 	}
 
-	const int iPalIndex = g_TexResourceToPaletteIndex[TexResource];
+	const int iPalIndex = static_cast<int>(g_TexResourceToPaletteIndex[TexResource]);
 
 	// Find this palette index in the least-recently-used queue and move it to the end.
 	for(std::list<std::size_t>::iterator i = g_PaletteIndex.begin(); i != g_PaletteIndex.end(); ++i)
@@ -781,8 +781,8 @@ class RageCompiledGeometrySWD3D : public RageCompiledGeometry
 public:
 	void Allocate( const std::vector<msMesh>& /* vMeshes */ ) override
 	{
-		m_vVertex.resize( std::max<unsigned int>(1u, GetTotalVertices()) );
-		m_vTriangles.resize( std::max<unsigned int>(1u, GetTotalTriangles()) );
+		m_vVertex.resize( std::max<unsigned int>(1u, static_cast<unsigned int>(GetTotalVertices())) );
+		m_vTriangles.resize( std::max<unsigned int>(1u, static_cast<unsigned int>(GetTotalTriangles())) );
 	}
 	void Change( const std::vector<msMesh> &vMeshes ) override
 	{

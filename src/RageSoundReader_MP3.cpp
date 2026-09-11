@@ -265,7 +265,7 @@ static int get_this_frame_byte( const madlib_t *mad )
 
 	/* If we have a frame, adjust. */
 	if( mad->Stream.this_frame != nullptr )
-		ret += mad->Stream.this_frame-mad->inbuf;
+		ret += static_cast<int>(mad->Stream.this_frame-mad->inbuf);
 
 	return ret;
 }
@@ -328,9 +328,9 @@ int RageSoundReader_MP3::fill_buffer()
 	if( mad->Stream.next_frame != nullptr )
 	{
 		/* Pull out remaining data from the last buffer. */
-		inbytes = mad->Stream.bufend-mad->Stream.next_frame;
+		inbytes = static_cast<int>(mad->Stream.bufend-mad->Stream.next_frame);
 		memmove( mad->inbuf, mad->Stream.next_frame, inbytes );
-		mad->inbuf_filepos += mad->Stream.next_frame - mad->inbuf;
+		mad->inbuf_filepos += static_cast<int>(mad->Stream.next_frame - mad->inbuf);
 	}
 
 	const bool bWasAtEOF = m_pFile->AtEOF();
@@ -421,7 +421,7 @@ int RageSoundReader_MP3::do_mad_frame_decode( bool headers_only )
 		{
 			/* This might be an ID3V2 tag. */
 			const int tagsize = id3_tag_query(mad->Stream.this_frame,
-				mad->Stream.bufend - mad->Stream.this_frame);
+				static_cast<id3_length_t>(mad->Stream.bufend - mad->Stream.this_frame));
 
 			if( tagsize )
 			{

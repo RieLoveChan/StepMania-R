@@ -44,8 +44,8 @@ static RString ClearMachineEdits()
 	GetDirListing( PROFILEMAN->GetProfileDir(ProfileSlot_Machine)+EDIT_STEPS_SUBDIR+"*.edit", vsEditFiles, false, true );
 	GetDirListing( PROFILEMAN->GetProfileDir(ProfileSlot_Machine)+EDIT_COURSES_SUBDIR+"*.crs", vsEditFiles, false, true );
 
-	int editCount = vsEditFiles.size();
-	int removedCount = std::count_if(vsEditFiles.begin(), vsEditFiles.end(), [](RString const &i) { return FILEMAN->Remove(i); });
+	int editCount = static_cast<int>(vsEditFiles.size());
+	int removedCount = static_cast<int>(std::count_if(vsEditFiles.begin(), vsEditFiles.end(), [](RString const &i) { return FILEMAN->Remove(i); }));
 
 	// reload the machine profile
 	PROFILEMAN->SaveMachineProfile();
@@ -85,8 +85,8 @@ static RString ClearMemoryCardEdits()
 	std::vector<RString> vsEditFiles;
 	GetDirListing( sDir+EDIT_STEPS_SUBDIR+"*.edit", vsEditFiles, false, true );
 	GetDirListing( sDir+EDIT_COURSES_SUBDIR+"*.crs", vsEditFiles, false, true );
-	int editCount = vsEditFiles.size();
-	int removedCount = std::count_if(vsEditFiles.begin(), vsEditFiles.end(), [](RString const &i) { return FILEMAN->Remove(i); });
+	int editCount = static_cast<int>(vsEditFiles.size());
+	int removedCount = static_cast<int>(std::count_if(vsEditFiles.begin(), vsEditFiles.end(), [](RString const &i) { return FILEMAN->Remove(i); }));
 
 	MEMCARDMAN->UnmountCard(pn);
 

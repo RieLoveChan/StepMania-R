@@ -694,7 +694,7 @@ RString SongUtil::GetSectionNameFromSongAndSort( const Song* pSong, SortOrder so
 				int iMaxLength = (int)pSong->m_fMusicLengthSeconds;
 				iMaxLength += (iSortLengthSize - (iMaxLength%iSortLengthSize) - 1);
 				int iMinLength = iMaxLength - (iSortLengthSize-1);
-				return ssprintf( "%s-%s", SecondsToMMSS(iMinLength).c_str(), SecondsToMMSS(iMaxLength).c_str() );
+				return ssprintf( "%s-%s", SecondsToMMSS(static_cast<float>(iMinLength)).c_str(), SecondsToMMSS(static_cast<float>(iMaxLength)).c_str() );
 			}
 			else
 				return RString();
@@ -873,7 +873,7 @@ RString SongUtil::MakeUniqueEditDescription( const Song *pSong, StepsType st, co
 	{
 		// make name "My Edit" -> "My Edit2"
 		RString sNum = ssprintf("%d", i+1);
-		sTemp = sPreferredDescription.Left( MAX_STEPS_DESCRIPTION_LENGTH - sNum.size() ) + sNum;
+		sTemp = sPreferredDescription.Left( MAX_STEPS_DESCRIPTION_LENGTH - static_cast<int>(sNum.size()) ) + sNum;
 
 		if( IsEditDescriptionUnique(pSong, st, sTemp, nullptr) )
 			return sTemp;
@@ -1071,7 +1071,7 @@ void SongUtil::GetPlayableStepsTypes( const Song *pSong, std::set<StepsType> &vO
 	// Only allow OneSide Styles in Workout
 	if( GAMESTATE->m_bMultiplayer )
 	{
-		for( int i=vpPossibleStyles.size()-1; i>=0; i-- )
+		for( int i=static_cast<int>(vpPossibleStyles.size())-1; i>=0; i-- )
 		{
 			const Style *pStyle = vpPossibleStyles[i];
 			switch( pStyle->m_StyleType )

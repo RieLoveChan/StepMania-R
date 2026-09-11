@@ -607,7 +607,7 @@ float RageSquare( float angle )
 		{
 		    fAngle+= PI * 2;
 		}
-	return fAngle >= PI ? -1.0 : 1.0;
+	return fAngle >= PI ? -1.0f : 1.0f;
 }
 
 float RageTriangle( float angle )
@@ -620,15 +620,15 @@ float RageTriangle( float angle )
 	double result= fAngle * (1 / PI);
 	if(result < .5)
 	{
-		return result * 2.0;
+		return static_cast<float>(result * 2.0);
 	}
 	else if(result < 1.5)
 	{
-		return 1.0 - ((result - .5) * 2.0);
+		return static_cast<float>(1.0 - ((result - .5) * 2.0));
 	}
 	else
 	{
-		return -4.0 + (result * 2.0);
+		return static_cast<float>(-4.0 + (result * 2.0));
 	}
 
 }
