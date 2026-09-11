@@ -2418,3 +2418,28 @@
   `[bms]`-tagged characterization tests (647/47) re-checked identical;
   `ctest`/Release (clean rebuild)/`--SelfTest` gate green with the
   suppression flags gone for good.
+
+* **item 18 (Logging overhaul, ADR 0005 phase 4) batch 1, `572fc79738`
+  (2026-09-11).** First call-site migration to the categorized macros
+  -- this codebase had zero migrated files before this batch. Piloted
+  the convention on three non-§5-protected files:
+  `RageFileManager.cpp` (11 sites -> `Log::File`), `IniFile.cpp` (11
+  sites -> `Log::File`), `ThemeManager.cpp` (9 of 12 sites ->
+  `Log::Theme`; its 3 `LOG->UserLog(...)` calls write to user.txt via
+  a separate facility with no `LOG_*` equivalent and were left
+  untouched, out of phase 4's scope).
+  Per-site triage (not a blind `Warn`->`Error` sweep): genuine I/O or
+  config failures (unzip/read/write errors, can't-chdir-to-exe-dir,
+  unknown mount type, theme element truly missing) upgraded to
+  `LOG_ERROR`; routine/expected cases (an already-optional probe read,
+  deleting a key/value that may not exist, a theme falling back to a
+  default) and the "overwriting a protected path is not allowed"
+  security-guard sites kept at `LOG_WARN`/`LOG_TRACE` rather than
+  force-upgraded -- some `Warn` sites legitimately stay `Warn`.
+  No parsing/behavior logic touched anywhere -- pure category/level
+  tagging, confirmed by re-running the log output itself: the
+  characterization-test run now shows `[WARN] file ... IniFile.cpp:187
+  Value 'a' not found in key 's'.` etc. with the right category/level/
+  file:line, exactly as designed.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.

@@ -1261,6 +1261,23 @@ spec is the whole config.)
   / `Warn`→`Error` (real failure); this is what makes the per-category
   filter and the file:line column actually do anything, and where
   `LOG->Debug()` call sites first land. Long tail, per subsystem.
+  **Ph4 batch 1 (2026-09-11, `572fc79738`):** first files migrated —
+  `RageFileManager.cpp` (11 sites, `Log::File`), `IniFile.cpp` (11
+  sites, `Log::File`), `ThemeManager.cpp` (9 of 12 sites, `Log::Theme`
+  — its 3 `LOG->UserLog(...)` calls are a separate user.txt-facing
+  facility with no `LOG_*` equivalent, left untouched/out of scope).
+  Triage: genuine I/O/config failures → `LOG_ERROR`; routine/expected
+  fallbacks (probe-style reads, "not found" on an already-optional
+  delete) and security-guard "overwrite not allowed" sites → kept at
+  `LOG_WARN`/`LOG_TRACE` rather than force-upgraded. No parsing/logic
+  changed — pure category/level tagging. None of these 3 files are
+  §5-protected. Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%,
+  Release `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+  Remaining: the long tail of non-§5 files, then the §5-protected
+  parsers (`NotesLoaderSM.cpp` 39 sites, `CourseLoaderCRS.cpp` 27,
+  `NotesLoaderSSC.cpp` 26, `Song.cpp` 25, etc.) last, as pure
+  category/level re-tagging re-verified against their characterization
+  tests — never a parsing-logic change.
 
 ### 20. Replace the archaic hard-coded game-type system
 Game types are defined by hand-written `static const Game g_Game_X = {…}`
