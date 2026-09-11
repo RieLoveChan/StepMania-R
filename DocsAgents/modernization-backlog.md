@@ -1299,6 +1299,29 @@ spec is the whole config.)
   changed — pure category/level tagging. None of these 3 files are
   §5-protected. Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%,
   Release `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+  **Ph4 batch 2 (2026-09-11):** `CryptManager.cpp` (21 sites,
+  `Log::General` — no crypto-specific category exists, and `General`
+  is explicitly "no subsystem / not yet categorised") and
+  `MemoryCardManager.cpp` (13 real sites, `Log::Profile` — this
+  subsystem exists to serve `PROFILEMAN`'s removable-media storage;
+  one grep hit at line 219 is a pre-existing commented-out
+  `//LOG->Trace("update")`, left untouched, not a real call site).
+  Triage highlights: `CryptManager`'s RSA/hash/file-I/O failures
+  upgraded to `LOG_ERROR`; the one-time "keys missing, generating new
+  keys" first-run notice downgraded to `LOG_INFO` (routine, not a
+  failure); the alternate-public-key "signature mismatch" site
+  downgraded to `LOG_TRACE` (that function is called once per
+  candidate key while probing for the right one, so most mismatches
+  are expected, not tampering) to match the pre-existing "trying
+  alternate key" `Trace` right above it. `MemoryCardManager`'s
+  "mount failed" upgraded `Trace`→`WARN` (a real, if hotplug-flaky,
+  operation failure) and its post-mount "GetFileDriver failed"
+  upgraded `Warn`→`ERROR` (an internal inconsistency — the driver we
+  just mounted can't be found); its ~10 routine device-tracking/
+  thread-state `Trace` sites kept at `Trace`, just re-categorized.
+  No parsing/behavior logic changed anywhere. Verified: `sm_tests`
+  5966/226 unchanged, `ctest` 100%, Release `StepMania-R.exe` clean
+  rebuild, `--SelfTest` exit 0.
   Remaining: the long tail of non-§5 files, then the §5-protected
   parsers (`NotesLoaderSM.cpp` 39 sites, `CourseLoaderCRS.cpp` 27,
   `NotesLoaderSSC.cpp` 26, `Song.cpp` 25, etc.) last, as pure
