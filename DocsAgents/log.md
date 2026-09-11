@@ -2481,3 +2481,30 @@
   neither file is §5-protected.
   Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
   `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+
+* **item 18 (ADR 0005 phase 4) batch 3, 2026-09-11.** Migrated
+  `RageSound.cpp` (12 real sites -> `Log::Sound`) and
+  `NetworkSyncManager.cpp` (14 real sites -> `Log::Net`). Notable
+  triage: `RageSound`'s four "sound not loaded" guards (calling
+  `Play`/`Pause`/`GetLengthSeconds`/`SetPositionFrames` before `Load()`)
+  upgraded `Warn`->`ERROR` (a real caller bug, not routine); `Load()`'s
+  missing/corrupt-file open failure upgraded to `ERROR` too (it falls
+  back to a silence reader, but a missing asset is still a real
+  problem); "seeked past EOF" and "invalid stop mode" kept at `WARN`
+  (non-fatal, self-clamps/no-ops); the start-time-in-the-past
+  diagnostic upgraded `Trace`->`WARN` per its own comment ("log it,
+  since it can be unobvious"). `NetworkSyncManager`'s "invalid port"
+  and "failed to connect" upgraded to `ERROR`; an out-of-range command
+  byte from the wire upgraded `Trace`->`WARN` (real protocol anomaly).
+  **Mid-batch discovery: `NetworkSyncManager.cpp` and its whole calling
+  subsystem (every `ScreenNet*`/`Room*` file) turned out to be absent
+  from every `CMakeData-*.cmake` list and produces no object file in a
+  from-scratch build** -- orphaned from the CMake build entirely,
+  predating this modernization effort. The edit there is harmless
+  (pure text, never compiled either way) but couldn't be verified by
+  the usual `WITH_WERROR` gate. Flagged to the maintainer live; decided
+  to keep the edit and record it as new backlog item 29 (re-wire vs.
+  remove is a maintainer call) rather than investigate further in this
+  batch. `RageSound.cpp` compiled and verified normally.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.

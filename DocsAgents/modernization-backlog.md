@@ -1322,6 +1322,36 @@ spec is the whole config.)
   No parsing/behavior logic changed anywhere. Verified: `sm_tests`
   5966/226 unchanged, `ctest` 100%, Release `StepMania-R.exe` clean
   rebuild, `--SelfTest` exit 0.
+  **Ph4 batch 3 (2026-09-11):** `RageSound.cpp` (12 real sites,
+  `Log::Sound`; 4 grep hits are pre-existing commented-out `Trace`
+  calls, left untouched) and `NetworkSyncManager.cpp` (14 real sites,
+  `Log::Net`; 1 grep hit is a pre-existing commented-out call). Triage
+  highlights in `RageSound.cpp`: the four "sound not loaded" API-misuse
+  guards (`Play`/`Pause`/`GetLengthSeconds`/`SetPositionFrames` called
+  before `Load()`) upgraded `Warn`→`ERROR` (a real caller bug, not
+  routine); the missing/corrupt-file open failure in `Load()` upgraded
+  to `ERROR` (falls back to a silence reader, but the missing asset is
+  still a real problem); "seeked past EOF" and "invalid stop mode"
+  (malformed theme/Lua input) kept at `WARN` (notable but non-fatal,
+  self-clamps/no-ops); the start-time-in-the-past diagnostic upgraded
+  `Trace`→`WARN` per its own comment ("log it, since it can be
+  unobvious"). In `NetworkSyncManager.cpp`: "invalid port" and "failed
+  to connect" upgraded to `ERROR` (abort the connection attempt); an
+  out-of-range command byte from the wire upgraded `Trace`→`WARN`
+  (a real protocol anomaly worth surfacing); the rest (connection-flow
+  `Info`, per-packet/per-frame `Trace` chatter) re-categorized only.
+  **Discovered mid-batch: `NetworkSyncManager.cpp` (and its whole
+  calling subsystem — every `ScreenNet*`/`Room*` file) is not part of
+  the CMake build at all** — absent from every `CMakeData-*.cmake`
+  list, no object file in a from-scratch build. The edit is harmless
+  (pure text, and the compiler never sees the file either way) but
+  couldn't be verified by the usual `WITH_WERROR` compile gate; flagged
+  as new backlog item 29 for a maintainer call (re-wire it into the
+  build vs. remove it as confirmed-dead code), rather than
+  investigated further in this batch. `RageSound.cpp` compiled and
+  verified normally.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
   Remaining: the long tail of non-§5 files, then the §5-protected
   parsers (`NotesLoaderSM.cpp` 39 sites, `CourseLoaderCRS.cpp` 27,
   `NotesLoaderSSC.cpp` 26, `Song.cpp` 25, etc.) last, as pure
@@ -1360,6 +1390,34 @@ resolve identically, no mass cache invalidation.
 Lua bindings, `Profile` serialization. **Deserves its own ADR** when
 picked up. Also: `NoteSkins/Para/` is capitalised but the game name is
 `para` — rename for Linux (case-sensitive FS).
+
+### 29. Networking/multiplayer (SMOnline) subsystem is orphaned from the CMake build
+Found 2026-09-11 while doing item 18 phase-4 batch 3: `NetworkSyncManager.cpp`
+(and, going by the same grep, its whole calling subsystem —
+`ScreenSMOnlineLogin.cpp`, `ScreenNetSelectMusic.cpp`,
+`ScreenNetworkOptions.cpp`, `ScreenNetRoom.cpp`, `ScreenNetSelectBase.cpp`,
+`ScreenNetEvaluation.h`, `RoomWheel.cpp`, `RoomInfoDisplay.cpp`) appears in
+**none** of the `src/CMakeData-*.cmake` source lists and produces no
+`.obj` in a from-scratch build — confirmed by grepping every
+`CMakeData-*.cmake` for these filenames (zero hits) and checking the
+`sm_engine.dir` build tree for their object files (none exist). The
+`.cpp`/`.h` files are still present in the tree and still reference
+each other (`NetworkSyncManager.h` is `#include`d by the Screen* files),
+but none of it is reachable from a normal build today — this predates
+this modernization effort and most likely dates to when the old
+autotools/scons build systems were dropped (item 22) and the CMake
+source lists were hand-curated without carrying this subsystem over.
+**Not investigated further yet** (maintainer chose to note-and-defer
+rather than open a side investigation into how broken/complete it is).
+Two ways this could go, both needing a maintainer call: (a) wire it
+back into `CMakeData-*.cmake` and get it building again (unknown effort
+— it hasn't compiled against the current codebase in an unknown
+amount of time, so there may be real rot under the surface), or
+(b) treat it as confirmed-dead and remove it outright (same category as
+item 19's `CreateZip`/item 23's `smpackage`). Until decided, the item
+18 phase-4 logging migration still applied to `NetworkSyncManager.cpp`
+(pure category/level tagging, zero risk either way since the file isn't
+compiled) — see item 18's batch 3 note.
 
 ---
 
