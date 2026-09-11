@@ -401,8 +401,25 @@ previously-"done" file turned up no further residuals.
 - `ActorMultiTexture.cpp` (6): two `int`-into-`float` texture-size
   members; two `size_t`-into-`int` texture-unit-count returns; two
   `enum_add2(TextureUnit_1, size_t)` calls needing an `int` second arg.
+- `RageFileDriverMemory.cpp` (5): a memory-file `int m_iFilePos` fed
+  `size_t` byte counts across `Read`/`WriteInternal`, plus a
+  `GetFileSize()` returning the backing buffer's `size_t`.
+- `NoteDataUtil.cpp` (5, §5-adjacent `NoteData*`, characterization-
+  only): a pointer-diff-via-`intptr_t` into `int` (unmatched-hold
+  warning arg); a `size_t` length into a `LoadFromSMNoteDataString
+  WithPlayer` `int len` param; a `set<int>::size()` added into an
+  `int` track-pressed count; a `size_t` subtracted from a taps-left
+  counter; a reverse-loop `size()-1` bound.
+- `LuaManager.cpp` (5): the `FromStack<int>`/`FromStack<unsigned int>`
+  specializations' `lua_tointeger()`-into-narrower-type assignments;
+  a `lua_objlen()` into an `int` thread-pool index; two more
+  `lua_tointeger()`-into-`int` sites (`AdjustCount`, `lua_pushvalues`'s
+  upvalue arg count).
+- `CryptManager.cpp` (5): five `hash_descriptor[].process`/
+  `rsa_verify_hash_ex` calls fed a `size_t` buffer length where
+  libtomcrypt's C API expects `unsigned long`.
 **Not done:** `/wd4244`/`/wd4267` stay in `src/CMakeLists.txt` until all
-253 remaining sites (~125 files) are triaged (same "fix everything,
+233 remaining sites (~120 files) are triaged (same "fix everything,
 then remove the `/wd` flag in one commit" pattern as C4100) — continue
 file-by-file, highest concentration first; measure only via
 `--clean-first` with the flag actually removed, dedup with a regex
@@ -415,12 +432,12 @@ clean-rebuild log (careful: a plain filename grep like `Course.cpp(`
 also matches `ScreenOptionsEditCourse.cpp(` -- a substring false
 positive, not a residual; anchor or eyeball matches before treating them
 as real). Still not measured for Clang/GCC (`baseline.md` TBD,
-non-Windows). Next concentrations: `RageFileDriverMemory.cpp`/
-`NoteDataUtil.cpp`/`LuaManager.cpp`/`CryptManager.cpp` (5 each), then a
-wide tail of 4-site files (`StepMania.cpp`/`SongUtil.cpp`/
-`ScreenUnlockStatus.cpp`/`ScreenServiceAction.cpp`/`ScreenJukebox.cpp`/
-`ScoreKeeperNormal.cpp`/`RageTimer.cpp`/`RageSoundReader_Preload.cpp`/
-`RageSoundReader_MP3.cpp`/`RageMath.cpp`/`RageDisplay_D3D.cpp`).
+non-Windows). Next concentrations: a wide tail of 4-site files
+(`StepMania.cpp`/`SongUtil.cpp`/`ScreenUnlockStatus.cpp`/
+`ScreenServiceAction.cpp`/`ScreenJukebox.cpp`/`ScoreKeeperNormal.cpp`/
+`RageTimer.cpp`/`RageSoundReader_Preload.cpp`/`RageSoundReader_MP3.cpp`/
+`RageMath.cpp`/`RageDisplay_D3D.cpp`), then a long tail of 1-3-site
+files across ~110 remaining files.
 
 ### 3. Stale cppcheck leak list — DONE 2026-09-05, all dismissed
 ~~`Docs/Devdocs/possible memory leaks.txt` — from 2009. Re-triaged by
