@@ -2314,3 +2314,21 @@
   -- clean, no residuals.
   Verified: `sm_tests` 5966/226 unchanged, `ctest`/Release/`--SelfTest`
   gate re-run after restoring `/wd4244`/`/wd4267`.
+
+* **item 2 (C4244/C4267) sweep, 7 more files: 189 -> 163 remaining
+  (~105 files).** `OptionRow.cpp` (4: a course-entry count, a
+  `std::min<unsigned int>`, a `lua_pushnumber`); `JsonUtil.h` (4: four
+  near-identical `root.resize(v.size())` template sites needing
+  `Json::Value::ArrayIndex`); `GraphDisplay.cpp` (4: a `DrawQuads`
+  count, a fan-count division, two theme-metric size members);
+  `AdjustSync.cpp` (4: a before/after filter-count diff, a `size_t`
+  into `unsigned int`, a `FormatNumberAndSuffix` arg);
+  `ActorScroller.cpp` (4) + `DynamicActorScroller.cpp` (2, bonus find):
+  a sub-actor count, two `ceil()` results, three `wrap()` sites across
+  both scroller files; `Actor.cpp` (4: two `Left()` calls, a timer
+  value into a `float`-taking update function, a `lua_pushnumber`).
+  Full sanity sweep incl. every substring-ambiguous file (`Song.cpp`/
+  `Course.cpp`/`RageDisplay.cpp`/`ScreenOptions.cpp`/`Actor.cpp` itself
+  vs `ActorFrame.cpp`/`ActorMultiVertex.cpp`/etc.) -- clean.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest`/Release/`--SelfTest`
+  gate re-run after restoring `/wd4244`/`/wd4267`.

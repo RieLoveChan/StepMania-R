@@ -473,10 +473,50 @@ that matches BOTH `C4244` and `C4267` (`warning C42(44|67)`, not
 mid-edit, watch for `Edit` "N matches" errors resolved by fixing only
 one of several truly-identical occurrences, and periodically re-grep
 every already-"done" file against a fresh clean-rebuild log (watch for
+substring false positives on short/common filenames).
+- `OptionRow.cpp` (4): a `size_t` course-entry count into `int`; a
+  `std::min<unsigned int>` call's second arg; a `lua_pushnumber
+  (size_t)` accessor.
+- `JsonUtil.h` (4): four near-identical `root.resize(v.size())` sites
+  across `SerializeVectorObjects`/`SerializeVectorPointers` (×2)/
+  `SerializeArrayValues` template helpers, each needing
+  `Json::Value::ArrayIndex` instead of `size_t`.
+- `GraphDisplay.cpp` (4): a `size_t` vertex count into `DrawQuads`'s
+  `int`; a `size_t`/`int` division into a fan count; two theme-metric
+  `int`s into `float` size members.
+- `AdjustSync.cpp` (4): a `size_t` size snapshotted before/after a
+  filter call into an `int` counter (both sides of the diff); a
+  `size_t` into `unsigned int`; a `FormatNumberAndSuffix(int)` call fed
+  a `size_t` loop index.
+- `ActorScroller.cpp` (4) + `DynamicActorScroller.cpp` (2, bonus find
+  while in the file): a `size_t` sub-actor count into `int`; two
+  `std::ceil(float)` results into `int`; three `wrap(int&, size_t)`
+  sites across both scroller files.
+- `Actor.cpp` (4): two `RString::Left` calls fed `size_t`-minus
+  arithmetic parsing command/message names; a `uint64_t` timer value
+  into a `generic_global_timer_update(float, ...)` call; a
+  `lua_pushnumber(size_t)` accessor.
+**Not done:** `/wd4244`/`/wd4267` stay in `src/CMakeLists.txt` until all
+163 remaining sites (~105 files) are triaged (same "fix everything,
+then remove the `/wd` flag in one commit" pattern as C4100) — continue
+file-by-file, highest concentration first; measure only via
+`--clean-first` with the flag actually removed, dedup with a regex
+that matches BOTH `C4244` and `C4267` (`warning C42(44|67)`, not
+`C424[47]`), never run the measurement rebuild while a file is
+mid-edit, watch for `Edit` "N matches" errors resolved by fixing only
+one of several truly-identical occurrences, and periodically re-grep
+every already-"done" file against a fresh clean-rebuild log (watch for
 substring false positives on short/common filenames). Next
-concentrations: `OptionRow.cpp`/`JsonUtil.h`/`GraphDisplay.cpp`/
-`AdjustSync.cpp`/`ActorScroller.cpp`/`Actor.cpp` (4 each), then a long
-tail of 1-3-site files across ~100 remaining files.
+concentrations: a wide tail of 19 files at 3 sites each
+(`WheelNotifyIcon.cpp`/`UnlockManager.cpp`/`Steps.cpp`/
+`ScreenSelectCharacter.cpp`/`ScreenSelect.cpp`/`Screen.cpp`/
+`RageThreads.cpp`/`RageSoundReader_ChannelSplit.cpp`/
+`RageFileDriverReadAhead.cpp`/`RageFileDriverDirect.cpp`/
+`PlayerStageStats.cpp`/`OptionRowHandler.cpp`/`NotesLoaderSSC.cpp`/
+`LightsManager.cpp`/`InputQueue.cpp`/`GameManager.cpp`/
+`ArrowEffects.cpp`/`ActorFrame.cpp`, plus `ScreenOptionsEditCourse.cpp`
+which is a genuinely separate file from `ScreenOptions.cpp`/
+`Course.cpp` and not yet touched), then ~85 files at 1-2 sites.
 
 ### 3. Stale cppcheck leak list — DONE 2026-09-05, all dismissed
 ~~`Docs/Devdocs/possible memory leaks.txt` — from 2009. Re-triaged by
