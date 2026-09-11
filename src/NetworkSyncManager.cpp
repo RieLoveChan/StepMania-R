@@ -129,7 +129,7 @@ void NetworkSyncManager::PostStartUp( const RString& ServerIP )
 		if( *cEnd != 0 || errno != 0 )
 		{
 			m_startupStatus = 2;
-			LOG->Warn( "Invalid port" );
+			LOG_ERROR(Log::Net, "Invalid port" );
 			return;
 		}
 	}
@@ -139,13 +139,13 @@ void NetworkSyncManager::PostStartUp( const RString& ServerIP )
 		sAddress = ServerIP;
 	}
 
-	LOG->Info( "Attempting to connect to: %s, Port: %i", sAddress.c_str(), iPort );
+	LOG_INFO(Log::Net, "Attempting to connect to: %s, Port: %i", sAddress.c_str(), iPort );
 
 	CloseConnection();
 	if( !Connect(sAddress.c_str(), iPort) )
 	{
 		m_startupStatus = 2;
-		LOG->Warn( "Network Sync Manager failed to connect" );
+		LOG_ERROR(Log::Net, "Network Sync Manager failed to connect" );
 		return;
 	}
 
@@ -200,7 +200,7 @@ void NetworkSyncManager::PostStartUp( const RString& ServerIP )
 
 	m_ServerName = m_packet.ReadNT();
 	m_iSalt = m_packet.Read4();
-	LOG->Info( "Server Version: %d %s", m_ServerVersion, m_ServerName.c_str() );
+	LOG_INFO(Log::Net, "Server Version: %d %s", m_ServerVersion, m_ServerName.c_str() );
 }
 
 
@@ -220,12 +220,12 @@ void NetworkSyncManager::StartUp()
 
 bool NetworkSyncManager::Connect( const RString& addy, unsigned short port )
 {
-	LOG->Info( "Beginning to connect" );
+	LOG_INFO(Log::Net, "Beginning to connect" );
 
 	NetPlayerClient->create(); // Initialize Socket
-	LOG->Info( "Calling EzSockets:connect()" );
+	LOG_INFO(Log::Net, "Calling EzSockets:connect()" );
 	useSMserver = NetPlayerClient->connect( addy, port );
-	LOG->Info( "Back from ezsockets..." );
+	LOG_INFO(Log::Net, "Back from ezsockets..." );
 	return useSMserver;
 }
 
@@ -249,7 +249,7 @@ void NetworkSyncManager::ReportScore(int playerID, int step, int score, int comb
 	if (!useSMserver) //Make sure that we are using the network
 		return;
 
-	LOG->Trace("Player ID %i combo = %i", playerID, combo);
+	LOG_TRACE(Log::Net, "Player ID %i combo = %i", playerID, combo);
 	m_packet.ClearPacket();
 
 	m_packet.Write1(NSCGSU);
@@ -294,7 +294,7 @@ void NetworkSyncManager::ReportScore(int playerID, int step, int score, int comb
 	if( !useSMserver ) //Make sure that we are using the network
 		return;
 
-	LOG->Trace( "Player ID %i combo = %i", playerID, combo );
+	LOG_TRACE(Log::Net, "Player ID %i combo = %i", playerID, combo );
 	m_packet.ClearPacket();
 
 	m_packet.Write1( NSCGSU );
@@ -349,7 +349,7 @@ void NetworkSyncManager::ReportSongOver()
 
 void NetworkSyncManager::ReportStyle() 
 {
-	LOG->Trace( "Sending \"Style\" to server" );
+	LOG_TRACE(Log::Net, "Sending \"Style\" to server" );
 
 	if( !useSMserver )
 		return;
@@ -374,7 +374,7 @@ void NetworkSyncManager::StartRequest( short position )
 	if( GAMESTATE->m_bDemonstrationOrJukebox )
 		return;
 
-	LOG->Trace( "Requesting Start from Server." );
+	LOG_TRACE(Log::Net, "Requesting Start from Server." );
 
 	m_packet.ClearPacket();
 
@@ -479,7 +479,7 @@ void NetworkSyncManager::StartRequest( short position )
 	//Don't block if we are serving
 	NetPlayerClient->SendPack((char*)&m_packet.Data, m_packet.Position); 
 	
-	LOG->Trace("Waiting for RECV");
+	LOG_TRACE(Log::Net, "Waiting for RECV");
 
 	m_packet.ClearPacket();
 
@@ -591,7 +591,7 @@ void NetworkSyncManager::ProcessInput()
 		//Check to make sure command is valid from server
 		if (command < NSServerOffset)
 		{
-			LOG->Trace("CMD (below 128) Invalid> %d",command);
+			LOG_WARN(Log::Net, "CMD (below 128) Invalid> %d",command);
  			break;
 		}
 
@@ -729,7 +729,7 @@ void NetworkSyncManager::ProcessInput()
 				m_SMOnlinePacket.size = packetSize - 1;
 				m_SMOnlinePacket.Position = 0;
 				memcpy( m_SMOnlinePacket.Data, (m_packet.Data + 1), packetSize-1 );
-				LOG->Trace( "Received SMOnline Command: %d, size:%d", command, packetSize - 1 );
+				LOG_TRACE(Log::Net, "Received SMOnline Command: %d, size:%d", command, packetSize - 1 );
 				SCREENMAN->SendMessageToTopScreen( SM_SMOnlinePack );
 			}
 			break;
