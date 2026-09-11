@@ -188,7 +188,7 @@ void ThreadedMemoryCardWorker::HandleRequest( int iRequest )
 			std::vector<UsbStorageDevice>::iterator it =
 				find( m_aMountedDevices.begin(), m_aMountedDevices.end(), m_RequestDevice );
 			if( it == m_aMountedDevices.end() )
-				LOG->Warn( "Unmounted a device that wasn't mounted" );
+				LOG_WARN(Log::Profile, "Unmounted a device that wasn't mounted" );
 			else
 				m_aMountedDevices.erase( it );
 			break;
@@ -363,18 +363,18 @@ void MemoryCardManager::UpdateAssignments()
 			{
 				/* The player has a card, and it's still plugged in. Update any
 				 * changed state, such as m_State. */
-				LOG->Trace( "Player %d already has a card: '%s'", p+1, assigned_device.sOsMountDir.c_str() );
+				LOG_TRACE(Log::Profile, "Player %d already has a card: '%s'", p+1, assigned_device.sOsMountDir.c_str() );
 				assigned_device = *it;
 				continue;
 			}
 
 			// The assigned card has been removed; clear it and re-search.
-			LOG->Trace( "Player %i: disconnected bus %d port %d device %d path %s",
+			LOG_TRACE(Log::Profile, "Player %i: disconnected bus %d port %d device %d path %s",
 				p+1, assigned_device.iBus, assigned_device.iPort, assigned_device.iLevel, assigned_device.sOsMountDir.c_str() );
 			assigned_device.MakeBlank();
 		}
 
-		LOG->Trace( "Looking for a card for Player %d", p+1 );
+		LOG_TRACE(Log::Profile, "Looking for a card for Player %d", p+1 );
 
 		for (std::vector<UsbStorageDevice>::iterator d = vUnassignedDevices.begin(); d != vUnassignedDevices.end(); ++d)
 		{
@@ -396,7 +396,7 @@ void MemoryCardManager::UpdateAssignments()
 				m_iMemoryCardUsbLevel[p] != d->iLevel )
 				continue;// not a match
 
-			LOG->Trace( "Player %i: matched %s", p+1, d->sDevice.c_str() );
+			LOG_TRACE(Log::Profile, "Player %i: matched %s", p+1, d->sDevice.c_str() );
 
 			assigned_device = *d; // save a copy
 			vUnassignedDevices.erase( d ); // remove the device so we don't match it for another player
@@ -532,12 +532,12 @@ void MemoryCardManager::WaitForCheckingToComplete()
 		if( !bLogged )
 		{
 			bLogged = true;
-			LOG->Trace( "One or more cards are in STATE_CHECKING; waiting for them ..." );
+			LOG_TRACE(Log::Profile, "One or more cards are in STATE_CHECKING; waiting for them ..." );
 		}
 
 		if( !g_pWorker->WaitForOneHeartbeat() )
 		{
-			LOG->Trace( "STATE_CHECKING wait timed out" );
+			LOG_TRACE(Log::Profile, "STATE_CHECKING wait timed out" );
 			break;
 		}
 	}
@@ -583,7 +583,7 @@ void MemoryCardManager::UnlockCard( PlayerNumber pn )
 // Called just before reading or writing to the memory card. Should block.
 bool MemoryCardManager::MountCard( PlayerNumber pn, int iTimeout )
 {
-	LOG->Trace( "MemoryCardManager::MountCard(%i)", pn );
+	LOG_TRACE(Log::Profile, "MemoryCardManager::MountCard(%i)", pn );
 	if( GetCardState(pn) != MemoryCardState_Ready )
 		return false;
 	ASSERT( !m_Device[pn].IsBlank() );
@@ -601,7 +601,7 @@ bool MemoryCardManager::MountCard( PlayerNumber pn, int iTimeout )
 
 	if( !g_pWorker->Mount( &m_Device[pn] ) )
 	{
-		LOG->Trace( "MemoryCardManager::MountCard: mount failed" );
+		LOG_WARN(Log::Profile, "MemoryCardManager::MountCard: mount failed" );
 		if( bStartingMemoryCardAccess )
 			this->UnPauseMountingThread();
 
@@ -613,7 +613,7 @@ bool MemoryCardManager::MountCard( PlayerNumber pn, int iTimeout )
 	RageFileDriver *pDriver = FILEMAN->GetFileDriver( MEM_CARD_MOUNT_POINT_INTERNAL[pn] );
 	if( pDriver == nullptr )
 	{
-		LOG->Warn( "FILEMAN->GetFileDriver(%s) failed", MEM_CARD_MOUNT_POINT_INTERNAL[pn].c_str() );
+		LOG_ERROR(Log::Profile, "FILEMAN->GetFileDriver(%s) failed", MEM_CARD_MOUNT_POINT_INTERNAL[pn].c_str() );
 		return true;
 	}
 
@@ -642,7 +642,7 @@ bool MemoryCardManager::MountCard( PlayerNumber pn, const UsbStorageDevice &d, i
  * will block until flushed. */
 void MemoryCardManager::UnmountCard( PlayerNumber pn )
 {
-	LOG->Trace( "MemoryCardManager::UnmountCard(%i) (mounted: %i)", pn, m_bMounted[pn] );
+	LOG_TRACE(Log::Profile, "MemoryCardManager::UnmountCard(%i) (mounted: %i)", pn, m_bMounted[pn] );
 	if( m_Device[pn].IsBlank() )
 		return;
 
@@ -695,7 +695,7 @@ RString MemoryCardManager::GetName( PlayerNumber pn ) const
 
 void MemoryCardManager::PauseMountingThread( int iTimeout )
 {
-	LOG->Trace( "MemoryCardManager::PauseMountingThread" );
+	LOG_TRACE(Log::Profile, "MemoryCardManager::PauseMountingThread" );
 
 	g_pWorker->SetMountThreadState( ThreadedMemoryCardWorker::paused );
 
@@ -706,7 +706,7 @@ void MemoryCardManager::PauseMountingThread( int iTimeout )
 
 void MemoryCardManager::UnPauseMountingThread()
 {
-	LOG->Trace( "MemoryCardManager::UnPauseMountingThread" );
+	LOG_TRACE(Log::Profile, "MemoryCardManager::UnPauseMountingThread" );
 
 	g_pWorker->SetMountThreadState( ThreadedMemoryCardWorker::detect_and_mount );
 
