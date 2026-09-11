@@ -378,8 +378,31 @@ previously-"done" file turned up no further residuals.
   rate; a `std::ceil()` result into an `int` width; a `size_t` vertex
   count into `StatsAddVerts(int)`; four mesh-info `size_t` counts/
   accumulators into `int` fields.
+- `XmlToLua.cpp` (6): `RString::Left`/`Right` fed `size_t` arithmetic
+  at 5 call sites parsing field names and file paths (`add_extension_
+  to_relative_path...`, `store_cmd`, `store_field`, `load_frames_
+  from_file` ×2); a trailing-`.lua` filename `Left()` call.
+- `WheelBase.cpp` (6): a `size_t` item count into `int`; five
+  `wrap(int&, size_t)` sites across `ChangeMusic`/`RebuildWheelItems`/
+  `FirstVisibleIndex`.
+- `StatsManager.cpp` (6): a `size_t` song count into `unsigned`; a
+  `std::trunc()` result and two `size_t` accumulators feeding profile
+  gameplay-seconds/songs-played counters; a `size_t`-minus-`int` index;
+  a `lua_pushnumber(size_t)` accessor.
+- `ScreenOptions.cpp` (6): a `MoveRowAbsolute` call's `size_t`-minus-1
+  arg; the same `const int iNumChoices = ...m_vsChoices.size()`
+  pattern at 2 call sites (4 warnings, both `int`/`const int`
+  variants); a `wrap(int&, size_t)` site.
+- `Course.cpp` (6): a `size_t` mod-change count into `int`; two
+  `RandomInt(size_t)` calls choosing steps; two identical
+  `std::floor((iMinDist + iMaxDist) / 2)` sites promoting an all-`int`
+  expression to `double` then narrowing back, in two near-duplicate
+  meter-balancing code paths; a `lua_pushnumber(size_t)` accessor.
+- `ActorMultiTexture.cpp` (6): two `int`-into-`float` texture-size
+  members; two `size_t`-into-`int` texture-unit-count returns; two
+  `enum_add2(TextureUnit_1, size_t)` calls needing an `int` second arg.
 **Not done:** `/wd4244`/`/wd4267` stay in `src/CMakeLists.txt` until all
-289 remaining sites (~130 files) are triaged (same "fix everything,
+253 remaining sites (~125 files) are triaged (same "fix everything,
 then remove the `/wd` flag in one commit" pattern as C4100) — continue
 file-by-file, highest concentration first; measure only via
 `--clean-first` with the flag actually removed, dedup with a regex
@@ -388,12 +411,16 @@ that matches BOTH `C4244` and `C4267` (`warning C42(44|67)`, not
 mid-edit, watch for `Edit` "N matches" errors resolved by fixing only
 one of several truly-identical occurrences (the `Song.cpp` miss above),
 and periodically re-grep every already-"done" file against a fresh
-clean-rebuild log. Still not measured for Clang/GCC (`baseline.md` TBD,
-non-Windows). Next concentrations: `XmlToLua.cpp`/`WheelBase.cpp`/
-`StatsManager.cpp`/`ScreenOptions.cpp`/`Course.cpp`/
-`ActorMultiTexture.cpp` (6 each), then a wide tail of 4-5-site files
-(`RageFileDriverMemory.cpp`/`NoteDataUtil.cpp`/`LuaManager.cpp`/
-`CryptManager.cpp` at 5, several at 4).
+clean-rebuild log (careful: a plain filename grep like `Course.cpp(`
+also matches `ScreenOptionsEditCourse.cpp(` -- a substring false
+positive, not a residual; anchor or eyeball matches before treating them
+as real). Still not measured for Clang/GCC (`baseline.md` TBD,
+non-Windows). Next concentrations: `RageFileDriverMemory.cpp`/
+`NoteDataUtil.cpp`/`LuaManager.cpp`/`CryptManager.cpp` (5 each), then a
+wide tail of 4-site files (`StepMania.cpp`/`SongUtil.cpp`/
+`ScreenUnlockStatus.cpp`/`ScreenServiceAction.cpp`/`ScreenJukebox.cpp`/
+`ScoreKeeperNormal.cpp`/`RageTimer.cpp`/`RageSoundReader_Preload.cpp`/
+`RageSoundReader_MP3.cpp`/`RageMath.cpp`/`RageDisplay_D3D.cpp`).
 
 ### 3. Stale cppcheck leak list — DONE 2026-09-05, all dismissed
 ~~`Docs/Devdocs/possible memory leaks.txt` — from 2009. Re-triaged by
