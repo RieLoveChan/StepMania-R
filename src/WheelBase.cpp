@@ -111,7 +111,7 @@ void WheelBase::SetItemPosition(Actor &item, int item_index, float offset_from_m
 
 void WheelBase::UpdateScrollbar()
 {
-	int iTotalNumItems = m_CurWheelItemData.size();
+	int iTotalNumItems = static_cast<int>(m_CurWheelItemData.size());
 	float fItemAt = m_iSelection - m_fPositionOffsetFromSelection;
 
 	{
@@ -428,7 +428,7 @@ bool WheelBase::MoveSpecific( int n )
 void WheelBase::ChangeMusic( int iDist )
 {
 	m_iSelection += iDist;
-	wrap( m_iSelection, m_CurWheelItemData.size() );
+	wrap( m_iSelection, static_cast<int>(m_CurWheelItemData.size()) );
 
 	RebuildWheelItems( iDist );
 
@@ -455,7 +455,7 @@ void WheelBase::RebuildWheelItems( int iDist )
 	iFirstVisibleIndex -= NUM_WHEEL_ITEMS/2;
 
 	ASSERT(!data.empty());
-	wrap( iFirstVisibleIndex, data.size() );
+	wrap( iFirstVisibleIndex, static_cast<int>(data.size()) );
 
 	// iIndex is now the index of the lowest WheelItem to draw
 
@@ -475,7 +475,7 @@ void WheelBase::RebuildWheelItems( int iDist )
 	for( int i=iFirst; i <= iLast; i++ )
 	{
 		int iIndex = iFirstVisibleIndex + i;
-		wrap( iIndex, data.size() );
+		wrap( iIndex, static_cast<int>(data.size()) );
 
 		const WheelItemBaseData *pData = data[iIndex];
 		WheelItemBase *pDisplay = items[i];
@@ -486,7 +486,7 @@ void WheelBase::RebuildWheelItems( int iDist )
 	for( int i=0; i<(int)items.size(); i++ )
 	{
 		int iIndex = iFirstVisibleIndex + i;
-		wrap( iIndex, data.size() );
+		wrap( iIndex, static_cast<int>(data.size()) );
 		const WheelItemBaseData *pData = data[iIndex];
 		WheelItemBase *pDisplay = items[i];
 		pDisplay->LoadFromWheelItemData( pData, iIndex, m_iSelection==iIndex, i );
@@ -511,7 +511,7 @@ int WheelBase::FirstVisibleIndex()
 	// find the first wheel item shown
 	iFirstVisibleIndex -= NUM_WHEEL_ITEMS/2;
 
-	wrap( iFirstVisibleIndex, m_CurWheelItemData.size() );
+	wrap( iFirstVisibleIndex, static_cast<int>(m_CurWheelItemData.size()) );
 	return iFirstVisibleIndex;
 }
 

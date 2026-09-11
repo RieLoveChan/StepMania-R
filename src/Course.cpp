@@ -124,7 +124,7 @@ int CourseEntry::GetNumModChanges() const
 	int iNumModChanges = 0;
 	if( !sModifiers.empty() )
 		iNumModChanges++;
-	iNumModChanges += attacks.size();
+	iNumModChanges += static_cast<int>(attacks.size());
 	return iNumModChanges;
 }
 
@@ -569,7 +569,7 @@ bool Course::GetTrailUnsorted( StepsType st, CourseDifficulty cd, Trail &trail )
 			{
 				resolved.pSong = vpSongs[ e->iChooseIndex ];
 				const std::vector<Steps*> &mappedSongs = mapSongToSteps[ resolved.pSong ];
-				resolved.pSteps = mappedSongs[ RandomInt( mappedSongs.size() ) ];
+				resolved.pSteps = mappedSongs[ RandomInt( static_cast<int>(mappedSongs.size()) ) ];
 			}
 			else
 			{
@@ -638,7 +638,7 @@ bool Course::GetTrailUnsorted( StepsType st, CourseDifficulty cd, Trail &trail )
 					if( iMaxDist == iMinDist )
 						iAdd = iMaxDist;
 					else {
-						iAdd = std::floor((iMinDist + iMaxDist) / 2);
+						iAdd = static_cast<int>(std::floor((iMinDist + iMaxDist) / 2));
 					}
 					iLowMeter += iAdd;
 					iHighMeter += iAdd;
@@ -799,7 +799,7 @@ void Course::GetTrailUnsortedEndless( const std::vector<CourseEntry> &entries, T
 		CourseSortSongs(e->songSort, vpSongs, rnd);
 		resolved.pSong = vpSongs[e->iChooseIndex];
 		const std::vector<Steps*>& songSteps = songStepMap[resolved.pSong];
-		resolved.pSteps = songSteps[RandomInt(songSteps.size())];
+		resolved.pSteps = songSteps[RandomInt(static_cast<int>(songSteps.size()))];
 
 		lastSongSelected = resolved.pSong;
 		alreadySelected.emplace(resolved.pSong);
@@ -870,7 +870,7 @@ void Course::GetTrailUnsortedEndless( const std::vector<CourseEntry> &entries, T
 				if( iMaxDist == iMinDist )
 					iAdd = iMaxDist;
 				else {
-					iAdd = std::floor((iMinDist + iMaxDist) / 2);
+					iAdd = static_cast<int>(std::floor((iMinDist + iMaxDist) / 2));
 				}
 				iLowMeter += iAdd;
 				iHighMeter += iAdd;
@@ -1340,7 +1340,7 @@ public:
 	}
 	static int GetNumCourseEntries(T* p, lua_State* L)
 	{
-		lua_pushnumber(L, p->m_vEntries.size());
+		lua_pushnumber(L, static_cast<lua_Number>(p->m_vEntries.size()));
 		return 1;
 	}
 	static int GetAllTrails( T* p, lua_State *L )
