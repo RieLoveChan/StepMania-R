@@ -158,7 +158,7 @@ bool RageFileManager::Unzip(const std::string &zipPath, std::string targetPath, 
 	if (!zipFile.Open(zipPath, RageFile::READ))
 	{
 		RString error = zipFile.GetError();
-		LOG->Warn("Could not unzip %s: %s", zipPath.c_str(), error.c_str());
+		LOG_ERROR(Log::File, "Could not unzip %s: %s", zipPath.c_str(), error.c_str());
 		return false;
 	}
 
@@ -168,7 +168,7 @@ bool RageFileManager::Unzip(const std::string &zipPath, std::string targetPath, 
 
 	if (!mz_zip_reader_init(&zip, zipFile.GetFileSize(), 0))
 	{
-		LOG->Warn("Could not unzip %s: %s", zipPath.c_str(), mz_zip_get_error_string(zip.m_last_error));
+		LOG_ERROR(Log::File, "Could not unzip %s: %s", zipPath.c_str(), mz_zip_get_error_string(zip.m_last_error));
 		mz_zip_reader_end(&zip);
 		return false;
 	}
@@ -181,7 +181,7 @@ bool RageFileManager::Unzip(const std::string &zipPath, std::string targetPath, 
 		mz_zip_archive_file_stat info;
 		if (!mz_zip_reader_file_stat(&zip, fileIndex, &info))
 		{
-			LOG->Warn("Could not unzip %s: %s", zipPath.c_str(), mz_zip_get_error_string(zip.m_last_error));
+			LOG_ERROR(Log::File, "Could not unzip %s: %s", zipPath.c_str(), mz_zip_get_error_string(zip.m_last_error));
 			success = false;
 			break;
 		}
@@ -204,7 +204,7 @@ bool RageFileManager::Unzip(const std::string &zipPath, std::string targetPath, 
 
 		if (FILEMAN->IsPathProtected(filepath))
 		{
-			LOG->Warn("Overwriting %s is not allowed", filepath.c_str());
+			LOG_WARN(Log::File, "Overwriting %s is not allowed", filepath.c_str());
 			continue;
 		}
 
@@ -218,7 +218,7 @@ bool RageFileManager::Unzip(const std::string &zipPath, std::string targetPath, 
 			if (!f.Open(filepath, RageFile::WRITE | RageFile::STREAMED))
 			{
 				RString error = zipFile.GetError();
-				LOG->Warn("Could not write to %s: %s", filepath.c_str(), error.c_str());
+				LOG_ERROR(Log::File, "Could not write to %s: %s", filepath.c_str(), error.c_str());
 				success = false;
 				break;
 			}
@@ -227,7 +227,7 @@ bool RageFileManager::Unzip(const std::string &zipPath, std::string targetPath, 
 			if (!success)
 			{
 				RString error = f.GetError();
-				LOG->Warn("Could not write to %s: %s", filepath.c_str(), error.c_str());
+				LOG_ERROR(Log::File, "Could not write to %s: %s", filepath.c_str(), error.c_str());
 				FILEMAN->Remove(filepath);
 				break;
 			}
@@ -417,7 +417,7 @@ static void ChangeToDirOfExecutable( const RString &argv0 )
 	if( chdir( RageFileManagerUtil::sDirOfExecutable ) )
 #endif
 	{
-		LOG->Warn("Can't set current working directory to %s", RageFileManagerUtil::sDirOfExecutable.c_str());
+		LOG_ERROR(Log::File, "Can't set current working directory to %s", RageFileManagerUtil::sDirOfExecutable.c_str());
 		return;
 	}
 }
@@ -718,7 +718,7 @@ bool RageFileManager::Mount( const RString &sType, const RString &sRoot_, const 
 	{
 		const RString errorMsg = ssprintf("Can't mount unknown VFS type \"%s\", root \"%s\"", sType.c_str(), sRoot.c_str());
 		CHECKPOINT_M( errorMsg );
-		LOG->Warn( "%s", errorMsg.c_str() );
+		LOG_ERROR(Log::File, "%s", errorMsg.c_str() );
 		return false;
 	}
 
@@ -791,12 +791,12 @@ void RageFileManager::Remount( RString sMountpoint, RString sPath )
 	if( pDriver == nullptr )
 	{
 		if( LOG )
-			LOG->Warn( "Remount(%s,%s): mountpoint not found", sMountpoint.c_str(), sPath.c_str() );
+			LOG_ERROR(Log::File, "Remount(%s,%s): mountpoint not found", sMountpoint.c_str(), sPath.c_str() );
 		return;
 	}
 
 	if( !pDriver->Remount(sPath) )
-		LOG->Warn( "Remount(%s,%s): remount failed (does the driver support remounting?)", sMountpoint.c_str(), sPath.c_str() );
+		LOG_WARN(Log::File, "Remount(%s,%s): remount failed (does the driver support remounting?)", sMountpoint.c_str(), sPath.c_str() );
 	else
 		pDriver->FlushDirCache( "" );
 
@@ -1272,7 +1272,7 @@ public:
 
 		if (p->IsPathProtected(toPath))
 		{
-			LOG->Warn("Overwriting %s is not allowed", toPath.c_str());
+			LOG_WARN(Log::File, "Overwriting %s is not allowed", toPath.c_str());
 			lua_pushboolean(L, false);
 			return 1;
 		}

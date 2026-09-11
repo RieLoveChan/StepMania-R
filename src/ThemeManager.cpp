@@ -97,7 +97,7 @@ public:
 			return GetValue();
 		}
 		RString const & curLanguage = (THEME && THEME->IsThemeLoaded() ? THEME->GetCurLanguage() : RString("current"));
-		LOG->Warn("Missing translation for %s in the %s language.", m_sName.c_str(), curLanguage.c_str());
+		LOG_WARN(Log::Theme, "Missing translation for %s in the %s language.", m_sName.c_str(), curLanguage.c_str());
 		return m_sName;
 	}
 };
@@ -393,7 +393,7 @@ void ThemeManager::SwitchThemeAndLanguage( const RString &sThemeName_, const RSt
 	if(!IsThemeSelectable(sThemeName))
 	{
 		RString to_try= PREFSMAN->m_sTheme.GetDefault();
-		LOG->Warn("Selected theme '%s' not found.  "
+		LOG_WARN(Log::Theme, "Selected theme '%s' not found.  "
 			"Trying Theme preference default value '%s'.",
 			sThemeName.c_str(), to_try.c_str());
 		sThemeName = to_try;
@@ -403,7 +403,7 @@ void ThemeManager::SwitchThemeAndLanguage( const RString &sThemeName_, const RSt
 		if(!IsThemeSelectable(sThemeName))
 		{
 			to_try= PREFSMAN->m_sDefaultTheme;
-			LOG->Warn("Theme preference defaults to '%s', which cannot be used."
+			LOG_WARN(Log::Theme, "Theme preference defaults to '%s', which cannot be used."
 				"  Trying DefaultTheme preference '%s'.",
 				sThemeName.c_str(), to_try.c_str());
 			sThemeName = to_try;
@@ -413,7 +413,7 @@ void ThemeManager::SwitchThemeAndLanguage( const RString &sThemeName_, const RSt
 				GetSelectableThemeNames(theme_names);
 				ASSERT_M(!theme_names.empty(), "No themes found, unable to start stepmania.");
 				to_try= theme_names[0];
-				LOG->Warn("DefaultTheme preference is '%s', which cannot be found."
+				LOG_WARN(Log::Theme, "DefaultTheme preference is '%s', which cannot be found."
 					"  Using '%s'.",
 					sThemeName.c_str(), to_try.c_str());
 				sThemeName= to_try;
@@ -427,7 +427,7 @@ void ThemeManager::SwitchThemeAndLanguage( const RString &sThemeName_, const RSt
 	 * sLanguage exists. Just check for empty. */
 	if( sLanguage.empty() )
 		sLanguage = GetDefaultLanguage();
-	LOG->Trace("ThemeManager::SwitchThemeAndLanguage: \"%s\", \"%s\"",
+	LOG_TRACE(Log::Theme, "ThemeManager::SwitchThemeAndLanguage: \"%s\", \"%s\"",
 		sThemeName.c_str(), sLanguage.c_str() );
 
 	bool bNothingChanging = sThemeName == m_sCurThemeName && sLanguage == m_sCurLanguage && m_bPseudoLocalize == bPseudoLocalize;
@@ -538,7 +538,7 @@ void ThemeManager::RunLuaScripts( const RString &sMask, bool bUseThemeDir )
 		for( unsigned i = 0; i < asElementPaths.size(); ++i )
 		{
 			const RString &sPath = asElementPaths[i];
-			LOG->Trace( "Loading \"%s\" ...", sPath.c_str() );
+			LOG_TRACE(Log::Theme, "Loading \"%s\" ...", sPath.c_str() );
 			LuaHelpers::RunScriptFile( sPath );
 		}
 	}
@@ -547,7 +547,7 @@ void ThemeManager::RunLuaScripts( const RString &sMask, bool bUseThemeDir )
 	/* TODO: verify whether this final check is necessary. */
 	if( sCurThemeName != m_sCurThemeName )
 	{
-		LOG->Warn( "ThemeManager: theme name was not restored after RunLuaScripts" );
+		LOG_WARN(Log::Theme, "ThemeManager: theme name was not restored after RunLuaScripts" );
 		m_sCurThemeName = sCurThemeName;
 	}
 }
@@ -576,7 +576,7 @@ struct CompareLanguageTag
 	CompareLanguageTag( const RString &sLang )
 	{
 		m_sLanguageString = RString("(lang ") + sLang + ")";
-		LOG->Trace( "try \"%s\"", sLang.c_str() );
+		LOG_TRACE(Log::Theme, "try \"%s\"", sLang.c_str() );
 		m_sLanguageString.MakeLower();
 	}
 
@@ -861,7 +861,7 @@ try_element_again:
 				GetThemeDirFromName(m_sCurThemeName) + "\" or \"" +
 				GetThemeDirFromName(SpecialFiles::BASE_THEME_NAME) + "\".";
 			LOG->UserLog("Theme element", element.c_str(), "%s", error.c_str());
-			LOG->Warn( "%s %s", element.c_str(), error.c_str());
+			LOG_ERROR(Log::Theme, "%s %s", element.c_str(), error.c_str());
 			LuaHelpers::ScriptErrorMessage("'" + element + "' " + error);
 		}
 
