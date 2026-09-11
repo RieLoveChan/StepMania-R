@@ -2257,3 +2257,21 @@
   the same run were green). Re-ran via `gh run rerun --failed`.
   Verified locally: `sm_tests` 5966/226 unchanged, `ctest`/Release/
   `--SelfTest` gate re-run after restoring `/wd4244`/`/wd4267`.
+
+* **item 2 (C4244/C4267) sweep, 6 more files: 289 -> 253 remaining
+  (~125 files).** `XmlToLua.cpp` (6: `Left`/`Right` size arithmetic at
+  5 call sites, a filename `Left()`); `WheelBase.cpp` (6: a count into
+  `int`, five `wrap()` sites); `StatsManager.cpp` (6: a song count, a
+  `trunc()` result, two profile-stat accumulators, an index, a
+  `lua_pushnumber`); `ScreenOptions.cpp` (6: a `MoveRowAbsolute` arg,
+  the same `iNumChoices` pattern at 2 call sites, a `wrap()`);
+  `Course.cpp` (6: a mod-change count, two `RandomInt()` calls, two
+  near-duplicate `std::floor()` meter-balancing sites, a
+  `lua_pushnumber`); `ActorMultiTexture.cpp` (6: two size members, two
+  texture-unit-count returns, two `enum_add2()` calls). Sanity-swept
+  every previously-"done" file against the clean rebuild log again --
+  no real residuals (a `Course.cpp(` grep also matched
+  `ScreenOptionsEditCourse.cpp(` as a substring, a false positive, not
+  a miss).
+  Verified: `sm_tests` 5966/226 unchanged, `ctest`/Release/`--SelfTest`
+  gate re-run after restoring `/wd4244`/`/wd4267`.
