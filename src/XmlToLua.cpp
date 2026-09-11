@@ -96,7 +96,7 @@ RString add_extension_to_relative_path_from_found_file(
 {
 	std::size_t rel_last_slash= after_slash_or_zero(relative_path);
 	std::size_t found_last_slash= after_slash_or_zero(found_file);
-	return relative_path.Left(rel_last_slash) +
+	return relative_path.Left(static_cast<int>(rel_last_slash)) +
 		found_file.substr(found_last_slash, std::string::npos);
 }
 
@@ -301,7 +301,7 @@ void actor_template_t::store_cmd(RString const& cmd_name, RString const& full_cm
 {
 	if(full_cmd.Left(1) == "%")
 	{
-		RString cmd_text= full_cmd.Right(full_cmd.size()-1);
+		RString cmd_text= full_cmd.Right(static_cast<int>(full_cmd.size())-1);
 		convert_lua_chunk(cmd_text);
 		fields[cmd_name]= cmd_text;
 		return;
@@ -398,7 +398,7 @@ void actor_template_t::store_field(RString const& field_name, RString const& val
 	}
 	if(cmd_convert)
 	{
-		RString real_field_name= field_name.Left(field_name.size()-7) + "Command";
+		RString real_field_name= field_name.Left(static_cast<int>(field_name.size())-7) + "Command";
 		store_cmd(real_field_name, value);
 	}
 	else
@@ -453,13 +453,13 @@ void actor_template_t::load_frames_from_file(RString const& fname, RString const
 			RString field_type= attr->first.Left(5);
 			if(field_type == "Frame")
 			{
-				int id= StringToInt(attr->first.Right(attr->first.size()-5));
+				int id= StringToInt(attr->first.Right(static_cast<int>(attr->first.size())-5));
 				make_space_for_frame(id);
 				attr->second->GetValue(frames[id].frame);
 			}
 			else if(field_type == "Delay")
 			{
-				int id= StringToInt(attr->first.Right(attr->first.size()-5));
+				int id= StringToInt(attr->first.Right(static_cast<int>(attr->first.size())-5));
 				make_space_for_frame(id);
 				attr->second->GetValue(frames[id].delay);
 			}
@@ -737,7 +737,7 @@ void convert_xml_file(RString const& fname, RString const& dirname)
 	condition_set_t conditions;
 	plate.load_node(xml, dirname, conditions);
 	RageFile* file= new RageFile;
-	RString out_name= fname.Left(fname.size()-4) + ".lua";
+	RString out_name= fname.Left(static_cast<int>(fname.size())-4) + ".lua";
 	if(!file->Open(out_name, RageFile::WRITE))
 	{
 		LOG->Trace("Could not open %s: %s", out_name.c_str(), file->GetError().c_str());

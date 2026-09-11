@@ -970,7 +970,7 @@ void ScreenOptions::ProcessMenuStart( const InputEventPlus &input )
 		case NAV_FIVE_KEY:
 			/* Jump to the exit row.  (If everyone's already on the exit row, then
 			 * we'll have already gone to the next screen above.) */
-			if( MoveRowAbsolute(pn, m_pRows.size()-1) )
+			if( MoveRowAbsolute(pn, static_cast<int>(m_pRows.size())-1) )
 				m_SoundNextRow.Play(true);
 
 			break;
@@ -1035,7 +1035,7 @@ void ScreenOptions::ChangeValueInRowAbsolute( int iRow, PlayerNumber pn, int iCh
 
 	OptionRow &row = *m_pRows[iRow];
 
-	const int iNumChoices = row.GetRowDef().m_vsChoices.size();
+	const int iNumChoices = static_cast<int>(row.GetRowDef().m_vsChoices.size());
 	ASSERT( iNumChoices >= 0 && iChoiceIndex < iNumChoices );
 
 	int iCurrentChoiceWithFocus = row.GetChoiceInRowWithFocus(pn);
@@ -1056,7 +1056,7 @@ void ScreenOptions::ChangeValueInRowRelative( int iRow, PlayerNumber pn, int iDe
 
 	OptionRow &row = *m_pRows[iRow];
 
-	const int iNumChoices = row.GetRowDef().m_vsChoices.size();
+	const int iNumChoices = static_cast<int>(row.GetRowDef().m_vsChoices.size());
 
 	if( m_OptionsNavigation == NAV_THREE_KEY_MENU && iNumChoices <= 1 )	// 1 or 0
 	{
@@ -1172,7 +1172,7 @@ bool ScreenOptions::MoveRowRelative( PlayerNumber pn, int iDir, bool bRepeat )
 	{
 		int iDelta = r*iDir;
 		iDest = m_iCurrentRow[pn] + iDelta;
-		wrap( iDest, m_pRows.size() );
+		wrap( iDest, static_cast<int>(m_pRows.size()) );
 
 		OptionRow &row = *m_pRows[iDest];
 		if( row.GetRowDef().IsEnabledForPlayer(pn) )

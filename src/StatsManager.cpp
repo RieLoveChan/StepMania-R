@@ -69,7 +69,7 @@ static StageStats AccumPlayedStageStats( const std::vector<StageStats>& vss )
 	for (StageStats const &ss :vss)
 		ssreturn.AddStats( ss );
 
-	unsigned uNumSongs = ssreturn.m_vpPlayedSongs.size();
+	unsigned uNumSongs = static_cast<unsigned>(ssreturn.m_vpPlayedSongs.size());
 
 	if( uNumSongs == 0 )
 		return ssreturn;	// don't divide by 0 below
@@ -214,10 +214,10 @@ void StatsManager::CommitStatsToProfiles( const StageStats *pSS )
 	// Update profile stats
 	Profile* pMachineProfile = PROFILEMAN->GetMachineProfile();
 
-	int iGameplaySeconds = std::trunc(pSS->m_fGameplaySeconds);
+	int iGameplaySeconds = static_cast<int>(std::trunc(pSS->m_fGameplaySeconds));
 
 	pMachineProfile->m_iTotalGameplaySeconds += iGameplaySeconds;
-	pMachineProfile->m_iNumTotalSongsPlayed += pSS->m_vpPlayedSongs.size();
+	pMachineProfile->m_iNumTotalSongsPlayed += static_cast<int>(pSS->m_vpPlayedSongs.size());
 
 	if( !GAMESTATE->m_bMultiplayer )	// FIXME
 	{
@@ -227,7 +227,7 @@ void StatsManager::CommitStatsToProfiles( const StageStats *pSS )
 			if( pPlayerProfile )
 			{
 				pPlayerProfile->m_iTotalGameplaySeconds += iGameplaySeconds;
-				pPlayerProfile->m_iNumTotalSongsPlayed += pSS->m_vpPlayedSongs.size();
+				pPlayerProfile->m_iNumTotalSongsPlayed += static_cast<int>(pSS->m_vpPlayedSongs.size());
 			}
 
 			LOG->Trace("Adding stats to machine profile...");
@@ -528,7 +528,7 @@ public:
 	static int GetPlayedStageStats( T* p, lua_State *L )
 	{
 		int iAgo = IArg(1);
-		int iIndex = p->m_vPlayedStageStats.size() - iAgo;
+		int iIndex = static_cast<int>(p->m_vPlayedStageStats.size()) - iAgo;
 		if( iIndex < 0 || iIndex >= (int) p->m_vPlayedStageStats.size() )
 			return 0;
 
@@ -558,7 +558,7 @@ public:
 		}
 		return 1;
 	}
-	static int GetStagesPlayed( T* p, lua_State *L )				{ lua_pushnumber( L, p->m_vPlayedStageStats.size() ); return 1; }
+	static int GetStagesPlayed( T* p, lua_State *L )				{ lua_pushnumber( L, static_cast<lua_Number>(p->m_vPlayedStageStats.size()) ); return 1; }
 
 	static int GetBestGrade( T* /* p */, lua_State *L )
 	{

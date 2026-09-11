@@ -52,8 +52,8 @@ void ActorMultiTexture::LoadFromNode( const XNode* pNode )
 
 void ActorMultiTexture::SetSizeFromTexture( RageTexture *pTexture )
 {
-	ActorMultiTexture::m_size.x = pTexture->GetSourceWidth();
-	ActorMultiTexture::m_size.y = pTexture->GetSourceHeight();
+	ActorMultiTexture::m_size.x = static_cast<float>(pTexture->GetSourceWidth());
+	ActorMultiTexture::m_size.y = static_cast<float>(pTexture->GetSourceHeight());
 }
 
 void ActorMultiTexture::ClearTextures()
@@ -68,13 +68,13 @@ int ActorMultiTexture::AddTexture( RageTexture *pTexture )
 	if( pTexture == nullptr )
 	{
 		LOG->Warn( "Can't add nil texture to ActorMultiTexture" );
-		return m_aTextureUnits.size();
+		return static_cast<int>(m_aTextureUnits.size());
 	}
 	LOG->Trace( "ActorMultiTexture::AddTexture( %s )", pTexture->GetID().filename.c_str() );
 
 	m_aTextureUnits.push_back( TextureUnitState() );
 	m_aTextureUnits.back().m_pTexture = TEXTUREMAN->CopyTexture( pTexture );
-	return m_aTextureUnits.size();
+	return static_cast<int>(m_aTextureUnits.size());
 }
 
 void ActorMultiTexture::SetTextureMode( int iIndex, TextureMode tm )
@@ -100,7 +100,7 @@ void ActorMultiTexture::DrawPrimitives()
 	DISPLAY->ClearAllTextures();
 	for( std::size_t i = 0; i < m_aTextureUnits.size(); ++i )
 	{
-		TextureUnit tu = enum_add2(TextureUnit_1, i);
+		TextureUnit tu = enum_add2(TextureUnit_1, static_cast<int>(i));
 		DISPLAY->SetTexture( tu, m_aTextureUnits[i].m_pTexture->GetTexHandle() );
 		DISPLAY->SetTextureWrapping( tu, m_bTextureWrapping );
 		DISPLAY->SetTextureMode( tu, m_aTextureUnits[i].m_TextureMode );
@@ -128,7 +128,7 @@ void ActorMultiTexture::DrawPrimitives()
 	DISPLAY->DrawQuad( v );
 
 	for( std::size_t i = 0; i < m_aTextureUnits.size(); ++i )
-		DISPLAY->SetTexture( enum_add2(TextureUnit_1, i), 0 );
+		DISPLAY->SetTexture( enum_add2(TextureUnit_1, static_cast<int>(i)), 0 );
 
 	DISPLAY->SetEffectMode( EffectMode_Normal );
 }
