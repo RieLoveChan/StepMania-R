@@ -2207,3 +2207,23 @@
   even if it's `--clean-first`.
   Verified: `sm_tests` 5966/226 unchanged, `ctest`/Release/`--SelfTest`
   gate re-run after restoring `/wd4244`/`/wd4267`.
+
+* **item 2 (C4244/C4267) sweep, 6 more files: 397 -> 340, plus a THIRD
+  file-level discovery -- 3 already-"done" files had residual C4267
+  the broken regex hid, -> true 332 remaining (136 files).**
+  `OptionsList.cpp` (10), `EditMenu.cpp` (10), `CubicSpline.cpp` (10: a
+  shared `LCSN_EVAL_SOMETHING` macro fixed once covers 4 call sites),
+  `TimingData.cpp` (9, §5-protected, characterization-only),
+  `MusicWheel.cpp` (9), `CourseLoaderCRS.cpp` (9, §5-protected `.crs`,
+  characterization-only: `Left`/`Right` fed `strlen()`-derived lengths
+  parsing `BEST`/`WORST`/`GRADEBEST`/`GRADEWORST` prefixes). After a
+  clean rebuild confirmed those six at zero, a sanity sweep of every
+  previously-"done" file against the same log turned up 8 more sites
+  the `C424[47]` regex bug had hidden in files marked done earlier this
+  sweep: `NoteField.cpp` (5), `ScreenGameplay.cpp` (2),
+  `ScreenOptionsMasterPrefs.cpp` (1) -- all fixed and reconfirmed at
+  zero in a follow-up clean rebuild, along with every other
+  previously-"done" file (no further residuals found). True total: 332
+  sites / 136 files remain.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest`/Release/`--SelfTest`
+  gate re-run after restoring `/wd4244`/`/wd4267`.

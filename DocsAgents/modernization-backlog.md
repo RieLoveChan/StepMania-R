@@ -307,21 +307,61 @@ re-confirmed at zero in that same clean rebuild).
   loop `size()-1` bounds ×3; `RString::Left`/`Right` fed
   `size_t`-derived mount-point-length arithmetic; three `size()`/
   `length()` values into `int` locals tracking driver/file counts.
+- `OptionsList.cpp` (10): `unsigned`/`int` locals and a `GetScreen(int)`
+  call fed `size_t` choice counts/indices; two `wrap(int&, size_t)`
+  sites (the count arg force-cast); a linear-search loop returning its
+  `size_t` index as `int`.
+- `EditMenu.cpp` (10): two reverse-loop `size()-1` bounds; a
+  `switch`/`case` block of six one-line `GetRowSize` accessors
+  returning `size()` as `int`; a `size()-1` default-selection index.
+- `CubicSpline.cpp` (10): a shared `LCSN_EVAL_SOMETHING` macro's
+  `lua_createtable`/`lua_rawseti` pushing per-point float vectors --
+  fixed once at the macro (covers 4 call sites); three more
+  `lua_createtable`/`lua_rawgeti`/`lua_rawseti` sites in the
+  coefficient get/set helpers; two `lua_pushnumber(size_t)` accessors
+  (`get_size`/`get_dimension`).
+- `TimingData.cpp` (9, §5-protected `TimingData`, characterization-
+  only): a 4-way `size()` sum into an `unsigned int` segment count; an
+  `EraseSegment(int, ...)` fed a `size_t` loop index at 2 call sites; a
+  binary-search `size()-1` upper bound; a `lua_createtable`/
+  `lua_rawseti` block serializing timing segments to Lua (2 tables, 3
+  index sites).
+- `MusicWheel.cpp` (9): a `MusicWheelItemData` ctor's `int` section-
+  count param fed `size_t` at 2 sites; two `unsigned` snapshot-size
+  locals; a `std::min<unsigned int>` call's second arg; two
+  `wrap(int&, size_t)` sites; a reverse-loop bound; a
+  `RandomInt(size_t)` call.
+- `CourseLoaderCRS.cpp` (9, §5-protected `.crs`, characterization-
+  only): four `RString::Left`/`Right` pairs (8 sites) fed
+  `strlen()`/`size()`-derived `size_t` lengths when parsing
+  `BEST`/`WORST`/`GRADEBEST`/`GRADEWORST` song-choice prefixes; an
+  `int` (`StringToInt`) assigned into a `float` field.
+**A third file-level discovery en route:** the broken `C424[47]` regex
+had also silently hidden residual `C4267` sites in three files this
+doc had already marked "done, verified" earlier in the sweep --
+`NoteField.cpp` (5: two `int` column-index members fed a `size_t` loop
+var, a binary-search `size()-1` bound, a `lua_createtable`/
+`lua_rawseti` pair pushing column-renderer actors), `ScreenGameplay.cpp`
+(2: an `unsigned int` queue-size local, a reverse-loop `size()-1`
+bound), `ScreenOptionsMasterPrefs.cpp` (1: a `MoveMap(..., unsigned
+cnt)` call fed `size_t`). All three re-confirmed at zero in the same
+clean rebuild that produced the numbers below; a full sweep of every
+previously-"done" file turned up no further residuals.
 **Not done:** `/wd4244`/`/wd4267` stay in `src/CMakeLists.txt` until all
-397 remaining sites (142 files) are triaged (same "fix everything, then
+332 remaining sites (136 files) are triaged (same "fix everything, then
 remove the `/wd` flag in one commit" pattern as C4100) — continue
 file-by-file, highest concentration first; measure only via
 `--clean-first` with the flag actually removed, dedup with a regex
 that matches BOTH `C4244` and `C4267` (`warning C42(44|67)`, not
-`C424[47]`), and never run the measurement rebuild while a file is
-mid-edit -- doing so once (this batch) silently rebuilt 3 files in
-their pre-fix state and produced a wrong intermediate count that had
-to be re-measured from a clean, edit-free tree. Still not measured for
+`C424[47]`), never run the measurement rebuild while a file is
+mid-edit, and periodically re-grep every already-"done" file against a
+fresh clean-rebuild log -- the regex bug hid residuals in 3 files for
+several batches before this check caught them. Still not measured for
 Clang/GCC (`baseline.md` TBD, non-Windows). Next concentrations:
-`OptionsList.cpp`/`EditMenu.cpp`/`CubicSpline.cpp` (10 each),
-`TimingData.cpp`/`MusicWheel.cpp`/`CourseLoaderCRS.cpp` (9 each),
 `RageDisplay_OGL.cpp` (8), `Song.cpp`/`ScreenSelectMaster.cpp`/
-`RageLog.cpp`/`RageFileDriverDeflate.cpp`/`RageDisplay.cpp` (7 each).
+`RageLog.cpp`/`RageFileDriverDeflate.cpp`/`RageDisplay.cpp` (7 each),
+`XmlToLua.cpp`/`WheelBase.cpp`/`StatsManager.cpp`/`ScreenOptions.cpp`/
+`Course.cpp`/`ActorMultiTexture.cpp` (6 each).
 
 ### 3. Stale cppcheck leak list — DONE 2026-09-05, all dismissed
 ~~`Docs/Devdocs/possible memory leaks.txt` — from 2009. Re-triaged by
