@@ -1352,7 +1352,27 @@ spec is the whole config.)
   verified normally.
   Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
   `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
-  Remaining: the long tail of non-§5 files, then the §5-protected
+  **Ph4 batch 4 (2026-09-11):** `RageDisplay_OGL.cpp` (25 real sites,
+  `Log::Gl`; 5 grep hits are pre-existing dead code — 2 fully
+  commented-out lines plus 3 more sitting inside `/* ... */` blocks
+  around debug-only matrix dumps — all left untouched). Triage
+  highlights: shader file-open/read failures and actual GLSL
+  compile/link failures upgraded to `LOG_ERROR` (real bugs — a shipped
+  shader that won't build); driver-capability gaps ("fragment shaders
+  not supported", "low-performance renderer") kept at `LOG_WARN`
+  (expected on older/limited hardware, handled gracefully, not a
+  bug); the vendor/renderer/version/extension-list startup dump and
+  the various feature-probe fallback notices (paletted textures,
+  packed-pixel format, pixel-map table size) kept at `LOG_INFO`/
+  `LOG_TRACE` as before — all routine capability detection, not
+  problems. The two known-driver-quirk workarounds (an old Catalyst
+  `GL_INVALID_OPERATION` bug) stayed at `LOG_TRACE`, matching the
+  file's own comment explaining why the fallback exists. No
+  parsing/behavior logic changed; not §5-protected.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+  Remaining: the long tail of non-§5 files (`RageDisplay_D3D.cpp` next,
+  then `StepMania.cpp`/`Profile.cpp`/etc.), then the §5-protected
   parsers (`NotesLoaderSM.cpp` 39 sites, `CourseLoaderCRS.cpp` 27,
   `NotesLoaderSSC.cpp` 26, `Song.cpp` 25, etc.) last, as pure
   category/level re-tagging re-verified against their characterization

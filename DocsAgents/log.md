@@ -2508,3 +2508,22 @@
   batch. `RageSound.cpp` compiled and verified normally.
   Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
   `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+
+* **item 18 (ADR 0005 phase 4) batch 4, 2026-09-11.** Migrated
+  `RageDisplay_OGL.cpp` (25 real sites -> `Log::Gl`; 5 grep hits are
+  pre-existing dead code -- 2 fully commented-out lines plus 3 more
+  sitting inside `/* ... */` blocks around debug-only matrix dumps --
+  all left untouched). Triage: shader file-open/read failures and
+  actual GLSL compile/link failures upgraded to `LOG_ERROR` (real
+  bugs); driver-capability gaps ("fragment shaders not supported",
+  "low-performance renderer") kept at `LOG_WARN` (expected on older/
+  limited hardware, handled gracefully); the vendor/renderer/version/
+  extension-list startup dump and feature-probe fallback notices
+  (paletted textures, packed-pixel format, pixel-map table size) kept
+  at `LOG_INFO`/`LOG_TRACE` -- routine capability detection, not
+  problems. Two known-driver-quirk workarounds (an old Catalyst
+  `GL_INVALID_OPERATION` bug) stayed at `LOG_TRACE`, matching the
+  file's own comment explaining the fallback. No parsing/behavior
+  logic changed; not §5-protected.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
