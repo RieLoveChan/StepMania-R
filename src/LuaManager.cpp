@@ -94,8 +94,8 @@ namespace LuaHelpers
 
 	template<> bool FromStack<bool>( Lua *L, bool &Object, int iOffset ) { Object = !!lua_toboolean( L, iOffset ); return true; }
 	template<> bool FromStack<float>( Lua *L, float &Object, int iOffset ) { Object = (float)lua_tonumber( L, iOffset ); return true; }
-	template<> bool FromStack<int>( Lua *L, int &Object, int iOffset ) { Object = lua_tointeger( L, iOffset ); return true; }
-	template<> bool FromStack<unsigned int>( Lua *L, unsigned int &Object, int iOffset ) { Object = lua_tointeger( L, iOffset ); return true; }
+	template<> bool FromStack<int>( Lua *L, int &Object, int iOffset ) { Object = static_cast<int>(lua_tointeger( L, iOffset )); return true; }
+	template<> bool FromStack<unsigned int>( Lua *L, unsigned int &Object, int iOffset ) { Object = static_cast<unsigned int>(lua_tointeger( L, iOffset )); return true; }
 	template<> bool FromStack<RString>( Lua *L, RString &Object, int iOffset )
 	{
 		std::size_t iLen;
@@ -298,7 +298,7 @@ Lua *LuaManager::Get()
 		pRet = lua_newthread( m_pLuaMain );
 
 		// Store the new thread in THREAD_POOL, so it isn't collected.
-		int iLast = lua_objlen( m_pLuaMain, THREAD_POOL );
+		int iLast = static_cast<int>(lua_objlen( m_pLuaMain, THREAD_POOL ));
 		lua_rawseti( m_pLuaMain, THREAD_POOL, iLast+1 );
 	}
 	else
@@ -487,7 +487,7 @@ int LuaThreadVariable::AdjustCount( lua_State *L, int iAdd )
 	lua_rawgeti( L, -1, 0 );
 	ASSERT( lua_isnumber(L, -1) != 0 );
 
-	int iCount = lua_tointeger( L, -1 );
+	int iCount = static_cast<int>(lua_tointeger( L, -1 ));
 	lua_pop( L, 1 );
 
 	iCount += iAdd;
@@ -1024,7 +1024,7 @@ namespace
 {
 	int lua_pushvalues( lua_State *L )
 	{
-		int iArgs = lua_tointeger( L, lua_upvalueindex(1) );
+		int iArgs = static_cast<int>(lua_tointeger( L, lua_upvalueindex(1) ));
 		for( int i = 0; i < iArgs; ++i )
 			lua_pushvalue( L, lua_upvalueindex(i+2) );
 		return iArgs;
