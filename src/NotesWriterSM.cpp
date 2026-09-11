@@ -96,7 +96,7 @@ static void WriteGlobalTags( RageFileBasic &f, Song &out )
 
 	std::map<float, float> allPauses;
 	const std::vector<TimingSegment*> &warps = timing.GetTimingSegments(SEGMENT_WARP);
-	unsigned wSize = warps.size();
+	unsigned wSize = static_cast<unsigned>(warps.size());
 	if( wSize > 0 )
 	{
 		for( unsigned i=0; i < wSize; i++ )

@@ -63,7 +63,7 @@ public:
 	// Update the list of songs to match whatever songs are indexed by the song manager (SONGMAN)
 	virtual void ReloadSongList() {}
 
-	virtual unsigned int GetNumItems() const { return m_CurWheelItemData.size(); }
+	virtual unsigned int GetNumItems() const { return static_cast<unsigned int>(m_CurWheelItemData.size()); }
 	bool IsEmpty() { return m_bEmpty; }
 	WheelItemBaseData* GetItem(unsigned int index);
 	WheelItemBaseData* LastSelected();

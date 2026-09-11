@@ -70,7 +70,7 @@ void WorkoutGraph::SetInternal( int /* iMinSongsPlayed */ )
 		viMeters.push_back( e.pSteps->GetMeter() );
 	}
 
-	int iBlocksWide = viMeters.size();
+	int iBlocksWide = static_cast<int>(viMeters.size());
 	int iBlocksHigh = MAX_METER;
 
 	const float fMaxWidth = 300;

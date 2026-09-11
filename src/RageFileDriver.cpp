@@ -28,7 +28,7 @@ int RageFileDriver::GetPathValue( const RString &sPath )
 		switch( Type )
 		{
 		case RageFileManager::TYPE_NONE:
-			return asParts.size()-i;
+			return static_cast<int>(asParts.size()-i);
 
 		/* If this is the last part (the whole path), it needs to be a file; otherwise a directory. */
 		case RageFileManager::TYPE_FILE:

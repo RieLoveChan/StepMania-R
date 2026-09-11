@@ -74,7 +74,7 @@ int CheckEnum( lua_State *L, LuaReference &table, int iPos, int iInvalid, const 
 		}
 		lua_error( L );
 	}
-	int iRet = lua_tointeger( L, -1 );
+	int iRet = static_cast<int>(lua_tointeger( L, -1 ));
 	lua_pop( L, 2 );
 	return iRet;
 }

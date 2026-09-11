@@ -3042,7 +3042,7 @@ public:
 			lua_pushstring( L, pSteps->GetDescription() );
 		}
 
-		return vpStepsToShow.size()*2;
+		return static_cast<int>(vpStepsToShow.size()*2);
 	}
 
 	static int SetPreferredSongGroup( T* p, lua_State *L ) { p->m_sPreferredSongGroup.Set( SArg(1) ); COMMON_RETURN_SELF; }

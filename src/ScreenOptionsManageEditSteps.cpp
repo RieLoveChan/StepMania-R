@@ -114,7 +114,7 @@ void ScreenOptionsManageEditSteps::BeginScreen()
 		std::vector<Steps*>::const_iterator iter = find( m_vpSteps.begin(), m_vpSteps.end(), GAMESTATE->m_pCurSteps[PLAYER_1] );
 		if( iter != m_vpSteps.end() )
 		{
-			iIndex = iter - m_vpSteps.begin();
+			iIndex = static_cast<int>(iter - m_vpSteps.begin());
 			this->MoveRowAbsolute( PLAYER_1, 1 + iIndex );
 		}
 	}

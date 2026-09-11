@@ -119,7 +119,7 @@ public:
 	bool AllSongsAreFixed() const;
 	const Style *GetCourseStyle( const Game *pGame, int iNumPlayers ) const;
 
-	int GetEstimatedNumStages() const { return m_vEntries.size(); }
+	int GetEstimatedNumStages() const { return static_cast<int>(m_vEntries.size()); }
 	bool IsPlayableIn( StepsType st ) const;
 	bool CourseHasBestOrWorst() const;
 	RageColor GetColor() const;

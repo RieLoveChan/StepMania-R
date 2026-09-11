@@ -353,7 +353,7 @@ bool RageTextureManager::SetPrefs( RageTextureManagerPrefs prefs )
 
 void RageTextureManager::DiagnosticOutput() const
 {
-	unsigned iCount = distance( m_mapPathToTexture.begin(), m_mapPathToTexture.end() );
+	unsigned iCount = static_cast<unsigned>(distance( m_mapPathToTexture.begin(), m_mapPathToTexture.end() ));
 	LOG->Trace( "%u textures loaded:", iCount );
 
 	int iTotal = 0;

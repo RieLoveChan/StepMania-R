@@ -144,7 +144,7 @@ static void GetTimingTags( std::vector<RString> &lines, const TimingData &timing
 	for (i = 0; i < speeds.size(); i++)
 	{
 		SpeedSegment *ss = ToSpeed( speeds[i] );
-		w.Write( ss->GetRow(), ss->GetRatio(), ss->GetDelay(), ss->GetUnit() );
+		w.Write( ss->GetRow(), ss->GetRatio(), ss->GetDelay(), static_cast<unsigned short>(ss->GetUnit()) );
 	}
 	w.Finish();
 

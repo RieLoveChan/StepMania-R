@@ -1146,7 +1146,7 @@ bool SMLoader::LoadFromSimfile( const RString &sPath, Song &out, bool bFromCache
 		 * splitting other formats that *don't* natively support #SUBTITLE. */
 			handler->second(reused_song_info);
 		}
-		else if(sValueName.Left(strlen("BGCHANGES")) == "BGCHANGES")
+		else if(sValueName.Left(static_cast<int>(strlen("BGCHANGES"))) == "BGCHANGES")
 		{
 			SMSetBGChanges(reused_song_info);
 		}

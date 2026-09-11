@@ -325,7 +325,7 @@ public:
 	// Screenshot Data
 	std::vector<Screenshot> m_vScreenshots;
 	void AddScreenshot( const Screenshot &screenshot );
-	int GetNextScreenshotIndex() { return m_vScreenshots.size(); }
+	int GetNextScreenshotIndex() { return static_cast<int>(m_vScreenshots.size()); }
 
 
 	/**

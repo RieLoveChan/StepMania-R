@@ -766,7 +766,7 @@ bool KSFLoader::LoadFromDir( const RString &sDir, Song &out )
 	// indistinctly for SM so it shouldn't matter, I use piu fiesta/ex naming
 	// for directmove though, and we're just gathering basic info anyway, and
 	// most of the time all the KSF files have the same info in the #TITLE:; section
-	unsigned files = arrayKSFFileNames.size();
+	unsigned files = static_cast<unsigned>(arrayKSFFileNames.size());
 	RString dir = out.GetSongDir();
 	if( !LoadGlobalData(dir + arrayKSFFileNames[files - 1], out, bKIUCompliant) )
 		return false;

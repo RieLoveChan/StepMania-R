@@ -208,7 +208,7 @@ int MovieDecoder_FFMpeg::DecodeNextFrame()
 		// If we had to approximate the number of frames, set the actual
 		// total number of frames. This is benign even if we did have an
 		// accurate frame count at the start.
-		total_frames_ = frame_buffer_.size();
+		total_frames_ = static_cast<int>(frame_buffer_.size());
 	}
 	status = DecodePacketInBuffer();
 	if (first_frame_) {
@@ -496,12 +496,12 @@ RString MovieDecoder_FFMpeg::Open(RString sFile)
 
 	LOG->Trace("Bitrate: %i", static_cast<int>(av_stream_codec_->bit_rate));
 	LOG->Trace("Codec pixel format: %s", avcodec::av_get_pix_fmt_name(av_stream_codec_->pix_fmt));
-	total_frames_ = av_stream_->nb_frames;
+	total_frames_ = static_cast<int>(av_stream_->nb_frames);
 	if (total_frames_ <= 0) {
 		// Sometimes we might not get a correct frame count.
 		// In that case, approximate and fix it later.
-		total_frames_ = av_format_context_->duration // microseconds
-			* (av_stream_->avg_frame_rate.num) / (av_stream_->avg_frame_rate.den) / (1000000);
+		total_frames_ = static_cast<int>(av_format_context_->duration // microseconds
+			* (av_stream_->avg_frame_rate.num) / (av_stream_->avg_frame_rate.den) / (1000000));
 		LOG->Trace("Number of frames provided is inaccurate, estimating.");
 	}
 	LOG->Trace("Number of frames detected: %i", total_frames_);

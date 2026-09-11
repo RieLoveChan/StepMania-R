@@ -171,7 +171,7 @@ public:
 	void LogNonEmptyRows();
 	std::vector<int>& GetNonEmptyRowVector() { return NonEmptyRowVector; };
 
-	int GetNumTracks() const { return m_TapNotes.size(); }
+	int GetNumTracks() const { return static_cast<int>(m_TapNotes.size()); }
 	void SetNumTracks( int iNewNumTracks );
 	bool IsComposite() const;
 	bool operator==( const NoteData &nd ) const			{ return m_TapNotes == nd.m_TapNotes; }

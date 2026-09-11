@@ -693,7 +693,7 @@ RString FontPageSettings::MapRange( RString sMapping, int iMapOffset, int iGlyph
 
 		while( iCount )
 		{
-			CharToGlyphNo[iMapOffset] = iGlyphNo;
+			CharToGlyphNo[static_cast<wchar_t>(iMapOffset)] = iGlyphNo;
 			iMapOffset++;
 			iGlyphNo++;
 			iCount--;

@@ -198,7 +198,7 @@ int WindowsFileIO::read_several(const std::vector<WindowsFileIO *> &sources, voi
 	for( unsigned i = 0; i < sources.size(); ++i )
 		Handles[i] = sources[i]->m_Handle;
 
-	int ret = WaitForMultipleObjectsEx( sources.size(), Handles, false, int(timeout * 1000), true);
+	int ret = WaitForMultipleObjectsEx( static_cast<DWORD>(sources.size()), Handles, false, int(timeout * 1000), true);
 	delete[] Handles;
 
 	if( ret == -1 )

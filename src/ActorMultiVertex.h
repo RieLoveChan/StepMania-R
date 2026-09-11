@@ -123,7 +123,7 @@ public:
 		RectF rect;
 		float delay;
 	};
-	int GetNumStates() const override { return _states.size(); }
+	int GetNumStates() const override { return static_cast<int>(_states.size()); }
 	void AddState(const State& new_state) { _states.push_back(new_state); }
 	void RemoveState(std::size_t i)
 	{ ASSERT(i < _states.size()); _states.erase(_states.begin()+i); }

@@ -155,7 +155,7 @@ void ScreenOptionsManageCourses::BeginScreen()
 		std::vector<Course*>::const_iterator iter = find( m_vpCourses.begin(), m_vpCourses.end(), GAMESTATE->m_pCurCourse );
 		if( iter != m_vpCourses.end() )
 		{
-			iIndex = iter - m_vpCourses.begin();
+			iIndex = static_cast<int>(iter - m_vpCourses.begin());
 			this->MoveRowAbsolute( GAMESTATE->GetMasterPlayerNumber(), 1 + iIndex );
 		}
 	}

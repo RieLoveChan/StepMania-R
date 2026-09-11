@@ -115,7 +115,7 @@ public:
 	void GetWidthXY( PlayerNumber pn, int iChoiceOnRow, int &iWidthOut, int &iXOut, int &iYOut ) const;
 
 	// ScreenOptions calls positions m_FrameDestination, then m_Frame tween to that same TweenState.
-	unsigned GetTextItemsSize() const { return m_textItems.size(); }
+	unsigned GetTextItemsSize() const { return static_cast<unsigned>(m_textItems.size()); }
 	bool GetFirstItemGoesDown() const { return m_bFirstItemGoesDown; }
 	bool GoToFirstOnStart();
 

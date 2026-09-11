@@ -642,7 +642,7 @@ void MoveToBeginning( std::vector<T> &v, const U &item )
 static void FillWFEXT( WAVEFORMATEXTENSIBLE* pwfext, DeviceSampleFormat sampleFormat, int sampleRate, int channelCount)
 {
 	pwfext->Format.wFormatTag = WAVE_FORMAT_EXTENSIBLE;
-	pwfext->Format.nChannels = channelCount;
+	pwfext->Format.nChannels = static_cast<WORD>(channelCount);
 	pwfext->Format.nSamplesPerSec = sampleRate;
 	switch( channelCount )
 	{
@@ -661,9 +661,9 @@ static void FillWFEXT( WAVEFORMATEXTENSIBLE* pwfext, DeviceSampleFormat sampleFo
 	case DeviceSampleFormat_Int16: pwfext->SubFormat = KSDATAFORMAT_SUBTYPE_PCM;break;
 	}
 
-	pwfext->Format.nBlockAlign = GetBytesPerSample( sampleFormat );
+	pwfext->Format.nBlockAlign = static_cast<WORD>(GetBytesPerSample( sampleFormat ));
 	pwfext->Format.wBitsPerSample = pwfext->Format.nBlockAlign * 8;
-	pwfext->Format.nBlockAlign *= channelCount;
+	pwfext->Format.nBlockAlign = static_cast<WORD>(pwfext->Format.nBlockAlign * channelCount);
 	pwfext->Samples.wValidBitsPerSample = pwfext->Format.wBitsPerSample;
 	pwfext->Format.cbSize = sizeof(WAVEFORMATEXTENSIBLE)-sizeof(WAVEFORMATEX);
 	pwfext->Format.nAvgBytesPerSec = pwfext->Format.nSamplesPerSec * pwfext->Format.nBlockAlign;
@@ -1039,7 +1039,7 @@ namespace
 					for( int k = 0; k < iInChannels; ++k )
 						iSum += pIn[k];
 					iSum /= iInChannels;
-					pOut[j] = iSum;
+					pOut[j] = static_cast<int16_t>(iSum);
 				}
 				else
 					pOut[j] = pIn[ pChannelMap[j] ];
@@ -1146,7 +1146,7 @@ bool RageSoundDriver_WDMKS::Fill( int iPacket, RString &sError )
 //	if( iCurrentFrame == m_iLastCursorPos )
 //		LOG->Trace( "underrun" );
 
-	Read( m_pStream->m_Packets[iPacket].Data, m_pStream->m_iFramesPerChunk, m_iLastCursorPos, iCurrentFrame );
+	Read( m_pStream->m_Packets[iPacket].Data, m_pStream->m_iFramesPerChunk, m_iLastCursorPos, static_cast<int>(iCurrentFrame) );
 
 	/* Increment m_iLastCursorPos. */
 	m_iLastCursorPos += m_pStream->m_iFramesPerChunk;
