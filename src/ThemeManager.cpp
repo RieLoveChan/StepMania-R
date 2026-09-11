@@ -139,8 +139,8 @@ static void FileNameToMetricsGroupAndElement( const RString &sFileName, RString 
 	}
 	else
 	{
-		sMetricsGroupOut = sFileName.Left( iIndexOfFirstSpace );
-		sElementOut = sFileName.Right( sFileName.size() - iIndexOfFirstSpace - 1 );
+		sMetricsGroupOut = sFileName.Left( static_cast<int>(iIndexOfFirstSpace) );
+		sElementOut = sFileName.Right( static_cast<int>(sFileName.size() - iIndexOfFirstSpace - 1) );
 	}
 }
 
@@ -193,7 +193,7 @@ void ThemeManager::GetThemeNames( std::vector<RString>& AddTo )
 void ThemeManager::GetSelectableThemeNames( std::vector<RString>& AddTo )
 {
 	GetThemeNames( AddTo );
-	for( int i=AddTo.size()-1; i>=0; i-- )
+	for( int i=static_cast<int>(AddTo.size())-1; i>=0; i-- )
 	{
 		if(!IsThemeNameValid(AddTo[i]))
 		{
@@ -206,7 +206,7 @@ int ThemeManager::GetNumSelectableThemes()
 {
 	std::vector<RString> vs;
 	GetSelectableThemeNames( vs );
-	return vs.size();
+	return static_cast<int>(vs.size());
 }
 
 bool ThemeManager::DoesThemeExist( const RString &sThemeName )
@@ -605,12 +605,12 @@ void ThemeManager::FilterFileLanguages( std::vector<RString> &asPaths )
 	std::vector<RString>::iterator it =
 		partition( asPaths.begin(), asPaths.end(), CompareLanguageTag(m_sCurLanguage) );
 
-	int iDist = distance( asPaths.begin(), it );
+	int iDist = static_cast<int>(distance( asPaths.begin(), it ));
 	if( iDist == 0 )
 	{
 		// We didn't find any for the current language.  Try BASE_LANGUAGE.
 		it = partition( asPaths.begin(), asPaths.end(), CompareLanguageTag(SpecialFiles::BASE_LANGUAGE) );
-		iDist = distance( asPaths.begin(), it );
+		iDist = static_cast<int>(distance( asPaths.begin(), it ));
 	}
 
 	if( iDist == 1 )
@@ -1184,7 +1184,7 @@ void ThemeManager::GetLanguagesForTheme( const RString &sThemeName, std::vector<
 			continue;
 
 		// strip ".ini"
-		RString s2 = s.Left( s.size()-4 );
+		RString s2 = s.Left( static_cast<int>(s.size())-4 );
 
 		asLanguagesOut.push_back( s2 );
 	}
@@ -1303,7 +1303,7 @@ void ThemeManager::GetMetricsThatBeginWith( const RString &sMetricsGroup_, const
 			for( XAttrs::const_iterator j = cur->m_attrs.lower_bound( sValueName ); j != cur->m_attrs.end(); ++j )
 			{
 				const RString &sv = j->first;
-				if( sv.Left(sValueName.size()) == sValueName )
+				if( sv.Left(static_cast<int>(sValueName.size())) == sValueName )
 					vsValueNamesOut.insert( sv );
 				else	// we passed the last metric that matched sValueName
 					break;
@@ -1409,7 +1409,7 @@ public:
 		if(metric_node != nullptr)
 		{
 			// Placed in a table indexed by number, so the order is always the same.
-			lua_createtable(L, metric_node->m_attrs.size(), 0);
+			lua_createtable(L, static_cast<int>(metric_node->m_attrs.size()), 0);
 			int next_index= 1;
 			for(XAttrs::const_iterator n= metric_node->m_attrs.begin(); n != metric_node->m_attrs.end(); ++n)
 			{
@@ -1449,12 +1449,12 @@ public:
 
 	static int get_theme_fallback_list(T* /* p */, lua_State* L)
 	{
-		lua_createtable(L, g_vThemes.size(), 0);
+		lua_createtable(L, static_cast<int>(g_vThemes.size()), 0);
 		int ret= lua_gettop(L);
 		for(std::size_t tid= 0; tid < g_vThemes.size(); ++tid)
 		{
 			lua_pushstring(L, g_vThemes[tid].sThemeName.c_str());
-			lua_rawseti(L, ret, tid+1);
+			lua_rawseti(L, ret, static_cast<int>(tid+1));
 		}
 		return 1;
 	}

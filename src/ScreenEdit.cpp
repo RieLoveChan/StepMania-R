@@ -1330,7 +1330,7 @@ static RString GetOneBakedRandomFile( Song *pSong, bool bTryGenre = true )
 		vsNames,
 		bTryGenre );
 
-	return vsNames.empty() ? RString() : vsNames[RandomInt(vsNames.size())];
+	return vsNames.empty() ? RString() : vsNames[RandomInt(static_cast<int>(vsNames.size()))];
 }
 
 static MenuDef g_InsertTapAttack(
@@ -1459,7 +1459,7 @@ void ScreenEdit::Init()
 	m_SnapDisplay.SetXY( EDIT_X, PLAYER_Y_STANDARD );
 	m_SnapDisplay.Load();
 	// xxx: hardcoded command -aj
-	m_SnapDisplay.SetZoom( SCREEN_HEIGHT/480*0.5 );
+	m_SnapDisplay.SetZoom( static_cast<float>(SCREEN_HEIGHT/480*0.5) );
 	this->AddChild( &m_SnapDisplay );
 
 	// We keep track of this bit of state so that when the user is in Edit/Sync Songs and makes a change to the NoteSkins,
@@ -1497,7 +1497,7 @@ void ScreenEdit::Init()
 
 	m_pSteps->GetNoteData( m_NoteDataEdit );
 	m_NoteFieldEdit.SetXY( EDIT_X, EDIT_Y );
-	m_NoteFieldEdit.SetZoom( SCREEN_HEIGHT/480*0.5 );
+	m_NoteFieldEdit.SetZoom( static_cast<float>(SCREEN_HEIGHT/480*0.5) );
 	m_NoteFieldEdit.Init( &m_PlayerStateEdit, PLAYER_HEIGHT*2, false );
 	m_NoteFieldEdit.Load( &m_NoteDataEdit, -240, 850 );
 	this->AddChild( &m_NoteFieldEdit );
@@ -2306,7 +2306,7 @@ bool ScreenEdit::InputEdit( const InputEventPlus &input, EditButton EditB )
 				break;
 			case EDIT_BUTTON_SCROLL_UP_TS:
 			case EDIT_BUTTON_SCROLL_DOWN_TS:
-				fBeatsToMove = beatsPerMeasure;
+				fBeatsToMove = static_cast<float>(beatsPerMeasure);
 				if( EditB == EDIT_BUTTON_SCROLL_UP_TS )
 					fBeatsToMove *= -1;
 				break;
@@ -2839,7 +2839,7 @@ bool ScreenEdit::InputEdit( const InputEventPlus &input, EditButton EditB )
 				{
 					g_CourseMode.rows[0].choices.push_back( crs->GetDisplayFullTitle() );
 					if( crs == GAMESTATE->m_pCurCourse )
-						g_CourseMode.rows[0].iDefaultChoice = g_CourseMode.rows[0].choices.size()-1;
+						g_CourseMode.rows[0].iDefaultChoice = static_cast<int>(g_CourseMode.rows[0].choices.size())-1;
 				}
 			}
 
@@ -3935,10 +3935,10 @@ void ScreenEdit::HandleScreenMessage( const ScreenMessage SM )
 		const TapNote &oldNote = m_NoteDataEdit.GetTapNote(track, row);
 		TapNote newNote = oldNote; // need to lose the const. not feeling like casting.
 		std::vector<RString> &kses = m_pSong->m_vsKeysoundFile;
-		unsigned pos = find(kses.begin(), kses.end(), answer) - kses.begin();
+		unsigned pos = static_cast<unsigned>(find(kses.begin(), kses.end(), answer) - kses.begin());
 		if (pos == kses.size())
 		{
-			newNote.iKeysoundIndex = kses.size();
+			newNote.iKeysoundIndex = static_cast<int>(kses.size());
 			kses.push_back(answer);
 		}
 		else
@@ -4162,7 +4162,7 @@ void ScreenEdit::HandleScreenMessage( const ScreenMessage SM )
 					g_IndividualAttack.rows[col].SetOneUnthemedChoice(mods[i].c_str());
 				}
 
-				g_IndividualAttack.rows.push_back(MenuRowDef(mods.size() + 2,
+				g_IndividualAttack.rows.push_back(MenuRowDef(static_cast<int>(mods.size()) + 2,
 															 "Add Mod",
 															 true,
 															 EditMode_CourseMods,
@@ -5042,7 +5042,7 @@ static bool ConvertMappingInputToMapping(RString const& mapstr, int* mapping, RS
 		if(mapping_input[track].empty() || mapping_input[track] == " ")
 		{
 			// This allows blank entries to mean "pass through".
-			mapping[track]= track+1;
+			mapping[track]= static_cast<int>(track+1);
 		}
 		else if(!(mapping_input[track] >> mapping[track]))
 		{
@@ -5059,7 +5059,7 @@ static bool ConvertMappingInputToMapping(RString const& mapstr, int* mapping, RS
 	}
 	for(; track < tracks_for_type; ++track)
 	{
-		mapping[track]= track;
+		mapping[track]= static_cast<int>(track);
 	}
 	return true;
 }
@@ -6503,7 +6503,7 @@ void ScreenEdit::DoKeyboardTrackMenu()
 	}
 	choices.push_back(NEWKEYSND);
 	choices.push_back(NO_KEYSND);
-	int numKeysounds = kses.size();
+	int numKeysounds = static_cast<int>(kses.size());
 	int foundKeysounds = 0;
 	for (int i = 0; i < m_NoteDataEdit.GetNumTracks(); ++i)
 	{

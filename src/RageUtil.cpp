@@ -707,7 +707,7 @@ RString join( const RString &sDelimitor, std::vector<RString>::const_iterator be
 
 RString SmEscape( const RString &sUnescaped, const std::vector<char> charsToEscape )
 {
-	return SmEscape(sUnescaped.c_str(), sUnescaped.size(), charsToEscape);
+	return SmEscape(sUnescaped.c_str(), static_cast<int>(sUnescaped.size()), charsToEscape);
 }
 
 RString SmEscape ( const char *cUnescaped, int len, const std::vector<char> charsToEscape )
@@ -756,7 +756,7 @@ RString SmUnescape( const RString &sEscaped )
 
 RString DwiEscape( const RString &sUnescaped )
 {
-	return DwiEscape( sUnescaped.c_str(), sUnescaped.size() );
+	return DwiEscape( sUnescaped.c_str(), static_cast<int>(sUnescaped.size()) );
 }
 
 RString DwiEscape( const char *cUnescaped, int len )
@@ -781,7 +781,7 @@ RString DwiEscape( const char *cUnescaped, int len )
 template <class S>
 static int DelimitorLength( const S &Delimitor )
 {
-	return Delimitor.size();
+	return static_cast<int>(Delimitor.size());
 }
 
 static int DelimitorLength( char /* Delimitor */ )
@@ -863,7 +863,7 @@ void do_split( const S &Source, const S &Delimitor, int &begin, int &size, int l
 	if( size != -1 )
 	{
 		// Start points to the beginning of the last delimiter. Move it up.
-		begin += size+Delimitor.size();
+		begin += size+static_cast<int>(Delimitor.size());
 		begin = std::min( begin, len );
 	}
 
@@ -886,7 +886,7 @@ void do_split( const S &Source, const S &Delimitor, int &begin, int &size, int l
 		pos = Source.find( Delimitor, begin );
 	if( pos == Source.npos || (int) pos > len )
 		pos = len;
-	size = pos - begin;
+	size = static_cast<int>(pos) - begin;
 }
 
 void split( const RString &Source, const RString &Delimitor, int &begin, int &size, int len, const bool bIgnoreEmpty )
@@ -901,12 +901,12 @@ void split( const std::wstring &Source, const std::wstring &Delimitor, int &begi
 
 void split( const RString &Source, const RString &Delimitor, int &begin, int &size, const bool bIgnoreEmpty )
 {
-	do_split( Source, Delimitor, begin, size, Source.size(), bIgnoreEmpty );
+	do_split( Source, Delimitor, begin, size, static_cast<int>(Source.size()), bIgnoreEmpty );
 }
 
 void split( const std::wstring &Source, const std::wstring &Delimitor, int &begin, int &size, const bool bIgnoreEmpty )
 {
-	do_split( Source, Delimitor, begin, size, Source.size(), bIgnoreEmpty );
+	do_split( Source, Delimitor, begin, size, static_cast<int>(Source.size()), bIgnoreEmpty );
 }
 
 /*
@@ -1281,7 +1281,7 @@ void TrimLeft( RString &sStr, const char *s )
 
 void TrimRight( RString &sStr, const char *s )
 {
-	int n = sStr.size();
+	int n = static_cast<int>(sStr.size());
 	while( n > 0 && strchr(s, sStr[n-1]) )
 		n--;
 
@@ -1498,7 +1498,7 @@ Regex::~Regex()
 bool Regex::Compare( const RString &sStr )
 {
 	int iMat[128*3];
-	int iRet = pcre_exec( (pcre *) m_pReg, nullptr, sStr.data(), sStr.size(), 0, 0, iMat, 128*3 );
+	int iRet = pcre_exec( (pcre *) m_pReg, nullptr, sStr.data(), static_cast<int>(sStr.size()), 0, 0, iMat, 128*3 );
 
 	if( iRet < -1 )
 		RageException::Throw( "Unexpected return from pcre_exec('%s'): %i.", m_sPattern.c_str(), iRet );
@@ -1511,7 +1511,7 @@ bool Regex::Compare( const RString &sStr, std::vector<RString> &asMatches )
 	asMatches.clear();
 
 	int iMat[128*3];
-	int iRet = pcre_exec( (pcre *) m_pReg, nullptr, sStr.data(), sStr.size(), 0, 0, iMat, 128*3 );
+	int iRet = pcre_exec( (pcre *) m_pReg, nullptr, sStr.data(), static_cast<int>(sStr.size()), 0, 0, iMat, 128*3 );
 
 	if( iRet < -1 )
 		RageException::Throw( "Unexpected return from pcre_exec('%s'): %i.", m_sPattern.c_str(), iRet );
@@ -1805,7 +1805,7 @@ void MakeUpper( char *p, std::size_t iLen )
 			continue;
 		}
 
-		int iRemaining = iLen - (p-pStart);
+		int iRemaining = static_cast<int>(iLen - (p-pStart));
 		p += UnicodeDoUpper( p, iRemaining, g_UpperCase );
 	}
 }
@@ -1825,7 +1825,7 @@ void MakeLower( char *p, std::size_t iLen )
 			continue;
 		}
 
-		int iRemaining = iLen - (p-pStart);
+		int iRemaining = static_cast<int>(iLen - (p-pStart));
 		p += UnicodeDoUpper( p, iRemaining, g_LowerCase );
 	}
 }
@@ -2085,9 +2085,9 @@ void Replace_Unicode_Markers( RString &sText )
 
 		if( iPos == sText.npos )
 			break;
-		iStart = iPos+1;
+		iStart = static_cast<unsigned>(iPos+1);
 
-		unsigned p = iPos;
+		unsigned p = static_cast<unsigned>(iPos);
 		p += 2;
 
 		// Found &# or &x. Is it followed by digits and a semicolon?
@@ -2159,7 +2159,7 @@ RString Dirname( const RString &dir )
 	if( dir.size() == 1 && dir[0] == '/' )
 		return "/";
 
-	int pos = dir.size()-1;
+	int pos = static_cast<int>(dir.size())-1;
 	// Skip trailing slashes.
 	while( pos >= 0 && dir[pos] == '/' )
 		--pos;
@@ -2553,7 +2553,7 @@ int LuaFunc_JsonEncode(lua_State* L)
 				{
 					// array
 					Json::Value array(Json::arrayValue);
-					array.resize(len);
+					array.resize(static_cast<Json::Value::ArrayIndex>(len));
 
 					for (unsigned int i = 0; i < len; i++)
 					{
@@ -2696,7 +2696,7 @@ void luafunc_approach_internal(lua_State* L, int valind, int goalind, int speedi
 	{ \
 		luaL_error(L, "approach: " #num_name " for approach %d is not a number.", process_index); \
 	} \
-	(dest)= lua_tonumber(L, index);
+	(dest)= static_cast<float>(lua_tonumber(L, index));
 	float val= 0;
 	float goal= 0;
 	float speed= 0;
@@ -2741,7 +2741,7 @@ int LuaFunc_multiapproach(lua_State* L)
 	float mult= 1.0f;
 	if(lua_isnumber(L, 4))
 	{
-		mult= lua_tonumber(L, 4);
+		mult= static_cast<float>(lua_tonumber(L, 4));
 	}
 	if(currents_len != goals_len || currents_len != speeds_len)
 	{
@@ -2753,11 +2753,11 @@ int LuaFunc_multiapproach(lua_State* L)
 	}
 	for(std::size_t i= 1; i <= currents_len; ++i)
 	{
-		lua_rawgeti(L, 1, i);
-		lua_rawgeti(L, 2, i);
-		lua_rawgeti(L, 3, i);
-		luafunc_approach_internal(L, -3, -2, -1, mult, i);
-		lua_rawseti(L, 1, i);
+		lua_rawgeti(L, 1, static_cast<int>(i));
+		lua_rawgeti(L, 2, static_cast<int>(i));
+		lua_rawgeti(L, 3, static_cast<int>(i));
+		luafunc_approach_internal(L, -3, -2, -1, mult, static_cast<int>(i));
+		lua_rawseti(L, 1, static_cast<int>(i));
 		lua_pop(L, 3);
 	}
 	lua_pushvalue(L, 1);

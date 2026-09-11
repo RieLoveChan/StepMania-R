@@ -119,7 +119,7 @@ std::size_t zipRead(void *pOpaque, mz_uint64 file_ofs, void *pBuf, std::size_t n
 {
 	RageFile *f = static_cast<RageFile*>(pOpaque);
 
-	const int pos = f->Seek(file_ofs);
+	const int pos = f->Seek(static_cast<int>(file_ofs));
 	if (pos >= 0 && static_cast<std::uint64_t>(pos) != file_ofs)
 	{
 		return 0;
@@ -466,7 +466,7 @@ RageFileManager::~RageFileManager()
 
 	/* Note that drivers can use previously-loaded drivers, eg. to load a ZIP
 	 * from the FS.  Unload drivers in reverse order. */
-	for( int i = g_pDrivers.size()-1; i >= 0; --i )
+	for( int i = static_cast<int>(g_pDrivers.size())-1; i >= 0; --i )
 	{
 		delete g_pDrivers[i]->m_pDriver;
 		delete g_pDrivers[i];
@@ -490,11 +490,11 @@ RString LoadedDriver::GetPath( const RString &sPath ) const
 			return RString();
 	}
 
-	if( sPath.Left(m_sMountPoint.size()).CompareNoCase(m_sMountPoint) )
+	if( sPath.Left(static_cast<int>(m_sMountPoint.size())).CompareNoCase(m_sMountPoint) )
 		return RString(); /* no match */
 
 	/* Add one, so we don't cut off the leading slash. */
-	RString sRet = sPath.Right( sPath.size() - m_sMountPoint.size() + 1 );
+	RString sRet = sPath.Right( static_cast<int>(sPath.size() - m_sMountPoint.size() + 1) );
 	return sRet;
 }
 
@@ -515,7 +515,7 @@ void RageFileManager::GetDirListing( const RString &sPath_, std::vector<RString>
 	ReferenceAllDrivers( apDriverList );
 
 	int iDriversThatReturnedFiles = 0;
-	int iOldSize = AddTo.size();
+	int iOldSize = static_cast<int>(AddTo.size());
 	for( unsigned i = 0; i < apDriverList.size(); ++i )
 	{
 		LoadedDriver *pLoadedDriver = apDriverList[i];
@@ -523,7 +523,7 @@ void RageFileManager::GetDirListing( const RString &sPath_, std::vector<RString>
 		if( p.empty() )
 			continue;
 
-		const unsigned OldStart = AddTo.size();
+		const unsigned OldStart = static_cast<unsigned>(AddTo.size());
 
 		pLoadedDriver->m_pDriver->GetDirListing( p, AddTo, bOnlyDirs, bReturnPathToo );
 		if( AddTo.size() != OldStart )
@@ -947,7 +947,7 @@ RString RageFileManager::ResolvePath(const RString &path)
 		if ( pDriver->m_sType != "dir" && pDriver->m_sType != "dirro" )
 			continue;
 
-		int iMountPointLen = pDriver->m_sMountPoint.length();
+		int iMountPointLen = static_cast<int>(pDriver->m_sMountPoint.length());
 		if( tmpPath.substr(0, iMountPointLen) != pDriver->m_sMountPoint )
 			continue;
 
@@ -1095,7 +1095,7 @@ RageFileBasic *RageFileManager::OpenForWriting( const RString &sPath, int mode, 
 	/* Only write files if they'll be read.  If a file exists in any driver, don't
 	 * create or write files in any driver mounted after it, because when we later
 	 * try to read it, we'll get that file and not the one we wrote. */
-	int iMaximumDriver = apDriverList.size();
+	int iMaximumDriver = static_cast<int>(apDriverList.size());
 	if( !Values.empty() && Values[0].second == 0 )
 		iMaximumDriver = Values[0].first;
 
@@ -1175,7 +1175,7 @@ void GetDirListingRecursive( const RString &sDir, const RString &sMatch, std::ve
 		vsDirs.erase( vsDirs.begin()+i );
 		i--;
 	}
-	for( int i=vsFiles.size()-1; i>=0; i-- )
+	for( int i=static_cast<int>(vsFiles.size())-1; i>=0; i-- )
 	{
 		if( !IsADirectory(vsFiles[i]) )
 			AddTo.push_back( vsFiles[i] );
@@ -1196,7 +1196,7 @@ void GetDirListingRecursive( RageFileDriver *prfd, const RString &sDir, const RS
 		vsDirs.erase( vsDirs.begin()+i );
 		i--;
 	}
-	for( int i=vsFiles.size()-1; i>=0; i-- )
+	for( int i=static_cast<int>(vsFiles.size())-1; i>=0; i-- )
 	{
 		if( prfd->GetFileType(vsFiles[i]) != RageFileManager::TYPE_DIR )
 			AddTo.push_back( vsFiles[i] );
