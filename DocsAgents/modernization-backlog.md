@@ -18,12 +18,11 @@ as new sweeps find things. Numbers/anchors confirmed 2026-09-02.
 
 ## Tier 1 — Blocks safe continuous work
 
-**Tier 1 is now empty.** Items 1–3 all closed (2026-09-05): the safety
-net (smoke + Catch2 harness + characterization coverage of the pure-ish
-cores), the MSVC-warning ratchet's mechanical categories, and the 2009
-cppcheck leak list. What remains for the warning ratchet is `C4244`/
-`C4267`, tracked under Tier 3 / item 2 — it needs a scoping conversation,
-not continuous-work unblocking.
+**Tier 1 is now empty.** Items 1–3 all closed: the safety net (smoke +
+Catch2 harness + characterization coverage of the pure-ish cores,
+2026-09-05), the MSVC-warning ratchet (2026-09-11, all 5 categories
+promoted — see item 2 below), and the 2009 cppcheck leak list
+(2026-09-05).
 
 ### 27. `sm_tests` crashed on the first engine assert on Unix — FIXED 2026-09-10
 Diagnosed in a Docker `ubuntu:24.04` container with gdb. Root cause was
@@ -76,7 +75,7 @@ Full suite green on Windows **and** Linux (`5966 / 226`); the CI
   A committed simfile corpus is a future add if/when the harness grows
   an engine-bootstrap fixture). **311 assertions / 72 cases.**
 
-### 2. Warnings on but unmeasured / unenforced — ratchet turning, 3 of 5 MSVC categories promoted
+### 2. Warnings on but unmeasured / unenforced — DONE 2026-09-11, all 5 MSVC categories promoted
 `WITH_WERROR` exists (default OFF, ON in Windows CI) and counts are
 captured in [`baseline.md`](./baseline.md) (ADR 0001 §7 mechanism).
 **Done (2026-09-04):** `C4189` (unused local, was 26) and `C4702`
@@ -577,7 +576,60 @@ each): `WorkoutGraph.cpp`, `WheelBase.h`, `Tween.cpp`, `TrailUtil.cpp`,
 `NotesWriterSM.cpp`, `NoteData.h`, `Profile.h`, `Course.h`) are
 §5-protected — characterization-only casts, re-verify against the
 matching `test_NotesLoader*.cpp`/existing coverage before considering
-each done.
+each done. All 54 fixed and reconfirmed clean.
+**A fourth methodology trap, caught right at the finish line:** every
+"clean, edit-free `--clean-first` rebuild" this sweep used a dedup
+regex anchored on `^[A-Za-z]:` that silently stopped matching any path
+containing a space or parenthesis -- which includes the default MSVC
+toolchain install path (`C:\Program Files (x86)\...`), so a genuine
+site instantiated from our code but attributed by the compiler to a
+*standard-library header* line (e.g. `<algorithm>`'s `std::transform`
+body) was invisible to every count this whole sweep. Worse: every
+"complete" clean rebuild had also been silently stopping exactly at
+the alphabetical end of the root `src/*.cpp` file list and never
+reaching the `src/arch/` and `src/archutils/Win32/` subdirectories at
+all -- not a regex problem, a genuinely incomplete build each time,
+never previously suspected because the tail of the log always looked
+plausible (ending at `XmlFileUtil.cpp`) and the file count was never
+cross-checked against the source tree. Both gaps were caught only by
+this session's final full-tree rebuild, which reached and warned on
+files never seen in any earlier count in this sweep. Fixed:
+`Song.cpp`'s two `std::transform(..., ::tolower)` calls (the
+`<algorithm>`-attributed site -- `int`-returning C library function
+assigned through a `char` iterator, fixed with a casting lambda,
+incidentally also fixing the classic tolower-with-negative-char UB
+gotcha); 14 files / 25 sites across `src/arch/` and
+`src/archutils/Win32/` (`RageSoundDriver_WDMKS.cpp` 5,
+`ErrorStrings.cpp` 4, `MovieTexture_FFMpeg.cpp` 3,
+`CrashHandlerNetworking.cpp` 2, `InputHandler_DirectInput.cpp` 2,
+`VideoDriverInfo.cpp`/`USB.cpp`/`RegistryAccess.cpp`/`DialogUtil.cpp`/
+`RageSoundDriver_Generic_Software.cpp`/`DSoundHelpers.cpp`/
+`MemoryCardDriverThreaded_Windows.cpp`/`InputHandler_Win32_RTIO.cpp`/
+`ArchHooks_Win32.cpp` 1 each -- same recurring narrowing patterns,
+mostly Win32 API `int`/`DWORD`/`WORD` params fed `size_t`). One site
+was in **vendored** code (`extern/ffmpeg-w32-prebuilt/include/
+libavutil/common.h`'s inline clamp helpers, instantiated from
+`MovieTexture_FFMpeg.cpp`) -- not patched (never edit vendored code);
+instead scoped an MSVC-only `#pragma warning(push)` / `disable: 4244`
+/ `pop` around just the FFmpeg `#include` block in
+`MovieTexture_FFMpeg.h`, the same "leave vendored trees alone" policy
+already used for the `ixwebsocket` clang-tidy exclusion (item 12).
+**DONE 2026-09-11.** A genuinely edit-free, full-tree `--clean-first`
+Debug rebuild with `/wd4244`/`/wd4267` removed now completes with
+**exit code 0 and zero `C4244`/`C4267` warnings anywhere** --
+`/wd4244`/`/wd4267` **removed from `src/CMakeLists.txt` permanently**,
+completing the MSVC-warning ratchet (all 5 categories now promoted to
+`-Werror`: `C4189`, `C4702`, `C4100`, `C4244`, `C4267`). Total sweep
+across the whole session: real starting count was misjudged multiple
+times before landing on the true baseline of **528 unique sites**
+(`RageUtil.h`/`RageTimer.h`'s Release-target sites aside), fixed across
+~140 files in ~16 verified batches, ending with the 26 late-discovered
+`arch`/`archutils` sites bringing the true grand total past 550. Every
+fix was a `static_cast`/casting-lambda documenting pre-existing
+intentional narrowing (Win32 API params, Lua bindings, iterator diffs,
+reverse-loop bounds, `RString::Left`/`Right` lengths) -- zero logic
+changes; `sm_tests` held at 5966/226 throughout, and every §5-protected
+site was re-verified against its characterization test.
 
 ### 3. Stale cppcheck leak list — DONE 2026-09-05, all dismissed
 ~~`Docs/Devdocs/possible memory leaks.txt` — from 2009. Re-triaged by
