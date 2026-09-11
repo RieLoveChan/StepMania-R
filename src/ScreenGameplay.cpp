@@ -552,11 +552,11 @@ void ScreenGameplay::Init()
 		if(LuaHelpers::RunScriptOnStack(L, err, 2, 3, true))
 		{
 			RString marge= "Margin value must be a number.";
-			margins[PLAYER_1][0]= SafeFArg(L, -3, marge, 40);
-			float center= SafeFArg(L, -2, marge, 80);
+			margins[PLAYER_1][0]= static_cast<float>( SafeFArg(L, -3, marge, 40) );
+			float center= static_cast<float>( SafeFArg(L, -2, marge, 80) );
 			margins[PLAYER_1][1]= center / 2.0f;
 			margins[PLAYER_2][0]= center / 2.0f;
-			margins[PLAYER_2][1]= SafeFArg(L, -1, marge, 40);
+			margins[PLAYER_2][1]= static_cast<float>( SafeFArg(L, -1, marge, 40) );
 		}
 		lua_settop(L, 0);
 		LUA->Release(L);
@@ -989,7 +989,7 @@ void ScreenGameplay::InitSongQueues()
 				int iIndexBase = 0;
 				if( iter != vpSteps.end() )
 				{
-					iIndexBase = iter - vpSteps.begin();
+					iIndexBase = static_cast<int>( iter - vpSteps.begin() );
 					CLAMP( iIndexBase, 0, vpSteps.size() - GAMESTATE->m_iNumMultiplayerNoteFields );
 				}
 
@@ -2963,7 +2963,7 @@ void ScreenGameplay::HandleScreenMessage( const ScreenMessage SM )
 	}
 	else if( SM >= SM_BattleTrickLevel1 && SM <= SM_BattleTrickLevel3 )
 	{
-		int iTrickLevel = SM-SM_BattleTrickLevel1+1;
+		int iTrickLevel = static_cast<int>( SM-SM_BattleTrickLevel1 ) + 1;
 		PlayAnnouncer( ssprintf("gameplay battle trick level%d",iTrickLevel), 3 );
 		if( SM == SM_BattleTrickLevel1 ) m_soundBattleTrickLevel1.Play(false);
 		else if( SM == SM_BattleTrickLevel2 ) m_soundBattleTrickLevel2.Play(false);
@@ -2971,7 +2971,7 @@ void ScreenGameplay::HandleScreenMessage( const ScreenMessage SM )
 	}
 	else if( SM >= SM_BattleDamageLevel1 && SM <= SM_BattleDamageLevel3 )
 	{
-		int iDamageLevel = SM-SM_BattleDamageLevel1+1;
+		int iDamageLevel = static_cast<int>( SM-SM_BattleDamageLevel1 ) + 1;
 		PlayAnnouncer( ssprintf("gameplay battle damage level%d",iDamageLevel), 3 );
 	}
 	else if( SM == SM_DoPrevScreen )
@@ -3271,7 +3271,7 @@ public:
 		float prev_turning= -1;
 		for(std::size_t n= 1; n < size; ++n)
 		{
-			lua_pushnumber(L, n);
+			lua_pushnumber(L, static_cast<lua_Number>(n));
 			lua_gettable(L, index);
 			float v= FArg(-1);
 			if(v < prev_turning || v > 1)
