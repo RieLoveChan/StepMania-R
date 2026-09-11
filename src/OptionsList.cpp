@@ -53,7 +53,7 @@ void OptionListRow::SetFromHandler( const OptionRowHandler *pHandler )
 	if( pHandler == nullptr )
 		return;
 
-	unsigned int iNum = std::max( pHandler->m_Def.m_vsChoices.size(), m_Text.size() ) + 1;
+	unsigned int iNum = static_cast<unsigned int>( std::max( pHandler->m_Def.m_vsChoices.size(), m_Text.size() ) ) + 1;
 	m_Text.resize( iNum, m_Text[0] );
 	m_Underlines.resize( iNum, m_Underlines[0] );
 
@@ -68,7 +68,7 @@ void OptionListRow::SetFromHandler( const OptionRowHandler *pHandler )
 
 	SetTextFromHandler( pHandler );
 
-	const unsigned iCnt = pHandler->m_Def.m_vsChoices.size();
+	const unsigned iCnt = static_cast<unsigned>( pHandler->m_Def.m_vsChoices.size() );
 	m_bItemsInTwoRows = (int) iCnt > MAX_ITEMS_BEFORE_SPLIT;
 	const float fWidth = ITEMS_SPLIT_WIDTH;
 	float fY = 0;
@@ -96,7 +96,7 @@ void OptionListRow::SetFromHandler( const OptionRowHandler *pHandler )
 			fY += ITEMS_SPACING_Y;
 	}
 
-	int iExit = pHandler->m_Def.m_vsChoices.size();
+	int iExit = static_cast<int>( pHandler->m_Def.m_vsChoices.size() );
 	m_Text[iExit].SetText( "Exit" ); // XXX localize
 	m_Text[iExit].SetXY( 0, fY );
 	this->AddChild( &m_Text[iExit] );
@@ -234,7 +234,7 @@ void OptionsList::Load( RString sType, PlayerNumber pn )
 
 		for( std::size_t i = 0; i < pHand->m_Def.m_vsChoices.size(); ++i )
 		{
-			RString sScreen = pHand->GetScreen(i);
+			RString sScreen = pHand->GetScreen(static_cast<int>(i));
 			if( !sScreen.empty() )
 				setToLoad.push_back( sScreen );
 		}
@@ -406,7 +406,7 @@ bool OptionsList::Input( const InputEventPlus &input )
 					int iSelection = GetOneSelection(sDest);
 					int iDir = (input.MenuI == GAME_BUTTON_RIGHT? +1:-1);
 					iSelection += iDir;
-					wrap( iSelection, bTargetSelections.size() );
+					wrap( iSelection, static_cast<int>(bTargetSelections.size()) );
 					SelectItem( sDest, iSelection );
 
 					Message lMsg("OptionsListQuickChange");
@@ -426,7 +426,7 @@ bool OptionsList::Input( const InputEventPlus &input )
 			return false;
 
 		--m_iMenuStackSelection;
-		wrap( m_iMenuStackSelection, pHandler->m_Def.m_vsChoices.size()+1 ); // +1 for exit row
+		wrap( m_iMenuStackSelection, static_cast<int>(pHandler->m_Def.m_vsChoices.size())+1 ); // +1 for exit row
 		PositionCursor();
 
 		Message lMsg("OptionsListLeft");
@@ -441,7 +441,7 @@ bool OptionsList::Input( const InputEventPlus &input )
 			return false;
 
 		++m_iMenuStackSelection;
-		wrap( m_iMenuStackSelection, pHandler->m_Def.m_vsChoices.size()+1 ); // +1 for exit row
+		wrap( m_iMenuStackSelection, static_cast<int>(pHandler->m_Def.m_vsChoices.size())+1 ); // +1 for exit row
 		PositionCursor();
 
 		Message lMsg("OptionsListRight");
@@ -575,8 +575,8 @@ int OptionsList::FindScreenInHandler( const OptionRowHandler *pHandler, RString 
 {
 	for( std::size_t i = 0; i < pHandler->m_Def.m_vsChoices.size(); ++i )
 	{
-		if( pHandler->GetScreen(i) == sScreen )
-			return i;
+		if( pHandler->GetScreen(static_cast<int>(i)) == sScreen )
+			return static_cast<int>(i);
 	}
 	return -1;
 }

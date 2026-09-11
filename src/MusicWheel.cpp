@@ -719,7 +719,7 @@ void MusicWheel::BuildWheelItemDatas( std::vector<MusicWheelItemData *> &arrayWh
 							RageColor colorSection = SECTION_COLORS.GetValue(iSectionColorIndex);
 							iSectionColorIndex = (iSectionColorIndex+1) % NUM_SECTION_COLORS;
 							// Add the section item
-							arrayWheelItemDatas.push_back( new MusicWheelItemData(WheelItemDataType_Section, nullptr, sectionName, nullptr, colorSection, songs.size()) );
+							arrayWheelItemDatas.push_back( new MusicWheelItemData(WheelItemDataType_Section, nullptr, sectionName, nullptr, colorSection, static_cast<int>(songs.size())) );
 							// Add all the songs in this section
 							for (auto const& song : songs)
 							{
@@ -735,7 +735,7 @@ void MusicWheel::BuildWheelItemDatas( std::vector<MusicWheelItemData *> &arrayWh
 							RageColor colorSection = SECTION_COLORS.GetValue(iSectionColorIndex);
 							iSectionColorIndex = (iSectionColorIndex+1) % NUM_SECTION_COLORS;
 							// Add the section item
-							arrayWheelItemDatas.push_back( new MusicWheelItemData(WheelItemDataType_Section, nullptr, ssprintf("%d",sectionName), nullptr, colorSection, songs.size()) );
+							arrayWheelItemDatas.push_back( new MusicWheelItemData(WheelItemDataType_Section, nullptr, ssprintf("%d",sectionName), nullptr, colorSection, static_cast<int>(songs.size())) );
 							// Add all the songs in this section
 							for (auto const& song : songs)
 							{
@@ -989,7 +989,7 @@ void MusicWheel::FilterWheelItemDatas(std::vector<MusicWheelItemData *> &aUnFilt
 {
 	aFilteredData.clear();
 
-	unsigned unfilteredSize=aUnFilteredDatas.size();
+	unsigned unfilteredSize=static_cast<unsigned>(aUnFilteredDatas.size());
 
 	/* Only add WheelItemDataType_Portal if there's at least one song on the list. */
 	bool bFoundAnySong = false;
@@ -1106,7 +1106,7 @@ void MusicWheel::FilterWheelItemDatas(std::vector<MusicWheelItemData *> &aUnFilt
 	}
 
 	// Update the song count in each section header.
-	unsigned filteredSize=aFilteredData.size();
+	unsigned filteredSize=static_cast<unsigned>(aFilteredData.size());
 	for( unsigned i=0; i < filteredSize; )
 	{
 		MusicWheelItemData& WID = *aFilteredData[i];
@@ -1137,7 +1137,7 @@ void MusicWheel::FilterWheelItemDatas(std::vector<MusicWheelItemData *> &aUnFilt
 	/* Update the popularity.  This is affected by filtering. */
 	if( so == SORT_POPULARITY )
 	{
-		for( unsigned i=0; i < std::min<unsigned int>(3u, aFilteredData.size()); i++ )
+		for( unsigned i=0; i < std::min<unsigned int>(3u, static_cast<unsigned int>(aFilteredData.size())); i++ )
 		{
 			MusicWheelItemData& WID = *aFilteredData[i];
 			WID.m_Flags.iPlayersBestNumber = i+1;
@@ -1241,7 +1241,7 @@ void MusicWheel::UpdateSwitch()
 void MusicWheel::ChangeMusic( int iDist )
 {
 	m_iSelection += iDist;
-	wrap( m_iSelection, m_CurWheelItemData.size() );
+	wrap( m_iSelection, static_cast<int>(m_CurWheelItemData.size()) );
 
 	if( REMIND_WHEEL_POSITIONS && HIDE_INACTIVE_SECTIONS )
 	{
@@ -1334,7 +1334,7 @@ bool MusicWheel::NextSort()		// return true if change successful
 
 	// move to the next sort with wrapping
 	++cur;
-	wrap( cur, aSortOrders.size() );
+	wrap( cur, static_cast<int>(aSortOrders.size()) );
 
 	// apply new sort
 	SortOrder soNew = aSortOrders[cur];
@@ -1622,7 +1622,7 @@ RString MusicWheel::JumpToPrevGroup()
 			}
 		}
 		// in case it wasn't found above:
-		for( unsigned int i = m_CurWheelItemData.size()-1; i > 0; --i )
+		for( unsigned int i = static_cast<unsigned int>(m_CurWheelItemData.size())-1; i > 0; --i )
 		{
 			LOG->Trace( "JumpToPrevGroup iteration 2 | i = %u",i );
 			if( m_CurWheelItemData[i]->m_Type == WheelItemDataType_Section )
@@ -1717,7 +1717,7 @@ Song *MusicWheel::GetPreferredSelectionForRandomOrPortal()
 		if( i == NUM_PROBES/2 )
 			vDifficultiesToRequire.clear();
 
-		int iSelection = RandomInt( wid.size() );
+		int iSelection = RandomInt( static_cast<int>(wid.size()) );
 		if( wid[iSelection]->m_Type != WheelItemDataType_Song )
 			continue;
 

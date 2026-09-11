@@ -94,7 +94,7 @@ void TimingData::PrepareLookup()
 	const std::vector<TimingSegment*>& stops= m_avpTimingSegments[SEGMENT_STOP];
 	const std::vector<TimingSegment*>& delays= m_avpTimingSegments[SEGMENT_DELAY];
 
-	unsigned int total_segments= bpms.size() + warps.size() + stops.size() + delays.size();
+	unsigned int total_segments= static_cast<unsigned int>(bpms.size() + warps.size() + stops.size() + delays.size());
 	unsigned int lookup_entries= total_segments / segments_per_lookup;
 	m_beat_start_lookup.reserve(lookup_entries);
 	m_time_start_lookup.reserve(lookup_entries);
@@ -291,7 +291,7 @@ void TimingData::ShiftRange(int start_row, int end_row,
 					{
 						if(segs.size() > 1)
 						{
-							EraseSegment(segs, i, segs[i]);
+							EraseSegment(segs, static_cast<int>(i), segs[i]);
 							--i;
 							--last_affected;
 							erased = true;
@@ -313,7 +313,7 @@ void TimingData::ShiftRange(int start_row, int end_row,
 					{
 						if(segs.size() > 1)
 						{
-							EraseSegment(segs, i, segs[i]);
+							EraseSegment(segs, static_cast<int>(i), segs[i]);
 							--i;
 							--last_affected;
 							erased = true;
@@ -401,7 +401,7 @@ int TimingData::GetSegmentIndexAtRow(TimingSegmentType tst, int iRow ) const
 	if( vSegs.empty() )
 		return INVALID_INDEX;
 
-	int min = 0, max = vSegs.size() - 1;
+	int min = 0, max = static_cast<int>(vSegs.size()) - 1;
 	int l = min, r = max;
 	while( l <= r )
 	{
@@ -1307,7 +1307,7 @@ void TimingSegmentSetToLuaTable(TimingData* td, TimingSegmentType tst, lua_State
 void TimingSegmentSetToLuaTable(TimingData* td, TimingSegmentType tst, lua_State *L)
 {
 	const std::vector<TimingSegment*> segs= td->GetTimingSegments(tst);
-	lua_createtable(L, segs.size(), 0);
+	lua_createtable(L, static_cast<int>(segs.size()), 0);
 	if(tst == SEGMENT_LABEL)
 	{
 		for(std::size_t i= 0; i < segs.size(); ++i)
@@ -1317,7 +1317,7 @@ void TimingSegmentSetToLuaTable(TimingData* td, TimingSegmentType tst, lua_State
 			lua_rawseti(L, -2, 1);
 			lua_pushstring(L, (ToLabel(segs[i]))->GetLabel().c_str());
 			lua_rawseti(L, -2, 2);
-			lua_rawseti(L, -2, i+1);
+			lua_rawseti(L, -2, static_cast<int>(i+1));
 		}
 	}
 	else
@@ -1325,15 +1325,15 @@ void TimingSegmentSetToLuaTable(TimingData* td, TimingSegmentType tst, lua_State
 		for(std::size_t i= 0; i < segs.size(); ++i)
 		{
 			std::vector<float> values= segs[i]->GetValues();
-			lua_createtable(L, values.size()+1, 0);
+			lua_createtable(L, static_cast<int>(values.size()+1), 0);
 			lua_pushnumber(L, segs[i]->GetBeat());
 			lua_rawseti(L, -2, 1);
 			for(std::size_t v= 0; v < values.size(); ++v)
 			{
 				lua_pushnumber(L, values[v]);
-				lua_rawseti(L, -2, v+2);
+				lua_rawseti(L, -2, static_cast<int>(v+2));
 			}
-			lua_rawseti(L, -2, i+1);
+			lua_rawseti(L, -2, static_cast<int>(i+1));
 		}
 	}
 }
