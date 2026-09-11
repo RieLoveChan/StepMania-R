@@ -131,17 +131,25 @@ With it removed, a clean `sm_engine`/`sm_tests` (Debug, `WITH_TESTS=ON`,
   dedup), `RageSurfaceUtils.cpp` (6, not 22, same template-note
   inflation), `ScreenOptionsMasterPrefs.cpp` (2, not 18, one generic
   `if constexpr` helper instantiated for many `T`/`U`): 187 remained,
-  then fixing `NoteDataWithScoring.cpp` (11, genuinely 11),
-  `NoteDisplay.cpp` (9), `ScreenGameplay.cpp` (9, two of them from the
-  shared `FLOAT_TABLE_INTERFACE` macro in `OptionsBinding.h` -- fixed
-  once at the macro, benefits every other user of it too): **158 unique
-  sites remain across 72 files.** This full-tree count (suppression
-  actually off) supersedes the earlier "~75 files" estimate, which
-  undercounted -- expect the true file list to be broader than any
-  single top-N snapshot suggests. Next concentrations: `Profile.cpp`
-  (6), `NotesLoaderBMS.cpp` (6), `NetworkManager.cpp` (6),
-  `ScreenDebugOverlay.cpp` (5), `RageFileBasic.cpp` (5),
-  `BitmapText.cpp` (5), `ActorMultiVertex.cpp` (5).
+  then fixing `NoteDataWithScoring.cpp` (11), `NoteDisplay.cpp` (9),
+  `ScreenGameplay.cpp` (9, two of them from the shared
+  `FLOAT_TABLE_INTERFACE` macro in `OptionsBinding.h` -- fixed once at
+  the macro, benefits every other user of it too), `NetworkManager.cpp`
+  (6), `Profile.cpp` (10) and `NotesLoaderBMS.cpp` (10, §5-adjacent
+  `NotesLoader*` -- characterization only, `test_NotesLoaderBMS.cpp`'s
+  26 assertions / 2 cases re-checked identical): **a second methodology
+  trap** — checking a fix by deleting just the touched `.obj` files and
+  rebuilding (not `--clean-first`) only recompiles those files plus
+  their direct dependents, so it *undercounts the total* (it did catch
+  that the touched files themselves were clean, correctly). The
+  authoritative number needs `--clean-first` **and** the flag removed
+  together. With both: **140 unique sites remain across 69 files**
+  (all ten files fixed so far confirmed at zero in this same clean
+  rebuild). Next concentrations: `ScreenDebugOverlay.cpp` (5),
+  `RageFileBasic.cpp` (5), `BitmapText.cpp` (5), `ActorMultiVertex.cpp`
+  (5), then a wide tail of 2-4-site files (`StepMania.cpp`,
+  `SongManager.cpp`, `ScreenEdit.cpp`, `RageUtil.cpp`, `RageTimer.cpp`,
+  `RageMath.cpp`, `LuaManager.cpp`, `Course.cpp`, ...).
 **Done, verified (`sm_tests` 5966/226, `ctest`, Release + `--SelfTest`
 green, `/wd4244`/`/wd4267` still in place while sites remain elsewhere):**
 - `RageUtil.h`/`RageTimer.h`: the 4 header sites (`RageTimer::
@@ -185,10 +193,42 @@ green, `/wd4244`/`/wd4267` still in place while sites remain elsewhere):**
   `lua_pushnumber`'s `lua_Number` param — fixed once at the macro
   definition, so every screen/options-page that uses this interface
   benefits, not just `ScreenGameplay.cpp`.
+- `NetworkManager.cpp`: `lua_tointeger()` (`lua_Integer`) into `int`
+  timeout/interval fields ×4; `lua_pushnumber(uint64_t)` (should be
+  `lua_Number`) ×2.
+- `Profile.cpp`: `GetAge()`'s year-difference into `float`; a
+  `std::count_if` (`ptrdiff_t`) return into `float`;
+  `CalculateCaloriesFromHeartRate`'s unit-conversion chain (×4); plus
+  (only surfaced on a genuine clean rebuild) `size()`/iterator-diff/
+  `size()-1` values (`size_t`) into `int` ×6 across high-score checks,
+  `RString::Right(int)`, a reverse file-index loop (safe by
+  construction: an empty vector's `SIZE_MAX` still truncates to `-1`),
+  and two `lua_createtable`/`lua_rawseti` pairs.
+- `NotesLoaderBMS.cpp` (§5-protected `NotesLoader*`; every cast here is
+  characterization-only, no logic change): a `double` measure-size
+  assigned to a `float` field ×2; `long long` beat-fraction num/den
+  into `SetTimeSignatureAtRow`'s `int` params ×2; a `double` sum into
+  `BeatToNoteRow`'s `float` param; an `unsigned int` BPM into a `float`
+  field; plus (only surfaced on a genuine clean rebuild) four more
+  `size()`/`find()` (`size_t`) values assigned into `int`/`unsigned`
+  locals. Re-verified via `sm_tests.exe "[bms]" -s`: 26 assertions / 2
+  cases, all pinned values unchanged (e.g. `pnm-nine`'s tap count still
+  118).
+**Second methodology trap, corrected:** checking a fix by deleting only
+the touched `.obj` files and rebuilding recompiles just those files
+(plus header-dependents), not the whole tree — it can't surface sites
+in code paths the narrow recompile never touches, so treating its "0
+warnings for these files" as a full-tree count silently undercounts
+everywhere else too. The `NetworkManager`/`Profile`/`NotesLoaderBMS`
+batch above was first "confirmed" this way, then a real
+`--clean-first` rebuild (flag genuinely removed) turned up several
+more real sites in those same three files (now all fixed and
+re-confirmed at zero in that same clean rebuild).
 **Not done:** `/wd4244`/`/wd4267` stay in `src/CMakeLists.txt` until all
-158 remaining sites (72 files) are triaged (same "fix everything, then
+140 remaining sites (69 files) are triaged (same "fix everything, then
 remove the `/wd` flag in one commit" pattern as C4100) — continue
-file-by-file, highest concentration first. Still not measured for
+file-by-file, highest concentration first; measure only via
+`--clean-first` with the flag actually removed. Still not measured for
 Clang/GCC (`baseline.md` TBD, non-Windows).
 
 ### 3. Stale cppcheck leak list — DONE 2026-09-05, all dismissed
