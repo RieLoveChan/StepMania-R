@@ -40,9 +40,9 @@ public:
 		for( unsigned i = 0; i < m_pCircles.size(); ++i )
 			m_pCircles[i].c = this->m_pTempState->diffuse[0];
 
-		DISPLAY->DrawQuads( &m_Quads[0], m_Quads.size() );
+		DISPLAY->DrawQuads( &m_Quads[0], static_cast<int>(m_Quads.size()) );
 
-		int iFans = m_pCircles.size() / iCircleVertices;
+		int iFans = static_cast<int>(m_pCircles.size() / iCircleVertices);
 		for( int i = 0; i < iFans; ++i )
 			DISPLAY->DrawFan( &m_pCircles[0]+iCircleVertices*i, iCircleVertices );
 	}
@@ -224,8 +224,8 @@ void GraphDisplay::Set( const StageStats &ss, const PlayerStageStats &pss )
 
 void GraphDisplay::Load( RString sMetricsGroup )
 {
-	m_size.x = THEME->GetMetricI( sMetricsGroup, "BodyWidth" );
-	m_size.y = THEME->GetMetricI( sMetricsGroup, "BodyHeight" );
+	m_size.x = static_cast<float>(THEME->GetMetricI( sMetricsGroup, "BodyWidth" ));
+	m_size.y = static_cast<float>(THEME->GetMetricI( sMetricsGroup, "BodyHeight" ));
 
 	m_sprBacking.Load( THEME->GetPathG(sMetricsGroup,"Backing") );
 	m_sprBacking->ZoomToWidth( m_size.x );

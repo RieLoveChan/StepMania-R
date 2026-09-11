@@ -46,7 +46,7 @@ ActorScroller::ActorScroller()
 
 void ActorScroller::Load2()
 {
-	m_iNumItems = m_SubActors.size();
+	m_iNumItems = static_cast<int>(m_SubActors.size());
 
 	Lua *L = LUA->Get();
 	for( unsigned i = 0; i < m_SubActors.size(); ++i )
@@ -264,8 +264,8 @@ void ActorScroller::PositionItemsAndDrawPrimitives( bool bDrawPrimitives )
 
 	float fFirstItemToDraw = m_fCurrentItem - fNumItemsToDraw/2.f;
 	float fLastItemToDraw = m_fCurrentItem + fNumItemsToDraw/2.f;
-	int iFirstItemToDraw = std::ceil( fFirstItemToDraw );
-	int iLastItemToDraw = std::ceil( fLastItemToDraw );
+	int iFirstItemToDraw = static_cast<int>(std::ceil( fFirstItemToDraw ));
+	int iLastItemToDraw = static_cast<int>(std::ceil( fLastItemToDraw ));
 	if( !m_bLoop && !m_bWrap )
 	{
 		iFirstItemToDraw = std::clamp( iFirstItemToDraw, 0, m_iNumItems );
@@ -289,7 +289,7 @@ void ActorScroller::PositionItemsAndDrawPrimitives( bool bDrawPrimitives )
 		float fPosition = iItem - m_fCurrentItem;
 		int iIndex = i; // index into m_SubActors
 		if( m_bLoop || m_bWrap )
-			wrap( iIndex, m_SubActors.size() );
+			wrap( iIndex, static_cast<int>(m_SubActors.size()) );
 		else if( iIndex < 0 || iIndex >= (int)m_SubActors.size() )
 			continue;
 

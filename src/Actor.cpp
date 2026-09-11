@@ -142,7 +142,7 @@ static bool GetMessageNameFromCommandName( const RString &sCommandName, RString 
 {
 	if( sCommandName.Right(7) == "Message" )
 	{
-		sMessageNameOut = sCommandName.Left(sCommandName.size()-7);
+		sMessageNameOut = sCommandName.Left(static_cast<int>(sCommandName.size())-7);
 		return true;
 	}
 	else
@@ -351,7 +351,7 @@ void Actor::LoadFromNode( const XNode* pNode )
 			LuaReference *pRef = new LuaReference;
 			pValue->PushValue( L );
 			pRef->SetFromStack( L );
-			RString sCmdName = sKeyName.Left( sKeyName.size()-7 );
+			RString sCmdName = sKeyName.Left( static_cast<int>(sKeyName.size())-7 );
 			AddCommand( sCmdName, apActorCommands( pRef ) );
 		}
 		else if( sKeyName == "Name" )			SetName( pValue->GetValue<RString>() );
@@ -919,7 +919,7 @@ void Actor::UpdateInternal(float delta_time)
 		}
 		break;
 	case CLOCK_TIMER_GLOBAL:
-		generic_global_timer_update(RageTimer::GetUsecsSinceStart(), m_fEffectDelta, m_fSecsIntoEffect);
+		generic_global_timer_update(static_cast<float>(RageTimer::GetUsecsSinceStart()), m_fEffectDelta, m_fSecsIntoEffect);
 		break;
 	case CLOCK_BGM_BEAT:
 		generic_global_timer_update(g_fCurrentBGMBeat, m_fEffectDelta, m_fSecsIntoEffect);
@@ -1982,7 +1982,7 @@ public:
 	}
 	static int GetNumWrapperStates(T* p, lua_State* L)
 	{
-		lua_pushnumber(L, p->GetNumWrapperStates());
+		lua_pushnumber(L, static_cast<lua_Number>(p->GetNumWrapperStates()));
 		return 1;
 	}
 	static int GetWrapperState(T* p, lua_State* L)
