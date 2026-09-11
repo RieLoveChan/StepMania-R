@@ -559,7 +559,7 @@ void UnlockManager::Load()
 
 	// Make sure that we don't have duplicate unlock IDs. This can cause problems
 	// with UnlockCelebrate and with codes.
-	unsigned size = m_UnlockEntries.size();
+	unsigned size = static_cast<unsigned>(m_UnlockEntries.size());
 	if (size > 1)
 	{
 		for (unsigned i = 0; i < size - 1; ++i)
@@ -728,14 +728,14 @@ void UnlockManager::PreferUnlockEntryID( RString sUnlockEntryID )
 
 int UnlockManager::GetNumUnlocks() const
 {
-	return m_UnlockEntries.size();
+	return static_cast<int>(m_UnlockEntries.size());
 }
 
 int UnlockManager::GetNumUnlocked() const
 {
-	return std::count_if(m_UnlockEntries.begin(), m_UnlockEntries.end(), [](UnlockEntry const &ue) {
+	return static_cast<int>(std::count_if(m_UnlockEntries.begin(), m_UnlockEntries.end(), [](UnlockEntry const &ue) {
 		return !ue.IsLocked();
-	});
+	}));
 }
 
 int UnlockManager::GetUnlockEntryIndexToCelebrate() const

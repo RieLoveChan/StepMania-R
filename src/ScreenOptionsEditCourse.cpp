@@ -83,7 +83,7 @@ public:
 		}
 		else
 		{
-			int index = iter - m_vpSteps.begin();
+			int index = static_cast<int>(iter - m_vpSteps.begin());
 			pRow->SetOneSharedSelection( index );
 		}
 
@@ -285,7 +285,7 @@ void ScreenOptionsEditCourse::ImportOptions( int iRow, const std::vector<PlayerN
 					if( iter == m_vpSongs.end() )
 						row.SetOneSharedSelection( 0 );
 					else
-						row.SetOneSharedSelection( 1 + iter - m_vpSongs.begin() );
+						row.SetOneSharedSelection( static_cast<int>(1 + iter - m_vpSongs.begin()) );
 				}
 				break;
 			case RowType_Steps:
@@ -493,7 +493,7 @@ void ScreenOptionsEditCourse::ProcessMenuStart( const InputEventPlus &input )
 
 	int iRow = m_iCurrentRow[GAMESTATE->GetMasterPlayerNumber()];
 
-	unsigned iSongCount = GAMESTATE->m_pCurCourse->m_vEntries.size();
+	unsigned iSongCount = static_cast<unsigned>(GAMESTATE->m_pCurCourse->m_vEntries.size());
 
 	if( m_pRows[iRow]->GetRowType() == OptionRow::RowType_Exit  &&  iSongCount < unsigned(MIN_ENABLED_SONGS) )
 	{

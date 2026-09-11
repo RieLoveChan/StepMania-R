@@ -662,7 +662,7 @@ LockMutex::LockMutex( RageMutex &pMutex, const char *file_, int line_ ):
 	mutex( pMutex ),
 	file( file_ ),
 	line( line_ ),
-	locked_at( RageTimer::GetTimeSinceStart() ),
+	locked_at( static_cast<float>(RageTimer::GetTimeSinceStart()) ),
 	locked(false) // ensure it gets locked inside.
 {
 	mutex.Lock();
@@ -684,7 +684,7 @@ void LockMutex::Unlock()
 
 	if( file && locked_at != -1 )
 	{
-		const float dur = RageTimer::GetTimeSinceStart() - locked_at;
+		const float dur = static_cast<float>(RageTimer::GetTimeSinceStart() - locked_at);
 		if( dur > 0.015f )
 			LOG->Trace( "Lock at %s:%i took %f", file, line, dur );
 	}

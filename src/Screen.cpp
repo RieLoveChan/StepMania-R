@@ -164,7 +164,7 @@ void Screen::Update( float fDeltaTime )
 		m_QueuedMessages.erase( m_QueuedMessages.begin()+i );
 		i--;
 
-		unsigned iSize = m_QueuedMessages.size();
+		unsigned iSize = static_cast<unsigned>(m_QueuedMessages.size());
 
 		// send this sucker!
 		CHECKPOINT_M( ssprintf("ScreenMessage(%s)", ScreenMessageHelpers::ScreenMessageToString(SM).c_str()) );
@@ -311,7 +311,7 @@ void Screen::ClearMessageQueue()
 
 void Screen::ClearMessageQueue( const ScreenMessage SM )
 {
-	for( int i=m_QueuedMessages.size()-1; i>=0; i-- )
+	for( int i=static_cast<int>(m_QueuedMessages.size())-1; i>=0; i-- )
 		if( m_QueuedMessages[i].SM == SM )
 			m_QueuedMessages.erase( m_QueuedMessages.begin()+i );
 }
@@ -433,7 +433,7 @@ public:
 	{
 		RString sMessage = SArg(1);
 		ScreenMessage SM = ScreenMessageHelpers::ToScreenMessage( sMessage );
-		p->PostScreenMessage( SM, IArg(2) );
+		p->PostScreenMessage( SM, static_cast<float>(IArg(2)) );
 		COMMON_RETURN_SELF;
 	}
 

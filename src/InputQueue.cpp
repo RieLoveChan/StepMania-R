@@ -31,7 +31,7 @@ void InputQueue::RememberInput( const InputEventPlus &iep )
 
 bool InputQueue::WasPressedRecently( GameController c, const GameButton button, const RageTimer &OldestTimeAllowed, InputEventPlus *pIEP )
 {
-	for( int queue_index=m_aQueue[c].size()-1; queue_index>=0; queue_index-- )	// iterate newest to oldest
+	for( int queue_index=static_cast<int>(m_aQueue[c].size())-1; queue_index>=0; queue_index-- )	// iterate newest to oldest
 	{
 		const InputEventPlus &iep = m_aQueue[c][queue_index];
 		if( iep.DeviceI.ts < OldestTimeAllowed )	// buttons are too old.  Stop searching because we're not going to find a match
@@ -70,9 +70,9 @@ bool InputQueueCode::EnteredCode( GameController controller ) const
 		OldestTimeAllowed += -m_fMaxSecondsBack;
 
 	// iterate newest to oldest
-	int iSequenceIndex = m_aPresses.size()-1;	// count down
+	int iSequenceIndex = static_cast<int>(m_aPresses.size())-1;	// count down
 	const std::vector<InputEventPlus> &aQueue = INPUTQUEUE->GetQueue( controller );
-	int iQueueIndex = aQueue.size()-1;
+	int iQueueIndex = static_cast<int>(aQueue.size())-1;
 	while( iQueueIndex >= 0 )
 	{
 		/* If the buttons are too old, stop searching because we're not going to find a match. */

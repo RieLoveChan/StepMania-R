@@ -388,7 +388,7 @@ void PlayerStageStats::SetLifeRecordAt( float fLife, float fStepsSecond )
 		if(curr->second != fLife)
 		{
 			// 2^-8
-			m_fLifeRecord[fStepsSecond - 0.00390625]= curr->second;
+			m_fLifeRecord[fStepsSecond - 0.00390625f]= curr->second;
 		}
 	}
 	m_fLifeRecord[fStepsSecond] = fLife;
@@ -792,7 +792,7 @@ public:
 	}
 	static int GetComboList( T* p, lua_State *L )
 	{
-		lua_createtable(L, p->m_ComboList.size(), 0);
+		lua_createtable(L, static_cast<int>(p->m_ComboList.size()), 0);
 		for( std::size_t i= 0; i < p->m_ComboList.size(); ++i)
 		{
 			lua_createtable(L, 0, 6);
@@ -814,7 +814,7 @@ public:
 			lua_pushstring(L, "IsZero");
 			lua_pushnumber(L, p->m_ComboList[i].IsZero());
 			lua_rawset(L, -3);
-			lua_rawseti(L, -2, i+1);
+			lua_rawseti(L, -2, static_cast<int>(i+1));
 		}
 		return 1;
 	}

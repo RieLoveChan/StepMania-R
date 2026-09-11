@@ -372,7 +372,7 @@ void SetRadarValues(StepsTagInfo& info)
 		{
 			for(std::size_t i= 0; i < cats_per_player; ++i)
 			{
-				v[pn][i]= StringToFloat(values[pn * cats_per_player + i]);
+				v[pn][static_cast<int>(i)]= StringToFloat(values[pn * cats_per_player + i]);
 			}
 		}
 		info.steps->SetCachedRadarValues(v);
@@ -791,7 +791,7 @@ void SSCLoader::ProcessCombos( TimingData &out, const RString line, const int /*
 	{
 		std::vector<RString> arrayComboValues;
 		split( arrayComboExpressions[f], "=", arrayComboValues );
-		unsigned size = arrayComboValues.size();
+		unsigned size = static_cast<unsigned>(arrayComboValues.size());
 		if( size < 2 )
 		{
 			LOG->UserLog("Song file",
@@ -989,7 +989,7 @@ bool SSCLoader::LoadFromSimfile( const RString &sPath, Song &out, bool bFromCach
 				{
 					handler->second(reused_song_info);
 				}
-				else if(sValueName.Left(strlen("BGCHANGES"))=="BGCHANGES")
+				else if(sValueName.Left(static_cast<int>(strlen("BGCHANGES")))=="BGCHANGES")
 				{
 					SetBGChanges(reused_song_info);
 				}

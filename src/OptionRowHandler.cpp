@@ -632,7 +632,7 @@ public:
 			std::vector<Steps*>::const_iterator iter = find( m_vSteps.begin(), m_vSteps.end(), m_ppStepsToFill->Get() );
 			if( iter != m_vSteps.end() )
 			{
-				unsigned i = iter - m_vSteps.begin();
+				unsigned i = static_cast<unsigned>(iter - m_vSteps.begin());
 				vbSelOut[i] = true;
 				continue;
 			}
@@ -643,7 +643,7 @@ public:
 				// use the old style for now.
 				for (std::vector<Difficulty>::const_iterator d = m_vDifficulties.begin(); d != m_vDifficulties.end(); ++d)
 				{
-					unsigned i = d - m_vDifficulties.begin();
+					unsigned i = static_cast<unsigned>(d - m_vDifficulties.begin());
 					if( *d == GAMESTATE->m_PreferredDifficulty[p] )
 					{
 						vbSelOut[i] = true;
@@ -1472,7 +1472,7 @@ public:
 				std::vector<StepsType>::const_iterator iter = find( m_vStepsTypesToShow.begin(), m_vStepsTypesToShow.end(), st );
 				if( iter != m_vStepsTypesToShow.end() )
 				{
-					unsigned i = iter - m_vStepsTypesToShow.begin();
+					unsigned i = static_cast<unsigned>(iter - m_vStepsTypesToShow.begin());
 					vbSelOut[i] = true;
 					continue;	// done with this player
 				}
