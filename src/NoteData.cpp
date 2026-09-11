@@ -978,7 +978,7 @@ int NoteData::GetNumTracksHeldAtRow( int row )
 	static std::set<int> viTracks;
 	viTracks.clear();
 	GetTracksHeldAtRow( row, viTracks );
-	return viTracks.size();
+	return static_cast<int>(viTracks.size());
 }
 
 bool NoteData::GetNextTapNoteRowForTrack( int track, int &rowInOut, bool ignoreAutoKeysounds ) const
@@ -1415,7 +1415,7 @@ template<typename ND, typename iter, typename TN>
 			{
 				avg_row+= m_PrevCurrentRows[p];
 			}
-			avg_row/= m_PrevCurrentRows.size();
+			avg_row/= static_cast<int>(m_PrevCurrentRows.size());
 			for(std::size_t a= 0; a < added_or_removed_tracks.size(); ++a)
 			{
 				int track_id= added_or_removed_tracks[a];

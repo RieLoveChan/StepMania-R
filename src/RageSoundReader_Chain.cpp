@@ -98,13 +98,13 @@ int RageSoundReader_Chain::LoadSound( RString sPath )
 	m_apNamedSounds[sPath] = pReader;
 
 	m_apLoadedSounds.push_back( m_apNamedSounds[sPath] );
-	return m_apLoadedSounds.size()-1;
+	return static_cast<int>(m_apLoadedSounds.size())-1;
 }
 
 int RageSoundReader_Chain::LoadSound( RageSoundReader *pSound )
 {
 	m_apLoadedSounds.push_back( pSound );
-	return m_apLoadedSounds.size()-1;
+	return static_cast<int>(m_apLoadedSounds.size())-1;
 }
 
 /* If every sound has the same sample rate, return it.  Otherwise, return -1. */

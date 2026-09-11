@@ -169,7 +169,7 @@ void ScreenOptionsManageProfiles::BeginScreen()
 		std::vector<RString>::const_iterator iter = find( m_vsLocalProfileID.begin(), m_vsLocalProfileID.end(), sEditLocalProfileID );
 		if( iter != m_vsLocalProfileID.end() )
 		{
-			int iIndex = iter - m_vsLocalProfileID.begin();
+			int iIndex = static_cast<int>(iter - m_vsLocalProfileID.begin());
 			this->MoveRowAbsolute( PLAYER_1, 1 + iIndex );
 		}
 	}
@@ -264,7 +264,7 @@ void ScreenOptionsManageProfiles::HandleScreenMessage( const ScreenMessage SM )
 			int iIndex = -1;
 			std::vector<RString>::const_iterator iter = find( m_vsLocalProfileID.begin(), m_vsLocalProfileID.end(), GAMESTATE->m_sEditLocalProfileID.Get() );
 			if( iter != m_vsLocalProfileID.end() )
-				iIndex = iter - m_vsLocalProfileID.begin();
+				iIndex = static_cast<int>(iter - m_vsLocalProfileID.begin());
 			CLAMP( iIndex, 0, m_vsLocalProfileID.size()-1 );
 			GAMESTATE->m_sEditLocalProfileID.Set( m_vsLocalProfileID[iIndex] );
 

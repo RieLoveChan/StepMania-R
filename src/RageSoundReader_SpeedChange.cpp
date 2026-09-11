@@ -88,7 +88,7 @@ int RageSoundReader_SpeedChange::FillData( int iMaxFrames )
 	while( iMaxFrames > 0 )
 	{
 		int iFramesToRead = iMaxFrames - m_iDataBufferAvailFrames;
-		int iBytesToRead = iFramesToRead * m_Channels.size() * sizeof(float);
+		int iBytesToRead = static_cast<int>(iFramesToRead * m_Channels.size() * sizeof(float));
 		if( iBytesToRead <= 0 )
 			return m_iDataBufferAvailFrames;
 
@@ -218,7 +218,7 @@ int RageSoundReader_SpeedChange::Step()
 		ASSERT( c.m_iCorrelatedPos >= 0 );
 		ASSERT( c.m_iCorrelatedPos < m_iDataBufferAvailFrames );
 
-		int iBest = FindClosestMatch( &c.m_DataBuffer[m_iUncorrelatedPos], iUncorrelatedToMatch, &c.m_DataBuffer[c.m_iCorrelatedPos], iCorrelatedToMatch, m_Channels.size() );
+		int iBest = FindClosestMatch( &c.m_DataBuffer[m_iUncorrelatedPos], iUncorrelatedToMatch, &c.m_DataBuffer[c.m_iCorrelatedPos], iCorrelatedToMatch, static_cast<int>(m_Channels.size()) );
 		c.m_iLastCorrelatedPos = c.m_iCorrelatedPos;
 		c.m_iCorrelatedPos = iBest + m_iUncorrelatedPos;
 		ASSERT( m_Channels[i].m_iCorrelatedPos + GetWindowSizeFrames() <= m_iDataBufferAvailFrames );

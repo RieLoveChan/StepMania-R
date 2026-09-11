@@ -1019,7 +1019,7 @@ void ScreenSelectMusic::ChangeSteps( PlayerNumber pn, int dir )
 		m_iSelection[pn] += dir;
 		if( WRAP_CHANGE_STEPS )
 		{
-			wrap( m_iSelection[pn], m_vpSteps.size() );
+			wrap( m_iSelection[pn], static_cast<int>(m_vpSteps.size()) );
 		}
 		else
 		{
@@ -1036,7 +1036,7 @@ void ScreenSelectMusic::ChangeSteps( PlayerNumber pn, int dir )
 		m_iSelection[pn] += dir;
 		if( WRAP_CHANGE_STEPS )
 		{
-			wrap( m_iSelection[pn], m_vpTrails.size() );
+			wrap( m_iSelection[pn], static_cast<int>(m_vpTrails.size()) );
 		}
 		else
 		{

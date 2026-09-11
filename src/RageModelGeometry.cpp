@@ -62,8 +62,8 @@ void RageModelGeometry::MergeMeshes( int iFromIndex, int iToIndex )
 	msMesh& meshFrom = m_Meshes[ iFromIndex ];
 	msMesh& meshTo = m_Meshes[ iToIndex ];
 
-	int iShiftTriangleVertexIndicesBy = meshTo.Vertices.size();
-	int iStartShiftingAtTriangleIndex = meshTo.Triangles.size();
+	int iShiftTriangleVertexIndicesBy = static_cast<int>(meshTo.Vertices.size());
+	int iStartShiftingAtTriangleIndex = static_cast<int>(meshTo.Triangles.size());
 
 	meshTo.Vertices.insert( meshTo.Vertices.end(), meshFrom.Vertices.begin(), meshFrom.Vertices.end() );
 	meshTo.Triangles.insert( meshTo.Triangles.end(), meshFrom.Triangles.begin(), meshFrom.Triangles.end() );

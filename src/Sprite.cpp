@@ -812,7 +812,7 @@ void Sprite::DrawPrimitives()
 
 int Sprite::GetNumStates() const
 {
-	return m_States.size();
+	return static_cast<int>(m_States.size());
 }
 
 void Sprite::SetState( int iNewState )
@@ -1220,7 +1220,7 @@ public:
 		for(std::size_t s= 0; s < num_states; ++s)
 		{
 			Sprite::State new_state;
-			lua_rawgeti(L, 1, s+1);
+			lua_rawgeti(L, 1, static_cast<int>(s+1));
 			lua_getfield(L, -1, "Frame");
 			int frame_index= 0;
 			if(lua_isnumber(L, -1))

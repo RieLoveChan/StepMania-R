@@ -917,11 +917,11 @@ int LuaFunc_get_sound_driver_list(lua_State* L)
 {
 	std::vector<RString> driver_names;
 	split(RageSoundDriver::GetDefaultSoundDriverList(), ",", driver_names, true);
-	lua_createtable(L, driver_names.size(), 0);
+	lua_createtable(L, static_cast<int>(driver_names.size()), 0);
 	for(std::size_t n= 0; n < driver_names.size(); ++n)
 	{
 		lua_pushstring(L, driver_names[n].c_str());
-		lua_rawseti(L, -2, n+1);
+		lua_rawseti(L, -2, static_cast<int>(n+1));
 	}
 	return 1;
 }
