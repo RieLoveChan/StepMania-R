@@ -270,7 +270,7 @@ void ScreenDebugOverlay::Init()
 	auto start = m_asPages.begin();
 	for (std::vector<RString>::const_iterator s = m_asPages.begin(); s != m_asPages.end(); ++s)
 	{
-		int iPage = s - start;
+		int iPage = static_cast<int>(s - start);
 
 		DeviceInput di;
 		bool b = GetKeyFromMap( g_Mappings.pageButton, iPage, di );
@@ -365,7 +365,7 @@ void ScreenDebugOverlay::UpdateText()
 	auto start = m_asPages.begin();
 	for (std::vector<RString>::const_iterator s = m_asPages.begin(); s != m_asPages.end(); ++s)
 	{
-		int iPage = s - start;
+		int iPage = static_cast<int>(s - start);
 		m_vptextPages[iPage]->PlayCommand( (iPage == m_iCurrentPage) ? "GainFocus" :  "LoseFocus" );
 	}
 
@@ -376,7 +376,7 @@ void ScreenDebugOverlay::UpdateText()
 	{
 		RString sPageName = (*p)->GetPageName();
 
-		int i = p - subStart;
+		int i = static_cast<int>(p - subStart);
 
 		float fY = LINE_START_Y + iOffset * LINE_SPACING;
 
@@ -477,7 +477,7 @@ bool ScreenDebugOverlay::Input( const InputEventPlus &input )
 	{
 		RString sPageName = (*p)->GetPageName();
 
-		int i = p - start;
+		int i = static_cast<int>(p - start);
 
 		// Gameplay buttons are available only in gameplay. Non-gameplay buttons
 		// are only available when the screen is displayed.
@@ -1319,7 +1319,7 @@ class DebugLineForceCrash : public IDebugLine
 class DebugLineUptime : public IDebugLine
 {
 	RString GetDisplayTitle() override { return UPTIME.GetValue(); }
-	RString GetDisplayValue() override { return SecondsToMMSSMsMsMs(RageTimer::GetTimeSinceStart()); }
+	RString GetDisplayValue() override { return SecondsToMMSSMsMsMs(static_cast<float>(RageTimer::GetTimeSinceStart())); }
 	bool IsEnabled() override { return false; }
 	void DoAndLog( RString &/* sMessageOut */ ) override {}
 };

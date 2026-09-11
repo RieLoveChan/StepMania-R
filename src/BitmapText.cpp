@@ -352,7 +352,7 @@ void BitmapText::DrawChars( bool bUseStrokeTexture )
 		m_pTempState->crop.top + m_pTempState->crop.bottom >= 1 )
 		return;
 
-	const int iNumGlyphs = m_vpFontPageTextures.size();
+	const int iNumGlyphs = static_cast<int>( m_vpFontPageTextures.size() );
 	int iStartGlyph = std::lrint( SCALE( m_pTempState->crop.left, 0.f, 1.f, 0, (float) iNumGlyphs ) );
 	int iEndGlyph = std::lrint( SCALE( m_pTempState->crop.right, 0.f, 1.f, (float) iNumGlyphs, 0 ) );
 	iStartGlyph = std::clamp( iStartGlyph, 0, iNumGlyphs );
@@ -616,7 +616,7 @@ void BitmapText::UpdateBaseZoom()
 		} \
 		if(dimension != 0) \
 		{ \
-			const float zoom= std::fmin(1, (dimension_max) / dimension); \
+			const float zoom= std::fmin(1.0f, (dimension_max) / dimension); \
 			base_zoom_set(zoom); \
 		} \
 	}
@@ -775,7 +775,7 @@ void BitmapText::DrawPrimitives()
 
 			for( unsigned i=0; i<m_aVertices.size(); i+=4 )
 			{
-				RageVector3 jitter( rnd()%2, rnd()%3, 0 );
+				RageVector3 jitter( static_cast<float>(rnd()%2), static_cast<float>(rnd()%3), 0 );
 				vGlyphJitter.push_back( jitter );
 
 				m_aVertices[i+0].p += jitter;	// top left
@@ -910,7 +910,7 @@ void BitmapText::Attribute::FromStack( lua_State *L, int iPos )
 
 	// Get the length.
 	lua_getfield( L, iTab, "Length" );
-	length = lua_tointeger( L, -1 );
+	length = static_cast<int>( lua_tointeger( L, -1 ) );
 	lua_settop( L, iTab );
 
 	// Get the diffuse colors.
