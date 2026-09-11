@@ -94,7 +94,7 @@ void DynamicActorScroller::ShiftSubActors( int iDist )
 	int iFirstToReconfigure = 0;
 	int iLastToReconfigure = (int)m_SubActors.size();
 	if( iDist > 0 && iDist < (int) m_SubActors.size() )
-		iFirstToReconfigure = m_SubActors.size()-iDist;
+		iFirstToReconfigure = static_cast<int>(m_SubActors.size())-iDist;
 	else if( iDist < 0 && -iDist < (int) m_SubActors.size() )
 		iLastToReconfigure = -iDist;
 
@@ -104,7 +104,7 @@ void DynamicActorScroller::ShiftSubActors( int iDist )
 		int iItem = i + m_iFirstSubActorIndex;
 		if( m_bLoop )
 		{
-			wrap( iIndex, m_SubActors.size() );
+			wrap( iIndex, static_cast<int>(m_SubActors.size()) );
 			wrap( iItem, m_iNumItems );
 		}
 		else if( iIndex < 0 || iIndex >= m_iNumItems || iItem < 0 || iItem >= m_iNumItems )

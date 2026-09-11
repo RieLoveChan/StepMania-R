@@ -250,9 +250,9 @@ void AdjustSync::AutosyncTempo()
 		 * However, throwing away the ones with high error should be enough
 		 * in most cases. */
 		float fFilteredError = 0;
-		s_iStepsFiltered = s_vAutosyncTempoData.size();
+		s_iStepsFiltered = static_cast<int>(s_vAutosyncTempoData.size());
 		FilterHighErrorPoints( s_vAutosyncTempoData, fSlope, fIntercept, ERROR_TOO_HIGH );
-		s_iStepsFiltered -= s_vAutosyncTempoData.size();
+		s_iStepsFiltered -= static_cast<int>(s_vAutosyncTempoData.size());
 
 		if( !CalcLeastSquares( s_vAutosyncTempoData, fSlope, fIntercept, fFilteredError ) )
 			return;
@@ -339,7 +339,7 @@ void AdjustSync::GetSyncChangeTextSong( std::vector<RString> &vsAddTo )
 		LuaHelpers::ReportScriptError("The sync overlay's " #segments_name " segment list is a different size from the song's.  Please report this bug with steps to reproduce it."); \
 	}
 
-		unsigned int iOriginalSize = vsAddTo.size();
+		unsigned int iOriginalSize = static_cast<unsigned int>(vsAddTo.size());
 		TimingData &original = s_vpTimingDataOriginal[0];
 		TimingData &testing = GAMESTATE->m_pCurSong->m_SongTiming;
 
@@ -376,7 +376,7 @@ void AdjustSync::GetSyncChangeTextSong( std::vector<RString> &vsAddTo )
 			}
 
 			RString s = ssprintf( TEMPO_SEGMENT_FROM.GetValue(),
-					FormatNumberAndSuffix(i+1).c_str(), fOld, fNew );
+					FormatNumberAndSuffix(static_cast<int>(i+1)).c_str(), fOld, fNew );
 
 			vsAddTo.push_back( s );
 		}

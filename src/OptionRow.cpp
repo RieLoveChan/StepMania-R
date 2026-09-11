@@ -210,7 +210,7 @@ RString OptionRow::GetRowTitle() const
 		{
 			const Trail* pTrail = GAMESTATE->m_pCurTrail[GAMESTATE->GetMasterPlayerNumber()];
 			ASSERT( pTrail != nullptr );
-			const int iNumCourseEntries = pTrail->m_vEntries.size();
+			const int iNumCourseEntries = static_cast<int>(pTrail->m_vEntries.size());
 			if( iNumCourseEntries > CommonMetrics::MAX_COURSE_ENTRIES_BEFORE_VARIOUS )
 				bShowBpmInSpeedTitle = false;
 		}
@@ -631,7 +631,7 @@ void OptionRow::UpdateEnabledDisabled()
 			unsigned item_no = m_pHand->m_Def.m_bOneChoiceForAllPlayers ? 0 : pn;
 
 			// If player_no is 2 and there is no player 1:
-			item_no = std::min<unsigned int>(item_no, m_textItems.size() - 1);
+			item_no = std::min<unsigned int>(item_no, static_cast<unsigned int>(m_textItems.size()) - 1);
 
 			BitmapText &bt = *m_textItems[item_no];
 
@@ -980,7 +980,7 @@ public:
 	static int GetChoiceInRowWithFocus( T* p, lua_State *L ) { lua_pushnumber( L, p->GetChoiceInRowWithFocus(Enum::Check<PlayerNumber>(L, 1)) ); return 1; }
 	DEFINE_METHOD( GetLayoutType, GetHandler()->m_Def.m_layoutType )
 	static int GetName( T* p, lua_State *L ) { lua_pushstring( L, p->GetHandler()->m_Def.m_sName ); return 1; }
-	static int GetNumChoices( T* p, lua_State *L ) { lua_pushnumber( L, p->GetHandler()->m_Def.m_vsChoices.size() ); return 1; }
+	static int GetNumChoices( T* p, lua_State *L ) { lua_pushnumber( L, static_cast<lua_Number>(p->GetHandler()->m_Def.m_vsChoices.size()) ); return 1; }
 	DEFINE_METHOD( GetSelectType, GetHandler()->m_Def.m_selectType )
 	DEFINE_METHOD( GetRowTitle, GetRowTitle() )
 	static int HasFocus( T* p, lua_State *L ) { lua_pushboolean( L, p->GetRowHasFocus(Enum::Check<PlayerNumber>(L, 1)) ); return 1; }

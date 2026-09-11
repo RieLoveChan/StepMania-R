@@ -23,7 +23,7 @@ namespace JsonUtil
 	static void SerializeVectorObjects(const std::vector<T> &v, void fn(const T &, Json::Value &), Json::Value &root)
 	{
 		root = Json::Value(Json::arrayValue);
-		root.resize(v.size());
+		root.resize(static_cast<Json::Value::ArrayIndex>(v.size()));
 		for(unsigned i=0; i<v.size(); i++)
 			fn(v[i], root[i]);
 	}
@@ -32,7 +32,7 @@ namespace JsonUtil
 	static void SerializeVectorPointers(const std::vector<const T*> &v, void fn(const T &, Json::Value &), Json::Value &root)
 	{
 		root = Json::Value(Json::arrayValue);
-		root.resize(v.size());
+		root.resize(static_cast<Json::Value::ArrayIndex>(v.size()));
 		for(unsigned i=0; i<v.size(); i++)
 			fn(*v[i], root[i]);
 	}
@@ -41,7 +41,7 @@ namespace JsonUtil
 	static void SerializeVectorPointers(const std::vector<T*> &v, void fn(const T &, Json::Value &), Json::Value &root)
 	{
 		root = Json::Value(Json::arrayValue);
-		root.resize(v.size());
+		root.resize(static_cast<Json::Value::ArrayIndex>(v.size()));
 		for(unsigned i=0; i<v.size(); i++)
 			fn(*v[i], root[i]);
 	}
@@ -69,7 +69,7 @@ namespace JsonUtil
 	static void SerializeArrayValues(const V &v, Json::Value &root)
 	{
 		root = Json::Value(Json::arrayValue);
-		root.resize( v.size() );
+		root.resize( static_cast<Json::Value::ArrayIndex>(v.size()) );
 		int i=0;
 		for( typename V::const_iterator iter=v.begin(); iter!=v.end(); iter++ )
 			root[i++] = *iter;
