@@ -516,7 +516,7 @@ public:
 		if (!lua_isnil(L, -1)) {
 			if (lua_isnumber(L, -1))
 			{
-				args.connectTimeout = lua_tointeger(L, -1);
+				args.connectTimeout = static_cast<int>( lua_tointeger(L, -1) );
 			}
 			else
 			{
@@ -530,7 +530,7 @@ public:
 		{
 			if (lua_isnumber(L, -1))
 			{
-				args.transferTimeout = lua_tointeger(L, -1);
+				args.transferTimeout = static_cast<int>( lua_tointeger(L, -1) );
 			}
 			else
 			{
@@ -697,7 +697,7 @@ public:
 		if (!lua_isnil(L, -1)) {
 			if (lua_isnumber(L, -1))
 			{
-				args.handshakeTimeout = lua_tointeger(L, -1);
+				args.handshakeTimeout = static_cast<int>( lua_tointeger(L, -1) );
 			}
 			else
 			{
@@ -711,7 +711,7 @@ public:
 		{
 			if (lua_isnumber(L, -1))
 			{
-				args.pingInterval = lua_tointeger(L, -1);
+				args.pingInterval = static_cast<int>( lua_tointeger(L, -1) );
 			}
 			else
 			{
@@ -935,10 +935,10 @@ private:
 		lua_pushlstring(L, response->body.c_str(), response->body.length());
 		lua_setfield(L, -2, "body");
 
-		lua_pushnumber(L, response->uploadSize);
+		lua_pushnumber(L, static_cast<lua_Number>( response->uploadSize ));
 		lua_setfield(L, -2, "uploadSize");
 
-		lua_pushnumber(L, response->downloadSize);
+		lua_pushnumber(L, static_cast<lua_Number>( response->downloadSize ));
 		lua_setfield(L, -2, "downloadSize");
 
 		RString error = "Lua error in HTTP response handler: ";
