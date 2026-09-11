@@ -38,7 +38,7 @@ static bool HashFile( RageFileBasic &f, unsigned char buf_hash[20], int iHash )
 		s.erase();
 		if( f.Read(s, 1024*4) == -1 )
 		{
-			LOG->Warn( "Error reading %s: %s", f.GetDisplayPath().c_str(), f.GetError().c_str() );
+			LOG_ERROR(Log::General, "Error reading %s: %s", f.GetDisplayPath().c_str(), f.GetError().c_str() );
 			hash_descriptor[iHash].done( &hash, buf_hash );
 			return false;
 		}
@@ -119,7 +119,7 @@ void CryptManager::GenerateGlobalKeys()
 	    !key.Load(sKey, sError) )
 		bGenerate = true;
 	if( !sError.empty() )
-		LOG->Warn( "Error loading RSA key: %s", sError.c_str() );
+		LOG_ERROR(Log::General, "Error loading RSA key: %s", sError.c_str() );
 
 	sError.clear();
 	if( !DoesFileExist(PUBLIC_KEY_PATH) ||
@@ -127,11 +127,11 @@ void CryptManager::GenerateGlobalKeys()
 	    !key.Load(sKey, sError) )
 		bGenerate = true;
 	if( !sError.empty() )
-		LOG->Warn( "Error loading RSA key: %s", sError.c_str() );
+		LOG_ERROR(Log::General, "Error loading RSA key: %s", sError.c_str() );
 
 	if( bGenerate )
 	{
-		LOG->Warn( "Keys missing or failed to load.  Generating new keys" );
+		LOG_INFO(Log::General, "Keys missing or failed to load.  Generating new keys" );
 		GenerateRSAKeyToFile( KEY_LENGTH, PRIVATE_KEY_PATH, PUBLIC_KEY_PATH );
 	}
 }
@@ -148,13 +148,13 @@ static bool WriteFile( RString sFile, RString sBuf )
 	RageFile output;
 	if( !output.Open(sFile, RageFile::WRITE) )
 	{
-		LOG->Warn( "WriteFile: opening %s failed: %s", sFile.c_str(), output.GetError().c_str() );
+		LOG_ERROR(Log::General, "WriteFile: opening %s failed: %s", sFile.c_str(), output.GetError().c_str() );
 		return false;
 	}
 
 	if( output.Write(sBuf) == -1 || output.Flush() == -1 )
 	{
-		LOG->Warn( "WriteFile: writing %s failed: %s", sFile.c_str(), output.GetError().c_str() );
+		LOG_ERROR(Log::General, "WriteFile: writing %s failed: %s", sFile.c_str(), output.GetError().c_str() );
 		output.Close();
 		FILEMAN->Remove( sFile );
 		return false;
@@ -171,7 +171,7 @@ void CryptManager::GenerateRSAKey( unsigned int keyLength, RString &sPrivKey, RS
 	iRet = rsa_make_key( &g_pPRNG->m_PRNG, g_pPRNG->m_iPRNG, keyLength / 8, 65537, &key );
 	if( iRet != CRYPT_OK )
 	{
-		LOG->Warn( "GenerateRSAKey(%i) error: %s", keyLength, error_to_string(iRet) );
+		LOG_ERROR(Log::General, "GenerateRSAKey(%i) error: %s", keyLength, error_to_string(iRet) );
 		return;
 	}
 
@@ -180,7 +180,7 @@ void CryptManager::GenerateRSAKey( unsigned int keyLength, RString &sPrivKey, RS
 	iRet = rsa_export( buf, &iSize, PK_PUBLIC, &key );
 	if( iRet != CRYPT_OK )
 	{
-		LOG->Warn( "Export error: %s", error_to_string(iRet) );
+		LOG_ERROR(Log::General, "Export error: %s", error_to_string(iRet) );
 		return;
 	}
 
@@ -190,7 +190,7 @@ void CryptManager::GenerateRSAKey( unsigned int keyLength, RString &sPrivKey, RS
 	iRet = rsa_export( buf, &iSize, PK_PRIVATE, &key );
 	if( iRet != CRYPT_OK )
 	{
-		LOG->Warn( "Export error: %s", error_to_string(iRet) );
+		LOG_ERROR(Log::General, "Export error: %s", error_to_string(iRet) );
 		return;
 	}
 
@@ -233,14 +233,14 @@ bool CryptManager::Sign( RString sPath, RString &sSignatureOut, RString sPrivKey
 {
 	if( !IsAFile(sPath) )
 	{
-		LOG->Trace( "SignFileToFile: \"%s\" doesn't exist", sPath.c_str() );
+		LOG_TRACE(Log::General, "SignFileToFile: \"%s\" doesn't exist", sPath.c_str() );
 		return false;
 	}
 
 	RageFile file;
 	if( !file.Open(sPath) )
 	{
-		LOG->Warn( "SignFileToFile: open(%s) failed: %s", sPath.c_str(), file.GetError().c_str() );
+		LOG_ERROR(Log::General, "SignFileToFile: open(%s) failed: %s", sPath.c_str(), file.GetError().c_str() );
 		return false;
 	}
 
@@ -248,7 +248,7 @@ bool CryptManager::Sign( RString sPath, RString &sSignatureOut, RString sPrivKey
 	RString sError;
 	if( !key.Load(sPrivKey, sError) )
 	{
-		LOG->Warn( "Error loading RSA key: %s", sError.c_str() );
+		LOG_ERROR(Log::General, "Error loading RSA key: %s", sError.c_str() );
 		return false;
 	}
 
@@ -269,7 +269,7 @@ bool CryptManager::Sign( RString sPath, RString &sSignatureOut, RString sPrivKey
 			0, &key.m_Key);
 	if( iRet != CRYPT_OK )
 	{
-		LOG->Warn( "SignFileToFile error: %s", error_to_string(iRet) );
+		LOG_ERROR(Log::General, "SignFileToFile error: %s", error_to_string(iRet) );
 		return false;
 	}
 
@@ -287,7 +287,7 @@ bool CryptManager::VerifyFileWithFile( RString sPath, RString sSignatureFile )
 	for( unsigned i = 0; i < asKeys.size(); ++i )
 	{
 		const RString &sKey = asKeys[i];
-		LOG->Trace( "Trying alternate key \"%s\" ...", sKey.c_str() );
+		LOG_TRACE(Log::General, "Trying alternate key \"%s\" ...", sKey.c_str() );
 
 		if( VerifyFileWithFile(sPath, sSignatureFile, sKey) )
 			return true;
@@ -316,7 +316,7 @@ bool CryptManager::VerifyFileWithFile( RString sPath, RString sSignatureFile, RS
 	RageFile file;
 	if( !file.Open(sPath) )
 	{
-		LOG->Warn( "Verify: open(%s) failed: %s", sPath.c_str(), file.GetError().c_str() );
+		LOG_ERROR(Log::General, "Verify: open(%s) failed: %s", sPath.c_str(), file.GetError().c_str() );
 		return false;
 	}
 
@@ -329,7 +329,7 @@ bool CryptManager::Verify( RageFileBasic &file, RString sSignature, RString sPub
 	RString sError;
 	if( !key.Load(sPublicKey, sError) )
 	{
-		LOG->Warn( "Error loading RSA key: %s", sError.c_str() );
+		LOG_ERROR(Log::General, "Error loading RSA key: %s", sError.c_str() );
 		return false;
 	}
 
@@ -346,13 +346,16 @@ bool CryptManager::Verify( RageFileBasic &file, RString sSignature, RString sPub
 
 	if( iRet != CRYPT_OK )
 	{
-		LOG->Warn( "Verify(%s) failed: %s", file.GetDisplayPath().c_str(), error_to_string(iRet) );
+		LOG_ERROR(Log::General, "Verify(%s) failed: %s", file.GetDisplayPath().c_str(), error_to_string(iRet) );
 		return false;
 	}
 
 	if( !iMatch )
 	{
-		LOG->Warn( "Verify(%s) failed: signature mismatch", file.GetDisplayPath().c_str() );
+		// Routine, not a failure: VerifyFileWithFile() tries every alternate
+		// public key in turn (see the LOG_TRACE above), so most keys are
+		// expected to mismatch until the right one is found.
+		LOG_TRACE(Log::General, "Verify(%s) failed: signature mismatch", file.GetDisplayPath().c_str() );
 		return false;
 	}
 
@@ -371,7 +374,7 @@ RString CryptManager::GetMD5ForFile( RString fn )
 	RageFile file;
 	if( !file.Open( fn, RageFile::READ ) )
 	{
-		LOG->Warn( "GetMD5: Failed to open file '%s'", fn.c_str() );
+		LOG_ERROR(Log::General, "GetMD5: Failed to open file '%s'", fn.c_str() );
 		return RString();
 	}
 	int iHash = register_hash( &md5_desc );
@@ -416,7 +419,7 @@ RString CryptManager::GetSHA1ForFile( RString fn )
 	RageFile file;
 	if( !file.Open( fn, RageFile::READ ) )
 	{
-		LOG->Warn( "GetSHA1: Failed to open file '%s'", fn.c_str() );
+		LOG_ERROR(Log::General, "GetSHA1: Failed to open file '%s'", fn.c_str() );
 		return RString();
 	}
 	int iHash = register_hash( &sha1_desc );
@@ -447,7 +450,7 @@ RString CryptManager::GetSHA256ForFile( RString fn )
 	RageFile file;
 	if( !file.Open( fn, RageFile::READ ) )
 	{
-		LOG->Warn( "GetSHA256: Failed to open file '%s'", fn.c_str() );
+		LOG_ERROR(Log::General, "GetSHA256: Failed to open file '%s'", fn.c_str() );
 		return RString();
 	}
 	int iHash = register_hash( &sha256_desc );
