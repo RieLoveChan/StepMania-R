@@ -123,7 +123,7 @@ void ProfileManager::Init()
 		if( (int)g_vLocalProfile.size() > NUM_FIXED_PROFILES )
 			g_vLocalProfile.erase( g_vLocalProfile.begin()+NUM_FIXED_PROFILES, g_vLocalProfile.end() );
 
-		for( int i=g_vLocalProfile.size(); i<NUM_FIXED_PROFILES; i++ )
+		for( int i=static_cast<int>(g_vLocalProfile.size()); i<NUM_FIXED_PROFILES; i++ )
 		{
 			RString sCharacterID = FIXED_PROFILE_CHARACTER_ID( i );
 			Character *pCharacter = CHARMAN->GetCharacterFromID( sCharacterID );
@@ -1274,7 +1274,7 @@ Profile *ProfileManager::GetLocalProfileFromIndex( int iIndex )
 
 int ProfileManager::GetNumLocalProfiles() const
 {
-	return g_vLocalProfile.size();
+	return static_cast<int>(g_vLocalProfile.size());
 }
 
 void ProfileManager::SetStatsPrefix(RString const& prefix)

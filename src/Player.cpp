@@ -85,7 +85,7 @@ public:
 			m_vRows[m_iOffset] = false;
 			++m_iStart;
 			if( ++m_iOffset >= int(m_vRows.size()) )
-				m_iOffset -= m_vRows.size();
+				m_iOffset -= static_cast<int>(m_vRows.size());
 		}
 		return ret;
 	}
@@ -1708,7 +1708,7 @@ Player::PlayerNoteFieldPositioner::PlayerNoteFieldPositioner(
 	:player(p)
 {
 	player->PushPlayerMatrix(x, skew, center_y);
-	float reverse_mult= (reverse ? -1 : 1);
+	float reverse_mult= (reverse ? -1.f : 1.f);
 	original_y= player->m_pNoteField->GetY();
 	float tilt_degrees= SCALE(tilt, -1.f, +1.f, +30, -30) * reverse_mult;
 	float zoom= SCALE(mini, 0.f, 1.f, 1.f, .5f);

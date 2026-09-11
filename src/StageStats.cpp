@@ -87,7 +87,7 @@ int StageStats::GetAverageMeter( PlayerNumber pn ) const
 		const Steps* pSteps = m_player[pn].m_vpPossibleSteps[i];
 		iTotalMeter += pSteps->GetMeter();
 	}
-	return iTotalMeter / m_vpPlayedSongs.size();	// round down
+	return static_cast<int>(iTotalMeter / m_vpPlayedSongs.size());	// round down
 }
 
 void StageStats::AddStats( const StageStats& other )
@@ -295,7 +295,7 @@ void StageStats::FinalizeScores( bool bSummary )
 		if( iter == pHSL->vHighScores.end() )
 			m_player[p].m_iMachineHighScoreIndex = -1;
 		else
-			m_player[p].m_iMachineHighScoreIndex = iter - pHSL->vHighScores.begin();
+			m_player[p].m_iMachineHighScoreIndex = static_cast<int>(iter - pHSL->vHighScores.begin());
 	}
 
 	LOG->Trace( "done saving stats and high scores" );

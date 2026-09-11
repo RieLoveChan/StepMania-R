@@ -59,7 +59,7 @@ bool RandomSample::LoadSoundDir( RString sDir, int iMaxToLoad )
 	GetDirListing( sDir + "*.wav", arraySoundFiles );
 
 	std::shuffle( arraySoundFiles.begin(), arraySoundFiles.end(), g_RandomNumberGenerator );
-	const unsigned int newSize = std::min<unsigned int>(arraySoundFiles.size(), static_cast<unsigned int>(iMaxToLoad));
+	const unsigned int newSize = std::min<unsigned int>(static_cast<unsigned int>(arraySoundFiles.size()), static_cast<unsigned int>(iMaxToLoad));
 	arraySoundFiles.resize(newSize);
 
 	for( unsigned i=0; i<arraySoundFiles.size(); i++ )
@@ -95,7 +95,7 @@ int RandomSample::GetNextToPlay()
 	int iIndexToPlay = 0;
 	for( int i=0; i<5; i++ )
 	{
-		iIndexToPlay = RandomInt( m_pSamples.size() );
+		iIndexToPlay = RandomInt( static_cast<int>(m_pSamples.size()) );
 		if( iIndexToPlay != m_iIndexLastPlayed )
 			break;
 	}

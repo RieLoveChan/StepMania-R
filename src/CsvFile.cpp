@@ -72,7 +72,7 @@ bool CsvFile::ReadFile( RageFileBasic &f )
 				while(true);
 
 				RString sValue = line;
-				sValue = sValue.Left( iEnd );
+				sValue = sValue.Left( static_cast<int>(iEnd) );
 				vs.push_back( sValue );
 
 				line.erase( line.begin(), line.begin()+iEnd );
@@ -87,7 +87,7 @@ bool CsvFile::ReadFile( RageFileBasic &f )
 					iEnd = line.size();	// didn't find an end.  Take the whole line
 
 				RString sValue = line;
-				sValue = sValue.Left( iEnd );
+				sValue = sValue.Left( static_cast<int>(iEnd) );
 				vs.push_back( sValue );
 
 				line.erase( line.begin(), line.begin()+iEnd );

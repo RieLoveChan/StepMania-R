@@ -78,7 +78,7 @@ Character* CharacterManager::GetRandomCharacter()
 	std::vector<Character*> apCharacters;
 	GetCharacters( apCharacters );
 	if( !apCharacters.empty() )
-		return apCharacters[RandomInt(apCharacters.size())];
+		return apCharacters[RandomInt(static_cast<int>(apCharacters.size()))];
 	else
 		return GetDefaultCharacter();
 }
@@ -158,7 +158,7 @@ public:
 	{
 		std::vector<Character*> chars;
 		p->GetCharacters(chars);
-		lua_pushnumber(L, chars.size());
+		lua_pushnumber(L, static_cast<lua_Number>(chars.size()));
 		return 1;
 	}
 

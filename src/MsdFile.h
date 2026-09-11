@@ -55,13 +55,13 @@ public:
 	/**
 	 * @brief Retrieve the number of values for each tag.
 	 * @return the nmber of values. */
-	unsigned GetNumValues() const { return values.size(); }
+	unsigned GetNumValues() const { return static_cast<unsigned>(values.size()); }
 	/**
 	 * @brief Get the number of parameters for the current index.
 	 * @param val the current value index.
 	 * @return the number of params.
 	 */
-	unsigned GetNumParams( unsigned val ) const { if( val >= GetNumValues() ) return 0; return values[val].params.size(); }
+	unsigned GetNumParams( unsigned val ) const { if( val >= GetNumValues() ) return 0; return static_cast<unsigned>(values[val].params.size()); }
 	/**
 	 * @brief Get the specified value.
 	 * @param val the current value index.

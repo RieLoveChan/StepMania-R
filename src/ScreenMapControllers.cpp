@@ -190,8 +190,8 @@ void ScreenMapControllers::Init()
 		m_Line.back(), &m_LineScroller);
 #undef ADD_ACTION
 
-	m_MaxDestItem= (1 + m_KeysToMap.size() + m_Actions.size()) -
-		THEME->GetMetricI("ScreenMapControllers", "LinesVisible");
+	m_MaxDestItem= static_cast<unsigned int>((1 + m_KeysToMap.size() + m_Actions.size()) -
+		THEME->GetMetricI("ScreenMapControllers", "LinesVisible"));
 
 	m_LineScroller.SetName( "LineScroller" );
 	ActorUtil::LoadAllCommands( m_LineScroller, m_sName );
@@ -682,7 +682,7 @@ int ScreenMapControllers::CurKeyIndex()
 int ScreenMapControllers::CurActionIndex()
 {
 	// Subtract the header row and the keys.
-	return m_CurButton - 1 - m_KeysToMap.size();
+	return static_cast<int>(m_CurButton - 1 - m_KeysToMap.size());
 }
 
 void ScreenMapControllers::SetCursorFromSetListCurrent()

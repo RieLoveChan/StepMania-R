@@ -110,7 +110,7 @@ void StepsUtil::GetAllMatchingEndless( Song *pSong, const StepsCriteria &stc, st
 			}
 			if( difficulty < previousDifficulty )
 			{
-				lowestDifficultyIndex = st - vSteps.begin();
+				lowestDifficultyIndex = static_cast<int>(st - vSteps.begin());
 			}
 		}
 		out.push_back( SongAndSteps( pSong, vSteps.at( lowestDifficultyIndex ) ) );
@@ -255,7 +255,7 @@ void StepsUtil::SortStepsByDescription( std::vector<Steps*> &arraySongPointers )
 
 void StepsUtil::RemoveLockedSteps( const Song *pSong, std::vector<Steps*> &vpSteps )
 {
-	for( int i=vpSteps.size()-1; i>=0; i-- )
+	for( int i=static_cast<int>(vpSteps.size())-1; i>=0; i-- )
 	{
 		if( UNLOCKMAN->StepsIsLocked(pSong, vpSteps[i]) )
 			vpSteps.erase( vpSteps.begin()+i );

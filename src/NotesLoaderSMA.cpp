@@ -26,7 +26,7 @@ void SMALoader::ProcessMultipliers( TimingData &out, const int iRowsPerBeat, con
 	{
 		std::vector<RString> arrayMultiplierValues;
 		split( arrayMultiplierExpressions[f], "=", arrayMultiplierValues );
-		unsigned size = arrayMultiplierValues.size();
+		unsigned size = static_cast<unsigned>(arrayMultiplierValues.size());
 		if( size < 2 )
 		{
 			LOG->UserLog("Song file",
@@ -354,7 +354,7 @@ bool SMALoader::LoadFromSimfile( const RString &sPath, Song &out, bool /* bFromC
 					     sParams[1].c_str() );
 		}
 
-		else if( sValueName.Left(strlen("BGCHANGES"))=="BGCHANGES" || sValueName=="ANIMATIONS" )
+		else if( sValueName.Left(static_cast<int>(strlen("BGCHANGES")))=="BGCHANGES" || sValueName=="ANIMATIONS" )
 		{
 			SMLoader::ProcessBGChanges( out, sValueName, sPath, sParams[1]);
 		}

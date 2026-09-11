@@ -725,7 +725,7 @@ bool PlayerOptions::FromOneModString( const RString &sOneMod, RString &sErrorOut
 	else if( sBit == "life" || sBit == "lives" )
 	{
 		// level is a percentage for every other option, so multiply by 100. -Kyz
-		m_BatteryLives= level * 100.0f;
+		m_BatteryLives= static_cast<int>(level * 100.0f);
 	}
 	else if( sBit.find("modtimer") != sBit.npos)
 	{
@@ -1401,7 +1401,7 @@ float PlayerOptions::GetReversePercentForColumn( int iCol ) const
 		f += m_fScrolls[SCROLL_CROSS];
 
 	if( f > 2 )
-		f = std::fmod( f, 2 );
+		f = std::fmod( f, 2.0f );
 	if( f > 1 )
 		f = SCALE( f, 1.f, 2.f, 1.f, 0.f );
 	return f;

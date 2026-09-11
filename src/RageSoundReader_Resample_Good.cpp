@@ -303,7 +303,7 @@ int PolyphaseFilter::RunPolyphaseFilter(
 	State.m_iFilled = iFilled;
 	State.m_iPolyIndex = iPolyIndex;
 
-	int iRetSamples = pOut - pOutOrig;
+	int iRetSamples = static_cast<int>(pOut - pOutOrig);
 	int iRetFrames = iRetSamples / iSampleStride;
 	return iRetFrames;
 }
@@ -590,7 +590,7 @@ int RageSoundReader_Resample_Good::SetPosition( int iFrame )
 
 int RageSoundReader_Resample_Good::Read( float *pBuf, int iFrames )
 {
-	int iChannels = m_apResamplers.size();
+	int iChannels = static_cast<int>(m_apResamplers.size());
 
 	int iFramesRead = 0;
 
