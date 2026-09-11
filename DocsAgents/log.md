@@ -2086,3 +2086,26 @@
     `ScreenOptionsMasterPrefs.cpp` 18).
   **Verified:** `sm_tests` 5966/226, `ctest` 100%, Release build +
   `--SelfTest` green after all three changes together.
+
+* **item 2 (C4244/C4267) sweep, first 4 files: 297 -> 187 remaining.**
+  Methodology lesson learned the hard way: a "clean rebuild shows 0"
+  check is meaningless if `/wd4244 /wd4267` is still in
+  `src/CMakeLists.txt` -- burned about an hour mid-sweep on a false
+  "sweep complete" signal because the suppression flag wasn't actually
+  removed for that measurement. Always confirm the flag is gone before
+  trusting a 0.
+  Real fixes, all `static_cast` documenting existing intentional
+  behavior (no logic change): `NoteField.cpp` (2 macro fixes covered
+  ~30 of its 35 call-site warnings: `draw_all_segments`'s int-ternary-
+  into-float, `IS_ON_SCREEN`'s float-members-into-int-params; plus a
+  handful of individual float/int call sites and a `lua_tonumber`
+  truncation); `TimingSegments.cpp` (`*Segment::GetValues()` pushing
+  int/enum into `vector<float>`, 5 sites); `RageSurfaceUtils.cpp`
+  (`std::trunc`/`std::lrint` results assigned to narrower int types, 6
+  sites); `ScreenOptionsMasterPrefs.cpp` (one `static_cast<T>` around a
+  generic `if constexpr` lambda fixes every instantiation, 2 sites).
+  `/wd4244`/`/wd4267` stay in `src/CMakeLists.txt` -- 187 sites remain
+  across ~75 files (`NoteDataWithScoring.cpp` 11, `ScreenGameplay.cpp`
+  9, `NoteDisplay.cpp` 9, ... next).
+  Verified: `sm_tests` 5966/226, `ctest` 100%, Release + `--SelfTest`
+  green.
