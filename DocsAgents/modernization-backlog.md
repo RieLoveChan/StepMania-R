@@ -130,11 +130,18 @@ With it removed, a clean `sm_engine`/`sm_tests` (Debug, `WITH_TESTS=ON`,
   inflate the apparent per-file count but not the true `(line,col)`
   dedup), `RageSurfaceUtils.cpp` (6, not 22, same template-note
   inflation), `ScreenOptionsMasterPrefs.cpp` (2, not 18, one generic
-  `if constexpr` helper instantiated for many `T`/`U`): **187 unique
-  sites remain across ~75 files.** Next concentrations: `NoteDataWithScoring.cpp`
-  (11, genuinely 11 — no inflation there), `ScreenGameplay.cpp` (9),
-  `NoteDisplay.cpp` (9), `Profile.cpp` (6), `NotesLoaderBMS.cpp` (6),
-  `NetworkManager.cpp` (6).
+  `if constexpr` helper instantiated for many `T`/`U`): 187 remained,
+  then fixing `NoteDataWithScoring.cpp` (11, genuinely 11),
+  `NoteDisplay.cpp` (9), `ScreenGameplay.cpp` (9, two of them from the
+  shared `FLOAT_TABLE_INTERFACE` macro in `OptionsBinding.h` -- fixed
+  once at the macro, benefits every other user of it too): **158 unique
+  sites remain across 72 files.** This full-tree count (suppression
+  actually off) supersedes the earlier "~75 files" estimate, which
+  undercounted -- expect the true file list to be broader than any
+  single top-N snapshot suggests. Next concentrations: `Profile.cpp`
+  (6), `NotesLoaderBMS.cpp` (6), `NetworkManager.cpp` (6),
+  `ScreenDebugOverlay.cpp` (5), `RageFileBasic.cpp` (5),
+  `BitmapText.cpp` (5), `ActorMultiVertex.cpp` (5).
 **Done, verified (`sm_tests` 5966/226, `ctest`, Release + `--SelfTest`
 green, `/wd4244`/`/wd4267` still in place while sites remain elsewhere):**
 - `RageUtil.h`/`RageTimer.h`: the 4 header sites (`RageTimer::
@@ -159,8 +166,27 @@ green, `/wd4244`/`/wd4267` still in place while sites remain elsewhere):**
 - `ScreenOptionsMasterPrefs.cpp`: `FindClosestEntry<T,U>`'s `if
   constexpr` helper lambda — one `static_cast<T>` around its call fixes
   every `T`/`U` instantiation at once.
+- `NoteDataWithScoring.cpp`: `RadarValues` (float-backed) read as `int`
+  counts (`out[RadarCategory_Notes]` etc.) and int scoring counters
+  (`state.taps_hit` etc.) written back into it — cast both directions.
+  §5-adjacent (`NoteData*`); characterization-only (no logic change),
+  verified against the existing `sm_tests` coverage.
+- `NoteDisplay.cpp`: degrees-as-double (`PI_180`/`PI_180R`) multiplied
+  into a `float` rotation; the same `IsOnScreen()` float-members-into-
+  int-params pattern as `NoteField.cpp`; a pointer-difference
+  (`v - buf`) into `int` ×2.
+- `ScreenGameplay.cpp`: int assigned from `SafeFArg()` (returns `int`)
+  into `float margins[][2]` ×3; an iterator-diff into `int`; an enum
+  subtraction into `int` ×2; `lua_pushnumber(size_t)` (should be
+  `lua_Number`) ×1 direct + 2 more via the shared macro below.
+- `OptionsBinding.h`'s `FLOAT_TABLE_INTERFACE` macro: `size()` (`size_t`)
+  into `lua_createtable`'s `int` count param, `n+1` (`size_t`) into
+  `lua_rawseti`'s `int` index param, and a bare `size_t` into
+  `lua_pushnumber`'s `lua_Number` param — fixed once at the macro
+  definition, so every screen/options-page that uses this interface
+  benefits, not just `ScreenGameplay.cpp`.
 **Not done:** `/wd4244`/`/wd4267` stay in `src/CMakeLists.txt` until all
-187 remaining Debug sites are triaged (same "fix everything, then
+158 remaining sites (72 files) are triaged (same "fix everything, then
 remove the `/wd` flag in one commit" pattern as C4100) — continue
 file-by-file, highest concentration first. Still not measured for
 Clang/GCC (`baseline.md` TBD, non-Windows).
