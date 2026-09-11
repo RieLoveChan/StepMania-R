@@ -1192,6 +1192,32 @@ it. Changes:
 Verified: Windows Release build + `sm_tests` (Debug) + `ctest` +
 `--SelfTest` all green after the change (`-A x64` explicit).
 
+### 28. Drop macOS x86_64 from CI — DONE 2026-09-11
+ADR [0003](./adr/0003-platform-support-floors.md)'s macOS floor row
+carried x86_64 conditionally: "arm64 primary, x86_64 while Apple/
+Rosetta still ship it." Maintainer confirmed live (2026-09-11) that
+Apple has ended Intel Mac support, so that clause has lapsed — same
+kind of "the floor moved out from under this build" reasoning as item
+21's 32-bit Windows drop. Changes:
+- `.github/workflows/ci.yml`: removed the `macos-build-x86_64` job
+  (`macos-15-intel` runner, `-DCMAKE_OSX_ARCHITECTURES=x86_64`).
+  `macos-build-arm64` was already a separate job — it's now the only
+  macOS build leg. `macos-tests` (unit tests) was already arm64-only,
+  no change needed there.
+- ADR 0003's floor table updated: macOS is now **arm64 only**.
+- **Left alone, out of scope for this pass:** `CMake/CPackSetup.cmake`
+  and `CMake/SetupFfmpeg.cmake` both still branch on
+  `CMAKE_OSX_ARCHITECTURES STREQUAL "x86_64"` (DMG packaging label
+  "macOS-Intel", FFmpeg `--arch=x86_64` configure flags) — a local
+  Intel-Mac dev build still works, only CI *coverage* changed here.
+  Removing the x86_64 packaging/build path entirely (making arm64 the
+  only buildable target, not just the only CI-tested one) is a bigger
+  change and needs its own explicit go-ahead.
+Verified: this is a CI-workflow + docs-only change (no C++ touched);
+the push that carries it is itself the verification that the trimmed
+`ci.yml` still parses and all remaining jobs (Windows/Ubuntu/macOS
+arm64 × build+tests, Lua.xml validation) run green.
+
 ### 15. `#if 0` dead blocks — two batches DONE, ~7 remain (fragile ones)
 First pass (`a2c3d44522`, 2026-09-04): 10 dead blocks across 8 files
 (`CodeDetector.cpp`/`.h`, `CourseUtil.cpp`, `NoteDataUtil.cpp` ×3,
