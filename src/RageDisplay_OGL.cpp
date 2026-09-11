@@ -320,14 +320,14 @@ GLhandleARB CompileShader( GLenum ShaderType, RString sFile, std::vector<RString
 	{
 		s = ssprintf( "#define %s\n", s.c_str() );
 		apData.push_back( s.data() );
-		aiLength.push_back( s.size() );
+		aiLength.push_back( static_cast<GLint>(s.size()) );
 	}
 	apData.push_back( "#line 1\n" );
 	aiLength.push_back( 8 );
 
 	apData.push_back( sBuffer.data() );
-	aiLength.push_back( sBuffer.size() );
-	glShaderSourceARB( hShader, apData.size(), &apData[0], &aiLength[0] );
+	aiLength.push_back( static_cast<GLint>(sBuffer.size()) );
+	glShaderSourceARB( hShader, static_cast<GLsizei>(apData.size()), &apData[0], &aiLength[0] );
 
 	glCompileShaderARB( hShader );
 
@@ -866,7 +866,7 @@ void RageDisplay_Legacy::EndFrame()
 		fullscreenSprite.SetHorizAlign(align_left);
 		fullscreenSprite.SetVertAlign(align_top);
 		CameraPushMatrix();
-		LoadMenuPerspective( 0, GetActualVideoModeParams().width, GetActualVideoModeParams().height,
+		LoadMenuPerspective( 0, static_cast<float>(GetActualVideoModeParams().width), static_cast<float>(GetActualVideoModeParams().height),
 							 static_cast<float> (GetActualVideoModeParams().width) / 2.f,
 							 static_cast<float> (GetActualVideoModeParams().height) / 2.f );
 		fullscreenSprite.Draw();
@@ -1041,8 +1041,8 @@ public:
 	void Allocate( const std::vector<msMesh>& /* vMeshes */ ) override
 	{
 		/* Always allocate at least 1 entry, so &x[0] is valid. */
-		const unsigned int verticesCount = std::max<unsigned int>(1u, GetTotalVertices());
-		const unsigned int trianglesCount = std::max<unsigned int>(1u, GetTotalTriangles());
+		const unsigned int verticesCount = std::max<unsigned int>(1u, static_cast<unsigned int>(GetTotalVertices()));
+		const unsigned int trianglesCount = std::max<unsigned int>(1u, static_cast<unsigned int>(GetTotalTriangles()));
 
 		m_vPosition.resize(verticesCount);
 		m_vTexture.resize(verticesCount);
@@ -1514,7 +1514,7 @@ void RageDisplay_Legacy::DrawSymmetricQuadStripInternal( const RageSpriteVertex 
 
 	// make a temporary index buffer
 	static std::vector<std::uint16_t> vIndices;
-	unsigned uOldSize = vIndices.size();
+	unsigned uOldSize = static_cast<unsigned>(vIndices.size());
 	unsigned uNewSize = std::max(uOldSize,(unsigned)iNumIndices);
 	vIndices.resize( uNewSize );
 	for( std::uint16_t i=(std::uint16_t)uOldSize/12; i<(std::uint16_t)iNumPieces; i++ )

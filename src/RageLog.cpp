@@ -422,7 +422,7 @@ void RageLog::EmitLine( int where, const RString &sTagged )
 
 	/* Timestamp goes on log.txt / timelog.txt / RecentLogs only, not
 	 * info.txt or stdout. */
-	sStr.insert( 0, SecondsToMMSSMsMsMs( RageTimer::GetTimeSinceStart() ) + "  " );
+	sStr.insert( 0, SecondsToMMSSMsMsMs( static_cast<float>(RageTimer::GetTimeSinceStart()) ) + "  " );
 
 	if( where & WRITE_TO_TIME )
 		g_fileTimeLog->PutLine( sStr );
@@ -532,21 +532,21 @@ void RageLog::AddToInfo( const RString &str )
 	if( limit_reached )
 		return;
 
-	unsigned len = str.size() + strlen( NEWLINE );
+	unsigned len = static_cast<unsigned>(str.size() + strlen( NEWLINE ));
 	if( staticlog_size + len > sizeof(staticlog) )
 	{
 		const RString txt( NEWLINE "Staticlog limit reached" NEWLINE );
 
-		const unsigned int pos = std::min<unsigned int>(staticlog_size, sizeof(staticlog) - txt.size());
+		const unsigned int pos = std::min<unsigned int>(staticlog_size, static_cast<unsigned int>(sizeof(staticlog) - txt.size()));
 		memcpy( staticlog+pos, txt.data(), txt.size() );
 		limit_reached = true;
 		return;
 	}
 
 	memcpy( staticlog+staticlog_size, str.data(), str.size() );
-	staticlog_size += str.size();
+	staticlog_size += static_cast<unsigned>(str.size());
 	memcpy( staticlog+staticlog_size, NEWLINE, strlen(NEWLINE) );
-	staticlog_size += strlen( NEWLINE );
+	staticlog_size += static_cast<unsigned>(strlen( NEWLINE ));
 }
 
 const char *RageLog::GetInfo()
@@ -560,7 +560,7 @@ static char backlog[BACKLOG_LINES][1024];
 static int backlog_start=0, backlog_cnt=0;
 void RageLog::AddToRecentLogs( const RString &str )
 {
-	unsigned len = str.size();
+	unsigned len = static_cast<unsigned>(str.size());
 	if( len > sizeof(backlog[backlog_start])-1 )
 		len = sizeof(backlog[backlog_start])-1;
 
@@ -599,7 +599,7 @@ void RageLog::UpdateMappedLog()
 	for (auto const &i : LogMaps)
 		str += ssprintf( "%s" NEWLINE, i.second.c_str() );
 
-	g_AdditionalLogSize = std::min( sizeof(g_AdditionalLogStr), str.size()+1 );
+	g_AdditionalLogSize = static_cast<int>(std::min( sizeof(g_AdditionalLogStr), str.size()+1 ));
 	memcpy( g_AdditionalLogStr, str.c_str(), g_AdditionalLogSize );
 	g_AdditionalLogStr[ sizeof(g_AdditionalLogStr)-1 ] = 0;
 }

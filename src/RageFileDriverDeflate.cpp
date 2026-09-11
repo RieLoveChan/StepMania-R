@@ -108,7 +108,7 @@ int RageFileObjInflate::ReadInternal( void *buf, std::size_t bytes )
 		m_pInflate->next_in = (Bytef *) decomp_buf_ptr;
 		m_pInflate->avail_in = decomp_buf_avail;
 		m_pInflate->next_out = (Bytef *) buf;
-		m_pInflate->avail_out = bytes;
+		m_pInflate->avail_out = static_cast<uInt>(bytes);
 
 
 		int err = inflate( m_pInflate, Z_SYNC_FLUSH );
@@ -132,11 +132,11 @@ int RageFileObjInflate::ReadInternal( void *buf, std::size_t bytes )
 			WARN( ssprintf("Huh? inflate err %i", err) );
 		}
 
-		const int used = (char *)m_pInflate->next_in - decomp_buf_ptr;
+		const int used = static_cast<int>((char *)m_pInflate->next_in - decomp_buf_ptr);
 		decomp_buf_ptr += used;
 		decomp_buf_avail -= used;
 
-		const int got = (char *)m_pInflate->next_out - (char *)buf;
+		const int got = static_cast<int>((char *)m_pInflate->next_out - (char *)buf);
 		m_iFilePos += got;
 		ret += got;
 		buf = (char *)buf + got;
@@ -231,7 +231,7 @@ int RageFileObjDeflate::WriteInternal( const void *pBuffer, std::size_t iBytes )
 		return 0;
 	}
 	m_pDeflate->next_in  = (Bytef*) pBuffer;
-	m_pDeflate->avail_in = iBytes;
+	m_pDeflate->avail_in = static_cast<uInt>(iBytes);
 
 	for(;;)
 	{
@@ -266,7 +266,7 @@ int RageFileObjDeflate::WriteInternal( const void *pBuffer, std::size_t iBytes )
 			break;
 		}
 	}
-	return iBytes;
+	return static_cast<int>(iBytes);
 }
 
 /* Note that flushing clears compression state, so (unlike most Flush() calls)
