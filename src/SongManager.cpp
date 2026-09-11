@@ -369,7 +369,7 @@ void SongManager::LoadSongDir( RString sDir, LoadingWindow *ld, bool onlyAdditio
 	if(ld)
 	{
 		ld->SetIndeterminate(false);
-		ld->SetTotalWork(arrayGroupDirs.size());
+		ld->SetTotalWork(static_cast<int>(arrayGroupDirs.size()));
 	}
 	int sanity_index= 0;
 	for (RString const &sGroupDirName : arrayGroupDirs)	// foreach dir in /Songs/
@@ -392,7 +392,7 @@ void SongManager::LoadSongDir( RString sDir, LoadingWindow *ld, bool onlyAdditio
 		SortRStringArray( arraySongDirs );
 
 		arrayGroupSongDirs.push_back(arraySongDirs);
-		songCount += arraySongDirs.size();
+		songCount += static_cast<int>(arraySongDirs.size());
 
 	}
 
@@ -678,7 +678,7 @@ RageColor SongManager::GetSongColor( const Song* pSong ) const
 			sortIndex += 1;
 		}
 
-		int i = m_vPreferredSongSort.size();
+		int i = static_cast<int>(m_vPreferredSongSort.size());
 		return SONG_GROUP_COLOR.GetValue( i%NUM_SONG_GROUP_COLORS );
 	}
 	else // TODO: Have a better fallback plan with colors?
@@ -776,7 +776,7 @@ RageColor SongManager::GetCourseColor( const Course* pCourse ) const
 			courseIndex += 1;
 		}
 
-		int i = m_vPreferredCourseSort.size();
+		int i = static_cast<int>(m_vPreferredCourseSort.size());
 		CHECKPOINT_M( ssprintf( "%i, NUM_COURSE_GROUP_COLORS = %i", i, NUM_COURSE_GROUP_COLORS.GetValue()) );
 		return COURSE_GROUP_COLOR.GetValue( i % NUM_COURSE_GROUP_COLORS );
 	}
@@ -901,37 +901,37 @@ std::vector<Song*> SongManager::GetSongsByMeter(const int iMeter) const {
 
 int SongManager::GetNumSongs() const
 {
-	return m_pSongs.size();
+	return static_cast<int>(m_pSongs.size());
 }
 
 int SongManager::GetNumLockedSongs() const
 {
-	return std::count_if(m_pSongs.begin(), m_pSongs.end(), [](Song const *s) { return UNLOCKMAN->SongIsLocked(s); });
+	return static_cast<int>(std::count_if(m_pSongs.begin(), m_pSongs.end(), [](Song const *s) { return UNLOCKMAN->SongIsLocked(s); }));
 }
 
 int SongManager::GetNumUnlockedSongs() const
 {
-	return std::count_if(m_pSongs.begin(), m_pSongs.end(), [](Song const *s) { return UNLOCKMAN->SongIsLocked(s) & ~LOCKED_LOCK; });
+	return static_cast<int>(std::count_if(m_pSongs.begin(), m_pSongs.end(), [](Song const *s) { return UNLOCKMAN->SongIsLocked(s) & ~LOCKED_LOCK; }));
 }
 
 int SongManager::GetNumSelectableAndUnlockedSongs() const
 {
-	return std::count_if(m_pSongs.begin(), m_pSongs.end(), [](Song const *s) { return UNLOCKMAN->SongIsLocked(s) & ~(LOCKED_LOCK | LOCKED_SELECTABLE); });
+	return static_cast<int>(std::count_if(m_pSongs.begin(), m_pSongs.end(), [](Song const *s) { return UNLOCKMAN->SongIsLocked(s) & ~(LOCKED_LOCK | LOCKED_SELECTABLE); }));
 }
 
 int SongManager::GetNumSongGroups() const
 {
-	return m_sSongGroupNames.size();
+	return static_cast<int>(m_sSongGroupNames.size());
 }
 
 int SongManager::GetNumCourses() const
 {
-	return m_pCourses.size();
+	return static_cast<int>(m_pCourses.size());
 }
 
 int SongManager::GetNumCourseGroups() const
 {
-	return m_mapCourseGroupToInfo.size();
+	return static_cast<int>(m_mapCourseGroupToInfo.size());
 }
 
 RString SongManager::ShortenGroupName( RString sLongGroupName )
@@ -975,7 +975,7 @@ void SongManager::InitCoursesFromDisk( LoadingWindow *ld, bool onlyAdditions )
 		if( ld )
 		{
 			ld->SetIndeterminate( false );
-			ld->SetTotalWork( vsCoursePaths.size() );
+			ld->SetTotalWork( static_cast<int>(vsCoursePaths.size()) );
 		}
 
 		RString base_course_group= Basename(sCourseGroup);
@@ -1445,7 +1445,7 @@ Song* SongManager::GetRandomSong()
 	for( int iThrowAway=0; iThrowAway<100; iThrowAway++ )
 	{
 		i++;
-		wrap( i, m_pShuffledSongs.size() );
+		wrap( i, static_cast<int>(m_pShuffledSongs.size()) );
 		Song *pSong = m_pShuffledSongs[ i ];
 		if( pSong->IsTutorial() )
 			continue;
@@ -1467,7 +1467,7 @@ Course* SongManager::GetRandomCourse()
 	for( int iThrowAway=0; iThrowAway<100; iThrowAway++ )
 	{
 		i++;
-		wrap( i, m_pShuffledCourses.size() );
+		wrap( i, static_cast<int>(m_pShuffledCourses.size()) );
 		Course *pCourse = m_pShuffledCourses[ i ];
 		if( pCourse->m_bIsAutogen && !PREFSMAN->m_bAutogenGroupCourses )
 			continue;
@@ -1689,7 +1689,7 @@ void SongManager::SetPreferredSongs(RString sPreferredSongs, bool bIsAbsolute) {
 				section = PreferredSortSection();
 			}
 
-			section.sName = sLine.Right( sLine.length() - RString("---").length() );
+			section.sName = sLine.Right( static_cast<int>(sLine.length() - RString("---").length()) );
 			TrimLeft( section.sName );
 			TrimRight( section.sName );
 		}
@@ -1699,7 +1699,7 @@ void SongManager::SetPreferredSongs(RString sPreferredSongs, bool bIsAbsolute) {
 				* and if it does, add all the songs in that group to the list. */
 			if( EndsWith(sLine,"/*") )
 			{
-				RString group = sLine.Left( sLine.length() - RString("/*").length() );
+				RString group = sLine.Left( static_cast<int>(sLine.length() - RString("/*").length()) );
 				if( DoesSongGroupExist(group) )
 				{
 					// add all songs in group
@@ -1764,7 +1764,7 @@ void SongManager::SetPreferredSongs(RString sPreferredSongs, bool bIsAbsolute) {
 	}
 
 	// prune empty groups
-	for( int i=m_vPreferredSongSort.size()-1; i>=0; i-- )
+	for( int i=static_cast<int>(m_vPreferredSongSort.size())-1; i>=0; i-- )
 		if( m_vPreferredSongSort[i].vpSongs.empty() ) {
 			m_vPreferredSongSort.erase( m_vPreferredSongSort.begin()+i );
 			m_mapPreferredSectionToSongs.erase( m_vPreferredSongSort[i].sName );
@@ -1834,7 +1834,7 @@ void SongManager::SetPreferredCourses(RString sPreferredCourses, bool bIsAbsolut
 
 		for (auto v = m_vPreferredCourseSort.begin(); v != m_vPreferredCourseSort.end(); ++v)
 		{
-			for( int i=v->size()-1; i>=0; i-- )
+			for( int i=static_cast<int>(v->size())-1; i>=0; i-- )
 			{
 				Course *pCourse = (*v)[i];
 				if( find(vpUnlockCourses.begin(),vpUnlockCourses.end(),pCourse) != vpUnlockCourses.end() )
@@ -1848,7 +1848,7 @@ void SongManager::SetPreferredCourses(RString sPreferredCourses, bool bIsAbsolut
 	}
 
 	// prune empty groups
-	for( int i=m_vPreferredCourseSort.size()-1; i>=0; i-- )
+	for( int i=static_cast<int>(m_vPreferredCourseSort.size())-1; i>=0; i-- )
 		if( m_vPreferredCourseSort[i].empty() )
 			m_vPreferredCourseSort.erase( m_vPreferredCourseSort.begin()+i );
 
@@ -2070,9 +2070,9 @@ int SongManager::GetNumStepsLoadedFromProfile()
 	{
 		std::vector<Steps*> vpAllSteps = s->GetAllSteps();
 
-		iCount += std::count_if(vpAllSteps.begin(), vpAllSteps.end(), [](Steps const *step) {
+		iCount += static_cast<int>(std::count_if(vpAllSteps.begin(), vpAllSteps.end(), [](Steps const *step) {
 			return step->GetLoadedFromProfileSlot() != ProfileSlot_Invalid;
-		});
+		}));
 	}
 
 	return iCount;

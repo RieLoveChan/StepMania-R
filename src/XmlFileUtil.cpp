@@ -140,7 +140,7 @@ RString::size_type LoadAttributes( XNode *pNode, const RString &xml, RString &sE
 
 		// XML Attr Name
 		RString sName;
-		SetString( xml, iOffset, iEnd, &sName );
+		SetString( xml, static_cast<int>(iOffset), static_cast<int>(iEnd), &sName );
 
 		// add new attribute
 		DEBUG_ASSERT( !sName.empty() );
@@ -183,7 +183,7 @@ RString::size_type LoadAttributes( XNode *pNode, const RString &xml, RString &sE
 			}
 
 			RString sValue;
-			SetString( xml, iOffset, iEnd, &sValue, true );
+			SetString( xml, static_cast<int>(iOffset), static_cast<int>(iEnd), &sValue, true );
 			ReplaceEntityText( sValue, g_mapEntitiesToChars );
 			pAttr->SetValue( sValue );
 			iOffset = iEnd;
@@ -244,7 +244,7 @@ RString::size_type LoadInternal( XNode *pNode, const RString &xml, RString &sErr
 	iOffset++;
 	RString::size_type iTagEnd = xml.find_first_of( " \t\r\n/>", iOffset );
 	RString sName;
-	SetString( xml, iOffset, iTagEnd, &sName );
+	SetString( xml, static_cast<int>(iOffset), static_cast<int>(iTagEnd), &sName );
 	pNode->SetName( sName );
 	iOffset = iTagEnd;
 
@@ -302,7 +302,7 @@ RString::size_type LoadInternal( XNode *pNode, const RString &xml, RString &sErr
 		}
 
 		RString sValue;
-		SetString( xml, iOffset, iEnd, &sValue, true );
+		SetString( xml, static_cast<int>(iOffset), static_cast<int>(iEnd), &sValue, true );
 
 		iOffset = iEnd;
 		ReplaceEntityText( sValue, g_mapEntitiesToChars );
@@ -353,7 +353,7 @@ RString::size_type LoadInternal( XNode *pNode, const RString &xml, RString &sErr
 			}
 
 			RString closename;
-			SetString( xml, iOffset, iEnd, &closename );
+			SetString( xml, static_cast<int>(iOffset), static_cast<int>(iEnd), &closename );
 			iOffset = iEnd+1;
 			if( closename == pNode->GetName() )
 			{
@@ -384,7 +384,7 @@ RString::size_type LoadInternal( XNode *pNode, const RString &xml, RString &sErr
 				}
 
 				RString sValue;
-				SetString( xml, iOffset, iEnd, &sValue, true );
+				SetString( xml, static_cast<int>(iOffset), static_cast<int>(iEnd), &sValue, true );
 
 				iOffset = iEnd;
 				ReplaceEntityText( sValue, g_mapEntitiesToChars );
@@ -678,7 +678,7 @@ namespace
 			NodesToAdd.back().SetFromStack( L );
 		}
 
-		int iLen = NodeNamesToAdd.size();
+		int iLen = static_cast<int>(NodeNamesToAdd.size());
 		FOREACH_LUATABLE( L, -1 )
 		{
 			// If this entry is a table, add it recursively.
@@ -810,7 +810,7 @@ void XmlFileUtil::MergeIniUnder( XNode *pFrom, XNode *pTo )
 
 	/* Iterate in reverse, since erasing iterators will invalidate the
 	 * iterators after it. */
-	for( int i = aToMove.size()-1; i >= 0; --i )
+	for( int i = static_cast<int>(aToMove.size())-1; i >= 0; --i )
 	{
 		XNode *pNode = *aToMove[i];
 		pFrom->RemoveChild(pNode, false);
