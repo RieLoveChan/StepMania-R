@@ -2290,3 +2290,27 @@
   noted last batch still applies, still not a real residual).
   Verified: `sm_tests` 5966/226 unchanged, `ctest`/Release/`--SelfTest`
   gate re-run after restoring `/wd4244`/`/wd4267`.
+
+* **item 2 (C4244/C4267) sweep, 11 more files (every remaining 4-site
+  file): 233 -> 189 remaining (~110 files).** `StepMania.cpp` (4: a
+  `ceil()` window width, a memory-status division, an `srand` seed);
+  `SongUtil.cpp` (4: two `SecondsToMMSS` calls, a `Left()`, a
+  reverse-loop bound); `ScreenUnlockStatus.cpp` (4: two unlock counts,
+  two reverse-loop bounds); `ScreenServiceAction.cpp` (4: two
+  near-duplicate edit-clearing helpers); `ScreenJukebox.cpp` (4: three
+  `RandomInt()` calls, a reverse-loop bound); `ScoreKeeperNormal.cpp`
+  (4: a song count, two Lua toasty-trigger sites); `RageTimer.cpp` (4:
+  two `Difference()` results, a `floor(float)` into `int64_t`);
+  `RageSoundReader_Preload.cpp` (4: four repeats of the same
+  frame-count computation); `RageSoundReader_MP3.cpp` (4: three MAD
+  pointer-diffs, an `id3_tag_query` length arg); `RageMath.cpp` (4: a
+  `double`-literal ternary fixed with `f`-suffixed literals instead of
+  a cast, three `double` intermediates in a triangle-wave helper);
+  `RageDisplay_D3D.cpp` (4: a palette-index lookup, two
+  `std::max<unsigned int>` calls -- same pattern as the earlier OGL
+  fix). Full sanity sweep of every previously-"done" file (including
+  the known substring-ambiguous `Song.cpp`/`Course.cpp`/
+  `RageDisplay.cpp`/`ScreenOptions.cpp`, checked precisely this time)
+  -- clean, no residuals.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest`/Release/`--SelfTest`
+  gate re-run after restoring `/wd4244`/`/wd4267`.
