@@ -182,9 +182,9 @@ set(SM_COMPILE_FLAGS "")
 
 if(WITH_SSE2)
   if(MSVC)
-    if(SM_WIN32_ARCH MATCHES "x86")
-      set(SM_COMPILE_FLAGS "${SM_COMPILE_FLAGS} /arch:SSE2")
-    endif()
+    # No /arch:SSE2 branch here: that flag only matters for 32-bit MSVC
+    # (SSE2 is baseline on x64); ADR 0003 / item 21 dropped 32-bit
+    # Windows, so SM_WIN32_ARCH is always "x64" and this was dead.
   elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "x86")
     set(SM_COMPILE_FLAGS "${SM_COMPILE_FLAGS} -msse2")
   elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
