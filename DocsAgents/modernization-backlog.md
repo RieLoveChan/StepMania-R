@@ -525,18 +525,59 @@ binding, or (×2, both characterization-only) a §5-protected file:
 `Steps.cpp` (a Lua `GetColumnCues` binding) and `NotesLoaderSSC.cpp`
 (a `RadarValues` index, a combo-tag size, a `Left()` tag-prefix
 compare). No logic changes anywhere; `sm_tests` unchanged.
+**Every remaining 2-site file fixed in one batch (26 files, 52
+sites):** `StepsUtil.cpp`, `StageStats.cpp`, `Sprite.cpp`,
+`ScrollBar.cpp`, `ScreenSelectMusic.cpp`,
+`ScreenOptionsManageProfiles.cpp`, `ScreenMapControllers.cpp`,
+`ScreenInstallOverlay.cpp`, `SampleHistory.cpp`, `RandomSample.cpp`,
+`RageUtil_CharConversions.cpp`, `RageSoundReader_SpeedChange.cpp`,
+`RageSoundReader_Resample_Good.cpp`, `RageSoundReader_Chain.cpp`,
+`RageModelGeometry.cpp`, `RageFileDriverTimeout.cpp`,
+`ProfileManager.cpp`, `PlayerOptions.cpp`, `Player.cpp`,
+`NotesLoaderSMA.cpp` (§5-protected, characterization-only),
+`NotesLoaderJson.cpp` (§5-protected, characterization-only),
+`NoteData.cpp` (§5-protected `NoteData*`, characterization-only),
+`MsdFile.h`, `GameSoundManager.cpp`, `CsvFile.cpp`,
+`CharacterManager.cpp` — same recurring patterns throughout: `size_t`/
+`double`-family values narrowed at `wrap()`/`RandomInt()` calls,
+iterator-diffs, reverse-loop bounds, `RString::Left`/`Right` length
+args, and Lua `lua_push*`/`lua_raw*` bindings. No logic changes;
+`sm_tests` unchanged.
 **Not done:** `/wd4244`/`/wd4267` stay in `src/CMakeLists.txt` until all
-106 remaining sites (~85 files) are triaged (same "fix everything,
-then remove the `/wd` flag in one commit" pattern as C4100) — continue
-file-by-file; measure only via `--clean-first` with the flag actually
+54 remaining sites (all now single-site files) are triaged (same "fix
+everything, then remove the `/wd` flag in one commit" pattern as
+C4100) — measure only via `--clean-first` with the flag actually
 removed, dedup with a regex that matches BOTH `C4244` and `C4267`
 (`warning C42(44|67)`, not `C424[47]`), never run the measurement
 rebuild while a file is mid-edit, watch for `Edit` "N matches" errors
 resolved by fixing only one of several truly-identical occurrences,
 and periodically re-grep every already-"done" file against a fresh
-clean-rebuild log. Remaining files are now all at 1-2 sites each --
-continue picking off the highest-count files, no more meaningful
-"tiers" to group by count.
+clean-rebuild log. Remaining 54 files (all headers or `.cpp`, 1 site
+each): `WorkoutGraph.cpp`, `WheelBase.h`, `Tween.cpp`, `TrailUtil.cpp`,
+`ScreenTextEntry.cpp`, `ScreenOptionsManageEditSteps.cpp`,
+`ScreenOptionsManageCourses.cpp`, `ScreenHighScores.cpp`,
+`ScreenEvaluation.cpp`, `ScreenEnding.cpp`, `ScreenDimensions.cpp`,
+`ScreenDemonstration.cpp`, `RageUtil_FileDB.cpp`,
+`RageTextureManager.cpp`, `RageSurface_Load_XPM.cpp`,
+`RageSoundUtil.cpp`, `RageSoundReader_Vorbisfile.cpp`,
+`RageSoundReader_Merge.cpp`, `RageSoundReader_Chain.h`,
+`RageSoundMixBuffer.h`, `RageFileDriverDirectHelpers.cpp`,
+`RageFileDriver.cpp`, `Profile.h`, `PrefsManager.cpp`, `OptionRow.h`,
+`NotesWriterSSC.cpp`, `NotesWriterSM.cpp`, `NotesLoaderSM.cpp`,
+`NotesLoaderKSF.cpp`, `NotesLoaderDWI.cpp`, `NoteData.h`,
+`MsdFile.cpp`, `ModelTypes.cpp`, `MenuTimer.cpp`,
+`MemoryCardManager.cpp`, `InputMapper.cpp`, `IniFile.cpp`,
+`HighScore.cpp`, `GameState.cpp`, `GameConstantsAndTypes.cpp`,
+`FontCharAliases.cpp`, `Font.cpp`, `EnumHelper.cpp`,
+`CryptHelpers.cpp`, `CourseUtil.cpp`, `CourseContentsList.cpp`,
+`Course.h`, `Character.cpp`, `BackgroundUtil.cpp`, `Background.cpp`,
+`Attack.cpp`, `AnnouncerManager.cpp`, `ActorMultiVertex.h`,
+`ActorFrame.h`. Several of these (`NotesLoaderSM.cpp`,
+`NotesLoaderKSF.cpp`, `NotesLoaderDWI.cpp`, `NotesWriterSSC.cpp`,
+`NotesWriterSM.cpp`, `NoteData.h`, `Profile.h`, `Course.h`) are
+§5-protected — characterization-only casts, re-verify against the
+matching `test_NotesLoader*.cpp`/existing coverage before considering
+each done.
 
 ### 3. Stale cppcheck leak list — DONE 2026-09-05, all dismissed
 ~~`Docs/Devdocs/possible memory leaks.txt` — from 2009. Re-triaged by
