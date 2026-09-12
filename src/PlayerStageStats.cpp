@@ -827,7 +827,7 @@ public:
 			samples= IArg(2);
 			if(samples <= 0)
 			{
-				LOG->Trace("PlayerStageStats:GetLifeRecord requires an integer greater than 0.  Defaulting to 100.");
+				LOG_WARN(Log::Lua, "PlayerStageStats:GetLifeRecord requires an integer greater than 0.  Defaulting to 100.");
 				samples= 100;
 			}
 		}

@@ -260,7 +260,7 @@ void ScreenSelectMusic::BeginScreen()
 	{
 		// Instead of crashing here, let's just set the PlayMode to regular
 		GAMESTATE->m_PlayMode.Set( PLAY_MODE_REGULAR );
-		LOG->Trace( "PlayMode not set, setting as regular." );
+		LOG_TRACE(Log::Screen, "PlayMode not set, setting as regular." );
 	}
 	FOREACH_ENUM( PlayerNumber, pn )
 	{
@@ -293,7 +293,7 @@ void ScreenSelectMusic::BeginScreen()
 
 ScreenSelectMusic::~ScreenSelectMusic()
 {
-	LOG->Trace( "ScreenSelectMusic::~ScreenSelectMusic()" );
+	LOG_TRACE(Log::Screen, "ScreenSelectMusic::~ScreenSelectMusic()" );
 	IMAGECACHE->Undemand("Banner");
 }
 
@@ -1010,7 +1010,7 @@ void ScreenSelectMusic::UpdateSelectButton( PlayerNumber pn, bool bSelectIsDown 
 
 void ScreenSelectMusic::ChangeSteps( PlayerNumber pn, int dir )
 {
-	LOG->Trace( "ScreenSelectMusic::ChangeSteps( %d, %d )", pn, dir );
+	LOG_TRACE(Log::Screen, "ScreenSelectMusic::ChangeSteps( %d, %d )", pn, dir );
 
 	ASSERT( GAMESTATE->IsHumanPlayer(pn) );
 
@@ -1947,7 +1947,7 @@ void ScreenSelectMusic::AfterMusicChange()
 	g_bCDTitleWaiting = false;
 	if( !g_sCDTitlePath.empty() || g_bWantFallbackCdTitle )
 	{
-		LOG->Trace( "cache \"%s\"", g_sCDTitlePath.c_str());
+		LOG_TRACE(Log::Screen, "cache \"%s\"", g_sCDTitlePath.c_str());
 		m_BackgroundLoader.CacheFile( g_sCDTitlePath ); // empty OK
 		g_bCDTitleWaiting = true;
 	}
@@ -1955,7 +1955,7 @@ void ScreenSelectMusic::AfterMusicChange()
 	g_bBannerWaiting = false;
 	if( bWantBanner )
 	{
-		LOG->Trace("LoadFromCachedBanner(%s)",g_sBannerPath .c_str());
+		LOG_TRACE(Log::Screen, "LoadFromCachedBanner(%s)",g_sBannerPath .c_str());
 		if( m_Banner.LoadFromCachedBanner( g_sBannerPath ) )
 		{
 			/* If the high-res banner is already loaded, just delay before
@@ -2003,13 +2003,13 @@ void ScreenSelectMusic::OnConfirmSongDeletion()
 	Song* deletedSong = m_pSongAwaitingDeletionConfirmation;
 	if ( !deletedSong )
 	{
-		LOG->Warn("Attempted to delete a null song (ScreenSelectMusic::OnConfirmSongDeletion)");
+		LOG_WARN(Log::Screen, "Attempted to delete a null song (ScreenSelectMusic::OnConfirmSongDeletion)");
 		return;
 	}
 	// ensure Stepmania is configured to allow song deletion
 	if ( !PREFSMAN->m_bAllowSongDeletion.Get() )
 	{
-		LOG->Warn("Attemped to delete a song but AllowSongDeletion was set to false (ScreenSelectMusic::OnConfirmSongDeletion)");
+		LOG_WARN(Log::Screen, "Attemped to delete a song but AllowSongDeletion was set to false (ScreenSelectMusic::OnConfirmSongDeletion)");
 		return;
 	}
 
@@ -2018,7 +2018,7 @@ void ScreenSelectMusic::OnConfirmSongDeletion()
 	SONGMAN->UnlistSong(deletedSong);
 	// refresh the song list
 	m_MusicWheel.ReloadSongList();
-	LOG->Trace("Deleting song: '%s'\n", deleteDir.c_str());
+	LOG_TRACE(Log::Screen, "Deleting song: '%s'\n", deleteDir.c_str());
 	// delete the song directory from disk
 	FILEMAN->DeleteRecursive(deleteDir);
 
