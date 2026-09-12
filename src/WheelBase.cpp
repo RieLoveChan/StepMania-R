@@ -47,7 +47,7 @@ WheelBase::~WheelBase()
 
 void WheelBase::Load( RString sType )
 {
-	LOG->Trace( "WheelBase::Load('%s')", sType.c_str() );
+	LOG_TRACE(Log::Actor, "WheelBase::Load('%s')", sType.c_str() );
 	ASSERT( this->GetNumChildren() == 0 ); // only load once
 
 	m_bEmpty = false;
@@ -273,7 +273,7 @@ void WheelBase::UpdateSwitch()
 
 bool WheelBase::Select()	// return true if this selection can end the screen
 {
-	LOG->Trace( "WheelBase::Select()" );
+	LOG_TRACE(Log::Actor, "WheelBase::Select()" );
 
 	m_Moving = 0;
 

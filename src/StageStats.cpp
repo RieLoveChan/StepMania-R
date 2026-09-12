@@ -195,7 +195,7 @@ void StageStats::FinalizeScores( bool bSummary )
 	if( !GAMESTATE->m_SongOptions.GetCurrent().m_bSaveScore )
 		return;
 
-	LOG->Trace( "saving stats and high scores" );
+	LOG_TRACE(Log::Profile, "saving stats and high scores" );
 
 	// generate a HighScore for each player
 
@@ -298,7 +298,7 @@ void StageStats::FinalizeScores( bool bSummary )
 			m_player[p].m_iMachineHighScoreIndex = static_cast<int>(iter - pHSL->vHighScores.begin());
 	}
 
-	LOG->Trace( "done saving stats and high scores" );
+	LOG_TRACE(Log::Profile, "done saving stats and high scores" );
 }
 
 bool StageStats::PlayerHasHighScore( PlayerNumber pn ) const

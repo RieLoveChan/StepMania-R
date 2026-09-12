@@ -112,7 +112,7 @@ void ScreenSelect::BeginScreen()
 
 ScreenSelect::~ScreenSelect()
 {
-	LOG->Trace( "ScreenSelect::~ScreenSelect()" );
+	LOG_TRACE(Log::Screen, "ScreenSelect::~ScreenSelect()" );
 	for( unsigned i = 0; i < m_asSubscribedMessages.size(); ++i )
 		MESSAGEMAN->Unsubscribe( this, m_asSubscribedMessages[i] );
 }
