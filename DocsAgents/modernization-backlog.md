@@ -1635,6 +1635,23 @@ spec is the whole config.)
   `RageUtil_BackgroundLoader.cpp` (7), `MusicWheel.cpp` (7),
   `ImageCache.cpp` (7), `Bookkeeper.cpp` (7), `Font.cpp` (8),
   `RageDisplay.cpp` (8), and a long tail down to 1-site files).
+  **Ph4 batch 13 (2026-09-12).** `RageDisplay.cpp` (5 real sites,
+  `Log::General` — same reasoning as `RageDisplay_D3D.cpp`: it's the
+  backend-agnostic base class, not GL-specific, so `Log::Gl` would be
+  misleading; screenshot save/open failures upgraded `Trace`→`ERROR`,
+  the `TryVideoMode`-fallback-ladder trace and FPS-stats dump kept
+  `Trace` as routine), `Font.cpp` (3 real sites, `Log::Font` — a
+  perfect fit; two "invalid codepoint value" font-definition warnings
+  kept `WARN`, a "font page has no characters" routine note kept
+  `Trace`), `ScreenEdit.cpp` (5 real sites, `Log::Screen` — "Save
+  failed. Changes uncommitted from memory." upgraded `Trace`→`ERROR`,
+  a genuine editor-save failure with real data-loss risk for the
+  person editing a chart; the two save-*success* notices and the
+  dtor/playback-start traces stayed `Trace`). No parsing/behavior
+  logic changed anywhere.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+  ~118 files remain on the corrected list.
 
 ### 20. Replace the archaic hard-coded game-type system
 Game types are defined by hand-written `static const Game g_Game_X = {…}`
