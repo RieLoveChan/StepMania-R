@@ -29,7 +29,7 @@ void MeterDisplay::Load( RString sStreamPath, float fStreamWidth, RString sTipPa
 
 void MeterDisplay::LoadFromNode( const XNode* pNode )
 {
-	LOG->Trace( "MeterDisplay::LoadFromNode(%s)", ActorUtil::GetWhere(pNode).c_str() );
+	LOG_TRACE(Log::Actor, "MeterDisplay::LoadFromNode(%s)", ActorUtil::GetWhere(pNode).c_str() );
 
 	const XNode *pStream = pNode->GetChild( "Stream" );
 	if( pStream == nullptr )

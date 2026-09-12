@@ -41,7 +41,7 @@ void RageException::Throw( const char *sFmt, ... )
 		error.c_str() );
 	if( LOG )
 	{
-		LOG->Trace( "%s", msg.c_str() );
+		LOG_TRACE(Log::General, "%s", msg.c_str() );
 		LOG->Flush();
 	}
 	else

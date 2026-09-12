@@ -38,7 +38,7 @@ static RageSurface *TryOpenFile( RString sPath, bool bHeaderOnly, RString &error
 		return ret;
 	}
 
-	LOG->Trace( "Format %s failed: %s", format.c_str(), error.c_str() );
+	LOG_TRACE(Log::File, "Format %s failed: %s", format.c_str(), error.c_str() );
 
 	/*
 	 * The file failed to open, or failed to read.  This indicates a problem that will

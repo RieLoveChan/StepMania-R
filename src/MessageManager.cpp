@@ -209,7 +209,7 @@ void MessageManager::Broadcast( Message &msg ) const
 {
 	if(m_Logging)
 	{
-		LOG->Trace("MESSAGEMAN:Broadcast: %s", msg.GetName().c_str());
+		LOG_TRACE(Log::General, "MESSAGEMAN:Broadcast: %s", msg.GetName().c_str());
 	}
 	msg.SetBroadcast(true);
 

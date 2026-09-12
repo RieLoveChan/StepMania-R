@@ -11,7 +11,7 @@
 
 ScoreDisplayLifeTime::ScoreDisplayLifeTime()
 {
-	LOG->Trace( "ScoreDisplayLifeTime::ScoreDisplayLifeTime()" );
+	LOG_TRACE(Log::Actor, "ScoreDisplayLifeTime::ScoreDisplayLifeTime()" );
 }
 
 void ScoreDisplayLifeTime::Init( const PlayerState* pPlayerState, const PlayerStageStats* pPlayerStageStats ) 

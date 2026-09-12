@@ -143,7 +143,7 @@ void ScreenOptionsMaster::HandleScreenMessage( const ScreenMessage SM )
 		if( m_iChangeMask & OPT_SAVE_PREFERENCES )
 		{
 			// Save preferences.
-			LOG->Trace("ROW_CONFIG used; saving ...");
+			LOG_TRACE(Log::Screen, "ROW_CONFIG used; saving ...");
 			PREFSMAN->SavePrefsToDisk();
 		}
 

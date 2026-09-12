@@ -160,7 +160,7 @@ int RageSoundReader_Vorbisfile::Read( float *buf, int iFrames )
 			{
 				/* The timestamps moved backwards.  Ignore it.  This file probably
 				 * won't sync correctly. */
-				LOG->Trace( "p ahead %p %i < %i, we're ahead by %i",
+				LOG_TRACE(Log::Sound, "p ahead %p %i < %i, we're ahead by %i",
 					static_cast<void*>(this), curofs, read_offset, read_offset-curofs );
 				read_offset = curofs;
 			}

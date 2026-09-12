@@ -11,7 +11,7 @@
 
 ScoreDisplayOni::ScoreDisplayOni()
 {
-	LOG->Trace( "ScoreDisplayOni::ScoreDisplayOni()" );
+	LOG_TRACE(Log::Actor, "ScoreDisplayOni::ScoreDisplayOni()" );
 
 	m_sprFrame.Load( THEME->GetPathG("ScoreDisplayOni","frame") );
 	this->AddChild( &m_sprFrame );

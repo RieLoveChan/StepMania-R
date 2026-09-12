@@ -94,7 +94,7 @@ void SongCacheIndex::ReadCacheIndex()
 	if( iCacheVersion == FILE_CACHE_VERSION )
 		return; // OK
 
-	LOG->Trace( "Cache format is out of date.  Deleting all cache files." );
+	LOG_TRACE(Log::Song, "Cache format is out of date.  Deleting all cache files." );
 	EmptyDir( SpecialFiles::CACHE_DIR );
 	EmptyDir( SpecialFiles::CACHE_DIR+"Songs/" );
 	EmptyDir( SpecialFiles::CACHE_DIR+"Courses/" );

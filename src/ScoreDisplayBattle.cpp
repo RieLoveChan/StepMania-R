@@ -15,7 +15,7 @@
 
 ScoreDisplayBattle::ScoreDisplayBattle()
 {
-	LOG->Trace( "ScoreDisplayBattle::ScoreDisplayBattle()" );
+	LOG_TRACE(Log::Actor, "ScoreDisplayBattle::ScoreDisplayBattle()" );
 
 	m_sprFrame.Load( THEME->GetPathG("ScoreDisplayBattle","frame") );
 	this->AddChild( &m_sprFrame );

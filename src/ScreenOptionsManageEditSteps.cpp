@@ -176,7 +176,7 @@ void ScreenOptionsManageEditSteps::HandleScreenMessage( const ScreenMessage SM )
 	{
 		if( ScreenPrompt::s_LastAnswer == ANSWER_YES )
 		{
-			LOG->Trace( "Delete successful; deleting Steps from memory" );
+			LOG_TRACE(Log::Screen, "Delete successful; deleting Steps from memory" );
 
 			Steps *pSteps = GetStepsWithFocus();
 			FILEMAN->Remove( pSteps->GetFilename() );

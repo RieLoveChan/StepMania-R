@@ -36,7 +36,7 @@ RageSoundReader_FileReader *RageSoundReader_FileReader::TryOpenFile( RageFileBas
 	RString err = Sample->GetError();
 	delete Sample;
 
-	LOG->Trace( "Format %s failed: %s", format.c_str(), err.c_str() );
+	LOG_TRACE(Log::Sound, "Format %s failed: %s", format.c_str(), err.c_str() );
 
 	/*
 	 * The file failed to open, or failed to read.  This indicates a problem that will

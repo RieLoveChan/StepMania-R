@@ -111,7 +111,7 @@ EditMenu::~EditMenu()
 
 void EditMenu::Load( const RString &sType )
 {
-	LOG->Trace( "EditMenu::Load" );
+	LOG_TRACE(Log::Screen, "EditMenu::Load" );
 
 	SHOW_GROUPS.Load(sType,"ShowGroups");
 	ARROWS_X.Load(sType,ARROWS_X_NAME,NUM_ARROWS);

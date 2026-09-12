@@ -802,7 +802,7 @@ RageSurface *RageSurfaceUtils::LoadSurface( RString file )
 	 * was different. */
 	if( h.pitch != img->pitch )
 	{
-		LOG->Trace( "Error loading \"%s\": expected pitch %i, got %i (%ibpp, %i width)",
+		LOG_TRACE(Log::File, "Error loading \"%s\": expected pitch %i, got %i (%ibpp, %i width)",
 				file.c_str(), h.pitch, img->pitch, h.bpp, h.width );
 		delete img;
 		return nullptr;

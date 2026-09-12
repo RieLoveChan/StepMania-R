@@ -72,7 +72,7 @@ Grade StringToGrade( const RString &sGrade )
 	else if( s == "NODATA" )
 		return Grade_NoData;
 
-	LOG->Warn( "Invalid grade: %s", sGrade.c_str() );
+	LOG_WARN(Log::General, "Invalid grade: %s", sGrade.c_str() );
 	return Grade_NoData;
 };
 

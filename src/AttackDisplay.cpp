@@ -57,7 +57,7 @@ void AttackDisplay::Init( const PlayerState* pPlayerState )
 		const RString path = THEME->GetPathG( "AttackDisplay", GetAttackPieceName( *it ), true );
 		if( path.empty() )
 		{
-			LOG->Trace( "Couldn't find \"%s\"", GetAttackPieceName( *it ).c_str() );
+			LOG_TRACE(Log::Actor, "Couldn't find \"%s\"", GetAttackPieceName( *it ).c_str() );
 			continue;
 		}
 

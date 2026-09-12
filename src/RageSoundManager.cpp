@@ -116,7 +116,7 @@ void RageSoundManager::Update()
 		{
 			if( it->second->GetReferenceCount() == 1 )
 			{
-				LOG->Trace( "Deleted old sound \"%s\"", it->first.c_str() );
+				LOG_TRACE(Log::Sound, "Deleted old sound \"%s\"", it->first.c_str() );
 				delete it->second;
 				it = m_mapPreloadedSounds.erase(it);
 			}

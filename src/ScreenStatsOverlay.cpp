@@ -138,7 +138,7 @@ void ScreenStatsOverlay::UpdateSkips()
 		AddTimestampLine( ssprintf("%s: %.0fms (%.0f)", sTime.c_str(), 1000*UpdateTime, UpdateTime/ExpectedUpdate), colors[skip] );
 
 		if( PREFSMAN->m_bLogSkips )
-			LOG->Trace( "Frame skip: %.0fms (%.0f)", 1000*UpdateTime, UpdateTime/ExpectedUpdate );
+			LOG_TRACE(Log::Screen, "Frame skip: %.0fms (%.0f)", 1000*UpdateTime, UpdateTime/ExpectedUpdate );
 	}
 }
 
