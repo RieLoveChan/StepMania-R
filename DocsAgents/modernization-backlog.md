@@ -1807,6 +1807,44 @@ spec is the whole config.)
   2-site files from here, plus `Player.cpp`'s 47 raw hits (already
   fully migrated — 1 real site — but still shows in a raw count since
   46 are dead code).
+  **Ph4 batch 21 (2026-09-12).** `Steps.cpp` (2, `Log::Steps`, both
+  kept `WARN` — "unknown style" and "couldn't load NoteData" are real
+  chart-load failures; section-5-protected file, re-verified via the
+  transitive NotesLoader/GameManager characterization suite since no
+  dedicated `test_Steps.cpp` exists — unchanged before/after).
+  `ScreenEvaluation.cpp` (2, `Log::Screen`, `TRACE`), `ScreenDebugOverlay.cpp`
+  (2, `Log::Screen` — "Game halted" kept `WARN` as a deliberate
+  developer reminder per its inline comment, "DEBUG: %s" kept `TRACE`),
+  `ScreenAttract.cpp` (1 real site, `Log::Screen`, `TRACE`).
+  `RageSurface_Load_PNG.cpp` (2, `Log::File` — libpng error callback
+  upgraded `Trace`→`ERROR`, libpng warning callback upgraded
+  `Trace`→`WARN`). `RageBitmapTexture.cpp` (1 real site, `Log::File`,
+  upgraded `Warn`→`ERROR` — surfaces a user-facing dialog).
+  `RageInput.cpp` (2, `Log::Input` — ctor kept `TRACE`,
+  "NO_INPUT_DEVICES_LOADED" kept `WARN`). `PrefsManager.cpp` (2,
+  `Log::General` — "unknown preference" kept `WARN`, "restored
+  preference to default" kept `TRACE`). `Preference.cpp` (2 identical
+  sites, `Log::Lua`, `TRACE`). `PercentageDisplay.cpp` (2,
+  `Log::Actor`, `TRACE`). `NoteSkinManager.cpp` (2, `Log::Actor`,
+  `TRACE`). `InputQueue.cpp` (2, `Log::Input` — "ignoring empty code"
+  kept `TRACE`, "unrecognized button" upgraded `Trace`→`WARN`, since an
+  unrecognized button name in a mapped code is a real theme/config
+  anomaly). `CsvFile.cpp` (2, `Log::File` — read-failure kept `TRACE`
+  matching `IniFile.cpp` precedent, write-failure upgraded
+  `Trace`→`ERROR` matching `IniFile.cpp` precedent). `BackgroundUtil.cpp`
+  (1 real site, `Log::Song`, kept `WARN` — "Background missing"; the
+  other raw hit at line 252 is pre-existing dead `//`-commented code,
+  left untouched). `Background.cpp` checked and confirmed **0 real
+  sites** (both raw hits are pre-existing dead `//`-commented code) —
+  no edit needed, removed from the remaining-files list.
+  `ActorUtil.cpp` (2, `Log::Actor`, both kept `WARN`).
+  `RandomSample.cpp` (2, `Log::Sound`, both kept `TRACE` — confirmed
+  real via `#if 0` structure check: the file's dead `#if 0`/`#else`/
+  `#endif` block at lines 41-53 does not contain these two sites).
+  No parsing/behavior logic changed anywhere.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+  ~62 files remain on the corrected list.
 
 ### 20. Replace the archaic hard-coded game-type system
 Game types are defined by hand-written `static const Game g_Game_X = {…}`
