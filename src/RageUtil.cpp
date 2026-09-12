@@ -1403,7 +1403,7 @@ bool GetFileContents( const RString &sPath, RString &sOut, bool bOneLine )
 	RageFile file;
 	if( !file.Open(sPath) )
 	{
-		LOG->Warn( "GetFileContents(%s): %s", sPath.c_str(), file.GetError().c_str() );
+		LOG_ERROR(Log::File, "GetFileContents(%s): %s", sPath.c_str(), file.GetError().c_str() );
 		return false;
 	}
 
@@ -1417,7 +1417,7 @@ bool GetFileContents( const RString &sPath, RString &sOut, bool bOneLine )
 
 	if( iGot == -1 )
 	{
-		LOG->Warn( "GetFileContents(%s): %s", sPath.c_str(), file.GetError().c_str() );
+		LOG_ERROR(Log::File, "GetFileContents(%s): %s", sPath.c_str(), file.GetError().c_str() );
 		return false;
 	}
 
@@ -1433,7 +1433,7 @@ bool GetFileContents( const RString &sFile, std::vector<RString> &asOut )
 	RageFile file;
 	if( !file.Open(sFile) )
 	{
-		LOG->Warn( "GetFileContents(%s): %s", sFile.c_str(), file.GetError().c_str() );
+		LOG_ERROR(Log::File, "GetFileContents(%s): %s", sFile.c_str(), file.GetError().c_str() );
 		return false;
 	}
 
@@ -1890,10 +1890,10 @@ int StringToInt( const std::string& str, std::size_t* pos, int base, int exceptV
     return std::stoi(str, pos, base);
   }
   catch (const std::invalid_argument & e) {
-    if( LOG ) LOG->Warn( "stoi(%s): %s", str.c_str(), e.what() );
+    if( LOG ) LOG_WARN(Log::General, "stoi(%s): %s", str.c_str(), e.what() );
   }
   catch (const std::out_of_range & e) {
-    if( LOG ) LOG->Warn( "stoi(%s): %s", str.c_str(), e.what() );
+    if( LOG ) LOG_WARN(Log::General, "stoi(%s): %s", str.c_str(), e.what() );
   }
   return exceptVal;
 }
@@ -1905,10 +1905,10 @@ long StringToLong( const std::string& str, std::size_t* pos, int base, long exce
     return std::stol(str, pos, base);
   }
   catch (const std::invalid_argument & e) {
-    if( LOG ) LOG->Warn( "stol(%s): %s", str.c_str(), e.what() );
+    if( LOG ) LOG_WARN(Log::General, "stol(%s): %s", str.c_str(), e.what() );
   }
   catch (const std::out_of_range & e) {
-    if( LOG ) LOG->Warn( "stol(%s): %s", str.c_str(), e.what() );
+    if( LOG ) LOG_WARN(Log::General, "stol(%s): %s", str.c_str(), e.what() );
   }
   return exceptVal;
 }
@@ -1920,10 +1920,10 @@ long long StringToLLong( const std::string& str, std::size_t* pos, int base, lon
     return std::stoll(str, pos, base);
   }
   catch (const std::invalid_argument & e) {
-    if( LOG ) LOG->Warn( "stoll(%s): %s", str.c_str(), e.what() );
+    if( LOG ) LOG_WARN(Log::General, "stoll(%s): %s", str.c_str(), e.what() );
   }
   catch (const std::out_of_range & e) {
-    if( LOG ) LOG->Warn( "stoll(%s): %s", str.c_str(), e.what() );
+    if( LOG ) LOG_WARN(Log::General, "stoll(%s): %s", str.c_str(), e.what() );
   }
   return exceptVal;
 }
@@ -2378,7 +2378,7 @@ bool FileCopy( const RString &sSrcFile, const RString &sDstFile )
 {
 	if( !sSrcFile.CompareNoCase(sDstFile) )
 	{
-		LOG->Warn( "Tried to copy \"%s\" over itself", sSrcFile.c_str() );
+		LOG_WARN(Log::File, "Tried to copy \"%s\" over itself", sSrcFile.c_str() );
 		return false;
 	}
 
@@ -2393,7 +2393,7 @@ bool FileCopy( const RString &sSrcFile, const RString &sDstFile )
 	RString sError;
 	if( !FileCopy(in, out, sError) )
 	{
-		LOG->Warn( "FileCopy(%s,%s): %s",
+		LOG_ERROR(Log::File, "FileCopy(%s,%s): %s",
 				sSrcFile.c_str(), sDstFile.c_str(), sError.c_str() );
 		return false;
 	}

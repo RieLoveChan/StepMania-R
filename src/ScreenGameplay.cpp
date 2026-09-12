@@ -432,11 +432,11 @@ void ScreenGameplay::Init()
 			{
 				if (curSteps->GetNoteDataFromSimfile())
 				{
-					LOG->Trace("Notes should be loaded for player %d", player);
+					LOG_TRACE(Log::Screen, "Notes should be loaded for player %d", player);
 				}
 				else
 				{
-					LOG->Trace("Error loading notes for player %d", player);
+					LOG_ERROR(Log::Screen, "Error loading notes for player %d", player);
 				}
 			}
 		}
@@ -1014,7 +1014,7 @@ ScreenGameplay::~ScreenGameplay()
 		GAMESTATE->CancelStage();
 	}
 
-	LOG->Trace( "ScreenGameplay::~ScreenGameplay()" );
+	LOG_TRACE(Log::Screen, "ScreenGameplay::~ScreenGameplay()" );
 
 	SAFE_DELETE( m_pSongBackground );
 	SAFE_DELETE( m_pSongForeground );
@@ -1517,7 +1517,7 @@ void ScreenGameplay::PauseGame( bool bPause, GameController gc )
 {
 	if( m_bPaused == bPause )
 	{
-		LOG->Trace( "ScreenGameplay::PauseGame(%i) received, but already in that state; ignored", bPause );
+		LOG_TRACE(Log::Screen, "ScreenGameplay::PauseGame(%i) received, but already in that state; ignored", bPause );
 		return;
 	}
 
@@ -1751,7 +1751,7 @@ void ScreenGameplay::Update( float fDeltaTime )
 				if( pi->GetPlayerStageStats()->m_bFailed )
 					continue; /* failed and is already dead */
 
-				LOG->Trace("Player %d failed", (int)pn);
+				LOG_TRACE(Log::Screen, "Player %d failed", (int)pn);
 				pi->GetPlayerStageStats()->m_bFailed = true;	// fail
 
 				{
@@ -2486,7 +2486,7 @@ bool ScreenGameplay::Input( const InputEventPlus &input )
 				(input.DeviceI.device==DEVICE_KEYBOARD && input.type==IET_REPEAT) ||
 				(input.DeviceI.device!=DEVICE_KEYBOARD && INPUTFILTER->GetSecsHeld(input.DeviceI) >= 1.0f)) )
 			{
-				LOG->Trace("Player %i went back", input.pn+1);
+				LOG_TRACE(Log::Screen, "Player %i went back", input.pn+1);
 				BeginBackingOutFromGameplay();
 			}
 			else if( PREFSMAN->m_bDelayedBack && input.type==IET_FIRST_PRESS )
@@ -2623,11 +2623,11 @@ void ScreenGameplay::StageFinished( bool bBackedOut )
 {
 	if( GAMESTATE->IsCourseMode() && GAMESTATE->m_PlayMode != PLAY_MODE_ENDLESS )
 	{
-		LOG->Trace("Stage finished at index %i/%i", GAMESTATE->GetCourseSongIndex(), (int) m_apSongsQueue.size() );
+		LOG_TRACE(Log::Screen, "Stage finished at index %i/%i", GAMESTATE->GetCourseSongIndex(), (int) m_apSongsQueue.size() );
 		// +1 to skip the current song; that song has already passed.
 		for( unsigned i = GAMESTATE->GetCourseSongIndex()+1; i < m_apSongsQueue.size(); ++i )
 		{
-			LOG->Trace("Running stats for %i", i );
+			LOG_TRACE(Log::Screen, "Running stats for %i", i );
 			SetupSong( i );
 			FOREACH_EnabledPlayerInfo( m_vPlayerInfo, pi )
 				pi->m_pPlayer->ApplyWaitingTransforms();
@@ -2757,7 +2757,7 @@ void ScreenGameplay::HandleScreenMessage( const ScreenMessage SM )
 		const bool bStopCourseEarly = STOP_COURSE_EARLY;
 		const bool bIsLastSong = IsLastSong();
 
-		LOG->Trace( "bAllReallyFailed = %d, bStopCourseEarly = %d, "
+		LOG_TRACE(Log::Screen, "bAllReallyFailed = %d, bStopCourseEarly = %d, "
 			"bIsLastSong = %d, m_gave_up = %d, m_skipped_song = %d",
 			bAllReallyFailed, bStopCourseEarly, bIsLastSong, m_gave_up,
 			m_skipped_song);

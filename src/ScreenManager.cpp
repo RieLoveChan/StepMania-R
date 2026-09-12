@@ -127,7 +127,7 @@ namespace ScreenManagerUtil
 	// Add a screen to g_ScreenStack. This is the only function that adds to g_ScreenStack.
 	void PushLoadedScreen( const LoadedScreen &ls )
 	{
-		LOG->Trace( "PushScreen: \"%s\"", ls.m_pScreen->GetName().c_str() );
+		LOG_TRACE(Log::Screen, "PushScreen: \"%s\"", ls.m_pScreen->GetName().c_str() );
 		LOG->MapLog( "ScreenManager::TopScreen", "Top Screen: %s", ls.m_pScreen->GetName().c_str() );
 
 		// Be sure to push the screen first, so GetTopScreen returns the screen
@@ -262,7 +262,7 @@ ScreenManager::ScreenManager()
 
 ScreenManager::~ScreenManager()
 {
-	LOG->Trace("ScreenManager::~ScreenManager()");
+	LOG_TRACE(Log::Screen, "ScreenManager::~ScreenManager()");
 	LOG->UnmapLog("ScreenManager::TopScreen");
 
 	SAFE_DELETE(g_pSharedBGA);
@@ -286,7 +286,7 @@ ScreenManager::~ScreenManager()
 // This is called when we start up, and when the theme changes or is reloaded.
 void ScreenManager::ThemeChanged()
 {
-	LOG->Trace( "ScreenManager::ThemeChanged" );
+	LOG_TRACE(Log::Screen, "ScreenManager::ThemeChanged" );
 
 	// reload common sounds
 	m_soundStart.Load( THEME->GetPathS("Common","start") );
@@ -463,7 +463,7 @@ void ScreenManager::Update( float fDeltaTime )
 	 * animations don't jump. */
 	if (pScreen && m_bZeroNextUpdate)
 	{
-		LOG->Trace("Zeroing this update.  Was %f", fDeltaTime);
+		LOG_TRACE(Log::Screen, "Zeroing this update.  Was %f", fDeltaTime);
 		fDeltaTime = 0;
 		m_bZeroNextUpdate = false;
 	}
@@ -562,7 +562,7 @@ void ScreenManager::Input( const InputEventPlus &input )
 Screen* ScreenManager::MakeNewScreen( const RString &sScreenName )
 {
 	RageTimer t;
-	LOG->Trace( "Loading screen: \"%s\"", sScreenName.c_str() );
+	LOG_TRACE(Log::Screen, "Loading screen: \"%s\"", sScreenName.c_str() );
 
 	RString sClassName = THEME->GetMetric( sScreenName,"Class" );
 
@@ -578,7 +578,7 @@ Screen* ScreenManager::MakeNewScreen( const RString &sScreenName )
 	CreateScreenFn pfn = iter->second;
 	Screen *ret = pfn( sScreenName );
 
-	LOG->Trace( "Loaded \"%s\" (\"%s\") in %f", sScreenName.c_str(), sClassName.c_str(), t.GetDeltaTime() );
+	LOG_TRACE(Log::Screen, "Loaded \"%s\" (\"%s\") in %f", sScreenName.c_str(), sClassName.c_str(), t.GetDeltaTime() );
 
 	return ret;
 }
@@ -623,7 +623,7 @@ void ScreenManager::PrepareScreen( const RString &sScreenName )
 		// any common textures loaded.
 		if( pNewBGA == nullptr )
 		{
-			LOG->Trace( "Loading screen background \"%s\"", sNewBGA.c_str() );
+			LOG_TRACE(Log::Screen, "Loading screen background \"%s\"", sNewBGA.c_str() );
 			Actor *pActor = ActorUtil::MakeActor( sNewBGA );
 			if( pActor != nullptr )
 			{
@@ -845,7 +845,7 @@ void ScreenManager::SendMessageToTopScreen( ScreenMessage SM )
 
 void ScreenManager::SystemMessage( const RString &sMessage )
 {
-	LOG->Trace( "%s", sMessage.c_str() );
+	LOG_TRACE(Log::Screen, "%s", sMessage.c_str() );
 	Message msg( "SystemMessage" );
 	msg.SetParam( "Message", sMessage );
 	msg.SetParam( "NoAnimate", false );

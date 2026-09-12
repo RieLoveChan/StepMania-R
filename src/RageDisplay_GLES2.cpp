@@ -219,7 +219,7 @@ namespace
 
 RageDisplay_GLES2::RageDisplay_GLES2()
 {
-	LOG->Trace( "RageDisplay_GLES2::RageDisplay_GLES2()" );
+	LOG_TRACE(Log::Gl, "RageDisplay_GLES2::RageDisplay_GLES2()" );
 	LOG->MapLog("renderer", "Current renderer: OpenGL ES 2.0");
 
 	FixLittleEndian();
@@ -244,14 +244,14 @@ RageDisplay_GLES2::Init( const VideoModeParams &p, bool bAllowUnacceleratedRende
 
 	// Log driver details
 	g_pWind->LogDebugInformation();
-	LOG->Info( "OGL Vendor: %s", glGetString(GL_VENDOR) );
-	LOG->Info( "OGL Renderer: %s", glGetString(GL_RENDERER) );
-	LOG->Info( "OGL Version: %s", glGetString(GL_VERSION) );
-	LOG->Info( "OGL Max texture size: %i", Caps::iMaxTextureSize );
-	LOG->Info( "OGL Texture units: %i", Caps::iMaxTextureUnits );
+	LOG_INFO(Log::Gl, "OGL Vendor: %s", glGetString(GL_VENDOR) );
+	LOG_INFO(Log::Gl, "OGL Renderer: %s", glGetString(GL_RENDERER) );
+	LOG_INFO(Log::Gl, "OGL Version: %s", glGetString(GL_VERSION) );
+	LOG_INFO(Log::Gl, "OGL Max texture size: %i", Caps::iMaxTextureSize );
+	LOG_INFO(Log::Gl, "OGL Texture units: %i", Caps::iMaxTextureUnits );
 
 	/* Pretty-print the extension string: */
-	LOG->Info( "OGL Extensions:" );
+	LOG_INFO(Log::Gl, "OGL Extensions:" );
 	{
 		// glGetString(GL_EXTENSIONS) doesn't work for GL3 core profiles.
 		// this will be useful in the future.
@@ -331,7 +331,7 @@ RageDisplay_GLES2::Init( const VideoModeParams &p, bool bAllowUnacceleratedRende
 
 			if (iNextToPrint == iLastToPrint)
 			{
-				LOG->Info( "  %s", asExtensions[iNextToPrint].c_str() );
+				LOG_INFO(Log::Gl, "  %s", asExtensions[iNextToPrint].c_str() );
 				++iNextToPrint;
 				continue;
 			}
@@ -347,7 +347,7 @@ RageDisplay_GLES2::Init( const VideoModeParams &p, bool bAllowUnacceleratedRende
 					sList += ", ";
 				if (iNextToPrint == iLastToPrint || sList.size() + asExtensions[iNextToPrint+1].size() > 120)
 				{
-					LOG->Info( "%s", sList.c_str() );
+					LOG_INFO(Log::Gl, "%s", sList.c_str() );
 					sList = "    ";
 				}
 				++iNextToPrint;
@@ -374,7 +374,7 @@ RString RageDisplay_GLES2::TryVideoMode( const VideoModeParams &p, bool &bNewDev
 {
 	VideoModeParams vm = p;
 	vm.windowed = 1; // force windowed until I trust this thing.
-	LOG->Warn( "RageDisplay_GLES2::TryVideoMode( %d, %d, %d, %d, %d, %d )",
+	LOG_TRACE(Log::Gl, "RageDisplay_GLES2::TryVideoMode( %d, %d, %d, %d, %d, %d )",
 		vm.windowed, vm.width, vm.height, vm.bpp, vm.rate, vm.vsync );
 
 	RString err = g_pWind->TryVideoMode( vm, bNewDeviceOut );
