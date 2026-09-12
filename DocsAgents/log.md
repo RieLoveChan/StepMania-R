@@ -2829,3 +2829,15 @@
   Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
   `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
   ~87 files remain on the corrected list.
+
+* **item 18 (ADR 0005 phase 4) batch 19, 2026-09-12.** `JsonUtil.cpp`
+  (3 -> `Log::File`, all genuine file-open/parse failures upgraded
+  `Warn`->`ERROR`), `InputMapper.cpp` (3 -> `Log::Input`, already-
+  correct), `InputFilter.cpp` (3 -> `Log::Input`; out-of-range device/
+  button index sites upgraded `Trace`->`WARN`, a driver anomaly worth
+  surfacing), `GameLoop.cpp` (3 -> `Log::General`, already-correct),
+  `ActorMultiTexture.cpp` (3 -> `Log::Actor`, theme-misuse guards kept
+  `WARN`). No parsing/behavior logic changed.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+  ~82 files remain on the corrected list.

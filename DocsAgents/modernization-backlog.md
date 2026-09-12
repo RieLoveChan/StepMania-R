@@ -1774,6 +1774,22 @@ spec is the whole config.)
   Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
   `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
   ~87 files remain on the corrected list.
+  **Ph4 batch 19 (2026-09-12).** `JsonUtil.cpp` (3 sites, `Log::File`
+  — all three are genuine file-open/parse failures, upgraded
+  `Warn`→`ERROR`), `InputMapper.cpp` (3 sites, `Log::Input` — two
+  routine startup-diagnostic `Info`s, one routine "no mapping file
+  yet" `Trace`, none changed level), `InputFilter.cpp` (3 sites,
+  `Log::Input` — the zero-timestamp warning kept `WARN`; the
+  out-of-range device/button index sites upgraded `Trace`→`WARN`,
+  since a driver handing back an index outside the known
+  device/button range is a real anomaly worth surfacing, not routine),
+  `GameLoop.cpp` (3 sites, `Log::General`, all already-correct routine
+  `Trace`), `ActorMultiTexture.cpp` (3 sites, `Log::Actor` — the two
+  "can't add nil texture" / "index too high" theme-misuse guards kept
+  `WARN`). No parsing/behavior logic changed anywhere.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+  ~82 files remain on the corrected list.
 
 ### 20. Replace the archaic hard-coded game-type system
 Game types are defined by hand-written `static const Game g_Game_X = {…}`
