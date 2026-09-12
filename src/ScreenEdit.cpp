@@ -1580,7 +1580,7 @@ ScreenEdit::~ScreenEdit()
 	// UGLY: Don't delete the Song's steps.
 	m_SongLastSave.DetachSteps();
 
-	LOG->Trace( "ScreenEdit::~ScreenEdit()" );
+	LOG_TRACE(Log::Screen, "ScreenEdit::~ScreenEdit()" );
 	m_pSoundMusic->StopPlaying();
 
 	// Go back to Step Timing on leave.
@@ -3498,7 +3498,7 @@ void ScreenEdit::TransitionEditState( EditState em )
 	case STATE_RECORDING:
 		{
 		const float fStartSeconds = GetAppropriateTiming().GetElapsedTimeFromBeat( GetBeat() );
-		LOG->Trace( "Starting playback at %f", fStartSeconds );
+		LOG_TRACE(Log::Screen, "Starting playback at %f", fStartSeconds );
 
 		RageSoundParams p;
 		p.m_fSpeed = GAMESTATE->m_SongOptions.GetCurrent().m_fMusicRate;
@@ -4339,7 +4339,7 @@ void ScreenEdit::HandleScreenMessage( const ScreenMessage SM )
 	}
 	else if(SM == SM_SaveSuccessful || SM == SM_SaveSuccessNoSM)
 	{
-		LOG->Trace( "Save successful." );
+		LOG_TRACE(Log::Screen, "Save successful." );
 		CopyToLastSave();
 		SetDirty( false );
 		SONGMAN->Invalidate( GAMESTATE->m_pCurSong );
@@ -4361,7 +4361,7 @@ void ScreenEdit::HandleScreenMessage( const ScreenMessage SM )
 	}
 	else if( SM == SM_AutoSaveSuccessful )
 	{
-		LOG->Trace("AutoSave successful.");
+		LOG_TRACE(Log::Screen, "AutoSave successful.");
 		m_next_autosave_time= RageTimer::GetTimeSinceStartFast() + time_between_autosave;
 		SCREENMAN->SystemMessage(AUTOSAVE_SUCCESSFUL);
 	}
@@ -4369,7 +4369,7 @@ void ScreenEdit::HandleScreenMessage( const ScreenMessage SM )
 	{
 		/* We committed the steps to SongManager. Revert to the last save, and
 		 * recommit the reversion to SongManager. */
-		LOG->Trace( "Save failed. Changes uncommitted from memory." );
+		LOG_ERROR(Log::Screen, "Save failed. Changes uncommitted from memory." );
 		CopyFromLastSave();
 		m_pSteps->SetNoteData( m_NoteDataEdit );
 	}

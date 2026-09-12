@@ -526,12 +526,12 @@ void Font::LoadFontPageSettings( FontPageSettings &cfg, IniFile &ini, const RStr
 				{
 					c = utf8_get_char( sCodepoint.c_str() );
 					if(c == wchar_t(-1))
-						LOG->Warn("Font definition '%s' has an invalid value '%s'.",
+						LOG_WARN(Log::Font, "Font definition '%s' has an invalid value '%s'.",
 							ini.GetPath().c_str(), sName.c_str() );
 				}
 				else if( !FontCharAliases::GetChar(sCodepoint, c) )
 				{
-					LOG->Warn("Font definition '%s' has an invalid value '%s'.",
+					LOG_WARN(Log::Font, "Font definition '%s' has an invalid value '%s'.",
 						ini.GetPath().c_str(), sName.c_str() );
 					continue;
 				}
@@ -667,7 +667,7 @@ void Font::LoadFontPageSettings( FontPageSettings &cfg, IniFile &ini, const RStr
 			cfg.MapRange( "numbers", 0, 0, -1 );
 			break;
 		default:
-			LOG->Trace( "Font page \"%s\" has no characters", sTexturePath.c_str() );
+			LOG_TRACE(Log::Font, "Font page \"%s\" has no characters", sTexturePath.c_str() );
 		}
 	}
 
