@@ -57,7 +57,7 @@ static void CheckGameLoopTimerSkips( float fDeltaTime )
 	const float fExpectedTime = 1.0f / iThisFPS;
 	const float fDifference = fDeltaTime - fExpectedTime;
 	if( std::abs(fDifference) > 0.002f && std::abs(fDifference) < 0.100f )
-		LOG->Trace( "GameLoop timer skip: %i FPS, expected %.3f, got %.3f (%.3f difference)",
+		LOG_TRACE(Log::General, "GameLoop timer skip: %i FPS, expected %.3f, got %.3f (%.3f difference)",
 			iThisFPS, fExpectedTime, fDeltaTime, fDifference );
 }
 
@@ -428,7 +428,7 @@ void ConcurrentRenderer::RenderThread()
 			DISPLAY->BeginConcurrentRendering();
 			HOOKS->SetupConcurrentRenderingThread();
 
-			LOG->Trace( "ConcurrentRenderer::RenderThread start" );
+			LOG_TRACE(Log::General, "ConcurrentRenderer::RenderThread start" );
 
 			m_Event.Lock();
 			m_State = RENDERING_ACTIVE;
@@ -449,7 +449,7 @@ void ConcurrentRenderer::RenderThread()
 
 		if( m_State == RENDERING_END )
 		{
-			LOG->Trace( "ConcurrentRenderer::RenderThread done" );
+			LOG_TRACE(Log::General, "ConcurrentRenderer::RenderThread done" );
 
 			DISPLAY->EndConcurrentRendering();
 

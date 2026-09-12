@@ -67,10 +67,10 @@ int ActorMultiTexture::AddTexture( RageTexture *pTexture )
 {
 	if( pTexture == nullptr )
 	{
-		LOG->Warn( "Can't add nil texture to ActorMultiTexture" );
+		LOG_WARN(Log::Actor, "Can't add nil texture to ActorMultiTexture" );
 		return static_cast<int>(m_aTextureUnits.size());
 	}
-	LOG->Trace( "ActorMultiTexture::AddTexture( %s )", pTexture->GetID().filename.c_str() );
+	LOG_TRACE(Log::Actor, "ActorMultiTexture::AddTexture( %s )", pTexture->GetID().filename.c_str() );
 
 	m_aTextureUnits.push_back( TextureUnitState() );
 	m_aTextureUnits.back().m_pTexture = TEXTUREMAN->CopyTexture( pTexture );
@@ -81,7 +81,7 @@ void ActorMultiTexture::SetTextureMode( int iIndex, TextureMode tm )
 {
 	if( iIndex >= (int) m_aTextureUnits.size() )
 	{
-		LOG->Warn( "Can't set texture mode, index %d too high.", iIndex );
+		LOG_WARN(Log::Actor, "Can't set texture mode, index %d too high.", iIndex );
 		return;
 	}
 	m_aTextureUnits[iIndex].m_TextureMode = tm;

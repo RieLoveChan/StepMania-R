@@ -16,7 +16,7 @@ bool JsonUtil::LoadFromString(Json::Value &root, RString sData, RString &/* sErr
 	if (!parsingSuccessful)
 	{
 		RString err = reader.getFormattedErrorMessages();
-		LOG->Warn("JSON: LoadFromFileShowErrors failed: %s", err.c_str());
+		LOG_ERROR(Log::File, "JSON: LoadFromFileShowErrors failed: %s", err.c_str());
 		return false;
 	}
 	return true;
@@ -35,7 +35,7 @@ bool JsonUtil::LoadFromFileShowErrors(Json::Value &root, const RString &sFile)
 	RageFile f;
 	if(!f.Open(sFile, RageFile::READ))
 	{
-		LOG->Warn("Couldn't open %s for reading: %s", sFile.c_str(), f.GetError().c_str());
+		LOG_ERROR(Log::File, "Couldn't open %s for reading: %s", sFile.c_str(), f.GetError().c_str());
 		return false;
 	}
 
@@ -70,7 +70,7 @@ bool JsonUtil::WriteFile(const Json::Value &root, const RString &sFile, bool bMi
 	RageFile f;
 	if(!f.Open(sFile, RageFile::WRITE))
 	{
-		LOG->Warn("Couldn't open %s for reading: %s", sFile.c_str(), f.GetError().c_str());
+		LOG_ERROR(Log::File, "Couldn't open %s for reading: %s", sFile.c_str(), f.GetError().c_str());
 		return false;
 	}
 	f.Write(s);
