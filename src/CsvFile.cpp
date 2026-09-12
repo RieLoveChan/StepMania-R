@@ -19,7 +19,7 @@ bool CsvFile::ReadFile( const RString &sPath )
 	RageFile f;
 	if( !f.Open( m_sPath ) )
 	{
-		LOG->Trace( "Reading '%s' failed: %s", m_sPath.c_str(), f.GetError().c_str() );
+		LOG_TRACE(Log::File, "Reading '%s' failed: %s", m_sPath.c_str(), f.GetError().c_str() );
 		m_sError = f.GetError();
 		return false;
 	}
@@ -106,7 +106,7 @@ bool CsvFile::WriteFile( const RString &sPath ) const
 	RageFile f;
 	if( !f.Open( sPath, RageFile::WRITE ) )
 	{
-		LOG->Trace( "Writing '%s' failed: %s", sPath.c_str(), f.GetError().c_str() );
+		LOG_ERROR(Log::File, "Writing '%s' failed: %s", sPath.c_str(), f.GetError().c_str() );
 		m_sError = f.GetError();
 		return false;
 	}

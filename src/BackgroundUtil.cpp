@@ -297,7 +297,7 @@ namespace {
 			GetDirListing( RANDOMMOVIES_DIR+sMatch, vsPathsOut, false, true );
 			if( vsPathsOut.empty() && sMatch != NO_SONG_BG_FILE )
 			{
-				LOG->Warn( "Background missing: %s", sMatch.c_str() );
+				LOG_WARN(Log::Song, "Background missing: %s", sMatch.c_str() );
 			}
 			return;
 		}

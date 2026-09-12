@@ -273,7 +273,7 @@ void Steps::TidyUpData()
 	// delete them. -Kyz
 	if( m_StepsType == StepsType_Invalid )
 	{
-		LOG->Warn("Detected steps with unknown style '%s' in '%s'", m_StepsTypeStr.c_str(), m_pSong->m_sSongFileName.c_str());
+		LOG_WARN(Log::Steps, "Detected steps with unknown style '%s' in '%s'", m_StepsTypeStr.c_str(), m_pSong->m_sSongFileName.c_str());
 	}
 	else if(m_StepsTypeStr == "")
 	{
@@ -422,7 +422,7 @@ void Steps::Decompress()
 		// We have NoteData on disk and not in memory. Load it.
 		if (!this->GetNoteDataFromSimfile())
 		{
-			LOG->Warn("Couldn't load the %s chart's NoteData from \"%s\"",
+			LOG_WARN(Log::Steps, "Couldn't load the %s chart's NoteData from \"%s\"",
 					  DifficultyToString(m_Difficulty).c_str(), m_sFilename.c_str());
 			return;
 		}

@@ -70,12 +70,12 @@ bool RandomSample::LoadSoundDir( RString sDir, int iMaxToLoad )
 
 bool RandomSample::LoadSound( RString sSoundFilePath )
 {
-	LOG->Trace( "RandomSample::LoadSound( %s )", sSoundFilePath.c_str() );
+	LOG_TRACE(Log::Sound, "RandomSample::LoadSound( %s )", sSoundFilePath.c_str() );
 
 	RageSound *pSS = new RageSound;
 	if( !pSS->Load(sSoundFilePath) )
 	{
-		LOG->Trace( "Error loading \"%s\": %s", sSoundFilePath.c_str(), pSS->GetError().c_str() );
+		LOG_TRACE(Log::Sound, "Error loading \"%s\": %s", sSoundFilePath.c_str(), pSS->GetError().c_str() );
 		delete pSS;
 		return false;
 	}

@@ -63,7 +63,7 @@ void IPreference::ReadAllDefaultsFromNode( const XNode* pNode )
 void IPreference::PushValue( lua_State *L ) const
 {
 	if( LOG )
-		LOG->Trace( "The preference value \"%s\" is of a type not supported by Lua", m_sName.c_str() );
+		LOG_TRACE(Log::Lua, "The preference value \"%s\" is of a type not supported by Lua", m_sName.c_str() );
 
 	lua_pushnil( L );
 }
@@ -71,7 +71,7 @@ void IPreference::PushValue( lua_State *L ) const
 void IPreference::SetFromStack( lua_State *L )
 {
 	if( LOG )
-		LOG->Trace( "The preference value \"%s\" is of a type not supported by Lua", m_sName.c_str() );
+		LOG_TRACE(Log::Lua, "The preference value \"%s\" is of a type not supported by Lua", m_sName.c_str() );
 
 	lua_pop( L, 1 );
 }

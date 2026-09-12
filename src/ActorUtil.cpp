@@ -378,7 +378,7 @@ Actor* ActorUtil::MakeActor( const RString &sPath_, Actor *pParentActor )
 		}
 	default:
 		{
-			LOG->Warn( "File \"%s\" has unknown type, \"%s\".", sPath.c_str(), FileTypeToString(ft).c_str() );
+			LOG_WARN(Log::Actor, "File \"%s\" has unknown type, \"%s\".", sPath.c_str(), FileTypeToString(ft).c_str() );
 
 			XNode xml;
 			xml.AppendAttr( "Class", "Actor" );
@@ -420,7 +420,7 @@ bool ActorUtil::GetAttrPath( const XNode *pNode, const RString &sName, RString &
 		{
 			if(!optional)
 			{
-				LOG->Warn( "Relative path \"%s\", but path is unknown", sOut.c_str() );
+				LOG_WARN(Log::Actor, "Relative path \"%s\", but path is unknown", sOut.c_str() );
 			}
 			return false;
 		}
