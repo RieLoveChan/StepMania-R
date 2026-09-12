@@ -1420,11 +1420,37 @@ spec is the whole config.)
   changed; not §5-protected.
   Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
   `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
-  Remaining: `Profile.cpp` next, then the §5-protected
-  parsers (`NotesLoaderSM.cpp` 39 sites, `CourseLoaderCRS.cpp` 27,
-  `NotesLoaderSSC.cpp` 26, `Song.cpp` 25, etc.) last, as pure
-  category/level re-tagging re-verified against their characterization
-  tests — never a parsing-logic change.
+  **Ph4 batch 7 (2026-09-11):** `Profile.cpp` (16 sites, `Log::Profile`
+  — a perfect category fit). Triage: the `LOAD_NODE(X)` macro's
+  "Failed to read section X" upgraded `Warn`→`ERROR` — its 6 call
+  sites (`GeneralData`, `SongScores`, `CourseScores`, `CategoryScores`,
+  `ScreenshotData`, `CalorieData`) are all core, always-expected
+  top-level sections of `stats.xml`; a missing one means real data
+  loss/corruption, not an optional field. `LoadStatsFromDir`'s two
+  file-open failures (plain open, and gunzip of the compressed
+  variant) upgraded `Trace`→`ERROR` — both immediately return
+  `ProfileLoadResult_FailedTampered` to the caller, i.e. the code
+  itself already treats them as hard failures, the log level just
+  hadn't caught up. `LoadSongsFromDir`'s "Song %s failed to load"
+  (a custom song folder in the profile didn't load) upgraded
+  `Trace`→`WARN` — a real, if per-item recoverable, failure worth
+  surfacing to whoever's debugging why their custom song didn't show
+  up. Everything else (routine load/save progress markers, signature-
+  verification step-by-step tracing — actual signature *failures* are
+  reported via `LuaHelpers::ReportScriptErrorFmt`, a separate path,
+  not `LOG->`) stayed `Trace`. No parsing/behavior logic changed; not
+  §5-protected.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+  **This closes out the non-§5 tail of phase 4.** Everything left with
+  a bare `LOG->` call is a §5-protected parser (`NotesLoaderSM.cpp` 39
+  sites, `CourseLoaderCRS.cpp` 27, `NotesLoaderSSC.cpp` 26, `Song.cpp`
+  25, `NotesLoaderBMS.cpp` 18, `NotesLoaderDWI.cpp` 14,
+  `TimingSegments.cpp` 12, `NotesLoaderSMA.cpp` 12, `TimingData.cpp`
+  11, `NotesLoaderKSF.cpp` 9, etc.) or the god-object `Player.cpp`
+  (48) — both need a slower, more careful pass (characterization-test
+  re-verification for the former; extra care for the latter given its
+  size/hotspot status), not a routine batch.
 
 ### 20. Replace the archaic hard-coded game-type system
 Game types are defined by hand-written `static const Game g_Game_X = {…}`

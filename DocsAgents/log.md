@@ -2569,3 +2569,27 @@
   category. No parsing/behavior logic changed; not §5-protected.
   Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
   `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+
+* **item 18 (ADR 0005 phase 4) batch 7, 2026-09-11.** Migrated
+  `Profile.cpp` (16 sites -> `Log::Profile`, a perfect fit). The
+  `LOAD_NODE(X)` macro's "Failed to read section X" upgraded
+  `Warn`->`ERROR` -- its 6 call sites (`GeneralData`, `SongScores`,
+  `CourseScores`, `CategoryScores`, `ScreenshotData`, `CalorieData`)
+  are all core, always-expected top-level sections of `stats.xml`; a
+  missing one is real data loss/corruption, not an optional field.
+  `LoadStatsFromDir`'s two file-open failures (plain open, and gunzip
+  of the compressed variant) upgraded `Trace`->`ERROR` -- both
+  immediately return `ProfileLoadResult_FailedTampered`, i.e. the code
+  already treats them as hard failures, the log level just hadn't
+  caught up. `LoadSongsFromDir`'s "Song %s failed to load" upgraded
+  `Trace`->`WARN` -- a real per-item failure worth surfacing.
+  Everything else (routine load/save progress markers, signature-
+  verification step tracing -- actual signature failures go through
+  `LuaHelpers::ReportScriptErrorFmt`, a separate path) stayed `Trace`.
+  No parsing/behavior logic changed; not §5-protected.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+  **This closes the non-§5 tail of phase 4** -- everything left with a
+  bare `LOG->` call is either a §5-protected parser (needs
+  characterization-test re-verification each time) or `Player.cpp`
+  (48 sites, god-object hotspot, needs its own careful pass).
