@@ -204,7 +204,7 @@ void ScreenOptions::Init()
 
 void ScreenOptions::InitMenu( const std::vector<OptionRowHandler*> &vHands )
 {
-	LOG->Trace( "ScreenOptions::InitMenu()" );
+	LOG_TRACE(Log::Screen, "ScreenOptions::InitMenu()" );
 
 	for( unsigned i=0; i<m_pRows.size(); i++ )
 	{
@@ -356,7 +356,7 @@ void ScreenOptions::TweenOffScreen()
 
 ScreenOptions::~ScreenOptions()
 {
-	LOG->Trace( "ScreenOptions::~ScreenOptions()" );
+	LOG_TRACE(Log::Screen, "ScreenOptions::~ScreenOptions()" );
 	for( unsigned i=0; i<m_pRows.size(); i++ )
 		SAFE_DELETE( m_pRows[i] );
 }
@@ -988,7 +988,7 @@ void ScreenOptions::StoreFocus( PlayerNumber pn )
 
 	int iWidth, iY;
 	GetWidthXY( pn, m_iCurrentRow[pn], row.GetChoiceInRowWithFocus(pn), iWidth, m_iFocusX[pn], iY );
-	LOG->Trace("cur selection %ix%i @ %i",
+	LOG_TRACE(Log::Screen, "cur selection %ix%i @ %i",
 		m_iCurrentRow[pn], row.GetChoiceInRowWithFocus(pn), m_iFocusX[pn]);
 }
 

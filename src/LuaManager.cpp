@@ -810,7 +810,7 @@ Dialog::Result LuaHelpers::ReportScriptError(RString const& Error, RString Error
 		ScriptErrorMessage(Error);
 		InReportScriptError= false;
 	}
-	LOG->Warn( "%s", Error.c_str());
+	LOG_ERROR(Log::Lua, "%s", Error.c_str());
 	if(UseAbort)
 	{
 		RString with_correct= Error + "  Correct this and click Retry, or Cancel to break.";
@@ -978,7 +978,7 @@ void LuaHelpers::ParseCommandList( Lua *L, const RString &sCommands, const RStri
 
 	RString sError;
 	if( !LuaHelpers::RunScript(L, sLuaFunction, sName, sError, 0, 1) )
-		LOG->Warn( "Compiling \"%s\": %s", sLuaFunction.c_str(), sError.c_str() );
+		LOG_ERROR(Log::Lua, "Compiling \"%s\": %s", sLuaFunction.c_str(), sError.c_str() );
 
 	// The function is now on the stack.
 }
@@ -1063,13 +1063,13 @@ namespace
 	static int Trace( lua_State *L )
 	{
 		RString sString = SArg(1);
-		LOG->Trace( "%s", sString.c_str() );
+		LOG_TRACE(Log::Lua, "%s", sString.c_str() );
 		return 0;
 	}
 	static int Warn( lua_State *L )
 	{
 		RString sString = SArg(1);
-		LOG->Warn( "%s", sString.c_str() );
+		LOG_WARN(Log::Lua, "%s", sString.c_str() );
 		return 0;
 	}
 	static int Flush( lua_State */* L */ )

@@ -99,7 +99,7 @@ void RageSoundReader_Merge::Finish( int iPreferredSampleRate )
 		{
 			if( it->GetNumChannels() != m_iChannels )
 			{
-				LOG->Warn( "Discarded sound with %i channels, not %i",
+				LOG_WARN(Log::Sound, "Discarded sound with %i channels, not %i",
 					it->GetNumChannels(), m_iChannels );
 				delete it;
 				it = nullptr;
@@ -251,7 +251,7 @@ int RageSoundReader_Merge::Read( float *pBuffer, int iFrames )
 
 			if( Difference(aNextSourceFrames[i], m_iNextSourceFrame + static_cast<int>((iFramesRead * aRatios[i]) + 0.5)) > ERROR_CORRECTION_THRESHOLD )
 			{
-				LOG->Trace( "*** hurk %i", Difference(aNextSourceFrames[i], m_iNextSourceFrame + static_cast<int>((iFramesRead * aRatios[i]) + 0.5 )) );
+				LOG_TRACE(Log::Sound, "*** hurk %i", Difference(aNextSourceFrames[i], m_iNextSourceFrame + static_cast<int>((iFramesRead * aRatios[i]) + 0.5 )) );
 				break;
 			}
 
