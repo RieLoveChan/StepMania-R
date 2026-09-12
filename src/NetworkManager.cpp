@@ -86,7 +86,7 @@ NetworkManager::NetworkManager() : httpClient(true), downloadClient(true)
 	}
 	else
 	{
-		LOG->Warn("Reading '%s' failed: %s", SpecialFiles::CA_BUNDLE_PATH.c_str(), f.GetError().c_str());
+		LOG_ERROR(Log::Net, "Reading '%s' failed: %s", SpecialFiles::CA_BUNDLE_PATH.c_str(), f.GetError().c_str());
 	}
 
 	this->httpClient.setTLSOptions(this->tlsOptions);
@@ -629,7 +629,7 @@ public:
 		}
 		else
 		{
-			LOG->Warn("blocked access to %s", args.url.c_str());
+			LOG_WARN(Log::Net, "blocked access to %s", args.url.c_str());
 			luaL_unref(L, LUA_REGISTRYINDEX, onProgressRef);
 			if (onResponseRef != LUA_NOREF)
 			{
@@ -781,7 +781,7 @@ public:
 		}
 		else
 		{
-			LOG->Warn("blocked access to %s", args.url.c_str());
+			LOG_WARN(Log::Net, "blocked access to %s", args.url.c_str());
 			if (onMessageRef != LUA_NOREF)
 			{
 				handleWebSocketUrlForbidden(L, args.url, onMessageRef);

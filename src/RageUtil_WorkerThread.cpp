@@ -50,7 +50,7 @@ void RageWorkerThread::StopThread()
 	m_WorkerEvent.Lock();
 	if( m_bTimedOut )
 	{
-		LOG->Trace( "Waiting for timed-out worker thread \"%s\" to complete ...", m_sName.c_str() );
+		LOG_TRACE(Log::General, "Waiting for timed-out worker thread \"%s\" to complete ...", m_sName.c_str() );
 		while( m_bTimedOut )
 			m_WorkerEvent.Wait();
 	}
@@ -71,7 +71,7 @@ bool RageWorkerThread::DoRequest( int iRequest )
 	ASSERT( m_iRequest == REQ_NONE );
 
 	if( m_Timeout.IsZero() && iRequest != REQ_SHUTDOWN )
-		LOG->Warn( "Request made with timeout disabled (%s, iRequest = %i)", m_sName.c_str(), iRequest );
+		LOG_WARN(Log::General, "Request made with timeout disabled (%s, iRequest = %i)", m_sName.c_str(), iRequest );
 
 	/* Set the request, and wake up the worker thread. */
 	m_WorkerEvent.Lock();
@@ -155,7 +155,7 @@ void RageWorkerThread::WorkerMain()
 
 			if( m_bTimedOut )
 			{
-				LOG->Trace( "Request %i timed out", iRequest );
+				LOG_TRACE(Log::General, "Request %i timed out", iRequest );
 
 				/* The calling thread timed out.  It's already gone and moved on, so
 				 * it's our responsibility to clean up.  No new requests will come in

@@ -17,7 +17,7 @@ static bool CodePageConvert( RString &sText, int iCodePage )
 	int iSize = MultiByteToWideChar( iCodePage, MB_ERR_INVALID_CHARS, sText.data(), static_cast<int>(sText.size()), nullptr, 0 );
 	if( iSize == 0 )
 	{
-		LOG->Trace( "%s\n", werr_ssprintf(GetLastError(), "err: ").c_str() );
+		LOG_TRACE(Log::File, "%s\n", werr_ssprintf(GetLastError(), "err: ").c_str() );
 		return false; /* error */
 	}
 
@@ -73,13 +73,13 @@ static bool ConvertFromCharset( RString &sText, const char *szCharset )
 
 	if( size == (std::size_t)(-1) )
 	{
-		LOG->Trace( "%s\n", strerror( errno ) );
+		LOG_TRACE(Log::File, "%s\n", strerror( errno ) );
 		return false; /* Returned an error */
 	}
 
 	if( iInLeft != 0 )
 	{
-		LOG->Warn( "iconv(UTF-8,%s) for \"%s\": whole buffer not converted (%i left)", szCharset, sText.c_str(), int(iInLeft) );
+		LOG_WARN(Log::File, "iconv(UTF-8,%s) for \"%s\": whole buffer not converted (%i left)", szCharset, sText.c_str(), int(iInLeft) );
 		return false;
 	}
 
