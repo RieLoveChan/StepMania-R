@@ -1602,6 +1602,39 @@ spec is the whole config.)
   tail, per subsystem" the way ADR 0005 always described it, no
   longer batching off the stale original list — see the batches
   below for the corrected, ongoing count.
+  **Ph4 batch 12 (2026-09-12), first batch against the corrected
+  remaining list.** `PlayerStageStats.cpp` (1 real site — the other 11
+  raw hits were pre-existing commented-out calls, `Log::Lua` — a bad
+  argument from a theme's `GetLifeRecord` Lua call, upgraded
+  `Trace`→`WARN`), `RageUtil.cpp` (11 sites, split by function:
+  `GetFileContents`/`FileCopy` failures → `Log::File` + `ERROR` for
+  genuine I/O failures, kept `WARN` for the "copy over itself" misuse
+  guard; `StringToInt/Long/LLong`'s catch-block warnings →
+  `Log::General`, kept `WARN` since this utility is also used for
+  legitimate speculative "maybe it's a number" parsing, not just hard
+  errors), `ScreenGameplay.cpp` (9 real sites, `Log::Screen` — "Error
+  loading notes for player" upgraded `Trace`→`ERROR`, a genuine
+  simfile-load failure; everything else already-correct routine
+  gameplay-event `Trace`), `ScreenManager.cpp` (8 real sites,
+  `Log::Screen`, all already-correct routine screen-lifecycle
+  `Trace`), `RageDisplay_GLES2.cpp` (10 sites, `Log::Gl` — same
+  vendor/extension-dump→`INFO` and mislabeled-`TryVideoMode`-entry-
+  trace→`TRACE` pattern already established for `RageDisplay_OGL.cpp`/
+  `RageDisplay_D3D.cpp`; **this file is Linux-only**,
+  `elseif(LINUX) if(WITH_GLES2)`-gated in `CMakeData-rage.cmake`, so
+  the Windows build never compiles it — `WITH_GLES2` defaults `ON` and
+  Ubuntu CI does build it, so that CI leg going green is this file's
+  real compile verification, not the local Windows gate),
+  `ScreenSelectMusic.cpp` (8 real sites, `Log::Screen` — the two
+  song-deletion guard warnings kept `WARN`, everything else routine
+  `Trace`). No parsing/behavior logic changed anywhere.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0 (Windows); the
+  `RageDisplay_GLES2.cpp` site still needs Ubuntu CI to confirm.
+  ~121 files remain on the corrected list (`ScreenEdit.cpp` (7),
+  `RageUtil_BackgroundLoader.cpp` (7), `MusicWheel.cpp` (7),
+  `ImageCache.cpp` (7), `Bookkeeper.cpp` (7), `Font.cpp` (8),
+  `RageDisplay.cpp` (8), and a long tail down to 1-site files).
 
 ### 20. Replace the archaic hard-coded game-type system
 Game types are defined by hand-written `static const Game g_Game_X = {…}`
