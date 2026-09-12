@@ -1652,6 +1652,28 @@ spec is the whole config.)
   Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
   `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
   ~118 files remain on the corrected list.
+  **Ph4 batch 14 (2026-09-12).** `RageUtil_BackgroundLoader.cpp` (7
+  sites, `Log::File`, all `"XXX:"`-prefixed developer debug traces,
+  already-correct routine `Trace`, just categorized), `MusicWheel.cpp`
+  (6 real sites, `Log::Actor` — it's a `WheelBase`-derived UI widget,
+  not a `Screen` itself, so `Actor` fits better than `Screen`; all
+  already-correct routine `Trace`), `ImageCache.cpp` (3 real sites,
+  `Log::Cache` — a perfect fit; "Converted X at runtime" and "image
+  cache wasn't loaded" both kept `WARN`, matching the file's own
+  "Warn and continue" comment), `Bookkeeper.cpp` (7 sites, `Log::File`
+  — bookkeeping.xml read/write; two real XML-parse failures
+  ("unexpected node", "Data node missing") upgraded `Warn`→`ERROR`,
+  plus the never-invoked `WARN_AND_RETURN` macro upgraded the same way
+  for consistency (dead in practice — no call site anywhere in the
+  file — but live, uncommented code, migrated on the same terms as
+  everything else); the per-entry "incomplete date field" and
+  "Hour >= HOURS_IN_DAY" warnings kept `WARN` since they skip just
+  that one malformed record and continue, not a whole-file failure;
+  the write-failure ("Couldn't open file for writing") upgraded to
+  `ERROR`). No parsing/behavior logic changed anywhere.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+  ~114 files remain on the corrected list.
 
 ### 20. Replace the archaic hard-coded game-type system
 Game types are defined by hand-written `static const Game g_Game_X = {…}`

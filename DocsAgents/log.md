@@ -2741,3 +2741,19 @@
   Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
   `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
   ~118 files remain on the corrected list.
+
+* **item 18 (ADR 0005 phase 4) batch 14, 2026-09-12.**
+  `RageUtil_BackgroundLoader.cpp` (7 sites -> `Log::File`, all
+  "XXX:"-prefixed dev-debug traces, already-correct routine `Trace`),
+  `MusicWheel.cpp` (6 sites -> `Log::Actor` -- a `WheelBase`-derived
+  widget, not a `Screen`), `ImageCache.cpp` (3 sites -> `Log::Cache`,
+  a perfect fit; both warnings kept `WARN`), `Bookkeeper.cpp` (7 sites
+  -> `Log::File`; two XML-parse failures upgraded `Warn`->`ERROR`,
+  plus the never-invoked `WARN_AND_RETURN` macro migrated the same way
+  for consistency; per-entry "incomplete date"/"hour out of range"
+  warnings kept `WARN` since they skip one record and continue; the
+  write-open failure upgraded to `ERROR`). No parsing/behavior logic
+  changed.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+  ~114 files remain on the corrected list.
