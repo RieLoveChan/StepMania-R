@@ -1478,6 +1478,38 @@ spec is the whole config.)
   `TimingData.cpp` (11) — same treatment each time: filter out
   `UserLog`, triage only the real `Trace`/`Warn`/`Info` sites, re-run
   that file's characterization test before and after.
+  **Ph4 batch 9 (2026-09-12):** `TimingData.cpp` (10 real sites,
+  `Log::Song`), `NotesLoaderSMA.cpp` (1 real site), `NotesLoaderDWI.cpp`
+  (2 real sites; a 3rd grep hit is a pre-existing commented-out call,
+  left untouched), `NotesLoaderBMS.cpp` (2 real sites) — all
+  `Log::Song`. Almost everything was already-correct routine `Trace`
+  (lookup-table dumps, `AddSegment`/`EraseSegment` diagnostics, loader
+  entry traces), just categorized. One real upgrade:
+  `NotesLoaderDWI.cpp`'s "Didn't get enough data when attempting to
+  load a DWI file" `Warn`→`ERROR` — a genuine malformed-chart parse
+  failure that falls back to an empty `NoteData`, not routine.
+  **Extra wrinkle handled:** 3 of `TimingData.cpp`'s sites
+  (`EraseSegment`, `AddSegment`, the same-segment dedup check) sit
+  behind `#ifdef WITH_LOGGING_TIMING_DATA` — a real, flippable CMake
+  option (`option(WITH_LOGGING_TIMING_DATA ... OFF)`, unlike item 29's
+  truly-orphaned networking code) that's off by default and so isn't
+  exercised by the normal build gate. Reconfigured
+  `-DWITH_LOGGING_TIMING_DATA=ON`, rebuilt, and reran the full suite
+  (5966/226 unchanged) to actually compile-verify those 3 sites, then
+  reconfigured back to the default `OFF` to match CI before finishing
+  the gate. One more site sits behind `#ifdef DEBUG`, already covered
+  by the normal Debug build. Re-verified against characterization
+  tests: `[TimingData]` 40/9 (unchanged from batch 8's baseline);
+  `[sma]` 74/2, `[dwi]` 30/2, `[bms]` 26/2 confirmed via the unchanged
+  full-suite total (5966/226 both before and after this edit is the
+  authoritative check, since any behavior change would have shifted
+  it — no per-tag pre-edit baseline was captured for these three new
+  tags specifically).
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+  Remaining §5 files: `NotesLoaderSM.cpp`, `CourseLoaderCRS.cpp`,
+  `NotesLoaderSSC.cpp`, `Song.cpp` — bigger, real-vs-`UserLog` split
+  not yet broken down.
 
 ### 20. Replace the archaic hard-coded game-type system
 Game types are defined by hand-written `static const Game g_Game_X = {…}`
