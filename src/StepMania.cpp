@@ -403,7 +403,7 @@ static void AdjustForChangedSystemCapabilities()
 	if( g_iLastSeenMemory == Memory )
 		return;
 
-	LOG->Trace( "Memory changed from %i to %i; settings changed", g_iLastSeenMemory.Get(), Memory );
+	LOG_TRACE(Log::General, "Memory changed from %i to %i; settings changed", g_iLastSeenMemory.Get(), Memory );
 	g_iLastSeenMemory.Set( Memory );
 
 	// is this assumption outdated? -aj
@@ -521,7 +521,7 @@ bool CheckVideoDefaultSettings()
 	// Video card changed since last run
 	RString sVideoDriver = GetVideoDriverName();
 
-	LOG->Trace( "Last seen video driver: %s", PREFSMAN->m_sLastSeenVideoDriver.Get().c_str() );
+	LOG_TRACE(Log::General, "Last seen video driver: %s", PREFSMAN->m_sLastSeenVideoDriver.Get().c_str() );
 
 	VideoCardDefaults defaults;
 
@@ -534,7 +534,7 @@ bool CheckVideoDefaultSettings()
 		Regex regex( sDriverRegex );
 		if( regex.Compare(sVideoDriver) )
 		{
-			LOG->Trace( "Card matches '%s'.", !sDriverRegex.empty()? sDriverRegex.c_str():"(unknown card)" );
+			LOG_TRACE(Log::General, "Card matches '%s'.", !sDriverRegex.empty()? sDriverRegex.c_str():"(unknown card)" );
 			break;
 		}
 	}
@@ -547,12 +547,12 @@ bool CheckVideoDefaultSettings()
 	if( PREFSMAN->m_sVideoRenderers.Get().empty() )
 	{
 		bSetDefaultVideoParams = true;
-		LOG->Trace( "Applying defaults for %s.", sVideoDriver.c_str() );
+		LOG_TRACE(Log::General, "Applying defaults for %s.", sVideoDriver.c_str() );
 	}
 	else if( PREFSMAN->m_sLastSeenVideoDriver.Get() != sVideoDriver )
 	{
 		bSetDefaultVideoParams = true;
-		LOG->Trace( "Video card has changed from %s to %s.  Applying new defaults.", PREFSMAN->m_sLastSeenVideoDriver.Get().c_str(), sVideoDriver.c_str() );
+		LOG_TRACE(Log::General, "Video card has changed from %s to %s.  Applying new defaults.", PREFSMAN->m_sLastSeenVideoDriver.Get().c_str(), sVideoDriver.c_str() );
 	}
 
 	if( bSetDefaultVideoParams )
@@ -575,11 +575,11 @@ bool CheckVideoDefaultSettings()
 	}
 	else if( PREFSMAN->m_sVideoRenderers.Get().CompareNoCase(defaults.sVideoRenderers) )
 	{
-		LOG->Warn("Video renderer list has been changed from '%s' to '%s'",
+		LOG_INFO(Log::General, "Video renderer list has been changed from '%s' to '%s'",
 				defaults.sVideoRenderers.c_str(), PREFSMAN->m_sVideoRenderers.Get().c_str() );
 	}
 
-	LOG->Info( "Video renderers: '%s'", PREFSMAN->m_sVideoRenderers.Get().c_str() );
+	LOG_INFO(Log::General, "Video renderers: '%s'", PREFSMAN->m_sVideoRenderers.Get().c_str() );
 	return bSetDefaultVideoParams;
 }
 
@@ -697,7 +697,7 @@ static void SwitchToLastPlayedGame()
 	if( !GAMEMAN->IsGameEnabled( pGame ) && pGame != GAMEMAN->GetDefaultGame() )
 	{
 		pGame = GAMEMAN->GetDefaultGame();
-		LOG->Warn( "Default NoteSkin for \"%s\" missing, reverting to \"%s\"",
+		LOG_WARN(Log::General, "Default NoteSkin for \"%s\" missing, reverting to \"%s\"",
 			pGame->m_szName, GAMEMAN->GetDefaultGame()->m_szName );
 	}
 
@@ -729,7 +729,7 @@ void StepMania::InitializeCurrentGame( const Game* g )
 		Game const* new_game= GAMEMAN->StringToGame(argCurGame);
 		if(new_game == nullptr)
 		{
-			LOG->Warn("%s is not a known game type, ignoring.", argCurGame.c_str());
+			LOG_WARN(Log::General, "%s is not a known game type, ignoring.", argCurGame.c_str());
 		}
 		else
 		{
@@ -793,7 +793,7 @@ static void MountTreeOfZips( const RString &dir )
 			if( !IsAFile(zip) )
 				continue;
 
-			LOG->Trace( "VFS: found %s", zip.c_str() );
+			LOG_TRACE(Log::General, "VFS: found %s", zip.c_str() );
 			FILEMAN->Mount( "zip", zip, "/" );
 		}
 
@@ -814,18 +814,18 @@ static void MountFolders(const RString &type, const RString &realPathList, const
 
 static void WriteLogHeader()
 {
-	LOG->Info("%s%s", PRODUCT_FAMILY, product_version);
+	LOG_INFO(Log::General, "%s%s", PRODUCT_FAMILY, product_version);
 
-	LOG->Info( "Compiled %s @ %s (build %s)", version_date, version_time, ::sm_version_git_hash);
+	LOG_INFO(Log::General, "Compiled %s @ %s (build %s)", version_date, version_time, ::sm_version_git_hash);
 
 	time_t cur_time;
 	time(&cur_time);
 	struct tm now;
 	localtime_r( &cur_time, &now );
 
-	LOG->Info( "Log starting %.4d-%.2d-%.2d %.2d:%.2d:%.2d",
+	LOG_INFO(Log::General, "Log starting %.4d-%.2d-%.2d %.2d:%.2d:%.2d",
 		1900+now.tm_year, now.tm_mon+1, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec );
-	LOG->Trace( " " );
+	LOG_TRACE(Log::General, " " );
 
 	if( g_argc > 1 )
 	{
@@ -839,7 +839,7 @@ static void WriteLogHeader()
 			// using [[ and ]], as they are not likely to be in the params.
 			args += ssprintf( "[[%s]]", g_argv[i] );
 		}
-		LOG->Info( "Command line args (count=%d): %s", (g_argc - 1), args.c_str());
+		LOG_INFO(Log::General, "Command line args (count=%d): %s", (g_argc - 1), args.c_str());
 	}
 }
 
@@ -953,7 +953,7 @@ int sm_main(int argc, char* argv[])
 	HOOKS->DumpDebugInfo();
 
 #if defined(HAVE_TLS)
-	LOG->Info( "TLS is %savailable", RageThread::GetSupportsTLS()? "":"not " );
+	LOG_INFO(Log::General, "TLS is %savailable", RageThread::GetSupportsTLS()? "":"not " );
 #endif
 
 	AdjustForChangedSystemCapabilities();
@@ -986,7 +986,7 @@ int sm_main(int argc, char* argv[])
 	}
 
 	if( PREFSMAN->m_iSoundWriteAhead )
-		LOG->Info( "Sound writeahead has been overridden to %i", PREFSMAN->m_iSoundWriteAhead.Get() );
+		LOG_INFO(Log::General, "Sound writeahead has been overridden to %i", PREFSMAN->m_iSoundWriteAhead.Get() );
 
 	SOUNDMAN	= new RageSoundManager;
 	SOUNDMAN->Init();
@@ -1035,7 +1035,7 @@ int sm_main(int argc, char* argv[])
 	StartDisplay();
 
 	StoreActualGraphicOptions();
-	LOG->Info( "%s", GetActualGraphicOptionsString().c_str() );
+	LOG_INFO(Log::General, "%s", GetActualGraphicOptionsString().c_str() );
 
 	SONGMAN->PreloadSongImages();
 
@@ -1069,7 +1069,7 @@ int sm_main(int argc, char* argv[])
 	 * Exit code 0 = init succeeded. */
 	if( GetCommandlineArgument("SelfTest") )
 	{
-		LOG->Info( "[SelfTest] Engine initialised; exiting before the main loop." );
+		LOG_INFO(Log::General, "[SelfTest] Engine initialised; exiting before the main loop." );
 		ShutdownGame();
 		return 0;
 	}
@@ -1145,7 +1145,7 @@ void StepMania::InsertCoin( int iNum, bool bCountInBookkeeping )
 		GAMESTATE->m_iCoins.Set( PREFSMAN->m_iMaxNumCredits * PREFSMAN->m_iCoinsPerCredit );
 	}
 
-	LOG->Trace("%i coins inserted, %i needed to play", GAMESTATE->m_iCoins.Get(), PREFSMAN->m_iCoinsPerCredit.Get() );
+	LOG_TRACE(Log::General, "%i coins inserted, %i needed to play", GAMESTATE->m_iCoins.Get(), PREFSMAN->m_iCoinsPerCredit.Get() );
 
     // On InsertCoin, make sure to update Coins file
     BOOKKEEPER->WriteCoinsFile(GAMESTATE->m_iCoins.Get());
@@ -1185,7 +1185,7 @@ void StepMania::InsertCredit()
 
 void StepMania::ClearCredits()
 {
-	LOG->Trace("%i coins cleared", GAMESTATE->m_iCoins.Get() );
+	LOG_TRACE(Log::General, "%i coins cleared", GAMESTATE->m_iCoins.Get() );
 	GAMESTATE->m_iCoins.Set( 0 );
 	SCREENMAN->PlayInvalidSound();
 
@@ -1232,7 +1232,7 @@ bool HandleGlobalInputs( const InputEventPlus &input )
 			// Handle a coin insertion.
 			if( GAMESTATE->IsEditing() )	// no coins while editing
 			{
-				LOG->Trace( "Ignored coin insertion (editing)" );
+				LOG_TRACE(Log::General, "Ignored coin insertion (editing)" );
 				break;
 			}
 			StepMania::InsertCoin();
@@ -1340,7 +1340,7 @@ bool HandleGlobalInputs( const InputEventPlus &input )
 		bool bSaveCompressed = !bHoldingShift;
 		RageTimer timer;
 		StepMania::SaveScreenshot("Screenshots/", bSaveCompressed, false, "", "");
-		LOG->Trace( "Screenshot took %f seconds.", timer.GetDeltaTime() );
+		LOG_TRACE(Log::General, "Screenshot took %f seconds.", timer.GetDeltaTime() );
 		return true; // handled
 	}
 
