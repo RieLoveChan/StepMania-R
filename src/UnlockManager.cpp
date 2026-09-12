@@ -479,7 +479,7 @@ RString	UnlockEntry::GetBackgroundFile() const
 
 void UnlockManager::Load()
 {
-	LOG->Trace( "UnlockManager::Load()" );
+	LOG_TRACE(Log::Song, "UnlockManager::Load()" );
 
 	std::vector<RString> asUnlockNames;
 	split( UNLOCK_NAMES, ",", asUnlockNames );
@@ -655,7 +655,7 @@ void UnlockManager::Load()
 			str += ( " (found song)" );
 		if( e.m_Course.IsValid() )
 			str += ( " (found course)" );
-		LOG->Trace( "%s", str.c_str() );
+		LOG_TRACE(Log::Song, "%s", str.c_str() );
 	}
 
 	return;

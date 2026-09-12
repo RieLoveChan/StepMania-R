@@ -257,7 +257,7 @@ static void SyncFiles( const RString &sFromDir, const RString &sToDir, const RSt
 	for( unsigned i = 0; i < vsToDelete.size(); ++i )
 	{
 		RString sFile = sToDir + vsToDelete[i];
-		LOG->Trace( "Delete \"%s\"", sFile.c_str() );
+		LOG_TRACE(Log::Screen, "Delete \"%s\"", sFile.c_str() );
 
 		if( FILEMAN->Remove(sFile) )
 			++iNumDeleted;
@@ -269,7 +269,7 @@ static void SyncFiles( const RString &sFromDir, const RString &sToDir, const RSt
 	{
 		RString sFileFrom = sFromDir + vsFilesSource[i];
 		RString sFileTo = sToDir + vsFilesSource[i];
-		LOG->Trace( "Copy \"%s\"", sFileFrom.c_str() );
+		LOG_TRACE(Log::Screen, "Copy \"%s\"", sFileFrom.c_str() );
 		bool bOverwrite = DoesFileExist( sFileTo );
 		bool bSuccess = FileCopy( sFileFrom, sFileTo );
 		if( bSuccess )

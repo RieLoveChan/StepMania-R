@@ -208,7 +208,7 @@ RString ScreenWithMenuElements::HandleLuaMusicFile(RString const& path)
 				{
 					// 2) perhaps it's a table with some params? unsure if I want to support
 					// this just yet. -aj
-					LOG->Trace("Lua music script did not return a path to a sound.");
+					LOG_WARN(Log::Screen, "Lua music script did not return a path to a sound.");
 					ret= "";
 				}
 			}
@@ -216,7 +216,7 @@ RString ScreenWithMenuElements::HandleLuaMusicFile(RString const& path)
 		}
 		else
 		{
-			LOG->Trace("run script failed hardcore, lol");
+			LOG_WARN(Log::Screen, "run script failed hardcore, lol");
 			ret= "";
 		}
 	}

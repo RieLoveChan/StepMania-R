@@ -230,12 +230,12 @@ void StatsManager::CommitStatsToProfiles( const StageStats *pSS )
 				pPlayerProfile->m_iNumTotalSongsPlayed += static_cast<int>(pSS->m_vpPlayedSongs.size());
 			}
 
-			LOG->Trace("Adding stats to machine profile...");
+			LOG_TRACE(Log::Profile, "Adding stats to machine profile...");
 			AddPlayerStatsToProfile( pMachineProfile, *pSS, pn );
 
 			if( pPlayerProfile )
 			{
-				LOG->Trace("Adding stats to player profile...");
+				LOG_TRACE(Log::Profile, "Adding stats to player profile...");
 				AddPlayerStatsToProfile( pPlayerProfile, *pSS, pn );
 			}
 

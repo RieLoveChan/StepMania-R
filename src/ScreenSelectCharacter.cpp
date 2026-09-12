@@ -154,14 +154,14 @@ void ScreenSelectCharacter::Init()
 
 ScreenSelectCharacter::~ScreenSelectCharacter()
 {
-	LOG->Trace( "ScreenSelectCharacter::~ScreenSelectCharacter()" );
+	LOG_TRACE(Log::Screen, "ScreenSelectCharacter::~ScreenSelectCharacter()" );
 
 }
 
 
 bool ScreenSelectCharacter::Input( const InputEventPlus &input )
 {
-	LOG->Trace( "ScreenSelectCharacter::Input()" );
+	LOG_TRACE(Log::Screen, "ScreenSelectCharacter::Input()" );
 
 	if( IsTransitioning() )
 		return false;
