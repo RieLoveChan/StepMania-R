@@ -18,14 +18,14 @@ static void HandleBunki( TimingData &timing, const float fEarlyBPM,
 {
 	const float BeatsPerSecond = fEarlyBPM / 60.0f;
 	const float beat = (fPos + fGap) * BeatsPerSecond;
-	LOG->Trace( "BPM %f, BPS %f, BPMPos %f, beat %f",
+	LOG_TRACE(Log::Song, "BPM %f, BPS %f, BPMPos %f, beat %f",
 		   fEarlyBPM, BeatsPerSecond, fPos, beat );
 	timing.AddSegment( BPMSegment(BeatToNoteRow(beat), fCurBPM) );
 }
 
 static bool LoadFromKSFFile( const RString &sPath, Steps &out, Song &song, bool bKIUCompliant )
 {
-	LOG->Trace( "Steps::LoadFromKSFFile( '%s' )", sPath.c_str() );
+	LOG_TRACE(Log::Song, "Steps::LoadFromKSFFile( '%s' )", sPath.c_str() );
 
 	MsdFile msd;
 	if( !msd.ReadFile( sPath, false ) )  // don't unescape
@@ -741,7 +741,7 @@ bool KSFLoader::LoadNoteDataFromSimfile( const RString & cachePath, Steps &out )
 
 bool KSFLoader::LoadFromDir( const RString &sDir, Song &out )
 {
-	LOG->Trace( "KSFLoader::LoadFromDir(%s)", sDir.c_str() );
+	LOG_TRACE(Log::Song, "KSFLoader::LoadFromDir(%s)", sDir.c_str() );
 
 	std::vector<RString> arrayKSFFileNames;
 	GetDirListing( sDir + RString("*.ksf"), arrayKSFFileNames );
