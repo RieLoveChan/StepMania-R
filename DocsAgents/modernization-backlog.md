@@ -1262,7 +1262,7 @@ plain dead `#if 0 ... #endif` (candidate for removal), an active
 other branch is live), and a toolchain-EOL block like the VC6 ones
 above (enable, don't delete).
 
-### 18. Logging overhaul — phases 1-3 DONE, phase 4 open
+### 18. Logging overhaul — DONE 2026-09-12, all 4 phases complete
 Phase 1 (`c82d0e9058`): bracketed level tags, `Error()` level, no
 `/////`, `Char Widths` fixed. `--SelfTest` log 695→467 lines, clean.
 **Phase 2 DONE (2026-09-08, `156c075ff3` + `3a53baad5f`):**
@@ -1561,6 +1561,34 @@ spec is the whole config.)
   to the categorized `LOG_*` macros with zero parsing/behavior changes
   throughout, each re-verified against its characterization test (or
   the full-suite invariant where no per-format tag existed).
+  **Ph4 final batch (2026-09-12), `Player.cpp` — phase 4 now
+  COMPLETE.** Of the 48 raw `LOG->` grep hits in this god-object
+  (3567 lines, a hotspot per item 9), a programmatic check (`awk`
+  tracking `/* */` block-comment state, not just skipping `//` lines)
+  found that **47 of the 48 are dead code** — either single-line `//`
+  comments or sitting inside multi-line `/* ... */` blocks — leftover
+  debug scaffolding from a historically fragile hold-note-scoring
+  area (the same section item 15 already flagged as "too fragile a
+  hot path to guess at" for `#if 0` removal). Only **one** call site
+  is actually compiled: a routine "Applying transform '%s'..." trace
+  in the attack-mod application path, migrated to
+  `LOG_TRACE(Log::Actor, ...)` (`Actor` since `Player` is a gameplay
+  `Actor` subclass; no dedicated category fits gameplay/scoring logic
+  any better). No triage judgment needed — already correctly `Trace`.
+  No characterization test exists for `Player.cpp` (gameplay/scoring,
+  not simfile parsing), so the full-suite invariant (5966/226
+  unchanged) is the only available safety check, same as `Song.cpp`
+  in batch 10.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+  **ADR 0005 logging overhaul is now fully implemented end to end**:
+  bracketed level tags + `Error()` (phase 1), the `LogLevel`/
+  `Log::Category` infrastructure + `LOG_*` macros + `--LogLevel` spec
+  (phase 2), repeat-line collapsing (phase 3), and now every real
+  call site in `src/` migrated to the categorized macros (phase 4) —
+  11 batches total across this backlog item, spanning non-§5 files,
+  the entire §5-protected simfile-parser lane, and the `Player.cpp`
+  god-object, with zero parsing/behavior regressions throughout.
 
 ### 20. Replace the archaic hard-coded game-type system
 Game types are defined by hand-written `static const Game g_Game_X = {…}`
