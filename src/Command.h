@@ -3,6 +3,7 @@
 #ifndef Commands_H
 #define Commands_H
 
+#include <string>
 #include <vector>
 
 
@@ -11,14 +12,14 @@ class Command
 public:
 	void Load( const RString &sCommand );
 
-	RString GetOriginalCommandString() const;	// used when reporting an error in number of args
-	RString GetName() const;	// the first argument, Trim()'d (NOT lower-cased -- callers that need case-insensitive matching lower-case it themselves)
+	std::string GetOriginalCommandString() const;	// used when reporting an error in number of args
+	std::string GetName() const;	// the first argument, Trim()'d (NOT lower-cased -- callers that need case-insensitive matching lower-case it themselves)
 
 	void Clear() { m_vsArgs.clear(); }
 
 	struct Arg
 	{
-		RString s;
+		std::string s;
 		Arg(): s("") {}
 	};
 	Arg GetArg( unsigned index ) const;
@@ -33,7 +34,7 @@ class Commands
 public:
 	std::vector<Command> v;
 
-	RString GetOriginalCommandString() const;	// used when reporting an error in number of args
+	std::string GetOriginalCommandString() const;	// used when reporting an error in number of args
 };
 
 // Take a command list string and return pointers to each of the tokens in the

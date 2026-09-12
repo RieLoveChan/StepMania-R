@@ -592,7 +592,7 @@ void UnlockManager::Load()
 				break;
 			}
 
-			e.m_dc = StringToDifficulty( e.m_cmd.GetArg(1).s );
+			e.m_dc = StringToDifficulty( RString(e.m_cmd.GetArg(1).s) );
 			if( e.m_dc == Difficulty_Invalid )
 			{
 				LuaHelpers::ReportScriptErrorFmt( "Unlock: Invalid difficulty \"%s\"", e.m_cmd.GetArg(1).s.c_str() );
@@ -609,7 +609,7 @@ void UnlockManager::Load()
 				break;
 			}
 
-			e.m_dc = StringToDifficulty( e.m_cmd.GetArg(1).s );
+			e.m_dc = StringToDifficulty( RString(e.m_cmd.GetArg(1).s) );
 			if( e.m_dc == Difficulty_Invalid )
 			{
 				LuaHelpers::ReportScriptErrorFmt( "Unlock: Invalid difficulty \"%s\"", e.m_cmd.GetArg(1).s.c_str() );
