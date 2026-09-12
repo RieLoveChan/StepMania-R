@@ -692,7 +692,7 @@ void InputMapper::AutoMapJoysticksForCurrentGame()
 			if( gc >= NUM_GameController )
 				break;	// stop mapping.  We already mapped one device for each game controller.
 
-			LOG->Info( "Applying default joystick mapping #%d for device '%s' (%s)",
+			LOG_INFO(Log::Input, "Applying default joystick mapping #%d for device '%s' (%s)",
 				iNumJoysticksMapped+1, mapping.m_sDriverRegex.c_str(), mapping.m_sControllerName.c_str() );
 
 			Unmap( id );
@@ -853,7 +853,7 @@ bool InputMapper::CheckForChangedInputDevicesAndRemap( RString &sMessageOut )
 		MESSAGEMAN->Broadcast( Message_AutoJoyMappingApplied );
 	}
 
-	LOG->Info( "%s", sMessageOut.c_str() );
+	LOG_INFO(Log::Input, "%s", sMessageOut.c_str() );
 
 	// see above comment about not using ",". -aj
 	g_sLastSeenInputDevices.Set( join("|",vsCurrent) );
@@ -1261,7 +1261,7 @@ void InputMappings::ReadMappings( const InputScheme *pInputScheme, RString sFile
 
 	IniFile ini;
 	if( !ini.ReadFile( sFilePath ) )
-		LOG->Trace( "Couldn't open mapping file \"%s\": %s.",
+		LOG_TRACE(Log::Input, "Couldn't open mapping file \"%s\": %s.",
 					SpecialFiles::KEYMAPS_PATH.c_str(), ini.GetError().c_str() );
 
 	if( bIsAutoMapping )

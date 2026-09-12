@@ -186,17 +186,17 @@ void InputFilter::ButtonPressed( const DeviceInput &di )
 	LockMut(*queuemutex);
 
 	if( di.ts.IsZero() )
-		LOG->Warn( "InputFilter::ButtonPressed: zero timestamp is invalid" );
+		LOG_WARN(Log::Input, "InputFilter::ButtonPressed: zero timestamp is invalid" );
 
 	// Filter out input that is beyond the range of the current system.
 	if(di.device >= NUM_InputDevice)
 	{
-		LOG->Trace("InputFilter::ButtonPressed: Invalid device %i", di.device);
+		LOG_WARN(Log::Input, "InputFilter::ButtonPressed: Invalid device %i", di.device);
 		return;
 	}
 	if(di.button >= NUM_DeviceButton)
 	{
-		LOG->Trace("InputFilter::ButtonPressed: Invalid button %i", di.button);
+		LOG_WARN(Log::Input, "InputFilter::ButtonPressed: Invalid button %i", di.button);
 		return;
 	}
 
