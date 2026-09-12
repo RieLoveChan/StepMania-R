@@ -2551,3 +2551,21 @@
   No parsing/behavior logic changed; not §5-protected.
   Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
   `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+
+* **item 18 (ADR 0005 phase 4) batch 6, 2026-09-11.** Migrated
+  `StepMania.cpp` (23 real sites -> `Log::General`, the top-level
+  application/main-loop file with no single subsystem category fit;
+  3 grep hits are pre-existing commented-out input-debug calls, left
+  untouched). Kept both existing `Warn` sites at `WARN` (a saved
+  game-type preference that's no longer available, falling back to
+  the default; an unknown `--game` command-line argument being
+  ignored -- real, if recoverable, config/input problems). Downgraded
+  one `Warn`->`INFO`: "video renderer list has been changed from X to
+  Y" is the code noting a config divergence from card defaults and
+  continuing normally, not a problem -- `WARN` was the wrong altitude.
+  Everything else (startup banner/version/command-line-args dump,
+  video-card-default detection, coin-mech bookkeeping, screenshot
+  timing) was already correctly leveled `Trace`/`Info` and just got a
+  category. No parsing/behavior logic changed; not §5-protected.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
