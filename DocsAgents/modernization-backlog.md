@@ -1674,6 +1674,28 @@ spec is the whole config.)
   Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
   `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
   ~114 files remain on the corrected list.
+  **Ph4 batch 15 (2026-09-12).** `XmlToLua.cpp` (6 sites, `Log::File`
+  — this is the XML-actor-def-to-Lua conversion utility; the "error
+  loading xml" and "could not open output file" sites in the core
+  `convert_xml_file` entry point upgraded `Trace`→`ERROR`, the
+  optional sprite/model sub-file "failed to read" sites kept `Trace`
+  since those files are legitimately optional per-actor), `SongManager.cpp`
+  (6 sites, `Log::Song`, all already-correct routine `Trace`),
+  `RageTextureManager.cpp` (6 sites, `Log::Cache` — the
+  `"TEXTUREMAN LEAK"` shutdown-time refcount check upgraded
+  `Trace`→`WARN`, a genuine resource-leak indicator; the rest are
+  routine texture-inventory `Trace` dumps), `NoteField.cpp` (2 real
+  sites, `Log::Actor`, both already-correct routine `Trace`),
+  `GameState.cpp` (4 sites, `Log::General` — no dedicated category
+  fits the central game-state singleton; the "`BeginStage` called
+  twice" invariant-violation warning kept `WARN`, the blacklisted-name
+  match upgraded `Trace`→`WARN` for the same "notable, audit-worthy
+  guard event" reasoning as other content/security guards in this
+  sweep, the two gameplay-flow traces stayed `Trace`). No parsing/
+  behavior logic changed anywhere.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+  ~109 files remain on the corrected list.
 
 ### 20. Replace the archaic hard-coded game-type system
 Game types are defined by hand-written `static const Game g_Game_X = {…}`

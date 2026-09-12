@@ -2757,3 +2757,19 @@
   Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
   `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
   ~114 files remain on the corrected list.
+
+* **item 18 (ADR 0005 phase 4) batch 15, 2026-09-12.** `XmlToLua.cpp`
+  (6 sites -> `Log::File`; the core `convert_xml_file` entry point's
+  "error loading xml"/"could not open output file" upgraded
+  `Trace`->`ERROR`, the optional sprite/model sub-file reads kept
+  `Trace`), `SongManager.cpp` (6 sites -> `Log::Song`, all
+  already-correct), `RageTextureManager.cpp` (6 sites -> `Log::Cache`;
+  the `"TEXTUREMAN LEAK"` shutdown refcount check upgraded
+  `Trace`->`WARN`, a genuine leak indicator), `NoteField.cpp` (2 sites
+  -> `Log::Actor`, already-correct), `GameState.cpp` (4 sites ->
+  `Log::General`; the `BeginStage`-called-twice invariant-violation
+  warning kept `WARN`, the blacklisted-name match upgraded
+  `Trace`->`WARN`). No parsing/behavior logic changed.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+  ~109 files remain on the corrected list.
