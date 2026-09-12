@@ -240,7 +240,7 @@ static void Language( int &sel, bool ToSel, const ConfOption* /* pConfOption */ 
 
 		if( sel == -1 )
 		{
-			LOG->Warn( "Couldn't find language \"%s\" or fallback \"%s\"; using \"%s\"",
+			LOG_WARN(Log::Screen, "Couldn't find language \"%s\" or fallback \"%s\"; using \"%s\"",
 				THEME->GetCurLanguage().c_str(), SpecialFiles::BASE_LANGUAGE.c_str(), vs[0].c_str() );
 			sel = 0;
 		}

@@ -60,7 +60,7 @@ static void PNG_Error( png_struct *pPng, const char *szError )
 
 static void PNG_Warning( png_struct */* png */, const char *warning )
 {
-	LOG->Trace( "saving PNG: warning: %s", warning );
+	LOG_TRACE(Log::File, "saving PNG: warning: %s", warning );
 }
 
 /* Since libpng forces us to use longjmp, this function shouldn't create any C++

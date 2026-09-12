@@ -31,7 +31,7 @@ int RageSoundReader::RetriedRead(float* pBuffer, int iFrames, int* iSourceFrame,
 		}
 	}
 
-	LOG->Warn("WARNING: could not read from the sound file. Giving up.");
+	LOG_WARN(Log::Sound, "WARNING: could not read from the sound file. Giving up.");
 
 	// Pretend we got EOF.
 	return RageSoundReader::END_OF_FILE;

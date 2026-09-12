@@ -148,7 +148,7 @@ static void LoadFromSMNoteDataStringWithPlayer( NoteData& out, const RString &sS
 					if( !out.IsHoldNoteAtRow( iTrack, iIndex, &iHeadRow ) )
 					{
 						int n = static_cast<int>(std::intptr_t(endLine) - std::intptr_t(beginLine));
-						LOG->Warn( "Unmatched 3 in \"%.*s\"", n, beginLine );
+						LOG_WARN(Log::Song, "Unmatched 3 in \"%.*s\"", n, beginLine );
 					}
 					else
 					{

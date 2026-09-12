@@ -114,7 +114,7 @@ void PlayerState::ResetToDefaultPlayerOptions( ModsLevel l )
  * is set.  This is also called by GameState::Update when activating a queued attack. */
 void PlayerState::LaunchAttack( const Attack& a )
 {
-	LOG->Trace( "Launch attack '%s' against P%d at %f", a.sModifiers.c_str(), m_PlayerNumber+1, a.fStartSecond );
+	LOG_TRACE(Log::General, "Launch attack '%s' against P%d at %f", a.sModifiers.c_str(), m_PlayerNumber+1, a.fStartSecond );
 
 	Attack attack = a;
 

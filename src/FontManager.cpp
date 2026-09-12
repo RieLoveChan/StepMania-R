@@ -23,7 +23,7 @@ FontManager::~FontManager()
 		const FontName &fn = i->first;
 		Font* pFont = i->second;
 		if(pFont->m_iRefCount > 0) {
-			LOG->Trace( "FONT LEAK: '%s', RefCount = %d.", fn.first.c_str(), pFont->m_iRefCount );
+			LOG_TRACE(Log::Font, "FONT LEAK: '%s', RefCount = %d.", fn.first.c_str(), pFont->m_iRefCount );
 		}
 		delete pFont;
 	}

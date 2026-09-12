@@ -83,7 +83,7 @@ void ComboGraph::Set( const StageStats &s, const PlayerStageStats &pss )
 
 		const bool bIsMax = (combo.GetStageCnt() == iMaxComboSize);
 
-		LOG->Trace( "combo %i is %f+%f of %f", i, combo.m_fStartSecond, combo.m_fSizeSeconds, fLastSecond );
+		LOG_TRACE(Log::Actor, "combo %i is %f+%f of %f", i, combo.m_fStartSecond, combo.m_fSizeSeconds, fLastSecond );
 		Actor *pSprite = bIsMax? m_pMaxCombo->Copy() : m_pNormalCombo->Copy();
 
 		const float fStart = SCALE( combo.m_fStartSecond, fFirstSecond, fLastSecond, 0.0f, 1.0f );

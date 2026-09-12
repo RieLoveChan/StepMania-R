@@ -371,7 +371,7 @@ void SongUtil::DeleteDuplicateSteps( Song *pSong, std::vector<Steps*> &vSteps )
 			if( RemoveInitialWhitespace(sSMNoteData1) != RemoveInitialWhitespace(sSMNoteData2) )
 				continue;
 
-			LOG->Trace("Removed %p duplicate steps in song \"%s\" with description \"%s\", step author \"%s\", and meter \"%i\"",
+			LOG_TRACE(Log::Song, "Removed %p duplicate steps in song \"%s\" with description \"%s\", step author \"%s\", and meter \"%i\"",
 				static_cast<const void*>(s2), pSong->GetSongDir().c_str(), s1->GetDescription().c_str(), s1->GetCredit().c_str(), s1->GetMeter() );
 
 			pSong->DeleteSteps( s2, false );

@@ -20,7 +20,7 @@ ModelManager::~ModelManager()
 	{
 		RageModelGeometry* pGeom = i->second;
 		if( pGeom->m_iRefCount )
-			LOG->Trace( "MODELMAN LEAK: '%s', RefCount = %d.", i->first.c_str(), pGeom->m_iRefCount );
+			LOG_TRACE(Log::Cache, "MODELMAN LEAK: '%s', RefCount = %d.", i->first.c_str(), pGeom->m_iRefCount );
 		SAFE_DELETE( pGeom );
 	}
 }

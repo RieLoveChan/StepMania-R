@@ -360,7 +360,7 @@ public:
 
 		if ((mode & RageFile::WRITE) && FILEMAN->IsPathProtected(path))
 		{
-			LOG->Warn("Writing to %s is not allowed", path.c_str());
+			LOG_WARN(Log::File, "Writing to %s is not allowed", path.c_str());
 			lua_pushboolean(L, false);
 			return 1;
 		}

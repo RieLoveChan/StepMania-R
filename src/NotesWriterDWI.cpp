@@ -319,7 +319,7 @@ static bool WriteDWINotesTag( RageFile &f, const Steps &out )
 	if( out.GetDifficulty() == Difficulty_Edit )
 		return false;	// not supported by DWI
 
-	LOG->Trace( "Steps::WriteDWINotesTag" );
+	LOG_TRACE(Log::Song, "Steps::WriteDWINotesTag" );
 
 	switch( out.m_StepsType )
 	{

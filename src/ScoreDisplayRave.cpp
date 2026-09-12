@@ -9,7 +9,7 @@
 
 ScoreDisplayRave::ScoreDisplayRave()
 {
-	LOG->Trace( "ScoreDisplayRave::ScoreDisplayRave()" );
+	LOG_TRACE(Log::Actor, "ScoreDisplayRave::ScoreDisplayRave()" );
 
 	m_lastLevelSeen = ATTACK_LEVEL_1;
 

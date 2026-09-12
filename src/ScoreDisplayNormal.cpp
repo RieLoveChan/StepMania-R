@@ -11,7 +11,7 @@
 
 ScoreDisplayNormal::ScoreDisplayNormal()
 {
-	LOG->Trace( "ScoreDisplayNormal::ScoreDisplayNormal()" );
+	LOG_TRACE(Log::Actor, "ScoreDisplayNormal::ScoreDisplayNormal()" );
 
 	RString sType = "ScoreDisplayNormal";
 

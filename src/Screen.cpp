@@ -68,7 +68,7 @@ void Screen::Init()
 	split( PREPARE_SCREENS, ",", asList );
 	for( unsigned i = 0; i < asList.size(); ++i )
 	{
-		LOG->Trace( "Screen \"%s\" preparing \"%s\"", m_sName.c_str(), asList[i].c_str() );
+		LOG_TRACE(Log::Screen, "Screen \"%s\" preparing \"%s\"", m_sName.c_str(), asList[i].c_str() );
 		SCREENMAN->PrepareScreen( asList[i] );
 	}
 

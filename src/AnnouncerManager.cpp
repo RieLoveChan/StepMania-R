@@ -135,7 +135,7 @@ RString AnnouncerManager::GetPathTo( RString sAnnouncerName, RString sFolderName
 	/* No announcer directory matched.  In debug, create the directory by
 	 * its preferred name. */
 #ifdef DEBUG
-	LOG->Trace( "The announcer in '%s' is missing the folder '%s'.",
+	LOG_TRACE(Log::General, "The announcer in '%s' is missing the folder '%s'.",
 		AnnouncerPath.c_str(), sFolderName.c_str() );
 //	MessageBeep( MB_OK );
 	RageFile temp;

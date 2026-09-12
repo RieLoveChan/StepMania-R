@@ -161,7 +161,7 @@ std::int64_t pos_map_queue::Search( std::int64_t iSourceFrame, bool */* bApproxi
 	if( last.PeekDeltaTime() >= 1.0f )
 	{
 		last.Touch();
-		LOG->Trace("Audio frame was out of range of the data sent - possible buffer underflow? This is not always an error, however if you see it frequently there could be sound buffer problems.");
+		LOG_TRACE(Log::Sound, "Audio frame was out of range of the data sent - possible buffer underflow? This is not always an error, however if you see it frequently there could be sound buffer problems.");
 	}
 
 	return iClosestPosition;

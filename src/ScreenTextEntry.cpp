@@ -376,7 +376,7 @@ void ScreenTextEntry::TextEntrySettings::FromStack( lua_State *L )
 {
 	if( lua_type(L, 1) != LUA_TTABLE )
 	{
-		LOG->Trace("not a table");
+		LOG_TRACE(Log::Screen, "not a table");
 		return;
 	}
 
