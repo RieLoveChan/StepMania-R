@@ -1056,7 +1056,7 @@ void Profile::IncrementCategoryPlayCount( StepsType st, RankingCategory rc )
 #define WARN_AND_BREAK_M(m) { WARN_M(m); break; }
 #define LOAD_NODE(X)	{ \
 	const XNode* X = xml->GetChild(#X); \
-	if( X== nullptr ) LOG->Warn("Failed to read section " #X); \
+	if( X== nullptr ) LOG_ERROR(Log::Profile, "Failed to read section " #X); \
 	else Load##X##FromNode(X); }
 
 void Profile::LoadCustomFunction(RString sDir, PlayerNumber pn)
@@ -1157,7 +1157,7 @@ void Profile::HandleStatsPrefixChange(RString dir, bool require_signature)
 
 ProfileLoadResult Profile::LoadAllFromDir( RString sDir, bool bRequireSignature )
 {
-	LOG->Trace( "Profile::LoadAllFromDir( %s )", sDir.c_str() );
+	LOG_TRACE(Log::Profile, "Profile::LoadAllFromDir( %s )", sDir.c_str() );
 
 	ASSERT( sDir.Right(1) == "/" );
 
@@ -1190,14 +1190,14 @@ void Profile::LoadSongsFromDir(RString const& dir, ProfileSlot prof_slot)
 	RString songs_folder= dir + "Songs";
 	if(FILEMAN->DoesFileExist(songs_folder))
 	{
-		LOG->Trace("Found songs folder in profile.");
+		LOG_TRACE(Log::Profile, "Found songs folder in profile.");
 		std::vector<RString> song_folders;
 		RageTimer song_load_start_time;
 		song_load_start_time.Touch();
 		FILEMAN->GetDirListing(songs_folder + "/*", song_folders, true, true);
 		StripCvsAndSvn(song_folders);
 		StripMacResourceForks(song_folders);
-		LOG->Trace("Found %i songs in profile.", int(song_folders.size()));
+		LOG_TRACE(Log::Profile, "Found %i songs in profile.", int(song_folders.size()));
 		// Only songs that are successfully loaded count towards the limit. -Kyz
 		for(std::size_t song_index= 0; song_index < song_folders.size()
 					&& m_songs.size() < PREFSMAN->m_custom_songs_max_count;
@@ -1208,7 +1208,7 @@ void Profile::LoadSongsFromDir(RString const& dir, ProfileSlot prof_slot)
 			if(!new_song->LoadFromSongDir(song_dir_name, false, prof_slot))
 			{
 				// The song failed to load.
-				LOG->Trace("Song %s failed to load.", song_dir_name.c_str());
+				LOG_WARN(Log::Profile, "Song %s failed to load.", song_dir_name.c_str());
 				delete new_song;
 			}
 			else
@@ -1222,11 +1222,11 @@ void Profile::LoadSongsFromDir(RString const& dir, ProfileSlot prof_slot)
 			}
 		}
 		float load_time= song_load_start_time.Ago();
-		LOG->Trace("Successfully loaded %zu songs in %.6f from profile.", m_songs.size(), load_time);
+		LOG_TRACE(Log::Profile, "Successfully loaded %zu songs in %.6f from profile.", m_songs.size(), load_time);
 	}
 	else
 	{
-		LOG->Trace("No songs folder in profile.");
+		LOG_TRACE(Log::Profile, "No songs folder in profile.");
 	}
 }
 
@@ -1251,7 +1251,7 @@ ProfileLoadResult Profile::LoadStatsFromDir(RString dir, bool require_signature)
 	std::unique_ptr<RageFileBasic> pFile(FILEMAN->Open(fn, RageFile::READ, iError));
 	if(pFile.get() == nullptr)
 	{
-		LOG->Trace("Error opening %s: %s", fn.c_str(), strerror(iError));
+		LOG_ERROR(Log::Profile, "Error opening %s: %s", fn.c_str(), strerror(iError));
 		return ProfileLoadResult_FailedTampered;
 	}
 
@@ -1262,7 +1262,7 @@ ProfileLoadResult Profile::LoadStatsFromDir(RString dir, bool require_signature)
 		RageFileObjInflate *pInflate = GunzipFile(pFile.release(), sError, &iCRC32);
 		if(pInflate == nullptr)
 		{
-			LOG->Trace("Error opening %s: %s", fn.c_str(), sError.c_str());
+			LOG_ERROR(Log::Profile, "Error opening %s: %s", fn.c_str(), sError.c_str());
 			return ProfileLoadResult_FailedTampered;
 		}
 
@@ -1285,30 +1285,30 @@ ProfileLoadResult Profile::LoadStatsFromDir(RString dir, bool require_signature)
 		RString sStatsXmlSigFile = fn+SIGNATURE_APPEND;
 		RString sDontShareFile = dir + DONT_SHARE_SIG;
 
-		LOG->Trace("Verifying don't share signature \"%s\" against \"%s\"", sDontShareFile.c_str(), sStatsXmlSigFile.c_str());
+		LOG_TRACE(Log::Profile, "Verifying don't share signature \"%s\" against \"%s\"", sDontShareFile.c_str(), sStatsXmlSigFile.c_str());
 		// verify the stats.xml signature with the "don't share" file
 		if(!CryptManager::VerifyFileWithFile(sStatsXmlSigFile, sDontShareFile))
 		{
 			LuaHelpers::ReportScriptErrorFmt("The don't share check for '%s' failed.  Data will be ignored.", sStatsXmlSigFile.c_str());
 			return ProfileLoadResult_FailedTampered;
 		}
-		LOG->Trace("Done.");
+		LOG_TRACE(Log::Profile, "Done.");
 
 		// verify stats.xml
-		LOG->Trace("Verifying stats.xml signature");
+		LOG_TRACE(Log::Profile, "Verifying stats.xml signature");
 		if(!CryptManager::VerifyFileWithFile(fn, sStatsXmlSigFile))
 		{
 			LuaHelpers::ReportScriptErrorFmt("The signature check for '%s' failed.  Data will be ignored.", fn.c_str());
 			return ProfileLoadResult_FailedTampered;
 		}
-		LOG->Trace("Done.");
+		LOG_TRACE(Log::Profile, "Done.");
 	}
 
-	LOG->Trace("Loading %s", fn.c_str());
+	LOG_TRACE(Log::Profile, "Loading %s", fn.c_str());
 	XNode xml;
 	if(!XmlFileUtil::LoadFromFileShowErrors(xml, *pFile.get()))
 		return ProfileLoadResult_FailedTampered;
-	LOG->Trace("Done.");
+	LOG_TRACE(Log::Profile, "Done.");
 
 	return LoadStatsXmlFromNode(&xml);
 }
@@ -1454,7 +1454,7 @@ XNode *Profile::SaveStatsXmlCreateNode() const
 
 bool Profile::SaveStatsXmlToDir( RString sDir, bool bSignData ) const
 {
-	LOG->Trace( "SaveStatsXmlToDir: %s", sDir.c_str() );
+	LOG_TRACE(Log::Profile, "SaveStatsXmlToDir: %s", sDir.c_str() );
 	std::unique_ptr<XNode> xml( SaveStatsXmlCreateNode() );
 
 	sDir= sDir + PROFILEMAN->GetStatsPrefix();
