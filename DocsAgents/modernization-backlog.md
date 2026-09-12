@@ -879,6 +879,39 @@ Verified: `sm_tests` 5966/226 unchanged, `[Grade]` characterization tag
 `--SelfTest` exit 0. **Playbook's core claim validated — safe to
 continue picking small leaf subsystems opportunistically.**
 
+**Pilot #2 (2026-09-12): `Command.cpp`/`Command.h`.** Second small
+leaf subsystem (~20 total `RString` mentions). `Command::GetName()`,
+`Command::GetOriginalCommandString()`, `Commands::GetOriginalCommandString()`,
+and the `Command::Arg::s` member all migrated `RString`→`std::string`.
+Internal storage (`m_vsArgs` as `std::vector<RString>`, `Load()`'s and
+`ParseCommands()`'s `const RString&` parameters, and the `split()`/`join()`
+calls) deliberately **left as `RString`** — `RageUtil`'s `split`/`join`
+take `std::vector<RString>&`/`const std::vector<RString>&`, and
+`std::vector<Derived>` has no relationship to `std::vector<Base>` (no
+container covariance), so migrating the vector's element type would
+require migrating those `RageUtil` signatures too — out of scope for
+one bounded subsystem pass, exactly the "big boundary, pick a
+different subsystem" case the playbook warns about. Scalar-value
+boundaries (a single `RString`/`std::string` copy, not a container)
+stayed safe throughout, confirmed via `StdString.h:361`'s converting
+constructor.
+**Found one real hard boundary** (not just "verify it compiles" —
+an actual blocker): `Difficulty.h`'s `StringToDifficulty(const RString&)`
+takes its argument by **reference to the derived type**, which a
+plain `std::string` argument cannot bind to (only the reverse
+direction — derived-to-base reference binding — is implicit). Its two
+call sites in `UnlockManager.cpp` (`e.m_cmd.GetArg(1).s` now being
+`std::string`) needed an explicit `RString(...)` wrap. This is the
+converse of the direction the playbook calls out as safe, so it's now
+recorded as a distinct gotcha in the playbook. All other boundary
+calls in `UnlockManager.cpp`/`OptionRowHandler.cpp`/`GameCommand.cpp`/
+`LuaManager.cpp` (by-value `RString` parameters, `const std::string&`
+parameters like `StringToInt`, `RString` variable assignment,
+`.c_str()`) needed no changes — implicit conversion handled them.
+Verified: `sm_tests` 5966/226 unchanged, `[Command]` characterization
+tag 26/6 unchanged, `ctest` 100%, Release `StepMania-R.exe` clean
+rebuild, `--SelfTest` exit 0.
+
 ### 11. Pre-C++11 threading / smart pointers
 `RageThreads` predates `std::thread`/`std::mutex`;
 `RageUtil_AutoPtr.h` ("TODO: replace with c++11 smart pointers");
