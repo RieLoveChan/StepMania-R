@@ -65,6 +65,33 @@ if a boundary gotcha turned up, plus `log.md`.
 
 # Gotchas
 
+- **A `const RString&` (or `RString&`) parameter is a hard boundary,
+  not a soft one.** The playbook's "boundary is usually fine" claim
+  (step 4) is about the *safe* direction: passing an `RString` where
+  `const std::string&`/`std::string` (by value) is expected, or
+  returning `std::string` where a caller stores it into an `RString`
+  variable — both work because `RString` derives from `std::string`
+  and has a converting constructor from it (`StdString.h:361`). The
+  **reverse** direction does not: a plain `std::string` argument cannot
+  bind to a parameter typed `const RString&`/`RString&` (reference to
+  the *derived* type), since that would require an implicit
+  base-to-derived conversion, which doesn't exist. If a not-yet-
+  migrated function you call takes `RString` by reference (not by
+  value, not `const std::string&`), a `std::string` argument needs an
+  explicit `RString(...)` wrap at the call site — found in practice
+  migrating `Command.cpp` (`Difficulty.h`'s `StringToDifficulty(const
+  RString&)`, fixed with 2 explicit wraps in `UnlockManager.cpp`).
+- **Containers don't inherit the boundary safety.** `std::vector<Derived>`
+  has no relationship to `std::vector<Base>` — there's no container
+  covariance in C++. If a subsystem's own vector/map of strings is
+  passed to a not-yet-migrated function expecting
+  `std::vector<RString>&` (e.g. `RageUtil`'s `split`/`join`), you
+  cannot migrate that container's element type without also migrating
+  the function it's passed to. Keep such internal containers as
+  `RString` and only migrate the *scalar* values that cross the
+  boundary (a single string return/copy, not the container itself) —
+  this is what kept `Command.cpp`'s `m_vsArgs` as `std::vector<RString>`
+  while still migrating the public API's individual string returns.
 - **`printf`-family + `std::string`:** `ssprintf("%s", s.c_str())` — a
   bare `std::string` into a varargs `%s` is UB. `RString` sometimes
   papered over this; do not carry the bug.
@@ -110,3 +137,14 @@ if a boundary gotcha turned up, plus `log.md`.
   leaf files first (`RString` mention count, not file size) — good
   next candidates are similarly small single-purpose util/data files
   with few cross-file string-returning functions.
+- 2026-09-12 — second subsystem migrated: `Command.cpp`/`Command.h`
+  (~20 `RString` mentions). Migrated only the *scalar* boundary values
+  (`GetName()`, `GetOriginalCommandString()` on both `Command` and
+  `Commands`, the `Arg::s` member) to `std::string`; deliberately kept
+  internal storage (`m_vsArgs`, the `Load()`/`ParseCommands()`
+  parameters, the `split()`/`join()` calls) as `RString` per the new
+  container gotcha above. Found the hard-boundary gotcha above in
+  practice (`Difficulty.h`'s `StringToDifficulty(const RString&)`
+  needed 2 explicit `RString(...)` wraps in `UnlockManager.cpp`). Full
+  gate green (`sm_tests` unchanged, `[Command]` tag 26/6 unchanged,
+  `ctest`, Release, `--SelfTest`).
