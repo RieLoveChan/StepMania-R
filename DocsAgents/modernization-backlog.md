@@ -1262,7 +1262,7 @@ plain dead `#if 0 ... #endif` (candidate for removal), an active
 other branch is live), and a toolchain-EOL block like the VC6 ones
 above (enable, don't delete).
 
-### 18. Logging overhaul — phases 1-3 DONE, phase 4 IN PROGRESS (methodology correction below)
+### 18. Logging overhaul — ALL 4 PHASES DONE (2026-09-12, batch 22; see closure note after the batch history below)
 Phase 1 (`c82d0e9058`): bracketed level tags, `Error()` level, no
 `/////`, `Char Widths` fixed. `--SelfTest` log 695→467 lines, clean.
 **Phase 2 DONE (2026-09-08, `156c075ff3` + `3a53baad5f`):**
@@ -1905,6 +1905,26 @@ spec is the whole config.)
   `Player.cpp`'s already-resolved 47 raw/1-real count) — regenerate via
   `grep -cE "LOG->Trace|LOG->Warn|LOG->Info" src/*.cpp | sort -rn` to
   confirm the true remaining count before declaring phase 4 complete.
+
+  **CLOSURE (2026-09-12, same day as batch 22): phase 4 is now
+  genuinely complete, this time verified via a true fresh full-tree
+  re-sweep** — learning explicitly from the earlier premature-
+  completion mistake (the correction note above this batch history).
+  Every file the re-sweep's raw grep count still flags is now one of:
+  (a) fully migrated, with only dead `//`/`/* */`-commented lines
+  raising the count (confirmed file-by-file across batches 12-22); (b)
+  a file the whole session has deliberately left untouched pending a
+  maintainer decision — the item 29 SMOnline/multiplayer cluster
+  (`NetworkSyncManager.cpp`, `ScreenSMOnlineLogin.cpp`,
+  `ScreenNetEvaluation.cpp`, `RoomWheel.cpp`, etc.) and the newly-found
+  item 29 package-downloader pair (`ScreenPackages.cpp`,
+  `FileDownload.cpp`) — both orphaned from the CMake build; or (c)
+  `RageFileManager_ReadAhead.cpp`'s permanently dead `#if 0` block
+  (batch 18 finding). No non-blocking file remains unmigrated. 22
+  batches total for phase 4 (batches 1-11 on the original top-30 list,
+  batches 12-22 on the corrected full-tree list after the methodology
+  fix) — see `DocsAgents/log.md` for the complete batch-by-batch
+  history. **Item 18 is closed.**
 
 ### 20. Replace the archaic hard-coded game-type system
 Game types are defined by hand-written `static const Game g_Game_X = {…}`
