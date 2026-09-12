@@ -1451,6 +1451,33 @@ spec is the whole config.)
   (48) — both need a slower, more careful pass (characterization-test
   re-verification for the former; extra care for the latter given its
   size/hotspot status), not a routine batch.
+  **Ph4 batch 8 (2026-09-12), first §5-protected batch:**
+  `TimingSegments.cpp` (12 sites, `Log::Song`) and the 3 real
+  (non-`UserLog`) sites in `NotesLoaderKSF.cpp` (also `Log::Song`; its
+  6 `LOG->UserLog(...)` calls stay untouched, same out-of-scope
+  reasoning as every other loader file — a separate user.txt facility
+  with no `LOG_*` equivalent). `TimingSegments.cpp` turned out to be
+  the cleanest possible pilot for the §5 lane: all 12 sites are
+  identical-shape `DebugPrint()` overrides on each `TimingSegment`
+  subclass (`BPMSegment`, `StopSegment`, `WarpSegment`, etc.), pure
+  diagnostic formatting with zero decision logic — no triage judgment
+  needed, all stayed `LOG_TRACE`. `NotesLoaderKSF.cpp`'s 3 sites
+  (a `BPM`-conversion helper's trace, `LoadFromKSFFile`'s entry trace,
+  `LoadFromDir`'s entry trace) were likewise already-correct routine
+  `Trace` calls, just categorized. Re-verified against
+  characterization tests before AND after the edit: `[TimingData]`
+  40/9 and `[ksf]` 31/2, both identical — confirming pure category/
+  level tagging with zero parsing/behavior change, per the §5 gate.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+  Remaining §5 files (by size): `NotesLoaderSM.cpp` (39 raw hits, but
+  most are likely `UserLog` given the pattern seen in every other
+  loader — real count TBD per file), `CourseLoaderCRS.cpp` (27),
+  `NotesLoaderSSC.cpp` (26), `Song.cpp` (25), `NotesLoaderBMS.cpp`
+  (18), `NotesLoaderDWI.cpp` (14), `NotesLoaderSMA.cpp` (12),
+  `TimingData.cpp` (11) — same treatment each time: filter out
+  `UserLog`, triage only the real `Trace`/`Warn`/`Info` sites, re-run
+  that file's characterization test before and after.
 
 ### 20. Replace the archaic hard-coded game-type system
 Game types are defined by hand-written `static const Game g_Game_X = {…}`
