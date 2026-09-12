@@ -2689,3 +2689,20 @@
   done, 11 batches total for phase 4 alone, spanning non-§5 files, the
   whole §5-protected simfile-parser lane, and `Player.cpp`, with zero
   parsing/behavior regressions throughout.
+
+* **item 18 phase 4 CORRECTION, 2026-09-12 (same day).** The "phase 4
+  complete" entry above was wrong. All 11 batches worked from a fixed
+  top-30 file list captured once at the start of phase-4 recon --
+  every batch picked files off that original list, but the list was
+  never a full sweep and no final re-sweep of all of `src/` was done
+  before declaring it done. A fresh sweep (`grep -cE "LOG->Trace|
+  LOG->Warn|LOG->Info" src/*.cpp`, UserLog still excluded) found
+  **127 more files, ~430+ more sites** that were simply never on the
+  original list -- `PlayerStageStats.cpp` (12), `ScreenGameplay.cpp`
+  (11), `RageUtil.cpp` (11), `ScreenManager.cpp` (10),
+  `RageDisplay_GLES2.cpp` (10), down to a long 1-site tail. This is
+  the exact same methodology trap already documented for item 2's
+  C4244/C4267 sweep -- a curated work-list snapshot is not a
+  substitute for a final full-tree re-sweep before calling something
+  done. Phase 4 resumes as an actual long tail from here, no longer
+  batching off the stale list.
