@@ -854,6 +854,31 @@ one cluster per PR, always §4.
 **Action:** [`playbooks/migrate-rstring.md`](./playbooks/migrate-rstring.md),
 per subsystem, opportunistic.
 
+**Pilot #1 (2026-09-12): `Grade.cpp`/`Grade.h`.** Smallest possible
+leaf subsystem (10 total `RString` mentions) to validate the playbook's
+boundary-safety claim in practice. `GradeToString` (header-inline),
+`GradeToOldString`, `GradeToLocalizedString` (return `RString`→
+`std::string`) and `StringToGrade` (param `const RString&`→
+`const std::string&`) migrated; `StringToGrade`'s local
+`s.MakeUpper()` (a `CStdString`-only method, not on `std::string`)
+replaced with the `RageUtil` free function
+`if(!s.empty()) MakeUpper(&s[0], s.size())`, mirroring `CStdStr::MakeUpper()`'s
+own implementation (`StdString.h`) which does the identical empty-guard
++ in-place-buffer call. Confirmed via `StdString.h:361`
+(`CStdStr(const std::string& str): MYBASE(str)`) that the boundary
+works in **both** directions with zero call-site changes needed: a
+`std::string` implicitly converts to `RString` (converting ctor) when
+passed to or assigned into not-yet-migrated code, and an `RString`
+implicitly satisfies a `const std::string&` parameter (`CStdString`
+derives from `std::basic_string<char>`). 8 caller files
+(`GradeDisplay.cpp`, `HighScore.cpp`, `NetworkSyncManager.cpp`,
+`PlayerStageStats.cpp`, `Profile.cpp`, `ScreenEvaluation.cpp`,
+`SongUtil.cpp`, `Grade.h`'s own macro users) all compiled unchanged.
+Verified: `sm_tests` 5966/226 unchanged, `[Grade]` characterization tag
+38/4 unchanged, `ctest` 100%, Release `StepMania-R.exe` clean rebuild,
+`--SelfTest` exit 0. **Playbook's core claim validated — safe to
+continue picking small leaf subsystems opportunistically.**
+
 ### 11. Pre-C++11 threading / smart pointers
 `RageThreads` predates `std::thread`/`std::mutex`;
 `RageUtil_AutoPtr.h` ("TODO: replace with c++11 smart pointers");

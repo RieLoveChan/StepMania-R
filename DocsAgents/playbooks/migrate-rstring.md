@@ -94,3 +94,19 @@ if a boundary gotcha turned up, plus `log.md`.
 - 2026-09-02 — created from recon: `global.h:107`, `StdString.h` API
   surface, usage counts. No subsystem migrated yet — first executor
   fills in a "known-good order" list of subsystems here.
+- 2026-09-12 — first subsystem migrated: `Grade.cpp`/`Grade.h` (10
+  `RString` mentions, the smallest leaf subsystem in the codebase).
+  Confirmed the boundary-safety claim in step 4 holds in practice with
+  zero caller-side changes across 8 caller files: `CStdStr(const
+  std::string&)` (`StdString.h:361`) makes `std::string`→`RString`
+  implicit, and `CStdString`'s inheritance from `std::basic_string<char>`
+  makes `RString`→`const std::string&` implicit. The one gotcha hit:
+  `.MakeUpper()`/`.MakeLower()` are `CStdString`-only methods with no
+  direct `std::string` equivalent — use the `RageUtil` free function
+  guarded exactly like `CStdStr::MakeUpper()` itself does:
+  `if(!s.empty()) MakeUpper(&s[0], s.size());`. Full gate green
+  (`sm_tests` unchanged, `[Grade]` tag unchanged, `ctest`, Release,
+  `--SelfTest`). **Known-good order so far:** start with the smallest
+  leaf files first (`RString` mention count, not file size) — good
+  next candidates are similarly small single-purpose util/data files
+  with few cross-file string-returning functions.
