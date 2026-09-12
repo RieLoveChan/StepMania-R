@@ -2841,3 +2841,16 @@
   Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
   `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
   ~82 files remain on the corrected list.
+
+* **item 18 (ADR 0005 phase 4) batch 20, 2026-09-12.** `WheelBase.cpp`
+  (2 -> `Log::Actor`), `UnlockManager.cpp` (2 -> `Log::Song`),
+  `StatsManager.cpp` (2 -> `Log::Profile`), `StageStats.cpp` (2 ->
+  `Log::Profile`) -- all already-correct. `ScreenWithMenuElements.cpp`
+  (2 -> `Log::Screen`, both upgraded `Trace`->`WARN` -- real
+  theme-Lua-script failures despite the informal message text).
+  `ScreenServiceAction.cpp` (2), `ScreenSelectCharacter.cpp` (2),
+  `ScreenSelect.cpp` (1) -- all `Log::Screen`, already-correct. No
+  parsing/behavior logic changed.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+  ~75 files remain on the corrected list.
