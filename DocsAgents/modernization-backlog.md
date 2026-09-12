@@ -1725,6 +1725,25 @@ spec is the whole config.)
   Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
   `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
   ~101 files remain on the corrected list.
+  **Ph4 batch 17 (2026-09-12).** `RageUtil_FileDB.cpp` (3 sites,
+  `Log::File` — two documented-precondition violations
+  ("m_Mutex was locked" when the API contract explicitly says it must
+  not be) upgraded `Warn`→`ERROR`; "Slow cache due to" kept `WARN` as
+  a routine perf diagnostic), `RageSoundReader_Chain.cpp` (3 real
+  sites — a 4th grep hit sits inside a `/* ... */` block, caught by
+  the same `awk` comment-state check used for `Player.cpp`;
+  `Log::Sound`; "error opening sound" upgraded `Trace`→`ERROR`, the
+  discarded-channel-mismatch and rate-desync warnings kept `WARN`,
+  matching `RageSoundReader_Merge.cpp`'s precedent), `OptionRowHandler.cpp`
+  (1 real site, `Log::Screen` — a theme/config issue: an option row
+  with nothing selectable and no fallback, kept `WARN`), `Course.cpp`
+  (2 real sites, `Log::Song` — an unrecognized sort-type reaching the
+  `default:` case, whose own message already reads "invalid??",
+  upgraded `Trace`→`WARN`; the "Total feet" stat dump kept `Trace`).
+  No parsing/behavior logic changed anywhere.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+  ~97 files remain on the corrected list.
 
 ### 20. Replace the archaic hard-coded game-type system
 Game types are defined by hand-written `static const Game g_Game_X = {…}`

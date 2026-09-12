@@ -2793,3 +2793,16 @@
   Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
   `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
   ~101 files remain on the corrected list.
+
+* **item 18 (ADR 0005 phase 4) batch 17, 2026-09-12.**
+  `RageUtil_FileDB.cpp` (3 -> `Log::File`; two documented-precondition
+  violations upgraded `Warn`->`ERROR`), `RageSoundReader_Chain.cpp` (3
+  real -> `Log::Sound`; a 4th grep hit sits inside a `/* */` block,
+  caught by the same `awk` comment-state check used for `Player.cpp`;
+  "error opening sound" upgraded `Trace`->`ERROR`), `OptionRowHandler.cpp`
+  (1 -> `Log::Screen`, kept `WARN`), `Course.cpp` (2 -> `Log::Song`; an
+  unrecognized sort-type default case upgraded `Trace`->`WARN`). No
+  parsing/behavior logic changed.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+  ~97 files remain on the corrected list.
