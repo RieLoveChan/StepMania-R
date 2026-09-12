@@ -2773,3 +2773,23 @@
   Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
   `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
   ~109 files remain on the corrected list.
+
+* **item 18 (ADR 0005 phase 4) batch 16, 2026-09-12.**
+  `ScreenUnlockStatus.cpp` and `NoteDataWithScoring.cpp` turned out to
+  have zero real sites (all dead code, some inside `/* */` blocks) --
+  skipped. `ScreenOptions.cpp` (3 -> `Log::Screen`, already-correct),
+  `RageThreads.cpp` (5 -> `Log::General`; mutex lock-order-
+  inconsistency warning upgraded `Warn`->`ERROR`, a genuine deadlock-
+  risk bug indicator), `RageSoundReader_Merge.cpp` (2 -> `Log::Sound`),
+  `ProfileManager.cpp` (5 -> `Log::Profile`; "corrupt profile, no
+  LastGood either" upgraded `Trace`->`WARN`, "DeleteRecursive failed"
+  upgraded `Warn`->`ERROR`), `LuaManager.cpp` (4 -> `Log::Lua`;
+  `ReportScriptError`'s and the compile-failure's `Warn`s upgraded to
+  `ERROR` -- every call through those paths is a real script error;
+  the Lua-exposed global `Trace()`/`Warn()` kept at their own levels
+  since that's the theme author's choice, not ours to second-guess),
+  `GameSoundManager.cpp` (4 -> `Log::Sound`, already-correct). No
+  parsing/behavior logic changed.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+  ~101 files remain on the corrected list.

@@ -1696,6 +1696,35 @@ spec is the whole config.)
   Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
   `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
   ~109 files remain on the corrected list.
+  **Ph4 batch 16 (2026-09-12).** Two files turned out to have zero
+  real sites once checked carefully: `ScreenUnlockStatus.cpp` (all 5
+  raw hits pre-existing `//`-comments) and `NoteDataWithScoring.cpp`
+  (2 of its 5 raw hits sit inside a `/* ... */` block, the other 3
+  are `//`-commented) — both skipped, nothing to migrate.
+  `ScreenOptions.cpp` (3 sites, `Log::Screen`, all already-correct),
+  `RageThreads.cpp` (5 sites, `Log::General` — no threading-specific
+  category exists; the mutex lock-order-inconsistency warning
+  upgraded `Warn`→`ERROR`, a genuine deadlock-risk bug indicator, not
+  routine), `RageSoundReader_Merge.cpp` (2 sites, `Log::Sound` — a
+  discarded-mismatched-channel-count warning kept `WARN`, a dev-debug
+  "hurk" sync-correction trace kept `Trace` since channel-drift
+  correction is routine during normal playback), `ProfileManager.cpp`
+  (5 sites, `Log::Profile` — "profile corrupt, no LastGood backup
+  either" upgraded `Trace`→`WARN`; "DeleteRecursive failed" upgraded
+  `Warn`→`ERROR`; "ProfileID doesn't exist" kept `WARN`, a caller-side
+  misuse, not a system failure), `LuaManager.cpp` (4 sites, `Log::Lua`
+  — `ReportScriptError`'s and the Lua-compile-failure's `Warn`s both
+  upgraded to `ERROR` since by definition every call through those
+  paths is a real script error; the Lua-exposed global `Trace()`/
+  `Warn()` functions kept at their respective levels since the level
+  is the *theme author's* choice, not something to second-guess),
+  `GameSoundManager.cpp` (4 sites, `Log::Sound`, all already-correct
+  — including an opt-in (`PREFSMAN->m_bLogSkips`) song-position-skip
+  diagnostic, routine when the debug pref is on). No parsing/behavior
+  logic changed anywhere.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+  ~101 files remain on the corrected list.
 
 ### 20. Replace the archaic hard-coded game-type system
 Game types are defined by hand-written `static const Game g_Game_X = {…}`
