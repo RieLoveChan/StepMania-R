@@ -452,7 +452,7 @@ void PrefsManager::ReadPrefsFromIni( const IniFile &ini, const RString &sSection
 	IPreference *pPref = PREFSMAN->GetPreferenceByName( *sName );
 	if( pPref == nullptr )
 	{
-		LOG->Warn( "Unknown preference in [%s]: %s", sClassName.c_str(), sName->c_str() );
+		LOG_WARN(Log::General, "Unknown preference in [%s]: %s", sClassName.c_str(), sName->c_str() );
 		continue;
 	}
 	pPref->FromString( sVal );
@@ -616,7 +616,7 @@ public:
 		}
 
 		pPref->LoadDefault();
-		LOG->Trace( "Restored preference \"%s\" to default \"%s\"", sName.c_str(), pPref->ToString().c_str() );
+		LOG_TRACE(Log::General, "Restored preference \"%s\" to default \"%s\"", sName.c_str(), pPref->ToString().c_str() );
 		COMMON_RETURN_SELF;
 	}
 	static int PreferenceExists( T* /* p */, lua_State *L )

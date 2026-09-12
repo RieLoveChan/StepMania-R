@@ -41,7 +41,7 @@ void PercentageDisplay::LoadFromNode( const XNode* pNode )
 				// Not reported as an error because _fallback and default provided bad
 				// examples in their [LifeMeterBattery Percent]:Format metric and nobody
 				// realized it was supposed to be set to a function. -Kyz
-				LOG->Trace("Format attribute for PercentageDisplay named '%s' is not a function. Defaulting to 'FormatPercentScore'.", GetName().c_str());
+				LOG_TRACE(Log::Actor, "Format attribute for PercentageDisplay named '%s' is not a function. Defaulting to 'FormatPercentScore'.", GetName().c_str());
 				m_FormatPercentScore.SetFromExpression("FormatPercentScore");
 			}
 		}
@@ -103,7 +103,7 @@ void PercentageDisplay::Load( const PlayerState *pPlayerState, const PlayerStage
 		// Not reported as an error because _fallback and default provided bad
 		// examples in their [LifeMeterBattery Percent]:Format metric and nobody
 		// realized it was supposed to be set to a function. -Kyz
-		LOG->Trace("Format metric is not a function in [%s]. Defaulting to 'FormatPercentScore'.", sMetricsGroup.c_str());
+		LOG_TRACE(Log::Actor, "Format metric is not a function in [%s]. Defaulting to 'FormatPercentScore'.", sMetricsGroup.c_str());
 		m_FormatPercentScore.SetFromExpression( "FormatPercentScore" );
 	}
 

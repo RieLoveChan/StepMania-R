@@ -26,7 +26,7 @@ namespace
 
 RageInput::RageInput()
 {
-	LOG->Trace( "RageInput::RageInput()" );
+	LOG_TRACE(Log::Input, "RageInput::RageInput()" );
 
 	// Register with Lua.
 	{
@@ -69,7 +69,7 @@ void RageInput::LoadDrivers()
 
 	// If no input devices are loaded, the user won't be able to input anything.
 	if( apDevices.empty() )
-		LOG->Warn( "%s", NO_INPUT_DEVICES_LOADED.GetValue().c_str() );
+		LOG_WARN(Log::Input, "%s", NO_INPUT_DEVICES_LOADED.GetValue().c_str() );
 }
 
 void RageInput::Update()

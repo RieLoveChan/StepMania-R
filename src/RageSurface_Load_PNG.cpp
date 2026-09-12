@@ -51,7 +51,7 @@ void PNG_Error( png_struct *png, const char *error )
 	error_info *info = (error_info *) png_get_error_ptr(png);
 	strncpy( info->err, error, 1024 );
 	info->err[1023] = 0;
-	LOG->Trace( "loading \"%s\": err: %s", info->fn, info->err );
+	LOG_ERROR(Log::File, "loading \"%s\": err: %s", info->fn, info->err );
 	longjmp( png_jmpbuf(png), 1 );
 }
 
@@ -59,7 +59,7 @@ void PNG_Warning( png_struct *png, const char *warning )
 {
 	CHECKPOINT_M(ssprintf("PNG warning during processing: %s", warning));
 	error_info *info = (error_info *) png_get_io_ptr(png);
-	LOG->Trace( "loading \"%s\": warning: %s", info->fn, warning );
+	LOG_WARN(Log::File, "loading \"%s\": warning: %s", info->fn, warning );
 }
 
 /* Since libpng forces us to use longjmp (gross!), this function shouldn't create any C++

@@ -93,7 +93,7 @@ ScreenEvaluation::~ScreenEvaluation()
 
 void ScreenEvaluation::Init()
 {
-	LOG->Trace( "ScreenEvaluation::Init()" );
+	LOG_TRACE(Log::Screen, "ScreenEvaluation::Init()" );
 
 	// debugging
 	// Only fill StageStats with fake info if we're the InitialScreen
@@ -426,7 +426,7 @@ void ScreenEvaluation::Init()
 				m_sprActualBar[p][r].SetWidth( m_sprPossibleBar[p][r].GetUnzoomedWidth() * actual * fDivider );
 
 				float value = (float)100 * m_sprActualBar[p][r].GetUnzoomedWidth() / m_sprPossibleBar[p][r].GetUnzoomedWidth();
-				LOG->Trace("Radar bar %d of 5 - %f percent", r,  value);
+				LOG_TRACE(Log::Screen, "Radar bar %d of 5 - %f percent", r,  value);
 
 				m_sprActualBar[p][r].SetName( ssprintf("BarActual%dP%d",r+1,p+1) );
 				ActorUtil::LoadAllCommands( m_sprActualBar[p][r], m_sName );

@@ -141,7 +141,7 @@ bool NoteSkinManager::LoadNoteSkinDataRecursive( const RString &sNoteSkinName_, 
 			}
 		}
 
-		LOG->Trace( "LoadNoteSkinDataRecursive: %s (%s)", sNoteSkinName.c_str(), sDir.c_str() );
+		LOG_TRACE(Log::Actor, "LoadNoteSkinDataRecursive: %s (%s)", sNoteSkinName.c_str(), sDir.c_str() );
 
 		// read global fallback the current NoteSkin (if any)
 		IniFile ini;
@@ -181,7 +181,7 @@ bool NoteSkinManager::LoadNoteSkinDataRecursive( const RString &sNoteSkinName_, 
 		if( !GetFileContents(sFile, sScript) )
 			continue;
 
-		LOG->Trace( "Load script \"%s\"", sFile.c_str() );
+		LOG_TRACE(Log::Actor, "Load script \"%s\"", sFile.c_str() );
 
 		Lua *L = LUA->Get();
 		RString Error= "Error running " + sFile + ": ";

@@ -422,7 +422,7 @@ void ScreenDebugOverlay::UpdateText()
 		if( g_HaltTimer.Ago() >= 5.0f )
 		{
 			g_HaltTimer.Touch();
-			LOG->Warn( "Game halted" );
+			LOG_WARN(Log::Screen, "Game halted" );
 		}
 	}
 }
@@ -507,7 +507,7 @@ bool ScreenDebugOverlay::Input( const InputEventPlus &input )
 			RString sMessage;
 			(*p)->DoAndLog( sMessage );
 			if( !sMessage.empty() )
-				LOG->Trace("DEBUG: %s", sMessage.c_str() );
+				LOG_TRACE(Log::Screen, "DEBUG: %s", sMessage.c_str() );
 			if( (*p)->ForceOffAfterUse() )
 				m_bForcedHidden = true;
 

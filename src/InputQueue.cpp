@@ -178,7 +178,7 @@ bool InputQueueCode::Load( RString sButtonsNames )
 		if( asButtonNames.empty() )
 		{
 			if( !sButtonsNames.empty() )
-				LOG->Trace( "Ignoring empty code \"%s\".", sButtonsNames.c_str() );
+				LOG_TRACE(Log::Input, "Ignoring empty code \"%s\".", sButtonsNames.c_str() );
 			return false;
 		}
 
@@ -220,7 +220,7 @@ bool InputQueueCode::Load( RString sButtonsNames )
 			const GameButton gb = INPUTMAPPER->GetInputScheme()->ButtonNameToIndex( sButtonName );
 			if( gb == GameButton_Invalid )
 			{
-				LOG->Trace( "The code \"%s\" contains an unrecognized button \"%s\".", sButtonsNames.c_str(), sButtonName.c_str() );
+				LOG_WARN(Log::Input, "The code \"%s\" contains an unrecognized button \"%s\".", sButtonsNames.c_str(), sButtonName.c_str() );
 				m_aPresses.clear();
 				return false;
 			}
