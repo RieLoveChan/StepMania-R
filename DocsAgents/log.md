@@ -2670,3 +2670,22 @@
   characterization test covers gameplay/scoring logic). Every
   §5-protected simfile-format file is now migrated to the categorized
   `LOG_*` macros, zero parsing/behavior changes throughout.
+
+* **item 18 (ADR 0005 phase 4) final batch, 2026-09-12 -- `Player.cpp`,
+  phase 4 now COMPLETE.** Of 48 raw `LOG->` grep hits in this
+  god-object (3567 lines), a programmatic check (`awk` tracking
+  `/* */` block-comment state, not just `//` lines) found **47 of 48
+  are dead code** -- leftover debug scaffolding from a historically
+  fragile hold-note-scoring area (the same section item 15 already
+  flagged as too fragile to touch for `#if 0` removal). Only one call
+  site is actually compiled: a routine "Applying transform..." trace
+  in the attack-mod path, migrated to `LOG_TRACE(Log::Actor, ...)`.
+  No characterization test exists for `Player.cpp` (gameplay/scoring,
+  not simfile parsing), so the unchanged full-suite total (5966/226)
+  is the only available safety check.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+  **ADR 0005 is now fully implemented end to end** -- all 4 phases
+  done, 11 batches total for phase 4 alone, spanning non-§5 files, the
+  whole §5-protected simfile-parser lane, and `Player.cpp`, with zero
+  parsing/behavior regressions throughout.
