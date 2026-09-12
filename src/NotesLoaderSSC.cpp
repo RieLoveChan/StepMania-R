@@ -844,7 +844,7 @@ void SSCLoader::ProcessScrolls( TimingData &out, const RString sParam )
 
 bool SSCLoader::LoadNoteDataFromSimfile( const RString & cachePath, Steps &out )
 {
-	LOG->Trace( "Loading notes from %s", cachePath.c_str() );
+	LOG_TRACE(Log::Song, "Loading notes from %s", cachePath.c_str() );
 
 	MsdFile msd;
 	if (!msd.ReadFile(cachePath, true))
@@ -1053,7 +1053,7 @@ bool SSCLoader::LoadFromSimfile( const RString &sPath, Song &out, bool bFromCach
 
 bool SSCLoader::LoadEditFromFile( RString sEditFilePath, ProfileSlot slot, bool bAddStepsToSong, Song *givenSong /* = nullptr */ )
 {
-	LOG->Trace( "SSCLoader::LoadEditFromFile(%s)", sEditFilePath.c_str() );
+	LOG_TRACE(Log::Song, "SSCLoader::LoadEditFromFile(%s)", sEditFilePath.c_str() );
 
 	int iBytes = FILEMAN->GetFileSizeInBytes( sEditFilePath );
 	if( iBytes > MAX_EDIT_STEPS_SIZE_BYTES )
