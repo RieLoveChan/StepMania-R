@@ -114,7 +114,7 @@ void ScoreScroller::ScrollTop()
 
 void ScoreScroller::ConfigureActor( Actor *pActor, int iItem )
 {
-	LOG->Trace("ScoreScroller::ConfigureActor");
+	LOG_TRACE(Log::Screen, "ScoreScroller::ConfigureActor");
 
 	Actor &item = *dynamic_cast<Actor *>(pActor);
 	const ScoreRowItemData &data = m_vScoreRowItemData[iItem];
@@ -160,7 +160,7 @@ void ScoreScroller::ConfigureActor( Actor *pActor, int iItem )
 
 
 	item.HandleMessage( msg );
-	LOG->Trace("end ScoreScroller::ConfigureActor");
+	LOG_TRACE(Log::Screen, "end ScoreScroller::ConfigureActor");
 }
 
 void ScoreScroller::LoadSongs( int iNumRecentScores )

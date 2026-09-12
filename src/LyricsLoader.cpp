@@ -21,7 +21,7 @@ static int CompareLyricSegments(const LyricSegment &seg1, const LyricSegment &se
 
 bool LyricsLoader::LoadFromLRCFile(const RString& sPath, Song& out)
 {
-	LOG->Trace( "LyricsLoader::LoadFromLRCFile(%s)", sPath.c_str() );
+	LOG_TRACE(Log::Song, "LyricsLoader::LoadFromLRCFile(%s)", sPath.c_str() );
 
 	RageFile input;
 	if( !input.Open(sPath) )
@@ -79,7 +79,7 @@ bool LyricsLoader::LoadFromLRCFile(const RString& sPath, Song& out)
 			// ten colors in a line and access them via "{cX}", where X is 0-9.
 			if(result != 3)
 			{
-				LOG->Trace( "The color value '%s' in '%s' is invalid.",
+				LOG_WARN(Log::Song, "The color value '%s' in '%s' is invalid.",
 				sValueData.c_str(), sPath.c_str() );
 				continue;
 			}
@@ -108,7 +108,7 @@ bool LyricsLoader::LoadFromLRCFile(const RString& sPath, Song& out)
 	}
 
 	sort( out.m_LyricSegments.begin(), out.m_LyricSegments.end(), CompareLyricSegments );
-	LOG->Trace( "LyricsLoader::LoadFromLRCFile done" );
+	LOG_TRACE(Log::Song, "LyricsLoader::LoadFromLRCFile done" );
 
 	return true;
 }

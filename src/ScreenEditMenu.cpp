@@ -42,7 +42,7 @@ void ScreenEditMenu::Init()
 	// is true of various parts of this poorly designed screen. -Kyz
 	if(GAMESTATE->GetMasterPlayerNumber() != PLAYER_1)
 	{
-		LOG->Warn("Master player number was not player 1, forcing it to player 1 so that edit mode will work.  If playing in edit mode doesn't work, this might be related.");
+		LOG_WARN(Log::Screen, "Master player number was not player 1, forcing it to player 1 so that edit mode will work.  If playing in edit mode doesn't work, this might be related.");
 		GAMESTATE->SetMasterPlayerNumber(PLAYER_1);
 	}
 
@@ -85,7 +85,7 @@ void ScreenEditMenu::HandleScreenMessage( const ScreenMessage SM )
 	}
 	else if( SM == SM_Success && m_Selector.GetSelectedAction() == EditMenuAction_Delete )
 	{
-		LOG->Trace( "Delete successful; deleting steps from memory" );
+		LOG_TRACE(Log::Screen, "Delete successful; deleting steps from memory" );
 
 		Song* pSong = GAMESTATE->m_pCurSong;
 		Steps* pStepsToDelete = GAMESTATE->m_pCurSteps[PLAYER_1];
@@ -108,7 +108,7 @@ void ScreenEditMenu::HandleScreenMessage( const ScreenMessage SM )
 	}
 	else if( SM == SM_Failure && m_Selector.GetSelectedAction() == EditMenuAction_Delete )
 	{
-		LOG->Trace( "Delete failed; not deleting steps" );
+		LOG_WARN(Log::Screen, "Delete failed; not deleting steps" );
 	}
 	else if( SM == SM_BackFromEditDescription )
 	{

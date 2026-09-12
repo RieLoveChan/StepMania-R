@@ -432,7 +432,7 @@ bool ScreenMapControllers::Input( const InputEventPlus &input )
 				!IsAxis(m_DeviceIToMap) &&
 				IsAxis(input.DeviceI) )
 			{
-				LOG->Trace("Ignored input; non-axis event already received");
+				LOG_TRACE(Log::Input, "Ignored input; non-axis event already received");
 				return false;	// ignore this press
 			}
 

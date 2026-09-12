@@ -279,7 +279,7 @@ public:
 		{
 			if( iPredictor[i] >= (int) m_iaCoef1.size() )
 			{
-				LOG->Trace( "%s: predictor out of range", m_File.GetDisplayPath().c_str() );
+				LOG_WARN(Log::Sound, "%s: predictor out of range", m_File.GetDisplayPath().c_str() );
 
 				/* XXX: silence this block? */
 				iPredictor[i] = 0;
@@ -511,7 +511,7 @@ RageSoundReader_FileReader::OpenResult RageSoundReader_WAV::Open( RageFileBasic 
 		if( ChunkID == "fmt " )
 		{
 			if( bGotFormatChunk )
-				LOG->Warn( "File %s has more than one fmt chunk", m_pFile->GetDisplayPath().c_str() );
+				LOG_WARN(Log::Sound, "File %s has more than one fmt chunk", m_pFile->GetDisplayPath().c_str() );
 
 			m_WavData.m_iFormatTag = FileReading::read_16_le( *m_pFile, sError );
 			m_WavData.m_iChannels = FileReading::read_16_le( *m_pFile, sError );
@@ -541,7 +541,7 @@ RageSoundReader_FileReader::OpenResult RageSoundReader_WAV::Open( RageFileBasic 
 			int iMaxSize = iFileSize-m_WavData.m_iDataChunkPos;
 			if( iMaxSize < m_WavData.m_iDataChunkSize )
 			{
-				LOG->Warn( "File %s truncated (%i < data chunk size %i)", m_pFile->GetDisplayPath().c_str(),
+				LOG_WARN(Log::Sound, "File %s truncated (%i < data chunk size %i)", m_pFile->GetDisplayPath().c_str(),
 					iMaxSize, m_WavData.m_iDataChunkSize );
 
 				m_WavData.m_iDataChunkSize = iMaxSize;

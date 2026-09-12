@@ -318,7 +318,7 @@ RageFileBasic *ThreadedFileWorker::Open( const RString &sPath, int iMode, int &i
 
 	if( !DoRequest(REQ_OPEN) )
 	{
-		LOG->Trace( "Open(%s) timed out", sPath.c_str() );
+		LOG_TRACE(Log::File, "Open(%s) timed out", sPath.c_str() );
 		iErr = EFAULT; /* Win32 has no ETIMEDOUT */
 		return nullptr;
 	}
@@ -613,7 +613,7 @@ bool ThreadedFileWorker::PopulateFileSet( FileSet &fs, const RString &sPath )
 	/* Kick off the worker thread, and wait for it to finish. */
 	if( !DoRequest(REQ_POPULATE_FILE_SET) )
 	{
-		LOG->Trace( "PopulateFileSet(%s) timed out", sPath.c_str() );
+		LOG_TRACE(Log::File, "PopulateFileSet(%s) timed out", sPath.c_str() );
 		return false;
 	}
 
@@ -683,7 +683,7 @@ bool ThreadedFileWorker::FlushDirCache( const RString &sPath )
 		if( !bTimeoutEnabled )
 			SetTimeout(-1);
 
-		LOG->Trace( "FlushDirCache(%s) timed out", sPath.c_str() );
+		LOG_TRACE(Log::File, "FlushDirCache(%s) timed out", sPath.c_str() );
 		return false;
 	}
 
