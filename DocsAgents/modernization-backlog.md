@@ -1744,6 +1744,36 @@ spec is the whole config.)
   Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
   `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
   ~97 files remain on the corrected list.
+  **Ph4 batch 18 (2026-09-12).** Skipped `ScreenNetEvaluation.cpp`
+  (part of item 29's orphaned networking subsystem, not in the CMake
+  build) and found a **third dead-code category**:
+  `RageFileManager_ReadAhead.cpp`'s 3 grep hits all sit inside a
+  permanent `#if 0` block (the real branch is
+  `#if defined(HAVE_POSIX_FADVISE)` / `#else` / `#if 0` .../ `#else`
+  (stub) / `#endif` / `#endif` — a preprocessor-disabled fallback path,
+  never compiled on any platform, distinct from both `//` comments and
+  `/* */` blocks already caught this sweep) — skipped, nothing real to
+  migrate. Migrated: `ScreenMapControllers.cpp` (1, `Log::Input`),
+  `ScreenHighScores.cpp` (2, `Log::Screen`), `ScreenEditMenu.cpp` (3,
+  `Log::Screen` — "Delete failed; not deleting steps" upgraded
+  `Trace`→`WARN`, a real user-visible action failure), `RageUtil_WorkerThread.cpp`
+  (3, `Log::General`), `RageUtil_CharConversions.cpp` (3, `Log::File`
+  — the two codepage/iconv "attempt failed" traces kept `Trace` since
+  callers try multiple charsets speculatively; the partial-conversion
+  warning kept `WARN`), `RageSoundReader_WAV.cpp` (3, `Log::Sound` —
+  "predictor out of range" upgraded `Trace`→`WARN`, a genuine
+  malformed-ADPCM-data anomaly; the duplicate-fmt-chunk and truncated-
+  file warnings kept `WARN`), `RageFileDriverTimeout.cpp` (3,
+  `Log::File`, all "X timed out" kept `Trace` — routine for a
+  timeout-wrapper driver), `NetworkManager.cpp` (3, `Log::Net` —
+  "reading CA bundle failed" upgraded `Warn`→`ERROR`, a real
+  HTTPS-connectivity risk; the "blocked access" security-guard
+  warnings kept `WARN`), `LyricsLoader.cpp` (3, `Log::Song` — an
+  invalid `.lrc` color-value warning upgraded `Trace`→`WARN`). No
+  parsing/behavior logic changed anywhere.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+  ~87 files remain on the corrected list.
 
 ### 20. Replace the archaic hard-coded game-type system
 Game types are defined by hand-written `static const Game g_Game_X = {…}`

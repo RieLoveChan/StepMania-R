@@ -2806,3 +2806,26 @@
   Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
   `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
   ~97 files remain on the corrected list.
+
+* **item 18 (ADR 0005 phase 4) batch 18, 2026-09-12 -- found a third
+  dead-code category.** Skipped `ScreenNetEvaluation.cpp` (item 29's
+  orphaned networking subsystem). `RageFileManager_ReadAhead.cpp`'s 3
+  grep hits all sit inside a permanent `#if 0` block (nested under
+  `#if defined(HAVE_POSIX_FADVISE)` / `#else` / `#if 0` ... `#else`
+  (stub) / `#endif` / `#endif`) -- a preprocessor-disabled fallback
+  path never compiled on any platform, distinct from `//` comments and
+  `/* */` blocks already caught earlier this sweep -- skipped.
+  Migrated: `ScreenMapControllers.cpp` (1 -> `Log::Input`),
+  `ScreenHighScores.cpp` (2 -> `Log::Screen`), `ScreenEditMenu.cpp` (3
+  -> `Log::Screen`; "Delete failed" upgraded `Trace`->`WARN`),
+  `RageUtil_WorkerThread.cpp` (3 -> `Log::General`),
+  `RageUtil_CharConversions.cpp` (3 -> `Log::File`),
+  `RageSoundReader_WAV.cpp` (3 -> `Log::Sound`; "predictor out of
+  range" upgraded `Trace`->`WARN`), `RageFileDriverTimeout.cpp` (3 ->
+  `Log::File`, all routine), `NetworkManager.cpp` (3 -> `Log::Net`;
+  "reading CA bundle failed" upgraded `Warn`->`ERROR`),
+  `LyricsLoader.cpp` (3 -> `Log::Song`; invalid color-value warning
+  upgraded `Trace`->`WARN`). No parsing/behavior logic changed.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+  ~87 files remain on the corrected list.
