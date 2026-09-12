@@ -189,13 +189,13 @@ RString RageDisplay_D3D::Init( const VideoModeParams &p, bool /* bAllowUnacceler
 {
 	GraphicsWindow::Initialize( true );
 
-	LOG->Trace( "RageDisplay_D3D::RageDisplay_D3D()" );
+	LOG_TRACE(Log::General, "RageDisplay_D3D::RageDisplay_D3D()" );
 	LOG->MapLog("renderer", "Current renderer: Direct3D");
 
 	g_pd3d = Direct3DCreate9(D3D_SDK_VERSION);
 	if(!g_pd3d)
 	{
-		LOG->Trace( "Direct3DCreate9 failed" );
+		LOG_ERROR(Log::General, "Direct3DCreate9 failed" );
 		return D3D_NOT_INSTALLED.GetValue();
 	}
 
@@ -206,7 +206,7 @@ RString RageDisplay_D3D::Init( const VideoModeParams &p, bool /* bAllowUnacceler
 	D3DADAPTER_IDENTIFIER9	identifier;
 	g_pd3d->GetAdapterIdentifier( D3DADAPTER_DEFAULT, 0, &identifier );
 
-	LOG->Trace(
+	LOG_INFO(Log::General,
 		"Driver: %s\n"
 		"Description: %s\n"
 		"Max texture size: %d\n"
@@ -216,14 +216,14 @@ RString RageDisplay_D3D::Init( const VideoModeParams &p, bool /* bAllowUnacceler
 		g_DeviceCaps.MaxTextureWidth,
 		(g_DeviceCaps.TextureCaps & D3DPTEXTURECAPS_ALPHAPALETTE) ? "yes" : "no" );
 
-	LOG->Trace( "This display adaptor supports the following modes:" );
+	LOG_INFO(Log::General, "This display adaptor supports the following modes:" );
 	D3DDISPLAYMODE mode;
 
 	UINT modeCount = g_pd3d->GetAdapterModeCount(D3DADAPTER_DEFAULT, g_DefaultAdapterFormat);
 
 	for( UINT u=0; u < modeCount; u++ )
 		if( SUCCEEDED( g_pd3d->EnumAdapterModes( D3DADAPTER_DEFAULT, g_DefaultAdapterFormat, u, &mode ) ) )
-			LOG->Trace( "  %ux%u %uHz, format %d", mode.Width, mode.Height, mode.RefreshRate, mode.Format );
+			LOG_INFO(Log::General, "  %ux%u %uHz, format %d", mode.Width, mode.Height, mode.RefreshRate, mode.Format );
 
 	g_PaletteIndex.clear();
 	for( int i = 0; i < 256; ++i )
@@ -241,7 +241,7 @@ RString RageDisplay_D3D::Init( const VideoModeParams &p, bool /* bAllowUnacceler
 
 RageDisplay_D3D::~RageDisplay_D3D()
 {
-	LOG->Trace( "RageDisplay_D3D::~RageDisplay()" );
+	LOG_TRACE(Log::General, "RageDisplay_D3D::~RageDisplay()" );
 
 	GraphicsWindow::Shutdown();
 
@@ -291,7 +291,7 @@ void RageDisplay_D3D::GetDisplaySpecs( DisplaySpecs &out ) const
 	}
 	else
 	{
-		LOG->Warn( "Could not find active mode for default D3D adapter" );
+		LOG_ERROR(Log::General, "Could not find active mode for default D3D adapter" );
 		if ( !modes.empty() )
 		{
 			const DisplayMode &m = *modes.begin();
@@ -341,7 +341,7 @@ D3DFORMAT FindBackBufferType(bool bWindowed, int iBPP)
 		else	// Fullscreen
 			fmtDisplay = vBackBufferFormats[i];
 
-		LOG->Trace( "Testing format: display %d, back buffer %d, windowed %d...",
+		LOG_TRACE(Log::General, "Testing format: display %d, back buffer %d, windowed %d...",
 					fmtDisplay, fmtBackBuffer, bWindowed );
 
 		hr = g_pd3d->CheckDeviceType( D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL,
@@ -351,11 +351,11 @@ D3DFORMAT FindBackBufferType(bool bWindowed, int iBPP)
 			continue; // skip
 
 		// done searching
-		LOG->Trace( "This will work." );
+		LOG_TRACE(Log::General, "This will work." );
 		return fmtBackBuffer;
 	}
 
-	LOG->Trace( "Couldn't find an appropriate back buffer format." );
+	LOG_ERROR(Log::General, "Couldn't find an appropriate back buffer format." );
 	return D3DFMT_UNKNOWN;
 }
 
@@ -409,7 +409,7 @@ static bool D3DReduceParams( D3DPRESENT_PARAMETERS *pp )
 	const int iCnt = g_pd3d->GetAdapterModeCount( D3DADAPTER_DEFAULT, g_DefaultAdapterFormat );
 	int iBest = -1;
 	int iBestScore = 0;
-	LOG->Trace( "cur: %ux%u %uHz, format %i", current.Width, current.Height, current.RefreshRate, current.Format );
+	LOG_TRACE(Log::General, "cur: %ux%u %uHz, format %i", current.Width, current.Height, current.RefreshRate, current.Format );
 	for( int i = 0; i < iCnt; ++i )
 	{
 		D3DDISPLAYMODE mode;
@@ -459,7 +459,7 @@ static bool D3DReduceParams( D3DPRESENT_PARAMETERS *pp )
 			iBestScore = iScore;
 		}
 
-		LOG->Trace( "try: %ux%u %uHz, format %i: score %i", mode.Width, mode.Height, mode.RefreshRate, mode.Format, iScore );
+		LOG_TRACE(Log::General, "try: %ux%u %uHz, format %i: score %i", mode.Width, mode.Height, mode.RefreshRate, mode.Format, iScore );
 	}
 
 	if( iBest == -1 )
@@ -501,7 +501,7 @@ static void SetPresentParametersFromVideoModeParams( const VideoModeParams &p, D
 
 	pD3Dpp->Flags = 0;
 
-	LOG->Trace( "Present Parameters: %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d",
+	LOG_TRACE(Log::General, "Present Parameters: %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d",
 		pD3Dpp->BackBufferWidth, pD3Dpp->BackBufferHeight, pD3Dpp->BackBufferFormat,
 		pD3Dpp->BackBufferCount,
 		pD3Dpp->MultiSampleType, pD3Dpp->SwapEffect, pD3Dpp->hDeviceWindow,
@@ -515,7 +515,7 @@ static void SetPresentParametersFromVideoModeParams( const VideoModeParams &p, D
 RString RageDisplay_D3D::TryVideoMode( const VideoModeParams &_p, bool &bNewDeviceOut )
 {
 	VideoModeParams p = _p;
-	LOG->Warn( "RageDisplay_D3D::TryVideoMode( %d, %d, %d, %d, %d, %d )", p.windowed, p.width, p.height, p.bpp, p.rate, p.vsync );
+	LOG_TRACE(Log::General, "RageDisplay_D3D::TryVideoMode( %d, %d, %d, %d, %d, %d )", p.windowed, p.width, p.height, p.bpp, p.rate, p.vsync );
 
 	if( FindBackBufferType( p.windowed, p.bpp ) == D3DFMT_UNKNOWN )	// no possible back buffer formats
 		return ssprintf( "FindBackBufferType(%i,%i) failed", p.windowed, p.bpp );	// failed to set mode
