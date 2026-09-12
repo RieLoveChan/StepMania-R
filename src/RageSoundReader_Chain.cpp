@@ -90,7 +90,7 @@ int RageSoundReader_Chain::LoadSound( RString sPath )
 	RageSoundReader *pReader = RageSoundReader_FileReader::OpenFile( sPath, sError, &bPrebuffer );
 	if( pReader == nullptr )
 	{
-		LOG->Warn( "RageSoundReader_Chain: error opening sound \"%s\": %s",
+		LOG_ERROR(Log::Sound, "RageSoundReader_Chain: error opening sound \"%s\": %s",
 			sPath.c_str(), sError.c_str() );
 		return -1;
 	}
@@ -138,7 +138,7 @@ void RageSoundReader_Chain::Finish()
 		{
 			if( it->GetNumChannels() != m_iChannels )
 			{
-				LOG->Warn( "Discarded sound with %i channels, not %i",
+				LOG_WARN(Log::Sound, "Discarded sound with %i channels, not %i",
 					it->GetNumChannels(), m_iChannels );
 				delete it;
 				it = nullptr;
@@ -297,7 +297,7 @@ float RageSoundReader_Chain::GetStreamToSourceRatio() const
 	for( unsigned i = 1; i < m_apActiveSounds.size(); ++i )
 	{
 		if( m_apActiveSounds[i]->pSound->GetStreamToSourceRatio() != iRate )
-			LOG->Warn( "RageSoundReader_Chain: sound rates changing differently" );
+			LOG_WARN(Log::Sound, "RageSoundReader_Chain: sound rates changing differently" );
 	}
 
 	return iRate;

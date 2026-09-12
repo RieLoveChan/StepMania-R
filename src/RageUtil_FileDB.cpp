@@ -274,7 +274,7 @@ FileSet *FilenameDB::GetFileSet( const RString &sDir_, bool bCreate )
 
 	/* Creating can take a long time; don't hold the lock if we might do that. */
 	if( bCreate && m_Mutex.IsLockedByThisThread() && LOG )
-		LOG->Warn( "FilenameDB::GetFileSet: m_Mutex was locked" );
+		LOG_ERROR(Log::File, "FilenameDB::GetFileSet: m_Mutex was locked" );
 
 	/* Normalize the path. */
 	sDir.Replace("\\", "/"); /* foo\bar -> foo/bar */
@@ -513,7 +513,7 @@ void FilenameDB::FlushDirCache( const RString & /* sDir */ )
 const File *FilenameDB::GetFile( const RString &sPath )
 {
 	if( m_Mutex.IsLockedByThisThread() && LOG )
-		LOG->Warn( "FilenameDB::GetFile: m_Mutex was locked" );
+		LOG_ERROR(Log::File, "FilenameDB::GetFile: m_Mutex was locked" );
 
 	RString Dir, Name;
 	SplitPath(sPath, Dir, Name);
@@ -592,7 +592,7 @@ void FilenameDB::GetFileSetCopy( const RString &sDir, FileSet &out )
 
 void FilenameDB::CacheFile( const RString &sPath )
 {
-	LOG->Warn( "Slow cache due to: %s", sPath.c_str() );
+	LOG_WARN(Log::File, "Slow cache due to: %s", sPath.c_str() );
 	FlushDirCache( Dirname(sPath) );
 }
 

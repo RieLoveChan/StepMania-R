@@ -432,7 +432,7 @@ static void CourseSortSongs( SongSort sort, std::vector<Song*> &vpPossibleSongs,
 			SongUtil::SortSongPointerArrayByGrades( vpPossibleSongs, false );	// ascending
 		break;
 	default:
-		LOG->Trace("CourseSortSongs sort= %d | %s invalid??", sort, SongSortToString(sort).c_str());
+		LOG_WARN(Log::Song, "CourseSortSongs sort= %d | %s invalid??", sort, SongSortToString(sort).c_str());
 		break;
 	}
 }
@@ -1169,7 +1169,7 @@ void Course::UpdateCourseStats( StepsType st )
 	// OPTIMIZATION: Ranking info isn't dependent on style, so call it
 	// sparingly. It's handled on startup and when themes change.
 
-	LOG->Trace("%s: Total feet: %d",
+	LOG_TRACE(Log::Song, "%s: Total feet: %d",
 		this->m_sMainTitle.c_str(),
 		m_SortOrder_TotalDifficulty );
 }
