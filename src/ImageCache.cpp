@@ -158,7 +158,7 @@ void ImageCache::OutputStats() const
 		const int iSize = pImage->pitch * pImage->h;
 		iTotalSize += iSize;
 	}
-	LOG->Info( "%i bytes of images loaded", iTotalSize );
+	LOG_INFO(Log::Cache, "%i bytes of images loaded", iTotalSize );
 }
 
 void ImageCache::UnloadAllImages()
@@ -222,7 +222,7 @@ struct ImageTexture: public RageTexture
 		if( m_pImage->w > DISPLAY->GetMaxTextureSize() ||
 			m_pImage->h > DISPLAY->GetMaxTextureSize() )
 		{
-			LOG->Warn( "Converted %s at runtime", GetID().filename.c_str() );
+			LOG_WARN(Log::Cache, "Converted %s at runtime", GetID().filename.c_str() );
 			int iWidth = std::min( m_pImage->w, DISPLAY->GetMaxTextureSize() );
 			int iHeight = std::min( m_pImage->h, DISPLAY->GetMaxTextureSize() );
 			RageSurfaceUtils::Zoom( m_pImage, iWidth, iHeight );
@@ -291,7 +291,7 @@ RageTextureID ImageCache::LoadCachedImage( RString sImageDir, RString sImagePath
 		/* Oops, the image is missing.  Warn and continue. */
 		if(PREFSMAN->m_ImageCache != IMGCACHE_OFF)
 		{
-			LOG->Warn( "Image cache for '%s' wasn't loaded", sImagePath.c_str() );
+			LOG_WARN(Log::Cache, "Image cache for '%s' wasn't loaded", sImagePath.c_str() );
 		}
 		return ID;
 	}

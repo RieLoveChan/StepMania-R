@@ -27,7 +27,7 @@ Bookkeeper::~Bookkeeper()
 	WriteToDisk();
 }
 
-#define WARN_AND_RETURN { LOG->Warn("Error parsing at %s:%d",__FILE__,__LINE__); return; }
+#define WARN_AND_RETURN { LOG_ERROR(Log::File, "Error parsing at %s:%d",__FILE__,__LINE__); return; }
 
 void Bookkeeper::ClearAll()
 {
@@ -62,14 +62,14 @@ void Bookkeeper::LoadFromNode( const XNode *pNode )
 {
 	if( pNode->GetName() != "Bookkeeping" )
 	{
-		LOG->Warn( "Error loading bookkeeping: unexpected \"%s\"", pNode->GetName().c_str() );
+		LOG_ERROR(Log::File, "Error loading bookkeeping: unexpected \"%s\"", pNode->GetName().c_str() );
 		return;
 	}
 
 	const XNode *pData = pNode->GetChild( "Data" );
 	if( pData == nullptr )
 	{
-		LOG->Warn( "Error loading bookkeeping: Data node missing" );
+		LOG_ERROR(Log::File, "Error loading bookkeeping: Data node missing" );
 		return;
 	}
 
@@ -80,7 +80,7 @@ void Bookkeeper::LoadFromNode( const XNode *pNode )
 			!day->GetAttrValue( "Day", d.m_iDayOfYear ) ||
 			!day->GetAttrValue( "Year", d.m_iYear ) )
 		{
-			LOG->Warn( "Incomplete date field" );
+			LOG_WARN(Log::File, "Incomplete date field" );
 			continue;
 		}
 
@@ -130,7 +130,7 @@ void Bookkeeper::ReadFromDisk()
 	else if ( numCoins / PREFSMAN->m_iCoinsPerCredit > PREFSMAN->m_iMaxNumCredits )
 		numCoins = 0;
 
-    LOG->Trace("Number of Coins to Load on boot: %i", numCoins);
+    LOG_TRACE(Log::File, "Number of Coins to Load on boot: %i", numCoins);
     GAMESTATE->m_iCoins.Set(numCoins);
 
 	LoadFromNode( &xml );
@@ -142,7 +142,7 @@ void Bookkeeper::WriteToDisk()
 	RageFile f;
 	if( !f.Open(COINS_DAT, RageFile::WRITE|RageFile::SLOW_FLUSH) )
 	{
-		LOG->Warn( "Couldn't open file \"%s\" for writing: %s", COINS_DAT.c_str(), f.GetError().c_str() );
+		LOG_ERROR(Log::File, "Couldn't open file \"%s\" for writing: %s", COINS_DAT.c_str(), f.GetError().c_str() );
 		return;
 	}
 
@@ -254,7 +254,7 @@ void Bookkeeper::GetCoinsByHour( int coins[HOURS_IN_DAY] ) const
 
 		if( d.m_iHour >= HOURS_IN_DAY )
 		{
-			LOG->Warn( "Hour %i >= %i", d.m_iHour, HOURS_IN_DAY );
+			LOG_WARN(Log::File, "Hour %i >= %i", d.m_iHour, HOURS_IN_DAY );
 			continue;
 		}
 

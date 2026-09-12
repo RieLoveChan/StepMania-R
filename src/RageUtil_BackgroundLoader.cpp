@@ -108,14 +108,14 @@ void BackgroundLoader::LoadThread()
 			if( it != m_FinishedRequests.end() )
 			{
 				++it->second;
-				LOG->Trace("XXX: request %s done loading (already done), cnt now %i", sFile.c_str(), m_FinishedRequests[sFile] );
+				LOG_TRACE(Log::File, "XXX: request %s done loading (already done), cnt now %i", sFile.c_str(), m_FinishedRequests[sFile] );
 				continue;
 			}
 		}
 
 		m_sThreadIsActive = true;
 
-		LOG->Trace("XXX: reading %s", sFile.c_str());
+		LOG_TRACE(Log::File, "XXX: reading %s", sFile.c_str());
 
 		RString sCachePath = GetCachePath( sFile );
 
@@ -129,7 +129,7 @@ void BackgroundLoader::LoadThread()
 			bool bWriteToCache = g_bWriteToCache;
 			if( bWriteToCache )
 				bWriteToCache = dst.Open( sCachePath, RageFile::WRITE );
-			LOG->Trace("XXX: go on '%s' to '%s'", sFile.c_str(), sCachePath.c_str());
+			LOG_TRACE(Log::File, "XXX: go on '%s' to '%s'", sFile.c_str(), sCachePath.c_str());
 
 			char buf[1024*4];
 			while( !m_sThreadShouldAbort && !src.AtEOF() )
@@ -141,7 +141,7 @@ void BackgroundLoader::LoadThread()
 			if( bWriteToCache )
 				dst.Close();
 
-			LOG->Trace("XXX: done");
+			LOG_TRACE(Log::File, "XXX: done");
 		}
 		src.Close();
 
@@ -149,13 +149,13 @@ void BackgroundLoader::LoadThread()
 		if( !m_sThreadShouldAbort )
 		{
 			++m_FinishedRequests[sFile];
-		LOG->Trace("XXX: request %s done loading, cnt now %i", sFile.c_str(), m_FinishedRequests[sFile] );
+		LOG_TRACE(Log::File, "XXX: request %s done loading, cnt now %i", sFile.c_str(), m_FinishedRequests[sFile] );
 		}
 		else
 		{
 			FILEMAN->Remove( sCachePath );
 
-			LOG->Trace("XXX: request %s aborted", sFile.c_str() );
+			LOG_TRACE(Log::File, "XXX: request %s aborted", sFile.c_str() );
 		}
 
 		m_sThreadShouldAbort = false;
@@ -197,7 +197,7 @@ bool BackgroundLoader::IsCacheFileFinished( const RString &sFile, RString &sActu
 	if( it == m_FinishedRequests.end() )
 		return false;
 
-	LOG->Trace("XXX: %s finished (%i)", sFile.c_str(), it->second);
+	LOG_TRACE(Log::File, "XXX: %s finished (%i)", sFile.c_str(), it->second);
 	if( g_bWriteToCache )
 		sActualPath = GetCachePath( sFile );
 	else

@@ -151,7 +151,7 @@ void MusicWheel::BeginScreen()
 		}
 	}
 	if(g_bPrecacheAllSorts) {
-		LOG->Trace( "MusicWheel sorting took: %s", times.c_str() );
+		LOG_TRACE(Log::Actor, "MusicWheel sorting took: %s", times.c_str() );
 	}
 
 	// Set m_LastModeMenuItem to the first item that matches the current mode.  (Do this
@@ -310,7 +310,7 @@ bool MusicWheel::SelectSongOrCourse()
 			return SelectCourse( wiWheelItems[i]->m_pCourse );
 	}
 
-	LOG->Trace( "MusicWheel::MusicWheel() - No selectable songs or courses found in WheelData" );
+	LOG_TRACE(Log::Actor, "MusicWheel::MusicWheel() - No selectable songs or courses found in WheelData" );
 	return false;
 }
 
@@ -1225,7 +1225,7 @@ void MusicWheel::UpdateSwitch()
 			m_fTimeLeftInState = SwitchTimes[m_iSwitchesLeftInSpinDown];
 			m_Moving = 0;
 
-			LOG->Trace( "m_iSwitchesLeftInSpinDown id %d, m_fTimeLeftInState is %f", m_iSwitchesLeftInSpinDown, m_fTimeLeftInState );
+			LOG_TRACE(Log::Actor, "m_iSwitchesLeftInSpinDown id %d, m_fTimeLeftInState is %f", m_iSwitchesLeftInSpinDown, m_fTimeLeftInState );
 
 			if( m_iSwitchesLeftInSpinDown == 0 )
 				ChangeMusic( randomf(0,1) >= 0.5f? 1:-1 );
@@ -1343,7 +1343,7 @@ bool MusicWheel::NextSort()		// return true if change successful
 
 bool MusicWheel::Select()	// return true if this selection ends the screen
 {
-	LOG->Trace( "MusicWheel::Select()" );
+	LOG_TRACE(Log::Actor, "MusicWheel::Select()" );
 
 	switch( m_WheelState )
 	{
@@ -1624,11 +1624,11 @@ RString MusicWheel::JumpToPrevGroup()
 		// in case it wasn't found above:
 		for( unsigned int i = static_cast<unsigned int>(m_CurWheelItemData.size())-1; i > 0; --i )
 		{
-			LOG->Trace( "JumpToPrevGroup iteration 2 | i = %u",i );
+			LOG_TRACE(Log::Actor, "JumpToPrevGroup iteration 2 | i = %u",i );
 			if( m_CurWheelItemData[i]->m_Type == WheelItemDataType_Section )
 			{
 				m_iSelection = i;
-				LOG->Trace( "finding it in #2 | i = %u | text = %s",i, m_CurWheelItemData[i]->m_sText.c_str() );
+				LOG_TRACE(Log::Actor, "finding it in #2 | i = %u | text = %s",i, m_CurWheelItemData[i]->m_sText.c_str() );
 				return m_CurWheelItemData[i]->m_sText;
 			}
 		}
