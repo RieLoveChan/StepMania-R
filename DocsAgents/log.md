@@ -2632,3 +2632,22 @@
   any behavior change would have shifted it.
   Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
   `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+
+* **item 18 (ADR 0005 phase 4) batch 10, 2026-09-12.** `Song.cpp` (12
+  real sites -> `Log::Song`; 2 grep hits are pre-existing dead code --
+  a commented-out line plus a whole call inside a `/* */` block, both
+  left untouched). The cache-load fallback warning ("main title or
+  music file came up blank") kept at `WARN`. Three custom-song
+  rejection sites (too long / can't open music / file too big)
+  upgraded `Trace`->`WARN`, matching batch 7's `Profile.cpp`
+  precedent. "Points to a music file that doesn't exist, found music
+  file X" upgraded `Trace`->`WARN` -- a real broken-reference simfile
+  issue, recovered via fallback but worth surfacing. The optional
+  timestamped-backup step's failure case upgraded `Trace`->`WARN`
+  (primary save already succeeded, but a failed safety net matters).
+  Rest of the save-flow entry traces stayed `Trace`. No parsing/
+  behavior logic changed; no dedicated `[Song]` characterization tag
+  exists, so the unchanged full-suite total is the check, same as
+  batch 9.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
