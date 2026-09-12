@@ -2727,3 +2727,17 @@
   `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0 (Windows);
   `RageDisplay_GLES2.cpp` still needs Ubuntu CI confirmation.
   ~121 files remain on the corrected list.
+
+* **item 18 (ADR 0005 phase 4) batch 13, 2026-09-12.** `RageDisplay.cpp`
+  (5 sites -> `Log::General`, same reasoning as `RageDisplay_D3D.cpp`
+  -- backend-agnostic base class, `Log::Gl` would be misleading;
+  screenshot save/open failures upgraded `Trace`->`ERROR`),
+  `Font.cpp` (3 sites -> `Log::Font`; two "invalid codepoint value"
+  warnings kept `WARN`, one routine note kept `Trace`),
+  `ScreenEdit.cpp` (5 sites -> `Log::Screen`; "Save failed. Changes
+  uncommitted from memory." upgraded `Trace`->`ERROR` -- a genuine
+  editor-save failure with real data-loss risk). No parsing/behavior
+  logic changed.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+  ~118 files remain on the corrected list.
