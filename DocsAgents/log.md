@@ -2706,3 +2706,24 @@
   substitute for a final full-tree re-sweep before calling something
   done. Phase 4 resumes as an actual long tail from here, no longer
   batching off the stale list.
+
+* **item 18 (ADR 0005 phase 4) batch 12, 2026-09-12 -- first batch
+  against the corrected remaining list.** `PlayerStageStats.cpp` (1
+  real site -> `Log::Lua`, a bad Lua-script argument warning),
+  `RageUtil.cpp` (11 sites, split by function: `GetFileContents`/
+  `FileCopy` I/O failures -> `Log::File`/`ERROR`; `StringToInt/Long/
+  LLong` catch-block warnings -> `Log::General`, kept `WARN` since
+  also used for legitimate speculative parsing), `ScreenGameplay.cpp`
+  (9 sites -> `Log::Screen`, "Error loading notes for player" upgraded
+  `Trace`->`ERROR`), `ScreenManager.cpp` (8 sites -> `Log::Screen`,
+  all already-correct), `RageDisplay_GLES2.cpp` (10 sites ->
+  `Log::Gl`, same vendor-dump->`INFO` / mislabeled-entry-trace->
+  `TRACE` pattern as the OGL/D3D backends -- **this file is Linux-only**
+  (`elseif(LINUX) if(WITH_GLES2)`-gated), so Ubuntu CI is its real
+  compile check, not the local Windows gate), `ScreenSelectMusic.cpp`
+  (8 sites -> `Log::Screen`, two song-deletion guard warnings kept
+  `WARN`). No parsing/behavior logic changed.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0 (Windows);
+  `RageDisplay_GLES2.cpp` still needs Ubuntu CI confirmation.
+  ~121 files remain on the corrected list.
