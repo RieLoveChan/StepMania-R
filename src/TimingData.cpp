@@ -143,12 +143,12 @@ void TimingData::DumpOneTable(const beat_start_lookup_t& lookup, const RString& 
 	const std::vector<TimingSegment*>& warps= m_avpTimingSegments[SEGMENT_WARP];
 	const std::vector<TimingSegment*>& stops= m_avpTimingSegments[SEGMENT_STOP];
 	const std::vector<TimingSegment*>& delays= m_avpTimingSegments[SEGMENT_DELAY];
-	LOG->Trace("%s lookup table:", name.c_str());
+	LOG_TRACE(Log::Song, "%s lookup table:", name.c_str());
 	for(std::size_t lit= 0; lit < lookup.size(); ++lit)
 	{
 		const lookup_item_t& item= lookup[lit];
 		const GetBeatStarts& starts= item.second;
-		LOG->Trace("%zu: %f", lit, item.first);
+		LOG_TRACE(Log::Song, "%zu: %f", lit, item.first);
 		RString str= ssprintf("  %s, %s, %s, %s,\n"
 			"  last_row: %d, last_time: %.3f,\n"
 			"  warp_destination: %.3f, is_warping: %d",
@@ -157,16 +157,16 @@ void TimingData::DumpOneTable(const beat_start_lookup_t& lookup, const RString& 
 			SegInfoStr(stops, starts.stop, "stop").c_str(),
 			SegInfoStr(delays, starts.delay, "delay").c_str(),
 			starts.last_row, starts.last_time, starts.warp_destination, starts.is_warping);
-		LOG->Trace("%s", str.c_str());
+		LOG_TRACE(Log::Song, "%s", str.c_str());
 	}
 }
 
 void TimingData::DumpLookupTables()
 {
-	LOG->Trace("Dumping timing data lookup tables for %s:", m_sFile.c_str());
+	LOG_TRACE(Log::Song, "Dumping timing data lookup tables for %s:", m_sFile.c_str());
 	DumpOneTable(m_beat_start_lookup, "m_beat_start_lookup");
 	DumpOneTable(m_time_start_lookup, "m_time_start_lookup");
-	LOG->Trace("Finished dumping lookup tables for %s:", m_sFile.c_str());
+	LOG_TRACE(Log::Song, "Finished dumping lookup tables for %s:", m_sFile.c_str());
 }
 
 TimingData::beat_start_lookup_t::const_iterator FindEntryInLookup(
@@ -584,7 +584,7 @@ TimingSegment* TimingData::GetSegmentAtRow( int iNoteRow, TimingSegmentType tst 
 static void EraseSegment( std::vector<TimingSegment*> &vSegs, int index, TimingSegment *cur )
 {
 #ifdef WITH_LOGGING_TIMING_DATA
-	LOG->Trace( "EraseSegment(%d, %p)", index, cur );
+	LOG_TRACE(Log::Song, "EraseSegment(%d, %p)", index, cur );
 	cur->DebugPrint();
 #endif
 
@@ -597,7 +597,7 @@ static void EraseSegment( std::vector<TimingSegment*> &vSegs, int index, TimingS
 void TimingData::AddSegment( const TimingSegment *seg )
 {
 #ifdef WITH_LOGGING_TIMING_DATA
-	LOG->Trace( "AddSegment( %s )", TimingSegmentTypeToString(seg->GetType()).c_str() );
+	LOG_TRACE(Log::Song, "AddSegment( %s )", TimingSegmentTypeToString(seg->GetType()).c_str() );
 	seg->DebugPrint();
 #endif
 
@@ -718,7 +718,7 @@ void TimingData::AddSegment( const TimingSegment *seg )
 	if( bOnSameRow && (*cur) == (*seg) )
 	{
 #ifdef WITH_LOGGING_TIMING_DATA
-		LOG->Trace( "equals previous segment, ignoring" );
+		LOG_TRACE(Log::Song, "equals previous segment, ignoring" );
 #endif
 		return;
 	}
@@ -1104,7 +1104,7 @@ void TimingData::DeleteRows( int iStartRow, int iRowsToDelete )
 				tsEnd->GetRow() < iStartRow + iRowsToDelete)
 		{
 			// The iRowsToDelete will eventually be subtracted out
-			LOG->Trace("Segment at row %d shifted to %d", tsEnd->GetRow(), iStartRow + iRowsToDelete);
+			LOG_TRACE(Log::Song, "Segment at row %d shifted to %d", tsEnd->GetRow(), iStartRow + iRowsToDelete);
 			tsEnd->SetRow(iStartRow + iRowsToDelete);
 		}
 
@@ -1136,7 +1136,7 @@ float TimingData::GetDisplayedSpeedPercent( float fSongBeat, float fMusicSeconds
 	if( speeds.size() == 0 )
 	{
 #ifdef DEBUG
-		LOG->Trace("No speed segments found: using default value.");
+		LOG_TRACE(Log::Song, "No speed segments found: using default value.");
 #endif
 		return 1.0f;
 	}

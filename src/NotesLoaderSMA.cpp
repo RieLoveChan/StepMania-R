@@ -166,7 +166,7 @@ void SMALoader::ProcessSpeeds( TimingData &out, const RString line, const int ro
 
 bool SMALoader::LoadFromSimfile( const RString &sPath, Song &out, bool /* bFromCache */ )
 {
-	LOG->Trace( "Song::LoadFromSMAFile(%s)", sPath.c_str() );
+	LOG_TRACE(Log::Song, "Song::LoadFromSMAFile(%s)", sPath.c_str() );
 
 	MsdFile msd;
 	if( !msd.ReadFile( sPath, true ) )  // unescape

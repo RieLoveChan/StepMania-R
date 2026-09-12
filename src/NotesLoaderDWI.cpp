@@ -192,7 +192,7 @@ static NoteData ParseNoteData(RString &step1, RString &step2,
 {
 	if (step1.size() < 2 && step2.size() < 2)
 	{
-		LOG->Warn("Didn't get enough data when attempting to load a DWI file");
+		LOG_ERROR(Log::Song, "Didn't get enough data when attempting to load a DWI file");
 		// Handle the error by returning an empty NoteData object
 		return NoteData();
 	}
@@ -547,7 +547,7 @@ bool DWILoader::LoadFromDir( const RString &sPath_, Song &out, std::set<RString>
 	ASSERT( aFileNames.size() == 1 );
 	const RString sPath = sPath_ + aFileNames[0];
 
-	LOG->Trace( "Song::LoadFromDWIFile(%s)", sPath.c_str() );
+	LOG_TRACE(Log::Song, "Song::LoadFromDWIFile(%s)", sPath.c_str() );
 
 	MsdFile msd;
 	if( !msd.ReadFile( sPath, false ) )  // don't unescape

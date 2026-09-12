@@ -92,7 +92,7 @@ static void SearchForDifficulty( RString sTag, Steps *pOut )
 		pOut->SetDifficulty( Difficulty_Edit );
 	}
 
-	LOG->Trace( "Tag \"%s\" is %s", sTag.c_str(), DifficultyToString(pOut->GetDifficulty()).c_str() );
+	LOG_TRACE(Log::Song, "Tag \"%s\" is %s", sTag.c_str(), DifficultyToString(pOut->GetDifficulty()).c_str() );
 }
 
 static void SlideDuplicateDifficulties( Song &p )
@@ -1732,7 +1732,7 @@ bool BMSLoader::LoadNoteDataFromSimfile( const RString & cachePath, Steps & out 
 
 bool BMSLoader::LoadFromDir( const RString &sDir, Song &out )
 {
-	LOG->Trace( "Song::LoadFromBMSDir(%s)", sDir.c_str() );
+	LOG_TRACE(Log::Song, "Song::LoadFromBMSDir(%s)", sDir.c_str() );
 
 	ASSERT( out.m_vsKeysoundFile.empty() );
 
