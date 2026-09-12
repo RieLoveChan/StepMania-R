@@ -346,7 +346,7 @@ bool Song::LoadFromSongDir(RString sDir, bool load_autosave, ProfileSlot from_pr
 		}
 		if(m_sMainTitle == "" || (m_sMusicFile == "" && m_vsKeysoundFile.empty()))
 		{
-			LOG->Warn("Main title or music file for '%s' came up blank, forced to fall back on TidyUpData to fix title and paths.  Do not use # or ; in a song title.", m_sSongDir.c_str());
+			LOG_WARN(Log::Song, "Main title or music file for '%s' came up blank, forced to fall back on TidyUpData to fix title and paths.  Do not use # or ; in a song title.", m_sSongDir.c_str());
 			// Tell TidyUpData that it's not loaded from the cache because it needs
 			// to hit the song folder to find the files that weren't found. -Kyz
 			TidyUpData(false, false);
@@ -401,18 +401,18 @@ bool Song::LoadFromSongDir(RString sDir, bool load_autosave, ProfileSlot from_pr
 	{
 		if(m_fMusicLengthSeconds > PREFSMAN->m_custom_songs_max_seconds)
 		{
-			LOG->Trace("Custom song %s is too long.", m_sSongDir.c_str());
+			LOG_WARN(Log::Song, "Custom song %s is too long.", m_sSongDir.c_str());
 			return false;
 		}
 		RageFile music;
 		if(!music.Open(GetMusicPath(), RageFile::READ))
 		{
-			LOG->Trace("Custom song %s could not open music.", m_sSongDir.c_str());
+			LOG_WARN(Log::Song, "Custom song %s could not open music.", m_sSongDir.c_str());
 			return false;
 		}
 		if(music.GetFileSize() > PREFSMAN->m_custom_songs_max_megabytes * 1000000)
 		{
-			LOG->Trace("Custom song %s music file is too big.", m_sSongDir.c_str());
+			LOG_WARN(Log::Song, "Custom song %s music file is too big.", m_sSongDir.c_str());
 			return false;
 		}
 		m_pre_customify_song_dir= m_sSongDir;
@@ -757,7 +757,7 @@ void Song::TidyUpData( bool from_cache, bool /* duringCache */ )
 			// (yet) support.
 			if(!music_list.empty())
 			{
-				LOG->Trace("Song '%s' points to a music file that doesn't exist, found music file '%s'", m_sSongDir.c_str(), music_list[0].c_str());
+				LOG_WARN(Log::Song, "Song '%s' points to a music file that doesn't exist, found music file '%s'", m_sSongDir.c_str(), music_list[0].c_str());
 				m_bHasMusic= true;
 				m_sMusicFile= music_list[0];
 				if(music_list.size() > 1 &&
@@ -1212,7 +1212,7 @@ bool Song::HasStepsTypeAndDifficulty( StepsType st, Difficulty dc ) const
 
 void Song::Save(bool autosave)
 {
-	LOG->Trace( "Song::SaveToSongFile()" );
+	LOG_TRACE(Log::Song, "Song::SaveToSongFile()" );
 
 	ReCalculateRadarValuesAndLastSecond();
 	TranslateTitles();
@@ -1260,7 +1260,7 @@ void Song::Save(bool autosave)
 bool Song::SaveToSMFile()
 {
 	const RString sPath = SetExtension( GetSongFilePath(), "sm" );
-	LOG->Trace( "Song::SaveToSMFile(%s)", sPath.c_str() );
+	LOG_TRACE(Log::Song, "Song::SaveToSMFile(%s)", sPath.c_str() );
 
 	// If the file exists, make a backup.
 	if( IsAFile(sPath) )
@@ -1297,7 +1297,7 @@ bool Song::SaveToSSCFile( RString sPath, bool bSavingCache, bool autosave )
 		path = SetExtension(sPath, "ats");
 	}
 
-	LOG->Trace( "Song::SaveToSSCFile('%s')", path.c_str() );
+	LOG_TRACE(Log::Song, "Song::SaveToSSCFile('%s')", path.c_str() );
 
 	// If the file exists, make a backup.
 	if(!bSavingCache && !autosave && IsAFile(path))
@@ -1348,9 +1348,9 @@ bool Song::SaveToSSCFile( RString sPath, bool bSavingCache, bool autosave )
 		sBackupFile += ssprintf( ".old" );
 
 		if( FileCopy(path, sBackupFile) )
-			LOG->Trace( "Backed up %s to %s", path.c_str(), sBackupFile.c_str() );
+			LOG_TRACE(Log::Song, "Backed up %s to %s", path.c_str(), sBackupFile.c_str() );
 		else
-			LOG->Trace( "Failed to back up %s to %s", path.c_str(), sBackupFile.c_str() );
+			LOG_WARN(Log::Song, "Failed to back up %s to %s", path.c_str(), sBackupFile.c_str() );
 	}
 
 	// Mark these steps saved to disk.
@@ -1362,7 +1362,7 @@ bool Song::SaveToSSCFile( RString sPath, bool bSavingCache, bool autosave )
 
 bool Song::SaveToJsonFile( RString sPath )
 {
-	LOG->Trace( "Song::SaveToJsonFile('%s')", sPath.c_str() );
+	LOG_TRACE(Log::Song, "Song::SaveToJsonFile('%s')", sPath.c_str() );
 	return NotesWriterJson::WriteSong(sPath, *this, true);
 }
 
@@ -1380,7 +1380,7 @@ bool Song::SaveToCacheFile()
 bool Song::SaveToDWIFile()
 {
 	const RString sPath = SetExtension( GetSongFilePath(), "dwi" );
-	LOG->Trace( "Song::SaveToDWIFile(%s)", sPath.c_str() );
+	LOG_TRACE(Log::Song, "Song::SaveToDWIFile(%s)", sPath.c_str() );
 
 	// If the file exists, make a backup.
 	if( IsAFile(sPath) )
