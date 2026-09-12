@@ -31,12 +31,12 @@ void TimingSegment::Scale( int start, int length, int newLength )
 
 void TimingSegment::DebugPrint() const
 {
-	LOG->Trace( "\tTimingSegment(%d [%f])", GetRow(), GetBeat() );
+	LOG_TRACE(Log::Song, "\tTimingSegment(%d [%f])", GetRow(), GetBeat() );
 }
 
 void BPMSegment::DebugPrint() const
 {
-	LOG->Trace( "\t%s(%d [%f], %f)",
+	LOG_TRACE(Log::Song, "\t%s(%d [%f], %f)",
 		TimingSegmentTypeToString(GetType()).c_str(),
 		GetRow(), GetBeat(), GetBPM()
 	);
@@ -44,7 +44,7 @@ void BPMSegment::DebugPrint() const
 
 void StopSegment::DebugPrint() const
 {
-	LOG->Trace( "\t%s(%d [%f], %f)",
+	LOG_TRACE(Log::Song, "\t%s(%d [%f], %f)",
 		TimingSegmentTypeToString(GetType()).c_str(),
 		GetRow(), GetBeat(), GetPause()
 	);
@@ -52,7 +52,7 @@ void StopSegment::DebugPrint() const
 
 void DelaySegment::DebugPrint() const
 {
-	LOG->Trace( "\t%s(%d [%f], %f)",
+	LOG_TRACE(Log::Song, "\t%s(%d [%f], %f)",
 		TimingSegmentTypeToString(GetType()).c_str(),
 		GetRow(), GetBeat(), GetPause()
 	);
@@ -60,7 +60,7 @@ void DelaySegment::DebugPrint() const
 
 void TimeSignatureSegment::DebugPrint() const
 {
-	LOG->Trace( "\t%s(%d [%f], %d/%d)",
+	LOG_TRACE(Log::Song, "\t%s(%d [%f], %d/%d)",
 		TimingSegmentTypeToString(GetType()).c_str(),
 		GetRow(), GetBeat(), GetNum(), GetDen()
 	);
@@ -68,7 +68,7 @@ void TimeSignatureSegment::DebugPrint() const
 
 void WarpSegment::DebugPrint() const
 {
-	LOG->Trace( "\t%s(%d [%f], %d [%f])",
+	LOG_TRACE(Log::Song, "\t%s(%d [%f], %d [%f])",
 		TimingSegmentTypeToString(GetType()).c_str(),
 		GetRow(), GetBeat(), GetLengthRows(), GetLengthBeats()
 	);
@@ -76,7 +76,7 @@ void WarpSegment::DebugPrint() const
 
 void LabelSegment::DebugPrint() const
 {
-	LOG->Trace( "\t%s(%d [%f], %s)",
+	LOG_TRACE(Log::Song, "\t%s(%d [%f], %s)",
 		TimingSegmentTypeToString(GetType()).c_str(),
 		GetRow(), GetBeat(), GetLabel().c_str()
 	);
@@ -84,7 +84,7 @@ void LabelSegment::DebugPrint() const
 
 void TickcountSegment::DebugPrint() const
 {
-	LOG->Trace( "\t%s(%d [%f], %d)",
+	LOG_TRACE(Log::Song, "\t%s(%d [%f], %d)",
 		TimingSegmentTypeToString(GetType()).c_str(),
 		GetRow(), GetBeat(), GetTicks()
 	);
@@ -92,7 +92,7 @@ void TickcountSegment::DebugPrint() const
 
 void ComboSegment::DebugPrint() const
 {
-	LOG->Trace( "\t%s(%d [%f], %d, %d)",
+	LOG_TRACE(Log::Song, "\t%s(%d [%f], %d, %d)",
 		TimingSegmentTypeToString(GetType()).c_str(),
 		GetRow(), GetBeat(), GetCombo(), GetMissCombo()
 	);
@@ -100,7 +100,7 @@ void ComboSegment::DebugPrint() const
 
 void SpeedSegment::DebugPrint() const
 {
-	LOG->Trace( "\t%s(%d [%f], %f, %f, %d)",
+	LOG_TRACE(Log::Song, "\t%s(%d [%f], %f, %f, %d)",
 		TimingSegmentTypeToString(GetType()).c_str(),
 		GetRow(), GetBeat(), GetRatio(), GetDelay(), GetUnit()
 	);
@@ -108,7 +108,7 @@ void SpeedSegment::DebugPrint() const
 
 void ScrollSegment::DebugPrint() const
 {
-	LOG->Trace( "\t%s(%d [%f], %f)",
+	LOG_TRACE(Log::Song, "\t%s(%d [%f], %f)",
 		TimingSegmentTypeToString(GetType()).c_str(),
 		GetRow(), GetBeat(), GetRatio()
 	);
@@ -116,7 +116,7 @@ void ScrollSegment::DebugPrint() const
 
 void FakeSegment::DebugPrint() const
 {
-	LOG->Trace( "\t%s(%d [%f], %d [%f])",
+	LOG_TRACE(Log::Song, "\t%s(%d [%f], %d [%f])",
 		TimingSegmentTypeToString(GetType()).c_str(),
 		GetRow(), GetBeat(), GetLengthRows(), GetLengthBeats()
 	);
