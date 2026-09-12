@@ -1402,6 +1402,29 @@ spec is the whole config.)
   `NotesLoaderSSC.cpp` 26, `Song.cpp` 25, etc.) last, as pure
   category/level re-tagging re-verified against their characterization
   tests — never a parsing-logic change.
+  **Ph4 batch 6 (2026-09-11):** `StepMania.cpp` (23 real sites,
+  `Log::General` — this is the top-level application/main-loop file,
+  no single subsystem category fits; 3 grep hits are pre-existing
+  commented-out input-debug calls, left untouched). Triage: kept the
+  two existing `Warn` sites at `WARN` (a saved game-type preference
+  that's no longer available, falling back to the default; an unknown
+  `--game` command-line argument being ignored — both real, if
+  recoverable, config/input problems, not routine). Downgraded one
+  `Warn`→`INFO`: "video renderer list has been changed from X to Y" is
+  the code noting a config divergence from card defaults and
+  continuing normally — not a problem, just an FYI, so `WARN` was the
+  wrong altitude for it. Everything else (startup banner/version/
+  command-line-args dump, video-card-default detection, coin-mech
+  bookkeeping, screenshot timing) was already correctly leveled
+  `Trace`/`Info` and just got a category. No parsing/behavior logic
+  changed; not §5-protected.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+  Remaining: `Profile.cpp` next, then the §5-protected
+  parsers (`NotesLoaderSM.cpp` 39 sites, `CourseLoaderCRS.cpp` 27,
+  `NotesLoaderSSC.cpp` 26, `Song.cpp` 25, etc.) last, as pure
+  category/level re-tagging re-verified against their characterization
+  tests — never a parsing-logic change.
 
 ### 20. Replace the archaic hard-coded game-type system
 Game types are defined by hand-written `static const Game g_Game_X = {…}`
