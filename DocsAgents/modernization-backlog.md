@@ -1371,8 +1371,33 @@ spec is the whole config.)
   parsing/behavior logic changed; not §5-protected.
   Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
   `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
-  Remaining: the long tail of non-§5 files (`RageDisplay_D3D.cpp` next,
-  then `StepMania.cpp`/`Profile.cpp`/etc.), then the §5-protected
+  **Ph4 batch 5 (2026-09-11):** `RageDisplay_D3D.cpp` (14 real sites,
+  `Log::General` — no D3D-specific category exists, same reasoning as
+  `CryptManager` in batch 2; using `Log::Gl` would have been
+  misleading for a different rendering backend. 2 grep hits are
+  pre-existing commented-out calls, left untouched). Triage: two real
+  init-time failures upgraded to `LOG_ERROR` — `Direct3DCreate9`
+  failing outright, and failing to find *any* usable back buffer
+  format (`FindBackBufferType`'s terminal case, previously mislabeled
+  `Trace`); the adapter display-mode query failure also upgraded
+  `Warn`→`ERROR` (has a graceful fallback, but the query itself
+  shouldn't normally fail). One clear mislabeling fixed:
+  `TryVideoMode`'s entry trace was tagged `Warn` for no evident reason
+  — it's a plain function-entry diagnostic, identical in kind to its
+  (already-commented-out) sibling one line away in
+  `RageDisplay_OGL.cpp` — downgraded to `LOG_TRACE`. For cross-backend
+  parity with batch 4's already-`LOG_INFO` OGL vendor/mode startup
+  dump, the equivalent D3D driver-identification and
+  supported-display-mode dump (3 sites) was promoted `Trace`→`INFO`
+  rather than left at the file's pre-existing level — same kind of
+  information, same subsystem role, should behave the same under
+  `--LogLevel` regardless of which renderer backend is active. The
+  rest (routine per-mode/parameter-testing loop diagnostics) stayed at
+  `LOG_TRACE`. No parsing/behavior logic changed; not §5-protected.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+  Remaining: the long tail of non-§5 files (`StepMania.cpp`/
+  `Profile.cpp`/etc. next), then the §5-protected
   parsers (`NotesLoaderSM.cpp` 39 sites, `CourseLoaderCRS.cpp` 27,
   `NotesLoaderSSC.cpp` 26, `Song.cpp` 25, etc.) last, as pure
   category/level re-tagging re-verified against their characterization
