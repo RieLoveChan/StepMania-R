@@ -148,7 +148,7 @@ bool ProfileManager::FixedProfiles() const
 
 ProfileLoadResult ProfileManager::LoadProfile( PlayerNumber pn, RString sProfileDir, bool bIsMemCard )
 {
-	LOG->Trace( "LoadingProfile P%d, %s, %d", pn+1, sProfileDir.c_str(), bIsMemCard );
+	LOG_TRACE(Log::Profile, "LoadingProfile P%d, %s, %d", pn+1, sProfileDir.c_str(), bIsMemCard );
 
 	ASSERT( !sProfileDir.empty() );
 	ASSERT( sProfileDir.Right(1) == "/" );
@@ -184,7 +184,7 @@ ProfileLoadResult ProfileManager::LoadProfile( PlayerNumber pn, RString sProfile
 		 * then the error should be failed_tampered and not failed_no_profile. */
 		if( lr == ProfileLoadResult_FailedNoProfile )
 		{
-			LOG->Trace( "Profile was corrupt and LastGood for %s doesn't exist; error is ProfileLoadResult_FailedTampered",
+			LOG_WARN(Log::Profile, "Profile was corrupt and LastGood for %s doesn't exist; error is ProfileLoadResult_FailedTampered",
 					sProfileDir.c_str() );
 			lr = ProfileLoadResult_FailedTampered;
 		}
@@ -201,7 +201,7 @@ ProfileLoadResult ProfileManager::LoadProfile( PlayerNumber pn, RString sProfile
 		prof->LoadSongsFromDir(sProfileDir, ProfileSlot(pn));
 	}
 
-	LOG->Trace( "Done loading profile - result %d", lr );
+	LOG_TRACE(Log::Profile, "Done loading profile - result %d", lr );
 
 	return lr;
 }
@@ -812,14 +812,14 @@ bool ProfileManager::DeleteLocalProfile( RString sProfileID )
 			}
 			else
 			{
-				LOG->Warn("[ProfileManager::DeleteLocalProfile] DeleteRecursive(%s) failed",
+				LOG_ERROR(Log::Profile, "[ProfileManager::DeleteLocalProfile] DeleteRecursive(%s) failed",
 					sProfileID.c_str() );
 				return false;
 			}
 		}
 	}
 
-	LOG->Warn( "DeleteLocalProfile: ProfileID '%s' doesn't exist", sProfileID.c_str() );
+	LOG_WARN(Log::Profile, "DeleteLocalProfile: ProfileID '%s' doesn't exist", sProfileID.c_str() );
 	return false;
 }
 

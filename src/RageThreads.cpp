@@ -245,7 +245,7 @@ void RageThread::Create( int (*fn)(void *), void *data )
 	strcpy( m_pSlot->m_szName, m_sName.c_str() );
 
 	if( LOG )
-		LOG->Trace( "Starting thread: %s", m_sName.c_str() );
+		LOG_TRACE(Log::General, "Starting thread: %s", m_sName.c_str() );
 	sprintf( m_pSlot->m_szThreadFormattedOutput, "Thread: %s", m_sName.c_str() );
 
 	/* Start a thread using our own startup function.  We pass the id to fill in,
@@ -395,7 +395,7 @@ void Checkpoints::SetCheckpoint( const char *file, int line, const char *message
 	slot->m_Checkpoints[slot->m_iCurCheckpoint].Set( file, line, message );
 
 	if( g_LogCheckpoints )
-		LOG->Trace( "%s", slot->m_Checkpoints[slot->m_iCurCheckpoint].m_szFormattedBuf );
+		LOG_TRACE(Log::General, "%s", slot->m_Checkpoints[slot->m_iCurCheckpoint].m_szFormattedBuf );
 
 	++slot->m_iCurCheckpoint;
 	slot->m_iNumCheckpoints = std::max( slot->m_iNumCheckpoints, slot->m_iCurCheckpoint );
@@ -492,7 +492,7 @@ void RageMutex::MarkLockedMutex()
 		 * then we have an inconsistent lock order. */
 		if( g_MutexesBefore[mutex->m_UniqueID][this->m_UniqueID] )
 		{
-			LOG->Warn( "Mutex lock inconsistency: mutex \"%s\" must be locked before \"%s\"",
+			LOG_ERROR(Log::General, "Mutex lock inconsistency: mutex \"%s\" must be locked before \"%s\"",
 				this->GetName().c_str(), mutex->GetName().c_str() );
 
 			break;
@@ -547,7 +547,7 @@ RageMutex::RageMutex( const RString &name ):
 				s += ", ";
 			s += ssprintf( "\"%s\"", (*g_MutexList)[i]->GetName().c_str() );
 		}
-		LOG->Trace( "%s", s.c_str() );
+		LOG_TRACE(Log::General, "%s", s.c_str() );
 		FAIL_M( ssprintf("MAX_MUTEXES exceeded creating \"%s\"", name.c_str() ) );
 	}
 
@@ -686,7 +686,7 @@ void LockMutex::Unlock()
 	{
 		const float dur = static_cast<float>(RageTimer::GetTimeSinceStart() - locked_at);
 		if( dur > 0.015f )
-			LOG->Trace( "Lock at %s:%i took %f", file, line, dur );
+			LOG_TRACE(Log::General, "Lock at %s:%i took %f", file, line, dur );
 	}
 }
 
