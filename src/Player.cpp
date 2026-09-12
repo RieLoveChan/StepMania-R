@@ -1606,7 +1606,7 @@ void Player::ApplyWaitingTransforms()
 		mod.GetRealtimeAttackBeats( GAMESTATE->m_pCurSong, m_pPlayerState, fStartBeat, fEndBeat );
 		fEndBeat = std::min( fEndBeat, m_NoteData.GetLastBeat() );
 
-		LOG->Trace( "Applying transform '%s' from %f to %f to '%s'", mod.sModifiers.c_str(), fStartBeat, fEndBeat,
+		LOG_TRACE(Log::Actor, "Applying transform '%s' from %f to %f to '%s'", mod.sModifiers.c_str(), fStartBeat, fEndBeat,
 			GAMESTATE->m_pCurSong->GetTranslitMainTitle().c_str() );
 
 		// if re-adding noteskin changes, this is one place to edit -aj
