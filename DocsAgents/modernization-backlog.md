@@ -1538,6 +1538,29 @@ spec is the whole config.)
   Remaining §5 files: `NotesLoaderSM.cpp`, `CourseLoaderCRS.cpp`,
   `NotesLoaderSSC.cpp` — the three biggest, real-vs-`UserLog` split
   not yet broken down.
+  **Ph4 batch 11 (2026-09-12) — closes out the entire §5-protected
+  lane.** `NotesLoaderSM.cpp` (1 real site — its other 3 raw grep hits
+  were all pre-existing commented-out calls, not real sites despite
+  the "39" raw count originally estimated), `CourseLoaderCRS.cpp`
+  (3 real sites), `NotesLoaderSSC.cpp` (2 real sites; 1 more grep hit
+  is a pre-existing commented-out call) — all `Log::Song` (no
+  dedicated `Course` category exists either, same catch-all
+  reasoning). Every single site across all three files turned out to
+  already be a correctly-leveled routine `Trace` (loader/edit-file
+  entry points, cache-vs-fresh-load branch tracing) — no triage
+  upgrades needed, purely categorization. Verified against real
+  characterization coverage: `[SMLoader]` 43/14, `[corpus]` 313/3
+  (covers both `.sm` and `.ssc` via the paired-format test), `[crs]`
+  39/5 — all unchanged, plus the full suite (5966/226).
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+  **Item 18 phase 4 is now fully done except `Player.cpp`** (48 sites,
+  god-object hotspot — its own careful pass, no characterization test
+  exists for it since it's gameplay/scoring logic, not simfile
+  parsing). Every §5-protected simfile-format file has been migrated
+  to the categorized `LOG_*` macros with zero parsing/behavior changes
+  throughout, each re-verified against its characterization test (or
+  the full-suite invariant where no per-format tag existed).
 
 ### 20. Replace the archaic hard-coded game-type system
 Game types are defined by hand-written `static const Game g_Game_X = {…}`
