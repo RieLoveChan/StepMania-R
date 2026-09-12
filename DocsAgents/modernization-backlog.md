@@ -1262,7 +1262,7 @@ plain dead `#if 0 ... #endif` (candidate for removal), an active
 other branch is live), and a toolchain-EOL block like the VC6 ones
 above (enable, don't delete).
 
-### 18. Logging overhaul — DONE 2026-09-12, all 4 phases complete
+### 18. Logging overhaul — phases 1-3 DONE, phase 4 IN PROGRESS (methodology correction below)
 Phase 1 (`c82d0e9058`): bracketed level tags, `Error()` level, no
 `/////`, `Char Widths` fixed. `--SelfTest` log 695→467 lines, clean.
 **Phase 2 DONE (2026-09-08, `156c075ff3` + `3a53baad5f`):**
@@ -1581,14 +1581,27 @@ spec is the whole config.)
   in batch 10.
   Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
   `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
-  **ADR 0005 logging overhaul is now fully implemented end to end**:
-  bracketed level tags + `Error()` (phase 1), the `LogLevel`/
-  `Log::Category` infrastructure + `LOG_*` macros + `--LogLevel` spec
-  (phase 2), repeat-line collapsing (phase 3), and now every real
-  call site in `src/` migrated to the categorized macros (phase 4) —
-  11 batches total across this backlog item, spanning non-§5 files,
-  the entire §5-protected simfile-parser lane, and the `Player.cpp`
-  god-object, with zero parsing/behavior regressions throughout.
+  **CORRECTION (2026-09-12, same day): phase 4 was declared complete
+  prematurely.** The batches above were all worked from a **fixed
+  top-30 list captured once at the very start of phase 4 recon**
+  (~799 raw hits counted then); every batch since picked files off
+  that original list, but the list itself was never a full sweep, and
+  no final re-sweep of the whole `src/` tree was done before declaring
+  victory. A fresh sweep (`grep -cE "LOG->Trace|LOG->Warn|LOG->Info"
+  src/*.cpp`, deliberately excluding `LOG->UserLog` which stays
+  out-of-scope) after the `Player.cpp` batch found **127 more files**
+  with real, un-migrated sites (~430+ sites total) that were simply
+  never on the original top-30 — `PlayerStageStats.cpp` (12),
+  `ScreenGameplay.cpp` (11), `RageUtil.cpp` (11), `ScreenManager.cpp`
+  (10), `RageDisplay_GLES2.cpp` (10), and a long tail down to
+  1-site files. **This is the same methodology trap already
+  documented for item 2's C4244/C4267 sweep** ("declared complete
+  wrongly at least four times before the true zero") — a curated
+  work-list from one point in time is not a substitute for a final
+  full-tree re-sweep. Phase 4 continues from here as a real "long
+  tail, per subsystem" the way ADR 0005 always described it, no
+  longer batching off the stale original list — see the batches
+  below for the corrected, ongoing count.
 
 ### 20. Replace the archaic hard-coded game-type system
 Game types are defined by hand-written `static const Game g_Game_X = {…}`
