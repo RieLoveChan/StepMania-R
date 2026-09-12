@@ -1510,6 +1510,34 @@ spec is the whole config.)
   Remaining §5 files: `NotesLoaderSM.cpp`, `CourseLoaderCRS.cpp`,
   `NotesLoaderSSC.cpp`, `Song.cpp` — bigger, real-vs-`UserLog` split
   not yet broken down.
+  **Ph4 batch 10 (2026-09-12):** `Song.cpp` (12 real sites, `Log::Song`
+  — 2 grep hits are pre-existing dead code: one commented-out single
+  line plus one whole `LOG->Trace(...)` call sitting inside a
+  `/* ... */` block, both left untouched). Triage: the cache-load
+  fallback warning ("main title or music file came up blank") kept at
+  `WARN` (a real, self-healing data-quality issue with an actionable
+  hint in the message itself). Three custom-song (profile-song)
+  rejection sites upgraded `Trace`→`WARN` (too long / can't open music
+  / file too big — each aborts loading that one custom song, matching
+  the "Song %s failed to load" precedent from batch 7's
+  `Profile.cpp`). "Points to a music file that doesn't exist, found
+  music file X" upgraded `Trace`→`WARN` — a real simfile-authoring
+  error (broken music-file reference) that the code recovers from via
+  fallback, still worth surfacing. In `SaveToSSCFile`'s optional
+  timestamped-backup step, the success case stayed `Trace` but the
+  failure case upgraded `Trace`→`WARN` — the primary save already
+  succeeded by this point, so it's not data loss, but a failed safety
+  net is worth knowing about. The rest (save-flow entry traces for
+  `.sm`/`.ssc`/`.json`/`.dwi`) stayed `Trace`. No parsing/behavior
+  logic changed; verified via the unchanged full-suite total
+  (5966/226) — no dedicated `[Song]`-tagged characterization test
+  exists, so the full-suite invariant is the check here, same
+  reasoning as batch 9's `[sma]`/`[dwi]`/`[bms]`.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+  Remaining §5 files: `NotesLoaderSM.cpp`, `CourseLoaderCRS.cpp`,
+  `NotesLoaderSSC.cpp` — the three biggest, real-vs-`UserLog` split
+  not yet broken down.
 
 ### 20. Replace the archaic hard-coded game-type system
 Game types are defined by hand-written `static const Game g_Game_X = {…}`
