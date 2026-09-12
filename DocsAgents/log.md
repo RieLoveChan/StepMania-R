@@ -2593,3 +2593,19 @@
   bare `LOG->` call is either a §5-protected parser (needs
   characterization-test re-verification each time) or `Player.cpp`
   (48 sites, god-object hotspot, needs its own careful pass).
+
+* **item 18 (ADR 0005 phase 4) batch 8, 2026-09-12 -- first
+  §5-protected batch.** `TimingSegments.cpp` (12 sites -> `Log::Song`)
+  and the 3 real (non-`UserLog`) sites in `NotesLoaderKSF.cpp` (also
+  `Log::Song`; its 6 `LOG->UserLog(...)` calls stay untouched, same
+  as every other loader file). `TimingSegments.cpp` was the cleanest
+  possible §5 pilot: all 12 sites are identical-shape `DebugPrint()`
+  overrides on each `TimingSegment` subclass, pure diagnostic
+  formatting with zero decision logic -- no triage judgment needed,
+  all stayed `LOG_TRACE`. `NotesLoaderKSF.cpp`'s 3 sites were likewise
+  already-correct routine `Trace` calls, just categorized. Re-verified
+  against characterization tests before AND after: `[TimingData]`
+  40/9 and `[ksf]` 31/2, both identical -- confirming pure category/
+  level tagging with zero parsing/behavior change, per the §5 gate.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
