@@ -79,7 +79,7 @@ RString RageDisplay::SetVideoMode( VideoModeParams p, bool &bNeedReloadTextures 
 
 	if( (err = this->TryVideoMode(p,bNeedReloadTextures)).empty() )
 		return RString();
-	LOG->Trace( "TryVideoMode failed: %s", err.c_str() );
+	LOG_TRACE(Log::General, "TryVideoMode failed: %s", err.c_str() );
 	vs.push_back( err );
 
 	// fall back to settings that will most likely work
@@ -148,7 +148,7 @@ void RageDisplay::ProcessStatsOnFlip()
 		{
 			RString sStats = GetStats();
 			sStats.Replace( "\n", ", " );
-			LOG->Trace( "%s", sStats.c_str() );
+			LOG_TRACE(Log::General, "%s", sStats.c_str() );
 		}
 	}
 }
@@ -775,7 +775,7 @@ bool RageDisplay::SaveScreenshot( RString sPath, GraphicsFileFormat format )
 
 	if (nullptr == surface)
 	{
-		LOG->Trace("CreateScreenshot failed to return a surface");
+		LOG_ERROR(Log::General, "CreateScreenshot failed to return a surface");
 		return false;
 	}
 
@@ -798,7 +798,7 @@ bool RageDisplay::SaveScreenshot( RString sPath, GraphicsFileFormat format )
 	RageFile out;
 	if( !out.Open( sPath, RageFile::WRITE ) )
 	{
-		LOG->Trace("Couldn't write %s: %s", sPath.c_str(), out.GetError().c_str() );
+		LOG_ERROR(Log::General, "Couldn't write %s: %s", sPath.c_str(), out.GetError().c_str() );
 		SAFE_DELETE( surface );
 		return false;
 	}
@@ -828,7 +828,7 @@ bool RageDisplay::SaveScreenshot( RString sPath, GraphicsFileFormat format )
 
 	if( !bSuccess )
 	{
-		LOG->Trace("Couldn't write %s: %s", sPath.c_str(), out.GetError().c_str() );
+		LOG_ERROR(Log::General, "Couldn't write %s: %s", sPath.c_str(), out.GetError().c_str() );
 		return false;
 	}
 
