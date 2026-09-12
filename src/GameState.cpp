@@ -726,7 +726,7 @@ void GameState::BeginStage()
 
 	// This should only be called once per stage.
 	if( m_iNumStagesOfThisSong != 0 )
-		LOG->Warn( "XXX: m_iNumStagesOfThisSong == %i?", m_iNumStagesOfThisSong );
+		LOG_WARN(Log::General, "XXX: m_iNumStagesOfThisSong == %i?", m_iNumStagesOfThisSong );
 
 	ResetStageStatistics();
 	AdjustSync::ResetOriginalSyncData();
@@ -821,7 +821,7 @@ void GameState::FinishStage()
 	STATSMAN->m_CurStageStats.m_EarnedExtraStage = e;
 	if( e != EarnedExtraStage_No )
 	{
-		LOG->Trace( "awarded extra stage" );
+		LOG_TRACE(Log::General, "awarded extra stage" );
 		FOREACH_HumanPlayer( p )
 		{
 			// todo: unhardcode the extra stage limit? -aj
@@ -865,7 +865,7 @@ void GameState::FinishStage()
 		const int iSaveProfileEvery = 3;
 		if( iOldStageIndex/iSaveProfileEvery < m_iCurrentStageIndex/iSaveProfileEvery )
 		{
-			LOG->Trace( "Played %i stages; saving profiles ...", iSaveProfileEvery );
+			LOG_TRACE(Log::General, "Played %i stages; saving profiles ...", iSaveProfileEvery );
 			PROFILEMAN->SaveMachineProfile();
 			this->SavePlayerProfiles();
 		}
@@ -2342,7 +2342,7 @@ void GameState::StoreRankingName( PlayerNumber pn, RString sName )
 				sLine.MakeUpper();
 				if( !sLine.empty() && sName.find(sLine) != std::string::npos )	// name contains a bad word
 				{
-					LOG->Trace( "entered '%s' matches blacklisted item '%s'", sName.c_str(), sLine.c_str() );
+					LOG_WARN(Log::General, "entered '%s' matches blacklisted item '%s'", sName.c_str(), sLine.c_str() );
 					sName = "";
 					break;
 				}

@@ -128,7 +128,7 @@ void NoteField::CacheNoteSkin( const RString &sNoteSkin_ )
 
 	LockNoteSkin l( sNoteSkinLower );
 
-	LOG->Trace("NoteField::CacheNoteSkin: cache %s", sNoteSkinLower.c_str() );
+	LOG_TRACE(Log::Actor, "NoteField::CacheNoteSkin: cache %s", sNoteSkinLower.c_str() );
 	NoteDisplayCols *nd = new NoteDisplayCols( GAMESTATE->GetCurrentStyle(m_pPlayerState->m_PlayerNumber)->m_iColsPerPlayer );
 
 	for( int c=0; c<GAMESTATE->GetCurrentStyle(m_pPlayerState->m_PlayerNumber)->m_iColsPerPlayer; c++ )
@@ -144,7 +144,7 @@ void NoteField::UncacheNoteSkin( const RString &sNoteSkin_ )
 	RString sNoteSkinLower = sNoteSkin_;
 	sNoteSkinLower.MakeLower();
 
-	LOG->Trace("NoteField::CacheNoteSkin: release %s", sNoteSkinLower.c_str() );
+	LOG_TRACE(Log::Actor, "NoteField::CacheNoteSkin: release %s", sNoteSkinLower.c_str() );
 	ASSERT_M( m_NoteDisplays.find(sNoteSkinLower) != m_NoteDisplays.end(), sNoteSkinLower );
 	delete m_NoteDisplays[sNoteSkinLower];
 	m_NoteDisplays.erase( sNoteSkinLower );

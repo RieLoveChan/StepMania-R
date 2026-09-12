@@ -49,7 +49,7 @@ RageTextureManager::~RageTextureManager()
 	{
 		RageTexture* pTexture = i.second;
 		if( pTexture->m_iRefCount )
-			LOG->Trace( "TEXTUREMAN LEAK: '%s', RefCount = %d.", i.first.filename.c_str(), pTexture->m_iRefCount );
+			LOG_WARN(Log::Cache, "TEXTUREMAN LEAK: '%s', RefCount = %d.", i.first.filename.c_str(), pTexture->m_iRefCount );
 		SAFE_DELETE( pTexture );
 	}
 	m_textures_to_update.clear();
@@ -262,7 +262,7 @@ void RageTextureManager::DeleteTexture( RageTexture *t )
 void RageTextureManager::GarbageCollect( GCType type )
 {
 	// Search for old textures with refcount==0 to unload
-	LOG->Trace("Performing texture garbage collection.");
+	LOG_TRACE(Log::Cache, "Performing texture garbage collection.");
 
 	for( std::map<RageTextureID, RageTexture*>::iterator i = m_mapPathToTexture.begin();
 		i != m_mapPathToTexture.end(); )
@@ -354,7 +354,7 @@ bool RageTextureManager::SetPrefs( RageTextureManagerPrefs prefs )
 void RageTextureManager::DiagnosticOutput() const
 {
 	unsigned iCount = static_cast<unsigned>(distance( m_mapPathToTexture.begin(), m_mapPathToTexture.end() ));
-	LOG->Trace( "%u textures loaded:", iCount );
+	LOG_TRACE(Log::Cache, "%u textures loaded:", iCount );
 
 	int iTotal = 0;
 	for (auto const &i : m_mapPathToTexture)
@@ -369,10 +369,10 @@ void RageTextureManager::DiagnosticOutput() const
 		if( !sDiags.empty() )
 			sStr += " " + sDiags;
 
-		LOG->Trace( " %-40s %s", sStr.c_str(), Basename(ID.filename).c_str() );
+		LOG_TRACE(Log::Cache, " %-40s %s", sStr.c_str(), Basename(ID.filename).c_str() );
 		iTotal += pTex->GetTextureHeight() * pTex->GetTextureWidth();
 	}
-	LOG->Trace( "total %3i texels", iTotal );
+	LOG_TRACE(Log::Cache, "total %3i texels", iTotal );
 }
 
 /*

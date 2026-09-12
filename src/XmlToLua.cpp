@@ -440,7 +440,7 @@ void actor_template_t::load_frames_from_file(RString const& fname, RString const
 	IniFile ini;
 	if(!ini.ReadFile(fname))
 	{
-		LOG->Trace("Failed to read sprite file %s: %s", fname.c_str(), ini.GetError().c_str());
+		LOG_TRACE(Log::File, "Failed to read sprite file %s: %s", fname.c_str(), ini.GetError().c_str());
 		return;
 	}
 	XNode const* sprite_node= ini.GetChild("Sprite");
@@ -480,7 +480,7 @@ void actor_template_t::load_model_from_file(RString const& fname, RString const&
 	IniFile ini;
 	if(!ini.ReadFile(fname))
 	{
-		LOG->Trace("Failed to read model file %s: %s", fname.c_str(), ini.GetError().c_str());
+		LOG_TRACE(Log::File, "Failed to read model file %s: %s", fname.c_str(), ini.GetError().c_str());
 		return;
 	}
 	XNode const* model_node= ini.GetChild("Model");
@@ -726,11 +726,11 @@ void convert_xml_file(RString const& fname, RString const& dirname)
 	{
 		init_parser_helpers();
 	}
-	LOG->Trace("Beginning conversion of entry: %s", fname.c_str());
+	LOG_TRACE(Log::File, "Beginning conversion of entry: %s", fname.c_str());
 	XNode xml;
 	if(!XmlFileUtil::LoadFromFileShowErrors(xml, fname))
 	{
-		LOG->Trace("Error when loading xml.");
+		LOG_ERROR(Log::File, "Error when loading xml.");
 		return;
 	}
 	actor_template_t plate;
@@ -740,10 +740,10 @@ void convert_xml_file(RString const& fname, RString const& dirname)
 	RString out_name= fname.Left(static_cast<int>(fname.size())-4) + ".lua";
 	if(!file->Open(out_name, RageFile::WRITE))
 	{
-		LOG->Trace("Could not open %s: %s", out_name.c_str(), file->GetError().c_str());
+		LOG_ERROR(Log::File, "Could not open %s: %s", out_name.c_str(), file->GetError().c_str());
 		return;
 	}
-	LOG->Trace("Saving conversion to: %s", out_name.c_str());
+	LOG_TRACE(Log::File, "Saving conversion to: %s", out_name.c_str());
 	for(condition_set_t::iterator cond= conditions.begin();
 		cond != conditions.end(); ++cond)
 	{

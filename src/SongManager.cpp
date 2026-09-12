@@ -243,7 +243,7 @@ void SongManager::InitSongsFromDisk( LoadingWindow *ld, bool onlyAdditions )
 	IMAGECACHE->WriteToDisk();
 	IMAGECACHE->delay_save_cache = false;
 
-	LOG->Trace( "Found %d songs in %f seconds.", (int)m_pSongs.size(), tm.GetDeltaTime() );
+	LOG_TRACE(Log::Song, "Found %d songs in %f seconds.", (int)m_pSongs.size(), tm.GetDeltaTime() );
 }
 
 static LocalizedString FOLDER_CONTAINS_MUSIC_FILES( "SongManager", "The folder \"%s\" appears to be a song folder.  All song folders must reside in a group folder.  For example, \"Songs/Originals/My Song\"." );
@@ -330,7 +330,7 @@ void SongManager::AddGroup( RString sDir, RString sGroupDirName )
 	}
 */
 	/*
-	LOG->Trace( "Group banner for '%s' is '%s'.", sGroupDirName.c_str(),
+	LOG_TRACE(Log::Song, "Group banner for '%s' is '%s'.", sGroupDirName.c_str(),
 				sBannerPath != ""? sBannerPath.c_str():"(none)" );
 	*/
 	m_sSongGroupNames.push_back( sGroupDirName );
@@ -409,7 +409,7 @@ void SongManager::LoadSongDir( RString sDir, LoadingWindow *ld, bool onlyAdditio
 	{
 		std::vector<RString> &arraySongDirs = arrayGroupSongDirs[groupIndex++];
 
-		LOG->Trace("Attempting to load %i songs from \"%s\"", int(arraySongDirs.size()),
+		LOG_TRACE(Log::Song, "Attempting to load %i songs from \"%s\"", int(arraySongDirs.size()),
 				   (sDir+sGroupDirName).c_str() );
 		int loaded = 0;
 
@@ -455,7 +455,7 @@ void SongManager::LoadSongDir( RString sDir, LoadingWindow *ld, bool onlyAdditio
 			songIndex++;
 		}
 
-		LOG->Trace("Loaded %i songs from \"%s\"", loaded, (sDir+sGroupDirName).c_str() );
+		LOG_TRACE(Log::Song, "Loaded %i songs from \"%s\"", loaded, (sDir+sGroupDirName).c_str() );
 
 		// Don't add the group name if we didn't load any songs in this group.
 		if(!loaded) continue;
@@ -947,7 +947,7 @@ RString SongManager::ShortenGroupName( RString sLongGroupName )
 static LocalizedString LOADING_COURSES ( "SongManager", "Loading courses..." );
 void SongManager::InitCoursesFromDisk( LoadingWindow *ld, bool onlyAdditions )
 {
-	LOG->Trace( "Loading courses." );
+	LOG_TRACE(Log::Song, "Loading courses." );
 	if( ld )
 		ld->SetText( LOADING_COURSES );
 
@@ -1105,7 +1105,7 @@ void SongManager::InitRandomAttacks()
 	GAMESTATE->m_RandomAttacks.clear();
 
 	if( !IsAFile(ATTACK_FILE) )
-		LOG->Trace( "File Data/RandomAttacks.txt was not found" );
+		LOG_TRACE(Log::Song, "File Data/RandomAttacks.txt was not found" );
 	else
 	{
 		MsdFile msd;
