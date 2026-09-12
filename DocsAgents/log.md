@@ -2651,3 +2651,22 @@
   batch 9.
   Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
   `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+
+* **item 18 (ADR 0005 phase 4) batch 11, 2026-09-12 -- closes out the
+  entire §5-protected lane.** `NotesLoaderSM.cpp` (1 real site -- its
+  other 3 raw hits were pre-existing commented-out calls),
+  `CourseLoaderCRS.cpp` (3 real sites), `NotesLoaderSSC.cpp` (2 real
+  sites; 1 more grep hit is commented-out) -- all `Log::Song`. Every
+  site was already a correctly-leveled routine `Trace` (loader/edit-
+  file entry points, cache-vs-fresh-load branch tracing) -- pure
+  categorization, no triage upgrades. Verified against real
+  characterization coverage: `[SMLoader]` 43/14, `[corpus]` 313/3
+  (covers `.sm` and `.ssc` via the paired-format test), `[crs]` 39/5,
+  all unchanged, plus the full suite (5966/226).
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+  **Item 18 phase 4 is now fully done except `Player.cpp`** (48
+  sites, god-object hotspot, own careful pass since no
+  characterization test covers gameplay/scoring logic). Every
+  §5-protected simfile-format file is now migrated to the categorized
+  `LOG_*` macros, zero parsing/behavior changes throughout.
