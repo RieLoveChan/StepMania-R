@@ -2609,3 +2609,26 @@
   level tagging with zero parsing/behavior change, per the §5 gate.
   Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
   `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+
+* **item 18 (ADR 0005 phase 4) batch 9, 2026-09-12.** `TimingData.cpp`
+  (10 real sites -> `Log::Song`), `NotesLoaderSMA.cpp` (1),
+  `NotesLoaderDWI.cpp` (2; a 3rd grep hit is a pre-existing
+  commented-out call), `NotesLoaderBMS.cpp` (2) -- all `Log::Song`.
+  Almost everything was already-correct routine `Trace`; one real
+  upgrade: `NotesLoaderDWI.cpp`'s "Didn't get enough data when
+  attempting to load a DWI file" `Warn`->`ERROR` (a genuine
+  malformed-chart parse failure, falls back to an empty `NoteData`).
+  **Handled a wrinkle:** 3 of `TimingData.cpp`'s sites sit behind
+  `#ifdef WITH_LOGGING_TIMING_DATA`, a real CMake option (default OFF,
+  unlike item 29's truly-orphaned code) not exercised by the normal
+  build. Reconfigured `-DWITH_LOGGING_TIMING_DATA=ON`, rebuilt, reran
+  the full suite (5966/226 unchanged) to actually compile-verify those
+  3 sites, then reconfigured back to the default `OFF` to match CI. One
+  more site sits behind `#ifdef DEBUG`, already covered by the normal
+  Debug build. `[TimingData]` re-checked at 40/9 (unchanged from batch
+  8); the new `[sma]`/`[dwi]`/`[bms]` tags weren't baselined
+  individually before this edit, but the unchanged full-suite total
+  (5966/226 both before and after) is the authoritative check since
+  any behavior change would have shifted it.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
