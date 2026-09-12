@@ -2527,3 +2527,27 @@
   logic changed; not §5-protected.
   Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
   `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+
+* **item 18 (ADR 0005 phase 4) batch 5, 2026-09-11.** Migrated
+  `RageDisplay_D3D.cpp` (14 real sites -> `Log::General`, since no
+  D3D-specific category exists -- same reasoning as `CryptManager` in
+  batch 2; 2 grep hits are pre-existing commented-out calls, left
+  untouched). Two real init-time failures upgraded to `LOG_ERROR`:
+  `Direct3DCreate9` failing outright, and `FindBackBufferType` finding
+  no usable back buffer format at all (previously mislabeled `Trace`);
+  the adapter display-mode query failure upgraded `Warn`->`ERROR` too
+  (has a graceful fallback, but the query itself shouldn't normally
+  fail). One clear mislabeling fixed: `TryVideoMode`'s entry trace was
+  tagged `Warn` for no evident reason -- it's a plain function-entry
+  diagnostic, identical in kind to its own (already-commented-out)
+  sibling one line away in `RageDisplay_OGL.cpp` -- downgraded to
+  `LOG_TRACE`. For cross-backend parity with batch 4's already-`INFO`
+  OGL vendor/mode startup dump, the equivalent D3D driver-
+  identification and supported-mode dump (3 sites) was promoted
+  `Trace`->`INFO` rather than left at its pre-existing level -- same
+  kind of information should behave the same under `--LogLevel`
+  regardless of which renderer backend is active. The rest (routine
+  per-mode/parameter-testing loop diagnostics) stayed at `LOG_TRACE`.
+  No parsing/behavior logic changed; not §5-protected.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
