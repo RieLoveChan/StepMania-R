@@ -1845,6 +1845,66 @@ spec is the whole config.)
   Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
   `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
   ~62 files remain on the corrected list.
+  **Ph4 batch 22 (2026-09-12).** Cross-checked every file already
+  marked "done" whose raw grep count was still non-zero (`Font.cpp`,
+  `RageSound.cpp`, `NoteField.cpp`, `ImageCache.cpp`, `StepMania.cpp`,
+  `RageSoundReader_Merge.cpp`, `RageDisplay.cpp`, `OptionRowHandler.cpp`,
+  `Song.cpp`, `ScreenOptions.cpp`, `ScreenManager.cpp`,
+  `ScreenGameplay.cpp`, `ScreenEdit.cpp`, `RageDisplay_D3D.cpp`,
+  `GameState.cpp`, `Course.cpp`, `NotesLoaderSM.cpp`,
+  `ScreenMapControllers.cpp`, `PlayerStageStats.cpp`) — all confirmed
+  dead `//`/`/* */` remainders only, no missed real sites. **Found and
+  fixed a genuine false-negative in the `awk` block-comment scanner**:
+  `ScreenSoundReader_Chain.cpp`'s stray hit really is dead (confirmed by
+  direct read, matches the earlier finding), but `ScreenPackages.cpp`'s
+  real, live `LOG->Trace("end: ...")` site was wrongly flagged "inside a
+  comment" by the awk script — its `GetDirListing("Packages/*.zip", ...)`
+  glob-pattern string contains a bare `/*` that the naive line-based
+  scanner can't tell apart from a real block-comment opener, so it
+  treated everything from there to the next real `/* */` pair (hundreds
+  of lines later) as commented out. **New standing lesson: the awk
+  block-comment check is itself fooled by `/*`-shaped substrings inside
+  string literals (glob patterns, URLs) — treat a "no real sites" awk
+  verdict as a hint, not proof, and directly read the surrounding lines
+  before trusting it, especially when the original grep hit had no `//`
+  prefix.** Separately, `ScreenPackages.cpp` and `FileDownload.cpp`
+  turned out to be **absent from every `CMakeData-*.cmake` list** —
+  orphaned from the CMake build like item 29's networking cluster, but
+  a distinct feature (the online package-downloader UI, not
+  multiplayer/room sync). Left both unedited pending the same
+  maintainer wire-vs-delete call as item 29; noted under item 29 below.
+  Migrated 33 genuinely new real sites this batch: `AnnouncerManager.cpp`,
+  `AttackDisplay.cpp`, `ComboGraph.cpp`, `GameCommand.cpp`,
+  `EditMenu.cpp`, `Grade.cpp`, `FontManager.cpp`, `ModelManager.cpp`
+  (→ `Log::Cache`, matches the `RageTextureManager`/`ImageCache`
+  resource-cache-leak precedent), `MeterDisplay.cpp`,
+  `MessageManager.cpp`, `PlayerState.cpp`, `PlayerOptions.cpp`,
+  `RageException.cpp`, `RageFile.cpp`, `RageSoundManager.cpp`,
+  `RageSoundPosMap.cpp`, `RageSoundReader.cpp`, `RageSurfaceUtils.cpp`,
+  `RageSoundReader_FileReader.cpp`, `RageSurface_Load.cpp`,
+  `RageSoundReader_Vorbisfile.cpp`, `RageSurface_Save_PNG.cpp`,
+  `ScoreDisplayOni/LifeTime/Normal/Battle/Rave.cpp`, `Screen.cpp`,
+  `ScreenOptionsManageEditSteps.cpp`, `ScreenOptionsMaster.cpp`,
+  `ScreenOptionsMasterPrefs.cpp`, `ScreenStatsOverlay.cpp`,
+  `ScreenTextEntry.cpp`, `ScreenTitleMenu.cpp`, `SongCacheIndex.cpp`,
+  `SongUtil.cpp` — categorized `Log::General`/`Actor`/`Font`/`Sound`/
+  `File`/`Screen`/`Song` per the established per-subsystem mapping, all
+  already-correct routine `Trace`/`Warn` levels, no upgrades needed.
+  `NoteDataUtil.cpp` (1 real site, `Log::Song`, `WARN`) and
+  `NotesWriterDWI.cpp` (1 real site, `Log::Song`, `TRACE`) are
+  section-5-protected — re-verified: `NoteDataUtil.cpp` against its
+  dedicated `[NoteDataUtil]` characterization tag (53/12, unchanged
+  before/after); `NotesWriterDWI.cpp`/`SongCacheIndex.cpp`/`SongUtil.cpp`
+  have no dedicated tag, so the unchanged full-suite invariant is their
+  safety check (same treatment as `Song.cpp` in batch 10). No
+  parsing/behavior logic changed anywhere.
+  Verified: `sm_tests` 5966/226 unchanged, `ctest` 100%, Release
+  `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+  Remaining tail is now down to a handful of files (mostly
+  §5-protected loaders/writers not yet individually triaged, plus
+  `Player.cpp`'s already-resolved 47 raw/1-real count) — regenerate via
+  `grep -cE "LOG->Trace|LOG->Warn|LOG->Info" src/*.cpp | sort -rn` to
+  confirm the true remaining count before declaring phase 4 complete.
 
 ### 20. Replace the archaic hard-coded game-type system
 Game types are defined by hand-written `static const Game g_Game_X = {…}`
@@ -1906,6 +1966,16 @@ item 19's `CreateZip`/item 23's `smpackage`). Until decided, the item
 18 phase-4 logging migration still applied to `NetworkSyncManager.cpp`
 (pure category/level tagging, zero risk either way since the file isn't
 compiled) — see item 18's batch 3 note.
+
+**Related finding, item 18 phase-4 batch 22 (2026-09-12):** a second,
+distinct orphaned pair — `ScreenPackages.cpp` (the online
+package-downloader UI) and `FileDownload.cpp` (its HTTP download
+helper) — is likewise absent from every `CMakeData-*.cmake` list and
+produces no object file. This is a different feature from the
+SMOnline/multiplayer cluster above (no shared files), so it's a
+separate wire-vs-delete question, but the same maintainer call applies.
+Left unedited (not even the free category/level tagging this time,
+since these two weren't already touched) pending that decision.
 
 ---
 
