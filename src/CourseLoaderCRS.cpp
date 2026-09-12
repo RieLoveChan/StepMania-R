@@ -263,12 +263,12 @@ bool CourseLoaderCRS::LoadFromCRSFile( const RString &_sPath, Course &out )
 	if( bUseCache )
 	{
 		RString sCacheFile = out.GetCacheFilePath();
-		LOG->Trace( "CourseLoaderCRS::LoadFromCRSFile(\"%s\") (\"%s\")", sPath.c_str(), sCacheFile.c_str() );
+		LOG_TRACE(Log::Song, "CourseLoaderCRS::LoadFromCRSFile(\"%s\") (\"%s\")", sPath.c_str(), sCacheFile.c_str() );
 		sPath = sCacheFile;
 	}
 	else
 	{
-		LOG->Trace( "CourseLoaderCRS::LoadFromCRSFile(\"%s\")", sPath.c_str() );
+		LOG_TRACE(Log::Song, "CourseLoaderCRS::LoadFromCRSFile(\"%s\")", sPath.c_str() );
 	}
 
 	MsdFile msd;
@@ -297,7 +297,7 @@ bool CourseLoaderCRS::LoadFromCRSFile( const RString &_sPath, Course &out )
 
 bool CourseLoaderCRS::LoadEditFromFile( const RString &sEditFilePath, ProfileSlot slot )
 {
-	LOG->Trace( "CourseLoaderCRS::LoadEdit(%s)", sEditFilePath.c_str() );
+	LOG_TRACE(Log::Song, "CourseLoaderCRS::LoadEdit(%s)", sEditFilePath.c_str() );
 
 	int iBytes = FILEMAN->GetFileSizeInBytes( sEditFilePath );
 	if( iBytes > MAX_EDIT_COURSE_SIZE_BYTES )

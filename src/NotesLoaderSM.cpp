@@ -1186,7 +1186,7 @@ bool SMLoader::LoadFromSimfile( const RString &sPath, Song &out, bool bFromCache
 
 bool SMLoader::LoadEditFromFile( RString sEditFilePath, ProfileSlot slot, bool bAddStepsToSong, Song *givenSong /* =nullptr */ )
 {
-	LOG->Trace( "SMLoader::LoadEditFromFile(%s)", sEditFilePath.c_str() );
+	LOG_TRACE(Log::Song, "SMLoader::LoadEditFromFile(%s)", sEditFilePath.c_str() );
 
 	int iBytes = FILEMAN->GetFileSizeInBytes( sEditFilePath );
 	if( iBytes > MAX_EDIT_STEPS_SIZE_BYTES )
