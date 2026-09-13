@@ -935,6 +935,29 @@ initializing it to -1) — left as harmless-but-redundant rather than
 Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%, Release
 `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
 
+**Phase 1, cluster 4 (2026-09-13, autonomous — "completa el backlog
+solo con lo no bloqueante" goal): `GameState`'s "Autogen stuff" carved
+out into `GameStateAutogenData.h` (header-only, no `.cpp` — the whole
+class is one inline getter + one vector, matching how it already lived
+inline in `GameState.h`).** The smallest cluster yet: only
+`GameState.h`/`.cpp` and one external read site
+(`NoteDataUtil.cpp:837`, `GAMESTATE->GetAutoGenFarg(0)`) touch it — the
+original author's own comment already flagged this as should-be-its-
+own-thing ("This should probably be moved to its own singleton or
+something when autogen is generalized and more customizable. -Kyz").
+Moved `m_autogen_fargs` (`std::vector<float>`) and `GetAutoGenFarg()`'s
+body. `GameState.cpp`'s `Luna<GameState>` Lua-binding block has two
+thunks (`GetAutoGenFarg`/`SetAutoGenFarg`) that directly call
+`p->m_autogen_fargs.push_back(...)`/`.size()`/`[si]=...` — all kept
+compiling unchanged via the reference member, same as every other
+cluster's internal `Luna` usage. Reference member bound via the
+constructor's init-list as usual (not an in-class default member
+initializer) for consistency with the other three clusters in this
+same file, even though an NSDMI would have worked too and let the
+`.cpp` constructor go untouched.
+Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%, Release
+`StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+
 **Related (2026-09-13): "why does Pay mode do nothing?" investigated
 and answered — nothing was disabled.** Maintainer recalled StepMania
 used to have Home/Free/Pay coin modes and asked to "reactivate" Pay.
