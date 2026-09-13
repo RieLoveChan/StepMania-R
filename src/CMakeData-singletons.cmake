@@ -45,6 +45,7 @@ list(APPEND SMDATA_GLOBAL_SINGLETON_HPP
             "GameStateEditData.h"
             "GameStateHasteData.h"
             "GameStateMultiPlayerData.h"
+            "GameStatePositionCorrectionData.h"
             "GameStateStageSeedData.h"
             "GameStateWorkoutData.h"
             "InputFilter.h"

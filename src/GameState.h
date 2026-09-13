@@ -12,6 +12,7 @@
 #include "GameStateEditData.h"
 #include "GameStateHasteData.h"
 #include "GameStateMultiPlayerData.h"
+#include "GameStatePositionCorrectionData.h"
 #include "GameStateStageSeedData.h"
 #include "GameStateWorkoutData.h"
 #include "Grade.h"
@@ -471,10 +472,13 @@ private:
 	int	m_iAwardedExtraStages[NUM_PLAYERS];
 	bool	m_bEarnedExtraStage;
 
-	// Timing position corrections
-	RageTimer m_LastPositionTimer;
-	float m_LastPositionSeconds;
-	bool m_paused;
+	// Timing position corrections -- carved out into
+	// GameStatePositionCorrectionData (backlog item 9, phase 1 cluster
+	// 11; see playbooks/split-god-object.md).
+	GameStatePositionCorrectionData m_PositionCorrectionData;
+	RageTimer &m_LastPositionTimer;
+	float &m_LastPositionSeconds;
+	bool &m_paused;
 
 	GameState(const GameState& rhs);
 	GameState& operator=(const GameState& rhs);
