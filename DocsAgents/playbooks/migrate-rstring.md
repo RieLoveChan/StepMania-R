@@ -529,3 +529,25 @@ if a boundary gotcha turned up, plus `log.md`.
   declaration exists. Also confirms pilot #1's original `.MakeUpper()`/
   `.MakeLower()` -> guarded free-function fix is still exactly right,
   unchanged, this far into the effort.
+- 2026-09-13 -- pilots #28-29 (found via a second scouting fork, after
+  `actor_template_t` was deliberately deferred as too large for one
+  session): `GameLoop.cpp`'s `g_NewTheme`/`g_NewGame` file-scope
+  `static` variables, and `Style::ColToButtonName(int)`'s return type.
+  Two new lessons: (1) `RString` has an implicit `operator const
+  CT*()` (the "drop-in CString replacement" facade,
+  `StdString.h:589`) that `std::string` lacks -- any call taking a
+  bare `const char*` (like the Lua C API's `lua_pushstring`) that used
+  to accept an `RString` argument directly needs an explicit
+  `.c_str()` once that argument's type migrates; this is a distinct
+  hard-boundary shape from the reference-binding and by-value ones
+  already catalogued. (2) When a call site's return value gets bound
+  into `const RString& local = ...`, don't assume retyping to
+  `const std::string&` is automatically the cheaper fix -- check how
+  many times that local is used downstream first. If it feeds several
+  more `const RString&`-taking calls (as `NoteDisplay.cpp`'s `sButton`
+  did, ~11 more sites), dropping the reference and copying by value
+  (`RString local = ...`) is simpler and avoids every downstream wrap,
+  since the local stays a genuine `RString` the whole time -- the
+  established "local variable deliberately kept as the old type"
+  pattern (already seen with `PaneDisplay.cpp`'s `sFontType` copy)
+  generalizes to reference locals, not just fresh ones.

@@ -1803,6 +1803,37 @@ not a facade override). Verified: `sm_tests` 5981/230 unchanged,
 `ctest` 100%, Release `StepMania-R.exe` clean rebuild, `--SelfTest`
 exit 0.
 
+**Pilots #28-29 (2026-09-13, found via a second scouting fork after
+`actor_template_t` was deliberately deferred as too large/unverifiable
+for this session): `GameLoop.cpp`'s `g_NewTheme`/`g_NewGame` file-scope
+statics, and `Style::ColToButtonName(int)`'s return type.**
+`g_NewTheme`/`g_NewGame` are `static` (internal linkage, genuinely
+file-local). 5 hard-boundary fixes, all local to `GameLoop.cpp`:
+`THEME->SwitchThemeAndLanguage`/`IsThemeSelectable` (both
+`const RString&`) and `PREFSMAN->m_sTheme.Set` (`Preference<RString>::
+Set(const T&)`) each needed an `RString(...)` wrap at 2-3 call sites;
+`GAMEMAN->StringToGame` (by-value) and `PREFSMAN->m_sTheme`'s own
+implicit `operator const RString()` conversion needed no changes
+(both already-established safe directions).
+`Style::ColToButtonName` required touching 3 files: its own
+`Style.h`/`.cpp` (return type change, plus `Style.cpp`'s
+`lua_pushstring(L, p->ColToButtonName(iCol))` — needed `.c_str()`
+added, since `lua_pushstring` wants `const char*` and `RString`
+(unlike `std::string`) has an implicit `operator const CT*()` that was
+silently covering this before); and 2 external files
+(`GhostArrowRow.cpp`, `NoteDisplay.cpp`) that each bound the call's
+result into `const RString &sButton`. Initially planned to retype
+those to `const std::string&`, but `NoteDisplay.cpp`'s `sButton` alone
+feeds ~11 more `.Load(sButton, ...)` calls all taking `const RString&`
+— retyping would have cascaded into 11 more wraps in one function.
+**Simpler fix: drop the reference and copy by value instead**
+(`RString sButton = ...ColToButtonName(...)`) — `sButton` stays a
+genuine `RString` throughout, so every downstream call keeps working
+completely unchanged. Same fix applied to `GhostArrowRow.cpp` for
+consistency, even though its own downstream use count was only 1.
+Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%, Release
+`StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+
 ### 11. Pre-C++11 threading / smart pointers
 `RageThreads` predates `std::thread`/`std::mutex`;
 `RageUtil_AutoPtr.h` ("TODO: replace with c++11 smart pointers");
