@@ -4,6 +4,7 @@
 #include "Attack.h"
 #include "Difficulty.h"
 #include "GameConstantsAndTypes.h"
+#include "GameStateEditData.h"
 #include "Grade.h"
 #include "MessageManager.h"
 #include "ModsGroup.h"
@@ -389,25 +390,28 @@ public:
 	CoinMode	GetCoinMode() const;
 	Premium		GetPremium() const;
 
-	// Edit stuff
-
+	// Edit stuff -- carved out into GameStateEditData (backlog item 9,
+	// phase 1 split; see playbooks/split-god-object.md). Exposed below
+	// under their original names via reference members, so no call site
+	// outside GameState.h/.cpp changes.
+	GameStateEditData m_EditData;
 	/**
 	 * @brief Is the game right now using Song timing or Steps timing?
 	 *
 	 * Different options are available depending on this setting. */
-	bool m_bIsUsingStepTiming;
+	bool& m_bIsUsingStepTiming;
 	/**
 	 * @brief Are we presently in the Step Editor, where some rules apply differently?
 	 *
 	 * TODO: Find a better way to implement this. */
-	bool m_bInStepEditor;
-	BroadcastOnChange<StepsType> m_stEdit;
-	BroadcastOnChange<CourseDifficulty> m_cdEdit;
-	BroadcastOnChangePtr<Steps> m_pEditSourceSteps;
-	BroadcastOnChange<StepsType> m_stEditSource;
-	BroadcastOnChange<int> m_iEditCourseEntryIndex;
-	BroadcastOnChange<RString> m_sEditLocalProfileID;
-	Profile* GetEditLocalProfile();
+	bool& m_bInStepEditor;
+	BroadcastOnChange<StepsType>& m_stEdit;
+	BroadcastOnChange<CourseDifficulty>& m_cdEdit;
+	BroadcastOnChangePtr<Steps>& m_pEditSourceSteps;
+	BroadcastOnChange<StepsType>& m_stEditSource;
+	BroadcastOnChange<int>& m_iEditCourseEntryIndex;
+	BroadcastOnChange<RString>& m_sEditLocalProfileID;
+	Profile* GetEditLocalProfile() { return m_EditData.GetEditLocalProfile(); }
 
 	// Workout stuff
 	float GetGoalPercentComplete( PlayerNumber pn );
