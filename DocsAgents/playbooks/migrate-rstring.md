@@ -351,3 +351,12 @@ if a boundary gotcha turned up, plus `log.md`.
   `std::string` argument -- by-value parameters accept either type
   from either direction, so a pilot's own by-value migration never
   needs to wait for a downstream by-value call to migrate too.
+- 2026-09-13 -- fifteenth subsystem migrated:
+  `RageUtil_WorkerThread.h`/`.cpp`'s `RageWorkerThread` constructor
+  parameter and private `m_sName` member. Reconfirmed the by-value
+  safe direction one more time, but through string *concatenation*
+  this time: `"\"" + sName + "\" worker event"` (now `std::string`
+  arithmetic) still produces a plain `std::string`, which binds
+  straight into `RageEvent(RString name)`'s by-value parameter with no
+  wrap -- string concatenation results are just as safe to pass by
+  value into an un-migrated by-value parameter as a bare variable is.
