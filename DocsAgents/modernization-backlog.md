@@ -1034,6 +1034,21 @@ Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%, Release
 `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0. **7 clusters done
 now (Edit, Workout, Attract, Autogen, Haste, MultiPlayer, Dance).**
 
+**Phase 1, cluster 8 (2026-09-13): `GameState`'s `PLAY_MODE_BATTLE`/
+`PLAY_MODE_RAVE` fields carved out into `GameStateBattleRaveData.h`
+(header-only).** `m_fOpponentHealthPercent` and `m_fTugLifePercentP1`
+(both `float`) — pure data, no associated methods. Recursive grep
+across all 6 touching files (`CombinedLifeMeterTug.cpp`,
+`Inventory.cpp`, `Player.cpp`, `ScoreKeeperRave.cpp`,
+`ScreenGameplay.cpp`, `GameState.cpp`) confirmed only plain
+reads/writes/comparisons, no hard boundaries. Neither field was in
+the original constructor init-list, so `GameStateBattleRaveData`
+correctly has no explicit constructor — same shape as the
+Haste/Dance clusters, no new technique wrinkle. Verified: `sm_tests`
+5981/230 unchanged, `ctest` 100%, Release `StepMania-R.exe` clean
+rebuild, `--SelfTest` exit 0. **8 clusters done now (Edit, Workout,
+Attract, Autogen, Haste, MultiPlayer, Dance, BattleRave).**
+
 **Related (2026-09-13): "why does Pay mode do nothing?" investigated
 and answered — nothing was disabled.** Maintainer recalled StepMania
 used to have Home/Free/Pay coin modes and asked to "reactivate" Pay.
