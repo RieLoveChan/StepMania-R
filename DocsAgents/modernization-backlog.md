@@ -847,6 +847,13 @@ case in `test_RageUtil.cpp`.
 `ScreenGameplay.cpp` 3381 · `NoteDataUtil.cpp` 3379 · `Profile.cpp` 2897.
 **Action:** [`playbooks/split-god-object.md`](./playbooks/split-god-object.md),
 one cluster per PR, always §4.
+**Not autonomously actionable (2026-09-13):** the playbook's own
+Verification section requires live manual spot-checks ("play a song,
+enter/exit edit mode, switch styles/players, evaluate") — there is no
+way for an unattended/autonomous session to visually confirm gameplay
+behavior is unchanged. Needs the maintainer present to test alongside,
+same practical category as a maintainer-gated item even though it
+carries no ADR.
 
 ### 10. RString everywhere
 `typedef StdString::CStdString RString` (`global.h:107`), 723 files /
@@ -945,6 +952,27 @@ regardless of how small the file itself is.**
 Verified: `sm_tests` 5966/226 unchanged (no dedicated characterization
 test exists for this widget), `ctest` 100%, Release `StepMania-R.exe`
 clean rebuild, `--SelfTest` exit 0.
+
+**Scouting pause (2026-09-13):** re-scouted ~15 more small candidates
+(`Bookkeeper.cpp`, `CourseContentsList.cpp`, `LuaExpressionTransform.cpp`,
+`ModsGroup.h`, `ScrollBar.cpp`, `ActiveAttackList.cpp`,
+`BeginnerHelper.cpp`, `CryptHelpers.h`, `GradeDisplay.cpp`,
+`OptionsCursor.cpp`, `DancingCharacters.cpp`) file-by-file, not just by
+`RString` grep count. Every one either passes its `RString` straight
+into a large un-migrated subsystem (`ThemeManager`/`AutoActor`/
+`IniFile`/`XNode`/`PlayerOptions`) or hits a genuine hard boundary not
+safe to paper over: `LuaExpressionTransform.cpp`'s `error` local feeds
+`LuaManager.h`'s `RunScriptOnStack(Lua*, RString &Error, ...)`, a
+**non-const reference out-param** — wrapping it in a temporary
+`RString(...)` copy would silently discard whatever the callee writes
+back through the reference, an actual behavior risk, not a style
+objection. **The opportunistic small-leaf-file lane is exhausted for
+now** — the 3 pilots above (`Grade`, `Command`, `ScoreDisplayCalories`)
+stand as the session's contribution; further progress needs either a
+bigger bounded subsystem pass (done when already working there for
+another reason, per the playbook's own "when to use" guidance) or
+waiting for new small candidates to surface. Do not re-scout the same
+~25 files without new information.
 
 ### 11. Pre-C++11 threading / smart pointers
 `RageThreads` predates `std::thread`/`std::mutex`;
