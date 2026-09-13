@@ -256,3 +256,19 @@ if a boundary gotcha turned up, plus `log.md`.
   candidate on the assumption a template is generic — verify
   `LuaHelpers::Push`'s actual overload set first if this one is picked
   up again.**
+- 2026-09-13 — tenth subsystem migrated: `TrailEntry::Modifiers`
+  (`Trail.h`/`.cpp`), unblocking pilot #9's flagged candidate. Checked
+  `LuaHelpers::Push`'s overload set (`LuaManager.cpp:93`) and found a
+  **genuine `std::string` template specialization already exists**
+  alongside the `RString` one — unlike `XNode::GetAttrValue`, this
+  template really is generic; `Message::SetParam` calling it is safe
+  with no wrap needed. **Not every templated wrapper hides a
+  non-template trap — check the actual specializations before assuming
+  either way, in both directions.** Needed 3 `RString(...)` wraps for
+  genuine reference-parameter hard boundaries
+  (`Attack::FromGlobalCourseModifier(const RString&)`,
+  `PlayerOptions::FromString(const RString&)` called from 2 different
+  files) — a public struct member touched from multiple external files
+  can still be a good pilot, it just costs one wrap per hard-boundary
+  call site, not per file. §5-adjacent — re-verified `[corpus]` (313/3)
+  and `[crs]` (39/5) both unchanged.
