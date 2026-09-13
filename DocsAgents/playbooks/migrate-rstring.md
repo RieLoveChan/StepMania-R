@@ -439,3 +439,27 @@ if a boundary gotcha turned up, plus `log.md`.
   variable of the old type (`RString sFontType = g_Contents[pc].
   sFontType;`) needs zero downstream changes, since every later use of
   that local operates on the unaffected type.
+- 2026-09-13 -- twenty-second subsystem migrated: `RageFileManager.cpp`'s
+  file-local `LoadedDriver::m_sType`/`m_sRoot`/`m_sMountPoint` (27
+  touch points, the largest single-file pilot so far). **New
+  hard-boundary shape: a `CStdStr`-only facade method with no direct
+  `std::string` equivalent.** `.CompareNoCase(x)` isn't just missing
+  from `std::string` -- there's no free-function drop-in either,
+  *except* that `CompareNoCase`'s own implementation
+  (`StdString.h:492`) is nothing but `ssicmp(this->c_str(), szThat)`,
+  and `ssicmp` is a plain templated free function over two `const
+  char*`s. So `a.CompareNoCase(b)` -> `StdString::ssicmp(a.c_str(),
+  b.c_str())` is not an approximation, it's literally unwrapping what
+  the method already did internally -- byte-identical behavior
+  guaranteed. Two things to know before reusing this: (1) `ssicmp`
+  lives in the `StdString` namespace, not global scope -- qualify it
+  or the build fails with `C3861: 'ssicmp': identifier not found`;
+  (2) this only works because `CompareNoCase`'s parameter type
+  (`PCMYSTR` = `const char*`) is a type both `RString` (via its
+  `operator const CT*()` facade conversion, `StdString.h:589`) and
+  `std::string::c_str()` can produce -- always call `.c_str()`
+  explicitly on both sides rather than relying on implicit
+  conversions once one side is `std::string`. General principle for
+  any other `CStdStr` "drop-in CString replacement" facade method
+  encountered later: check whether it forwards to an already-generic
+  free function before assuming it's a hard blocker.
