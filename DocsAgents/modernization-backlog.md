@@ -1719,6 +1719,21 @@ isn't part of the simfile parse path. Verified: `sm_tests` 5981/230
 unchanged, `ctest` 100%, Release `StepMania-R.exe` clean rebuild,
 `--SelfTest` exit 0.
 
+**Pilots #23-24 (2026-09-13, two more file-local structs found via the
+same technique): `ScreenInstallOverlay.cpp`'s
+`PlayAfterLaunchInfo::sSongDir`/`sTheme` and `StepMania.cpp`'s
+`VideoCardDefaults::sDriverRegex`/`sVideoRenderers`.** Both structs
+live entirely in their own `.cpp`, neither named in the matching
+header. `PlayAfterLaunchInfo` needed zero hard-boundary fixes at all
+— every touch (`SongManager::GetSongFromDir(RString)` by-value, field-
+to-field assignment inside `OverlayWith()`) was already a safe
+direction. `VideoCardDefaults` needed two: `Preference<RString>::
+Set(const T&)` (`defaults.sVideoRenderers` wrapped in `RString(...)`)
+and another `.CompareNoCase(...)` call, fixed with the same
+`StdString::ssicmp(a.c_str(), b.c_str())` substitution pilot #22
+established. Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%,
+Release `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+
 ### 11. Pre-C++11 threading / smart pointers
 `RageThreads` predates `std::thread`/`std::mutex`;
 `RageUtil_AutoPtr.h` ("TODO: replace with c++11 smart pointers");

@@ -463,3 +463,15 @@ if a boundary gotcha turned up, plus `log.md`.
   any other `CStdStr` "drop-in CString replacement" facade method
   encountered later: check whether it forwards to an already-generic
   free function before assuming it's a hard blocker.
+- 2026-09-13 -- pilots #23-24: two more file-local structs,
+  `ScreenInstallOverlay.cpp`'s `PlayAfterLaunchInfo` and
+  `StepMania.cpp`'s `VideoCardDefaults`. The file-local-struct grep
+  technique (introduced at pilot #18) keeps paying off -- these two
+  turned up in the same original full-tree scan, just not checked
+  yet. `PlayAfterLaunchInfo` needed zero fixes at all (every touch
+  already a safe direction); `VideoCardDefaults` reused both of
+  pilot #22's new techniques in the same function
+  (`Preference<T>::Set(const T&)` wrap, `StdString::ssicmp`
+  substitution for `.CompareNoCase`) -- confirming those aren't
+  one-off tricks but general-purpose fixes for any future
+  `Preference<RString>`/`CompareNoCase` encounter.
