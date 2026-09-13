@@ -322,3 +322,20 @@ if a boundary gotcha turned up, plus `log.md`.
   registration (`PaneDisplay.cpp`), and that registration's
   `LuaHelpers::Push` forwarding was already confirmed generic in pilot
   #10, so this pilot needed zero `RString(...)` wraps anywhere.
+- 2026-09-13 -- thirteenth subsystem migrated: `CodeSet.h`/`.cpp`'s
+  `InputQueueCodeSet::Load(...)` parameter and `::Input(...)` return
+  type. **A macro can hide a hard-boundary call just as well as a
+  function body can** -- `Load`'s `CODE_NAMES`/`CODE(s)` macros expand
+  to `THEME->GetMetric(sType, ...)`, a real `const RString&` reference
+  parameter into the still-`RString` `ThemeManager`; grep for the
+  parameter name alone won't show this unless the macro body is read
+  too. Fixed with an `RString(sType)` wrap inside each macro
+  definition itself (2 wraps, both confined to the one `.cpp`).
+  Reconfirmed the `split(...)` container hard-boundary from the
+  `Command.cpp`/`CommandLineActions` pilots: `m_asCodeNames`
+  (`std::vector<RString>`) stays `RString` because
+  `split(const RString&, const RString&, std::vector<RString>&, bool)`
+  (`RageUtil.h:406`) has no `std::vector<std::string>&` overload --
+  every `RageUtil` free function that fills a caller-provided container
+  needs checking the same way before assuming a container member is
+  migratable.
