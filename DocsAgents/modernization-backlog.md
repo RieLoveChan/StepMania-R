@@ -1784,6 +1784,25 @@ its own dedicated pilot than a quick win — deferred, not rejected.
 Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%, Release
 `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
 
+**Pilot #27 (2026-09-13): `ThemeManager.cpp`'s `Theme::sThemeName` and
+`CompareLanguageTag::m_sLanguageString` fields.** `Theme` has an
+unused, otherwise-dead forward declaration in `ThemeManager.h`
+(`struct Theme;`, never actually referenced there) — its real
+definition and every usage live in the `.cpp`.
+`CompareLanguageTag` is fully file-local (a `std::partition`
+predicate functor). Two `const RString&` hard boundaries for
+`sThemeName` — `GetLanguagesForTheme`/`GetPathInfoToRaw`
+(`ThemeManager.h:121,125`) — fixed with `RString(...)` wraps at the 2
+call sites. `m_sLanguageString.MakeLower()` (an RString-only facade
+method) replaced with the guarded free-function form
+(`if(!s.empty()) MakeLower(&s[0], s.size());`) established in pilot
+#1 — the very first pilot of this whole effort, confirming that
+lesson still applies unchanged 27 pilots later. `.find(...)` on the
+migrated field needed no change (inherited `std::basic_string` method,
+not a facade override). Verified: `sm_tests` 5981/230 unchanged,
+`ctest` 100%, Release `StepMania-R.exe` clean rebuild, `--SelfTest`
+exit 0.
+
 ### 11. Pre-C++11 threading / smart pointers
 `RageThreads` predates `std::thread`/`std::mutex`;
 `RageUtil_AutoPtr.h` ("TODO: replace with c++11 smart pointers");

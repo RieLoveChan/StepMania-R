@@ -519,3 +519,13 @@ if a boundary gotcha turned up, plus `log.md`.
   `std::vector<actor_template_t>`) -- sized like its own subsystem
   pilot, not a quick file-local-struct win; left for later rather than
   rushed.
+- 2026-09-13 -- pilot #27: `ThemeManager.cpp`'s `Theme::sThemeName`
+  and `CompareLanguageTag::m_sLanguageString`. New lesson: a header
+  can carry a forward declaration (`struct Theme;`) that's never
+  actually dereferenced anywhere in that header -- effectively dead,
+  but easy to mistake for "this type is part of the public API" on a
+  first grep. Always check whether a forward-declared type is used
+  as a parameter/return/member in the header, not just whether the
+  declaration exists. Also confirms pilot #1's original `.MakeUpper()`/
+  `.MakeLower()` -> guarded free-function fix is still exactly right,
+  unchanged, this far into the effort.
