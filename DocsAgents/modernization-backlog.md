@@ -847,13 +847,75 @@ case in `test_RageUtil.cpp`.
 `ScreenGameplay.cpp` 3381 · `NoteDataUtil.cpp` 3379 · `Profile.cpp` 2897.
 **Action:** [`playbooks/split-god-object.md`](./playbooks/split-god-object.md),
 one cluster per PR, always §4.
-**Not autonomously actionable (2026-09-13):** the playbook's own
-Verification section requires live manual spot-checks ("play a song,
-enter/exit edit mode, switch styles/players, evaluate") — there is no
-way for an unattended/autonomous session to visually confirm gameplay
-behavior is unchanged. Needs the maintainer present to test alongside,
-same practical category as a maintainer-gated item even though it
-carries no ADR.
+**Phase 1, cluster 1 (2026-09-13): `GameState`'s "Edit stuff" carved
+out into `GameStateEditData.h`/`.cpp`.** Maintainer asked for this
+cluster specifically. Moved 8 members (`m_bIsUsingStepTiming`,
+`m_bInStepEditor`, `m_stEdit`, `m_cdEdit`, `m_pEditSourceSteps`,
+`m_stEditSource`, `m_iEditCourseEntryIndex`, `m_sEditLocalProfileID`)
+and `GetEditLocalProfile()`'s body into a new owned `GameStateEditData`
+member (`m_EditData`). Registered in `CMakeData-singletons.cmake` next
+to `GameState.cpp`/`.h`.
+**Genuinely achieved zero call-site churn** (the playbook's phase-1
+goal) for *public data members*, not just accessor methods — these
+were raw public fields (`GAMESTATE->m_stEdit` etc.), touched directly
+across 13 files (~112 sites: `ArrowEffects.cpp`, `NoteDisplay.cpp`,
+`NoteField.cpp`, `OptionRowHandler.cpp`, `Player.cpp`,
+`PlayerState.cpp`, `ScreenEdit.cpp`, `ScreenOptionsEditProfile.cpp`,
+`ScreenOptionsManageCourses.cpp`, `ScreenOptionsManageProfiles.cpp`,
+`Steps.cpp`, plus `GameState.cpp` itself including its `Luna<GameState>`
+Lua binding block) — none of them needed touching. `GameState.h` now
+declares these as **reference members** (`bool& m_bIsUsingStepTiming;`
+etc.) bound in the constructor's init-list to the corresponding
+`m_EditData.xxx` field; every existing read/write/`.Set()` call
+continues to compile and behave identically, since a reference member
+transparently forwards to its referent. This is safe specifically
+because `m_EditData` is a same-lifetime value member of `GameState`
+(never copied — `GameState`'s copy ctor/assignment are already
+`private`/undefined) and is declared before the reference members in
+the class body, so it's fully constructed before they bind to it.
+`GetEditLocalProfile()` stays a thin inline forwarding method on
+`GameState` per the playbook's step 4 (`{ return
+m_EditData.GetEditLocalProfile(); }`). Reset parity (playbook gotcha)
+is automatic: `GameState::Reset()`'s existing `m_stEdit.Set(...)` etc.
+lines were not touched at all, they still write through the reference
+to the same underlying storage.
+Verified: `sm_tests` 5966/226 unchanged (at the point of this specific
+change, before the separate CoinMode test below), `ctest` 100%,
+Release `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0. **Phase 2
+(migrating call sites to talk to `m_EditData` directly) is
+deliberately not attempted** — per the playbook, that's a separate,
+later PR if ever wanted.
+
+**Related (2026-09-13): "why does Pay mode do nothing?" investigated
+and answered — nothing was disabled.** Maintainer recalled StepMania
+used to have Home/Free/Pay coin modes and asked to "reactivate" Pay.
+Investigation (git history + live code read) found `CoinMode_Pay` is
+**fully implemented and wired** today — credits/coins math in
+`GameCommand.cpp`/`GameState.cpp`, the 3-way "Home"/"Pay"/"Free Play"
+`ConfOption` in `ScreenOptionsMasterPrefs.cpp`, the credits overlay in
+`ScreenSystemLayer.cpp`, the debug-overlay cycle in
+`ScreenDebugOverlay.cpp`. There was a real upstream saga to remove Pay
+mode once (`CoinMode_Pay->CoinMode_Free, step 1.` and its reverts),
+but every one of those commits — including the final "Add Pay mode
+back" ones — already predates this fork (`git merge-base --is-ancestor`
+confirms). **The actual reason Pay mode looks inert**:
+`PrefsManager.cpp`'s `m_bEventMode` preference defaults to `true`
+(`git blame`: this default is from `a085d0d1da6`, 2011-03-17, genuine
+upstream StepMania behavior, not fork-specific), and
+`GameState::GetCoinMode()` silently downgrades `CoinMode_Pay` to
+`CoinMode_Free` whenever `IsEventMode()` is true. So picking "Pay" in
+System Options has no visible effect until `EventMode` is *also*
+turned off (a separate preference, not exposed in the same 3-way
+selector). Confirmed and pinned with a new characterization test,
+`tests/test_GameState.cpp` (registered in `tests/CMakeLists.txt`,
+`[GameState][CoinMode]` tag), covering Home/Free (never charge),
+Pay-with-EventMode-on (silently downgrades to Free — the surprising
+case), and Pay-with-EventMode-off (correctly charges
+`CoinsPerCredit` and gates `EnoughCreditsToJoin()` on `m_iCoins`). No
+production code changed for this — maintainer asked only to confirm
+it works, not to change the default. If a different default (Pay
+without needing to separately flip EventMode) is ever wanted, that's
+its own follow-up decision.
 
 ### 10. RString everywhere
 `typedef StdString::CStdString RString` (`global.h:107`), 723 files /
