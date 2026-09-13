@@ -94,3 +94,31 @@ Do **not** attempt both in one PR.
 - 2026-09-02 — created from recon (`GameState.h` ~112 members,
   `GameState.cpp` `LunaGameState` span). No split done yet — first
   executor records which cluster was taken and the reset-parity notes.
+- 2026-09-13 — first split done: `GameState`'s "Edit stuff" cluster
+  (8 members + `GetEditLocalProfile()`) into `GameStateEditData.h`/`.cpp`.
+  **Key technique for zero call-site churn on raw public data members**
+  (this codebase doesn't wrap most `GameState` fields in accessors —
+  they're touched directly as `GAMESTATE->m_xxx` everywhere): declare
+  the new component as a normal value member (`GameStateEditData
+  m_EditData;`), then declare **reference members** in the god object
+  for each moved field (`bool& m_bIsUsingStepTiming;`,
+  `BroadcastOnChange<StepsType>& m_stEdit;`, etc.), bound in the
+  constructor's mem-initializer list to `m_EditData.xxx`. Every
+  existing call site — reads, writes, `.Set()` calls, even the
+  `Luna<GameState>` Lua-binding block inside `GameState.cpp` itself —
+  keeps compiling and behaving identically, because a reference member
+  transparently forwards to its referent. This only works because (a)
+  `m_EditData` is declared *before* the reference members in the class
+  body, so it's fully constructed by the time they bind to it, and
+  (b) the god object's lifetime is single and non-copied (a reference
+  member would dangle if the object were ever copied/moved — verify
+  the god object's copy ctor/assignment are already deleted or
+  equivalently unused before relying on this). Reset/init parity
+  (the gotcha above) came free: `Reset()`'s existing lines writing to
+  the moved fields were never touched, they still write through the
+  reference to the same storage. Full gate green (`sm_tests`, `ctest`,
+  Release, `--SelfTest`); no live gameplay spot-check was performed for
+  this specific commit (data-only extraction, no logic moved beyond a
+  straight cut-paste of `GetEditLocalProfile()`'s body) — a maintainer
+  spot-check of the editor is still the confirming step per this
+  playbook's own Verification section.
