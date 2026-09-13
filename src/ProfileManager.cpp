@@ -25,6 +25,7 @@
 #include "CharacterManager.h"
 
 #include <cstddef>
+#include <string>
 #include <vector>
 
 
@@ -59,7 +60,7 @@ static RString LocalProfileDirToID( const RString &sDir ) { return Basename( sDi
 
 struct DirAndProfile
 {
-	RString sDir;
+	std::string sDir;
 	Profile profile;
 	void swap(DirAndProfile& other)
 	{
@@ -645,7 +646,7 @@ const Profile *ProfileManager::GetLocalProfile( const RString &sProfileID ) cons
 	RString sDir = LocalProfileIDToDir( sProfileID );
 	for (DirAndProfile const &dap : g_vLocalProfile)
 	{
-		const RString &sOther = dap.sDir;
+		const std::string &sOther = dap.sDir;
 		if( sOther == sDir )
 			return &dap.profile;
 	}
@@ -1236,7 +1237,7 @@ void ProfileManager::GetLocalProfileIDs( std::vector<RString> &vsProfileIDsOut )
 	vsProfileIDsOut.clear();
 	for (DirAndProfile const &i : g_vLocalProfile)
 	{
-		RString sID = LocalProfileDirToID( i.sDir );
+		RString sID = LocalProfileDirToID( RString(i.sDir) );
 		vsProfileIDsOut.push_back( sID );
 	}
 }
@@ -1263,7 +1264,7 @@ int ProfileManager::GetLocalProfileIndexFromID( RString sProfileID ) const
 
 RString ProfileManager::GetLocalProfileIDFromIndex( int iIndex )
 {
-	RString sID = LocalProfileDirToID( g_vLocalProfile[iIndex].sDir );
+	RString sID = LocalProfileDirToID( RString(g_vLocalProfile[iIndex].sDir) );
 	return sID;
 }
 
