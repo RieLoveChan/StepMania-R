@@ -122,6 +122,9 @@ GameState::GameState() :
 	m_iCoins(				Message_CoinsChanged ),
 	m_bMultiplayer(			m_MultiPlayerData.m_bMultiplayer ),
 	m_iNumMultiplayerNoteFields(	m_MultiPlayerData.m_iNumMultiplayerNoteFields ),
+	m_iGameSeed(			m_StageSeedData.m_iGameSeed ),
+	m_iStageSeed(			m_StageSeedData.m_iStageSeed ),
+	m_sStageGUID(			m_StageSeedData.m_sStageGUID ),
 	m_sPreferredSongGroup(	Message_PreferredSongGroupChanged ),
 	m_sPreferredCourseGroup(	Message_PreferredCourseGroupChanged ),
 	m_PreferredStepsType(	Message_PreferredStepsTypeChanged ),
@@ -2600,11 +2603,6 @@ Difficulty GameState::GetHardestStepsDifficulty() const
 		dc = std::max( dc, m_pCurSteps[p]->GetDifficulty() );
 	}
 	return dc;
-}
-
-void GameState::SetNewStageSeed()
-{
-	m_iStageSeed= rand();
 }
 
 bool GameState::IsEventMode() const

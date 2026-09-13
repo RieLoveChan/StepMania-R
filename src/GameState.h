@@ -11,6 +11,7 @@
 #include "GameStateEditData.h"
 #include "GameStateHasteData.h"
 #include "GameStateMultiPlayerData.h"
+#include "GameStateStageSeedData.h"
 #include "GameStateWorkoutData.h"
 #include "Grade.h"
 #include "MessageManager.h"
@@ -140,11 +141,15 @@ public:
 	RageTimer		m_timeGameStarted;	// from the moment the first player pressed Start
 	LuaTable		*m_Environment;
 
+	// Random seed state below carved out into GameStateStageSeedData
+	// (backlog item 9, phase 1 cluster 9; see
+	// playbooks/split-god-object.md).
+	GameStateStageSeedData m_StageSeedData;
 	// This is set to a random number per-game/round; it can be used for a random seed.
-	int			m_iGameSeed, m_iStageSeed;
-	RString		m_sStageGUID;
+	int			&m_iGameSeed, &m_iStageSeed;
+	RString		&m_sStageGUID;
 
-	void SetNewStageSeed();
+	void SetNewStageSeed() { m_StageSeedData.SetNewStageSeed(); }
 
 	/**
 	 * @brief Determine if a second player can join in at this time.
