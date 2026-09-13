@@ -205,3 +205,13 @@ Do **not** attempt both in one PR.
   reproduces this automatically -- just don't accidentally give the
   new component an explicit constructor that does something different
   for that member.
+- 2026-09-13 -- eighth split: GameState's PLAY_MODE_BATTLE/
+  PLAY_MODE_RAVE fields (m_fOpponentHealthPercent,
+  m_fTugLifePercentP1) into GameStateBattleRaveData.h (header-only).
+  Pure data (two floats), no methods, no hard boundaries across the 6
+  touching files. Neither field was in GameState's original
+  constructor init-list, so the new component correctly has no
+  explicit constructor -- same shape as Haste, no new wrinkle. This
+  cluster mainly confirms the pattern generalizes cleanly once a
+  candidate's usage is plain reads/writes: the scouting + verification
+  steps are now fully mechanical for this shape of field.
