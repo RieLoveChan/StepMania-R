@@ -24,6 +24,7 @@
 #include <deque>
 #include <map>
 #include <set>
+#include <string>
 #include <vector>
 
 
@@ -312,7 +313,7 @@ public:
 	float &m_DanceDuration;
 
 	// Random Attacks & Attack Mines
-	std::vector<RString>		m_RandomAttacks;
+	std::vector<std::string>		m_RandomAttacks;
 
 	// used in PLAY_MODE_BATTLE
 	float	m_fOpponentHealthPercent;
