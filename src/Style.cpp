@@ -127,7 +127,7 @@ float Style::GetWidth(PlayerNumber pn) const
 	return width + (width / static_cast<float>(m_iColsPerPlayer-1));
 }
 
-RString Style::ColToButtonName( int iCol ) const
+std::string Style::ColToButtonName( int iCol ) const
 {
 	const char *pzColumnName = m_ColumnInfo[PLAYER_1][iCol].pzName;
 	if( pzColumnName != nullptr )
@@ -180,7 +180,7 @@ public:
 		ret.Set( L, "Track" );
 		lua_pushnumber( L, p->m_ColumnInfo[pn][iCol].fXOffset );
 		ret.Set( L,  "XOffset" );
-		lua_pushstring( L, p->ColToButtonName(iCol) );
+		lua_pushstring( L, p->ColToButtonName(iCol).c_str() );
 		ret.Set( L, "Name" );
 
 		ret.PushSelf(L);

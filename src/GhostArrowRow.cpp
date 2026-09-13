@@ -26,7 +26,7 @@ void GhostArrowRow::Load( const PlayerState* pPlayerState, float fYReverseOffset
 	// init arrows
 	for( int c=0; c<pStyle->m_iColsPerPlayer; c++ )
 	{
-		const RString &sButton = GAMESTATE->GetCurrentStyle(pn)->ColToButtonName( c );
+		RString sButton = GAMESTATE->GetCurrentStyle(pn)->ColToButtonName( c );
 
 		std::vector<GameInput> GameI;
 		GAMESTATE->GetCurrentStyle(pn)->StyleInputToGameInput( c, pn, GameI );

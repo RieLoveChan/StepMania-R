@@ -22,6 +22,7 @@
 #include "RageInput.h"
 
 #include <cmath>
+#include <string>
 #include <vector>
 
 static RageTimer g_GameplayTimer;
@@ -96,8 +97,8 @@ static void CheckInputDevices()
 }
 
 // On the next update, change themes, and load sNewScreen.
-static RString g_NewTheme;
-static RString g_NewGame;
+static std::string g_NewTheme;
+static std::string g_NewGame;
 void GameLoop::ChangeTheme(const RString &sNewTheme)
 {
 	g_NewTheme = sNewTheme;
@@ -143,8 +144,8 @@ namespace
 
 		// We always need to force the theme to reload because we cleared the lua
 		// state by calling RegisterTypes so the scripts in Scripts/ need to run.
-		THEME->SwitchThemeAndLanguage( g_NewTheme, THEME->GetCurLanguage(), PREFSMAN->m_bPseudoLocalize, true );
-		PREFSMAN->m_sTheme.Set( g_NewTheme );
+		THEME->SwitchThemeAndLanguage( RString(g_NewTheme), THEME->GetCurLanguage(), PREFSMAN->m_bPseudoLocalize, true );
+		PREFSMAN->m_sTheme.Set( RString(g_NewTheme) );
 
 		// Apply the new window title, icon and aspect ratio.
 		StepMania::ApplyGraphicOptions();
@@ -181,7 +182,7 @@ namespace
 		{
 			g_NewTheme= PREFSMAN->m_sTheme;
 		}
-		if(g_NewTheme != THEME->GetCurThemeName() && THEME->IsThemeSelectable(g_NewTheme))
+		if(g_NewTheme != THEME->GetCurThemeName() && THEME->IsThemeSelectable(RString(g_NewTheme)))
 		{
 			theme_changing= true;
 		}
@@ -191,9 +192,9 @@ namespace
 			SAFE_DELETE(SCREENMAN);
 			TEXTUREMAN->DoDelayedDelete();
 			LUA->RegisterTypes();
-			THEME->SwitchThemeAndLanguage(g_NewTheme, THEME->GetCurLanguage(),
+			THEME->SwitchThemeAndLanguage(RString(g_NewTheme), THEME->GetCurLanguage(),
 				PREFSMAN->m_bPseudoLocalize);
-			PREFSMAN->m_sTheme.Set(g_NewTheme);
+			PREFSMAN->m_sTheme.Set(RString(g_NewTheme));
 			StepMania::ApplyGraphicOptions();
 			SCREENMAN= new ScreenManager();
 		}
