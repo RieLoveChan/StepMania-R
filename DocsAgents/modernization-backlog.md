@@ -1214,6 +1214,26 @@ Verified: `sm_tests` 5981/230 unchanged, `[corpus]` 313/3 unchanged,
 `ctest` 100%, Release `StepMania-R.exe` clean rebuild, `--SelfTest`
 exit 0.
 
+**Pilot #7 (2026-09-13, autonomous — same standing goal):
+`StepsUtil.h`/`.cpp`'s `StepsID::sDescription`.** Closes out the whole
+`*ID` family scouted this round. Two hard boundaries this time, not
+one: the usual `XNode::GetAttrValue` shape in `LoadFromNode()` (local
+`RString` temporary, same fix as every other `*ID` class), plus a new
+one — `SongUtil::GetOneSteps(...)`'s `sDescription` parameter is
+`const RString &sDescription` (a genuine reference parameter, not
+by-value like `StringToGame`/`GetCourseFromName`/etc. seen in the
+earlier `*ID` pilots) — fixed with an explicit `RString(sDescription)`
+wrap at the one call site in `ToSteps()`. Everything else qualified as
+safe under the established rules: `Steps::GetDescription()` returns
+`RString` by value (assigns into the `std::string` member fine),
+`AppendAttr`'s by-value template parameter, and the `operator<`/
+`operator==` `COMP()` macros' native `std::string` comparisons.
+§5-adjacent (Steps/chart identity) — re-verified `[corpus]` (313/3)
+unchanged before/after, on top of the usual gate.
+Verified: `sm_tests` 5981/230 unchanged, `[corpus]` 313/3 unchanged,
+`ctest` 100%, Release `StepMania-R.exe` clean rebuild, `--SelfTest`
+exit 0.
+
 ### 11. Pre-C++11 threading / smart pointers
 `RageThreads` predates `std::thread`/`std::mutex`;
 `RageUtil_AutoPtr.h` ("TODO: replace with c++11 smart pointers");
