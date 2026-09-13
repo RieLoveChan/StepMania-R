@@ -7,6 +7,7 @@
 #include "Difficulty.h"
 
 #include <set>
+#include <string>
 #include <vector>
 
 
@@ -208,7 +209,7 @@ namespace SongUtil
 
 class SongID
 {
-	RString sDir;
+	std::string sDir;
 
 public:
 	/**
