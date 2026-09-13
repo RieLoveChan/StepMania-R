@@ -4,6 +4,7 @@
 #include "GameConstantsAndTypes.h"
 #include "Difficulty.h"
 
+#include <string>
 #include <vector>
 
 
@@ -78,7 +79,7 @@ public:
 	void Unset() { FromCourse(nullptr); }
 	void FromCourse( const Course *p );
 	Course *ToCourse() const;
-	const RString &GetPath() const { return sPath; }
+	RString GetPath() const { return sPath; }
 	bool operator<( const CourseID &other ) const
 	{
 		if (sPath != other.sPath)
@@ -93,8 +94,8 @@ public:
 	bool IsValid() const;
 
 private:
-	RString sPath;
-	RString sFullTitle;
+	std::string sPath;
+	std::string sFullTitle;
 };
 
 #endif
