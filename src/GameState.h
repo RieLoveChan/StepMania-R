@@ -7,6 +7,7 @@
 #include "GameStateAttractData.h"
 #include "GameStateAutogenData.h"
 #include "GameStateBattleRaveData.h"
+#include "GameStateCharacterData.h"
 #include "GameStateDanceData.h"
 #include "GameStateEditData.h"
 #include "GameStateHasteData.h"
@@ -369,8 +370,10 @@ public:
 
 	FailType GetPlayerFailType( const PlayerState *pPlayerState ) const;
 
-	// character stuff
-	Character* m_pCurCharacters[NUM_PLAYERS];
+	// character stuff carved out into GameStateCharacterData (backlog
+	// item 9, phase 1 cluster 10; see playbooks/split-god-object.md).
+	GameStateCharacterData m_CharacterData;
+	Character* (&m_pCurCharacters)[NUM_PLAYERS];
 
 	bool HasEarnedExtraStage() const { return m_bEarnedExtraStage; }
 	EarnedExtraStage GetEarnedExtraStage() const { return CalculateEarnedExtraStage(); }
