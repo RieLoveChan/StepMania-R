@@ -3,6 +3,7 @@
 
 #include "RollingNumbers.h"
 #include "PlayerNumber.h"
+#include <string>
 
 /** @brief Shows calorie score during gameplay and some menus. */
 class ScoreDisplayCalories : public RollingNumbers
@@ -25,7 +26,7 @@ public:
 
 private:
 	PlayerNumber m_PlayerNumber;
-	RString m_sMessageOnStep;
+	std::string m_sMessageOnStep;
 };
 
 #endif
