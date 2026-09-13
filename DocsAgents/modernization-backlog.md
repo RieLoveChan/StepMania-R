@@ -1282,6 +1282,32 @@ Flagged as a real candidate for a future round once
 Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%, Release
 `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
 
+**Pilot #10 (2026-09-13, autonomous — same standing goal): the
+`Trail::Modifiers` candidate flagged in pilot #9, unblocked.**
+Checked `LuaHelpers::Push`'s actual overload set (`LuaManager.cpp:93`)
+and found it **already has a real `std::string` specialization**
+(`template<> void Push<std::string>(...)`, alongside the `RString`
+one) — unlike `XNode::GetAttrValue`, this template genuinely is
+generic for both string types, so `Message::SetParam(const RString&,
+const T&)` calling it is safe. Migrated `TrailEntry::Modifiers`
+(a public field, per the earlier scouting) to `std::string`. Needed
+**3 explicit `RString(...)` wraps**, not one: two hard-reference-
+parameter calls inside `Trail.cpp` itself
+(`Attack::FromGlobalCourseModifier(const RString&)` in
+`GetAttackArray()`, `PlayerOptions::FromString(const RString&)` in
+`ContainsTransformOrTurn()`), plus the same `PlayerOptions::FromString`
+call from the external caller in `GameState.cpp`
+(`GetAllUsedNoteSkins()`). The other two external touch points
+(`Course.cpp`'s `te.Modifiers = e->sModifiers;` — `RString` assigned
+into the member, safe direction; `CourseContentsList.cpp`'s
+`msg.SetParam("Modifiers", te->Modifiers)` — now confirmed safe via
+the `Push<std::string>` specialization) needed no changes at all.
+§5-adjacent (course/trail loading) — re-verified both `[corpus]`
+(313/3) and `[crs]` (39/5) unchanged before/after.
+Verified: `sm_tests` 5981/230 unchanged, `[corpus]` 313/3 unchanged,
+`[crs]` 39/5 unchanged, `ctest` 100%, Release `StepMania-R.exe` clean
+rebuild, `--SelfTest` exit 0.
+
 ### 11. Pre-C++11 threading / smart pointers
 `RageThreads` predates `std::thread`/`std::mutex`;
 `RageUtil_AutoPtr.h` ("TODO: replace with c++11 smart pointers");
