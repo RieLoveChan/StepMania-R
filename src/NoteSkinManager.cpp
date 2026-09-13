@@ -17,6 +17,7 @@
 
 #include <cstddef>
 #include <map>
+#include <string>
 #include <vector>
 
 
@@ -34,7 +35,7 @@ static std::map<RString,RString> g_PathCache;
 
 struct NoteSkinData
 {
-	RString sName;
+	std::string sName;
 	IniFile metrics;
 
 	// When looking for an element, search these dirs from head to tail.
@@ -134,7 +135,7 @@ bool NoteSkinManager::LoadNoteSkinDataRecursive( const RString &sNoteSkinName_, 
 			sDir = GLOBAL_BASE_DIR + sNoteSkinName + "/";
 			if( !FILEMAN->IsADirectory(sDir) )
 			{
-				LuaHelpers::ReportScriptError("NoteSkin \"" + data_out.sName +
+				LuaHelpers::ReportScriptError("NoteSkin \"" + RString(data_out.sName) +
 					"\" references skin \"" + sNoteSkinName + "\" that is not present",
 					"NOTESKIN_ERROR");
 				return false;
