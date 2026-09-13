@@ -122,3 +122,16 @@ Do **not** attempt both in one PR.
   straight cut-paste of `GetEditLocalProfile()`'s body) — a maintainer
   spot-check of the editor is still the confirming step per this
   playbook's own Verification section.
+- 2026-09-13 — second split: `GameState`'s "used in workout" fields
+  into `GameStateWorkoutData.h`/`.cpp`. Same reference-member technique,
+  one new wrinkle: **an array member needs a reference-to-array
+  declarator**, `T (&name)[N]`, not `T& name[N]` (which doesn't parse —
+  arrays of references aren't a thing) — e.g.
+  `bool (&m_bGoalComplete)[NUM_PLAYERS];`. It binds and indexes exactly
+  like the original array, so `m_bGoalComplete[p] = ...` call sites
+  need zero changes, same as the scalar case. Also confirmed: a moved
+  method only needs to become a *real* implementation on the new
+  component (not just a thin forward) when it doesn't touch any other
+  god-object state — check this before moving a method body, not just
+  its owning members; `GetGoalPercentComplete()` qualified (only used
+  `PROFILEMAN`/`STATSMAN` + its own parameter), so it moved as-is.
