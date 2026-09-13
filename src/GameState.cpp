@@ -130,6 +130,8 @@ GameState::GameState() :
 	m_pCurCourse(			Message_CurrentCourseChanged ),
 	m_pCurTrail(			Message_CurrentTrailP1Changed ),
 	m_bGameplayLeadIn(		Message_GameplayLeadInChanged ),
+	m_bGoalComplete(		m_WorkoutData.m_bGoalComplete ),
+	m_bWorkoutGoalComplete(		m_WorkoutData.m_bWorkoutGoalComplete ),
 	m_bDidModeChangeNoteSkin(	false ),
 	m_bIsUsingStepTiming(		m_EditData.m_bIsUsingStepTiming ),
 	m_bInStepEditor(		m_EditData.m_bInStepEditor ),
@@ -2641,35 +2643,6 @@ ThemeMetric<bool> DISABLE_PREMIUM_IN_EVENT_MODE("GameState","DisablePremiumInEve
 Premium	GameState::GetPremium() const
 {
 	return DISABLE_PREMIUM_IN_EVENT_MODE ? Premium_Off : g_Premium;
-}
-
-float GameState::GetGoalPercentComplete( PlayerNumber pn )
-{
-	const Profile *pProfile = PROFILEMAN->GetProfile(pn);
-	const StageStats &ssCurrent = STATSMAN->m_CurStageStats;
-	const PlayerStageStats &pssCurrent = ssCurrent.m_player[pn];
-
-	float fActual = 0;
-	float fGoal = 0;
-	switch( pProfile->m_GoalType )
-	{
-	case GoalType_Calories:
-		fActual = pssCurrent.m_fCaloriesBurned;
-		fGoal = (float)pProfile->m_iGoalCalories;
-		break;
-	case GoalType_Time:
-		fActual = ssCurrent.m_fGameplaySeconds;
-		fGoal = (float)pProfile->m_iGoalSeconds;
-		break;
-	case GoalType_None:
-		return 0;	// never complete
-	default:
-		FAIL_M(ssprintf("Invalid GoalType: %i", pProfile->m_GoalType));
-	}
-	if( fGoal == 0 )
-		return 0;
-	else
-		return fActual / fGoal;
 }
 
 bool GameState::PlayerIsUsingModifier( PlayerNumber pn, const RString &sModifier )

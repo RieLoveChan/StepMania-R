@@ -5,6 +5,7 @@
 #include "Difficulty.h"
 #include "GameConstantsAndTypes.h"
 #include "GameStateEditData.h"
+#include "GameStateWorkoutData.h"
 #include "Grade.h"
 #include "MessageManager.h"
 #include "ModsGroup.h"
@@ -303,9 +304,12 @@ public:
 	// used in PLAY_MODE_RAVE
 	float	m_fTugLifePercentP1;
 
-	// used in workout
-	bool	m_bGoalComplete[NUM_PLAYERS];
-	bool	m_bWorkoutGoalComplete;
+	// used in workout -- carved out into GameStateWorkoutData (backlog
+	// item 9, phase 1 cluster 2; see playbooks/split-god-object.md).
+	// Exposed under their original names via reference members.
+	GameStateWorkoutData m_WorkoutData;
+	bool	(&m_bGoalComplete)[NUM_PLAYERS];
+	bool	&m_bWorkoutGoalComplete;
 
 	/** @brief Primarily called at the end of a song to stop all attacks. */
 	void RemoveAllActiveAttacks();
@@ -414,8 +418,8 @@ public:
 	Profile* GetEditLocalProfile() { return m_EditData.GetEditLocalProfile(); }
 
 	// Workout stuff
-	float GetGoalPercentComplete( PlayerNumber pn );
-	bool IsGoalComplete( PlayerNumber pn )	{ return GetGoalPercentComplete( pn ) >= 1; }
+	float GetGoalPercentComplete( PlayerNumber pn ) { return m_WorkoutData.GetGoalPercentComplete( pn ); }
+	bool IsGoalComplete( PlayerNumber pn )	{ return m_WorkoutData.IsGoalComplete( pn ); }
 
 	bool m_bDopefish;
 
