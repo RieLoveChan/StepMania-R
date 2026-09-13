@@ -910,6 +910,31 @@ not new logic that needs pinning.
 Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%, Release
 `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
 
+**Phase 1, cluster 3 (2026-09-13): `GameState`'s "Attract stuff"
+carved out into `GameStateAttractData.h`/`.cpp`.** Picked after
+scouting "Award stuff" (`m_vLastStageAwards`/`m_vLastPeakComboAwards` +
+`StageAward`/`PeakComboAward` types) and finding it touches 8 files
+including `HighScore.cpp`/`.h`, `PlayerStageStats.cpp`/`.h`,
+`StageStats.cpp` — those types are used broadly across the scoring
+pipeline, not just as passive `GameState` fields, so a much bigger
+blast radius than expected; deferred. "Attract stuff" is the smallest,
+cleanest fit: only 4 files total (`GameState.h`/`.cpp`,
+`ScreenAttract.cpp`, `ScreenDemonstration.cpp` — the latter two only
+ever call the two methods below, never touch the field directly).
+Moved `m_iNumTimesThroughAttract` (a plain `int`, not wrapped in
+`BroadcastOnChange`) and both of its methods' full bodies —
+`IsTimeToPlayAttractSounds()`/`VisitAttractScreen()` only ever touched
+`PREFSMAN`/`CommonMetrics` (external singletons) and the moved field,
+no other `GameState` state, so they moved as real implementations.
+Same reference-member technique (a plain `int&` this time, no new
+wrinkle needed). `GameState`'s constructor still had a body-level
+`m_iNumTimesThroughAttract = -1;` line predating this split (in
+addition to `GameStateAttractData`'s own constructor now also
+initializing it to -1) — left as harmless-but-redundant rather than
+"improving" it beyond the split's minimal diff.
+Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%, Release
+`StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+
 **Related (2026-09-13): "why does Pay mode do nothing?" investigated
 and answered — nothing was disabled.** Maintainer recalled StepMania
 used to have Home/Free/Pay coin modes and asked to "reactivate" Pay.
