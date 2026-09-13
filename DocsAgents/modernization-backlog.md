@@ -1082,6 +1082,24 @@ Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%, Release
 done now (Edit, Workout, Attract, Autogen, Haste, MultiPlayer, Dance,
 BattleRave, StageSeed, Character).**
 
+**Phase 1, cluster 11 (2026-09-13): `GameState`'s private "Timing
+position corrections" fields carved out into
+`GameStatePositionCorrectionData.h` (header-only).**
+`m_LastPositionTimer` (`RageTimer`), `m_LastPositionSeconds` (`float`),
+`m_paused` (`bool`) — already `private` to `GameState`, so zero
+external exposure to begin with; only touched inside
+`GameState::ResetMusicStatistics()`/`UpdateSongPosition()` plus the
+trivial inline `SetPaused()`/`GetPaused()`. No methods moved (both
+touching methods also use unrelated `GameState` state, so they stay on
+`GameState` and just read through the reference members
+transparently). None of the three fields were in the original
+constructor init-list, so the new component correctly has no explicit
+constructor. Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%,
+Release `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0. **11
+clusters done now (Edit, Workout, Attract, Autogen, Haste,
+MultiPlayer, Dance, BattleRave, StageSeed, Character,
+PositionCorrection).**
+
 **Related (2026-09-13): "why does Pay mode do nothing?" investigated
 and answered — nothing was disabled.** Maintainer recalled StepMania
 used to have Home/Free/Pay coin modes and asked to "reactivate" Pay.

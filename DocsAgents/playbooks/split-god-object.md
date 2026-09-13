@@ -238,3 +238,17 @@ Do **not** attempt both in one PR.
   confirms the array-reference technique is now routine for any
   single-array field with a small, hard-boundary-free external
   footprint.
+- 2026-09-13 -- eleventh split: GameState's own private "Timing
+  position corrections" fields (m_LastPositionTimer, an RageTimer;
+  m_LastPositionSeconds, a float; m_paused, a bool) into
+  GameStatePositionCorrectionData.h (header-only). First cluster whose
+  fields were already `private` inside GameState itself, not merely
+  externally under-exposed -- confirms private god-object fields are
+  fair game too, and are if anything *safer* candidates since there's
+  no possibility of an external caller ever depending on them
+  directly. Both touching methods (ResetMusicStatistics,
+  UpdateSongPosition) also read/write unrelated GameState state in the
+  same body, so neither moved as a real implementation -- they stay on
+  GameState and read through the reference members exactly like
+  before. None of the three fields were in the original constructor
+  init-list, so no explicit constructor needed on the new component.
