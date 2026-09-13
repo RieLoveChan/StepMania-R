@@ -1308,6 +1308,30 @@ Verified: `sm_tests` 5981/230 unchanged, `[corpus]` 313/3 unchanged,
 `[crs]` 39/5 unchanged, `ctest` 100%, Release `StepMania-R.exe` clean
 rebuild, `--SelfTest` exit 0.
 
+**Scouting bug found immediately after (2026-09-13, no code
+committed):** attempted `CommandLineActions::CommandLineArgs::argv`
+next, scouted with a `src/*.cpp`-only grep (misses subdirectories),
+missed `src/archutils/Win32/GraphicsWindow.cpp` passing it into a
+`std::vector<RString>&` parameter — the known container hard-boundary.
+The real build caught it before any commit; reverted, net zero diff.
+**Standing fix: scout with a genuinely recursive `src/` search from
+now on, no single-directory glob.** See `playbooks/migrate-rstring.md`
+for the full writeup.
+
+**Pause point (2026-09-13): checked `src/arch/`/`src/archutils/` with
+the corrected recursive method — not a fruitful vein.** Nearly every
+small candidate there is a Linux/Mac-specific driver file (out of
+scope per `AGENTS.md` §3's Windows-first priority, and mostly
+impossible to compile-test on Windows anyway). The one cross-platform
+candidate, `arch/RageDriver.h`'s `DriverList::Create(const RString&)`,
+is foundational driver-registry infrastructure likely called from many
+per-platform driver `.cpp` files — too wide-reaching for a quick pilot.
+**After 10 pilots, the easy/quickly-scoutable RString vein in `src/`
+is genuinely thin now.** Further progress needs either a deliberately
+bigger bounded subsystem pass (per the playbook's own "when to use"
+guidance — while already working there for another reason, not as a
+cold scouting exercise) or fresh small candidates surfacing later.
+
 ### 11. Pre-C++11 threading / smart pointers
 `RageThreads` predates `std::thread`/`std::mutex`;
 `RageUtil_AutoPtr.h` ("TODO: replace with c++11 smart pointers");
