@@ -5,6 +5,7 @@
 #include "Difficulty.h"
 #include "GameConstantsAndTypes.h"
 #include "GameStateAttractData.h"
+#include "GameStateAutogenData.h"
 #include "GameStateEditData.h"
 #include "GameStateWorkoutData.h"
 #include "Grade.h"
@@ -427,14 +428,11 @@ public:
 
 	bool m_bDopefish;
 
-	// Autogen stuff.  This should probably be moved to its own singleton or
-	// something when autogen is generalized and more customizable. -Kyz
-	float GetAutoGenFarg(std::size_t i)
-	{
-		if(i >= m_autogen_fargs.size()) { return 0.0f; }
-		return m_autogen_fargs[i];
-	}
-	std::vector<float> m_autogen_fargs;
+	// Autogen stuff -- carved out into GameStateAutogenData (backlog
+	// item 9, phase 1 cluster 4; see playbooks/split-god-object.md).
+	GameStateAutogenData m_AutogenData;
+	float GetAutoGenFarg(std::size_t i) { return m_AutogenData.GetAutoGenFarg(i); }
+	std::vector<float> &m_autogen_fargs;
 
 	// Lua
 	void PushSelf( lua_State *L );
