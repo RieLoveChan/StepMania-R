@@ -1212,7 +1212,7 @@ void SongID::FromSong( const Song *p )
 
 	// HACK for backwards compatibility:
 	// Strip off leading "/".  2005/05/21 file layer changes added a leading slash.
-	if( sDir.Left(1) == "/" )
+	if( sDir.substr(0, 1) == "/" )
 		sDir.erase( sDir.begin() );
 }
 
@@ -1243,10 +1243,12 @@ XNode* SongID::CreateNode() const
 void SongID::LoadFromNode( const XNode* pNode )
 {
 	ASSERT( pNode->GetName() == "Song" );
-	pNode->GetAttrValue("Dir", sDir);
+	RString sDirTmp;
+	pNode->GetAttrValue("Dir", sDirTmp);
+	sDir = sDirTmp;
 
 	// HACK for backwards compatibility: /AdditionalSongs has been merged into /Songs
-	if (sDir.Left(16) == "AdditionalSongs/")
+	if (sDir.substr(0, 16) == "AdditionalSongs/")
 		sDir.replace(0, 16, "Songs/");
 }
 
