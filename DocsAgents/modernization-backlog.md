@@ -1537,6 +1537,24 @@ feeds `Message::SetParam`, already confirmed generic in pilot #10).
 Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%, Release
 `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
 
+**Pilot #14 (2026-09-13): `RandomSample`'s `Load`/`LoadSoundDir`/
+`LoadSound` parameters (`RandomSample.h`/`.cpp`).** All three by-value
+`RString` parameters migrated to `std::string`. Fixed 5 hard-boundary
+calls into still-`RString` `RageUtil` free functions:
+`GetExtension(const RString&)` (1 wrap) and
+`GetDirListing(const RString&, std::vector<RString>&, ...)` (4 wraps,
+one per extension) — the output vector (`arraySoundFiles`) stays
+`std::vector<RString>` since `GetDirListing` fills it by reference.
+Replaced the RString-only `.Right(1)` with `.substr(sDir.size()-1)`
+per the playbook's mapping table (safe here since `sDir` is already
+known non-empty at that point). `RageSound::Load(RString sFile)`
+(by-value) needed no wrap — passing `std::string` into an `RString`
+by-value parameter is the established safe direction. Only 1 external
+caller (`ScreenSelectMaster.cpp`'s `m_soundDifficult.Load(
+ANNOUNCER->GetPathTo(...))`, which returns `RString` by value) needed
+zero changes. Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%,
+Release `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+
 ### 11. Pre-C++11 threading / smart pointers
 `RageThreads` predates `std::thread`/`std::mutex`;
 `RageUtil_AutoPtr.h` ("TODO: replace with c++11 smart pointers");
