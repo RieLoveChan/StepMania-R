@@ -1498,6 +1498,24 @@ binding to the `push_back(const std::string&)` parameter).
 Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%, Release
 `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
 
+**Pilot #12 (2026-09-13, item 9's low-risk clusters exhausted, pivoted
+back to item 10): `PlayerStageStats::FormatPercentScore(float)`.** A
+static function's own return type migrated `RString` → `std::string`.
+Body only builds the result via `ssprintf(...)` (already safe:
+`std::string s = ssprintf(...)` slices the returned `RString`'s
+`std::basic_string<char>` base, no `RString`-specific data lost). Only
+1 real external caller (`PaneDisplay.cpp`'s
+`sTextOut = FormatPercentScore(...)`, where `sTextOut` is `RString&`) —
+safe because `CStdStr` has a genuine
+`operator=(const std::string&)` overload (`StdString.h:391`), not just
+the inherited base-class one. The `LuaFunction(FormatPercentScore,
+...)` macro registration forwards through `LuaHelpers::Push(L, expr)`,
+already confirmed generic for both `RString`/`std::string` in pilot
+#10. Verified: `sm_tests` 5981/230 unchanged (rebuild recompiled only
+the ~40 files that include `PlayerStageStats.h`, no wider cascade),
+`ctest` 100%, Release `StepMania-R.exe` clean rebuild, `--SelfTest`
+exit 0.
+
 ### 11. Pre-C++11 threading / smart pointers
 `RageThreads` predates `std::thread`/`std::mutex`;
 `RageUtil_AutoPtr.h` ("TODO: replace with c++11 smart pointers");

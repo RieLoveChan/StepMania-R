@@ -307,3 +307,18 @@ if a boundary gotcha turned up, plus `log.md`.
   actual usage pattern (method calls on elements/the container itself
   vs. passing the whole container onward) before assuming a container
   member is automatically off-limits.
+- 2026-09-13 -- twelfth subsystem migrated (item 9's low-risk
+  god-object clusters ran out, pivoted back to item 10):
+  `PlayerStageStats::FormatPercentScore(float)`'s own return type
+  (`RString` -> `std::string`). Same "migrate a public function's own
+  signature" shape as pilot #8/#9, but for a *return* type instead of
+  a parameter. New confirmation: `CStdStr` has a genuine
+  `operator=(const std::string&)` overload (`StdString.h:391`), not
+  just the base-class `std::basic_string<char>::operator=` -- so
+  assigning a `std::string`-returning function's result into an
+  existing `RString&`/`RString` variable is always safe, the same
+  "safe direction" as passing a `std::string` where an `RString`
+  parameter is expected. Only 1 real caller outside the `LuaFunction`
+  registration (`PaneDisplay.cpp`), and that registration's
+  `LuaHelpers::Push` forwarding was already confirmed generic in pilot
+  #10, so this pilot needed zero `RString(...)` wraps anywhere.
