@@ -22,6 +22,7 @@ set(SM_TEST_SRC
     test_LuaHelpers.cpp
     test_DateTime.cpp
     test_GameManager.cpp
+    test_GameState.cpp
     test_SongOptions.cpp
     test_DeviceInput.cpp
     test_Command.cpp

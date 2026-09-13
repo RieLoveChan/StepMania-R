@@ -131,14 +131,14 @@ GameState::GameState() :
 	m_pCurTrail(			Message_CurrentTrailP1Changed ),
 	m_bGameplayLeadIn(		Message_GameplayLeadInChanged ),
 	m_bDidModeChangeNoteSkin(	false ),
-	m_bIsUsingStepTiming(		true ),
-	m_bInStepEditor(		false ),
-	m_stEdit(				Message_EditStepsTypeChanged ),
-	m_cdEdit(				Message_EditCourseDifficultyChanged ),
-	m_pEditSourceSteps(		Message_EditSourceStepsChanged ),
-	m_stEditSource(			Message_EditSourceStepsTypeChanged ),
-	m_iEditCourseEntryIndex(	Message_EditCourseEntryIndexChanged ),
-	m_sEditLocalProfileID(		Message_EditLocalProfileIDChanged )
+	m_bIsUsingStepTiming(		m_EditData.m_bIsUsingStepTiming ),
+	m_bInStepEditor(		m_EditData.m_bInStepEditor ),
+	m_stEdit(			m_EditData.m_stEdit ),
+	m_cdEdit(			m_EditData.m_cdEdit ),
+	m_pEditSourceSteps(		m_EditData.m_pEditSourceSteps ),
+	m_stEditSource(			m_EditData.m_stEditSource ),
+	m_iEditCourseEntryIndex(	m_EditData.m_iEditCourseEntryIndex ),
+	m_sEditLocalProfileID(		m_EditData.m_sEditLocalProfileID )
 {
 	g_pImpl = new GameStateImpl;
 
@@ -2681,14 +2681,6 @@ bool GameState::PlayerIsUsingModifier( PlayerNumber pn, const RString &sModifier
 
 	return po == m_pPlayerState[pn]->m_PlayerOptions.GetCurrent()  &&  so == m_SongOptions.GetCurrent();
 }
-
-Profile* GameState::GetEditLocalProfile()
-{
-	if( m_sEditLocalProfileID.Get().empty() )
-		return nullptr;
-	return PROFILEMAN->GetLocalProfile( m_sEditLocalProfileID );
-}
-
 
 PlayerNumber GetNextHumanPlayer( PlayerNumber pn )
 {
