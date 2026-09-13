@@ -157,7 +157,10 @@ GameState::GameState() :
 	m_stEditSource(			m_EditData.m_stEditSource ),
 	m_iEditCourseEntryIndex(	m_EditData.m_iEditCourseEntryIndex ),
 	m_sEditLocalProfileID(		m_EditData.m_sEditLocalProfileID ),
-	m_autogen_fargs(		m_AutogenData.m_autogen_fargs )
+	m_autogen_fargs(		m_AutogenData.m_autogen_fargs ),
+	m_LastPositionTimer(		m_PositionCorrectionData.m_LastPositionTimer ),
+	m_LastPositionSeconds(		m_PositionCorrectionData.m_LastPositionSeconds ),
+	m_paused(			m_PositionCorrectionData.m_paused )
 {
 	g_pImpl = new GameStateImpl;
 
