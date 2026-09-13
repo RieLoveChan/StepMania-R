@@ -1734,6 +1734,30 @@ and another `.CompareNoCase(...)` call, fixed with the same
 established. Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%,
 Release `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
 
+**Pilot #25 (2026-09-13): `RageFileDriverMemory.cpp`'s file-local
+`RageFileObjMemFile::m_sBuf` field.** An in-memory byte-buffer used by
+`RageFileObjMem` (the "memory filesystem" file object). One real
+public API touch: `RageFileObjMem::GetString()`
+(`RageFileDriverMemory.h:29`) previously returned `const RString&` —
+can't keep returning a reference once the field is `std::string` (the
+established pilot #5/#19/#22 "derived-reference-to-base-object"
+shape), so it changed to return `RString` **by value** instead —
+requires **zero caller changes anywhere**, since every caller either
+assigns the result into an `RString`/`RString&` variable or passes it
+as a template argument that still deduces `RString` either way (both
+already-safe patterns). `PutString(const RString&)` assigns an
+`RString` into the `std::string` field — safe direction, no change.
+`.replace(...)`/`operator[]`/`.size()` are all inherited unmodified
+from `std::basic_string` in *both* `RString` and `std::string` — never
+RString-specific overrides — so their behavior is byte-for-byte
+identical regardless of the field's declared type. Since this class is
+used by `CourseWriterCRS.cpp` (writing `.crs` course files, a §5
+content-compatibility format) and `XmlFileUtil.cpp`/
+`RageFileDriverDeflate.cpp` (profile/stats serialization), re-verified
+both `[crs]` (39/5) and `[corpus]` (313/3) as an extra precaution.
+Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%, Release
+`StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+
 ### 11. Pre-C++11 threading / smart pointers
 `RageThreads` predates `std::thread`/`std::mutex`;
 `RageUtil_AutoPtr.h` ("TODO: replace with c++11 smart pointers");
