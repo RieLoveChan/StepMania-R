@@ -8,6 +8,7 @@
 #include "GameStateAutogenData.h"
 #include "GameStateEditData.h"
 #include "GameStateHasteData.h"
+#include "GameStateMultiPlayerData.h"
 #include "GameStateWorkoutData.h"
 #include "Grade.h"
 #include "MessageManager.h"
@@ -107,7 +108,13 @@ public:
 	 *
 	 * The left side is player 1, and the right side is player 2. */
 	bool					m_bSideIsJoined[NUM_PLAYERS];	// left side, right side
-	MultiPlayerStatus			m_MultiPlayerStatus[NUM_MultiPlayer];
+	// Multiplayer-mode fields below carved out into
+	// GameStateMultiPlayerData (backlog item 9, phase 1 cluster 6; see
+	// playbooks/split-god-object.md). Deliberately excludes
+	// m_bSideIsJoined and m_pPlayerState above/below (core 2-player
+	// state, too foundational for this cluster).
+	GameStateMultiPlayerData m_MultiPlayerData;
+	MultiPlayerStatus (&m_MultiPlayerStatus)[NUM_MultiPlayer];
 	BroadcastOnChange<PlayMode>		m_PlayMode;			// many screens display different info depending on this value
 	/**
 	 * @brief The number of coins presently in the machine.
@@ -116,8 +123,8 @@ public:
 	 * to get one credit, only to have to put in another four coins to get
 	 * the three credits needed to begin the game. */
 	BroadcastOnChange<int>			m_iCoins;
-	bool			m_bMultiplayer;
-	int				m_iNumMultiplayerNoteFields;
+	bool			&m_bMultiplayer;
+	int				&m_iNumMultiplayerNoteFields;
 	bool DifficultiesLocked() const;
 	bool ChangePreferredDifficultyAndStepsType( PlayerNumber pn, Difficulty dc, StepsType st );
 	bool ChangePreferredDifficulty( PlayerNumber pn, int dir );
@@ -151,7 +158,7 @@ public:
 
 	void GetPlayerInfo( PlayerNumber pn, bool& bIsEnabledOut, bool& bIsHumanOut );
 	bool IsPlayerEnabled( PlayerNumber pn ) const;
-	bool IsMultiPlayerEnabled( MultiPlayer mp ) const;
+	bool IsMultiPlayerEnabled( MultiPlayer mp ) const { return m_MultiPlayerData.IsMultiPlayerEnabled( mp ); }
 	bool IsPlayerEnabled( const PlayerState* pPlayerState ) const;
 	int	GetNumPlayersEnabled() const;
 
@@ -390,7 +397,7 @@ public:
 	// PlayerState
 	/** @brief Allow access to each player's PlayerState. */
 	PlayerState* m_pPlayerState[NUM_PLAYERS];
-	PlayerState* m_pMultiPlayerState[NUM_MultiPlayer];
+	PlayerState* (&m_pMultiPlayerState)[NUM_MultiPlayer];
 
 	// Preferences
 	static Preference<bool> m_bAutoJoin;
