@@ -71,6 +71,7 @@
 
 #include <cmath>
 #include <ctime>
+#include <string>
 #include <vector>
 
 #if defined(_WIN32)
@@ -448,8 +449,8 @@ static void AdjustForChangedSystemCapabilities()
 
 struct VideoCardDefaults
 {
-	RString sDriverRegex;
-	RString sVideoRenderers;
+	std::string sDriverRegex;
+	std::string sVideoRenderers;
 	int iWidth;
 	int iHeight;
 	int iDisplayColor;
@@ -557,7 +558,7 @@ bool CheckVideoDefaultSettings()
 
 	if( bSetDefaultVideoParams )
 	{
-		PREFSMAN->m_sVideoRenderers.Set( defaults.sVideoRenderers );
+		PREFSMAN->m_sVideoRenderers.Set( RString(defaults.sVideoRenderers) );
 		PREFSMAN->m_iDisplayWidth.Set( defaults.iWidth );
 		PREFSMAN->m_iDisplayHeight.Set( defaults.iHeight );
 		PREFSMAN->m_iDisplayColorDepth.Set( defaults.iDisplayColor );
@@ -573,7 +574,7 @@ bool CheckVideoDefaultSettings()
 		// Update last seen video card
 		PREFSMAN->m_sLastSeenVideoDriver.Set( GetVideoDriverName() );
 	}
-	else if( PREFSMAN->m_sVideoRenderers.Get().CompareNoCase(defaults.sVideoRenderers) )
+	else if( StdString::ssicmp( PREFSMAN->m_sVideoRenderers.Get().c_str(), defaults.sVideoRenderers.c_str() ) )
 	{
 		LOG_INFO(Log::General, "Video renderer list has been changed from '%s' to '%s'",
 				defaults.sVideoRenderers.c_str(), PREFSMAN->m_sVideoRenderers.Get().c_str() );

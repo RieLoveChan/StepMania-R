@@ -18,13 +18,14 @@ class Song;
 #include "StepMania.h"
 #include "ActorUtil.h"
 
+#include <string>
 #include <vector>
 
 
 struct PlayAfterLaunchInfo
 {
-	RString sSongDir;
-	RString sTheme;
+	std::string sSongDir;
+	std::string sTheme;
 	bool bAnySongChanged;
 	bool bAnyThemeChanged;
 
