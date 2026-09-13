@@ -958,6 +958,26 @@ same file, even though an NSDMI would have worked too and let the
 Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%, Release
 `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
 
+**Phase 1, cluster 5 (2026-09-13, autonomous — same standing goal):
+`GameState`'s "Haste" fields carved out into `GameStateHasteData.h`
+(header-only, like cluster 4 — 3 plain data members, nothing to put in
+a `.cpp`).** Pure data, no associated methods at all — `m_fHasteRate`/`m_fLastHasteUpdateMusicSeconds`/
+`m_fAccumulatedHasteSeconds` (3 plain floats) are read/written directly
+as `GAMESTATE->m_fHasteRate` etc. from `ScreenGameplay.cpp` (13 sites,
+all direct field access — checked each one before committing to this
+cluster, per the "verify full footprint" lesson from rejecting Award
+Stuff; none of them turned out to be more than simple reads/writes/
+`CLAMP()`/`SCALE()` calls on the raw values) and reset in
+`GameState::ResetStageStatistics()`. None of the three fields were
+previously in `GameState`'s constructor init-list (left uninitialized
+until `Reset()` runs, same as most plain-float `GameState` members) —
+`GameStateHasteData` correctly has **no explicit constructor**, since
+adding one that zero-initializes would silently change behavior versus
+the original (implicitly uninitialized until first `Reset()`).
+Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%, Release
+`StepMania-R.exe` clean rebuild, `--SelfTest` exit 0. **5 clusters done
+now (Edit, Workout, Attract, Autogen, Haste).**
+
 **Related (2026-09-13): "why does Pay mode do nothing?" investigated
 and answered — nothing was disabled.** Maintainer recalled StepMania
 used to have Home/Free/Pay coin modes and asked to "reactivate" Pay.

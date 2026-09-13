@@ -155,3 +155,15 @@ Do **not** attempt both in one PR.
   zero changes under the reference-member technique, same as any other
   call site — containers support all their normal operations through a
   reference exactly like through the original value.
+- 2026-09-13 — fifth split: `GameState`'s "Haste" fields (3 plain
+  floats, no methods at all) into `GameStateHasteData.h` (header-only
+  again). **Check whether the original fields were ever in the god
+  object's constructor init-list before deciding whether the new
+  component needs its own constructor.** These three weren't (left
+  implicitly uninitialized until the first `Reset()` call, same as
+  most plain-scalar `GameState` members) — giving `GameStateHasteData`
+  a constructor that zero-initializes them would have silently changed
+  behavior versus the original (a real, if minor, correctness risk:
+  reference members MUST be bound in the god object's init-list either
+  way, but what value the *referent* starts with is a separate
+  question you have to check, not assume).
