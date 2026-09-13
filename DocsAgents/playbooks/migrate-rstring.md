@@ -213,3 +213,15 @@ if a boundary gotcha turned up, plus `log.md`.
   (same two `.Left(n)` sites, same `XNode::GetAttrValue` hard-boundary
   fix). `SongID` is §5-adjacent (core song identity) — re-verified
   `[corpus]` (313/3) unchanged before/after.
+- 2026-09-13 — seventh subsystem migrated: `StepsUtil.h`/`.cpp`'s
+  `StepsID::sDescription`, closing out this round's `*ID` family scout.
+  A **second, different flavor of hard-reference-boundary parameter**
+  turned up: `SongUtil::GetOneSteps(...)`'s `sDescription` parameter is
+  `const RString &sDescription` — a real reference parameter, unlike
+  the by-value `RString` parameters (`StringToGame`, `GetCourseFromName`,
+  `GetSongFromDir`, etc.) every earlier `*ID` pilot happened to hit.
+  Same fix as always (an explicit `RString(...)` wrap at the one call
+  site), but a reminder that **by-value vs. by-reference isn't
+  predictable from the pattern of prior pilots — check every call's
+  actual signature, every time**, even after the same fix has worked
+  several times in a row on parameters that turned out to be by-value.
