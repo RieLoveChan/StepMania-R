@@ -13,6 +13,7 @@
 #include "ScreenDimensions.h"
 
 #include <set>
+#include <string>
 #include <vector>
 
 
@@ -31,7 +32,7 @@ struct ButtonState
 	ButtonState();
 	bool m_BeingHeld; // actual current state
 	bool m_bLastReportedHeld; // last state reported by Update()
-	RString m_sComment;
+	std::string m_sComment;
 	float m_fSecsHeld;
 	DeviceInput m_DeviceInput;
 
