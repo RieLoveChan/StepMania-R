@@ -1388,6 +1388,25 @@ bigger bounded subsystem pass (per the playbook's own "when to use"
 guidance — while already working there for another reason, not as a
 cold scouting exercise) or fresh small candidates surfacing later.
 
+**Pilot #11 (2026-09-13, found while scouting `GameState.h` for item 9
+clusters): `GameState::m_RandomAttacks`.** A `std::vector<RString>`
+public member migrated to `std::vector<std::string>` — a direct
+type change, not a god-object "carve into a component" cluster (no
+reference-member technique needed, since a plain member-type swap
+works fine when nothing outside the class needs a reference bound to
+it). Only 2 external files touch it (`Player.cpp`, `SongManager.cpp`),
+all via native container methods (`.empty()`/`.size()`/`operator[]`/
+`.clear()`/`.push_back()`) — no function anywhere takes the whole
+vector by reference to an un-migrated `vector<RString>&` parameter
+(the `Command.cpp`/`CommandLineActions` container trap), so this one
+had zero hard boundaries. `Player.cpp`'s `ApplyRandomAttack()` returns
+`RString` from an `operator[]` read — safe (implicit `std::string`→
+`RString` conversion on return); `SongManager.cpp`'s
+`.push_back(sAttack)` passes an `RString sAttack` local — safe (upcast
+binding to the `push_back(const std::string&)` parameter).
+Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%, Release
+`StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+
 ### 11. Pre-C++11 threading / smart pointers
 `RageThreads` predates `std::thread`/`std::mutex`;
 `RageUtil_AutoPtr.h` ("TODO: replace with c++11 smart pointers");
