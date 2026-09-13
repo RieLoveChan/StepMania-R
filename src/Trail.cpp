@@ -16,7 +16,7 @@
 void TrailEntry::GetAttackArray( AttackArray &out ) const
 {
 	if( !Modifiers.empty() )
-		out.push_back( Attack::FromGlobalCourseModifier( Modifiers ) );
+		out.push_back( Attack::FromGlobalCourseModifier( RString(Modifiers) ) );
 
 	out.insert( out.end(), Attacks.begin(), Attacks.end() );
 }
@@ -38,7 +38,7 @@ bool TrailEntry::operator== ( const TrailEntry &rhs ) const
 bool TrailEntry::ContainsTransformOrTurn() const
 {
 	PlayerOptions po;
-	po.FromString( Modifiers );
+	po.FromString( RString(Modifiers) );
 	if( po.ContainsTransformOrTurn() )
 		return true;
 	if( Attacks.ContainsTransformOrTurn() )

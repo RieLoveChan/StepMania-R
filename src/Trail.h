@@ -5,6 +5,7 @@
 #include "RadarValues.h"
 #include "Difficulty.h"
 
+#include <string>
 #include <vector>
 
 
@@ -34,7 +35,7 @@ struct TrailEntry
 	/** @brief The <a class="el" href="class_steps.html">Step</a> involved in the entry. */
 	Steps*		pSteps;
 	/** @brief The Modifiers applied for the whole Song. */
-	RString		Modifiers;
+	std::string	Modifiers;
 	/** @brief The Attacks that will take place durring the Song. */
 	AttackArray	Attacks;
 	/**
