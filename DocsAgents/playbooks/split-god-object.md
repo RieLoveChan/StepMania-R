@@ -135,3 +135,13 @@ Do **not** attempt both in one PR.
   god-object state — check this before moving a method body, not just
   its owning members; `GetGoalPercentComplete()` qualified (only used
   `PROFILEMAN`/`STATSMAN` + its own parameter), so it moved as-is.
+- 2026-09-13 — third split: `GameState`'s "Attract stuff" into
+  `GameStateAttractData.h`/`.cpp`. Confirms a lesson from the RString
+  playbook applies here too: a cluster that *looks* small and cohesive
+  by name (`GameState.h`'s "Award stuff" comment) can still have a much
+  bigger real blast radius if its types (`StageAward`/`PeakComboAward`
+  here) are used broadly elsewhere in the codebase — grep every
+  candidate's full footprint (types included, not just the god
+  object's own members) before committing to it. No new wrinkle this
+  time (plain `int`, not an array or a `BroadcastOnChange<T>`) —
+  straightforward reference member.
