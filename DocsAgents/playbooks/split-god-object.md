@@ -230,3 +230,11 @@ Do **not** attempt both in one PR.
   once. Section-5-adjacent (NoteDataUtil.cpp, Course.cpp read
   m_iStageSeed for shuffle/seed math) -- re-verified [corpus] and
   [crs] tags unchanged.
+- 2026-09-13 -- tenth split: GameState's "character stuff" field
+  (m_pCurCharacters[NUM_PLAYERS], a Character* array) into
+  GameStateCharacterData.h (header-only), using the same array
+  reference-to-array technique as cluster 6's m_MultiPlayerStatus
+  (Character* (&m_pCurCharacters)[NUM_PLAYERS];). No new wrinkle --
+  confirms the array-reference technique is now routine for any
+  single-array field with a small, hard-boundary-free external
+  footprint.
