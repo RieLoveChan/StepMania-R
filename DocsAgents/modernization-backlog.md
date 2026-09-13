@@ -886,6 +886,30 @@ Release `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0. **Phase 2
 deliberately not attempted** — per the playbook, that's a separate,
 later PR if ever wanted.
 
+**Phase 1, cluster 2 (2026-09-13): `GameState`'s "used in workout"
+fields carved out into `GameStateWorkoutData.h`/`.cpp`.** Even smaller
+blast radius than cluster 1: only 3 files touch this cluster at all
+(`GameState.h`/`.cpp` and `ScreenGameplay.cpp`, 1 read site). Moved
+`m_bGoalComplete[NUM_PLAYERS]`, `m_bWorkoutGoalComplete`, and
+`GetGoalPercentComplete()`'s full body (`IsGoalComplete()` is a
+1-liner that already just called it) into the new component —
+`GetGoalPercentComplete()` only ever touched `PROFILEMAN`/`STATSMAN`
+(external singletons) and its `pn` parameter, no other `GameState`
+state, so it moved as a real implementation, not just a forward.
+Same reference-member technique as cluster 1, with one new wrinkle:
+**`m_bGoalComplete` is an array (`bool[NUM_PLAYERS]`), not a scalar** —
+a reference to an array member uses the `T (&name)[N]` declarator
+(`bool (&m_bGoalComplete)[NUM_PLAYERS];`), which binds and indexes
+exactly like the original array (`m_bGoalComplete[p] = false;` in
+`GameState::Update()`/`ResetStageStatistics()` needed zero changes).
+`GetGoalPercentComplete()`/`IsGoalComplete()` stay thin inline
+forwards on `GameState` per playbook step 4. No new characterization
+test added — like cluster 1, this is a pure mechanical relocation with
+identical behavior, covered by the existing full suite + build gate,
+not new logic that needs pinning.
+Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%, Release
+`StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+
 **Related (2026-09-13): "why does Pay mode do nothing?" investigated
 and answered — nothing was disabled.** Maintainer recalled StepMania
 used to have Home/Free/Pay coin modes and asked to "reactivate" Pay.
