@@ -360,3 +360,13 @@ if a boundary gotcha turned up, plus `log.md`.
   straight into `RageEvent(RString name)`'s by-value parameter with no
   wrap -- string concatenation results are just as safe to pass by
   value into an un-migrated by-value parameter as a bare variable is.
+- 2026-09-13 -- sixteenth subsystem migrated: `RageSurfaceUtils.h`/
+  `.cpp`'s `SaveSurface`/`LoadSurface` by-value `file` parameter.
+  Routine shape by now: `RageFile::Open(const RString&, int)` is a
+  real reference-parameter hard boundary, fixed with one
+  `RString(file)` wrap per function; the single external caller file
+  passes a `const RString` local, safe by the by-value rule. No new
+  wrinkle -- this pilot mainly confirms the "migrate a function's own
+  by-value parameter, wrap at any reference-parameter call sites in
+  the body" pattern is now fully mechanical to execute once a
+  candidate's external footprint is scouted.

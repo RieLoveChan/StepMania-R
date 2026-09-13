@@ -1570,6 +1570,18 @@ subclass callers (`MemoryCardManager.cpp`'s string-literal argument,
 Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%, Release
 `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
 
+**Pilot #16 (2026-09-13): `RageSurfaceUtils::SaveSurface`/
+`LoadSurface`'s by-value `file` parameter (`RageSurfaceUtils.h`/
+`.cpp`).** Both migrated `RString` → `std::string`. `RageFile::Open(
+const RString&, int)` is a real reference-parameter hard boundary into
+the still-`RString` `RageFile` — fixed with 2 `RString(file)` wraps,
+one per function, both local to `RageSurfaceUtils.cpp`. Only 1
+external caller file (`ImageCache.cpp`, 3 call sites), all passing a
+`const RString sCachePath` local — safe, binds to the by-value
+`std::string` parameter with zero changes. Verified: `sm_tests`
+5981/230 unchanged, `ctest` 100%, Release `StepMania-R.exe` clean
+rebuild, `--SelfTest` exit 0.
+
 ### 11. Pre-C++11 threading / smart pointers
 `RageThreads` predates `std::thread`/`std::mutex`;
 `RageUtil_AutoPtr.h` ("TODO: replace with c++11 smart pointers");
