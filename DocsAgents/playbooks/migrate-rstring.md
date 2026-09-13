@@ -148,3 +148,20 @@ if a boundary gotcha turned up, plus `log.md`.
   needed 2 explicit `RString(...)` wraps in `UnlockManager.cpp`). Full
   gate green (`sm_tests` unchanged, `[Command]` tag 26/6 unchanged,
   `ctest`, Release, `--SelfTest`).
+- 2026-09-12 — third subsystem migrated: `ScoreDisplayCalories.cpp`/
+  `.h` (1 `RString` member). Trivial and fully self-contained — the
+  hard-boundary wrap (`MessageManager::Unsubscribe(const RString&)`)
+  landed in the same file, no other caller file needed touching.
+  **New lesson: `RString` mention count alone doesn't make a good
+  pilot signal — check what each mention actually does.** Scouted and
+  rejected `MeterDisplay.cpp`/`ComboGraph.cpp` (both immediately
+  forward a by-value `RString` param into `AutoActor`/`ThemeManager`/
+  `ThemeMetric` APIs — large un-migrated subsystems, no real reduction
+  in footprint) and `PlayerAI.cpp` (feeds straight into
+  `IniFile`/`XNode`, already named in this playbook's own "heavy
+  RString users" warning). A file with 1-2 `RString` mentions is only
+  a good pilot if those mentions stay local (a member field, a return
+  value) rather than passing straight through to a big subsystem's
+  reference-taking API. Full gate green (`sm_tests` unchanged, `ctest`,
+  Release, `--SelfTest`; no dedicated characterization test exists for
+  this widget).
