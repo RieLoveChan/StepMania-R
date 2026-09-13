@@ -1607,6 +1607,38 @@ maintainer-gated remainders left), and #29 (orphaned SMOnline
 networking — explicitly maintainer-deferred) are all genuinely
 maintainer-gated, not just under-scouted.**
 
+**Item 9 investigated for other targets beyond `GameState` (2026-09-13):
+`Player`/`ScreenGameplay` checked and rejected as split targets for
+now.** Both are listed in this item's own oversized-file table, but
+neither has `GameState`'s crisp safety prerequisite — an already
+deleted/private copy constructor and assignment operator. `GameState`'s
+were confirmed private/undefined before any cluster work started
+(making the reference-member technique provably safe: no code path can
+ever copy a `GameState` and alias its component's storage).
+`Player`/`ScreenGameplay` declare no such override; `Player` derives
+from `Actor`, which has a virtual `Copy()` clone method that `Player`
+does not override, so whether a `Player` is ever actually copied
+polymorphically is genuinely ambiguous rather than provably impossible.
+Applying the reference-member technique to an object that *can* be
+copied would silently alias two objects' "component" storage instead
+of giving each its own — exactly the kind of subtle bug the technique's
+prerequisite exists to rule out. Not pursued without either (a) proof
+no copy path exists, or (b) first adding an explicit deleted copy
+ctor/assignment to `Player`/`ScreenGameplay` as its own separate,
+verifiable safety-hardening change.
+
+**Pilot #18 (2026-09-13): `Inventory.cpp`'s file-local `Item::sModifier`
+field.** `struct Item` is declared entirely inside `Inventory.cpp`
+(not in any header) — zero external exposure by construction, the
+cleanest possible shape. Both touch points are safe-direction
+assignments already established this session:
+`item.sModifier = ITEM_EFFECT(i)` (RString-returning macro assigned
+into std::string, safe) and `a.sModifiers = g_Items[...].sModifier`
+(std::string assigned into `Attack::sModifiers`, still `RString` —
+safe via `CStdStr::operator=(const std::string&)`, `StdString.h:391`).
+Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%, Release
+`StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+
 ### 11. Pre-C++11 threading / smart pointers
 `RageThreads` predates `std::thread`/`std::mutex`;
 `RageUtil_AutoPtr.h` ("TODO: replace with c++11 smart pointers");
