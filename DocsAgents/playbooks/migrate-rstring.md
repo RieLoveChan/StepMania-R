@@ -292,3 +292,18 @@ if a boundary gotcha turned up, plus `log.md`.
   keeps platform code in, and a scout that only checks `src/*.cpp`
   will never see callers living there. Reverted the attempted change
   (net zero diff, nothing to commit) once the real boundary was found.
+- 2026-09-13 -- eleventh subsystem migrated (found while scouting
+  GameState.h for item-9 god-object clusters, not a dedicated RString
+  scouting pass): GameState::m_RandomAttacks
+  (std::vector<RString> -> std::vector<std::string>). A container
+  member, but a direct type change was enough here -- unlike
+  Command.cpp's m_vsArgs or CommandLineActions::argv, no function
+  anywhere takes this whole vector by reference to an un-migrated
+  vector<RString>& parameter, so it needed none of the container-
+  boundary workarounds those earlier cases required. Only 2 callers
+  (Player.cpp, SongManager.cpp), both using plain container methods.
+  A reminder that container members ARE migratable when nothing
+  external passes them through by reference -- check every caller's
+  actual usage pattern (method calls on elements/the container itself
+  vs. passing the whole container onward) before assuming a container
+  member is automatically off-limits.
