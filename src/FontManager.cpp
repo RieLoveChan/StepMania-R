@@ -29,7 +29,7 @@ FontManager::~FontManager()
 	}
 }
 
-Font* FontManager::LoadFont( const RString &sFontOrTextureFilePath, RString sChars )
+Font* FontManager::LoadFont( const std::string &sFontOrTextureFilePath, std::string sChars )
 {
 	Font *pFont;
 	/* Convert the path to lowercase so that we don't load duplicates. Really,
@@ -48,7 +48,7 @@ Font* FontManager::LoadFont( const RString &sFontOrTextureFilePath, RString sCha
 	}
 
 	Font *f = new Font;
-	f->Load(sFontOrTextureFilePath, sChars);
+	f->Load(RString(sFontOrTextureFilePath), sChars);
 	g_mapPathToFont[NewName] = f;
 	return f;
 }
