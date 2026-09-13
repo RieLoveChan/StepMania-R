@@ -272,3 +272,23 @@ if a boundary gotcha turned up, plus `log.md`.
   can still be a good pilot, it just costs one wrap per hard-boundary
   call site, not per file. §5-adjacent — re-verified `[corpus]` (313/3)
   and `[crs]` (39/5) both unchanged.
+- 2026-09-13 -- scouting methodology bug found and fixed: attempted
+  `CommandLineActions::CommandLineArgs::argv`
+  (`std::vector<RString> argv;`), scouted its external callers with
+  `grep -rn ... src/*.cpp` and found only one, in `src/*.cpp` itself --
+  looked clean. **The shell glob `src/*.cpp` does not recurse into
+  subdirectories**, so it silently missed
+  `src/archutils/Win32/GraphicsWindow.cpp`, which passes `args.argv`
+  by reference into `split(..., std::vector<RString>&, ...)` -- the
+  exact container hard-boundary already known from the `Command.cpp`
+  pilot. The actual build (which does compile the whole tree, `arch`/
+  `archutils` included) caught this immediately with a compile error
+  before anything was committed, so no broken commit resulted -- but
+  the scouting step itself gave a false "looks safe" signal. **Always
+  scout with a genuinely recursive search across all of `src/`
+  (`grep -rn ... src/` with no glob, or an explicit recursive flag),
+  never a single-directory glob** -- `src/arch/` and
+  `src/archutils/Win32/` are real, separate directories this codebase
+  keeps platform code in, and a scout that only checks `src/*.cpp`
+  will never see callers living there. Reverted the attempted change
+  (net zero diff, nothing to commit) once the real boundary was found.
