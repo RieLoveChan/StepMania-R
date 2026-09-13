@@ -1100,6 +1100,31 @@ clusters done now (Edit, Workout, Attract, Autogen, Haste,
 MultiPlayer, Dance, BattleRave, StageSeed, Character,
 PositionCorrection).**
 
+**Phase 1, cluster 12 (2026-09-13): `GameState`'s MusicWheel expanded/
+last-open section fields carved out into `GameStateSectionData.h`
+(header-only).** `sExpandedSectionName` and `sLastOpenSection` (both
+`RString`, contiguous in the header, thematically related — both
+track which song-group section is expanded/was last open on the
+MusicWheel). Only 2 external files touch the `GAMESTATE->` fields
+directly (`MusicWheelItem.cpp`, `MusicWheel.cpp`; `WheelBase.cpp` and
+`MusicWheel.cpp`'s own `m_sExpandedSectionName` are a *different*,
+same-named local member on those wheel classes, not this field) — all
+via plain `==` comparisons or assignments, no hard boundaries. Neither
+field was in the original constructor init-list, so the new component
+correctly has no explicit constructor. Verified: `sm_tests` 5981/230
+unchanged, `ctest` 100%, Release `StepMania-R.exe` clean rebuild,
+`--SelfTest` exit 0. **12 clusters done now (Edit, Workout, Attract,
+Autogen, Haste, MultiPlayer, Dance, BattleRave, StageSeed, Character,
+PositionCorrection, Section).** Remaining `GameState.h` fields are
+either already-rejected coupled clusters (Ranking Stuff, Award stuff,
+stage-token cluster) or isolated single bools
+(`m_bDopefish`, `m_bLoadingNextSong`, `m_bBackedOutOfFinalStage`,
+`m_bTemporaryEventMode`) with no natural thematic grouping — forcing
+them into one artificial component would be exactly the kind of
+unneeded abstraction the project avoids, so item 9's phase-1 low-risk
+clusters are considered exhausted for now without a maintainer call on
+how (or whether) to group the leftovers.
+
 **Related (2026-09-13): "why does Pay mode do nothing?" investigated
 and answered — nothing was disabled.** Maintainer recalled StepMania
 used to have Home/Free/Pay coin modes and asked to "reactivate" Pay.
