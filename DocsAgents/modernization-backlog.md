@@ -1689,6 +1689,36 @@ struct field directly. Verified: `sm_tests` 5981/230 unchanged,
 `ctest` 100%, Release `StepMania-R.exe` clean rebuild, `--SelfTest`
 exit 0.
 
+**Pilot #22 (2026-09-13): `RageFileManager.cpp`'s file-local
+`LoadedDriver::m_sType`/`m_sRoot`/`m_sMountPoint` fields.** The
+biggest single-file pilot yet (27 touch points across 3 fields), but
+fully mechanical and self-contained — `LoadedDriver` is never named in
+`RageFileManager.h`. New confirmed-safe/fixable shapes: (1)
+`.CompareNoCase(...)` is a `CStdStr`-only facade method with **no
+direct `std::string` equivalent**, but its own implementation
+(`StdString.h:492`) is just `ssicmp(this->c_str(), szThat)` —
+`StdString::ssicmp` is a plain templated free function usable directly
+on two `.c_str()` results, so every `.CompareNoCase(x)` call becomes
+`StdString::ssicmp(a.c_str(), x.c_str())` with byte-identical behavior
+(it's literally the same function the method already called
+internally) — note the `StdString::` qualifier is required, `ssicmp`
+lives in that namespace, not global scope (first build attempt failed
+with `C3861: 'ssicmp': identifier not found` until this was added).
+(2) A local `const RString &mountPoint = pLoadedDriver->m_sMountPoint;`
+reference binding needed retyping to `const std::string&` (same
+derived-reference-to-base-object shape as pilot #19's `sOther`,
+cascading into a second dependent local, `trimPoint`, which also
+needed retyping). `DriverLocation` (`RageFileManager.h:64-67`, a real
+public-API struct returned by `GetLoadedDrivers()`) was deliberately
+**left as `RString`** — assigning the migrated fields into its
+still-`RString` members is the established safe direction, so the
+public API's own type didn't need to change. Since this underlies all
+file I/O including song loading, re-verified `[corpus]` (313/3) and
+`[crs]` (39/5) as an extra precaution even though `LoadedDriver` itself
+isn't part of the simfile parse path. Verified: `sm_tests` 5981/230
+unchanged, `ctest` 100%, Release `StepMania-R.exe` clean rebuild,
+`--SelfTest` exit 0.
+
 ### 11. Pre-C++11 threading / smart pointers
 `RageThreads` predates `std::thread`/`std::mutex`;
 `RageUtil_AutoPtr.h` ("TODO: replace with c++11 smart pointers");
