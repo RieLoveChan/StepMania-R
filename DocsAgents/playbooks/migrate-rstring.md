@@ -415,3 +415,16 @@ if a boundary gotcha turned up, plus `log.md`.
   `Profile::LoadTypeFromDir`/`LoadAllFromDir`/etc taking `RString` by
   value (not reference) meant zero changes at 9 call sites -- by-value
   parameters remain the cheapest boundary shape to migrate around.
+- 2026-09-13 -- twentieth subsystem migrated: `InputFilter.cpp`'s
+  `ButtonState::m_sComment`. Generalizes the "file-local struct" shape
+  one step further: `ButtonState` isn't file-local in the strictest
+  sense (it's *forward*-declared in `InputFilter.h`, `struct
+  ButtonState;`), but since the header only ever holds a reference to
+  it (`ButtonState &bs`), the full definition -- and every field touch
+  -- still lives entirely in the `.cpp`. A forward-declared-by-
+  reference-only type gets the same zero-external-footprint guarantee
+  as a fully file-local one. The two real external entry points
+  (`InputFilter::Get`/`SetButtonComment`) keep their un-migrated
+  `RString` signatures and needed no changes at all, since both
+  directions of the RString<->std::string conversion at the boundary
+  were already-established safe shapes.
