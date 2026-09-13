@@ -4,6 +4,7 @@
 #include "Attack.h"
 #include "Difficulty.h"
 #include "GameConstantsAndTypes.h"
+#include "GameStateAttractData.h"
 #include "GameStateEditData.h"
 #include "GameStateWorkoutData.h"
 #include "Grade.h"
@@ -374,10 +375,13 @@ public:
 	std::deque<StageAward> m_vLastStageAwards[NUM_PLAYERS];
 	std::deque<PeakComboAward> m_vLastPeakComboAwards[NUM_PLAYERS];
 
-	// Attract stuff
-	int m_iNumTimesThroughAttract;	// negative means play regardless of m_iAttractSoundFrequency setting
-	bool IsTimeToPlayAttractSounds() const;
-	void VisitAttractScreen( const RString sScreenName );
+	// Attract stuff -- carved out into GameStateAttractData (backlog
+	// item 9, phase 1 cluster 3; see playbooks/split-god-object.md).
+	// Exposed under their original names via reference members.
+	GameStateAttractData m_AttractData;
+	int &m_iNumTimesThroughAttract;	// negative means play regardless of m_iAttractSoundFrequency setting
+	bool IsTimeToPlayAttractSounds() const { return m_AttractData.IsTimeToPlayAttractSounds(); }
+	void VisitAttractScreen( const RString sScreenName ) { m_AttractData.VisitAttractScreen( sScreenName ); }
 
 	// PlayerState
 	/** @brief Allow access to each player's PlayerState. */
