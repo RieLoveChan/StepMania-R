@@ -117,8 +117,11 @@ GameState::GameState() :
 	processedTiming(nullptr),
 	m_pCurGame(				Message_CurrentGameChanged ),
 	m_pCurStyle(			Message_CurrentStyleChanged ),
+	m_MultiPlayerStatus(		m_MultiPlayerData.m_MultiPlayerStatus ),
 	m_PlayMode(				Message_PlayModeChanged ),
 	m_iCoins(				Message_CoinsChanged ),
+	m_bMultiplayer(			m_MultiPlayerData.m_bMultiplayer ),
+	m_iNumMultiplayerNoteFields(	m_MultiPlayerData.m_iNumMultiplayerNoteFields ),
 	m_sPreferredSongGroup(	Message_PreferredSongGroupChanged ),
 	m_sPreferredCourseGroup(	Message_PreferredCourseGroupChanged ),
 	m_PreferredStepsType(	Message_PreferredStepsTypeChanged ),
@@ -137,6 +140,7 @@ GameState::GameState() :
 	m_bWorkoutGoalComplete(		m_WorkoutData.m_bWorkoutGoalComplete ),
 	m_bDidModeChangeNoteSkin(	false ),
 	m_iNumTimesThroughAttract(	m_AttractData.m_iNumTimesThroughAttract ),
+	m_pMultiPlayerState(		m_MultiPlayerData.m_pMultiPlayerState ),
 	m_bIsUsingStepTiming(		m_EditData.m_bIsUsingStepTiming ),
 	m_bInStepEditor(		m_EditData.m_bInStepEditor ),
 	m_stEdit(			m_EditData.m_stEdit ),
@@ -1676,11 +1680,6 @@ bool GameState::IsPlayerEnabled( PlayerNumber pn ) const
 		default:
 			return IsHumanPlayer(pn);
 	}
-}
-
-bool GameState::IsMultiPlayerEnabled( MultiPlayer mp ) const
-{
-	return m_MultiPlayerStatus[ mp ] == MultiPlayerStatus_Joined;
 }
 
 bool GameState::IsPlayerEnabled( const PlayerState* pPlayerState ) const
