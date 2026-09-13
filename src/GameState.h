@@ -7,6 +7,7 @@
 #include "GameStateAttractData.h"
 #include "GameStateAutogenData.h"
 #include "GameStateEditData.h"
+#include "GameStateHasteData.h"
 #include "GameStateWorkoutData.h"
 #include "Grade.h"
 #include "MessageManager.h"
@@ -288,10 +289,12 @@ public:
 	bool AllAreInDangerOrWorse() const;
 	bool OneIsHot() const;
 
-	// Haste
-	float	m_fHasteRate; // [-1,+1]; 0 = normal speed
-	float	m_fLastHasteUpdateMusicSeconds;
-	float	m_fAccumulatedHasteSeconds;
+	// Haste -- carved out into GameStateHasteData (backlog item 9,
+	// phase 1 cluster 5; see playbooks/split-god-object.md).
+	GameStateHasteData m_HasteData;
+	float	&m_fHasteRate; // [-1,+1]; 0 = normal speed
+	float	&m_fLastHasteUpdateMusicSeconds;
+	float	&m_fAccumulatedHasteSeconds;
 
 	// used by themes that support heart rate entry.
 	RageTimer m_DanceStartTime;
