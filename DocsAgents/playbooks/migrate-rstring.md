@@ -339,3 +339,15 @@ if a boundary gotcha turned up, plus `log.md`.
   every `RageUtil` free function that fills a caller-provided container
   needs checking the same way before assuming a container member is
   migratable.
+- 2026-09-13 -- fourteenth subsystem migrated: `RandomSample.h`/`.cpp`'s
+  `Load`/`LoadSoundDir`/`LoadSound`, all three by-value `RString`
+  parameters. Straightforward multi-hard-boundary case: 5 separate
+  `RString(...)` wraps needed in one function body
+  (`GetExtension`/`GetDirListing` x4) since `RageUtil`'s directory/
+  path helpers are still `RString`-only, but every wrap stayed local to
+  `RandomSample.cpp` itself. Reconfirmed `RageSound::Load(RString
+  sFile)` (a *different*, still-un-migrated subsystem's by-value
+  parameter) needs no wrap when called with a migrated
+  `std::string` argument -- by-value parameters accept either type
+  from either direction, so a pilot's own by-value migration never
+  needs to wait for a downstream by-value call to migrate too.
