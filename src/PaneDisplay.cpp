@@ -14,6 +14,8 @@
 #include "XmlFile.h"
 #include "PlayerStageStats.h"
 
+#include <string>
+
 #define SHIFT_X(pc)	THEME->GetMetricF(sMetricsGroup, ssprintf("ShiftP%iX", (pc)+1))
 #define SHIFT_Y(pc)	THEME->GetMetricF(sMetricsGroup, ssprintf("ShiftP%iY", (pc)+1))
 
@@ -38,7 +40,7 @@ enum { NEED_NOTES=1, NEED_PROFILE=2 };
 struct Content_t
 {
 	int req;
-	RString sFontType;
+	std::string sFontType;
 };
 
 static const Content_t g_Contents[NUM_PaneCategory] =
