@@ -29,6 +29,7 @@
 
 #include <cstddef>
 #include <deque>
+#include <string>
 #include <vector>
 
 
@@ -49,7 +50,7 @@ StringToX( ElementCategory );
 
 struct Theme
 {
-	RString sThemeName;
+	std::string sThemeName;
 };
 // When looking for a metric or an element, search these from head to tail.
 static std::deque<Theme> g_vThemes;
@@ -266,7 +267,7 @@ void ThemeManager::GetLanguages( std::vector<RString>& AddTo )
 	AddTo.clear();
 
 	for( unsigned i = 0; i < g_vThemes.size(); ++i )
-		GetLanguagesForTheme( g_vThemes[i].sThemeName, AddTo );
+		GetLanguagesForTheme( RString(g_vThemes[i].sThemeName), AddTo );
 
 	// remove dupes
 	sort( AddTo.begin(), AddTo.end() );
@@ -572,12 +573,13 @@ RString ThemeManager::GetThemeDirFromName( const RString &sThemeName )
 
 struct CompareLanguageTag
 {
-	RString m_sLanguageString;
+	std::string m_sLanguageString;
 	CompareLanguageTag( const RString &sLang )
 	{
 		m_sLanguageString = RString("(lang ") + sLang + ")";
 		LOG_TRACE(Log::Theme, "try \"%s\"", sLang.c_str() );
-		m_sLanguageString.MakeLower();
+		if( !m_sLanguageString.empty() )
+			MakeLower( &m_sLanguageString[0], m_sLanguageString.size() );
 	}
 
 	bool operator()( const RString &sFile ) const
@@ -786,7 +788,7 @@ bool ThemeManager::GetPathInfoToAndFallback( PathInfo &out, ElementCategory cate
 		for (Theme const &theme : g_vThemes)
 		{
 			// search with requested name
-			if( GetPathInfoToRaw( out, theme.sThemeName, category, sMetricsGroup, sElement ) )
+			if( GetPathInfoToRaw( out, RString(theme.sThemeName), category, sMetricsGroup, sElement ) )
 				return true;
 		}
 
