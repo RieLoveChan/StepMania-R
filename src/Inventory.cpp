@@ -11,6 +11,7 @@
 #include "ThemeMetric.h"
 #include "PlayerState.h"
 
+#include <string>
 #include <vector>
 
 
@@ -29,7 +30,7 @@ struct Item
 {
 	AttackLevel level;
 	unsigned int iCombo;
-	RString sModifier;
+	std::string sModifier;
 };
 static std::vector<Item>	g_Items;
 
