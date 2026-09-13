@@ -6,6 +6,7 @@
 #include "GameConstantsAndTypes.h"
 #include "GameStateAttractData.h"
 #include "GameStateAutogenData.h"
+#include "GameStateDanceData.h"
 #include "GameStateEditData.h"
 #include "GameStateHasteData.h"
 #include "GameStateMultiPlayerData.h"
@@ -303,9 +304,12 @@ public:
 	float	&m_fLastHasteUpdateMusicSeconds;
 	float	&m_fAccumulatedHasteSeconds;
 
-	// used by themes that support heart rate entry.
-	RageTimer m_DanceStartTime;
-	float m_DanceDuration;
+	// used by themes that support heart rate entry -- carved out into
+	// GameStateDanceData (backlog item 9, phase 1 cluster 7; see
+	// playbooks/split-god-object.md).
+	GameStateDanceData m_DanceData;
+	RageTimer &m_DanceStartTime;
+	float &m_DanceDuration;
 
 	// Random Attacks & Attack Mines
 	std::vector<RString>		m_RandomAttacks;

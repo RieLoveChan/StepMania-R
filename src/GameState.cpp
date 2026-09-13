@@ -136,6 +136,8 @@ GameState::GameState() :
 	m_fHasteRate(			m_HasteData.m_fHasteRate ),
 	m_fLastHasteUpdateMusicSeconds(	m_HasteData.m_fLastHasteUpdateMusicSeconds ),
 	m_fAccumulatedHasteSeconds(	m_HasteData.m_fAccumulatedHasteSeconds ),
+	m_DanceStartTime(		m_DanceData.m_DanceStartTime ),
+	m_DanceDuration(		m_DanceData.m_DanceDuration ),
 	m_bGoalComplete(		m_WorkoutData.m_bGoalComplete ),
 	m_bWorkoutGoalComplete(		m_WorkoutData.m_bWorkoutGoalComplete ),
 	m_bDidModeChangeNoteSkin(	false ),
