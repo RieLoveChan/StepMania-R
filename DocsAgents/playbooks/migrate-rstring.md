@@ -225,3 +225,19 @@ if a boundary gotcha turned up, plus `log.md`.
   predictable from the pattern of prior pilots — check every call's
   actual signature, every time**, even after the same fix has worked
   several times in a row on parameters that turned out to be by-value.
+- 2026-09-13 — eighth subsystem migrated: `CryptHelpers.h`/`.cpp`'s
+  `RSAKeyWrapper::Load(...)`. **A new shape: migrating a public
+  function's own parameter types, not an internal member behind an
+  unchanged interface.** This is usually the bigger, more externally-
+  visible kind of change, but stays small when the function has few
+  callers (here: 4, all in one file, `CryptManager.cpp`) — changed
+  `Load`'s params from `(const RString&, RString&)` to
+  `(const std::string&, std::string&)` directly, and **every existing
+  `RString` argument/out-param variable at the call sites bound with
+  zero changes**, because `RString`'s inheritance from `std::string`
+  makes a derived-typed variable satisfy a base-typed reference
+  parameter automatically — the same safe direction used everywhere
+  else in this playbook, just applied to a function's own declared
+  signature instead of storage behind it. Verified the blast radius
+  really was that contained by checking the rebuild only recompiled 2
+  files, not a wider cascade.

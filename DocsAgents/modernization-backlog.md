@@ -1234,6 +1234,29 @@ Verified: `sm_tests` 5981/230 unchanged, `[corpus]` 313/3 unchanged,
 `ctest` 100%, Release `StepMania-R.exe` clean rebuild, `--SelfTest`
 exit 0.
 
+**Pilot #8 (2026-09-13, autonomous — same standing goal):
+`CryptHelpers.h`/`.cpp`'s `RSAKeyWrapper::Load(...)`.** A different
+shape than every earlier pilot: not a private data member, but a
+**public method's own parameter types** — `bool Load( const RString
+&sKey, RString &sError )`. Migrating a function signature (rather than
+internal storage behind an unchanged interface) is usually a bigger,
+more externally-visible change, but this one stayed small: only 4
+call sites, all inside `CryptManager.cpp` itself. Changed the
+signature to `const std::string &sKey, std::string &sError` — **zero
+caller-side changes needed**, because `RString`'s inheritance from
+`std::basic_string<char>` means an existing `RString` argument/out-
+param variable at each call site binds directly to the new
+`const std::string&`/`std::string&` parameter types (the safe "derived
+object satisfying a base-type reference parameter" direction, just
+applied to a function's own declared parameter types instead of an
+internal member). Confirmed via a rebuild that only recompiled 2 files
+(`CryptHelpers.cpp`, `CryptManager.cpp`) — proof the change is exactly
+as contained as expected, no unexpected header-inclusion cascade.
+`Load()`'s body only used `sKey.data()`/`.size()` (native) and assigned
+`error_to_string(iRet)`'s result into `sError` (safe either direction).
+Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%, Release
+`StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+
 ### 11. Pre-C++11 threading / smart pointers
 `RageThreads` predates `std::thread`/`std::mutex`;
 `RageUtil_AutoPtr.h` ("TODO: replace with c++11 smart pointers");
