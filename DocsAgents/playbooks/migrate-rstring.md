@@ -399,3 +399,19 @@ if a boundary gotcha turned up, plus `log.md`.
   header-declared candidates, grep `struct \w+\s*\{` bodies inside
   `.cpp` files for file-local structs with an `RString` field -- these
   need zero external-footprint checking by construction.
+- 2026-09-13 -- nineteenth subsystem migrated: `ProfileManager.cpp`'s
+  file-local `DirAndProfile::sDir`. **New hard-boundary shape: a
+  reference binding, not a function call.** `const RString &sOther =
+  dap.sDir;` breaks once `dap.sDir` is `std::string` -- a
+  `const Derived&` (here `RString&`) cannot bind to a `Base` object
+  (`std::string`), the mirror image of the everyday-safe
+  `const RString&` binding an actual `RString`. Fix is a **type
+  change, not a wrap**: retype the local reference itself
+  (`const std::string &sOther = ...`); the comparison
+  (`sOther == sDir`, RHS still `RString`) keeps working because the
+  standard library's `operator==` for `basic_string` accepts both
+  operands via implicit reference conversion regardless of which side
+  is `std::string` vs `RString`. Also reconfirmed
+  `Profile::LoadTypeFromDir`/`LoadAllFromDir`/etc taking `RString` by
+  value (not reference) meant zero changes at 9 call sites -- by-value
+  parameters remain the cheapest boundary shape to migrate around.

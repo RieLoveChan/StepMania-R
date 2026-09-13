@@ -1639,6 +1639,24 @@ safe via `CStdStr::operator=(const std::string&)`, `StdString.h:391`).
 Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%, Release
 `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
 
+**Pilot #19 (2026-09-13): `ProfileManager.cpp`'s file-local
+`DirAndProfile::sDir` field.** Found via a new scouting technique
+(grepping for file-local `.cpp`-only `struct` bodies containing an
+`RString` field — same shape as pilot #18). `Profile::LoadTypeFromDir`/
+`LoadAllFromDir`/`LoadEditableDataFromDir`/`SaveTypeToDir`/
+`HandleStatsPrefixChange` (`Profile.h:403-420`) are all **by-value**
+`RString` parameters, so every `derp.profile.LoadTypeFromDir(derp.sDir)`
+-style call needed zero changes (safe direction). Two real hard
+boundaries: a local `const RString &sOther = dap.sDir;` reference
+binding, fixed by changing its declared type to
+`const std::string &` (not a wrap — a derived-reference-to-base-object
+binding is simply invalid, unlike the reverse); and two
+`LocalProfileDirToID(const RString&, ...)` calls passing a migrated
+`.sDir` field, fixed with `RString(...)` wraps. `struct DirAndProfile`
+lives entirely in `ProfileManager.cpp`, never in a header — zero
+external exposure. Verified: `sm_tests` 5981/230 unchanged, `ctest`
+100%, Release `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+
 ### 11. Pre-C++11 threading / smart pointers
 `RageThreads` predates `std::thread`/`std::mutex`;
 `RageUtil_AutoPtr.h` ("TODO: replace with c++11 smart pointers");
