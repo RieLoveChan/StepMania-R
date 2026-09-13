@@ -370,3 +370,20 @@ if a boundary gotcha turned up, plus `log.md`.
   by-value parameter, wrap at any reference-parameter call sites in
   the body" pattern is now fully mechanical to execute once a
   candidate's external footprint is scouted.
+- 2026-09-13 -- seventeenth subsystem migrated (found via a dedicated
+  scouting fork, after both item 9's low-risk clusters and item 10's
+  small-header candidates thinned out enough that a stop-hook flagged
+  the standing goal as unmet): `FontManager::LoadFont(...)`'s
+  parameters. New confirmed-safe shape: a `typedef std::pair<RString,
+  RString>` used as a `std::map` key (`FontName`) needed **no change**
+  when constructed from two migrated `std::string` arguments --
+  `std::pair`'s templated constructor converts each argument to the
+  pair's declared field type independently, so a still-`RString`
+  container key type is not itself a hard boundary as long as nothing
+  external accesses the pair's fields by reference. Only 1
+  `RString(...)` wrap needed, for `Font::Load(const RString&,
+  RString)`'s reference first parameter. When manual scouting of small
+  files runs dry, a dedicated fork sweeping wider file-size bands
+  (mid-size `.cpp` files, not just small `.h` files) is an effective
+  way to keep finding genuine candidates rather than concluding the
+  well is empty.
