@@ -6,6 +6,7 @@
 #include "GameConstantsAndTypes.h"
 #include "GameStateAttractData.h"
 #include "GameStateAutogenData.h"
+#include "GameStateBattleRaveData.h"
 #include "GameStateDanceData.h"
 #include "GameStateEditData.h"
 #include "GameStateHasteData.h"
@@ -315,11 +316,15 @@ public:
 	// Random Attacks & Attack Mines
 	std::vector<std::string>		m_RandomAttacks;
 
+	// PLAY_MODE_BATTLE/PLAY_MODE_RAVE fields below carved out into
+	// GameStateBattleRaveData (backlog item 9, phase 1 cluster 8; see
+	// playbooks/split-god-object.md).
+	GameStateBattleRaveData m_BattleRaveData;
 	// used in PLAY_MODE_BATTLE
-	float	m_fOpponentHealthPercent;
+	float	&m_fOpponentHealthPercent;
 
 	// used in PLAY_MODE_RAVE
-	float	m_fTugLifePercentP1;
+	float	&m_fTugLifePercentP1;
 
 	// used in workout -- carved out into GameStateWorkoutData (backlog
 	// item 9, phase 1 cluster 2; see playbooks/split-god-object.md).
