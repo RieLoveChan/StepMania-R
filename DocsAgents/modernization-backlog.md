@@ -1163,6 +1163,36 @@ Verified: `sm_tests` 5981/230 unchanged (no dedicated characterization
 test exists for `StyleID`), `ctest` 100%, Release `StepMania-R.exe`
 clean rebuild, `--SelfTest` exit 0.
 
+**Pilot #5 (2026-09-13, autonomous — same standing goal):
+`CourseUtil.h`/`.cpp`'s `CourseID` class.** Same private-member
+scouting heuristic as pilot #4, one level harder: `CourseID` has a
+**public getter that returns a reference to the private member**
+(`const RString &GetPath() const { return sPath; }`), which is NOT
+just an internal-boundary case — a `const RString&` reference to a
+`std::string` member can't be formed (base object, derived reference
+type), so this getter needed to change too. Fixed by dropping the
+reference (`RString GetPath() const { return sPath; }`, returning a
+by-value temporary instead) rather than changing the return type to
+`const std::string&` — this is only called from one place in the whole
+codebase (`Profile.cpp:2144`, `splitpath(courseID.GetPath(), ...)`,
+where `splitpath`'s first param is `const RString&`), and a by-value
+`RString` return binds to that directly with **zero caller-side
+changes needed**, matching the general principle "prefer the fix that
+needs no external changes when the call site is this rare." Also hit
+two `.Left(n)` calls (an `RString`-only method with no `std::string`
+equivalent) — replaced with `.substr(0, n)` per the playbook's
+existing mapping table; confirmed via `StdString.h:500`
+(`CStdStr::Left` is itself implemented as a clamped `substr(0, n)`)
+that this is an exact behavioral match, not an approximation. Hit the
+same `XNode::GetAttrValue` hard-boundary shape as pilot #4 in
+`LoadFromNode()`, fixed the same way (local `RString` temporaries).
+`CourseID` is §5-adjacent (`.crs` course-file identity/loading) —
+re-verified the `[crs]` characterization tag before and after: 39/5,
+unchanged, matching the documented baseline exactly.
+Verified: `sm_tests` 5981/230 unchanged, `[crs]` 39/5 unchanged,
+`ctest` 100%, Release `StepMania-R.exe` clean rebuild, `--SelfTest`
+exit 0.
+
 ### 11. Pre-C++11 threading / smart pointers
 `RageThreads` predates `std::thread`/`std::mutex`;
 `RageUtil_AutoPtr.h` ("TODO: replace with c++11 smart pointers");

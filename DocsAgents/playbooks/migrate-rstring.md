@@ -183,3 +183,22 @@ if a boundary gotcha turned up, plus `log.md`.
   needed no change, since `std::string`→`RString` construction is
   always the safe direction. Full gate green (`sm_tests` unchanged,
   `ctest`, Release, `--SelfTest`).
+- 2026-09-13 — fifth subsystem migrated: `CourseUtil.h`/`.cpp`'s
+  `CourseID` class. **A private member can still have external exposure
+  through a public getter that returns a reference to it** —
+  `const RString &GetPath() const { return sPath; }` can't keep
+  returning a reference once the member is `std::string` (a
+  `const RString&` can't reference a base-typed object). Prefer
+  dropping the reference (return the accessor's type *by value*
+  instead) over changing the getter's return type to
+  `const std::string&`, especially when the getter has few callers —
+  a by-value `RString` return still binds directly to any
+  `const RString&`-taking caller with zero changes there, whereas a
+  `const std::string&` return type would need every caller re-checked
+  for the same hard-boundary issue this whole gotchas section is about.
+  Also: `.Left(n)`/`.Right(n)`/`.Mid(i,n)` (the mapping table above)
+  really are exact behavioral matches, not approximations — confirmed
+  via `StdString.h:500`, `CStdStr::Left` is itself implemented as a
+  clamped `substr(0, n)`. `CourseID` is §5-adjacent (`.crs` course-file
+  identity) — re-verified `[crs]` (39/5) unchanged before/after, on top
+  of the usual gate.
