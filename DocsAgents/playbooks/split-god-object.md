@@ -145,3 +145,13 @@ Do **not** attempt both in one PR.
   object's own members) before committing to it. No new wrinkle this
   time (plain `int`, not an array or a `BroadcastOnChange<T>`) —
   straightforward reference member.
+- 2026-09-13 — fourth split: `GameState`'s "Autogen stuff" into
+  `GameStateAutogenData.h`. **A header-only component is fine** when
+  the whole thing is one inline getter + one member (no `.cpp` needed —
+  don't create an empty translation unit just for symmetry with
+  earlier clusters). Also: a `Luna<GodObject>` Lua-binding thunk that
+  calls container methods directly on the moved member
+  (`p->m_autogen_fargs.push_back(...)`, `.size()`, `operator[]`) needs
+  zero changes under the reference-member technique, same as any other
+  call site — containers support all their normal operations through a
+  reference exactly like through the original value.
