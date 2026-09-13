@@ -978,6 +978,45 @@ Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%, Release
 `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0. **5 clusters done
 now (Edit, Workout, Attract, Autogen, Haste).**
 
+**Phase 1, cluster 6 (2026-09-13): `GameState`'s MultiPlayer-mode
+fields carved out into `GameStateMultiPlayerData.h` (header-only).**
+The first cluster that's genuinely **not a single contiguous block**
+in the header — `m_MultiPlayerStatus`, `m_bMultiplayer`/
+`m_iNumMultiplayerNoteFields`, and `m_pMultiPlayerState` sit at three
+separate spots, interleaved with unrelated `GameState` members
+(`m_PlayMode`, `m_iCoins`, a dozen `ChangePreferredDifficulty*`
+methods, etc.) and with the core 2-player fields
+(`m_bSideIsJoined`, `m_pPlayerState`) that were **deliberately left
+alone** as too foundational. This didn't require moving the fields
+together textually — each one became a reference member *in its
+original location*, as long as `GameStateMultiPlayerData
+m_MultiPlayerData;` itself was declared before all of them (placed
+right where `m_MultiPlayerStatus` used to sit, the first of the four
+in declaration order). Scouted the real blast radius first: ~34 sites
+across 9 external files, but only `GameState.cpp` (18) and
+`ScreenGameplay.cpp` (8) had more than 1-2 touches each — everything
+else was a single incidental read.
+**A new kind of member for this technique: `m_pMultiPlayerState` is a
+heap-allocated pointer array** (`new PlayerState` per slot in
+`GameState`'s constructor *body*, `SAFE_DELETE` in the destructor,
+both loops already living outside the member-initializer list). Since
+the reference member only needs *binding* (in the init-list) to the
+component's real array storage, the existing allocation/deallocation
+loops in the constructor/destructor body needed **zero changes** —
+`new`/`delete`/array-indexing all pass through a reference-to-array
+exactly like through the original array. `IsMultiPlayerEnabled()`
+moved as a real implementation (only touched
+`m_MultiPlayerStatus[mp]`, no other `GameState` state); the free
+function `GetNextEnabledMultiPlayer()` calls `GAMESTATE->
+IsMultiPlayerEnabled(mp)` and needed no changes at all, since it goes
+through the still-identical public method. None of the four fields
+were in the original constructor init-list (left uninitialized until
+`Reset()`), so `GameStateMultiPlayerData` correctly has no explicit
+constructor, matching the Haste-cluster precedent.
+Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%, Release
+`StepMania-R.exe` clean rebuild, `--SelfTest` exit 0. **6 clusters done
+now (Edit, Workout, Attract, Autogen, Haste, MultiPlayer).**
+
 **Related (2026-09-13): "why does Pay mode do nothing?" investigated
 and answered — nothing was disabled.** Maintainer recalled StepMania
 used to have Home/Free/Pay coin modes and asked to "reactivate" Pay.

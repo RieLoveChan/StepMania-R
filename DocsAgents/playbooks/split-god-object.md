@@ -167,3 +167,28 @@ Do **not** attempt both in one PR.
   reference members MUST be bound in the god object's init-list either
   way, but what value the *referent* starts with is a separate
   question you have to check, not assume).
+- 2026-09-13 -- sixth split: GameState's MultiPlayer-mode fields into
+  GameStateMultiPlayerData.h (header-only). First cluster that is NOT
+  a single contiguous block in the header: m_MultiPlayerStatus,
+  m_bMultiplayer/m_iNumMultiplayerNoteFields, and m_pMultiPlayerState
+  sit at three separate spots, interleaved with unrelated members and
+  with the core 2-player fields (m_bSideIsJoined, m_pPlayerState) that
+  were deliberately left alone as too foundational. **The fields don't
+  need to be textually contiguous** -- each one becomes a reference
+  member in its own original location, as long as the new component
+  itself is declared before all of them (place it where the first
+  field in declaration order used to sit). Scouted the real blast
+  radius first (grep -rn, not a glob) before committing: ~34 sites
+  across 9 files, but only 2 files had more than 1-2 touches each.
+  **New kind of member handled: a heap-allocated pointer array**
+  (m_pMultiPlayerState, `new PlayerState` per slot in the constructor
+  *body*, `SAFE_DELETE` in the destructor -- both loops already live
+  outside the member-initializer list). The reference member only
+  needs binding in the init-list; the existing allocation/deallocation
+  loops needed zero changes, since new/delete/indexing all pass
+  through a reference-to-array exactly like the original array. A
+  moved method (IsMultiPlayerEnabled) that a *free function* elsewhere
+  calls through the god object's public interface
+  (GetNextEnabledMultiPlayer calling GAMESTATE->IsMultiPlayerEnabled)
+  also needed zero changes, since the public method signature never
+  changed, only what's behind it.
