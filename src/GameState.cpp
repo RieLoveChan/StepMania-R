@@ -146,6 +146,7 @@ GameState::GameState() :
 	m_bGoalComplete(		m_WorkoutData.m_bGoalComplete ),
 	m_bWorkoutGoalComplete(		m_WorkoutData.m_bWorkoutGoalComplete ),
 	m_bDidModeChangeNoteSkin(	false ),
+	m_pCurCharacters(		m_CharacterData.m_pCurCharacters ),
 	m_iNumTimesThroughAttract(	m_AttractData.m_iNumTimesThroughAttract ),
 	m_pMultiPlayerState(		m_MultiPlayerData.m_pMultiPlayerState ),
 	m_bIsUsingStepTiming(		m_EditData.m_bIsUsingStepTiming ),
