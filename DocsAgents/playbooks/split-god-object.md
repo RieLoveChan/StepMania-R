@@ -252,3 +252,23 @@ Do **not** attempt both in one PR.
   GameState and read through the reference members exactly like
   before. None of the three fields were in the original constructor
   init-list, so no explicit constructor needed on the new component.
+- 2026-09-13 -- twelfth split: GameState's MusicWheel expanded/last-
+  open section fields (sExpandedSectionName, sLastOpenSection, both
+  RString) into GameStateSectionData.h (header-only). A trap avoided:
+  WheelBase.h and MusicWheel.cpp each declare their own *same-named*
+  local member m_sExpandedSectionName on the wheel classes themselves
+  -- a completely different field that happens to share a name with
+  GameState's. Only grep hits qualified with GAMESTATE-> (or accessed
+  through a GameState* in GameState.cpp itself) are the real external
+  footprint; unqualified m_sExpandedSectionName hits belong to the
+  wheel class and must be excluded by hand, not just text-matched.
+  After this cluster, a full fresh scan of GameState.h found no more
+  low-risk candidates: remaining fields are either already-rejected
+  coupled clusters (Ranking Stuff, Award stuff, the stage-token
+  cluster) or single isolated bools with no natural thematic grouping
+  (m_bDopefish, m_bLoadingNextSong, m_bBackedOutOfFinalStage,
+  m_bTemporaryEventMode) -- forcing those into one artificial
+  component would be exactly the kind of unneeded abstraction this
+  project avoids, so phase 1's easy/safe clusters are exhausted for
+  now without a maintainer decision on how (or whether) to group the
+  leftovers.
