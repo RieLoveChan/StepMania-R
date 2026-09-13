@@ -13,6 +13,7 @@
 #include "GameStateHasteData.h"
 #include "GameStateMultiPlayerData.h"
 #include "GameStatePositionCorrectionData.h"
+#include "GameStateSectionData.h"
 #include "GameStateStageSeedData.h"
 #include "GameStateWorkoutData.h"
 #include "Grade.h"
@@ -242,9 +243,13 @@ public:
 	// adjust for the current song cost.
 	bool m_AdjustTokensBySongCostForFinalStageCheck;
 
-	RString sExpandedSectionName;
+	// MusicWheel expanded/last-open section state carved out into
+	// GameStateSectionData (backlog item 9, phase 1 cluster 12; see
+	// playbooks/split-god-object.md).
+	GameStateSectionData m_SectionData;
+	RString &sExpandedSectionName;
 
-	RString sLastOpenSection;
+	RString &sLastOpenSection;
 
 	static int GetNumStagesMultiplierForSong( const Song* pSong );
 	static int GetNumStagesForSongAndStyleType( const Song* pSong, StyleType st );

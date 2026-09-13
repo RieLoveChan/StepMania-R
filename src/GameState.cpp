@@ -160,7 +160,9 @@ GameState::GameState() :
 	m_autogen_fargs(		m_AutogenData.m_autogen_fargs ),
 	m_LastPositionTimer(		m_PositionCorrectionData.m_LastPositionTimer ),
 	m_LastPositionSeconds(		m_PositionCorrectionData.m_LastPositionSeconds ),
-	m_paused(			m_PositionCorrectionData.m_paused )
+	m_paused(			m_PositionCorrectionData.m_paused ),
+	sExpandedSectionName(		m_SectionData.sExpandedSectionName ),
+	sLastOpenSection(		m_SectionData.sLastOpenSection )
 {
 	g_pImpl = new GameStateImpl;
 
