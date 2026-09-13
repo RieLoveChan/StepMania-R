@@ -141,7 +141,8 @@ GameState::GameState() :
 	m_pEditSourceSteps(		m_EditData.m_pEditSourceSteps ),
 	m_stEditSource(			m_EditData.m_stEditSource ),
 	m_iEditCourseEntryIndex(	m_EditData.m_iEditCourseEntryIndex ),
-	m_sEditLocalProfileID(		m_EditData.m_sEditLocalProfileID )
+	m_sEditLocalProfileID(		m_EditData.m_sEditLocalProfileID ),
+	m_autogen_fargs(		m_AutogenData.m_autogen_fargs )
 {
 	g_pImpl = new GameStateImpl;
 

@@ -38,6 +38,7 @@ list(APPEND SMDATA_GLOBAL_SINGLETON_HPP
             "GameSoundManager.h"
             "GameState.h"
             "GameStateAttractData.h"
+            "GameStateAutogenData.h"
             "GameStateEditData.h"
             "GameStateWorkoutData.h"
             "InputFilter.h"
