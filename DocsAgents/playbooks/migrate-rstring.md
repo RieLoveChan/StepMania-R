@@ -495,3 +495,27 @@ if a boundary gotcha turned up, plus `log.md`.
   (`XmlFileUtil.cpp`, `RageFileDriverDeflate.cpp`, `StatsManager.cpp`)
   -- re-verified `[crs]`/`[corpus]` as extra precaution even though the
   buffer's own byte-level behavior didn't change.
+- 2026-09-13 -- pilot #26: `NoteSkinManager.cpp`'s
+  `NoteSkinData::sName`, another forward-declared-by-reference-only
+  struct (pilot #20's shape). One new economy: when a hard-boundary
+  call site is a whole *concatenation expression*
+  (`"a" + field + "b" + ...`), wrap just the migrated field's term
+  (`RString(field)`) rather than the entire expression -- the rest of
+  the `+` chain then resolves through `RString`'s own `operator+`
+  overloads exactly as before, and the wrap is cheaper to read/write
+  than parenthesizing the whole chain.
+- Also this round: two candidates checked and correctly declined
+  rather than forced. `WavReader::m_sError`
+  (`RageSoundReader_WAV.cpp`) is fed by-reference into
+  `FileReading::read_8`/`read_16_le(RageFileBasic&, RString& sError)`
+  -- a **mutable** reference out-parameter, used the same way by many
+  other files (`RageFileDriverDeflate.cpp`, `RageFileDriverZip.cpp`).
+  Unlike a `const T&` hard boundary (fixable with one wrap per call),
+  a mutable `RString&` genuinely cannot accept a `std::string&`
+  argument at all -- the only fix is migrating `read_8`/`read_16_le`
+  themselves, which fans out far past one file. `XmlToLua.cpp`'s
+  `actor_template_t` is real but large (8+ fields, a
+  `std::map<RString,RString>` member, 6+ methods, a recursive
+  `std::vector<actor_template_t>`) -- sized like its own subsystem
+  pilot, not a quick file-local-struct win; left for later rather than
+  rushed.

@@ -1758,6 +1758,32 @@ both `[crs]` (39/5) and `[corpus]` (313/3) as an extra precaution.
 Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%, Release
 `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
 
+**Pilot #26 (2026-09-13): `NoteSkinManager.cpp`'s
+`NoteSkinData::sName` field.** `struct NoteSkinData` is forward-
+declared and used only by reference (`NoteSkinData& data_out`) in
+`NoteSkinManager.h` — same shape as pilot #20's `ButtonState`.
+`vsDirSearchOrder` (`std::vector<RString>`) deliberately left
+untouched (a container, not this pilot's scope). Only 3 real touch
+points: an assignment from a `const RString&` parameter (safe), a
+`push_back` into a `vector<RString>&` out-parameter (safe, implicit
+`RString` construction), and one hard boundary —
+`LuaHelpers::ReportScriptError(RString const&, ...)` receiving a
+string-concatenation expression that now evaluates to `std::string`
+once `sName` migrates — fixed with a single `RString(...)` wrap around
+just the `data_out.sName` term (cheaper than wrapping the whole
+concatenation). Rejected in the same sweep:
+`RageSoundReader_WAV.cpp`'s `WavReader::m_sError` — genuinely
+infeasible without a much larger blast radius, since
+`FileReading::read_8`/`read_16_le` (`RageFile.h:106-107`) take a
+**mutable** `RString&` out-parameter used broadly elsewhere
+(`RageFileDriverDeflate.cpp`, `RageFileDriverZip.cpp`), a hard boundary
+with no cheap per-call fix. `XmlToLua.cpp`'s `actor_template_t`
+(8+ RString fields, a `std::map<RString,RString>` member, 6+ methods,
+recursive `std::vector<actor_template_t>`) is real but sized more like
+its own dedicated pilot than a quick win — deferred, not rejected.
+Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%, Release
+`StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+
 ### 11. Pre-C++11 threading / smart pointers
 `RageThreads` predates `std::thread`/`std::mutex`;
 `RageUtil_AutoPtr.h` ("TODO: replace with c++11 smart pointers");
