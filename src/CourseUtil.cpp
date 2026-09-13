@@ -515,7 +515,7 @@ void CourseID::FromCourse( const Course *p )
 
 	// HACK for backwards compatibility:
 	// Strip off leading "/".  2005/05/21 file layer changes added a leading slash.
-	if( sPath.Left(1) == "/" )
+	if( sPath.substr(0, 1) == "/" )
 		sPath.erase( sPath.begin() );
 }
 
@@ -558,13 +558,15 @@ XNode* CourseID::CreateNode() const
 void CourseID::LoadFromNode( const XNode* pNode )
 {
 	ASSERT( pNode->GetName() == "Course" );
-	sFullTitle = RString();
-	sPath = RString();
-	if( !pNode->GetAttrValue("Path", sPath) )
-		pNode->GetAttrValue( "FullTitle", sFullTitle );
+	RString sPathTmp;
+	RString sFullTitleTmp;
+	if( !pNode->GetAttrValue("Path", sPathTmp) )
+		pNode->GetAttrValue( "FullTitle", sFullTitleTmp );
+	sPath = sPathTmp;
+	sFullTitle = sFullTitleTmp;
 
 	// HACK for backwards compatibility: /AdditionalCourses has been merged into /Courses
-	if (sPath.Left(18) == "AdditionalCourses/")
+	if (sPath.substr(0, 18) == "AdditionalCourses/")
 		sPath.replace(0, 18, "Courses/");
 }
 
