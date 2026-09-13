@@ -1555,6 +1555,21 @@ ANNOUNCER->GetPathTo(...))`, which returns `RString` by value) needed
 zero changes. Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%,
 Release `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
 
+**Pilot #15 (2026-09-13): `RageWorkerThread`'s constructor parameter
+and `m_sName` member (`RageUtil_WorkerThread.h`/`.cpp`).** Private
+member, no exposing getter — only used with `.c_str()` in
+`LOG_TRACE`/`LOG_WARN`, works for either type. Zero wraps needed: the
+constructor body builds `RageEvent` names via
+`"\"" + sName + "\" worker event"` (`std::string` arithmetic, still
+produces `std::string`), which then binds into
+`RageEvent(RString name)`'s **by-value** parameter — the established
+safe direction, no `RString(...)` wrap required. Both external
+subclass callers (`MemoryCardManager.cpp`'s string-literal argument,
+`RageFileDriverTimeout.cpp`'s `ThreadedFileWorker`'s own by-value
+`RString sPath` forwarded straight through) needed zero changes.
+Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%, Release
+`StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+
 ### 11. Pre-C++11 threading / smart pointers
 `RageThreads` predates `std::thread`/`std::mutex`;
 `RageUtil_AutoPtr.h` ("TODO: replace with c++11 smart pointers");
