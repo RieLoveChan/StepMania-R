@@ -133,6 +133,7 @@ GameState::GameState() :
 	m_bGoalComplete(		m_WorkoutData.m_bGoalComplete ),
 	m_bWorkoutGoalComplete(		m_WorkoutData.m_bWorkoutGoalComplete ),
 	m_bDidModeChangeNoteSkin(	false ),
+	m_iNumTimesThroughAttract(	m_AttractData.m_iNumTimesThroughAttract ),
 	m_bIsUsingStepTiming(		m_EditData.m_bIsUsingStepTiming ),
 	m_bInStepEditor(		m_EditData.m_bInStepEditor ),
 	m_stEdit(			m_EditData.m_stEdit ),
@@ -2448,32 +2449,6 @@ bool GameState::OneIsHot() const
 		if( m_pPlayerState[p]->m_HealthState == HealthState_Hot )
 			return true;
 	return false;
-}
-
-bool GameState::IsTimeToPlayAttractSounds() const
-{
-	// m_iNumTimesThroughAttract will be -1 from the first attract screen after
-	// the end of a game until the next time FIRST_ATTRACT_SCREEN is reached.
-	// Play attract sounds for this sort span of time regardless of
-	// m_AttractSoundFrequency because it's awkward to have the machine go
-	// silent immediately after the end of a game.
-	if( m_iNumTimesThroughAttract == -1 )
-		return true;
-
-	if( PREFSMAN->m_AttractSoundFrequency == ASF_NEVER )
-		return false;
-
-	// play attract sounds once every m_iAttractSoundFrequency times through
-	if( (m_iNumTimesThroughAttract % PREFSMAN->m_AttractSoundFrequency)==0 )
-		return true;
-
-	return false;
-}
-
-void GameState::VisitAttractScreen( const RString sScreenName )
-{
-	if( sScreenName == CommonMetrics::FIRST_ATTRACT_SCREEN.GetValue() )
-		m_iNumTimesThroughAttract++;
 }
 
 bool GameState::DifficultiesLocked() const
