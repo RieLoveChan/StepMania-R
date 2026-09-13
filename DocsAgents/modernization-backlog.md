@@ -1067,6 +1067,21 @@ explicit constructor. Verified: `sm_tests` 5981/230 unchanged, `ctest`
 **9 clusters done now (Edit, Workout, Attract, Autogen, Haste,
 MultiPlayer, Dance, BattleRave, StageSeed).**
 
+**Phase 1, cluster 10 (2026-09-13): `GameState`'s "character stuff"
+field carved out into `GameStateCharacterData.h` (header-only).**
+`m_pCurCharacters[NUM_PLAYERS]` (`Character*`, array reference member
+— same shape as cluster 6's `m_MultiPlayerStatus`). Recursive grep
+across all 6 touching files (`AttackDisplay.cpp`, `BeginnerHelper.cpp`,
+`DancingCharacters.cpp`, `GameCommand.cpp`, `ScoreKeeperRave.cpp`,
+`ScreenSelectCharacter.cpp`) found only plain indexing/assignment/
+comparison, no hard boundaries — none are §5-adjacent (UI/scoring, not
+simfile parsing). Field was not in the original constructor init-list,
+so `GameStateCharacterData` correctly has no explicit constructor.
+Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%, Release
+`StepMania-R.exe` clean rebuild, `--SelfTest` exit 0. **10 clusters
+done now (Edit, Workout, Attract, Autogen, Haste, MultiPlayer, Dance,
+BattleRave, StageSeed, Character).**
+
 **Related (2026-09-13): "why does Pay mode do nothing?" investigated
 and answered — nothing was disabled.** Maintainer recalled StepMania
 used to have Home/Free/Pay coin modes and asked to "reactivate" Pay.
