@@ -1834,6 +1834,33 @@ consistency, even though its own downstream use count was only 1.
 Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%, Release
 `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
 
+**CI-caught fix (2026-09-13): pilots #28-29's macOS jobs failed —
+`GameLoop.cpp:183`, `Preference<RString>` → `std::string` assignment
+compiles on MSVC but not Clang.** `g_NewTheme = PREFSMAN->m_sTheme;`
+relies on `Preference<T>::operator const T()` (one user-defined
+conversion) producing an `RString` prvalue, then binding that into
+`std::string::operator=`. MSVC's STL accepts the derived-to-base
+slice as part of the same conversion sequence; libc++/Clang's
+templated `basic_string::operator=` does not, and rejects it as "no
+viable conversion from `Preference<RString>` to `string`" — a genuine
+cross-compiler difference **local Windows-only verification cannot
+catch**, since AGENTS.md §4's gate is a Windows Release build, not a
+multi-platform one. Fixed by using `Preference<T>::Get()` (returns
+`const T&` directly, no implicit-conversion-operator hop) instead of
+relying on the implicit conversion:
+`g_NewTheme = PREFSMAN->m_sTheme.Get();`. Swept the rest of the
+session's pilots for the same `PREFSMAN->m_s*` direct-assignment
+shape (`grep -rn "= *PREFSMAN->m_s[A-Za-z]*;" src/*.cpp`) — the other
+3 hits all target still-`RString` variables (same-type reference
+binding after the one conversion, not a base-slice, so not affected).
+**New standing lesson: prefer `Preference<T>::Get()` over the bare
+implicit conversion whenever assigning a `Preference<RString>` into a
+`std::string`-typed target** — it sidesteps this exact MSVC/Clang
+divergence entirely. Verified locally (Windows): `sm_tests` 5981/230
+unchanged, `ctest` 100%, Release rebuild, `--SelfTest` exit 0; pushed
+and awaiting the macOS CI jobs specifically to confirm the fix (local
+Windows verification cannot reproduce the original failure).
+
 ### 11. Pre-C++11 threading / smart pointers
 `RageThreads` predates `std::thread`/`std::mutex`;
 `RageUtil_AutoPtr.h` ("TODO: replace with c++11 smart pointers");

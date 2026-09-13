@@ -551,3 +551,24 @@ if a boundary gotcha turned up, plus `log.md`.
   established "local variable deliberately kept as the old type"
   pattern (already seen with `PaneDisplay.cpp`'s `sFontType` copy)
   generalizes to reference locals, not just fresh ones.
+- 2026-09-13 -- CI-caught cross-compiler fix (pilot #28's
+  `GameLoop.cpp`): `g_NewTheme = PREFSMAN->m_sTheme;` (assigning a
+  `Preference<RString>` into a migrated `std::string` field) compiled
+  clean on MSVC (the only compiler this playbook's local verification
+  gate exercises) but failed on Clang/libc++ in CI with "no viable
+  conversion from `Preference<RString>` to `string`". The chain is:
+  `Preference<T>::operator const T()` (one user-defined conversion) ->
+  an `RString` prvalue -> needs a derived-to-base slice to bind
+  `std::string::operator=`'s parameter. MSVC's STL accepts this;
+  libc++'s templated `operator=` does not. **New standing rule: when
+  assigning a `Preference<RString>` object into a `std::string`
+  target, always call `.Get()` explicitly** (`Preference<T>::Get()`
+  returns `const T&` directly, StdString.h -- no conversion-operator
+  hop at all, so there's nothing for the two compilers to disagree
+  about). This is a genuine gap in this playbook's own verification
+  gate: **local Windows-only builds cannot catch MSVC-vs-Clang
+  conversion differences** -- CI's macOS/Linux jobs are the only
+  thing that will, so a push isn't fully "verified" until CI (not just
+  the local Windows Release build) comes back green. Swept all prior
+  pilots for the same `Preference<RString>`-direct-assignment shape
+  and found no other occurrences among migrated fields.
