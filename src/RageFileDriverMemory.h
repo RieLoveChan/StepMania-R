@@ -26,7 +26,7 @@ public:
 	RageFileObjMem *Copy() const override;
 
 	/* Retrieve the contents of this file. */
-	const RString &GetString() const;
+	RString GetString() const;
 	void PutString( const RString &sBuf );
 
 private:

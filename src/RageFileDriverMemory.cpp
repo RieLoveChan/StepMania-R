@@ -6,6 +6,7 @@
 
 #include <cerrno>
 #include <cstddef>
+#include <string>
 #include <vector>
 
 
@@ -14,7 +15,7 @@ struct RageFileObjMemFile
 	RageFileObjMemFile():
 		m_iRefs(0),
 		m_Mutex("RageFileObjMemFile") { }
-	RString m_sBuf;
+	std::string m_sBuf;
 	int m_iRefs;
 	RageMutex m_Mutex;
 
@@ -103,7 +104,7 @@ RageFileObjMem *RageFileObjMem::Copy() const
 	return pRet;
 }
 
-const RString &RageFileObjMem::GetString() const
+RString RageFileObjMem::GetString() const
 {
 	return m_pFile->m_sBuf;
 }
