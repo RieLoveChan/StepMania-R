@@ -44,11 +44,13 @@ void StyleID::LoadFromNode( const XNode* pNode )
 	Unset();
 	ASSERT( pNode->GetName() == "Style" );
 
-	sGame = "";
-	pNode->GetAttrValue("Game", sGame);
+	RString sGameTmp = "";
+	pNode->GetAttrValue("Game", sGameTmp);
+	sGame = sGameTmp;
 
-	sStyle = "";
-	pNode->GetAttrValue("Style", sStyle);
+	RString sStyleTmp = "";
+	pNode->GetAttrValue("Style", sStyleTmp);
+	sStyle = sStyleTmp;
 }
 
 bool StyleID::IsValid() const
