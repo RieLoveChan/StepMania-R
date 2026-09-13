@@ -428,3 +428,14 @@ if a boundary gotcha turned up, plus `log.md`.
   `RString` signatures and needed no changes at all, since both
   directions of the RString<->std::string conversion at the boundary
   were already-established safe shapes.
+- 2026-09-13 -- twenty-first subsystem migrated: `PaneDisplay.cpp`'s
+  file-local `Content_t::sFontType`. Confirms aggregate initialization
+  with string literals (`{NEED_NOTES, "count"}` inside a `static
+  const Content_t g_Contents[] = {...}`) needs zero changes when the
+  field type changes -- `std::string`'s converting constructor from
+  `const char*` behaves identically to `RString`'s for this purpose.
+  Also confirms a read pattern from earlier pilots generalizes: code
+  that copies a migrated field into a *deliberately un-migrated* local
+  variable of the old type (`RString sFontType = g_Contents[pc].
+  sFontType;`) needs zero downstream changes, since every later use of
+  that local operates on the unaffected type.

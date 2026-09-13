@@ -1674,6 +1674,21 @@ established safe directions, so **zero external callers of
 storage migrating. Verified: `sm_tests` 5981/230 unchanged, `ctest`
 100%, Release `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
 
+**Pilot #21 (2026-09-13): `PaneDisplay.cpp`'s file-local
+`Content_t::sFontType` field.** `struct Content_t` and its
+`static const` aggregate-initialized array (`g_Contents[]`, string
+literals like `"count"`) both live entirely in the `.cpp` — zero
+external exposure. Only 1 touch point:
+`RString sFontType = g_Contents[pc].sFontType;` — a local variable
+deliberately kept as `RString` (unrelated to the migration), so this
+line already just implicitly constructs an `RString` from the
+migrated `std::string` field (safe direction) and the following
+`THEME->GetPathF(sMetricsGroup, sFontType)` call needed **no wrap at
+all**, since it's operating on the still-`RString` local, not the
+struct field directly. Verified: `sm_tests` 5981/230 unchanged,
+`ctest` 100%, Release `StepMania-R.exe` clean rebuild, `--SelfTest`
+exit 0.
+
 ### 11. Pre-C++11 threading / smart pointers
 `RageThreads` predates `std::thread`/`std::mutex`;
 `RageUtil_AutoPtr.h` ("TODO: replace with c++11 smart pointers");
