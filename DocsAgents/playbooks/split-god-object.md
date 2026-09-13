@@ -215,3 +215,18 @@ Do **not** attempt both in one PR.
   cluster mainly confirms the pattern generalizes cleanly once a
   candidate's usage is plain reads/writes: the scouting + verification
   steps are now fully mechanical for this shape of field.
+- 2026-09-13 -- ninth split: GameState's per-game/round random seed
+  fields (m_iGameSeed, m_iStageSeed both int, m_sStageGUID an RString)
+  plus SetNewStageSeed() into GameStateStageSeedData.h (header-only).
+  New wrinkle: a moved *method* (SetNewStageSeed) that only touches
+  the moved fields plus a free function (rand()) moves as a real
+  implementation with zero dependency on GameState singletons at all
+  -- simpler than the Attract-cluster case (which needed PREFSMAN/
+  CommonMetrics) or the Workout-cluster case (which needed PROFILEMAN/
+  STATSMAN). Also confirms clusters don't have to be pure item-9 work:
+  m_sStageGUID is an RString field, but it stays RString here since
+  this is a god-object split, not an item-10 RString migration -- the
+  two efforts are independent and a field doesn't need both done at
+  once. Section-5-adjacent (NoteDataUtil.cpp, Course.cpp read
+  m_iStageSeed for shuffle/seed math) -- re-verified [corpus] and
+  [crs] tags unchanged.

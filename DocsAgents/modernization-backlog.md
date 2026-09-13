@@ -1049,6 +1049,24 @@ Haste/Dance clusters, no new technique wrinkle. Verified: `sm_tests`
 rebuild, `--SelfTest` exit 0. **8 clusters done now (Edit, Workout,
 Attract, Autogen, Haste, MultiPlayer, Dance, BattleRave).**
 
+**Phase 1, cluster 9 (2026-09-13): `GameState`'s per-game/round random
+seed fields carved out into `GameStateStageSeedData.h` (header-only).**
+`m_iGameSeed`, `m_iStageSeed` (both `int`), `m_sStageGUID` (`RString`,
+left as `RString` — this is an item-9 split only, not an item-10
+RString migration) plus `SetNewStageSeed()`, moved as a real
+implementation since it only touches `m_iStageSeed` (`rand()` is a
+free function). 5 external files (`NoteDataUtil.cpp`, `StatsManager.cpp`,
+`Course.cpp`, `ScreenGameplay.cpp`, `ArrowEffects.cpp`) all touch these
+only via plain reads/the public `SetNewStageSeed()`/`GAMESTATE->`
+accessors — no hard boundaries. `NoteDataUtil.cpp`/`Course.cpp` are
+§5-adjacent, so re-verified `[corpus]` (313/3) and `[crs]` (39/5)
+unchanged before/after. Neither int field nor the RString was in the
+original constructor init-list, so the new component correctly has no
+explicit constructor. Verified: `sm_tests` 5981/230 unchanged, `ctest`
+100%, Release `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+**9 clusters done now (Edit, Workout, Attract, Autogen, Haste,
+MultiPlayer, Dance, BattleRave, StageSeed).**
+
 **Related (2026-09-13): "why does Pay mode do nothing?" investigated
 and answered — nothing was disabled.** Maintainer recalled StepMania
 used to have Home/Free/Pay coin modes and asked to "reactivate" Pay.
