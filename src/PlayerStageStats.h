@@ -7,6 +7,7 @@
 #include "PlayerNumber.h"
 
 #include <map>
+#include <string>
 #include <vector>
 
 
@@ -30,7 +31,7 @@ public:
 
 	Grade GetGrade() const;
 	static float MakePercentScore( int iActual, int iPossible );
-	static RString FormatPercentScore( float fPercentScore );
+	static std::string FormatPercentScore( float fPercentScore );
 	float GetPercentDancePoints() const;
 	float GetCurMaxPercentDancePoints() const;
 
