@@ -1516,6 +1516,27 @@ the ~40 files that include `PlayerStageStats.h`, no wider cascade),
 `ctest` 100%, Release `StepMania-R.exe` clean rebuild, `--SelfTest`
 exit 0.
 
+**Pilot #13 (2026-09-13): `InputQueueCodeSet::Load(...)`'s parameter
+and `::Input(...)`'s return type (`CodeSet.h`/`.cpp`).** `Load`'s
+`const RString&` parameter and `Input`'s `RString` return both migrated
+to `std::string`. `m_asCodeNames` (`std::vector<RString>`) stays
+`RString` — it feeds `split(const RString&, const RString&,
+std::vector<RString>&, bool)` (`RageUtil.h:406`), which has no
+`vector<std::string>&` overload, the same container hard-boundary as
+`CommandLineActions::argv`/`Command.cpp`'s `m_vsArgs`. `Load`'s body
+calls `THEME->GetMetric(const RString&, const RString&)` through the
+`CODE_NAMES`/`CODE(s)` macros — a real reference-parameter hard
+boundary into the still-`RString` `ThemeManager` — fixed by wrapping
+`sType` in `RString(...)` inside both macro definitions (2 wraps, one
+per macro, both localized to `CodeSet.cpp`). External callers
+(`OptionsList.cpp`'s `m_Codes.Load(sType)`, `Screen.cpp`'s
+`m_Codes.Load(m_sName)`) both pass an `RString` local — safe, binds to
+`const std::string&` with zero changes. `InputMessage`'s internal
+`sCodeName` local also switched to `std::string` (purely internal,
+feeds `Message::SetParam`, already confirmed generic in pilot #10).
+Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%, Release
+`StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+
 ### 11. Pre-C++11 threading / smart pointers
 `RageThreads` predates `std::thread`/`std::mutex`;
 `RageUtil_AutoPtr.h` ("TODO: replace with c++11 smart pointers");
