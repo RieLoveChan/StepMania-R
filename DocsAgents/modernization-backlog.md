@@ -1017,6 +1017,23 @@ Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%, Release
 `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0. **6 clusters done
 now (Edit, Workout, Attract, Autogen, Haste, MultiPlayer).**
 
+**Phase 1, cluster 7 (2026-09-13): `GameState`'s "used by themes that
+support heart rate entry" fields carved out into
+`GameStateDanceData.h` (header-only).** `m_DanceStartTime`
+(`RageTimer`) and `m_DanceDuration` (`float`) — pure data, no
+associated methods. Small external footprint (only `ScreenGameplay.cpp`
+touches them, via `.Touch()`/`.Ago()` and a plain read/write). Neither
+field was in the original constructor init-list — `m_DanceStartTime`
+being a class type (`RageTimer`) still gets correctly default-
+constructed via `GameStateDanceData`'s own implicit default
+constructor (unlike POD fields, class-type members are always
+default-constructed even with no explicit initializer, so this
+requires no special handling — just confirm the *new* component's
+constructor doesn't accidentally override that with an explicit one).
+Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%, Release
+`StepMania-R.exe` clean rebuild, `--SelfTest` exit 0. **7 clusters done
+now (Edit, Workout, Attract, Autogen, Haste, MultiPlayer, Dance).**
+
 **Related (2026-09-13): "why does Pay mode do nothing?" investigated
 and answered — nothing was disabled.** Maintainer recalled StepMania
 used to have Home/Free/Pay coin modes and asked to "reactivate" Pay.

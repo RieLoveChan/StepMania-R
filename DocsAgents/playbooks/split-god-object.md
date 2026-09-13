@@ -192,3 +192,16 @@ Do **not** attempt both in one PR.
   (GetNextEnabledMultiPlayer calling GAMESTATE->IsMultiPlayerEnabled)
   also needed zero changes, since the public method signature never
   changed, only what's behind it.
+- 2026-09-13 -- seventh split: GameState's "used by themes that
+  support heart rate entry" fields (m_DanceStartTime, m_DanceDuration)
+  into GameStateDanceData.h (header-only). Pure data, tiny external
+  footprint (only ScreenGameplay.cpp). Confirms a wrinkle for
+  class-type members: m_DanceStartTime is a RageTimer, a class type,
+  so even though it was never in GameState's own constructor
+  init-list, it was still being correctly default-constructed all
+  along (class-type members always get default-constructed unless
+  explicitly initialized, unlike POD members which are left
+  uninitialized). The new component's own implicit default constructor
+  reproduces this automatically -- just don't accidentally give the
+  new component an explicit constructor that does something different
+  for that member.
