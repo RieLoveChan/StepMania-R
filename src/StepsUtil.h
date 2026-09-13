@@ -4,6 +4,7 @@
 #include "GameConstantsAndTypes.h"
 #include "Difficulty.h"
 
+#include <string>
 #include <vector>
 
 
@@ -169,7 +170,7 @@ class StepsID
 {
 	StepsType st;
 	Difficulty dc;
-	RString sDescription;
+	std::string sDescription;
 	unsigned uHash;
 
 public:

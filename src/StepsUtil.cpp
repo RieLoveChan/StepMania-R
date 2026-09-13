@@ -313,7 +313,7 @@ Steps *StepsID::ToSteps( const Song *p, bool bAllowNull ) const
 	Steps *pRet = nullptr;
 	if( dc == Difficulty_Edit )
 	{
-		pRet = SongUtil::GetOneSteps( p, st, dc, -1, -1, sDescription, "", uHash, true );
+		pRet = SongUtil::GetOneSteps( p, st, dc, -1, -1, RString(sDescription), "", uHash, true );
 	}
 	else
 	{
@@ -355,7 +355,9 @@ void StepsID::LoadFromNode( const XNode* pNode )
 
 	if( dc == Difficulty_Edit )
 	{
-		pNode->GetAttrValue( "Description", sDescription );
+		RString sDescriptionTmp;
+		pNode->GetAttrValue( "Description", sDescriptionTmp );
+		sDescription = sDescriptionTmp;
 		pNode->GetAttrValue( "Hash", uHash );
 	}
 	else
