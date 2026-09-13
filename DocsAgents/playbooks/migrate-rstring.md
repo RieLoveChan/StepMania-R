@@ -387,3 +387,15 @@ if a boundary gotcha turned up, plus `log.md`.
   (mid-size `.cpp` files, not just small `.h` files) is an effective
   way to keep finding genuine candidates rather than concluding the
   well is empty.
+- 2026-09-13 -- eighteenth subsystem migrated: `Inventory.cpp`'s
+  file-local `Item::sModifier` field. **The cleanest possible pilot
+  shape**: `struct Item` is declared entirely inside the `.cpp`, never
+  exposed in a header, so there is no external-caller analysis to do
+  at all -- just confirm every in-file touch point is a safe-direction
+  assignment. Both here were already-established safe shapes (an
+  RString-returning macro assigned into the migrated field; the
+  migrated field assigned into an still-`RString` struct member via
+  `CStdStr::operator=(const std::string&)`). When scouting runs dry on
+  header-declared candidates, grep `struct \w+\s*\{` bodies inside
+  `.cpp` files for file-local structs with an `RString` field -- these
+  need zero external-footprint checking by construction.
