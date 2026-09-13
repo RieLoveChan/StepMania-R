@@ -18,9 +18,9 @@ RandomSample::~RandomSample()
 	UnloadAll();
 }
 
-bool RandomSample::Load( RString sFilePath, int iMaxToLoad )
+bool RandomSample::Load( std::string sFilePath, int iMaxToLoad )
 {
-	if( GetExtension(sFilePath).empty() )
+	if( GetExtension(RString(sFilePath)).empty() )
 		return LoadSoundDir( sFilePath, iMaxToLoad );
 	else
 		return LoadSound( sFilePath );
@@ -33,7 +33,7 @@ void RandomSample::UnloadAll()
 	m_pSamples.clear();
 }
 
-bool RandomSample::LoadSoundDir( RString sDir, int iMaxToLoad )
+bool RandomSample::LoadSoundDir( std::string sDir, int iMaxToLoad )
 {
 	if( sDir.empty() )
 		return true;
@@ -48,15 +48,15 @@ bool RandomSample::LoadSoundDir( RString sDir, int iMaxToLoad )
 		sDir += "/";
 #else
 	// make sure there's a slash at the end of this path
-	if( sDir.Right(1) != "/" )
+	if( sDir.substr(sDir.size()-1) != "/" )
 		sDir += "/";
 #endif
 
 	std::vector<RString> arraySoundFiles;
-	GetDirListing( sDir + "*.mp3", arraySoundFiles );
-	GetDirListing( sDir + "*.oga", arraySoundFiles );
-	GetDirListing( sDir + "*.ogg", arraySoundFiles );
-	GetDirListing( sDir + "*.wav", arraySoundFiles );
+	GetDirListing( RString(sDir + "*.mp3"), arraySoundFiles );
+	GetDirListing( RString(sDir + "*.oga"), arraySoundFiles );
+	GetDirListing( RString(sDir + "*.ogg"), arraySoundFiles );
+	GetDirListing( RString(sDir + "*.wav"), arraySoundFiles );
 
 	std::shuffle( arraySoundFiles.begin(), arraySoundFiles.end(), g_RandomNumberGenerator );
 	const unsigned int newSize = std::min<unsigned int>(static_cast<unsigned int>(arraySoundFiles.size()), static_cast<unsigned int>(iMaxToLoad));
@@ -68,7 +68,7 @@ bool RandomSample::LoadSoundDir( RString sDir, int iMaxToLoad )
 	return true;
 }
 
-bool RandomSample::LoadSound( RString sSoundFilePath )
+bool RandomSample::LoadSound( std::string sSoundFilePath )
 {
 	LOG_TRACE(Log::Sound, "RandomSample::LoadSound( %s )", sSoundFilePath.c_str() );
 
