@@ -1257,6 +1257,31 @@ as contained as expected, no unexpected header-inclusion cascade.
 Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%, Release
 `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
 
+**Pilot #9 (2026-09-13, autonomous — same standing goal):
+`ScoreKeeper.h`/`.cpp`'s `MakeScoreKeeper(...)` factory method.**
+Another public-function-signature migration like pilot #8, this time a
+**by-value parameter** (`RString sClassName` → `std::string sClassName`)
+rather than a reference — even simpler, since a by-value parameter
+accepts either an `RString` or `std::string` argument at the call site
+with zero ambiguity either way. Only 1 external caller
+(`ScreenGameplay.cpp:169`). Body only compares `sClassName == "..."`
+(native `std::string`/string-literal comparison) and calls `.c_str()`
+(native) — no hard boundaries at all.
+**Also scouted `Trail.h`'s public `Modifiers` member and deliberately
+did not migrate it this round** — unlike the private `*ID`-class
+members, `Modifiers` is touched directly from 3 external files
+(`Course.cpp`, `CourseContentsList.cpp`, `GameState.cpp`), and one of
+those calls, `PlayerOptions::FromString(const RString &sMultipleMods)`,
+takes a real reference parameter (hard boundary, would need a wrap).
+Worse, `Message::SetParam(const RString&, const T&)` is a template that
+forwards to `LuaHelpers::Push(L, val)` — potentially the same
+"templated wrapper, non-template backing" trap found migrating
+`StyleUtil`/`XNode::GetAttrValue` — not yet confirmed either way.
+Flagged as a real candidate for a future round once
+`LuaHelpers::Push`'s overload set is checked, not attempted half-sure.
+Verified: `sm_tests` 5981/230 unchanged, `ctest` 100%, Release
+`StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+
 ### 11. Pre-C++11 threading / smart pointers
 `RageThreads` predates `std::thread`/`std::mutex`;
 `RageUtil_AutoPtr.h` ("TODO: replace with c++11 smart pointers");

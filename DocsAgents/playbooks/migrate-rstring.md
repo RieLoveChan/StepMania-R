@@ -241,3 +241,18 @@ if a boundary gotcha turned up, plus `log.md`.
   signature instead of storage behind it. Verified the blast radius
   really was that contained by checking the rebuild only recompiled 2
   files, not a wider cascade.
+- 2026-09-13 — ninth subsystem migrated: `ScoreKeeper.h`/`.cpp`'s
+  `MakeScoreKeeper(...)` factory method — a **by-value** parameter
+  version of pilot #8's shape, simpler still, since a by-value
+  parameter accepts either an `RString` or `std::string` caller
+  argument unambiguously. Only 1 caller. Also scouted `Trail.h`'s
+  public `Modifiers` member and **deliberately stopped short of
+  migrating it**: it's touched from 3 external files, and one call,
+  `PlayerOptions::FromString(const RString&)`, is a real reference
+  parameter (needs a wrap); worse, `Message::SetParam(const RString&,
+  const T&)` is a template forwarding to `LuaHelpers::Push(L, val)` —
+  possibly the same "templated wrapper, non-template backing" trap as
+  `XNode::GetAttrValue`, not yet confirmed. **Don't half-migrate a
+  candidate on the assumption a template is generic — verify
+  `LuaHelpers::Push`'s actual overload set first if this one is picked
+  up again.**
