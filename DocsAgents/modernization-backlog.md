@@ -1657,6 +1657,23 @@ lives entirely in `ProfileManager.cpp`, never in a header — zero
 external exposure. Verified: `sm_tests` 5981/230 unchanged, `ctest`
 100%, Release `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
 
+**Pilot #20 (2026-09-13): `InputFilter.cpp`'s `ButtonState::m_sComment`
+field.** `struct ButtonState` is only *forward*-declared in
+`InputFilter.h` (`struct ButtonState;`) and used solely as a reference
+parameter (`CheckButtonChange(ButtonState &bs, ...)`) — its full
+definition, and every touch of `m_sComment`, lives entirely in
+`InputFilter.cpp`. The two real public entry points
+(`InputFilter::GetButtonComment()`/`SetButtonComment()`,
+`InputFilter.h:74`) keep their `RString` signatures unchanged — the
+getter's `return GetButtonState(di).m_sComment;` implicitly
+constructs an `RString` from the migrated `std::string` field on
+return, and the setter's `bs.m_sComment = sComment` assigns an
+`RString` parameter into the `std::string` field — both already-
+established safe directions, so **zero external callers of
+`Get`/`SetButtonComment` needed any change** despite the internal
+storage migrating. Verified: `sm_tests` 5981/230 unchanged, `ctest`
+100%, Release `StepMania-R.exe` clean rebuild, `--SelfTest` exit 0.
+
 ### 11. Pre-C++11 threading / smart pointers
 `RageThreads` predates `std::thread`/`std::mutex`;
 `RageUtil_AutoPtr.h` ("TODO: replace with c++11 smart pointers");
