@@ -1193,6 +1193,27 @@ Verified: `sm_tests` 5981/230 unchanged, `[crs]` 39/5 unchanged,
 `ctest` 100%, Release `StepMania-R.exe` clean rebuild, `--SelfTest`
 exit 0.
 
+**Pilot #6 (2026-09-13, autonomous — same standing goal):
+`SongUtil.h`/`.cpp`'s `SongID` class.** Same private-member scouting
+vein: checked `SongUtil.h`/`StepsUtil.h`/`TrailUtil.h`'s ID classes
+together. `TrailID` turned out to have **zero `RString` members at
+all** (just `StepsType`/`CourseDifficulty`) — nothing to migrate.
+`StepsID`'s `sDescription` is private with no reference-returning
+getter (`GetStepsType()`/`GetDifficulty()` only expose the non-string
+fields) — a clean future pilot, not done this round. `SongID::sDir`
+(private, no exposing getter either) migrated to `std::string` —
+identical shape to `CourseID`: one `.Left(1)`/`.Left(16)` pair replaced
+with `.substr(0, 1)`/`.substr(0, 16)`, the same `XNode::GetAttrValue`
+hard-boundary fix via a local `RString` temporary in `LoadFromNode()`,
+`Song::GetSongDir()`/`SongManager::GetSongFromDir(RString)` both
+qualify as boundary-safe under the established rules. `SongID` is
+§5-adjacent (core song identity/loading) — re-verified the `[corpus]`
+characterization tag before and after: 313/3, unchanged, matching the
+documented baseline exactly.
+Verified: `sm_tests` 5981/230 unchanged, `[corpus]` 313/3 unchanged,
+`ctest` 100%, Release `StepMania-R.exe` clean rebuild, `--SelfTest`
+exit 0.
+
 ### 11. Pre-C++11 threading / smart pointers
 `RageThreads` predates `std::thread`/`std::mutex`;
 `RageUtil_AutoPtr.h` ("TODO: replace with c++11 smart pointers");
