@@ -1128,6 +1128,41 @@ another reason, per the playbook's own "when to use" guidance) or
 waiting for new small candidates to surface. Do not re-scout the same
 ~25 files without new information.
 
+**Pilot #4 (2026-09-13, autonomous — "completa el backlog solo con lo
+no bloqueante" goal): `StyleUtil.h`/`.cpp`'s `StyleID` class.** Found
+by widening the scouting net to 2-3-mention files and specifically
+looking for **private members** — `StyleID::sGame`/`sStyle` are
+private, giving zero external call-site exposure by construction (only
+`StyleUtil.cpp`'s own methods touch them). Migrated both to
+`std::string`. All but one call qualified as boundary-safe by the
+established rules: `Game::m_szName`/`Style::m_szName` are `const
+char*` (assigns fine either way), `GAMEMAN->StringToGame`/
+`GameAndStringToStyle` take `RString` **by value** (implicit
+conversion), `XNode::AppendAttr(const RString&, T value)` takes its
+value **by value** too (implicit conversion into the eventual
+`XNodeValue::SetValue(const RString&)` call), and `operator<`'s string
+comparisons are native to `std::string`.
+**Found a new, more subtle hard-boundary shape**:
+`XNode::GetAttrValue(const RString &sName, T &out)` is a *template* on
+`T`, so it looks generic — but it forwards to
+`XNodeValue::GetValue(T &out)`, which is **not actually templated**:
+`XNodeValue` only declares four concrete virtual overloads
+(`GetValue(RString&)`/`(int&)`/`(float&)`/`(bool&)`/`(unsigned&)`), so
+instantiating the outer template with `T = std::string` fails to find
+a matching virtual overload — a compile error, not a silent behavior
+change, but still a real blocker a template's outer generic-looking
+signature can hide. Fixed in `StyleID::LoadFromNode()` with a local
+`RString` temporary (loaded via the working `RString&` overload, then
+assigned into the `std::string` member — the assignment direction is
+always safe). **New lesson: a templated wrapper function isn't proof
+the underlying call is generic — check what the template's body
+actually calls, especially for anything backed by a non-template
+virtual dispatch (this codebase's `XNodeValue` is a common one to
+watch for, since `IniFile`/`XmlFile` are both built on it).**
+Verified: `sm_tests` 5981/230 unchanged (no dedicated characterization
+test exists for `StyleID`), `ctest` 100%, Release `StepMania-R.exe`
+clean rebuild, `--SelfTest` exit 0.
+
 ### 11. Pre-C++11 threading / smart pointers
 `RageThreads` predates `std::thread`/`std::mutex`;
 `RageUtil_AutoPtr.h` ("TODO: replace with c++11 smart pointers");

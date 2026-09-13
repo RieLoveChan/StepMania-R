@@ -165,3 +165,21 @@ if a boundary gotcha turned up, plus `log.md`.
   reference-taking API. Full gate green (`sm_tests` unchanged, `ctest`,
   Release, `--SelfTest`; no dedicated characterization test exists for
   this widget).
+- 2026-09-13 — fourth subsystem migrated: `StyleUtil.h`/`.cpp`'s
+  `StyleID` class (`sGame`/`sStyle`, private members). **Prefer private
+  members when scouting** — they have zero external call-site exposure
+  by construction, so the whole boundary-safety analysis is confined to
+  the owning `.cpp`. Found a new hard-boundary shape: `XNode`'s
+  `GetAttrValue(const RString&, T &out)` is templated on `T`, so it
+  *looks* generic, but it forwards to `XNodeValue::GetValue(T &out)`,
+  which is **not** templated — only 5 concrete virtual overloads exist
+  (`RString&`/`int&`/`float&`/`bool&`/`unsigned&`), so `T = std::string`
+  fails to resolve. A templated wrapper isn't proof the underlying call
+  is generic; check what it actually calls, especially anything backed
+  by non-template virtual dispatch (`XNodeValue` underlies both
+  `IniFile` and `XmlFile` — watch for it elsewhere too). Fixed with a
+  local `RString` temporary for the read side; the write side
+  (`AppendAttr`/`SetValue(const RString&)`, by-value in the template)
+  needed no change, since `std::string`→`RString` construction is
+  always the safe direction. Full gate green (`sm_tests` unchanged,
+  `ctest`, Release, `--SelfTest`).
