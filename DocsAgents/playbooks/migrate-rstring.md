@@ -202,3 +202,14 @@ if a boundary gotcha turned up, plus `log.md`.
   clamped `substr(0, n)`. `CourseID` is §5-adjacent (`.crs` course-file
   identity) — re-verified `[crs]` (39/5) unchanged before/after, on top
   of the usual gate.
+- 2026-09-13 — sixth subsystem migrated: `SongUtil.h`/`.cpp`'s `SongID`
+  class. Checking a family of similarly-named ID classes together
+  (`SongID`/`StepsID`/`TrailID`/`CourseID`/`StyleID`) pays off: found
+  `TrailID` has **zero `RString` members at all** (nothing to
+  migrate — checking before assuming a same-named-family class is a
+  candidate saves wasted analysis), and `StepsID`'s `sDescription` is
+  private with no exposing getter, a clean pilot waiting for a future
+  round. `SongID::sDir` was identically shaped to `CourseID::sPath`
+  (same two `.Left(n)` sites, same `XNode::GetAttrValue` hard-boundary
+  fix). `SongID` is §5-adjacent (core song identity) — re-verified
+  `[corpus]` (313/3) unchanged before/after.
