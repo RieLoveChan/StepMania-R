@@ -912,6 +912,40 @@ Verified: `sm_tests` 5966/226 unchanged, `[Command]` characterization
 tag 26/6 unchanged, `ctest` 100%, Release `StepMania-R.exe` clean
 rebuild, `--SelfTest` exit 0.
 
+**Pilot #3 (2026-09-12): `ScoreDisplayCalories.cpp`/`.h`.** The file's
+single `RString` member, `m_sMessageOnStep`, migrated to `std::string`.
+Notable: grepping the whole file shows this member is declared and
+checked (`!m_sMessageOnStep.empty()`) but **never actually assigned
+anywhere in the class** — it stays default-constructed (empty) for the
+lifetime of every instance, so the `MESSAGEMAN->Unsubscribe(...)`
+branch that reads it never executes in practice. Pre-existing
+dead-ish state, unrelated to this migration and left as-is (not a
+parsing/behavior bug to fix here). `MessageManager::Unsubscribe(
+IMessageSubscriber*, const RString&)` takes its second argument by
+reference-to-derived-type — the same hard-boundary gotcha from pilot
+#2 — so the one call site got the same `RString(...)` wrap, this time
+self-contained within the same file (no other file needed a
+caller-side fix). **Also scouted and explicitly rejected as pilots**:
+`MeterDisplay.cpp`'s `Load(RString,float,RString)` and
+`ComboGraph.cpp`'s `Load(RString)` both immediately forward their
+by-value `RString` parameters into `AutoActor::Load(const RString&)` /
+`ThemeManager`/`ThemeMetric` APIs — exactly the "big boundary, pick a
+different subsystem" case the playbook already warns about, since
+`AutoActor`/`ThemeManager` are large un-migrated subsystems in their
+own right and wrapping every call site there wouldn't meaningfully
+shrink the codebase's real `RString` footprint. Similarly
+`PlayerAI.cpp`'s lone `RString sKey` feeds directly into
+`IniFile`/`XNode::GetChild()`, explicitly named in the playbook's
+existing "Serialization / IniFile / XmlFile ... heavy RString users"
+warning — skipped for the same reason. **New lesson: a low `RString`
+mention *count* isn't sufficient to pick a pilot — check what each
+mention actually touches; immediate pass-through into a large
+un-migrated subsystem (even via just 1-2 lines) is a bad pilot
+regardless of how small the file itself is.**
+Verified: `sm_tests` 5966/226 unchanged (no dedicated characterization
+test exists for this widget), `ctest` 100%, Release `StepMania-R.exe`
+clean rebuild, `--SelfTest` exit 0.
+
 ### 11. Pre-C++11 threading / smart pointers
 `RageThreads` predates `std::thread`/`std::mutex`;
 `RageUtil_AutoPtr.h` ("TODO: replace with c++11 smart pointers");
