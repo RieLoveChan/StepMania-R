@@ -13,6 +13,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <sstream>
+#include <string>
 #include <vector>
 
 #if defined(_WIN32)
@@ -40,7 +41,7 @@ struct LoadedDriver
 	 * only send "Foo/Bar".  The path "Themes/Foo" is out of the scope
 	 * of the driver, and GetPath returns false. */
 	RageFileDriver *m_pDriver;
-	RString m_sType, m_sRoot, m_sMountPoint;
+	std::string m_sType, m_sRoot, m_sMountPoint;
 
 	int m_iRefs;
 
@@ -84,7 +85,7 @@ RageFileDriver *RageFileManager::GetFileDriver( RString sMountpoint )
 	{
 		if( g_pDrivers[i]->m_sType == "mountpoints" )
 			continue;
-		if( g_pDrivers[i]->m_sMountPoint.CompareNoCase( sMountpoint ) )
+		if( StdString::ssicmp( g_pDrivers[i]->m_sMountPoint.c_str(), sMountpoint.c_str() ) )
 			continue;
 
 		pRet = g_pDrivers[i]->m_pDriver;
@@ -490,7 +491,7 @@ RString LoadedDriver::GetPath( const RString &sPath ) const
 			return RString();
 	}
 
-	if( sPath.Left(static_cast<int>(m_sMountPoint.size())).CompareNoCase(m_sMountPoint) )
+	if( StdString::ssicmp( sPath.Left(static_cast<int>(m_sMountPoint.size())).c_str(), m_sMountPoint.c_str() ) )
 		return RString(); /* no match */
 
 	/* Add one, so we don't cut off the leading slash. */
@@ -532,9 +533,9 @@ void RageFileManager::GetDirListing( const RString &sPath_, std::vector<RString>
 		/* If returning the path, prepend the mountpoint name to the files this driver returned. */
 		if( bReturnPathToo && !pLoadedDriver->m_sMountPoint.empty() )
 		{
-			RString const &mountPoint = pLoadedDriver->m_sMountPoint;
+			std::string const &mountPoint = pLoadedDriver->m_sMountPoint;
 			/* Skip the trailing slash on the mountpoint; there's already a slash there. */
-			RString const &trimPoint = mountPoint.substr(0, mountPoint.size() - 1);
+			std::string const &trimPoint = mountPoint.substr(0, mountPoint.size() - 1);
 			for( unsigned j = OldStart; j < AddTo.size(); ++j )
 			{
 				AddTo[j] = trimPoint + AddTo[j];
@@ -751,11 +752,11 @@ void RageFileManager::Unmount( const RString &sType, const RString &sRoot_, cons
 	g_Mutex->Lock();
 	for( unsigned i = 0; i < g_pDrivers.size(); ++i )
 	{
-		if( !sType.empty() && g_pDrivers[i]->m_sType.CompareNoCase( sType ) )
+		if( !sType.empty() && StdString::ssicmp( g_pDrivers[i]->m_sType.c_str(), sType.c_str() ) )
 			continue;
-		if( !sRoot.empty() && g_pDrivers[i]->m_sRoot.CompareNoCase( sRoot ) )
+		if( !sRoot.empty() && StdString::ssicmp( g_pDrivers[i]->m_sRoot.c_str(), sRoot.c_str() ) )
 			continue;
-		if( !sMountPoint.empty() && g_pDrivers[i]->m_sMountPoint.CompareNoCase( sMountPoint ) )
+		if( !sMountPoint.empty() && StdString::ssicmp( g_pDrivers[i]->m_sMountPoint.c_str(), sMountPoint.c_str() ) )
 			continue;
 
 		++g_pDrivers[i]->m_iRefs;
@@ -808,7 +809,7 @@ bool RageFileManager::IsMounted( RString MountPoint )
 	LockMut( *g_Mutex );
 
 	for( unsigned i = 0; i < g_pDrivers.size(); ++i )
-		if( !g_pDrivers[i]->m_sMountPoint.CompareNoCase( MountPoint ) )
+		if( !StdString::ssicmp( g_pDrivers[i]->m_sMountPoint.c_str(), MountPoint.c_str() ) )
 			return true;
 
 	return false;
