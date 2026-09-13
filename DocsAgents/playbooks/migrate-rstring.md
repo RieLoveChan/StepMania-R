@@ -475,3 +475,23 @@ if a boundary gotcha turned up, plus `log.md`.
   substitution for `.CompareNoCase`) -- confirming those aren't
   one-off tricks but general-purpose fixes for any future
   `Preference<RString>`/`CompareNoCase` encounter.
+- 2026-09-13 -- pilot #25: `RageFileDriverMemory.cpp`'s file-local
+  `RageFileObjMemFile::m_sBuf`. Confirms the pilot #5 "drop the
+  reference, return by value" fix generalizes cleanly to a byte-buffer
+  field, not just short-lived path strings: `GetString()`'s
+  `const RString&` -> `RString` return-type change needed zero caller
+  updates anywhere, including callers that pass the result straight
+  into a templated `AppendChild<T>(...)` call -- template argument
+  deduction picks up `RString` either way, reference or value, so
+  changing *how* a value is returned never by itself changes what a
+  template call site deduces. Also confirms `.replace()`/`operator[]`/
+  `.size()` are safe to assume identical between `RString` and
+  `std::string` unless `StdString.h` explicitly documents an override
+  (as it does for `.Left()`/`.Right()`/`.Mid()`/`.CompareNoCase()`/etc
+  under the "RString Facade Functions" comment) -- anything not in
+  that facade section is a plain inherited `std::basic_string` method,
+  unchanged behavior guaranteed. Class touches `.crs` course-writing
+  (`CourseWriterCRS.cpp`) and profile/stats serialization
+  (`XmlFileUtil.cpp`, `RageFileDriverDeflate.cpp`, `StatsManager.cpp`)
+  -- re-verified `[crs]`/`[corpus]` as extra precaution even though the
+  buffer's own byte-level behavior didn't change.
