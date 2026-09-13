@@ -1582,6 +1582,31 @@ external caller file (`ImageCache.cpp`, 3 call sites), all passing a
 5981/230 unchanged, `ctest` 100%, Release `StepMania-R.exe` clean
 rebuild, `--SelfTest` exit 0.
 
+**Pilot #17 (2026-09-13, found via a broad scouting fork after item 9's
+low-risk clusters and item 10's small-header candidates both thinned
+out): `FontManager::LoadFont(...)`'s parameters
+(`FontManager.h`/`.cpp`).** Both migrated `RString` → `std::string`
+(`const RString&` → `const std::string&`, by-value `RString` → by-value
+`std::string`). One hard boundary: `Font::Load(const RString&,
+RString)` (`Font.h:176`) — fixed with 1 `RString(...)` wrap on the
+first argument; the second (`sChars`) is by-value and binds with no
+wrap. `FontName` (`typedef std::pair<RString,RString>`, used as the
+font cache's map key) needed no change — `std::pair`'s templated
+constructor accepts `std::string` arguments converting implicitly to
+each `RString` field. Only 2 external callers, both in
+`BitmapText.cpp` (`LoadFromFont`/`LoadFromTextureAndChars`), both
+passing `const RString&` locals — safe, zero changes. Verified:
+`sm_tests` 5981/230 unchanged, `ctest` 100%, Release `StepMania-R.exe`
+clean rebuild, `--SelfTest` exit 0. **A dedicated scouting pass (fork)
+confirmed backlog items #12 (mechanical clang-tidy debt — blocked:
+`clang-tidy` isn't even installed on this machine, plus the §5/
+`clang-format`/maintainer-flagged blockers already on record), #15
+(`#if 0` dead blocks — remaining ~7 sites need live gameplay/editor
+reasoning), #26 (binary blobs — already fully worked through, only
+maintainer-gated remainders left), and #29 (orphaned SMOnline
+networking — explicitly maintainer-deferred) are all genuinely
+maintainer-gated, not just under-scouted.**
+
 ### 11. Pre-C++11 threading / smart pointers
 `RageThreads` predates `std::thread`/`std::mutex`;
 `RageUtil_AutoPtr.h` ("TODO: replace with c++11 smart pointers");
