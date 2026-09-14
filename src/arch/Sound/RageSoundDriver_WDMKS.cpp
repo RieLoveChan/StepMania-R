@@ -120,8 +120,8 @@ struct WinWdmFilter
 
 	HANDLE			m_hHandle;
 	std::vector<std::unique_ptr<WinWdmPin>>	m_apPins;
-	RString			m_sFilterName;
-	RString			m_sFriendlyName;
+	std::string		m_sFilterName;
+	std::string		m_sFriendlyName;
 	int			m_iUsageCount;
 };
 
@@ -577,7 +577,7 @@ bool WinWdmFilter::Use( RString &sError )
 	if( m_hHandle == nullptr )
 	{
 		/* Open the filter */
-		m_hHandle = CreateFile( m_sFilterName, GENERIC_READ | GENERIC_WRITE, 0,
+		m_hHandle = CreateFile( m_sFilterName.c_str(), GENERIC_READ | GENERIC_WRITE, 0,
 			nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED, nullptr );
 
 		if( m_hHandle == nullptr )
