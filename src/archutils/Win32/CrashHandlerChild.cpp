@@ -51,7 +51,7 @@ namespace VDDebugInfo
 	{
 		Context() { pRVAHeap=nullptr; }
 		bool Loaded() const { return pRVAHeap != nullptr; }
-		RString sRawBlock;
+		std::string sRawBlock;
 
 		int nBuildNumber;
 
@@ -62,7 +62,7 @@ namespace VDDebugInfo
 		const std::uintptr_t (*pSegments)[2];
 		int nSegments;
 		char sFilename[1024];
-		RString sError;
+		std::string sError;
 	};
 
 	static void GetVDIPath( char *buf, int bufsiz )
