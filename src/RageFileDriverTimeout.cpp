@@ -109,10 +109,10 @@ private:
 	RageMutex m_DeletedFilesLock;
 
 	/* REQ_OPEN, REQ_POPULATE_FILE_SET, REQ_FLUSH_DIR_CACHE, REQ_REMOVE, REQ_MOVE: */
-	RString m_sRequestPath; /* in */
+	std::string m_sRequestPath; /* in */
 
 	/* REQ_MOVE: */
-	RString m_sRequestPath2; /* in */
+	std::string m_sRequestPath2; /* in */
 
 	/* REQ_OPEN, REQ_COPY: */
 	RageFileBasic *m_pResultFile; /* out */
@@ -131,7 +131,7 @@ private:
 
 	/* REQ_READ, REQ_WRITE */
 	int m_iRequestSize; /* in */
-	RString m_sResultError; /* out */
+	std::string m_sResultError; /* out */
 
 	/* REQ_SEEK */
 	int m_iRequestPos; /* in */
