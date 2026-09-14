@@ -258,8 +258,8 @@ void convert_lua_chunk(RString& chunk_text)
 // So condition_set_t::iterator->first is the lua to execute for the
 // condition, and condition_set_t::iterator->second is the name of the
 // condition.
-typedef std::map<RString, RString> condition_set_t;
-typedef std::map<RString, RString> field_cont_t;
+typedef std::map<std::string, std::string> condition_set_t;
+typedef std::map<std::string, std::string> field_cont_t;
 struct frame_t
 {
 	int frame;
@@ -269,14 +269,14 @@ struct frame_t
 
 struct actor_template_t
 {
-	RString type;
+	std::string type;
 	field_cont_t fields;
-	RString condition;
-	RString name;
+	std::string condition;
+	std::string name;
 	std::vector<frame_t> frames;
 	std::vector<actor_template_t> children;
-	RString x;
-	RString y;
+	std::string x;
+	std::string y;
 	void make_space_for_frame(int id);
 	void store_cmd(RString const& cmd_name, RString const& full_cmd);
 	void store_field(RString const& field_name, RString const& value, bool cmd_convert, RString const& pref= "", RString const& suf= "");
@@ -502,7 +502,9 @@ void actor_template_t::load_node(XNode const& node, RString const& dirname, cond
 	{
 		if(attr->first == "Name")
 		{
-			attr->second->GetValue(name);
+			RString name_tmp;
+			attr->second->GetValue(name_tmp);
+			name= name_tmp;
 		}
 		else if(attr->first == "Condition")
 		{
@@ -523,7 +525,9 @@ void actor_template_t::load_node(XNode const& node, RString const& dirname, cond
 		{
 			if(!type_set_by_automagic)
 			{
-				attr->second->GetValue(type);
+				RString type_tmp;
+				attr->second->GetValue(type_tmp);
+				type= type_tmp;
 			}
 		}
 		else if(attr->first == "__TEXT__")
@@ -666,7 +670,7 @@ void actor_template_t::output_to_file(RageFile* file, RString const& indent)
 {
 	if(!condition.empty())
 	{
-		file->Write(indent + "optional_actor(" + condition + "_result,\n");
+		file->Write(indent + "optional_actor(" + RString(condition) + "_result,\n");
 	}
 	if(type == "LoadActor")
 	{
@@ -674,14 +678,14 @@ void actor_template_t::output_to_file(RageFile* file, RString const& indent)
 	}
 	else
 	{
-		file->Write(indent + "Def." + type + "{\n");
+		file->Write(indent + "Def." + RString(type) + "{\n");
 	}
 	RString subindent= indent + "  ";
 	if(name.empty())
 	{
 		name= unique_name("actor");
 	}
-	file->Write(subindent + "Name= \"" + name + "\",\n");
+	file->Write(subindent + "Name= \"" + RString(name) + "\",\n");
 	if(!frames.empty())
 	{
 		file->Write(subindent + "Frames= {\n");
@@ -697,14 +701,14 @@ void actor_template_t::output_to_file(RageFile* file, RString const& indent)
 	for(field_cont_t::iterator field= fields.begin();
 		field != fields.end(); ++field)
 	{
-		std::set<RString>::iterator is_string= fields_that_are_strings.find(field->first);
+		std::set<RString>::iterator is_string= fields_that_are_strings.find(RString(field->first));
 		if(is_string != fields_that_are_strings.end())
 		{
-			file->Write(subindent + field->first + "= \"" + field->second + "\",\n");
+			file->Write(subindent + RString(field->first) + "= \"" + RString(field->second) + "\",\n");
 		}
 		else
 		{
-			file->Write(subindent + field->first + "= " + field->second + ",\n");
+			file->Write(subindent + RString(field->first) + "= " + RString(field->second) + ",\n");
 		}
 	}
 	for(std::vector<actor_template_t>::iterator child= children.begin();
@@ -749,7 +753,7 @@ void convert_xml_file(RString const& fname, RString const& dirname)
 	{
 		RString cond_text= cond->first;
 		convert_lua_chunk(cond_text);
-		file->Write("local " + cond->second + "_result= " + cond_text + "\n\n");
+		file->Write("local " + RString(cond->second) + "_result= " + cond_text + "\n\n");
 	}
 	if(!conditions.empty())
 	{
