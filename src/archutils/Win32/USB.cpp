@@ -7,10 +7,9 @@
 #pragma comment(lib, "setupapi.lib")
 #pragma comment(lib, "hid.lib")
 
+#include <setupapi.h>
 extern "C" {
-#include "archutils/Win32/ddk/setupapi.h"
-/* Quiet header warning: */
-#include "archutils/Win32/ddk/hidsdi.h"
+#include <hidsdi.h>
 }
 
 #include <vector>
