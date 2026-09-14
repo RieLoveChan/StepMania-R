@@ -785,19 +785,26 @@ removal — do NOT blanket-delete:
   silently break that driver at runtime for whoever still uses it.
   Leave it; removing it is really "deprecate the Win32Parallel lights
   driver," a separate, bigger decision.
-- **`src/archutils/Win32/ddk/`** — checked 2026-09-10. The `.lib` files
-  (`{x86,x64}/{dbghelp,hid,setupapi}.lib`) do appear dead: nothing in
-  any `*.cmake`/`CMakeLists.txt` references `ddk`, and the Win32 build
-  links `dbghelp`/`setupapi`/`hid` as bare names off the Windows SDK
-  `LIBPATH` (`src/CMakeLists.txt:392-420`). BUT the **headers** in this
-  dir are load-bearing: `src/archutils/Win32/USB.cpp` has hard-coded
-  `#include "archutils/Win32/ddk/setupapi.h"` and `.../ddk/hidsdi.h`
-  (the only include path is `src/`, so these resolve here, not to the
-  SDK). So the directory must stay until USB.cpp is migrated to SDK
-  headers — a Win32 USB/HID input behavior-risk change, not a sweep
-  item. Removing only the 6 `.lib` files is safe but low value
-  (~380 KB) and leaves the dir half-populated; deferred to a
-  maintainer call. Left entirely as-is for now.
+- **`src/archutils/Win32/ddk/`** — **DELETED 2026-09-14** (`641d903cff`).
+  `USB.cpp` (live code — the Para/Pump dance-pad HID drivers, not
+  orphaned) was the only file including anything from this directory;
+  migrated its two `#include "archutils/Win32/ddk/..."` lines to the
+  Windows 10 SDK's own `<setupapi.h>`/`<hidsdi.h>` (already on the
+  include path via `<windows.h>`). Diffed the vendored vs SDK headers
+  for every struct/function `USB.cpp` actually uses
+  (`HIDD_ATTRIBUTES`, `HidD_GetHidGuid`, `HidD_GetAttributes`,
+  `SP_DEVICE_INTERFACE_DATA`, `SP_INTERFACE_DEVICE_DETAIL_DATA`,
+  `SetupDiGetClassDevs`/`EnumDeviceInterfaces`/
+  `GetDeviceInterfaceDetail`/`DestroyDeviceInfoList`) — identical
+  layouts, the SDK just adds modern SAL annotations; the legacy
+  `SP_INTERFACE_DEVICE_DETAIL_DATA` alias this code relies on still
+  exists in the current SDK for back-compat. The 6 `.lib` files went
+  with the headers (CMake already links these 3 libs from the SDK path
+  directly, `src/CMakeLists.txt:400-402` — nothing else changed).
+  Verified via a genuine clean rebuild (CMake reconfigure + forced
+  recompile) after physically deleting the files from disk, not just
+  an incremental build that could mask a missing include. 12,522 lines
+  / ~480 KB removed.
 - **`Xcode/Libraries/*.a`** — committed macOS static libs. `AGENTS.md`
   §3 — leave to a macOS-focused pass.
 
