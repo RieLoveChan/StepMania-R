@@ -116,7 +116,7 @@ public:
 
 protected:
 	State m_State;
-	RString m_sError;
+	std::string m_sError;
 };
 
 class NetworkStream_Win32: public NetworkStream
@@ -145,7 +145,7 @@ private:
 	// This event is signalled on cancellation, to wake us up if we're blocking.
 	HANDLE m_hCompletionEvent;
 
-	RString m_sHost;
+	std::string m_sHost;
 	int m_iPort;
 
 	RageMutex m_Mutex;
@@ -366,7 +366,7 @@ void NetworkStream_Win32::Open( const RString &sHost, int iPort, ConnectionType 
 		m_hResolve = WSAAsyncGetHostByName(
 			mw.GetHwnd(),
 			WM_USER,
-			m_sHost,
+			m_sHost.c_str(),
 			(char *) pHost,
 			MAXGETHOSTSTRUCT
 		);
