@@ -115,7 +115,7 @@ namespace ScreenManagerUtil
 	};
 
 	Actor				*g_pSharedBGA;  // BGA object that's persistent between screens
-	RString				m_sPreviousTopScreen;
+	std::string			m_sPreviousTopScreen;
 	std::vector<LoadedScreen>	g_ScreenStack;  // bottommost to topmost
 	std::vector<Screen*>		g_OverlayScreens;
 	std::set<RString>		g_setGroupedScreens;
@@ -136,7 +136,7 @@ namespace ScreenManagerUtil
 
 		// Set the name of the loading screen.
 		{
-			LuaThreadVariable var1( "PreviousScreen", m_sPreviousTopScreen );
+			LuaThreadVariable var1( "PreviousScreen", RString(m_sPreviousTopScreen) );
 			LuaThreadVariable var2( "LoadingScreen", ls.m_pScreen->GetName() );
 			ls.m_pScreen->BeginScreen();
 		}
