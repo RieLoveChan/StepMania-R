@@ -805,8 +805,29 @@ removal — do NOT blanket-delete:
   recompile) after physically deleting the files from disk, not just
   an incremental build that could mask a missing include. 12,522 lines
   / ~480 KB removed.
-- **`Xcode/Libraries/*.a`** — committed macOS static libs. `AGENTS.md`
-  §3 — leave to a macOS-focused pass.
+- **`Xcode/Libraries/*.a`** — **DELETED 2026-09-14** (`f82c2428f0`),
+  along with the rest of `Xcode/`'s dead pre-CMake artifacts found
+  while investigating this item. Kept only the 2 files the current
+  CMake macOS build actually uses (`Info.plist.in`, `smicon.icns`,
+  referenced via `SM_XCODE_DIR` in `src/CMakeLists.txt:258,294`) plus
+  `README.md` (already correctly documents that the old Xcode-project
+  workflow is gone). Removed: `Libraries/*.a` (2010-era prebuilt jpeg/
+  ogg/png/vorbis/theora/zlib/ffmpeg — every one superseded by a modern
+  `extern/`-built equivalent; theora isn't used in `src/` at all
+  anymore), `Patcher/` (a standalone dead Obj-C updater GUI with its
+  own `.xcodeproj`), `scripts/` (`mkrelease.rb`'s own README says it
+  "assumes you have already built a StepMania.app using Xcode" — the
+  workflow `Xcode/README.md` itself says no longer exists;
+  `increment_version.pl` is superseded by `src/verstub.in.cpp` +
+  CMake, item 25), the 6 `.lproj/Localizable.strings` dirs, and 6 more
+  unreferenced loose files (`Hardware.plist`/`.in.plist`,
+  `Info.plist.in.xml`, `plistHelper.in.hpp`, `product.xcconfig`,
+  `StepMania.entitlements`). Zero references anywhere in CMake/CI/docs
+  for any of it, confirmed via grep before deletion. 46 files, ~8.3 MB.
+  Verified with a real CMake reconfigure + Release/Debug rebuild
+  locally (Windows-only box, so the macOS `.app` bundle step itself
+  needed CI's `macOS (arm64)` job as the real verification, not just
+  local green). **This fully closes item 26 — nothing left in it.**
 
 ---
 
