@@ -40,7 +40,7 @@ static RString JoinLineList( std::vector<RString> &lines )
 struct TimingTagWriter {
 
 	std::vector<RString> *m_pvsLines;
-	RString m_sNext;
+	std::string m_sNext;
 
 	TimingTagWriter( std::vector<RString>* pvsLines ): m_pvsLines (pvsLines) { }
 
