@@ -548,8 +548,8 @@ namespace
 {
 	struct LClass
 	{
-		RString m_sBaseName;
-		std::vector<RString> m_vMethods;
+		std::string m_sBaseName;
+		std::vector<std::string> m_vMethods;
 	};
 }
 
@@ -691,7 +691,7 @@ XNode *LuaHelpers::GetLuaInformation()
 		pClassNode->AppendAttr( "name", c.first );
 		if( !c.second.m_sBaseName.empty() )
 			pClassNode->AppendAttr( "base", c.second.m_sBaseName );
-		for (RString const & m : c.second.m_vMethods)
+		for (std::string const & m : c.second.m_vMethods)
 		{
 			XNode *pMethodNode = pClassNode->AppendChild( "Function" );
 			pMethodNode->AppendAttr( "name", m );
