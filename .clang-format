@@ -12,7 +12,16 @@ BinPackParameters: false
 BreakBeforeBraces: Custom
 BraceWrapping:
   BeforeElse: true
-InsertBraces: true
+# InsertBraces is NOT safe on this codebase: clang-format doesn't expand
+# macros, so it can't tell that FOREACH_ENUM/FOREACH_CONST_Attr/etc expand to
+# a `for(...)` header with no braces of its own, controlling the next bare
+# statement (a common idiom here, ~98 files use these macros). With
+# InsertBraces on, clang-format mis-attributes the closing brace to the
+# enclosing `if`, silently moving the real loop body outside both the `if`
+# and the `for` -- a logic-changing bug, not a formatting one (caught during
+# the 2026-09-14 repo-wide format pass: HighScore.cpp/NoteDataUtil.cpp/
+# Profile.cpp all broke this way before the pass was reverted and redone).
+InsertBraces: false
 
 # Never collapse code into a single line
 AllowShortBlocksOnASingleLine: Never
