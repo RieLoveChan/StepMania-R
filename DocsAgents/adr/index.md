@@ -12,9 +12,11 @@ Status values: `Proposed` (awaiting maintainer sign-off) · `Accepted` ·
 * [0001](./0001-toolchain-target.md) - Toolchain & modernization target (C++17, CMake 3.20, `-Werror` policy, FFmpeg binaries). **Status: Accepted.** (§9 superseded by 0003.)
 * [0002](./0002-independent-project.md) - Independent project; no upstream compatibility constraint. **Status: Accepted.**
 * [0003](./0003-platform-support-floors.md) - Platform support floors: Windows 11, current macOS, current Linux; supersedes 0001 §9. **Status: Accepted.**
-* 0004 (not written) - Renderer strategy: legacy GL cleanup vs GL 3.3 core vs abstraction layer (bgfx et al.); fate of D3D9 and GLES2. Deferred from ADR 0001.
+* [0004](./0004-renderer-strategy.md) - Renderer strategy: legacy GL cleanup vs GL 3.3 core vs abstraction layer (bgfx et al.); fate of D3D9 and GLES2. Deferred from ADR 0001. **Status: Proposed** (open questions written 2026-09-15, awaiting maintainer decision).
 * [0005](./0005-logging-overhaul.md) - Logging overhaul: bracketed level tags, no `/////` frames, categories, repeat-collapsing. **Status: Accepted** (phase 1 landed).
 * [0006](./0006-test-harness.md) - Test harness: Catch2 v3 (amalgamated) + `src/` as an OBJECT library so exe and `tests/` share one engine build. **Status: Accepted** (scaffold on branch, merge gated on green build).
+* [0007](./0007-threading-modernization.md) - Threading modernization: replace `RageThreads`' pre-C++11 primitives with `std::thread`/`mutex`/`condition_variable`. Backlog item 11. **Status: Proposed** (open questions written 2026-09-15, awaiting maintainer decision).
+* [0008](./0008-game-type-registry.md) - Data-driven game-type registry: replace hand-maintained `g_Games[]`/`g_Game_*` and the compile-time `StepsType` enum. Backlog item 20. **Status: Proposed** (open questions written 2026-09-15, awaiting maintainer decision).
 
 # Adding one
 
