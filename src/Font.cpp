@@ -122,14 +122,14 @@ void FontPage::Load( const FontPageSettings &cfg )
 	if( iBaseline == -1 )
 	{
 		float center = m_FontPageTextures.m_pTextureMain->GetSourceFrameHeight()/2.0f;
-		iBaseline = int( center + m_iLineSpacing/2 );
+		iBaseline = int( center + m_iLineSpacing/2.0f );
 	}
 
 	int iTop = cfg.m_iTop;
 	if( iTop == -1 )
 	{
 		float center = m_FontPageTextures.m_pTextureMain->GetSourceFrameHeight()/2.0f;
-		iTop = int( center - m_iLineSpacing/2 );
+		iTop = int( center - m_iLineSpacing/2.0f );
 	}
 	m_iHeight = iBaseline - iTop;
 	m_iDrawExtraPixelsLeft = cfg.m_iDrawExtraPixelsLeft;
