@@ -7,8 +7,24 @@ tags: [adr, game-types, stepstype, data-driven, proposed]
 
 # Status
 
-**Proposed** — backlog item 20, explicitly flagged there as
-"deserves its own ADR when picked up." Not started.
+**Accepted** — 2026-09-15. Maintainer decision. Backlog item 20.
+
+# Decision
+
+- **Staged, not one-pass.** This ADR covers **stage 1 only**: make
+  `g_Games[]`/`g_Game_*` data-driven. `StepsType` stays a compile-time
+  enum for now — `NoteData`/`Style`/`Steps`/`RadarValues`/score
+  keepers/the editor/Lua bindings/`Profile` serialization are **not**
+  touched in this stage. The runtime-id migration for `StepsType` is
+  deferred to a future ADR amendment once stage 1 is proven.
+- **Format: an ini-tree under `Games/`**, matching the `NoteSkins/`/
+  `Themes/` pattern already live in the tree — one folder per game,
+  an `.ini`-style definition file inside. `NoteSkins/` remains the
+  enablement gate exactly as it is today; `g_Games[]` becomes "every
+  definition found on disk" instead of a hand-maintained array.
+- **The `NoteSkins/Para/` capitalization bug is fixed independently**
+  (2026-09-15, does not wait on this ADR) — see the fix commit near
+  this ADR's landing.
 
 # Context
 
@@ -42,45 +58,7 @@ capitalized but the actual game name is `para` — breaks on
 case-sensitive filesystems (Linux). Whether this gets fixed as part of
 this effort or as its own quick unrelated patch is question D below.
 
-# Open questions
-
-**A. Pursue now, or stay deferred?** Nothing else in the backlog
-blocks on this.
-
-**B. Data format.** Two real shapes, matching two patterns already
-live elsewhere in the tree:
-
-1. **Lua definition files** — matches how theme scripting already
-   works; game/style/stepstype definitions become Lua tables loaded at
-   startup.
-2. **An ini-tree under `Games/`** — matches the `NoteSkins/`/`Themes/`
-   pattern exactly (a directory per game, `.ini`-style definition
-   files inside), arguably the more consistent choice given NoteSkins
-   is already the enablement gate for the same games.
-
-**C. Scope of the first cut.** The full effort is big — `StepsType`
-(enum → runtime id) ripples through `NoteData`, `Style`, `Steps`,
-`RadarValues`, score keepers, the editor, Lua bindings, and `Profile`
-serialization, all at once if done in one pass. Two shapes for landing
-it:
-
-1. **One pass** — migrate `g_Games[]`/`g_Game_*` to data-driven *and*
-   `StepsType` from enum to runtime id, together, since they're
-   entangled (a `Game` definition references its supported
-   `StepsType`s).
-2. **Staged** — first make `g_Games[]` itself data-loaded while
-   `StepsType` stays a compile-time enum (smaller, contained, doesn't
-   touch `NoteData`/`RadarValues`/serialization at all), and defer the
-   `StepsType` runtime-id migration to a deliberate follow-up ADR
-   amendment once the first stage is proven.
-
-**D. The `NoteSkins/Para/` capitalization bug.** Bundle the fix into
-this effort (it's the same subsystem), or land it now as its own
-small, unrelated patch regardless of what happens with (A)-(C)? This
-one has no real downside to fixing immediately — it's a bug, not a
-design choice — so it may not need to wait on this ADR at all.
-
-# Consequences (of pursuing it)
+# Consequences
 
 This is the largest single piece of remaining backlog scope in the
 whole modernization effort — bigger than any RString pilot or
