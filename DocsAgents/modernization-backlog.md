@@ -2994,8 +2994,33 @@ Lua bindings, `Profile` serialization. **Deserves its own ADR** when
 picked up. Also: `NoteSkins/Para/` is capitalised but the game name is
 `para` — rename for Linux (case-sensitive FS).
 
-### 29. Networking/multiplayer (SMOnline) subsystem is orphaned from the CMake build
-Found 2026-09-11 while doing item 18 phase-4 batch 3: `NetworkSyncManager.cpp`
+### 29. Networking/multiplayer (SMOnline) subsystem is orphaned from the CMake build — DELETED 2026-09-14 (`9887258c71`)
+**Maintainer decided: delete, not revive** (asked directly, per this
+item's own "needs a maintainer call" note below). Re-audited before
+deleting and found the true component was bigger than originally
+documented and was really **one connected orphan, not two separate
+ones**: `ScreenNetEvaluation.cpp` (only the `.h` was previously listed)
+was also orphaned, and `FileDownload.h`/`ScreenPackages.*` share the
+SMOnline cluster's own dependency — `src/ezsockets.cpp`/`.h` (a
+2004-era hand-rolled raw-socket wrapper, itself also absent from every
+`CMakeData-*.cmake` list). Final deleted set: 24 files / 6731 lines —
+`NetworkSyncManager.cpp/.h`, `ScreenSMOnlineLogin.cpp/.h`,
+`ScreenNetSelectMusic.cpp/.h`, `ScreenNetworkOptions.cpp/.h`,
+`ScreenNetRoom.cpp/.h`, `ScreenNetSelectBase.cpp/.h`,
+`ScreenNetEvaluation.cpp/.h`, `RoomWheel.cpp/.h`,
+`RoomInfoDisplay.cpp/.h`, `ScreenPackages.cpp/.h`,
+`FileDownload.cpp/.h`, `ezsockets.cpp/.h`. Verified fully isolated
+first — an exhaustive grep across every remaining `src/*.cpp`/`*.h`
+confirmed zero files outside this set `#include` any of its headers or
+reference `NSMAN`/`FileTransfer`/`EzSockets`. Reactivating this later
+would have meant rewriting `ezsockets.cpp` against modern networking
+APIs and re-validating an online protocol nobody has run against a
+live server in years — not a simple CMake-wiring fix — which is why
+delete was the practical call over reconnect. Full gate green (Release
++ Debug builds, ctest 100%, sm_tests 5981/230 unchanged, `--SelfTest`).
+
+Original finding, kept for history: found 2026-09-11 while doing item
+18 phase-4 batch 3: `NetworkSyncManager.cpp`
 (and, going by the same grep, its whole calling subsystem —
 `ScreenSMOnlineLogin.cpp`, `ScreenNetSelectMusic.cpp`,
 `ScreenNetworkOptions.cpp`, `ScreenNetRoom.cpp`, `ScreenNetSelectBase.cpp`,
