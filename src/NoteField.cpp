@@ -509,7 +509,7 @@ void NoteField::DrawMarkerBar( int iBeat )
 	const float fYOffset	= ArrowEffects::GetYOffset( m_pPlayerState, 0, fBeat );
 	const float fYPos	= ArrowEffects::GetYPos(m_pPlayerState, 0, fYOffset, m_fYReverseOffsetPixels);
 
-	m_rectMarkerBar.StretchTo( RectF(-GetWidth()/2, fYPos-ARROW_SIZE/2, GetWidth()/2, fYPos+ARROW_SIZE/2) );
+	m_rectMarkerBar.StretchTo( RectF(-GetWidth()/2, fYPos-ARROW_SIZE/2.0f, GetWidth()/2, fYPos+ARROW_SIZE/2.0f) );
 	m_rectMarkerBar.Draw();
 }
 
