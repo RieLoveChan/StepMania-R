@@ -8,24 +8,24 @@
 
 #include <vector>
 
-
 class MenuTimer;
 class MemoryCardDisplay;
 
-class ScreenWithMenuElements : public Screen
-{
-public:
+class ScreenWithMenuElements : public Screen {
+ public:
 	ScreenWithMenuElements();
 	virtual void Init();
 	virtual void BeginScreen();
 	virtual ~ScreenWithMenuElements();
 
-	virtual void HandleScreenMessage( const ScreenMessage SM );
-	void Update( float fDeltaTime );
-	void StartTransitioningScreen( ScreenMessage smSendWhenDone );
-	virtual void Cancel( ScreenMessage smSendWhenDone );
+	virtual void HandleScreenMessage(const ScreenMessage SM);
+	void Update(float fDeltaTime);
+	void StartTransitioningScreen(ScreenMessage smSendWhenDone);
+	virtual void Cancel(ScreenMessage smSendWhenDone);
 	bool IsTransitioning();
-	virtual bool AllowCallbackInput() { return !IsTransitioning(); }
+	virtual bool AllowCallbackInput() {
+		return !IsTransitioning();
+	}
 
 	void StopTimer();
 	void ResetTimer();
@@ -35,48 +35,49 @@ public:
 	virtual void TweenOffScreen();
 
 	// Lua
-	virtual void PushSelf( lua_State *L );
+	virtual void PushSelf(lua_State *L);
 
-	virtual bool AllowLateJoin() const { return m_bShouldAllowLateJoin; }
+	virtual bool AllowLateJoin() const {
+		return m_bShouldAllowLateJoin;
+	}
 	bool m_bShouldAllowLateJoin; // So that it can be exposed to Lua.
 
-protected:
-	RString HandleLuaMusicFile(RString const& path);
+ protected:
+	RString HandleLuaMusicFile(RString const &path);
 	virtual void StartPlayingMusic();
-	void SetHelpText( RString s );
+	void SetHelpText(RString s);
 
-	AutoActor			m_sprUnderlay;
-	MemoryCardDisplay	*m_MemoryCardDisplay[NUM_PLAYERS];
-	MenuTimer			*m_MenuTimer;
-	AutoActor			m_sprOverlay;
-	std::vector<Actor*>		m_vDecorations;
+	AutoActor m_sprUnderlay;
+	MemoryCardDisplay *m_MemoryCardDisplay[NUM_PLAYERS];
+	MenuTimer *m_MenuTimer;
+	AutoActor m_sprOverlay;
+	std::vector<Actor *> m_vDecorations;
 
-	Transition			m_In;
-	Transition			m_Out;
-	Transition			m_Cancel;
+	Transition m_In;
+	Transition m_Out;
+	Transition m_Cancel;
 
-	ThemeMetric<bool>		PLAY_MUSIC;
-	ThemeMetric<bool>		MUSIC_ALIGN_BEAT;
-	ThemeMetric<float>		DELAY_MUSIC_SECONDS;
-	ThemeMetric<bool>		CANCEL_TRANSITIONS_OUT;
-	ThemeMetric<float>		TIMER_SECONDS;
-	ThemeMetric<RString>	TIMER_METRICS_GROUP;
-	ThemeMetric<bool>		RESET_GAMESTATE;
+	ThemeMetric<bool> PLAY_MUSIC;
+	ThemeMetric<bool> MUSIC_ALIGN_BEAT;
+	ThemeMetric<float> DELAY_MUSIC_SECONDS;
+	ThemeMetric<bool> CANCEL_TRANSITIONS_OUT;
+	ThemeMetric<float> TIMER_SECONDS;
+	ThemeMetric<RString> TIMER_METRICS_GROUP;
+	ThemeMetric<bool> RESET_GAMESTATE;
 
-private:
+ private:
 	RString m_sPathToMusic;
 };
 
-class ScreenWithMenuElementsSimple: public ScreenWithMenuElements
-{
-public:
-	bool MenuStart( const InputEventPlus &input );
-	bool MenuBack( const InputEventPlus &input );
+class ScreenWithMenuElementsSimple : public ScreenWithMenuElements {
+ public:
+	bool MenuStart(const InputEventPlus &input);
+	bool MenuBack(const InputEventPlus &input);
 
 	// Lua
-	virtual void PushSelf( lua_State *L );
+	virtual void PushSelf(lua_State *L);
 
-protected:
+ protected:
 };
 
 #endif

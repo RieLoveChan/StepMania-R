@@ -6,18 +6,17 @@
 #include <cstdio>
 #include <vector>
 
-
-class InputHandler_SextetStream: public InputHandler
-{
-public:
+class InputHandler_SextetStream : public InputHandler {
+ public:
 	InputHandler_SextetStream();
 	~InputHandler_SextetStream();
-	void GetDevicesAndDescriptions(std::vector<InputDeviceInfo>& vDevicesOut);
+	void GetDevicesAndDescriptions(std::vector<InputDeviceInfo> &vDevicesOut);
 
-public:
+ public:
 	class Impl;
-protected:
-	Impl * _impl;
+
+ protected:
+	Impl *_impl;
 };
 
 // Note: InputHandler_SextetStreamFromFile uses blocking I/O. For the
@@ -28,9 +27,8 @@ protected:
 // state accomplishes this without triggering any new events.) Either of
 // these interrupts the blocking read so that the loop can check its
 // continue flag.
-class InputHandler_SextetStreamFromFile: public InputHandler_SextetStream
-{
-public:
+class InputHandler_SextetStreamFromFile : public InputHandler_SextetStream {
+ public:
 	// Note: In the current implementation, the filename (either the
 	// `filename` parameter or the `SextetStreamInputFilename` setting) is
 	// passed to fopen(), not a RageFile ctor, so specify the file to be

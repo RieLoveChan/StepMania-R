@@ -6,25 +6,24 @@
 #include "PlayerNumber.h"
 #include "AutoActor.h"
 /** @brief A cursor for ScreenOptions. */
-class OptionsCursor : public ActorFrame
-{
-public:
+class OptionsCursor : public ActorFrame {
+ public:
 	/** @brief Set up a default OptionsCursor. */
 	OptionsCursor();
 	/**
 	 * @brief Set up an OptionsCursor based on an existing copy.
 	 * @param cpy the OptionsCursor we are copying. */
-	OptionsCursor( const OptionsCursor &cpy );
+	OptionsCursor(const OptionsCursor &cpy);
 
-	void Load( const RString &sMetricsGroup, bool bLoadCanGos );
+	void Load(const RString &sMetricsGroup, bool bLoadCanGos);
 
 	void StopTweening() override;
-	void BeginTweening( float fSecs, TweenType tt = TWEEN_LINEAR ) override;
-	void SetBarWidth( int iWidth );
+	void BeginTweening(float fSecs, TweenType tt = TWEEN_LINEAR) override;
+	void SetBarWidth(int iWidth);
 	int GetBarWidth() const;
-	void SetCanGo( bool bCanGoLeft, bool bCanGoRight );
+	void SetCanGo(bool bCanGoLeft, bool bCanGoRight);
 
-protected:
+ protected:
 	AutoActor m_sprMiddle;
 	AutoActor m_sprLeft;
 	AutoActor m_sprRight;
@@ -44,7 +43,7 @@ protected:
 /*
  * (c) 2001-2003 Chris Danford
  * All rights reserved.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -54,7 +53,7 @@ protected:
  * copyright notice(s) and this permission notice appear in all copies of
  * the Software and that both the above copyright notice(s) and this
  * permission notice appear in supporting documentation.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF

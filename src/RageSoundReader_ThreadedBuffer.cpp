@@ -19,39 +19,36 @@
 static const unsigned g_iReadBlockSizeFrames = 1024;
 
 // The maximum number of frames to buffer:
-static const int g_iStreamingBufferFrames = 1024*32;
+static const int g_iStreamingBufferFrames = 1024 * 32;
 
 /* When a sound has fewer than g_iMinFillFrames buffered, buffer at maximum speed.
  * Once beyond that, fill at a limited rate. */
-static const int g_iMinFillFrames = 1024*4;
+static const int g_iMinFillFrames = 1024 * 4;
 
-RageSoundReader_ThreadedBuffer::RageSoundReader_ThreadedBuffer( RageSoundReader *pSource ):
-	RageSoundReader_Filter( pSource ),
-	m_Event( "ThreadedBuffer" )
-{
+RageSoundReader_ThreadedBuffer::RageSoundReader_ThreadedBuffer(RageSoundReader *pSource)
+    : RageSoundReader_Filter(pSource), m_Event("ThreadedBuffer") {
 	m_iSampleRate = pSource->GetSampleRate();
 	m_iChannels = pSource->GetNumChannels();
 
 	int iFrameSize = sizeof(float) * this->GetNumChannels();
-	m_DataBuffer.reserve( g_iStreamingBufferFrames * iFrameSize, iFrameSize );
+	m_DataBuffer.reserve(g_iStreamingBufferFrames * iFrameSize, iFrameSize);
 
 	m_bEOF = false;
 	m_bShutdownThread = false;
 	m_bEnabled = false;
 	m_bFilling = false;
 
-	m_StreamPosition.push_back( Mapping() );
+	m_StreamPosition.push_back(Mapping());
 	m_StreamPosition.back().iPositionOfFirstFrame = pSource->GetNextSourceFrame();
 	m_StreamPosition.back().fRate = pSource->GetStreamToSourceRatio();
 
-	m_Thread.SetName( "Streaming sound buffering" );
-	m_Thread.Create( StartBufferingThread, this );
+	m_Thread.SetName("Streaming sound buffering");
+	m_Thread.Create(StartBufferingThread, this);
 }
 
-RageSoundReader_ThreadedBuffer::RageSoundReader_ThreadedBuffer( const RageSoundReader_ThreadedBuffer &cpy ):
-	RageSoundReader_Filter(nullptr), // don't touch m_pSource before DisableBuffering
-	m_Event( "ThreadedBuffer" )
-{
+RageSoundReader_ThreadedBuffer::RageSoundReader_ThreadedBuffer(const RageSoundReader_ThreadedBuffer &cpy)
+    : RageSoundReader_Filter(nullptr), // don't touch m_pSource before DisableBuffering
+      m_Event("ThreadedBuffer") {
 	bool bWasEnabled = cpy.DisableBuffering();
 
 	m_pSource = cpy.m_pSource->Copy();
@@ -65,17 +62,15 @@ RageSoundReader_ThreadedBuffer::RageSoundReader_ThreadedBuffer( const RageSoundR
 
 	m_StreamPosition = cpy.m_StreamPosition;
 
-	m_Thread.Create( StartBufferingThread, this );
+	m_Thread.Create(StartBufferingThread, this);
 
-	if( bWasEnabled )
-	{
+	if (bWasEnabled) {
 		cpy.EnableBuffering();
 		EnableBuffering();
 	}
 }
 
-RageSoundReader_ThreadedBuffer::~RageSoundReader_ThreadedBuffer()
-{
+RageSoundReader_ThreadedBuffer::~RageSoundReader_ThreadedBuffer() {
 	DisableBuffering();
 	m_Event.Lock();
 	m_bShutdownThread = true;
@@ -85,22 +80,20 @@ RageSoundReader_ThreadedBuffer::~RageSoundReader_ThreadedBuffer()
 	m_Thread.Wait();
 }
 
-void RageSoundReader_ThreadedBuffer::EnableBuffering()
-{
+void RageSoundReader_ThreadedBuffer::EnableBuffering() {
 	m_Event.Lock();
 	m_bEnabled = true;
 	m_Event.Broadcast();
 	m_Event.Unlock();
 }
 
-bool RageSoundReader_ThreadedBuffer::DisableBuffering()
-{
+bool RageSoundReader_ThreadedBuffer::DisableBuffering() {
 	m_Event.Lock();
 	bool bRet = m_bEnabled;
 	m_bEnabled = false;
 	m_Event.Broadcast();
 
-	while( m_bFilling )
+	while (m_bFilling)
 		m_Event.Wait();
 
 	m_Event.Unlock();
@@ -108,94 +101,82 @@ bool RageSoundReader_ThreadedBuffer::DisableBuffering()
 	return bRet;
 }
 
-void RageSoundReader_ThreadedBuffer::WaitUntilFrames( int iWaitUntilFrames )
-{
+void RageSoundReader_ThreadedBuffer::WaitUntilFrames(int iWaitUntilFrames) {
 	m_Event.Lock();
-	ASSERT( m_bEnabled );
-	while( GetFilledFrames() < iWaitUntilFrames )
+	ASSERT(m_bEnabled);
+	while (GetFilledFrames() < iWaitUntilFrames)
 		m_Event.Wait();
 	m_Event.Unlock();
 }
 
-int RageSoundReader_ThreadedBuffer::SetPosition( int iFrame )
-{
+int RageSoundReader_ThreadedBuffer::SetPosition(int iFrame) {
 	bool bWasEnabled = DisableBuffering();
 
 	m_DataBuffer.clear();
 
-	int iRet = RageSoundReader_Filter::SetPosition( iFrame );
+	int iRet = RageSoundReader_Filter::SetPosition(iFrame);
 
 	m_StreamPosition.clear();
-	m_StreamPosition.push_back( Mapping() );
+	m_StreamPosition.push_back(Mapping());
 	m_StreamPosition.back().iPositionOfFirstFrame = iFrame;
 
 	m_bEOF = iRet == 0;
 
-	if( bWasEnabled )
+	if (bWasEnabled)
 		EnableBuffering();
 
 	return iRet;
 }
 
-int RageSoundReader_ThreadedBuffer::GetEmptyFrames() const
-{
+int RageSoundReader_ThreadedBuffer::GetEmptyFrames() const {
 	int iSamplesPerFrame = this->GetNumChannels();
-	if( g_iReadBlockSizeFrames * iSamplesPerFrame > m_DataBuffer.num_writable() )
+	if (g_iReadBlockSizeFrames * iSamplesPerFrame > m_DataBuffer.num_writable())
 		return 0;
 	return m_DataBuffer.num_writable() / iSamplesPerFrame;
 }
 
-int RageSoundReader_ThreadedBuffer::GetFilledFrames() const
-{
+int RageSoundReader_ThreadedBuffer::GetFilledFrames() const {
 	int iSamplesPerFrame = this->GetNumChannels();
 	return m_DataBuffer.num_readable() / iSamplesPerFrame;
 }
 
-int RageSoundReader_ThreadedBuffer::GetNextSourceFrame() const
-{
+int RageSoundReader_ThreadedBuffer::GetNextSourceFrame() const {
 	m_Event.Lock();
 	int iRet = m_StreamPosition.front().iPositionOfFirstFrame;
 	m_Event.Unlock();
 	return iRet;
 }
 
-float RageSoundReader_ThreadedBuffer::GetStreamToSourceRatio() const
-{
+float RageSoundReader_ThreadedBuffer::GetStreamToSourceRatio() const {
 	m_Event.Lock();
 	float fRet = m_StreamPosition.front().fRate;
 	m_Event.Unlock();
 	return fRet;
 }
 
-int RageSoundReader_ThreadedBuffer::GetLength() const
-{
+int RageSoundReader_ThreadedBuffer::GetLength() const {
 	bool bWasEnabled = DisableBuffering();
 	int iRet = m_pSource->GetLength();
-	if( bWasEnabled )
+	if (bWasEnabled)
 		EnableBuffering();
 	return iRet;
 }
-int RageSoundReader_ThreadedBuffer::GetLength_Fast() const
-{
+int RageSoundReader_ThreadedBuffer::GetLength_Fast() const {
 	bool bWasEnabled = DisableBuffering();
 	int iRet = m_pSource->GetLength_Fast();
-	if( bWasEnabled )
+	if (bWasEnabled)
 		EnableBuffering();
 	return iRet;
 }
 
-bool RageSoundReader_ThreadedBuffer::SetProperty( const RString &sProperty, float fValue )
-{
-	return m_pSource->SetProperty( sProperty, fValue );
+bool RageSoundReader_ThreadedBuffer::SetProperty(const RString &sProperty, float fValue) {
+	return m_pSource->SetProperty(sProperty, fValue);
 }
 
-void RageSoundReader_ThreadedBuffer::BufferingThread()
-{
+void RageSoundReader_ThreadedBuffer::BufferingThread() {
 	m_Event.Lock();
-	while( !m_bShutdownThread )
-	{
-		if( !m_bEnabled )
-		{
+	while (!m_bShutdownThread) {
+		if (!m_bEnabled) {
 			m_Event.Wait();
 			continue;
 		}
@@ -204,18 +185,17 @@ void RageSoundReader_ThreadedBuffer::BufferingThread()
 		m_bFilling = true;
 
 		int iFramesToFill = g_iReadBlockSizeFrames;
-		if( GetFilledFrames() < g_iMinFillFrames )
-			iFramesToFill = std::max( iFramesToFill, g_iMinFillFrames - GetFilledFrames() );
+		if (GetFilledFrames() < g_iMinFillFrames)
+			iFramesToFill = std::max(iFramesToFill, g_iMinFillFrames - GetFilledFrames());
 
-		int iRet = FillFrames( iFramesToFill );
+		int iRet = FillFrames(iFramesToFill);
 
 		// Release m_bFilling, and signal the event to wake anyone waiting for it.
 		m_bFilling = false;
 		m_Event.Broadcast();
 
 		// On error or end of file, stop buffering the sound.
-		if( iRet < 0 )
-		{
+		if (iRet < 0) {
 			m_bEnabled = false;
 			continue;
 		}
@@ -224,37 +204,33 @@ void RageSoundReader_ThreadedBuffer::BufferingThread()
 		 * fill at a reasonable pace. */
 		float fTimeFilled = float(g_iReadBlockSizeFrames) / m_iSampleRate;
 		float fTimeToSleep = fTimeFilled / 2;
-		if( fTimeToSleep == 0 )
+		if (fTimeToSleep == 0)
 			fTimeToSleep = float(g_iReadBlockSizeFrames) / m_iSampleRate;
 
-		if( m_Event.WaitTimeoutSupported() )
-		{
+		if (m_Event.WaitTimeoutSupported()) {
 			RageTimer time;
 			time.Touch();
 			time += fTimeToSleep;
-			m_Event.Wait( &time );
+			m_Event.Wait(&time);
 		}
-		else
-		{
+		else {
 			m_Event.Unlock();
-			usleep( static_cast<int>((fTimeToSleep * 1000000) + 0.5) );
+			usleep(static_cast<int>((fTimeToSleep * 1000000) + 0.5));
 			m_Event.Lock();
 		}
 	}
 	m_Event.Unlock();
 }
 
-int RageSoundReader_ThreadedBuffer::FillFrames( int iFrames )
-{
+int RageSoundReader_ThreadedBuffer::FillFrames(int iFrames) {
 	int iFramesFilled = 0;
-	while( iFramesFilled < iFrames )
-	{
+	while (iFramesFilled < iFrames) {
 		int iRet = FillBlock();
 
-		if( iRet == 0 )
+		if (iRet == 0)
 			break;
 		// On error or end of file, stop buffering the sound.
-		if( iRet < 0 )
+		if (iRet < 0)
 			return iRet;
 
 		iFramesFilled += iRet;
@@ -262,13 +238,12 @@ int RageSoundReader_ThreadedBuffer::FillFrames( int iFrames )
 	return iFramesFilled;
 }
 
-int RageSoundReader_ThreadedBuffer::FillBlock()
-{
-	if( GetEmptyFrames() == 0 )
+int RageSoundReader_ThreadedBuffer::FillBlock() {
+	if (GetEmptyFrames() == 0)
 		return 0;
 
 	int iSamplesPerFrame = this->GetNumChannels();
-	ASSERT( g_iReadBlockSizeFrames * iSamplesPerFrame <= m_DataBuffer.num_writable() );
+	ASSERT(g_iReadBlockSizeFrames * iSamplesPerFrame <= m_DataBuffer.num_writable());
 
 	int iGotFrames;
 	int iNextSourceFrame = 0;
@@ -279,21 +254,23 @@ int RageSoundReader_ThreadedBuffer::FillBlock()
 	{
 		// We own m_pSource, even after unlocking, because m_bFilling is true.
 		unsigned iBufSize;
-		float *pBuf = m_DataBuffer.get_write_pointer( &iBufSize );
-		ASSERT( (iBufSize % iSamplesPerFrame) == 0 );
-		iGotFrames = m_pSource->RetriedRead( pBuf, std::min(g_iReadBlockSizeFrames, iBufSize / iSamplesPerFrame), &iNextSourceFrame, &fRate );
+		float *pBuf = m_DataBuffer.get_write_pointer(&iBufSize);
+		ASSERT((iBufSize % iSamplesPerFrame) == 0);
+		iGotFrames = m_pSource->RetriedRead(
+		   pBuf, std::min(g_iReadBlockSizeFrames, iBufSize / iSamplesPerFrame), &iNextSourceFrame, &fRate
+		);
 	}
 
 	m_Event.Lock();
 
-	if( iGotFrames > 0 )
-	{
+	if (iGotFrames > 0) {
 		// Add the data to the buffer.
-		m_DataBuffer.advance_write_pointer( iGotFrames * iSamplesPerFrame );
-		if( iNextSourceFrame != m_StreamPosition.back().iPositionOfFirstFrame + m_StreamPosition.back().iFramesBuffered ||
-			fRate != m_StreamPosition.back().fRate )
-		{
-			m_StreamPosition.push_back( Mapping() );
+		m_DataBuffer.advance_write_pointer(iGotFrames * iSamplesPerFrame);
+		if (
+		   iNextSourceFrame != m_StreamPosition.back().iPositionOfFirstFrame + m_StreamPosition.back().iFramesBuffered ||
+		   fRate != m_StreamPosition.back().fRate
+		) {
+			m_StreamPosition.push_back(Mapping());
 			m_StreamPosition.back().iPositionOfFirstFrame = iNextSourceFrame;
 			m_StreamPosition.back().fRate = fRate;
 		}
@@ -306,9 +283,8 @@ int RageSoundReader_ThreadedBuffer::FillBlock()
 	return iGotFrames;
 }
 
-int RageSoundReader_ThreadedBuffer::Read( float *pBuffer, int iFrames )
-{
-	if( !m_bEOF )
+int RageSoundReader_ThreadedBuffer::Read(float *pBuffer, int iFrames) {
+	if (!m_bEOF)
 		EnableBuffering();
 
 	m_Event.Lock();
@@ -319,8 +295,7 @@ int RageSoundReader_ThreadedBuffer::Read( float *pBuffer, int iFrames )
 		 * the rate or position has probably changed, so return. */
 		std::list<Mapping>::iterator it = m_StreamPosition.begin();
 		++it;
-		if( it != m_StreamPosition.end() && !m_StreamPosition.front().iFramesBuffered )
-		{
+		if (it != m_StreamPosition.end() && !m_StreamPosition.front().iFramesBuffered) {
 			++it;
 			m_StreamPosition.pop_front();
 			m_Event.Unlock();
@@ -329,17 +304,16 @@ int RageSoundReader_ThreadedBuffer::Read( float *pBuffer, int iFrames )
 	}
 
 	int iRet;
-	if( m_StreamPosition.front().iFramesBuffered )
-	{
+	if (m_StreamPosition.front().iFramesBuffered) {
 		Mapping &pos = m_StreamPosition.front();
-		int iFramesToRead = std::min( iFrames, pos.iFramesBuffered );
+		int iFramesToRead = std::min(iFrames, pos.iFramesBuffered);
 		int iSamplesPerFrame = this->GetNumChannels();
-		m_DataBuffer.read( pBuffer, iFramesToRead * iSamplesPerFrame );
+		m_DataBuffer.read(pBuffer, iFramesToRead * iSamplesPerFrame);
 		pos.iPositionOfFirstFrame += iFramesToRead;
 		pos.iFramesBuffered -= iFramesToRead;
 		iRet = iFramesToRead;
 	}
-	else if( m_bEOF )
+	else if (m_bEOF)
 		iRet = END_OF_FILE;
 	else
 		iRet = WOULD_BLOCK;

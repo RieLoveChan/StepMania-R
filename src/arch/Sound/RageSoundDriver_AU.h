@@ -8,27 +8,30 @@
 
 #include <AudioUnit/AudioUnit.h>
 
-class RageSoundDriver_AU: public RageSoundDriver
-{
-public:
+class RageSoundDriver_AU : public RageSoundDriver {
+ public:
 	RageSoundDriver_AU();
 	RString Init();
 	~RageSoundDriver_AU();
 	float GetPlayLatency() const;
-	int GetSampleRate() const { return m_iSampleRate; }
+	int GetSampleRate() const {
+		return m_iSampleRate;
+	}
 	std::int64_t GetPosition() const;
 
-protected:
+ protected:
 	void SetupDecodingThread();
 
-private:
-	static OSStatus Render( void *inRefCon,
-				AudioUnitRenderActionFlags *ioActionFlags,
-				const AudioTimeStamp *inTimeStamp,
-				UInt32 inBusNumber,
-				UInt32 inNumberFrames,
-				AudioBufferList *ioData );
-	static void NameHALThread( CFRunLoopObserverRef, CFRunLoopActivity activity, void *inRefCon );
+ private:
+	static OSStatus Render(
+	   void *inRefCon,
+	   AudioUnitRenderActionFlags *ioActionFlags,
+	   const AudioTimeStamp *inTimeStamp,
+	   UInt32 inBusNumber,
+	   UInt32 inNumberFrames,
+	   AudioBufferList *ioData
+	);
+	static void NameHALThread(CFRunLoopObserverRef, CFRunLoopActivity activity, void *inRefCon);
 
 	double m_TimeScale;
 	AudioUnit m_OutputUnit;
@@ -65,4 +68,3 @@ private:
  * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  * PERFORMANCE OF THIS SOFTWARE.
  */
-

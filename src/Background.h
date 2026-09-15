@@ -8,39 +8,39 @@
 
 #include <vector>
 
-
 class DancingCharacters;
 class Song;
 class BackgroundImpl;
 /** @brief the Background that is behind the notes while playing. */
-class Background : public ActorFrame
-{
-public:
+class Background : public ActorFrame {
+ public:
 	Background();
 	~Background();
 	void Init();
 
-	virtual void LoadFromSong( const Song *pSong );
+	virtual void LoadFromSong(const Song *pSong);
 	virtual void Unload();
 
 	void FadeToActualBrightness();
-	void SetBrightness( float fBrightness ); // overrides pref and Cover
+	void SetBrightness(float fBrightness); // overrides pref and Cover
 
 	// One more piece of the puzzle that puts the notefield board above the bg
 	// and under everything else.  m_disable_draw exists so that
 	// ScreenGameplay can draw the background manually, and still have it as a
 	// child. -Kyz
 	bool m_disable_draw;
-	virtual bool EarlyAbortDraw() const { return m_disable_draw; }
+	virtual bool EarlyAbortDraw() const {
+		return m_disable_draw;
+	}
 
 	/**
 	 * @brief Retrieve whatever dancing characters are in use.
 	 * @return the dancing characters. */
-	DancingCharacters* GetDancingCharacters();
+	DancingCharacters *GetDancingCharacters();
 
-	void GetLoadedBackgroundChanges( std::vector<BackgroundChange> **pBackgroundChangesOut );
+	void GetLoadedBackgroundChanges(std::vector<BackgroundChange> **pBackgroundChangesOut);
 
-protected:
+ protected:
 	BackgroundImpl *m_pImpl;
 };
 

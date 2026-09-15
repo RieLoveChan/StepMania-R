@@ -12,59 +12,78 @@ struct RageSurfaceFormat;
 struct RageSurface;
 
 /** @brief Utility functions for the RageSurfaces. */
-namespace RageSurfaceUtils
-{
-	std::uint32_t decodepixel( const std::uint8_t *p, int bpp );
-	void encodepixel( std::uint8_t *p, int bpp, std::uint32_t pixel );
+namespace RageSurfaceUtils {
+std::uint32_t decodepixel(const std::uint8_t *p, int bpp);
+void encodepixel(std::uint8_t *p, int bpp, std::uint32_t pixel);
 
-	void GetRawRGBAV( std::uint32_t pixel, const RageSurfaceFormat &fmt, std::uint8_t *v );
-	void GetRawRGBAV( const std::uint8_t *p, const RageSurfaceFormat &fmt, std::uint8_t *v );
-	void GetRGBAV( std::uint32_t pixel, const RageSurface *src, std::uint8_t *v );
-	void GetRGBAV( const std::uint8_t *p, const RageSurface *src, std::uint8_t *v );
+void GetRawRGBAV(std::uint32_t pixel, const RageSurfaceFormat &fmt, std::uint8_t *v);
+void GetRawRGBAV(const std::uint8_t *p, const RageSurfaceFormat &fmt, std::uint8_t *v);
+void GetRGBAV(std::uint32_t pixel, const RageSurface *src, std::uint8_t *v);
+void GetRGBAV(const std::uint8_t *p, const RageSurface *src, std::uint8_t *v);
 
-	std::uint32_t SetRawRGBAV( const RageSurfaceFormat *fmt, const std::uint8_t *v );
-	void SetRawRGBAV( std::uint8_t *p, const RageSurface *src, const std::uint8_t *v );
-	std::uint32_t SetRGBAV( const RageSurfaceFormat *fmt, const std::uint8_t *v );
-	void SetRGBAV( std::uint8_t *p, const RageSurface *src, const std::uint8_t *v );
+std::uint32_t SetRawRGBAV(const RageSurfaceFormat *fmt, const std::uint8_t *v);
+void SetRawRGBAV(std::uint8_t *p, const RageSurface *src, const std::uint8_t *v);
+std::uint32_t SetRGBAV(const RageSurfaceFormat *fmt, const std::uint8_t *v);
+void SetRGBAV(std::uint8_t *p, const RageSurface *src, const std::uint8_t *v);
 
-	/* Get the number of bits representing each color channel in fmt. */
-	void GetBitsPerChannel( const RageSurfaceFormat *fmt, std::uint32_t bits[4] );
+/* Get the number of bits representing each color channel in fmt. */
+void GetBitsPerChannel(const RageSurfaceFormat *fmt, std::uint32_t bits[4]);
 
-	void CopySurface( const RageSurface *src, RageSurface *dest );
-	bool ConvertSurface( const RageSurface *src, RageSurface *&dst,
-		int width, int height, int bpp, std::uint32_t R, std::uint32_t G, std::uint32_t B, std::uint32_t A );
-	void ConvertSurface( RageSurface *&image,
-		int width, int height, int bpp, std::uint32_t R, std::uint32_t G, std::uint32_t B, std::uint32_t A );
+void CopySurface(const RageSurface *src, RageSurface *dest);
+bool ConvertSurface(
+   const RageSurface *src,
+   RageSurface *&dst,
+   int width,
+   int height,
+   int bpp,
+   std::uint32_t R,
+   std::uint32_t G,
+   std::uint32_t B,
+   std::uint32_t A
+);
+void ConvertSurface(
+   RageSurface *&image,
+   int width,
+   int height,
+   int bpp,
+   std::uint32_t R,
+   std::uint32_t G,
+   std::uint32_t B,
+   std::uint32_t A
+);
 
-	void FixHiddenAlpha( RageSurface *img );
+void FixHiddenAlpha(RageSurface *img);
 
-	int FindSurfaceTraits( const RageSurface *img );
+int FindSurfaceTraits(const RageSurface *img);
 
-	/* The surface contains no transparent pixels and/or never uses its color
-	 * key, so it doesn't need any alpha bits at all. */
-	enum { TRAIT_NO_TRANSPARENCY = 0x0001 }; /* 0alpha */
+/* The surface contains no transparent pixels and/or never uses its color
+ * key, so it doesn't need any alpha bits at all. */
+enum {
+	TRAIT_NO_TRANSPARENCY = 0x0001
+}; /* 0alpha */
 
-	/* The surface contains only transparent values of 0 or 1; no translucency.
-	 * It only needs one bit of alpha. */
-	enum { TRAIT_BOOL_TRANSPARENCY = 0x0002 }; /* 1alpha */
+/* The surface contains only transparent values of 0 or 1; no translucency.
+ * It only needs one bit of alpha. */
+enum {
+	TRAIT_BOOL_TRANSPARENCY = 0x0002
+}; /* 1alpha */
 
-	void BlitTransform( const RageSurface *src, RageSurface *dst,
-					const float fCoords[8] /* TL, BR, BL, TR */ );
+void BlitTransform(const RageSurface *src, RageSurface *dst, const float fCoords[8] /* TL, BR, BL, TR */);
 
-	void Blit( const RageSurface *src, RageSurface *dst, int width = -1, int height = -1 );
-	void CorrectBorderPixels( RageSurface *img, int width, int height );
+void Blit(const RageSurface *src, RageSurface *dst, int width = -1, int height = -1);
+void CorrectBorderPixels(RageSurface *img, int width, int height);
 
-	bool SaveSurface( const RageSurface *img, std::string file );
-	RageSurface *LoadSurface( std::string file );
+bool SaveSurface(const RageSurface *img, std::string file);
+RageSurface *LoadSurface(std::string file);
 
-	/* Quickly palettize to an gray/alpha texture. */
-	RageSurface *PalettizeToGrayscale( const RageSurface *src_surf, unsigned int GrayBits, unsigned int AlphaBits );
+/* Quickly palettize to an gray/alpha texture. */
+RageSurface *PalettizeToGrayscale(const RageSurface *src_surf, unsigned int GrayBits, unsigned int AlphaBits);
 
-	RageSurface *MakeDummySurface( int height, int width );
+RageSurface *MakeDummySurface(int height, int width);
 
-	void ApplyHotPinkColorKey( RageSurface *&img );
-	void FlipVertically( RageSurface *img );
-};
+void ApplyHotPinkColorKey(RageSurface *&img);
+void FlipVertically(RageSurface *img);
+}; // namespace RageSurfaceUtils
 
 #endif
 

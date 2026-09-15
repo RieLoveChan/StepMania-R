@@ -11,26 +11,25 @@ extern "C" {
 #include <usb.h>
 }
 
-REGISTER_LIGHTS_DRIVER_CLASS( LinuxPacDrive );
+REGISTER_LIGHTS_DRIVER_CLASS(LinuxPacDrive);
 
-#define USB_DIR_OUT	0x00
-#define USB_DIR_IN	0x80
+#define USB_DIR_OUT 0x00
+#define USB_DIR_IN 0x80
 
-#define USB_TYPE_STANDARD	(0x00 << 5)
-#define USB_TYPE_CLASS		(0x01 << 5)
-#define USB_TYPE_VENDOR		(0x02 << 5)
-#define USB_TYPE_RESERVED	(0x03 << 5)
+#define USB_TYPE_STANDARD (0x00 << 5)
+#define USB_TYPE_CLASS (0x01 << 5)
+#define USB_TYPE_VENDOR (0x02 << 5)
+#define USB_TYPE_RESERVED (0x03 << 5)
 
-#define USB_RECIP_DEVICE	0x00
-#define USB_RECIP_INTERFACE	0x01
-#define USB_RECIP_ENDPOINT	0x02
-#define USB_RECIP_OTHER		0x03
+#define USB_RECIP_DEVICE 0x00
+#define USB_RECIP_INTERFACE 0x01
+#define USB_RECIP_ENDPOINT 0x02
+#define USB_RECIP_OTHER 0x03
 
-#define HID_GET_REPORT	0x01
-#define HID_SET_REPORT	0x09
-#define HID_IFACE_IN	256
-#define HID_IFACE_OUT	512
-
+#define HID_GET_REPORT 0x01
+#define HID_SET_REPORT 0x09
+#define HID_IFACE_IN 256
+#define HID_IFACE_OUT 512
 
 /* PacDrives have PIDs 1500 - 1507, but we'll handle that later. */
 const int PACDRIVE_VENDOR_ID = 0xD209;
@@ -40,19 +39,21 @@ const int PACDRIVE_PRODUCT_ID = 0x1500;
 const unsigned PACDRIVE_TIMEOUT = 10000;
 
 /* static struct to ensure the USB subsystem is initialized on start */
-struct USBInit
-{
-	USBInit() { usb_init(); usb_find_busses(); usb_find_devices(); }
+struct USBInit {
+	USBInit() {
+		usb_init();
+		usb_find_busses();
+		usb_find_devices();
+	}
 };
 
 static struct USBInit g_USBInit;
 
-//Adds new preference to allow for different light wiring setups
+// Adds new preference to allow for different light wiring setups
 static Preference<RString> g_sPacDriveLightOrdering("PacDriveLightOrdering", "openitg");
 int iLightingOrder = 0;
 
-LightsDriver_LinuxPacDrive::LightsDriver_LinuxPacDrive()
-{
+LightsDriver_LinuxPacDrive::LightsDriver_LinuxPacDrive() {
 	Device = NULL;
 	DeviceHandle = NULL;
 
@@ -60,7 +61,7 @@ LightsDriver_LinuxPacDrive::LightsDriver_LinuxPacDrive()
 	OpenDevice();
 
 	// clear all lights
-	WriteDevice( 0 );
+	WriteDevice(0);
 
 	RString lightOrder = g_sPacDriveLightOrdering.Get();
 	if (lightOrder.CompareNoCase("lumenar") == 0 || lightOrder.CompareNoCase("openitg") == 0) {
@@ -68,22 +69,21 @@ LightsDriver_LinuxPacDrive::LightsDriver_LinuxPacDrive()
 	}
 }
 
-LightsDriver_LinuxPacDrive::~LightsDriver_LinuxPacDrive()
-{
+LightsDriver_LinuxPacDrive::~LightsDriver_LinuxPacDrive() {
 	// clear all lights and close the connection
-	WriteDevice( 0 );
+	WriteDevice(0);
 	CloseDevice();
 }
 
-void LightsDriver_LinuxPacDrive::Set( const LightsState *ls )
-{
-	if ( !DeviceHandle ) return;
+void LightsDriver_LinuxPacDrive::Set(const LightsState *ls) {
+	if (!DeviceHandle)
+		return;
 
 	std::uint16_t outb = 0;
 
 	switch (iLightingOrder) {
 	case 1:
-		//Sets the cabinet light values to follow LumenAR/OpenITG wiring standards
+		// Sets the cabinet light values to follow LumenAR/OpenITG wiring standards
 
 		/*
 		 * OpenITG PacDrive Order:
@@ -104,174 +104,207 @@ void LightsDriver_LinuxPacDrive::Set( const LightsState *ls )
 		 * 12,13,14,15: P2 L R U D
 		 */
 
-		if (ls->m_bCabinetLights[LIGHT_MARQUEE_UP_LEFT]) outb |= BIT(0);
-		if (ls->m_bCabinetLights[LIGHT_MARQUEE_UP_RIGHT]) outb |= BIT(1);
-		if (ls->m_bCabinetLights[LIGHT_MARQUEE_LR_LEFT]) outb |= BIT(2);
-		if (ls->m_bCabinetLights[LIGHT_MARQUEE_LR_RIGHT]) outb |= BIT(3);
+		if (ls->m_bCabinetLights[LIGHT_MARQUEE_UP_LEFT])
+			outb |= BIT(0);
+		if (ls->m_bCabinetLights[LIGHT_MARQUEE_UP_RIGHT])
+			outb |= BIT(1);
+		if (ls->m_bCabinetLights[LIGHT_MARQUEE_LR_LEFT])
+			outb |= BIT(2);
+		if (ls->m_bCabinetLights[LIGHT_MARQUEE_LR_RIGHT])
+			outb |= BIT(3);
 
-		if (ls->m_bGameButtonLights[GameController_1][GAME_BUTTON_START]) outb |= BIT(4);
-		if (ls->m_bGameButtonLights[GameController_2][GAME_BUTTON_START]) outb |= BIT(5);
+		if (ls->m_bGameButtonLights[GameController_1][GAME_BUTTON_START])
+			outb |= BIT(4);
+		if (ls->m_bGameButtonLights[GameController_2][GAME_BUTTON_START])
+			outb |= BIT(5);
 
-		//Most PacDrive/Cabinet setups only have *one* bass light, so mux them together here.
-		if (ls->m_bCabinetLights[LIGHT_BASS_LEFT] || ls->m_bCabinetLights[LIGHT_BASS_RIGHT]) outb |= BIT(6);
-		if (ls->m_bCabinetLights[LIGHT_BASS_LEFT] || ls->m_bCabinetLights[LIGHT_BASS_RIGHT]) outb |= BIT(7);
+		// Most PacDrive/Cabinet setups only have *one* bass light, so mux them together here.
+		if (ls->m_bCabinetLights[LIGHT_BASS_LEFT] || ls->m_bCabinetLights[LIGHT_BASS_RIGHT])
+			outb |= BIT(6);
+		if (ls->m_bCabinetLights[LIGHT_BASS_LEFT] || ls->m_bCabinetLights[LIGHT_BASS_RIGHT])
+			outb |= BIT(7);
 
-		if (ls->m_bGameButtonLights[GameController_1][DANCE_BUTTON_LEFT]) outb |= BIT(8);
-		if (ls->m_bGameButtonLights[GameController_1][DANCE_BUTTON_RIGHT]) outb |= BIT(9);
-		if (ls->m_bGameButtonLights[GameController_1][DANCE_BUTTON_UP]) outb |= BIT(10);
-		if (ls->m_bGameButtonLights[GameController_1][DANCE_BUTTON_DOWN]) outb |= BIT(11);
+		if (ls->m_bGameButtonLights[GameController_1][DANCE_BUTTON_LEFT])
+			outb |= BIT(8);
+		if (ls->m_bGameButtonLights[GameController_1][DANCE_BUTTON_RIGHT])
+			outb |= BIT(9);
+		if (ls->m_bGameButtonLights[GameController_1][DANCE_BUTTON_UP])
+			outb |= BIT(10);
+		if (ls->m_bGameButtonLights[GameController_1][DANCE_BUTTON_DOWN])
+			outb |= BIT(11);
 
-		if (ls->m_bGameButtonLights[GameController_2][DANCE_BUTTON_LEFT]) outb |= BIT(12);
-		if (ls->m_bGameButtonLights[GameController_2][DANCE_BUTTON_RIGHT]) outb |= BIT(13);
-		if (ls->m_bGameButtonLights[GameController_2][DANCE_BUTTON_UP]) outb |= BIT(14);
-		if (ls->m_bGameButtonLights[GameController_2][DANCE_BUTTON_DOWN]) outb |= BIT(15);
+		if (ls->m_bGameButtonLights[GameController_2][DANCE_BUTTON_LEFT])
+			outb |= BIT(12);
+		if (ls->m_bGameButtonLights[GameController_2][DANCE_BUTTON_RIGHT])
+			outb |= BIT(13);
+		if (ls->m_bGameButtonLights[GameController_2][DANCE_BUTTON_UP])
+			outb |= BIT(14);
+		if (ls->m_bGameButtonLights[GameController_2][DANCE_BUTTON_DOWN])
+			outb |= BIT(15);
 
 		break;
 
 	case 0:
 	default:
-		//If all else fails, falls back to original order
-		//reference page 7
-		//http://www.peeweepower.com/stepmania/sm509pacdriveinfo.pdf
+		// If all else fails, falls back to original order
+		// reference page 7
+		// http://www.peeweepower.com/stepmania/sm509pacdriveinfo.pdf
 
-		if (ls->m_bCabinetLights[LIGHT_MARQUEE_UP_LEFT]) outb |= BIT(0);
-		if (ls->m_bCabinetLights[LIGHT_MARQUEE_UP_RIGHT]) outb |= BIT(1);
-		if (ls->m_bCabinetLights[LIGHT_MARQUEE_LR_LEFT]) outb |= BIT(2);
-		if (ls->m_bCabinetLights[LIGHT_MARQUEE_LR_RIGHT]) outb |= BIT(3);
+		if (ls->m_bCabinetLights[LIGHT_MARQUEE_UP_LEFT])
+			outb |= BIT(0);
+		if (ls->m_bCabinetLights[LIGHT_MARQUEE_UP_RIGHT])
+			outb |= BIT(1);
+		if (ls->m_bCabinetLights[LIGHT_MARQUEE_LR_LEFT])
+			outb |= BIT(2);
+		if (ls->m_bCabinetLights[LIGHT_MARQUEE_LR_RIGHT])
+			outb |= BIT(3);
 
-		if (ls->m_bCabinetLights[LIGHT_BASS_LEFT] || ls->m_bCabinetLights[LIGHT_BASS_RIGHT]) outb |= BIT(4);
+		if (ls->m_bCabinetLights[LIGHT_BASS_LEFT] || ls->m_bCabinetLights[LIGHT_BASS_RIGHT])
+			outb |= BIT(4);
 
-		if (ls->m_bGameButtonLights[GameController_1][DANCE_BUTTON_LEFT]) outb |= BIT(5);
-		if (ls->m_bGameButtonLights[GameController_1][DANCE_BUTTON_RIGHT]) outb |= BIT(6);
-		if (ls->m_bGameButtonLights[GameController_1][DANCE_BUTTON_UP]) outb |= BIT(7);
-		if (ls->m_bGameButtonLights[GameController_1][DANCE_BUTTON_DOWN]) outb |= BIT(8);
-		if (ls->m_bGameButtonLights[GameController_1][GAME_BUTTON_START]) outb |= BIT(9);
+		if (ls->m_bGameButtonLights[GameController_1][DANCE_BUTTON_LEFT])
+			outb |= BIT(5);
+		if (ls->m_bGameButtonLights[GameController_1][DANCE_BUTTON_RIGHT])
+			outb |= BIT(6);
+		if (ls->m_bGameButtonLights[GameController_1][DANCE_BUTTON_UP])
+			outb |= BIT(7);
+		if (ls->m_bGameButtonLights[GameController_1][DANCE_BUTTON_DOWN])
+			outb |= BIT(8);
+		if (ls->m_bGameButtonLights[GameController_1][GAME_BUTTON_START])
+			outb |= BIT(9);
 
-		if (ls->m_bGameButtonLights[GameController_2][DANCE_BUTTON_LEFT]) outb |= BIT(10);
-		if (ls->m_bGameButtonLights[GameController_2][DANCE_BUTTON_RIGHT]) outb |= BIT(11);
-		if (ls->m_bGameButtonLights[GameController_2][DANCE_BUTTON_UP]) outb |= BIT(12);
-		if (ls->m_bGameButtonLights[GameController_2][DANCE_BUTTON_DOWN]) outb |= BIT(13);
-		if (ls->m_bGameButtonLights[GameController_2][GAME_BUTTON_START]) outb |= BIT(14);
-		//Bit index 15 is unused.
+		if (ls->m_bGameButtonLights[GameController_2][DANCE_BUTTON_LEFT])
+			outb |= BIT(10);
+		if (ls->m_bGameButtonLights[GameController_2][DANCE_BUTTON_RIGHT])
+			outb |= BIT(11);
+		if (ls->m_bGameButtonLights[GameController_2][DANCE_BUTTON_UP])
+			outb |= BIT(12);
+		if (ls->m_bGameButtonLights[GameController_2][DANCE_BUTTON_DOWN])
+			outb |= BIT(13);
+		if (ls->m_bGameButtonLights[GameController_2][GAME_BUTTON_START])
+			outb |= BIT(14);
+		// Bit index 15 is unused.
 
 		break;
-}
-
+	}
 
 	WriteDevice(outb);
 }
 
-void LightsDriver_LinuxPacDrive::FindDevice()
-{
-	if ( usb_find_busses() < 0 )
-	{
-		LOG->Warn( "libusb: usb_find_busses: %s", usb_strerror() );
+void LightsDriver_LinuxPacDrive::FindDevice() {
+	if (usb_find_busses() < 0) {
+		LOG->Warn("libusb: usb_find_busses: %s", usb_strerror());
 		return;
 	}
 
-	if ( usb_find_devices() < 0 )
-	{
-		LOG->Warn( "libusb: usb_find_devices: %s", usb_strerror() );
+	if (usb_find_devices() < 0) {
+		LOG->Warn("libusb: usb_find_devices: %s", usb_strerror());
 		return;
 	}
 
-	for ( usb_bus *bus = usb_get_busses(); bus; bus = bus->next )
-		for ( struct usb_device *dev = bus->devices; dev; dev = dev->next )
-			if ( PACDRIVE_VENDOR_ID == dev->descriptor.idVendor &&
-				 PACDRIVE_PRODUCT_ID <= dev->descriptor.idProduct &&
-				 PACDRIVE_PRODUCT_ID + 8 > dev->descriptor.idProduct ) {
+	for (usb_bus *bus = usb_get_busses(); bus; bus = bus->next)
+		for (struct usb_device *dev = bus->devices; dev; dev = dev->next)
+			if (
+			   PACDRIVE_VENDOR_ID == dev->descriptor.idVendor && PACDRIVE_PRODUCT_ID <= dev->descriptor.idProduct &&
+			   PACDRIVE_PRODUCT_ID + 8 > dev->descriptor.idProduct
+			) {
 				Device = dev;
-				LOG->Info( "PacDrive device was found vid: 0x%04x pid: 0x%04x", dev->descriptor.idVendor, dev->descriptor.idProduct );
+				LOG->Info(
+				   "PacDrive device was found vid: 0x%04x pid: 0x%04x", dev->descriptor.idVendor, dev->descriptor.idProduct
+				);
 				return;
 			}
 
-	LOG->Warn( "PacDrive was not found!" );
+	LOG->Warn("PacDrive was not found!");
 	Device = NULL;
 }
 
-void LightsDriver_LinuxPacDrive::OpenDevice()
-{
+void LightsDriver_LinuxPacDrive::OpenDevice() {
 	CloseDevice();
 
-	if ( !Device ) return;
+	if (!Device)
+		return;
 
-	DeviceHandle = usb_open( Device );
+	DeviceHandle = usb_open(Device);
 
-	if ( DeviceHandle == NULL ) {
-		LOG->Warn( "libusb: usb_open: %s", usb_strerror() );
+	if (DeviceHandle == NULL) {
+		LOG->Warn("libusb: usb_open: %s", usb_strerror());
 		return;
 	}
 
 	// The device may be claimed by a kernel driver. Attempt to reclaim it.
-	for ( unsigned iface = 0; iface < Device->config->bNumInterfaces; iface++ )
-	{
-		int result = usb_detach_kernel_driver_np( DeviceHandle, iface );
+	for (unsigned iface = 0; iface < Device->config->bNumInterfaces; iface++) {
+		int result = usb_detach_kernel_driver_np(DeviceHandle, iface);
 
 		// device doesn't understand message, no attached driver, no error -- ignore these
-		if( result == -EINVAL || result == -ENODATA || result == 0 )
+		if (result == -EINVAL || result == -ENODATA || result == 0)
 			continue;
 
 		/* we have an error we can't handle; try and get more info. */
-		LOG->Warn( "usb_detach_kernel_driver_np: %s\n", usb_strerror() );
+		LOG->Warn("usb_detach_kernel_driver_np: %s\n", usb_strerror());
 
 		// on EPERM, a driver exists and we can't detach - report which one
-		if ( result == -EPERM )
-		{
+		if (result == -EPERM) {
 			char szDriverName[16];
-			strcpy( szDriverName, "(unknown)" );
+			strcpy(szDriverName, "(unknown)");
 			usb_get_driver_np(DeviceHandle, iface, szDriverName, 16);
 
-			LOG->Warn( "(cannot detach kernel driver \"%s\")", szDriverName );
+			LOG->Warn("(cannot detach kernel driver \"%s\")", szDriverName);
 		}
 
 		CloseDevice();
 		return;
 	}
 
-	if ( usb_set_configuration( DeviceHandle, Device->config->bConfigurationValue) ) {
-		LOG->Warn( "libusb: usb_set_configuration: %s", usb_strerror() );
+	if (usb_set_configuration(DeviceHandle, Device->config->bConfigurationValue)) {
+		LOG->Warn("libusb: usb_set_configuration: %s", usb_strerror());
 		CloseDevice();
 		return;
 	}
 
 	// attempt to claim all interfaces for this device
-	for ( unsigned i = 0; i < Device->config->bNumInterfaces; i++ )
-	{
-		if ( usb_claim_interface( DeviceHandle, i ) ) {
-			LOG->Warn( "Libusb: usb_claim_interface(%i): %s", i, usb_strerror() );
+	for (unsigned i = 0; i < Device->config->bNumInterfaces; i++) {
+		if (usb_claim_interface(DeviceHandle, i)) {
+			LOG->Warn("Libusb: usb_claim_interface(%i): %s", i, usb_strerror());
 			CloseDevice();
 			return;
 		}
 	}
 }
 
-void LightsDriver_LinuxPacDrive::WriteDevice(std::uint16_t out)
-{
-	if ( !DeviceHandle ) return;
+void LightsDriver_LinuxPacDrive::WriteDevice(std::uint16_t out) {
+	if (!DeviceHandle)
+		return;
 
 	// output is within the first 16 bits - accept a
 	// 16-bit arg and cast it, for simplicity's sake.
 	std::uint32_t data = (out << 16);
 	int expected = sizeof(data);
 
-	int result = usb_control_msg( DeviceHandle, USB_DIR_OUT | USB_TYPE_CLASS | USB_RECIP_INTERFACE,
-							  HID_SET_REPORT, HID_IFACE_OUT, 0, (char *)&data, expected,
-							  PACDRIVE_TIMEOUT );
+	int result = usb_control_msg(
+	   DeviceHandle,
+	   USB_DIR_OUT | USB_TYPE_CLASS | USB_RECIP_INTERFACE,
+	   HID_SET_REPORT,
+	   HID_IFACE_OUT,
+	   0,
+	   (char *)&data,
+	   expected,
+	   PACDRIVE_TIMEOUT
+	);
 
-	if( result != expected ) {
-		LOG->Warn( "PacDrive writing failed: %i (%s)\n", result, usb_strerror() );
+	if (result != expected) {
+		LOG->Warn("PacDrive writing failed: %i (%s)\n", result, usb_strerror());
 		CloseDevice();
 	}
 }
 
-void LightsDriver_LinuxPacDrive::CloseDevice()
-{
-	if ( !DeviceHandle )
+void LightsDriver_LinuxPacDrive::CloseDevice() {
+	if (!DeviceHandle)
 		return;
 
-	usb_set_altinterface( DeviceHandle, 0 );
-	usb_reset( DeviceHandle );
-	usb_close( DeviceHandle );
+	usb_set_altinterface(DeviceHandle, 0);
+	usb_reset(DeviceHandle);
+	usb_close(DeviceHandle);
 	DeviceHandle = NULL;
 }
 

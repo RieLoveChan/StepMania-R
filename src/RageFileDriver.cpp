@@ -5,38 +5,33 @@
 
 #include <vector>
 
-
-RageFileDriver::~RageFileDriver()
-{
+RageFileDriver::~RageFileDriver() {
 	delete FDB;
 }
 
-int RageFileDriver::GetPathValue( const RString &sPath )
-{
+int RageFileDriver::GetPathValue(const RString &sPath) {
 	std::vector<RString> asParts;
-	split( sPath, "/", asParts, true );
+	split(sPath, "/", asParts, true);
 
 	RString sPartialPath;
 
-	for( unsigned i = 0; i < asParts.size(); ++i )
-	{
+	for (unsigned i = 0; i < asParts.size(); ++i) {
 		sPartialPath += asParts[i];
-		if( i+1 < asParts.size() )
+		if (i + 1 < asParts.size())
 			sPartialPath += "/";
 
-		const RageFileManager::FileType Type = GetFileType( sPartialPath );
-		switch( Type )
-		{
+		const RageFileManager::FileType Type = GetFileType(sPartialPath);
+		switch (Type) {
 		case RageFileManager::TYPE_NONE:
-			return static_cast<int>(asParts.size()-i);
+			return static_cast<int>(asParts.size() - i);
 
 		/* If this is the last part (the whole path), it needs to be a file; otherwise a directory. */
 		case RageFileManager::TYPE_FILE:
-			if( i != asParts.size()-1 )
+			if (i != asParts.size() - 1)
 				return -1;
 			break;
 		case RageFileManager::TYPE_DIR:
-			if( i == asParts.size()-1 )
+			if (i == asParts.size() - 1)
 				return -1;
 			break;
 		}
@@ -45,51 +40,44 @@ int RageFileDriver::GetPathValue( const RString &sPath )
 	return 0;
 }
 
-void RageFileDriver::GetDirListing( const RString &sPath, std::vector<RString> &asAddTo, bool bOnlyDirs, bool bReturnPathToo )
-{
-	FDB->GetDirListing( sPath, asAddTo, bOnlyDirs, bReturnPathToo );
+void RageFileDriver::GetDirListing(
+   const RString &sPath, std::vector<RString> &asAddTo, bool bOnlyDirs, bool bReturnPathToo
+) {
+	FDB->GetDirListing(sPath, asAddTo, bOnlyDirs, bReturnPathToo);
 }
 
-RageFileManager::FileType RageFileDriver::GetFileType( const RString &sPath )
-{
-	return FDB->GetFileType( sPath );
+RageFileManager::FileType RageFileDriver::GetFileType(const RString &sPath) {
+	return FDB->GetFileType(sPath);
 }
 
-int RageFileDriver::GetFileSizeInBytes( const RString &sPath )
-{
-	return FDB->GetFileSize( sPath );
+int RageFileDriver::GetFileSizeInBytes(const RString &sPath) {
+	return FDB->GetFileSize(sPath);
 }
 
-int RageFileDriver::GetFileHash( const RString &sPath )
-{
-	return FDB->GetFileHash( sPath );
+int RageFileDriver::GetFileHash(const RString &sPath) {
+	return FDB->GetFileHash(sPath);
 }
 
-void RageFileDriver::FlushDirCache( const RString &sPath )
-{
-	FDB->FlushDirCache( sPath );
+void RageFileDriver::FlushDirCache(const RString &sPath) {
+	FDB->FlushDirCache(sPath);
 }
-
 
 const struct FileDriverEntry *g_pFileDriverList = nullptr;
 
-FileDriverEntry::FileDriverEntry( const RString &sType )
-{
+FileDriverEntry::FileDriverEntry(const RString &sType) {
 	m_pLink = g_pFileDriverList;
 	g_pFileDriverList = this;
 	m_sType = sType;
 }
 
-FileDriverEntry::~FileDriverEntry()
-{
+FileDriverEntry::~FileDriverEntry() {
 	g_pFileDriverList = nullptr; /* invalidate */
 }
 
-RageFileDriver *MakeFileDriver( const RString &sType, const RString &sRoot )
-{
-	for( const FileDriverEntry *p = g_pFileDriverList; p; p = p->m_pLink )
-		if( !p->m_sType.CompareNoCase(sType) )
-			return p->Create( sRoot );
+RageFileDriver *MakeFileDriver(const RString &sType, const RString &sRoot) {
+	for (const FileDriverEntry *p = g_pFileDriverList; p; p = p->m_pLink)
+		if (!p->m_sType.CompareNoCase(sType))
+			return p->Create(sRoot);
 	return nullptr;
 }
 
@@ -117,4 +105,3 @@ RageFileDriver *MakeFileDriver( const RString &sType, const RString &sRoot )
  * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  * PERFORMANCE OF THIS SOFTWARE.
  */
-

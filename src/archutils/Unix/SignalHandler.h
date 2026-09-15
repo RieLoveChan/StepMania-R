@@ -5,22 +5,19 @@
 #include <vector>
 #include <ucontext.h>
 
-
-class SaveSignals
-{
+class SaveSignals {
 	std::vector<struct sigaction> old_handlers;
 
-public:
-	SaveSignals(); /* save signals */
+ public:
+	SaveSignals();  /* save signals */
 	~SaveSignals(); /* restore signals */
 };
 
-namespace SignalHandler
-{
-	typedef bool (*handler)( int, siginfo_t *si, const ucontext_t *uc );
+namespace SignalHandler {
+typedef bool (*handler)(int, siginfo_t *si, const ucontext_t *uc);
 
-	void OnClose( handler );
-};
+void OnClose(handler);
+}; // namespace SignalHandler
 
 #endif
 
@@ -48,4 +45,3 @@ namespace SignalHandler
  * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  * PERFORMANCE OF THIS SOFTWARE.
  */
-

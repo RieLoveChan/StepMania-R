@@ -22,54 +22,52 @@ struct DisplayMode {
 	 * configuration
 	 */
 
-	bool operator<( const DisplayMode &other ) const
-	{
+	bool operator<(const DisplayMode &other) const {
 /** @brief A quick way to compare the two DisplayResolutions. */
-#define COMPARE(x) if( x != other.x ) return x < other.x;
-		COMPARE( width );
-		COMPARE( height );
-		COMPARE( refreshRate );
+#define COMPARE(x)                                                                                                     \
+	if (x != other.x)                                                                                                   \
+		return x < other.x;
+		COMPARE(width);
+		COMPARE(height);
+		COMPARE(refreshRate);
 #undef COMPARE
 		return false;
 	}
 
 	// Lua
-	void PushSelf( lua_State *L );
+	void PushSelf(lua_State *L);
 };
 
 /** @brief The dimensions of the program. */
-class DisplaySpec
-{
-public:
+class DisplaySpec {
+ public:
 	/*
 	 * Construct a specification for the display with the given ID, which supports the given modes,
 	 * and is currently using the specified mode with the specified logical screen bounds
 	 */
-	DisplaySpec(const std::string &id,
-				const std::string &name,
-				const std::set<DisplayMode> &modes,
-				const DisplayMode &curMode,
-				const RectI &curBounds,
-	            const bool isVirtual=false):
-			m_sId( id ), m_sName( name ),
-			m_sModes( modes ), m_bCurModeActive( true ), m_CurMode( curMode ),
-			m_rectBounds( curBounds ), m_bIsVirtual( isVirtual )
-	{
-		if ( m_sModes.find( curMode ) == m_sModes.end() )
-		{
+	DisplaySpec(
+	   const std::string &id,
+	   const std::string &name,
+	   const std::set<DisplayMode> &modes,
+	   const DisplayMode &curMode,
+	   const RectI &curBounds,
+	   const bool isVirtual = false
+	)
+	    : m_sId(id), m_sName(name), m_sModes(modes), m_bCurModeActive(true), m_CurMode(curMode), m_rectBounds(curBounds),
+	      m_bIsVirtual(isVirtual) {
+		if (m_sModes.find(curMode) == m_sModes.end()) {
 			// This is an error, make a failing assertion with a descriptive error message
 			std::stringstream msgStream;
-			msgStream << "DisplaySpec current mode (" << curMode.width << "x" <<
-				curMode.height << "@" << curMode.refreshRate << ") not in given list of supported modes: ";
-			for ( auto &m : modes )
-			{
+			msgStream << "DisplaySpec current mode (" << curMode.width << "x" << curMode.height << "@"
+			          << curMode.refreshRate << ") not in given list of supported modes: ";
+			for (auto &m : modes) {
 				msgStream << m.width << "x" << m.height << "@" << m.refreshRate << ", ";
 			}
 			auto msg = msgStream.str();
 			// Drop the trailing ", "
-			msg.resize( msg.size() - 2 );
+			msg.resize(msg.size() - 2);
 
-			ASSERT_M( false, msg.c_str() );
+			ASSERT_M(false, msg.c_str());
 		}
 	}
 
@@ -77,40 +75,31 @@ public:
 	 * Construct a specification for the display with the given ID, which supports the given modes,
 	 * and is currently disabled (has no active mode)
 	 */
-	DisplaySpec(const std::string id,
-				const std::string name,
-				const std::set<DisplayMode> modes,
-				const bool isVirtual=false):
-		m_sId( id ), m_sName( name ),
-		m_sModes( modes ), m_bCurModeActive( false ), m_CurMode( { } ),
-		m_bIsVirtual( isVirtual )
-	{
-
+	DisplaySpec(
+	   const std::string id, const std::string name, const std::set<DisplayMode> modes, const bool isVirtual = false
+	)
+	    : m_sId(id), m_sName(name), m_sModes(modes), m_bCurModeActive(false), m_CurMode({}), m_bIsVirtual(isVirtual) {
 	}
 
 	// Create a specification for a display supporting a single (and currently active) mode
-	DisplaySpec(std::string id, std::string name, DisplayMode mode) : m_sId( id ), m_sName( name ),
-		m_bCurModeActive( true ), m_CurMode( mode ), m_bIsVirtual( false )
-	{
-		m_sModes.insert( mode );
-		m_rectBounds = RectI( 0, 0, mode.width, mode.height );
+	DisplaySpec(std::string id, std::string name, DisplayMode mode)
+	    : m_sId(id), m_sName(name), m_bCurModeActive(true), m_CurMode(mode), m_bIsVirtual(false) {
+		m_sModes.insert(mode);
+		m_rectBounds = RectI(0, 0, mode.width, mode.height);
 	}
 
-	DisplaySpec( const DisplaySpec &other ) = default;
-	DisplaySpec& operator=(const DisplaySpec& other) = default;
+	DisplaySpec(const DisplaySpec &other) = default;
+	DisplaySpec &operator=(const DisplaySpec &other) = default;
 
-	std::string name() const
-	{
+	std::string name() const {
 		return m_sName;
 	}
 
-	std::string id() const
-	{
+	std::string id() const {
 		return m_sId;
 	}
 
-	const std::set<DisplayMode> &supportedModes() const
-	{
+	const std::set<DisplayMode> &supportedModes() const {
 		return m_sModes;
 	}
 
@@ -122,18 +111,15 @@ public:
 	 * an output can be enabled/disabled by an application by connecting/disconnecting
 	 * a crtc
 	 */
-	const DisplayMode *currentMode() const
-	{
+	const DisplayMode *currentMode() const {
 		return m_bCurModeActive ? &m_CurMode : nullptr;
 	}
 
-	const RectI &currentBounds() const
-	{
+	const RectI &currentBounds() const {
 		return m_rectBounds;
 	}
 
-	bool isVirtual() const
-	{
+	bool isVirtual() const {
 		return m_bIsVirtual;
 	}
 
@@ -145,14 +131,14 @@ public:
 	 *
 	 * @param other the other DisplaySpec to check.
 	 * @return true if this DisplaySpec is less than the other, or false otherwise. */
-	bool operator<( const DisplaySpec &other ) const
-	{
+	bool operator<(const DisplaySpec &other) const {
 		return m_sId < other.id();
 	}
 
 	// Lua
-	void PushSelf( lua_State *L );
-private:
+	void PushSelf(lua_State *L);
+
+ private:
 	// Unique identifier of the display
 	std::string m_sId;
 	// "Human-readable" display name
@@ -170,9 +156,8 @@ private:
 };
 /** @brief The collection of DisplaySpec available within the program. */
 typedef std::set<DisplaySpec> DisplaySpecs;
-//Lua
+// Lua
 DisplaySpecs *pushDisplaySpecs(lua_State *L, const DisplaySpecs &specs);
-
 
 #endif
 

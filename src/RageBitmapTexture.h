@@ -7,20 +7,23 @@
 
 #include <cstddef>
 
-class RageBitmapTexture : public RageTexture
-{
-public:
-	RageBitmapTexture( RageTextureID name );
+class RageBitmapTexture : public RageTexture {
+ public:
+	RageBitmapTexture(RageTextureID name);
 	~RageBitmapTexture() override;
 	/* only called by RageTextureManager::InvalidateTextures */
-	void Invalidate() override { m_uTexHandle = 0; /* don't Destroy() */}
+	void Invalidate() override {
+		m_uTexHandle = 0; /* don't Destroy() */
+	}
 	void Reload() override;
-	std::uintptr_t GetTexHandle() const override { return m_uTexHandle; };	// accessed by RageDisplay
+	std::uintptr_t GetTexHandle() const override {
+		return m_uTexHandle;
+	}; // accessed by RageDisplay
 
-private:
-	void Create();	// called by constructor and Reload
+ private:
+	void Create(); // called by constructor and Reload
 	void Destroy();
-	std::uintptr_t m_uTexHandle;	// treat as unsigned in OpenGL, IDirect3DTexture9* for D3D
+	std::uintptr_t m_uTexHandle; // treat as unsigned in OpenGL, IDirect3DTexture9* for D3D
 };
 
 #endif
@@ -49,4 +52,3 @@ private:
  * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  * PERFORMANCE OF THIS SOFTWARE.
  */
-

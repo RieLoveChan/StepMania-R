@@ -11,39 +11,38 @@
  * handler -- heap allocation (RString) is safe here. Still don't use
  * RegistryAccess, since it depends on engine state this minimal child
  * process doesn't set up. */
-static LONG GetRegKey( HKEY key, RString subkey, RString &out )
-{
+static LONG GetRegKey(HKEY key, RString subkey, RString &out) {
 	HKEY hKey;
-    LONG iRet = RegOpenKeyEx( key, subkey, 0, KEY_QUERY_VALUE, &hKey );
+	LONG iRet = RegOpenKeyEx(key, subkey, 0, KEY_QUERY_VALUE, &hKey);
 
-    if( iRet != ERROR_SUCCESS )
+	if (iRet != ERROR_SUCCESS)
 		return iRet;
 
 	long iDataSize = MAX_PATH;
 	char data[MAX_PATH];
-	RegQueryValue( hKey, "emulation", data, &iDataSize );
+	RegQueryValue(hKey, "emulation", data, &iDataSize);
 	out = data;
-	RegCloseKey( hKey );
+	RegCloseKey(hKey);
 
-    return ERROR_SUCCESS;
+	return ERROR_SUCCESS;
 }
 
-bool GotoURL( RString sUrl )
-{
+bool GotoURL(RString sUrl) {
 	// First try ShellExecute()
-	std::intptr_t iRet = reinterpret_cast<std::intptr_t>(ShellExecute( nullptr, "open", sUrl, nullptr, nullptr, SW_SHOWDEFAULT ));
+	std::intptr_t iRet =
+	   reinterpret_cast<std::intptr_t>(ShellExecute(nullptr, "open", sUrl, nullptr, nullptr, SW_SHOWDEFAULT));
 
 	// If it failed, get the .htm regkey and lookup the program
-	if( iRet > 32 )
+	if (iRet > 32)
 		return true;
 
 	RString sKey;
-	if( GetRegKey(HKEY_CLASSES_ROOT, ".htm", sKey) != ERROR_SUCCESS )
+	if (GetRegKey(HKEY_CLASSES_ROOT, ".htm", sKey) != ERROR_SUCCESS)
 		return false;
 
 	sKey = "\\shell\\open\\command";
 
-	if( GetRegKey(HKEY_CLASSES_ROOT, sKey, sKey) != ERROR_SUCCESS )
+	if (GetRegKey(HKEY_CLASSES_ROOT, sKey, sKey) != ERROR_SUCCESS)
 		return false;
 
 	// Strip the "%1" (quoted or bare) parameter placeholder, if present, so
@@ -51,16 +50,16 @@ bool GotoURL( RString sUrl )
 	// via the crash handler's update checker (CrashHandlerChild.cpp),
 	// network-supplied -- this used to be a fixed-buffer strcat with no
 	// bound on sUrl's length; an RString has no fixed capacity to overflow.
-	std::size_t iPos = sKey.find( "\"%1\"" );
-	if( iPos == RString::npos )
-		iPos = sKey.find( "%1" );
-	if( iPos != RString::npos )
-		sKey.erase( iPos );
+	std::size_t iPos = sKey.find("\"%1\"");
+	if (iPos == RString::npos)
+		iPos = sKey.find("%1");
+	if (iPos != RString::npos)
+		sKey.erase(iPos);
 
 	sKey += " ";
 	sKey += sUrl;
 
-	return WinExec( sKey, SW_SHOWDEFAULT ) > 32;
+	return WinExec(sKey, SW_SHOWDEFAULT) > 32;
 }
 
 /*

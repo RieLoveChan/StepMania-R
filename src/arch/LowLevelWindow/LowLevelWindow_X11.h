@@ -6,19 +6,20 @@
 #include "RageDisplay.h" // VideoModeParams
 #include "LowLevelWindow.h"
 
-class LowLevelWindow_X11 : public LowLevelWindow
-{
-public:
+class LowLevelWindow_X11 : public LowLevelWindow {
+ public:
 	LowLevelWindow_X11();
 	~LowLevelWindow_X11();
 
 	void *GetProcAddress(RString s);
 	RString TryVideoMode(const VideoModeParams &p, bool &bNewDeviceOut);
 	void LogDebugInformation() const;
-	bool IsSoftwareRenderer( RString &sError );
+	bool IsSoftwareRenderer(RString &sError);
 	void SwapBuffers();
 
-	const ActualVideoModeParams GetActualVideoModeParams() const { return CurrentParams; }
+	const ActualVideoModeParams GetActualVideoModeParams() const {
+		return CurrentParams;
+	}
 
 	void GetDisplaySpecs(DisplaySpecs &out) const;
 
@@ -33,7 +34,7 @@ public:
 	void BeginConcurrentRendering();
 	void EndConcurrentRendering();
 
-private:
+ private:
 	void RestoreOutputConfig();
 
 	bool m_bWasWindowed;

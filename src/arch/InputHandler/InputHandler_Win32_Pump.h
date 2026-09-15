@@ -6,25 +6,23 @@
 
 #include <vector>
 
-
 class USBDevice;
-class InputHandler_Win32_Pump: public InputHandler
-{
-public:
+class InputHandler_Win32_Pump : public InputHandler {
+ public:
 	void Update();
 	InputHandler_Win32_Pump();
 	~InputHandler_Win32_Pump();
-	RString GetDeviceSpecificInputString( const DeviceInput &di );
-	void GetDevicesAndDescriptions( std::vector<InputDeviceInfo>& vDevicesOut );
+	RString GetDeviceSpecificInputString(const DeviceInput &di);
+	void GetDevicesAndDescriptions(std::vector<InputDeviceInfo> &vDevicesOut);
 
-private:
+ private:
 	USBDevice *m_pDevice;
 	RageThread InputThread;
 	bool m_bShutdown;
 
-	static int InputThread_Start( void *p );
+	static int InputThread_Start(void *p);
 	void InputThreadMain();
-	void HandleInput( int devno, int event );
+	void HandleInput(int devno, int event);
 };
 
 #endif
@@ -53,4 +51,3 @@ private:
  * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  * PERFORMANCE OF THIS SOFTWARE.
  */
-

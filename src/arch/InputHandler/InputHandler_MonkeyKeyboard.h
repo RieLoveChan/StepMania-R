@@ -7,18 +7,16 @@
 
 #include <vector>
 
-
-class InputHandler_MonkeyKeyboard: public InputHandler
-{
-public:
+class InputHandler_MonkeyKeyboard : public InputHandler {
+ public:
 	void Update();
 	InputHandler_MonkeyKeyboard();
 	~InputHandler_MonkeyKeyboard();
-	void GetDevicesAndDescriptions( std::vector<InputDeviceInfo>& vDevicesOut );
+	void GetDevicesAndDescriptions(std::vector<InputDeviceInfo> &vDevicesOut);
 
-private:
+ private:
 	RageTimer m_timerPressButton;
-	DeviceButton m_dbLast;	// Last input that we sent
+	DeviceButton m_dbLast; // Last input that we sent
 };
 
 #endif
@@ -47,4 +45,3 @@ private:
  * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  * PERFORMANCE OF THIS SOFTWARE.
  */
-

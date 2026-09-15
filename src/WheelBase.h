@@ -15,8 +15,7 @@
 #include <cmath>
 #include <vector>
 
-
-#define NUM_WHEEL_ITEMS		((int)std::ceil(NUM_WHEEL_ITEMS_TO_DRAW+2))
+#define NUM_WHEEL_ITEMS ((int)std::ceil(NUM_WHEEL_ITEMS_TO_DRAW + 2))
 
 enum WheelState {
 	STATE_SELECTING,
@@ -29,54 +28,74 @@ enum WheelState {
 	NUM_WheelState,
 	WheelState_Invalid,
 };
-const RString& WheelStateToString( WheelState ws );
-WheelState StringToWheelState( const RString& sDC );
-LuaDeclareType( WheelState );
+const RString &WheelStateToString(WheelState ws);
+WheelState StringToWheelState(const RString &sDC);
+LuaDeclareType(WheelState);
 
 /** @brief A wheel with data elements. */
-class WheelBase : public ActorFrame
-{
-public:
+class WheelBase : public ActorFrame {
+ public:
 	virtual ~WheelBase();
-	virtual void Load( RString sType );
+	virtual void Load(RString sType);
 	void BeginScreen();
 
-	virtual void Update( float fDeltaTime );
+	virtual void Update(float fDeltaTime);
 
 	virtual void Move(int n);
-	void ChangeMusicUnlessLocked( int n ); /* +1 or -1 */
-	virtual void ChangeMusic(int dist); /* +1 or -1 */
-	virtual void SetOpenSection( RString /* group */ ) { }
+	void ChangeMusicUnlessLocked(int n); /* +1 or -1 */
+	virtual void ChangeMusic(int dist);  /* +1 or -1 */
+	virtual void SetOpenSection(RString /* group */) {
+	}
 
 	// Return true if we're moving fast automatically.
 	int IsMoving() const;
 	bool IsSettled() const;
 
-	void GetItemPosition( float fPosOffsetsFromMiddle, float& fX_out, float& fY_out, float& fZ_out, float& fRotationX_out );
+	void
+	GetItemPosition(float fPosOffsetsFromMiddle, float &fX_out, float &fY_out, float &fZ_out, float &fRotationX_out);
 	void SetItemPosition(Actor &item, int item_index, float offset_from_middle);
 
-	virtual bool Select();	// return true if this selection can end the screen
+	virtual bool Select(); // return true if this selection can end the screen
 
-	WheelState GetWheelState() { return m_WheelState; }
-	bool WheelIsLocked() { return (m_WheelState == STATE_LOCKED ? true : false); }
-	void RebuildWheelItems( int dist = INT_MAX );	// INT_MAX = refresh all
+	WheelState GetWheelState() {
+		return m_WheelState;
+	}
+	bool WheelIsLocked() {
+		return (m_WheelState == STATE_LOCKED ? true : false);
+	}
+	void RebuildWheelItems(int dist = INT_MAX); // INT_MAX = refresh all
 	// Update the list of songs to match whatever songs are indexed by the song manager (SONGMAN)
-	virtual void ReloadSongList() {}
+	virtual void ReloadSongList() {
+	}
 
-	virtual unsigned int GetNumItems() const { return static_cast<unsigned int>(m_CurWheelItemData.size()); }
-	bool IsEmpty() { return m_bEmpty; }
-	WheelItemBaseData* GetItem(unsigned int index);
-	WheelItemBaseData* LastSelected();
-	WheelItemBase *GetWheelItem( int i ) { if( i < 0 || i >= (int) m_WheelBaseItems.size() ) return nullptr; return m_WheelBaseItems[i]; }
-	RString GetExpandedSectionName() { return m_sExpandedSectionName; }
-	int GetCurrentIndex() { return m_iSelection; }
+	virtual unsigned int GetNumItems() const {
+		return static_cast<unsigned int>(m_CurWheelItemData.size());
+	}
+	bool IsEmpty() {
+		return m_bEmpty;
+	}
+	WheelItemBaseData *GetItem(unsigned int index);
+	WheelItemBaseData *LastSelected();
+	WheelItemBase *GetWheelItem(int i) {
+		if (i < 0 || i >= (int)m_WheelBaseItems.size())
+			return nullptr;
+		return m_WheelBaseItems[i];
+	}
+	RString GetExpandedSectionName() {
+		return m_sExpandedSectionName;
+	}
+	int GetCurrentIndex() {
+		return m_iSelection;
+	}
 
-	WheelItemDataType GetSelectedType() { return m_CurWheelItemData[m_iSelection]->m_Type; }
+	WheelItemDataType GetSelectedType() {
+		return m_CurWheelItemData[m_iSelection]->m_Type;
+	}
 
 	// Lua
-	void PushSelf( lua_State *L );
+	void PushSelf(lua_State *L);
 
-protected:
+ protected:
 	void TweenOnScreenForSort();
 	void TweenOffScreenForSort();
 
@@ -87,43 +106,43 @@ protected:
 
 	int FirstVisibleIndex();
 
-	ScrollBar	m_ScrollBar;
-	AutoActor	m_sprHighlight;
+	ScrollBar m_ScrollBar;
+	AutoActor m_sprHighlight;
 
 	std::vector<WheelItemBaseData *> m_CurWheelItemData;
 	std::vector<WheelItemBase *> m_WheelBaseItems;
-	WheelItemBaseData* m_LastSelection;
+	WheelItemBaseData *m_LastSelection;
 
-	bool		m_bEmpty;
-	int		m_iSelection;		// index into m_CurWheelItemBaseData
-	RString		m_sExpandedSectionName;
+	bool m_bEmpty;
+	int m_iSelection; // index into m_CurWheelItemBaseData
+	RString m_sExpandedSectionName;
 
-	int			m_iSwitchesLeftInSpinDown;
-	float		m_fLockedWheelVelocity;
+	int m_iSwitchesLeftInSpinDown;
+	float m_fLockedWheelVelocity;
 	// 0 = none; -1 or 1 = up/down
-	int		m_Moving;
-	RageTimer	m_MovingSoundTimer;
-	float		m_TimeBeforeMovingBegins;
-	float		m_SpinSpeed;
+	int m_Moving;
+	RageTimer m_MovingSoundTimer;
+	float m_TimeBeforeMovingBegins;
+	float m_SpinSpeed;
 
-	WheelState	m_WheelState;
-	float		m_fTimeLeftInState;
-	float		m_fPositionOffsetFromSelection;
+	WheelState m_WheelState;
+	float m_fTimeLeftInState;
+	float m_fPositionOffsetFromSelection;
 
 	RageSound m_soundChangeMusic;
 	RageSound m_soundExpand;
 	RageSound m_soundCollapse;
 	RageSound m_soundLocked;
 
-//	bool WheelItemIsVisible(int n);
+	//	bool WheelItemIsVisible(int n);
 	void UpdateScrollbar();
 
-	ThemeMetric<float>	SWITCH_SECONDS;
-	ThemeMetric<float>	LOCKED_INITIAL_VELOCITY;
-	ThemeMetric<int>	SCROLL_BAR_HEIGHT;
-	LuaExpressionTransform	m_exprItemTransformFunction;
-	ThemeMetric<float>	NUM_WHEEL_ITEMS_TO_DRAW;
-	ThemeMetric<RageColor>	WHEEL_ITEM_LOCKED_COLOR;
+	ThemeMetric<float> SWITCH_SECONDS;
+	ThemeMetric<float> LOCKED_INITIAL_VELOCITY;
+	ThemeMetric<int> SCROLL_BAR_HEIGHT;
+	LuaExpressionTransform m_exprItemTransformFunction;
+	ThemeMetric<float> NUM_WHEEL_ITEMS_TO_DRAW;
+	ThemeMetric<RageColor> WHEEL_ITEM_LOCKED_COLOR;
 };
 
 #endif

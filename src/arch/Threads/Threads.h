@@ -7,11 +7,11 @@
 class RageMutex;
 class RageTimer;
 
-class ThreadImpl
-{
-public:
-	virtual ~ThreadImpl() { }
-	virtual void Halt( bool Kill ) = 0;
+class ThreadImpl {
+ public:
+	virtual ~ThreadImpl() {
+	}
+	virtual void Halt(bool Kill) = 0;
 	virtual void Resume() = 0;
 
 	/* Get the identifier for this thread. The actual meaning of this is
@@ -23,13 +23,14 @@ public:
 	virtual int Wait() = 0;
 };
 
-class MutexImpl
-{
-public:
+class MutexImpl {
+ public:
 	RageMutex *m_Parent;
 
-	MutexImpl( RageMutex *pParent ): m_Parent(pParent) {}
-	virtual ~MutexImpl() { }
+	MutexImpl(RageMutex *pParent) : m_Parent(pParent) {
+	}
+	virtual ~MutexImpl() {
+	}
 
 	/* Lock the mutex. If mutex timeouts are implemented, and the mutex
 	 * times out, return false and do not lock the mutex. No other failure
@@ -45,25 +46,25 @@ public:
 	 * implementations may fail with an assertion if the mutex is not locked. */
 	virtual void Unlock() = 0;
 
-private:
-	MutexImpl(const MutexImpl& rhs);
-	MutexImpl& operator=(const MutexImpl& rhs);
+ private:
+	MutexImpl(const MutexImpl &rhs);
+	MutexImpl &operator=(const MutexImpl &rhs);
 };
 
-class EventImpl
-{
-public:
-	virtual ~EventImpl() { }
-	virtual bool Wait( RageTimer *pTimeout ) = 0;
+class EventImpl {
+ public:
+	virtual ~EventImpl() {
+	}
+	virtual bool Wait(RageTimer *pTimeout) = 0;
 	virtual void Signal() = 0;
 	virtual void Broadcast() = 0;
 	virtual bool WaitTimeoutSupported() const = 0;
 };
 
-class SemaImpl
-{
-public:
-	virtual ~SemaImpl() { }
+class SemaImpl {
+ public:
+	virtual ~SemaImpl() {
+	}
 	virtual int GetValue() const = 0;
 	virtual void Post() = 0;
 	virtual bool Wait() = 0;
@@ -71,11 +72,11 @@ public:
 };
 
 // These functions must be implemented by the thread implementation.
-ThreadImpl *MakeThread( int (*fn)(void *), void *data, std::uint64_t *piThreadID );
+ThreadImpl *MakeThread(int (*fn)(void *), void *data, std::uint64_t *piThreadID);
 ThreadImpl *MakeThisThread();
-MutexImpl *MakeMutex( RageMutex *pParent );
-EventImpl *MakeEvent( MutexImpl *pMutex );
-SemaImpl *MakeSemaphore( int iInitialValue );
+MutexImpl *MakeMutex(RageMutex *pParent);
+EventImpl *MakeEvent(MutexImpl *pMutex);
+SemaImpl *MakeSemaphore(int iInitialValue);
 std::uint64_t GetThisThreadId();
 
 /* Since ThreadId is implementation-defined, we can't define a universal

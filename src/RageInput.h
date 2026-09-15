@@ -8,37 +8,35 @@
 
 #include <vector>
 
-
 struct lua_State;
 class InputHandler;
 
-class RageInput
-{
-public:
+class RageInput {
+ public:
 	RageInput();
 	~RageInput();
 
 	void LoadDrivers();
 	void Update();
 	bool DevicesChanged();
-	void GetDevicesAndDescriptions( std::vector<InputDeviceInfo>& vOut ) const;
+	void GetDevicesAndDescriptions(std::vector<InputDeviceInfo> &vOut) const;
 	void WindowReset();
-	void AddHandler( InputHandler *pHandler );
-	InputHandler *GetHandlerForDevice( const InputDevice id );
-	RString GetDeviceSpecificInputString( const DeviceInput &di );
-	RString GetLocalizedInputString( const DeviceInput &di );
-	wchar_t DeviceInputToChar( DeviceInput di, bool bUseCurrentKeyModifiers );
-	InputDeviceState GetInputDeviceState( InputDevice id );
+	void AddHandler(InputHandler *pHandler);
+	InputHandler *GetHandlerForDevice(const InputDevice id);
+	RString GetDeviceSpecificInputString(const DeviceInput &di);
+	RString GetLocalizedInputString(const DeviceInput &di);
+	wchar_t DeviceInputToChar(DeviceInput di, bool bUseCurrentKeyModifiers);
+	InputDeviceState GetInputDeviceState(InputDevice id);
 	RString GetDisplayDevicesString() const;
 
 	// Lua
-	void PushSelf( lua_State *L );
+	void PushSelf(lua_State *L);
 };
 
 extern Preference<RString> g_sInputDrivers;
 extern Preference<RString> g_sInputDeviceOrder;
 
-extern RageInput*			INPUTMAN;	// global and accessible from anywhere in our program
+extern RageInput *INPUTMAN; // global and accessible from anywhere in our program
 
 #endif
 

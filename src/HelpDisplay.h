@@ -5,31 +5,33 @@
 
 #include <vector>
 
-
 struct lua_State;
 /** @brief A BitmapText that cycles through messages. */
-class HelpDisplay : public BitmapText
-{
-public:
+class HelpDisplay : public BitmapText {
+ public:
 	HelpDisplay();
-	void Load( const RString &sType );
+	void Load(const RString &sType);
 
 	virtual HelpDisplay *Copy() const;
 
-	void SetTips( const std::vector<RString> &arrayTips ) { SetTips( arrayTips, arrayTips ); }
-	void SetTips( const std::vector<RString> &arrayTips, const std::vector<RString> &arrayTipsAlt );
-	void GetTips( std::vector<RString> &arrayTipsOut, std::vector<RString> &arrayTipsAltOut ) const {
+	void SetTips(const std::vector<RString> &arrayTips) {
+		SetTips(arrayTips, arrayTips);
+	}
+	void SetTips(const std::vector<RString> &arrayTips, const std::vector<RString> &arrayTipsAlt);
+	void GetTips(std::vector<RString> &arrayTipsOut, std::vector<RString> &arrayTipsAltOut) const {
 		arrayTipsOut = m_arrayTips;
 		arrayTipsAltOut = m_arrayTipsAlt;
 	}
-	void SetSecsBetweenSwitches( float fSeconds ) { m_fSecsBetweenSwitches = m_fSecsUntilSwitch = fSeconds; }
+	void SetSecsBetweenSwitches(float fSeconds) {
+		m_fSecsBetweenSwitches = m_fSecsUntilSwitch = fSeconds;
+	}
 
-	virtual void Update( float fDeltaTime );
+	virtual void Update(float fDeltaTime);
 
 	// Lua
-	virtual void PushSelf( lua_State *L );
+	virtual void PushSelf(lua_State *L);
 
-protected:
+ protected:
 	std::vector<RString> m_arrayTips, m_arrayTipsAlt;
 	int m_iCurTipIndex;
 

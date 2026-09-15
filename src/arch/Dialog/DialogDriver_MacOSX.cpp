@@ -9,91 +9,83 @@
 
 #include <CoreFoundation/CoreFoundation.h>
 
+REGISTER_DIALOG_DRIVER_CLASS(MacOSX);
 
-REGISTER_DIALOG_DRIVER_CLASS( MacOSX );
-
-static CFOptionFlags ShowAlert( CFOptionFlags flags, const RString& sMessage, CFStringRef OK,
-				CFStringRef alt = nullptr, CFStringRef other = nullptr)
-{
+static CFOptionFlags ShowAlert(
+   CFOptionFlags flags, const RString &sMessage, CFStringRef OK, CFStringRef alt = nullptr, CFStringRef other = nullptr
+) {
 	CFOptionFlags result;
-	CFStringRef text = CFStringCreateWithCString( nullptr, sMessage, kCFStringEncodingUTF8 );
+	CFStringRef text = CFStringCreateWithCString(nullptr, sMessage, kCFStringEncodingUTF8);
 
-	if( text == nullptr )
-	{
-		RString error = ssprintf( "CFString for dialog string \"%s\" could not be created.", sMessage.c_str() );
-		WARN( error );
-		DEBUG_ASSERT_M( false, error );
+	if (text == nullptr) {
+		RString error = ssprintf("CFString for dialog string \"%s\" could not be created.", sMessage.c_str());
+		WARN(error);
+		DEBUG_ASSERT_M(false, error);
 		return kCFUserNotificationDefaultResponse; // Is this better than displaying an "unknown error" message?
 	}
-	CFUserNotificationDisplayAlert( 0.0, flags, nullptr, nullptr, nullptr, CFSTR(PRODUCT_FAMILY),
-					text, OK, alt, other, &result );
-	CFRelease( text );
+	CFUserNotificationDisplayAlert(
+	   0.0, flags, nullptr, nullptr, nullptr, CFSTR(PRODUCT_FAMILY), text, OK, alt, other, &result
+	);
+	CFRelease(text);
 
 	// Flush all input that's accumulated while the dialog box was up.
-	if( INPUTFILTER )
-	{
+	if (INPUTFILTER) {
 		std::vector<InputEvent> dummy;
 		INPUTFILTER->Reset();
-		INPUTFILTER->GetInputEvents( dummy );
+		INPUTFILTER->GetInputEvents(dummy);
 	}
 
 	return result;
 }
 
-#define LSTRING(b,x) CFBundleCopyLocalizedString( (b), CFSTR(x), nullptr, CFSTR("Localizable") )
+#define LSTRING(b, x) CFBundleCopyLocalizedString((b), CFSTR(x), nullptr, CFSTR("Localizable"))
 
-void DialogDriver_MacOSX::OK( RString sMessage, RString sID )
-{
+void DialogDriver_MacOSX::OK(RString sMessage, RString sID) {
 	CFBundleRef bundle = CFBundleGetMainBundle();
-	CFStringRef sDSA = LSTRING( bundle, "Don't show again" );
-	CFOptionFlags result = ShowAlert( kCFUserNotificationNoteAlertLevel, sMessage, CFSTR("OK"), sDSA );
+	CFStringRef sDSA = LSTRING(bundle, "Don't show again");
+	CFOptionFlags result = ShowAlert(kCFUserNotificationNoteAlertLevel, sMessage, CFSTR("OK"), sDSA);
 
-	CFRelease( sDSA );
-	if( result == kCFUserNotificationAlternateResponse )
-		Dialog::IgnoreMessage( sID );
+	CFRelease(sDSA);
+	if (result == kCFUserNotificationAlternateResponse)
+		Dialog::IgnoreMessage(sID);
 }
 
-void DialogDriver_MacOSX::Error( RString sError, RString sID )
-{
-	ShowAlert( kCFUserNotificationStopAlertLevel, sError, CFSTR("OK") );
+void DialogDriver_MacOSX::Error(RString sError, RString sID) {
+	ShowAlert(kCFUserNotificationStopAlertLevel, sError, CFSTR("OK"));
 }
 
-Dialog::Result DialogDriver_MacOSX::OKCancel( RString sMessage, RString sID )
-{
+Dialog::Result DialogDriver_MacOSX::OKCancel(RString sMessage, RString sID) {
 	CFBundleRef bundle = CFBundleGetMainBundle();
-	CFStringRef sOK = LSTRING( bundle, "OK" );
-	CFStringRef sCancel = LSTRING( bundle, "Cancel" );
-	CFOptionFlags result = ShowAlert( kCFUserNotificationNoteAlertLevel, sMessage, sOK, sCancel );
+	CFStringRef sOK = LSTRING(bundle, "OK");
+	CFStringRef sCancel = LSTRING(bundle, "Cancel");
+	CFOptionFlags result = ShowAlert(kCFUserNotificationNoteAlertLevel, sMessage, sOK, sCancel);
 
-	CFRelease( sOK );
-	CFRelease( sCancel );
-	switch( result )
-	{
+	CFRelease(sOK);
+	CFRelease(sCancel);
+	switch (result) {
 	case kCFUserNotificationDefaultResponse:
 	case kCFUserNotificationCancelResponse:
 		return Dialog::cancel;
 	case kCFUserNotificationAlternateResponse:
 		return Dialog::ok;
 	default:
-		FAIL_M( ssprintf("Invalid response: %d.", int(result)) );
+		FAIL_M(ssprintf("Invalid response: %d.", int(result)));
 	}
 }
 
-Dialog::Result DialogDriver_MacOSX::AbortRetryIgnore( RString sMessage, RString sID )
-{
+Dialog::Result DialogDriver_MacOSX::AbortRetryIgnore(RString sMessage, RString sID) {
 	CFBundleRef bundle = CFBundleGetMainBundle();
-	CFStringRef sIgnore = LSTRING( bundle, "Ignore" );
-	CFStringRef sRetry = LSTRING( bundle, "Retry" );
-	CFStringRef sAbort = LSTRING( bundle, "Abort" );
-	CFOptionFlags result = ShowAlert( kCFUserNotificationNoteAlertLevel, sMessage, sIgnore, sRetry, sAbort );
+	CFStringRef sIgnore = LSTRING(bundle, "Ignore");
+	CFStringRef sRetry = LSTRING(bundle, "Retry");
+	CFStringRef sAbort = LSTRING(bundle, "Abort");
+	CFOptionFlags result = ShowAlert(kCFUserNotificationNoteAlertLevel, sMessage, sIgnore, sRetry, sAbort);
 
-	CFRelease( sIgnore );
-	CFRelease( sRetry );
-	CFRelease( sAbort );
-	switch( result )
-	{
+	CFRelease(sIgnore);
+	CFRelease(sRetry);
+	CFRelease(sAbort);
+	switch (result) {
 	case kCFUserNotificationDefaultResponse:
-		Dialog::IgnoreMessage( sID );
+		Dialog::IgnoreMessage(sID);
 		return Dialog::ignore;
 	case kCFUserNotificationAlternateResponse:
 		return Dialog::retry;
@@ -101,49 +93,45 @@ Dialog::Result DialogDriver_MacOSX::AbortRetryIgnore( RString sMessage, RString 
 	case kCFUserNotificationCancelResponse:
 		return Dialog::abort;
 	default:
-		FAIL_M( ssprintf("Invalid response: %d.", int(result)) );
+		FAIL_M(ssprintf("Invalid response: %d.", int(result)));
 	}
 }
 
-Dialog::Result DialogDriver_MacOSX::AbortRetry( RString sMessage, RString sID )
-{
+Dialog::Result DialogDriver_MacOSX::AbortRetry(RString sMessage, RString sID) {
 	CFBundleRef bundle = CFBundleGetMainBundle();
-	CFStringRef sRetry = LSTRING( bundle, "Retry" );
-	CFStringRef sAbort = LSTRING( bundle, "Abort" );
-	CFOptionFlags result = ShowAlert( kCFUserNotificationNoteAlertLevel, sMessage, sRetry, sAbort );
+	CFStringRef sRetry = LSTRING(bundle, "Retry");
+	CFStringRef sAbort = LSTRING(bundle, "Abort");
+	CFOptionFlags result = ShowAlert(kCFUserNotificationNoteAlertLevel, sMessage, sRetry, sAbort);
 
-	CFRelease( sRetry );
-	CFRelease( sAbort );
-	switch( result )
-	{
+	CFRelease(sRetry);
+	CFRelease(sAbort);
+	switch (result) {
 	case kCFUserNotificationDefaultResponse:
 	case kCFUserNotificationCancelResponse:
 		return Dialog::abort;
 	case kCFUserNotificationAlternateResponse:
 		return Dialog::retry;
 	default:
-		FAIL_M( ssprintf("Invalid response: %d.", int(result)) );
+		FAIL_M(ssprintf("Invalid response: %d.", int(result)));
 	}
 }
 
-Dialog::Result DialogDriver_MacOSX::YesNo( RString sMessage, RString sID )
-{
+Dialog::Result DialogDriver_MacOSX::YesNo(RString sMessage, RString sID) {
 	CFBundleRef bundle = CFBundleGetMainBundle();
-	CFStringRef sYes = LSTRING( bundle, "Yes" );
-	CFStringRef sNo = LSTRING( bundle, "No" );
-	CFOptionFlags result = ShowAlert( kCFUserNotificationNoteAlertLevel, sMessage, sYes, sNo );
+	CFStringRef sYes = LSTRING(bundle, "Yes");
+	CFStringRef sNo = LSTRING(bundle, "No");
+	CFOptionFlags result = ShowAlert(kCFUserNotificationNoteAlertLevel, sMessage, sYes, sNo);
 
-	CFRelease( sYes );
-	CFRelease( sNo );
-	switch( result )
-	{
+	CFRelease(sYes);
+	CFRelease(sNo);
+	switch (result) {
 	case kCFUserNotificationDefaultResponse:
 	case kCFUserNotificationCancelResponse:
 		return Dialog::no;
 	case kCFUserNotificationAlternateResponse:
 		return Dialog::yes;
 	default:
-		FAIL_M( ssprintf("Invalid response: %d.", int(result)) );
+		FAIL_M(ssprintf("Invalid response: %d.", int(result)));
 	}
 }
 

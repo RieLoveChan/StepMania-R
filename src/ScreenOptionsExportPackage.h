@@ -6,43 +6,39 @@
 
 #include <vector>
 
-
 class Course;
 
 // Can this be done any better? -aj
-namespace ExportPackages
-{
-	RString m_sPackageType;
-	RString m_sFolder; // used for more subpages
-}
+namespace ExportPackages {
+RString m_sPackageType;
+RString m_sFolder; // used for more subpages
+} // namespace ExportPackages
 
 /** @brief A menu for exporting packages. */
-class ScreenOptionsExportPackage : public ScreenOptions
-{
-public:
+class ScreenOptionsExportPackage : public ScreenOptions {
+ public:
 	void Init();
 	virtual void BeginScreen();
 
-protected:
-	virtual void ImportOptions( int iRow, const std::vector<PlayerNumber> &vpns );
-	virtual void ExportOptions( int iRow, const std::vector<PlayerNumber> &vpns );
+ protected:
+	virtual void ImportOptions(int iRow, const std::vector<PlayerNumber> &vpns);
+	virtual void ExportOptions(int iRow, const std::vector<PlayerNumber> &vpns);
 
-	virtual void ProcessMenuStart( const InputEventPlus &input );
+	virtual void ProcessMenuStart(const InputEventPlus &input);
 
 	std::vector<RString> m_vsPackageTypes;
 };
 
-class ScreenOptionsExportPackageSubPage : public ScreenOptions
-{
-public:
+class ScreenOptionsExportPackageSubPage : public ScreenOptions {
+ public:
 	void Init();
 	virtual void BeginScreen();
 
-protected:
-	virtual void ImportOptions( int iRow, const std::vector<PlayerNumber> &vpns );
-	virtual void ExportOptions( int iRow, const std::vector<PlayerNumber> &vpns );
+ protected:
+	virtual void ImportOptions(int iRow, const std::vector<PlayerNumber> &vpns);
+	virtual void ExportOptions(int iRow, const std::vector<PlayerNumber> &vpns);
 
-	virtual void ProcessMenuStart( const InputEventPlus &input );
+	virtual void ProcessMenuStart(const InputEventPlus &input);
 
 	std::vector<RString> m_vsPossibleDirsToExport;
 };

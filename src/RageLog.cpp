@@ -13,7 +13,7 @@
 #include <windows.h>
 #endif
 
-RageLog* LOG;		// global and accessible from anywhere in the program
+RageLog *LOG; // global and accessible from anywhere in the program
 
 /*
  * We have a couple log types and a couple logs.
@@ -55,10 +55,10 @@ RageLog* LOG;		// global and accessible from anywhere in the program
  * map/unmap, using any mechanism to generate unique IDs. */
 static std::map<RString, RString> LogMaps;
 
-#define LOG_PATH	"/Logs/log.txt"
-#define INFO_PATH	"/Logs/info.txt"
-#define TIME_PATH	"/Logs/timelog.txt"
-#define USER_PATH	"/Logs/userlog.txt"
+#define LOG_PATH "/Logs/log.txt"
+#define INFO_PATH "/Logs/info.txt"
+#define TIME_PATH "/Logs/timelog.txt"
+#define USER_PATH "/Logs/userlog.txt"
 
 static RageFile *g_fileLog, *g_fileInfo, *g_fileUserLog, *g_fileTimeLog;
 
@@ -70,8 +70,7 @@ static RageMutex *g_Mutex;
  * crashlog gets log.txt */
 /* Destination bits for Write(). The severity is passed separately as a
  * LogLevel now (ADR 0005). */
-enum
-{
+enum {
 	/* Also write to info.txt / the crash staticlog / stdout (Info+). */
 	WRITE_TO_INFO = 0x01,
 
@@ -82,569 +81,531 @@ enum
 	WRITE_TO_TIME = 0x08
 };
 
-RageLog::RageLog(): m_bLogToDisk(false), m_bInfoToDisk(false),
-m_bUserLogToDisk(false), m_bFlush(false), m_bShowLogOutput(false)
-{
-	for( int i = 0; i < Log::NUM_Category; ++i )
-		m_CategoryLevel[i] = -1;	// unset -> follow the global minimum
+RageLog::RageLog()
+    : m_bLogToDisk(false), m_bInfoToDisk(false), m_bUserLogToDisk(false), m_bFlush(false), m_bShowLogOutput(false) {
+	for (int i = 0; i < Log::NUM_Category; ++i)
+		m_CategoryLevel[i] = -1; // unset -> follow the global minimum
 
 	g_fileLog = new RageFile;
 	g_fileInfo = new RageFile;
 	g_fileUserLog = new RageFile;
 	g_fileTimeLog = new RageFile;
 
-	if(!g_fileTimeLog->Open(TIME_PATH, RageFile::WRITE|RageFile::STREAMED))
-	{ fprintf(stderr, "Couldn't open %s: %s\n", TIME_PATH, g_fileTimeLog->GetError().c_str()); }
+	if (!g_fileTimeLog->Open(TIME_PATH, RageFile::WRITE | RageFile::STREAMED)) {
+		fprintf(stderr, "Couldn't open %s: %s\n", TIME_PATH, g_fileTimeLog->GetError().c_str());
+	}
 
-	g_Mutex = new RageMutex( "Log" );
+	g_Mutex = new RageMutex("Log");
 }
 
-RageLog::~RageLog()
-{
-	SpillRepeat();	// don't lose a "(repeated N×)" note pending at exit
+RageLog::~RageLog() {
+	SpillRepeat(); // don't lose a "(repeated N×)" note pending at exit
 
 	/* Add the mapped log data to info.txt. */
 	const RString AdditionalLog = GetAdditionalLog();
 	std::vector<RString> AdditionalLogLines;
-	split( AdditionalLog, "\n", AdditionalLogLines );
-	for( unsigned i = 0; i < AdditionalLogLines.size(); ++i )
-	{
-		Trim( AdditionalLogLines[i] );
-		this->Info( "%s", AdditionalLogLines[i].c_str() );
+	split(AdditionalLog, "\n", AdditionalLogLines);
+	for (unsigned i = 0; i < AdditionalLogLines.size(); ++i) {
+		Trim(AdditionalLogLines[i]);
+		this->Info("%s", AdditionalLogLines[i].c_str());
 	}
 
 	Flush();
-	SetShowLogOutput( false );
+	SetShowLogOutput(false);
 	g_fileLog->Close();
 	g_fileInfo->Close();
 	g_fileUserLog->Close();
 	g_fileTimeLog->Close();
 
-	SAFE_DELETE( g_Mutex );
-	SAFE_DELETE( g_fileLog );
-	SAFE_DELETE( g_fileInfo );
-	SAFE_DELETE( g_fileUserLog );
+	SAFE_DELETE(g_Mutex);
+	SAFE_DELETE(g_fileLog);
+	SAFE_DELETE(g_fileInfo);
+	SAFE_DELETE(g_fileUserLog);
 }
 
-void RageLog::SetLogToDisk( bool b )
-{
-	if( m_bLogToDisk == b )
+void RageLog::SetLogToDisk(bool b) {
+	if (m_bLogToDisk == b)
 		return;
 
 	m_bLogToDisk = b;
 
-	if( !m_bLogToDisk )
-	{
-		if( g_fileLog->IsOpen() )
+	if (!m_bLogToDisk) {
+		if (g_fileLog->IsOpen())
 			g_fileLog->Close();
 		return;
 	}
 
-	if( !g_fileLog->Open( LOG_PATH, RageFile::WRITE|RageFile::STREAMED ) )
-		fprintf( stderr, "Couldn't open %s: %s\n", LOG_PATH, g_fileLog->GetError().c_str() );
+	if (!g_fileLog->Open(LOG_PATH, RageFile::WRITE | RageFile::STREAMED))
+		fprintf(stderr, "Couldn't open %s: %s\n", LOG_PATH, g_fileLog->GetError().c_str());
 }
 
-void RageLog::SetInfoToDisk( bool b )
-{
-	if( m_bInfoToDisk == b )
+void RageLog::SetInfoToDisk(bool b) {
+	if (m_bInfoToDisk == b)
 		return;
 
 	m_bInfoToDisk = b;
 
-	if( !m_bInfoToDisk )
-	{
-		if( g_fileInfo->IsOpen() )
+	if (!m_bInfoToDisk) {
+		if (g_fileInfo->IsOpen())
 			g_fileInfo->Close();
 		return;
 	}
 
-	if( !g_fileInfo->Open( INFO_PATH, RageFile::WRITE|RageFile::STREAMED ) )
-		fprintf( stderr, "Couldn't open %s: %s\n", INFO_PATH, g_fileInfo->GetError().c_str() );
+	if (!g_fileInfo->Open(INFO_PATH, RageFile::WRITE | RageFile::STREAMED))
+		fprintf(stderr, "Couldn't open %s: %s\n", INFO_PATH, g_fileInfo->GetError().c_str());
 }
 
-void RageLog::SetUserLogToDisk( bool b )
-{
-	if( m_bUserLogToDisk == b )
+void RageLog::SetUserLogToDisk(bool b) {
+	if (m_bUserLogToDisk == b)
 		return;
 
 	m_bUserLogToDisk = b;
 
-	if( !m_bUserLogToDisk )
-	{
-		if( g_fileUserLog->IsOpen() )
+	if (!m_bUserLogToDisk) {
+		if (g_fileUserLog->IsOpen())
 			g_fileUserLog->Close();
 		return;
 	}
-	if( !g_fileUserLog->Open(USER_PATH, RageFile::WRITE|RageFile::STREAMED) )
-		fprintf( stderr, "Couldn't open %s: %s\n", USER_PATH, g_fileUserLog->GetError().c_str() );
+	if (!g_fileUserLog->Open(USER_PATH, RageFile::WRITE | RageFile::STREAMED))
+		fprintf(stderr, "Couldn't open %s: %s\n", USER_PATH, g_fileUserLog->GetError().c_str());
 }
 
-void RageLog::SetFlushing( bool b )
-{
+void RageLog::SetFlushing(bool b) {
 	m_bFlush = b;
 }
 
-void RageLog::SetLogLevel( LogLevel l )
-{
-	if( l < LogLevel_Trace || l >= NUM_LogLevel )
+void RageLog::SetLogLevel(LogLevel l) {
+	if (l < LogLevel_Trace || l >= NUM_LogLevel)
 		l = LogLevel_Trace;
 	m_MinLevel = l;
 }
 
-void RageLog::SetCategoryLevel( Log::Category c, LogLevel l )
-{
-	if( c < Log::General || c >= Log::NUM_Category )
+void RageLog::SetCategoryLevel(Log::Category c, LogLevel l) {
+	if (c < Log::General || c >= Log::NUM_Category)
 		return;
-	if( l < LogLevel_Trace || l >= NUM_LogLevel )
+	if (l < LogLevel_Trace || l >= NUM_LogLevel)
 		l = LogLevel_Trace;
 	m_CategoryLevel[c] = (signed char)l;
 }
 
-RageLog::LogLevel RageLog::GetEffectiveLevel( Log::Category c ) const
-{
-	if( c >= Log::General && c < Log::NUM_Category && m_CategoryLevel[c] >= 0 )
+RageLog::LogLevel RageLog::GetEffectiveLevel(Log::Category c) const {
+	if (c >= Log::General && c < Log::NUM_Category && m_CategoryLevel[c] >= 0)
 		return (LogLevel)m_CategoryLevel[c];
 	return m_MinLevel;
 }
 
-void RageLog::SetLogLevelSpec( const RString &spec )
-{
+void RageLog::SetLogLevelSpec(const RString &spec) {
 	/* The spec is the complete config: reset to defaults (global Trace,
 	 * no per-category overrides) and rebuild from the tokens. So
 	 * "--LogLevel=sound:error" is (global trace) + sound:error; to keep
 	 * a raised global, spell it: "--LogLevel=warn,sound:error". */
 	m_MinLevel = LogLevel_Trace;
-	for( int i = 0; i < Log::NUM_Category; ++i )
+	for (int i = 0; i < Log::NUM_Category; ++i)
 		m_CategoryLevel[i] = -1;
 
 	std::vector<RString> tokens;
-	split( spec, ",", tokens, true );
-	for( RString tok : tokens )
-	{
-		Trim( tok );
-		std::size_t colon = tok.find( ':' );
-		if( colon == std::string::npos )
-		{
-			SetLogLevel( LogLevelFromString( tok ) );
+	split(spec, ",", tokens, true);
+	for (RString tok : tokens) {
+		Trim(tok);
+		std::size_t colon = tok.find(':');
+		if (colon == std::string::npos) {
+			SetLogLevel(LogLevelFromString(tok));
 		}
-		else
-		{
-			Log::Category c = Log::CategoryFromString( tok.substr( 0, colon ) );
-			if( c != Log::General || tok.substr( 0, colon ) == "general" )
-				SetCategoryLevel( c, LogLevelFromString( tok.substr( colon + 1 ) ) );
+		else {
+			Log::Category c = Log::CategoryFromString(tok.substr(0, colon));
+			if (c != Log::General || tok.substr(0, colon) == "general")
+				SetCategoryLevel(c, LogLevelFromString(tok.substr(colon + 1)));
 		}
 	}
 }
 
-static const char *g_LogLevelNames[RageLog::NUM_LogLevel] =
-{
-	"trace", "debug", "info", "warn", "error", "off"
-};
+static const char *g_LogLevelNames[RageLog::NUM_LogLevel] = {"trace", "debug", "info", "warn", "error", "off"};
 
-RageLog::LogLevel RageLog::LogLevelFromString( const RString &s )
-{
+RageLog::LogLevel RageLog::LogLevelFromString(const RString &s) {
 	RString t = s;
 	t.MakeLower();
-	Trim( t );
-	for( int i = 0; i < NUM_LogLevel; ++i )
-		if( t == g_LogLevelNames[i] )
+	Trim(t);
+	for (int i = 0; i < NUM_LogLevel; ++i)
+		if (t == g_LogLevelNames[i])
 			return (LogLevel)i;
 	return LogLevel_Trace;
 }
 
-const char *RageLog::LogLevelToString( LogLevel l )
-{
-	if( l < LogLevel_Trace || l >= NUM_LogLevel )
+const char *RageLog::LogLevelToString(LogLevel l) {
+	if (l < LogLevel_Trace || l >= NUM_LogLevel)
 		l = LogLevel_Trace;
 	return g_LogLevelNames[l];
 }
 
-static const char *g_CategoryNames[Log::NUM_Category] =
-{
-	"general",
-	"arch", "file", "lua", "theme", "font", "gl", "sound", "input",
-	"song", "steps", "actor", "screen", "profile", "net", "cache"
+static const char *g_CategoryNames[Log::NUM_Category] = {
+   "general",
+   "arch",
+   "file",
+   "lua",
+   "theme",
+   "font",
+   "gl",
+   "sound",
+   "input",
+   "song",
+   "steps",
+   "actor",
+   "screen",
+   "profile",
+   "net",
+   "cache"
 };
 
-Log::Category Log::CategoryFromString( const RString &s )
-{
+Log::Category Log::CategoryFromString(const RString &s) {
 	RString t = s;
 	t.MakeLower();
-	Trim( t );
-	for( int i = 0; i < NUM_Category; ++i )
-		if( t == g_CategoryNames[i] )
+	Trim(t);
+	for (int i = 0; i < NUM_Category; ++i)
+		if (t == g_CategoryNames[i])
 			return (Category)i;
 	return General;
 }
 
-const char *Log::CategoryToString( Category c )
-{
-	if( c < General || c >= NUM_Category )
+const char *Log::CategoryToString(Category c) {
+	if (c < General || c >= NUM_Category)
 		c = General;
 	return g_CategoryNames[c];
 }
 
 /* Enable or disable display of output to stdout, or a console window in Windows. */
-void RageLog::SetShowLogOutput( bool show )
-{
+void RageLog::SetShowLogOutput(bool show) {
 	m_bShowLogOutput = show;
 
 #if defined(_WIN32)
-	if( m_bShowLogOutput )
-	{
+	if (m_bShowLogOutput) {
 		// create a new console window and attach standard handles
 		AllocConsole();
 		SetConsoleOutputCP(CP_UTF8);
-		freopen( "CONOUT$","wb", stdout );
-		freopen( "CONOUT$","wb", stderr );
+		freopen("CONOUT$", "wb", stdout);
+		freopen("CONOUT$", "wb", stderr);
 	}
-	else
-	{
+	else {
 		FreeConsole();
 	}
 #endif
 }
 
-void RageLog::Trace( const char *fmt, ... )
-{
-	va_list	va;
-	va_start( va, fmt );
-	RString sBuff = vssprintf( fmt, va );
-	va_end( va );
-
-	Write( 0, LogLevel_Trace, Log::General, sBuff );
-}
-
-void RageLog::Debug( const char *fmt, ... )
-{
-	va_list	va;
-	va_start( va, fmt );
-	RString sBuff = vssprintf( fmt, va );
-	va_end( va );
-
-	Write( 0, LogLevel_Debug, Log::General, sBuff );
-}
-
-/* Use this for more important information; it'll always be included
- * in crash dumps. */
-void RageLog::Info( const char *fmt, ... )
-{
-	va_list	va;
-	va_start( va, fmt );
-	RString sBuff = vssprintf( fmt, va );
-	va_end( va );
-
-	Write( WRITE_TO_INFO, LogLevel_Info, Log::General, sBuff );
-}
-
-void RageLog::Warn( const char *fmt, ... )
-{
-	va_list	va;
-	va_start( va, fmt );
-	RString sBuff = vssprintf( fmt, va );
-	va_end( va );
-
-	Write( WRITE_TO_INFO, LogLevel_Warn, Log::General, sBuff );
-}
-
-void RageLog::Error( const char *fmt, ... )
-{
-	va_list	va;
-	va_start( va, fmt );
-	RString sBuff = vssprintf( fmt, va );
-	va_end( va );
-
-	Write( WRITE_TO_INFO, LogLevel_Error, Log::General, sBuff );
-}
-
-void RageLog::Time(const char *fmt, ...)
-{
-	va_list	va;
+void RageLog::Trace(const char *fmt, ...) {
+	va_list va;
 	va_start(va, fmt);
 	RString sBuff = vssprintf(fmt, va);
 	va_end(va);
 
-	Write( WRITE_TO_TIME, LogLevel_Info, Log::General, sBuff );
+	Write(0, LogLevel_Trace, Log::General, sBuff);
 }
 
-void RageLog::UserLog( const RString &sType, const RString &sElement, const char *fmt, ... )
-{
+void RageLog::Debug(const char *fmt, ...) {
 	va_list va;
-	va_start( va, fmt );
-	RString sBuf = vssprintf( fmt, va );
-	va_end( va );
+	va_start(va, fmt);
+	RString sBuff = vssprintf(fmt, va);
+	va_end(va);
 
-	if( !sType.empty() )
-		sBuf = ssprintf( "%s \"%s\" %s", sType.c_str(), sElement.c_str(), sBuf.c_str() );
-
-	Write( WRITE_TO_USER_LOG, LogLevel_Info, Log::General, sBuf );
+	Write(0, LogLevel_Debug, Log::General, sBuff);
 }
 
-void RageLog::LogLine( LogLevel level, Log::Category cat,
-	const char *file, int line, const char *fmt, ... )
-{
-	if( level < GetEffectiveLevel( cat ) )
+/* Use this for more important information; it'll always be included
+ * in crash dumps. */
+void RageLog::Info(const char *fmt, ...) {
+	va_list va;
+	va_start(va, fmt);
+	RString sBuff = vssprintf(fmt, va);
+	va_end(va);
+
+	Write(WRITE_TO_INFO, LogLevel_Info, Log::General, sBuff);
+}
+
+void RageLog::Warn(const char *fmt, ...) {
+	va_list va;
+	va_start(va, fmt);
+	RString sBuff = vssprintf(fmt, va);
+	va_end(va);
+
+	Write(WRITE_TO_INFO, LogLevel_Warn, Log::General, sBuff);
+}
+
+void RageLog::Error(const char *fmt, ...) {
+	va_list va;
+	va_start(va, fmt);
+	RString sBuff = vssprintf(fmt, va);
+	va_end(va);
+
+	Write(WRITE_TO_INFO, LogLevel_Error, Log::General, sBuff);
+}
+
+void RageLog::Time(const char *fmt, ...) {
+	va_list va;
+	va_start(va, fmt);
+	RString sBuff = vssprintf(fmt, va);
+	va_end(va);
+
+	Write(WRITE_TO_TIME, LogLevel_Info, Log::General, sBuff);
+}
+
+void RageLog::UserLog(const RString &sType, const RString &sElement, const char *fmt, ...) {
+	va_list va;
+	va_start(va, fmt);
+	RString sBuf = vssprintf(fmt, va);
+	va_end(va);
+
+	if (!sType.empty())
+		sBuf = ssprintf("%s \"%s\" %s", sType.c_str(), sElement.c_str(), sBuf.c_str());
+
+	Write(WRITE_TO_USER_LOG, LogLevel_Info, Log::General, sBuf);
+}
+
+void RageLog::LogLine(LogLevel level, Log::Category cat, const char *file, int line, const char *fmt, ...) {
+	if (level < GetEffectiveLevel(cat))
 		return;
 
 	va_list va;
-	va_start( va, fmt );
-	RString sMsg = vssprintf( fmt, va );
-	va_end( va );
+	va_start(va, fmt);
+	RString sMsg = vssprintf(fmt, va);
+	va_end(va);
 
 	/* Ignore everything up to and including the first "src/". */
-	const char *slash = file ? strstr( file, "src/" ) : nullptr;
-	if( slash )
+	const char *slash = file ? strstr(file, "src/") : nullptr;
+	if (slash)
 		file = slash + 4;
 
 	/* "<cat>  <file>:<line>  <msg>" -- the [LEVEL] tag and timestamp are
 	 * added by Write(). */
-	RString sLine = ssprintf( "%-7s %s:%d  %s",
-		Log::CategoryToString( cat ), file ? file : "?", line, sMsg.c_str() );
+	RString sLine = ssprintf("%-7s %s:%d  %s", Log::CategoryToString(cat), file ? file : "?", line, sMsg.c_str());
 
-	int where = ( level >= LogLevel_Info ) ? WRITE_TO_INFO : 0;
-	Write( where, level, cat, sLine );
+	int where = (level >= LogLevel_Info) ? WRITE_TO_INFO : 0;
+	Write(where, level, cat, sLine);
 }
 
 /* Emit one already-tagged line (no timestamp) to every destination its
  * `where` bits select. Shared by Write() and the repeat-summary. */
-void RageLog::EmitLine( int where, const RString &sTagged )
-{
+void RageLog::EmitLine(int where, const RString &sTagged) {
 	RString sStr = sTagged;
 
-	if( m_bShowLogOutput || (where&WRITE_TO_INFO) )
+	if (m_bShowLogOutput || (where & WRITE_TO_INFO))
 		puts(sStr);
-	if( where & WRITE_TO_INFO )
-		AddToInfo( sStr );
-	if( m_bLogToDisk && (where&WRITE_TO_INFO) && g_fileInfo->IsOpen() )
-		g_fileInfo->PutLine( sStr );
-	if( m_bUserLogToDisk && (where&WRITE_TO_USER_LOG) && g_fileUserLog->IsOpen() )
-		g_fileUserLog->PutLine( sStr );
+	if (where & WRITE_TO_INFO)
+		AddToInfo(sStr);
+	if (m_bLogToDisk && (where & WRITE_TO_INFO) && g_fileInfo->IsOpen())
+		g_fileInfo->PutLine(sStr);
+	if (m_bUserLogToDisk && (where & WRITE_TO_USER_LOG) && g_fileUserLog->IsOpen())
+		g_fileUserLog->PutLine(sStr);
 
 	/* Timestamp goes on log.txt / timelog.txt / RecentLogs only, not
 	 * info.txt or stdout. */
-	sStr.insert( 0, SecondsToMMSSMsMsMs( static_cast<float>(RageTimer::GetTimeSinceStart()) ) + "  " );
+	sStr.insert(0, SecondsToMMSSMsMsMs(static_cast<float>(RageTimer::GetTimeSinceStart())) + "  ");
 
-	if( where & WRITE_TO_TIME )
-		g_fileTimeLog->PutLine( sStr );
+	if (where & WRITE_TO_TIME)
+		g_fileTimeLog->PutLine(sStr);
 
-	AddToRecentLogs( sStr );
+	AddToRecentLogs(sStr);
 
-	if( m_bLogToDisk && g_fileLog->IsOpen() )
-		g_fileLog->PutLine( sStr );
+	if (m_bLogToDisk && g_fileLog->IsOpen())
+		g_fileLog->PutLine(sStr);
 }
 
-void RageLog::SpillRepeat()
-{
+void RageLog::SpillRepeat() {
 	/* Occurrences 1 and 2 of a run are printed verbatim; only the 3rd
 	 * and beyond are folded into this note, so a mere pair of identical
 	 * lines produces no note. */
-	if( m_iRepeatCount >= 2 )
-	{
+	if (m_iRepeatCount >= 2) {
 		int n = m_iRepeatCount - 1;
-		EmitLine( m_iLastWhere, m_sLastTag +
-			ssprintf( "(previous line repeated %d more time%s)", n, n == 1 ? "" : "s" ) );
+		EmitLine(m_iLastWhere, m_sLastTag + ssprintf("(previous line repeated %d more time%s)", n, n == 1 ? "" : "s"));
 	}
 	m_iRepeatCount = 0;
 }
 
-void RageLog::Write( int where, LogLevel level, Log::Category cat, const RString &sLine )
-{
-	LockMut( *g_Mutex );
+void RageLog::Write(int where, LogLevel level, Log::Category cat, const RString &sLine) {
+	LockMut(*g_Mutex);
 
 	/* Drop lines below the effective minimum level (global, or the
 	 * per-category override). The time log and userlog.txt have their
 	 * own destinations and are never filtered here. ADR 0005. */
-	if( !(where & (WRITE_TO_TIME | WRITE_TO_USER_LOG)) && level < GetEffectiveLevel( cat ) )
+	if (!(where & (WRITE_TO_TIME | WRITE_TO_USER_LOG)) && level < GetEffectiveLevel(cat))
 		return;
 
 	/* Bracketed, fixed-width level tag on every line. Replaces the old
 	 * ///// warning frame; makes the log greppable by severity
 	 * (grep '\[WARN\]', grep -E '\[(WARN|ERROR)\]'). See ADR 0005. */
 	const char *sTag;
-	if( where & (WRITE_TO_TIME | WRITE_TO_USER_LOG) )
+	if (where & (WRITE_TO_TIME | WRITE_TO_USER_LOG))
 		sTag = ""; // time log and userlog.txt keep their own format
-	else switch( level )
-	{
-		case LogLevel_Error:	sTag = "[ERROR] ";	break;
-		case LogLevel_Warn:	sTag = "[WARN]  ";	break;
-		case LogLevel_Info:	sTag = "[INFO]  ";	break;
-		case LogLevel_Debug:	sTag = "[DEBUG] ";	break;
-		default:		sTag = "[TRACE] ";	break;
-	}
+	else
+		switch (level) {
+		case LogLevel_Error:
+			sTag = "[ERROR] ";
+			break;
+		case LogLevel_Warn:
+			sTag = "[WARN]  ";
+			break;
+		case LogLevel_Info:
+			sTag = "[INFO]  ";
+			break;
+		case LogLevel_Debug:
+			sTag = "[DEBUG] ";
+			break;
+		default:
+			sTag = "[TRACE] ";
+			break;
+		}
 
 	/* Consecutive-identical-line collapsing (ADR 0005 phase 3). Only
 	 * single-line, non-time/user lines participate; the time log keeps
 	 * every profiling sample and userlog.txt is already sparse. */
-	const bool bCollapsible = !(where & (WRITE_TO_TIME | WRITE_TO_USER_LOG))
-		&& sLine.find( '\n' ) == RString::npos;
+	const bool bCollapsible = !(where & (WRITE_TO_TIME | WRITE_TO_USER_LOG)) && sLine.find('\n') == RString::npos;
 
-	if( bCollapsible )
-	{
-		const RString sTagged = RString( sTag ) + sLine;
-		if( sTagged == m_sLastEmit )
-		{
+	if (bCollapsible) {
+		const RString sTagged = RString(sTag) + sLine;
+		if (sTagged == m_sLastEmit) {
 			++m_iRepeatCount;
 			// Print the 2nd occurrence verbatim; suppress the 3rd on.
-			if( m_iRepeatCount == 1 )
-				EmitLine( where, sTagged );
-			if( m_bFlush || (where & WRITE_TO_INFO) )
+			if (m_iRepeatCount == 1)
+				EmitLine(where, sTagged);
+			if (m_bFlush || (where & WRITE_TO_INFO))
 				Flush();
 			return;
 		}
-		SpillRepeat();		// a different line -- close out the run first
-		EmitLine( where, sTagged );
+		SpillRepeat(); // a different line -- close out the run first
+		EmitLine(where, sTagged);
 		m_sLastEmit = sTagged;
 		m_sLastTag = sTag;
 		m_iLastWhere = where;
 	}
-	else
-	{
+	else {
 		SpillRepeat();
-		m_sLastEmit.clear();	// a multi-line / special line breaks the run
+		m_sLastEmit.clear(); // a multi-line / special line breaks the run
 
 		std::vector<RString> asLines;
-		split( sLine, "\n", asLines, false );
-		for( RString &s : asLines )
-			EmitLine( where, RString( sTag ) + s );
+		split(sLine, "\n", asLines, false);
+		for (RString &s : asLines)
+			EmitLine(where, RString(sTag) + s);
 	}
 
-	if( m_bFlush || (where & WRITE_TO_INFO) )
+	if (m_bFlush || (where & WRITE_TO_INFO))
 		Flush();
 }
 
-
-void RageLog::Flush()
-{
+void RageLog::Flush() {
 	g_fileLog->Flush();
 	g_fileInfo->Flush();
 	g_fileTimeLog->Flush();
 	g_fileUserLog->Flush();
 }
 
-
 #define NEWLINE "\n"
 
-static char staticlog[1024*32]="";
+static char staticlog[1024 * 32] = "";
 static unsigned staticlog_size = 0;
-void RageLog::AddToInfo( const RString &str )
-{
+void RageLog::AddToInfo(const RString &str) {
 	static bool limit_reached = false;
-	if( limit_reached )
+	if (limit_reached)
 		return;
 
-	unsigned len = static_cast<unsigned>(str.size() + strlen( NEWLINE ));
-	if( staticlog_size + len > sizeof(staticlog) )
-	{
-		const RString txt( NEWLINE "Staticlog limit reached" NEWLINE );
+	unsigned len = static_cast<unsigned>(str.size() + strlen(NEWLINE));
+	if (staticlog_size + len > sizeof(staticlog)) {
+		const RString txt(NEWLINE "Staticlog limit reached" NEWLINE);
 
-		const unsigned int pos = std::min<unsigned int>(staticlog_size, static_cast<unsigned int>(sizeof(staticlog) - txt.size()));
-		memcpy( staticlog+pos, txt.data(), txt.size() );
+		const unsigned int pos =
+		   std::min<unsigned int>(staticlog_size, static_cast<unsigned int>(sizeof(staticlog) - txt.size()));
+		memcpy(staticlog + pos, txt.data(), txt.size());
 		limit_reached = true;
 		return;
 	}
 
-	memcpy( staticlog+staticlog_size, str.data(), str.size() );
+	memcpy(staticlog + staticlog_size, str.data(), str.size());
 	staticlog_size += static_cast<unsigned>(str.size());
-	memcpy( staticlog+staticlog_size, NEWLINE, strlen(NEWLINE) );
-	staticlog_size += static_cast<unsigned>(strlen( NEWLINE ));
+	memcpy(staticlog + staticlog_size, NEWLINE, strlen(NEWLINE));
+	staticlog_size += static_cast<unsigned>(strlen(NEWLINE));
 }
 
-const char *RageLog::GetInfo()
-{
-	staticlog[ sizeof(staticlog)-1 ] = 0;
+const char *RageLog::GetInfo() {
+	staticlog[sizeof(staticlog) - 1] = 0;
 	return staticlog;
 }
 
 static const int BACKLOG_LINES = 10;
 static char backlog[BACKLOG_LINES][1024];
-static int backlog_start=0, backlog_cnt=0;
-void RageLog::AddToRecentLogs( const RString &str )
-{
+static int backlog_start = 0, backlog_cnt = 0;
+void RageLog::AddToRecentLogs(const RString &str) {
 	unsigned len = static_cast<unsigned>(str.size());
-	if( len > sizeof(backlog[backlog_start])-1 )
-		len = sizeof(backlog[backlog_start])-1;
+	if (len > sizeof(backlog[backlog_start]) - 1)
+		len = sizeof(backlog[backlog_start]) - 1;
 
-	strncpy( backlog[backlog_start], str, len );
-	backlog[backlog_start] [ len ] = 0;
+	strncpy(backlog[backlog_start], str, len);
+	backlog[backlog_start][len] = 0;
 
 	backlog_start++;
-	if( backlog_start > backlog_cnt )
-		backlog_cnt=backlog_start;
+	if (backlog_start > backlog_cnt)
+		backlog_cnt = backlog_start;
 	backlog_start %= BACKLOG_LINES;
 }
 
-const char *RageLog::GetRecentLog( int n )
-{
-	if( n >= BACKLOG_LINES || n >= backlog_cnt )
+const char *RageLog::GetRecentLog(int n) {
+	if (n >= BACKLOG_LINES || n >= backlog_cnt)
 		return nullptr;
 
-	if( backlog_cnt == BACKLOG_LINES )
-	{
+	if (backlog_cnt == BACKLOG_LINES) {
 		n += backlog_start;
 		n %= BACKLOG_LINES;
 	}
 	/* Make sure it's terminated: */
-	backlog[n][ sizeof(backlog[n])-1 ] = 0;
+	backlog[n][sizeof(backlog[n]) - 1] = 0;
 
 	return backlog[n];
 }
 
-
 static char g_AdditionalLogStr[10240] = "";
 static int g_AdditionalLogSize = 0;
 
-void RageLog::UpdateMappedLog()
-{
+void RageLog::UpdateMappedLog() {
 	RString str;
 	for (auto const &i : LogMaps)
-		str += ssprintf( "%s" NEWLINE, i.second.c_str() );
+		str += ssprintf("%s" NEWLINE, i.second.c_str());
 
-	g_AdditionalLogSize = static_cast<int>(std::min( sizeof(g_AdditionalLogStr), str.size()+1 ));
-	memcpy( g_AdditionalLogStr, str.c_str(), g_AdditionalLogSize );
-	g_AdditionalLogStr[ sizeof(g_AdditionalLogStr)-1 ] = 0;
+	g_AdditionalLogSize = static_cast<int>(std::min(sizeof(g_AdditionalLogStr), str.size() + 1));
+	memcpy(g_AdditionalLogStr, str.c_str(), g_AdditionalLogSize);
+	g_AdditionalLogStr[sizeof(g_AdditionalLogStr) - 1] = 0;
 }
 
-const char *RageLog::GetAdditionalLog()
-{
-	int size = std::min( g_AdditionalLogSize, (int) sizeof(g_AdditionalLogStr)-1 );
+const char *RageLog::GetAdditionalLog() {
+	int size = std::min(g_AdditionalLogSize, (int)sizeof(g_AdditionalLogStr) - 1);
 	g_AdditionalLogStr[size] = 0;
 	return g_AdditionalLogStr;
 }
 
-void RageLog::MapLog( const RString &key, const char *fmt, ... )
-{
+void RageLog::MapLog(const RString &key, const char *fmt, ...) {
 	RString s;
 
-	va_list	va;
-	va_start( va, fmt );
-	s += vssprintf( fmt, va );
-	va_end( va );
+	va_list va;
+	va_start(va, fmt);
+	s += vssprintf(fmt, va);
+	va_end(va);
 
 	LogMaps[key] = s;
 	UpdateMappedLog();
 }
 
-void RageLog::UnmapLog( const RString &key )
-{
-	LogMaps.erase( key );
+void RageLog::UnmapLog(const RString &key) {
+	LogMaps.erase(key);
 	UpdateMappedLog();
 }
 
-void ShowWarningOrTrace( const char *file, int line, const char *message, bool bWarning )
-{
+void ShowWarningOrTrace(const char *file, int line, const char *message, bool bWarning) {
 	/* Ignore everything up to and including the first "src/". */
-	const char *temp = strstr( file, "src/" );
-	if( temp )
+	const char *temp = strstr(file, "src/");
+	if (temp)
 		file = temp + 4;
 
 	void (RageLog::*method)(const char *fmt, ...) = bWarning ? &RageLog::Warn : &RageLog::Trace;
 
-	if( LOG )
-		(LOG->*method)( "%s:%i: %s", file, line, message );
+	if (LOG)
+		(LOG->*method)("%s:%i: %s", file, line, message);
 	else
-		fprintf( stderr, "%s:%i: %s\n", file, line, message );
+		fprintf(stderr, "%s:%i: %s\n", file, line, message);
 }
-
 
 /*
  * Copyright (c) 2001-2004 Chris Danford, Glenn Maynard

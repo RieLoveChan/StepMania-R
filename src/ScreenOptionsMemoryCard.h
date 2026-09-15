@@ -6,28 +6,26 @@
 
 #include <vector>
 
-
-class ScreenOptionsMemoryCard : public ScreenOptions
-{
-public:
+class ScreenOptionsMemoryCard : public ScreenOptions {
+ public:
 	virtual void Init();
 	void BeginScreen();
 
-	virtual void HandleScreenMessage( const ScreenMessage SM );
+	virtual void HandleScreenMessage(const ScreenMessage SM);
 
-protected:
-	virtual void AfterChangeRow( PlayerNumber pn );
+ protected:
+	virtual void AfterChangeRow(PlayerNumber pn);
 
-private:
-	void ImportOptions( int iRow, const std::vector<PlayerNumber> &vpns );
-	void ExportOptions( int iRow, const std::vector<PlayerNumber> &vpns );
+ private:
+	void ImportOptions(int iRow, const std::vector<PlayerNumber> &vpns);
+	void ExportOptions(int iRow, const std::vector<PlayerNumber> &vpns);
 
-	void HandleMessage( const Message &msg );
+	void HandleMessage(const Message &msg);
 
-	void ProcessMenuStart( const InputEventPlus &input );
+	void ProcessMenuStart(const InputEventPlus &input);
 
 	void CreateMenu();
-	void SelectRowWithMemoryCard( const RString &sOsMountPoint );
+	void SelectRowWithMemoryCard(const RString &sOsMountPoint);
 
 	bool UpdateCurrentUsbStorageDevices();
 	std::vector<UsbStorageDevice> m_CurrentUsbStorageDevices;

@@ -6,82 +6,89 @@
 
 #include <vector>
 
-
-void TexCoordArrayFromRect( float fImageCoords[8], const RectF &rect );
+void TexCoordArrayFromRect(float fImageCoords[8], const RectF &rect);
 
 class RageTexture;
 /** @brief A bitmap Actor that animates and moves around. */
-class Sprite: public Actor
-{
-public:
+class Sprite : public Actor {
+ public:
 	/** @brief The Sprite's present state. */
-	struct State
-	{
+	struct State {
 		RectF rect;
 		/** @brief The number of "seconds to show". */
 		float fDelay;
 	};
 
 	Sprite();
-	Sprite( const Sprite &cpy );
-	Sprite &operator=( Sprite other );
+	Sprite(const Sprite &cpy);
+	Sprite &operator=(Sprite other);
 	virtual ~Sprite();
 
 	// See explanation in source.
-	static Sprite* NewBlankSprite();
+	static Sprite *NewBlankSprite();
 
 	virtual void InitState() override;
 
-	void LoadFromNode( const XNode* pNode ) override;
+	void LoadFromNode(const XNode *pNode) override;
 	virtual Sprite *Copy() const override;
 
 	virtual bool EarlyAbortDraw() const override;
 	virtual void DrawPrimitives() override;
-	virtual void Update( float fDeltaTime ) override;
+	virtual void Update(float fDeltaTime) override;
 
-	void UpdateAnimationState();	// take m_fSecondsIntoState, and move to a new state
+	void UpdateAnimationState(); // take m_fSecondsIntoState, and move to a new state
 
 	// Adjust texture properties for song backgrounds.
-	static RageTextureID SongBGTexture( RageTextureID ID );
+	static RageTextureID SongBGTexture(RageTextureID ID);
 
 	// Adjust texture properties for song banners.
-	static RageTextureID SongBannerTexture( RageTextureID ID );
+	static RageTextureID SongBannerTexture(RageTextureID ID);
 
-	virtual void Load( RageTextureID ID );
-	void SetTexture( RageTexture *pTexture );
+	virtual void Load(RageTextureID ID);
+	void SetTexture(RageTexture *pTexture);
 
 	void UnloadTexture();
-	RageTexture* GetTexture() { return m_pTexture; };
+	RageTexture *GetTexture() {
+		return m_pTexture;
+	};
 
-	virtual void EnableAnimation( bool bEnable ) override;
+	virtual void EnableAnimation(bool bEnable) override;
 
 	virtual int GetNumStates() const override;
-	virtual void SetState( int iNewState ) override;
-	int GetState() { return m_iCurState; }
-	virtual float GetAnimationLengthSeconds() const override
-	{ return m_animation_length_seconds; }
+	virtual void SetState(int iNewState) override;
+	int GetState() {
+		return m_iCurState;
+	}
+	virtual float GetAnimationLengthSeconds() const override {
+		return m_animation_length_seconds;
+	}
 	virtual void RecalcAnimationLengthSeconds();
-	virtual void SetSecondsIntoAnimation( float fSeconds ) override;
-	void SetStateProperties(const std::vector<State>& new_states)
-	{ m_States= new_states; RecalcAnimationLengthSeconds(); SetState(0); }
+	virtual void SetSecondsIntoAnimation(float fSeconds) override;
+	void SetStateProperties(const std::vector<State> &new_states) {
+		m_States = new_states;
+		RecalcAnimationLengthSeconds();
+		SetState(0);
+	}
 
-	RString	GetTexturePath() const;
+	RString GetTexturePath() const;
 
-	void SetCustomTextureRect( const RectF &new_texcoord_frect );
-	void SetCustomTextureCoords( float fTexCoords[8] );
-	void SetCustomImageRect( RectF rectImageCoords );	// in image pixel space
-	void SetCustomImageCoords( float fImageCoords[8] );
-	void SetCustomPosCoords( float fPosCoords[8] );
+	void SetCustomTextureRect(const RectF &new_texcoord_frect);
+	void SetCustomTextureCoords(float fTexCoords[8]);
+	void SetCustomImageRect(RectF rectImageCoords); // in image pixel space
+	void SetCustomImageCoords(float fImageCoords[8]);
+	void SetCustomPosCoords(float fPosCoords[8]);
 	const RectF *GetCurrentTextureCoordRect() const;
-	const RectF *GetTextureCoordRectForState( int iState ) const;
+	const RectF *GetTextureCoordRectForState(int iState) const;
 	void StopUsingCustomCoords();
 	void StopUsingCustomPosCoords();
 	void GetActiveTextureCoords(float fTexCoordsOut[8]) const;
-	void StretchTexCoords( float fX, float fY );
-	void AddImageCoords( float fX, float fY ); // in image pixel space
-	void SetEffectMode( EffectMode em ) { m_EffectMode = em; }
+	void StretchTexCoords(float fX, float fY);
+	void AddImageCoords(float fX, float fY); // in image pixel space
+	void SetEffectMode(EffectMode em) {
+		m_EffectMode = em;
+	}
 
-	void LoadFromCached( const RString &sDir, const RString &sPath );
+	void LoadFromCached(const RString &sDir, const RString &sPath);
 
 	void SetTexCoordVelocity(float fVelX, float fVelY);
 	/**
@@ -90,11 +97,11 @@ public:
 	 * It has to fit within and become clipped to the given parameters.
 	 * @param fWidth the new width.
 	 * @param fHeight the new height. */
-	void ScaleToClipped( float fWidth, float fHeight );
-	void CropTo( float fWidth, float fHeight );
+	void ScaleToClipped(float fWidth, float fHeight);
+	void CropTo(float fWidth, float fHeight);
 
 	// Commands
-	virtual void PushSelf( lua_State *L ) override;
+	virtual void PushSelf(lua_State *L) override;
 
 	void SetAllStateDelays(float fDelay);
 
@@ -102,20 +109,20 @@ public:
 
 	bool m_use_effect_clock_for_texcoords;
 
-protected:
-	void LoadFromTexture( RageTextureID ID );
+ protected:
+	void LoadFromTexture(RageTextureID ID);
 
-private:
+ private:
 	void LoadStatesFromTexture();
 
-	void DrawTexture( const TweenState *state );
+	void DrawTexture(const TweenState *state);
 
-	RageTexture* m_pTexture;
+	RageTexture *m_pTexture;
 
 	std::vector<State> m_States;
-	int		m_iCurState;
+	int m_iCurState;
 	/** @brief The number of seconds that have elapsed since we switched to this frame. */
-	float	m_fSecsIntoState;
+	float m_fSecsIntoState;
 	float m_animation_length_seconds;
 
 	EffectMode m_EffectMode;
@@ -142,7 +149,7 @@ private:
 
 	// Remembered clipped dimensions are applied on Load().
 	// -1 means no remembered dimensions;
-	float	m_fRememberedClipWidth, m_fRememberedClipHeight;
+	float m_fRememberedClipWidth, m_fRememberedClipHeight;
 
 	float m_fTexCoordVelocityX;
 	float m_fTexCoordVelocityY;

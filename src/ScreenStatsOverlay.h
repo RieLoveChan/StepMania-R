@@ -10,15 +10,14 @@
 
 const int NUM_SKIPS_TO_SHOW = 5;
 
-class ScreenStatsOverlay : public Screen
-{
-public:
+class ScreenStatsOverlay : public Screen {
+ public:
 	virtual void Init();
-	
-	void Update( float fDeltaTime );
 
-private:
-	void AddTimestampLine( const RString &txt, const RageColor &color );
+	void Update(float fDeltaTime);
+
+ private:
+	void AddTimestampLine(const RString &txt, const RageColor &color);
 	void UpdateSkips();
 
 	BitmapText m_textStats;
@@ -27,20 +26,19 @@ private:
 	RageTimer m_timerSkip;
 	int m_LastSkip;
 
-	ThemeMetric<bool>  SHOW_SKIPS;
+	ThemeMetric<bool> SHOW_SKIPS;
 	ThemeMetric<float> SKIP_X;
 	ThemeMetric<float> SKIP_Y;
 	ThemeMetric<float> SKIP_SPACING_Y;
 	ThemeMetric<float> SKIP_WIDTH;
 };
 
-
 #endif
 
 /*
  * (c) 2001-2005 Chris Danford, Glenn Maynard
  * All rights reserved.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -50,7 +48,7 @@ private:
  * copyright notice(s) and this permission notice appear in all copies of
  * the Software and that both the above copyright notice(s) and this
  * permission notice appear in supporting documentation.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF

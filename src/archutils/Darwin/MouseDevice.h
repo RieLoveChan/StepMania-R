@@ -6,9 +6,7 @@
 
 #include <vector>
 
-
-struct Mouse
-{
+struct Mouse {
 	InputDevice id;
 	IOHIDElementCookie x_axis, y_axis, z_axis;
 	int x_min, x_max;
@@ -18,23 +16,26 @@ struct Mouse
 	Mouse();
 };
 
-class MouseDevice : public HIDDevice
-{
-private:
+class MouseDevice : public HIDDevice {
+ private:
 	std::unordered_map<IOHIDElementCookie, DeviceButton> m_Mapping;
 	Mouse m_Mouse;
 
-protected:
-	bool AddLogicalDevice( int usagePage, int usage );
-	void AddElement( int usagePage, int usage, IOHIDElementCookie cookie, const CFDictionaryRef properties );
+ protected:
+	bool AddLogicalDevice(int usagePage, int usage);
+	void AddElement(int usagePage, int usage, IOHIDElementCookie cookie, const CFDictionaryRef properties);
 	void Open();
 
 	// just in case -aj
-	Mouse GetMouse(){ return m_Mouse; }
+	Mouse GetMouse() {
+		return m_Mouse;
+	}
 
-public:
-	void GetButtonPresses( std::vector<DeviceInput>& vPresses, IOHIDElementCookie cookie, int value, const RageTimer& now ) const;
-	void GetDevicesAndDescriptions( std::vector<InputDeviceInfo>& vDevices ) const;
+ public:
+	void GetButtonPresses(
+	   std::vector<DeviceInput> &vPresses, IOHIDElementCookie cookie, int value, const RageTimer &now
+	) const;
+	void GetDevicesAndDescriptions(std::vector<InputDeviceInfo> &vDevices) const;
 };
 
 #endif
@@ -63,4 +64,3 @@ public:
  * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  * PERFORMANCE OF THIS SOFTWARE.
  */
-

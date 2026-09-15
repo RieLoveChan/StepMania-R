@@ -6,36 +6,29 @@
 
 #include <vector>
 
-
-RandomSample::RandomSample()
-{
+RandomSample::RandomSample() {
 	m_iIndexLastPlayed = -1;
 }
 
-
-RandomSample::~RandomSample()
-{
+RandomSample::~RandomSample() {
 	UnloadAll();
 }
 
-bool RandomSample::Load( std::string sFilePath, int iMaxToLoad )
-{
-	if( GetExtension(RString(sFilePath)).empty() )
-		return LoadSoundDir( sFilePath, iMaxToLoad );
+bool RandomSample::Load(std::string sFilePath, int iMaxToLoad) {
+	if (GetExtension(RString(sFilePath)).empty())
+		return LoadSoundDir(sFilePath, iMaxToLoad);
 	else
-		return LoadSound( sFilePath );
+		return LoadSound(sFilePath);
 }
 
-void RandomSample::UnloadAll()
-{
-	for( unsigned i=0; i<m_pSamples.size(); i++ )
+void RandomSample::UnloadAll() {
+	for (unsigned i = 0; i < m_pSamples.size(); i++)
 		delete m_pSamples[i];
 	m_pSamples.clear();
 }
 
-bool RandomSample::LoadSoundDir( std::string sDir, int iMaxToLoad )
-{
-	if( sDir.empty() )
+bool RandomSample::LoadSoundDir(std::string sDir, int iMaxToLoad) {
+	if (sDir.empty())
 		return true;
 
 #if 0
@@ -48,55 +41,51 @@ bool RandomSample::LoadSoundDir( std::string sDir, int iMaxToLoad )
 		sDir += "/";
 #else
 	// make sure there's a slash at the end of this path
-	if( sDir.substr(sDir.size()-1) != "/" )
+	if (sDir.substr(sDir.size() - 1) != "/")
 		sDir += "/";
 #endif
 
 	std::vector<RString> arraySoundFiles;
-	GetDirListing( RString(sDir + "*.mp3"), arraySoundFiles );
-	GetDirListing( RString(sDir + "*.oga"), arraySoundFiles );
-	GetDirListing( RString(sDir + "*.ogg"), arraySoundFiles );
-	GetDirListing( RString(sDir + "*.wav"), arraySoundFiles );
+	GetDirListing(RString(sDir + "*.mp3"), arraySoundFiles);
+	GetDirListing(RString(sDir + "*.oga"), arraySoundFiles);
+	GetDirListing(RString(sDir + "*.ogg"), arraySoundFiles);
+	GetDirListing(RString(sDir + "*.wav"), arraySoundFiles);
 
-	std::shuffle( arraySoundFiles.begin(), arraySoundFiles.end(), g_RandomNumberGenerator );
-	const unsigned int newSize = std::min<unsigned int>(static_cast<unsigned int>(arraySoundFiles.size()), static_cast<unsigned int>(iMaxToLoad));
+	std::shuffle(arraySoundFiles.begin(), arraySoundFiles.end(), g_RandomNumberGenerator);
+	const unsigned int newSize =
+	   std::min<unsigned int>(static_cast<unsigned int>(arraySoundFiles.size()), static_cast<unsigned int>(iMaxToLoad));
 	arraySoundFiles.resize(newSize);
 
-	for( unsigned i=0; i<arraySoundFiles.size(); i++ )
-		LoadSound( sDir + arraySoundFiles[i] );
+	for (unsigned i = 0; i < arraySoundFiles.size(); i++)
+		LoadSound(sDir + arraySoundFiles[i]);
 
 	return true;
 }
 
-bool RandomSample::LoadSound( std::string sSoundFilePath )
-{
-	LOG_TRACE(Log::Sound, "RandomSample::LoadSound( %s )", sSoundFilePath.c_str() );
+bool RandomSample::LoadSound(std::string sSoundFilePath) {
+	LOG_TRACE(Log::Sound, "RandomSample::LoadSound( %s )", sSoundFilePath.c_str());
 
 	RageSound *pSS = new RageSound;
-	if( !pSS->Load(sSoundFilePath) )
-	{
-		LOG_TRACE(Log::Sound, "Error loading \"%s\": %s", sSoundFilePath.c_str(), pSS->GetError().c_str() );
+	if (!pSS->Load(sSoundFilePath)) {
+		LOG_TRACE(Log::Sound, "Error loading \"%s\": %s", sSoundFilePath.c_str(), pSS->GetError().c_str());
 		delete pSS;
 		return false;
 	}
 
-
-	m_pSamples.push_back( pSS );
+	m_pSamples.push_back(pSS);
 
 	return true;
 }
 
-int RandomSample::GetNextToPlay()
-{
+int RandomSample::GetNextToPlay() {
 	// play one of the samples
-	if( m_pSamples.empty() )
+	if (m_pSamples.empty())
 		return -1;
 
 	int iIndexToPlay = 0;
-	for( int i=0; i<5; i++ )
-	{
-		iIndexToPlay = RandomInt( static_cast<int>(m_pSamples.size()) );
-		if( iIndexToPlay != m_iIndexLastPlayed )
+	for (int i = 0; i < 5; i++) {
+		iIndexToPlay = RandomInt(static_cast<int>(m_pSamples.size()));
+		if (iIndexToPlay != m_iIndexLastPlayed)
 			break;
 	}
 
@@ -104,25 +93,22 @@ int RandomSample::GetNextToPlay()
 	return iIndexToPlay;
 }
 
-void RandomSample::PlayRandom()
-{
+void RandomSample::PlayRandom() {
 	int iIndexToPlay = GetNextToPlay();
-	if( iIndexToPlay == -1 )
+	if (iIndexToPlay == -1)
 		return;
 	m_pSamples[iIndexToPlay]->Play(true);
 }
 
-void RandomSample::PlayCopyOfRandom()
-{
+void RandomSample::PlayCopyOfRandom() {
 	int iIndexToPlay = GetNextToPlay();
-	if( iIndexToPlay == -1 )
+	if (iIndexToPlay == -1)
 		return;
 	m_pSamples[iIndexToPlay]->PlayCopy(true);
 }
 
-void RandomSample::Stop()
-{
-	if( m_iIndexLastPlayed == -1 )	// nothing is currently playing
+void RandomSample::Stop() {
+	if (m_iIndexLastPlayed == -1) // nothing is currently playing
 		return;
 
 	m_pSamples[m_iIndexLastPlayed]->Stop();

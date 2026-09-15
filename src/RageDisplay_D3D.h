@@ -7,84 +7,78 @@
 
 #include <cstdint>
 
-class RageDisplay_D3D: public RageDisplay
-{
-public:
+class RageDisplay_D3D : public RageDisplay {
+ public:
 	RageDisplay_D3D();
 	~RageDisplay_D3D() override;
-	RString Init( const VideoModeParams &p, bool bAllowUnacceleratedRenderer ) override;
+	RString Init(const VideoModeParams &p, bool bAllowUnacceleratedRenderer) override;
 
-	RString GetApiDescription() const override { return "D3D"; }
-	void GetDisplaySpecs( DisplaySpecs &out ) const override;
+	RString GetApiDescription() const override {
+		return "D3D";
+	}
+	void GetDisplaySpecs(DisplaySpecs &out) const override;
 	void ResolutionChanged() override;
 	const RagePixelFormatDesc *GetPixelFormatDesc(RagePixelFormat pf) const override;
 
 	bool BeginFrame() override;
 	void EndFrame() override;
 	ActualVideoModeParams GetActualVideoModeParams() const override;
-	void SetBlendMode( BlendMode mode ) override;
-	bool SupportsTextureFormat( RagePixelFormat pixfmt, bool realtime=false ) override;
+	void SetBlendMode(BlendMode mode) override;
+	bool SupportsTextureFormat(RagePixelFormat pixfmt, bool realtime = false) override;
 	bool SupportsThreadedRendering() override;
-	bool SupportsPerVertexMatrixScale() override { return false; }
-	std::uintptr_t CreateTexture(
-		RagePixelFormat pixfmt,
-		RageSurface* img,
-		bool bGenerateMipMaps ) override;
-	void UpdateTexture(
-		std::uintptr_t iTexHandle,
-		RageSurface* img,
-		int xoffset, int yoffset, int width, int height
-		) override;
-	void DeleteTexture( std::uintptr_t iTexHandle ) override;
+	bool SupportsPerVertexMatrixScale() override {
+		return false;
+	}
+	std::uintptr_t CreateTexture(RagePixelFormat pixfmt, RageSurface *img, bool bGenerateMipMaps) override;
+	void
+	UpdateTexture(std::uintptr_t iTexHandle, RageSurface *img, int xoffset, int yoffset, int width, int height) override;
+	void DeleteTexture(std::uintptr_t iTexHandle) override;
 	void ClearAllTextures() override;
 	int GetNumTextureUnits() override;
-	void SetTexture( TextureUnit tu, std::uintptr_t iTexture ) override;
-	void SetTextureMode( TextureUnit tu, TextureMode tm ) override;
-	void SetTextureWrapping( TextureUnit tu, bool b ) override;
+	void SetTexture(TextureUnit tu, std::uintptr_t iTexture) override;
+	void SetTextureMode(TextureUnit tu, TextureMode tm) override;
+	void SetTextureWrapping(TextureUnit tu, bool b) override;
 	int GetMaxTextureSize() const override;
-	void SetTextureFiltering( TextureUnit tu, bool b ) override;
+	void SetTextureFiltering(TextureUnit tu, bool b) override;
 	bool IsZWriteEnabled() const override;
 	bool IsZTestEnabled() const override;
-	void SetZWrite( bool b ) override;
-	void SetZBias( float f ) override;
-	void SetZTestMode( ZTestMode mode ) override;
+	void SetZWrite(bool b) override;
+	void SetZBias(float f) override;
+	void SetZTestMode(ZTestMode mode) override;
 	void ClearZBuffer() override;
-	void SetCullMode( CullMode mode ) override;
-	void SetAlphaTest( bool b ) override;
+	void SetCullMode(CullMode mode) override;
+	void SetAlphaTest(bool b) override;
 	void SetMaterial(
-		const RageColor &emissive,
-		const RageColor &ambient,
-		const RageColor &diffuse,
-		const RageColor &specular,
-		float shininess
-		) override;
-	void SetLighting( bool b ) override;
-	void SetLightOff( int index ) override;
+	   const RageColor &emissive,
+	   const RageColor &ambient,
+	   const RageColor &diffuse,
+	   const RageColor &specular,
+	   float shininess
+	) override;
+	void SetLighting(bool b) override;
+	void SetLightOff(int index) override;
 	void SetLightDirectional(
-		int index,
-		const RageColor &ambient,
-		const RageColor &diffuse,
-		const RageColor &specular,
-		const RageVector3 &dir ) override;
+	   int index, const RageColor &ambient, const RageColor &diffuse, const RageColor &specular, const RageVector3 &dir
+	) override;
 
-	void SetSphereEnvironmentMapping( TextureUnit tu, bool b ) override;
-	void SetCelShaded( int stage ) override;
+	void SetSphereEnvironmentMapping(TextureUnit tu, bool b) override;
+	void SetCelShaded(int stage) override;
 
-	RageCompiledGeometry* CreateCompiledGeometry() override;
-	void DeleteCompiledGeometry( RageCompiledGeometry* p ) override;
+	RageCompiledGeometry *CreateCompiledGeometry() override;
+	void DeleteCompiledGeometry(RageCompiledGeometry *p) override;
 
-protected:
-	void DrawQuadsInternal( const RageSpriteVertex v[], int iNumVerts ) override;
-	void DrawQuadStripInternal( const RageSpriteVertex v[], int iNumVerts ) override;
-	void DrawFanInternal( const RageSpriteVertex v[], int iNumVerts ) override;
-	void DrawStripInternal( const RageSpriteVertex v[], int iNumVerts ) override;
-	void DrawTrianglesInternal( const RageSpriteVertex v[], int iNumVerts ) override;
-	void DrawSymmetricQuadStripInternal( const RageSpriteVertex v[], int iNumVerts ) override;
-	void DrawCompiledGeometryInternal( const RageCompiledGeometry *p, int iMeshIndex ) override;
+ protected:
+	void DrawQuadsInternal(const RageSpriteVertex v[], int iNumVerts) override;
+	void DrawQuadStripInternal(const RageSpriteVertex v[], int iNumVerts) override;
+	void DrawFanInternal(const RageSpriteVertex v[], int iNumVerts) override;
+	void DrawStripInternal(const RageSpriteVertex v[], int iNumVerts) override;
+	void DrawTrianglesInternal(const RageSpriteVertex v[], int iNumVerts) override;
+	void DrawSymmetricQuadStripInternal(const RageSpriteVertex v[], int iNumVerts) override;
+	void DrawCompiledGeometryInternal(const RageCompiledGeometry *p, int iMeshIndex) override;
 
-	RString TryVideoMode( const VideoModeParams &p, bool &bNewDeviceOut ) override;
-	RageSurface* CreateScreenshot() override;
-	RageMatrix GetOrthoMatrix( float l, float r, float b, float t, float zn, float zf ) override;
+	RString TryVideoMode(const VideoModeParams &p, bool &bNewDeviceOut) override;
+	RageSurface *CreateScreenshot() override;
+	RageMatrix GetOrthoMatrix(float l, float r, float b, float t, float zn, float zf) override;
 
 	void SendCurrentMatrices();
 };

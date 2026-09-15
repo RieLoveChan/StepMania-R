@@ -5,20 +5,23 @@
 
 #include <cstdint>
 
-class ArchHooks_Unix: public ArchHooks
-{
-public:
+class ArchHooks_Unix : public ArchHooks {
+ public:
 	void Init();
-	RString GetArchName() const { return "Unix"; }
+	RString GetArchName() const {
+		return "Unix";
+	}
 	void DumpDebugInfo();
 
-	void SetTime( tm newtime );
+	void SetTime(tm newtime);
 	std::int64_t GetMicrosecondsSinceStart();
 
-	void MountInitialFilesystems( const RString &sDirOfExecutable );
-	float GetDisplayAspectRatio() { return 4.0f/3; }
+	void MountInitialFilesystems(const RString &sDirOfExecutable);
+	float GetDisplayAspectRatio() {
+		return 4.0f / 3;
+	}
 
-	bool GoToURL( RString sUrl );
+	bool GoToURL(RString sUrl);
 
 	static clockid_t GetClock();
 

@@ -8,20 +8,20 @@
 
 #include <vector>
 
-
-class InputHandler_Linux_Event: public InputHandler
-{
-public:
+class InputHandler_Linux_Event : public InputHandler {
+ public:
 	InputHandler_Linux_Event();
 	~InputHandler_Linux_Event();
 	bool TryDevice(RString devfile);
-	bool DevicesChanged() { return m_bDevicesChanged; }
-	void GetDevicesAndDescriptions( std::vector<InputDeviceInfo>& vDevicesOut );
+	bool DevicesChanged() {
+		return m_bDevicesChanged;
+	}
+	void GetDevicesAndDescriptions(std::vector<InputDeviceInfo> &vDevicesOut);
 
-private:
+ private:
 	void StartThread();
 	void StopThread();
-	static int InputThread_Start( void *p );
+	static int InputThread_Start(void *p);
 	void InputThread();
 
 	RageThread m_InputThread;

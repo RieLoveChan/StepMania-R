@@ -3,14 +3,16 @@
 
 #include <vector>
 
-
 /** @brief The different fields to potentially translate. */
-struct TitleFields
-{
+struct TitleFields {
 	void SaveToStrings(
-		RString &sTitle, RString &sSubtitle, RString &sArtist,
-		RString &sTitleTranslit, RString &sSubtitleTranslit, RString &sArtistTranslit ) const
-	{
+	   RString &sTitle,
+	   RString &sSubtitle,
+	   RString &sArtist,
+	   RString &sTitleTranslit,
+	   RString &sSubtitleTranslit,
+	   RString &sArtistTranslit
+	) const {
 		sTitle = Title;
 		sSubtitle = Subtitle;
 		sArtist = Artist;
@@ -20,9 +22,13 @@ struct TitleFields
 	}
 
 	void LoadFromStrings(
-		RString sTitle, RString sSubtitle, RString sArtist,
-		RString sTitleTranslit, RString sSubtitleTranslit, RString sArtistTranslit )
-	{
+	   RString sTitle,
+	   RString sSubtitle,
+	   RString sArtist,
+	   RString sTitleTranslit,
+	   RString sSubtitleTranslit,
+	   RString sArtistTranslit
+	) {
 		Title = sTitle;
 		Subtitle = sSubtitle;
 		Artist = sArtist;
@@ -35,18 +41,18 @@ struct TitleFields
 };
 struct TitleTrans;
 /** @brief Automatic translation for Song titles. */
-class TitleSubst
-{
+class TitleSubst {
 	std::vector<TitleTrans *> ttab;
 
 	void AddTrans(const TitleTrans &tr);
-public:
+
+ public:
 	TitleSubst(const RString &section);
 	~TitleSubst();
 
 	void Load(const RString &filename, const RString &section);
 
-	void Subst( TitleFields &tf );
+	void Subst(TitleFields &tf);
 };
 
 #endif

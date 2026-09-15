@@ -6,38 +6,37 @@ struct lua_State;
 
 const RString SIGNATURE_APPEND = ".sig";
 
-class CryptManager
-{
-public:
+class CryptManager {
+ public:
 	CryptManager();
 	~CryptManager();
 
 	static void GenerateGlobalKeys();
-	static void GenerateRSAKey( unsigned int keyLength, RString &sPrivKey, RString &sPubKey );
-	static void GenerateRSAKeyToFile( unsigned int keyLength, RString privFilename, RString pubFilename );
-	static void SignFileToFile( RString sPath, RString sSignatureFile = "" );
-	static bool Sign( RString sPath, RString &sSignatureOut, RString sPrivateKey );
-	static bool VerifyFileWithFile( RString sPath, RString sSignatureFile = "" );
-	static bool VerifyFileWithFile( RString sPath, RString sSignatureFile, RString sPublicKeyFile );
-	static bool Verify( RageFileBasic &file, RString sSignature, RString sPublicKey );
+	static void GenerateRSAKey(unsigned int keyLength, RString &sPrivKey, RString &sPubKey);
+	static void GenerateRSAKeyToFile(unsigned int keyLength, RString privFilename, RString pubFilename);
+	static void SignFileToFile(RString sPath, RString sSignatureFile = "");
+	static bool Sign(RString sPath, RString &sSignatureOut, RString sPrivateKey);
+	static bool VerifyFileWithFile(RString sPath, RString sSignatureFile = "");
+	static bool VerifyFileWithFile(RString sPath, RString sSignatureFile, RString sPublicKeyFile);
+	static bool Verify(RageFileBasic &file, RString sSignature, RString sPublicKey);
 
-	static void GetRandomBytes( void *pData, int iBytes );
+	static void GetRandomBytes(void *pData, int iBytes);
 	static RString GenerateRandomUUID();
 
-	static RString GetMD5ForFile( RString fn );         // in binary
-	static RString GetMD5ForString( RString sData );    // in binary
-	static RString GetSHA1ForString( RString sData );   // in binary
-	static RString GetSHA1ForFile( RString fn );        // in binary
-	static RString GetSHA256ForString( RString sData ); // in binary
-	static RString GetSHA256ForFile( RString fn );      // in binary
+	static RString GetMD5ForFile(RString fn);         // in binary
+	static RString GetMD5ForString(RString sData);    // in binary
+	static RString GetSHA1ForString(RString sData);   // in binary
+	static RString GetSHA1ForFile(RString fn);        // in binary
+	static RString GetSHA256ForString(RString sData); // in binary
+	static RString GetSHA256ForFile(RString fn);      // in binary
 
 	static RString GetPublicKeyFileName();
 
 	// Lua
-	void PushSelf( lua_State *L );
+	void PushSelf(lua_State *L);
 };
 
-extern CryptManager*	CRYPTMAN;	// global and accessible from anywhere in our program
+extern CryptManager *CRYPTMAN; // global and accessible from anywhere in our program
 
 #endif
 

@@ -14,11 +14,10 @@ class RageTimer;
 class RageSoundMixBuffer;
 static const int samples_per_block = 512;
 
-class RageSoundDriver: public RageDriver
-{
-public:
+class RageSoundDriver : public RageDriver {
+ public:
 	/* Pass an empty string to get the default sound driver list. */
-	static RageSoundDriver *Create( const RString &sDrivers );
+	static RageSoundDriver *Create(const RString &sDrivers);
 	static DriverList m_pDriverList;
 	static RString GetDefaultSoundDriverList();
 
@@ -28,29 +27,31 @@ public:
 	~RageSoundDriver() override;
 
 	/* Initialize.  On failure, an error message is returned. */
-	virtual RString Init() { return RString(); }
+	virtual RString Init() {
+		return RString();
+	}
 
 	/* A RageSound calls this to request to be played.
 	 * XXX: define what we should do when it can't be played (eg. out of
 	 * channels) */
-	void StartMixing( RageSoundBase *pSound );
+	void StartMixing(RageSoundBase *pSound);
 
 	/* A RageSound calls this to request it not be played.  When this function
 	 * returns, snd is no longer valid; ensure no running threads are still
 	 * accessing it before returning.  This must handle gracefully the case where
 	 * snd was not actually being played, though it may print a warning. */
-	void StopMixing( RageSoundBase *pSound );
+	void StopMixing(RageSoundBase *pSound);
 
 	/* Pause or unpause the given sound.  If the sound was stopped (not paused),
 	 * return false and do nothing; otherwise return true and pause or unpause
 	 * the sound.  Unlike StopMixing, pausing and unpause a sound will not lose
 	 * any buffered sound (but will not release any resources associated with
 	 * playing the sound, either). */
-	bool PauseMixing( RageSoundBase *pSound, bool bStop );
+	bool PauseMixing(RageSoundBase *pSound, bool bStop);
 
 	/* Get the current hardware frame position, in the same time base as passed to
 	 * RageSound::CommitPlayingPosition. */
-	std::int64_t GetHardwareFrame( RageTimer *pTimer ) const;
+	std::int64_t GetHardwareFrame(RageTimer *pTimer) const;
 	virtual std::int64_t GetPosition() const = 0;
 	void low_sample_count_workaround();
 
@@ -58,18 +59,20 @@ public:
 	 * been completely flushed (so GetPosition is no longer meaningful), call
 	 * RageSoundBase::SoundIsFinishedPlaying(). */
 
-
-
 	/* Optional, if needed:  */
 	virtual void Update();
 
 	/* Sound startup latency--delay between Play() being called and actually
 	 * hearing it.  (This isn't necessarily the same as the buffer latency.) */
-	virtual float GetPlayLatency() const { return 0.0f; }
+	virtual float GetPlayLatency() const {
+		return 0.0f;
+	}
 
-	virtual int GetSampleRate() const { return 44100; }
+	virtual int GetSampleRate() const {
+		return 44100;
+	}
 
-protected:
+ protected:
 	/* Start the decoding.  This should be called once the hardware is set up and
 	 * GetSampleRate will return the correct value. */
 	void StartDecodeThread();
@@ -78,11 +81,12 @@ protected:
 	 * size.  This is the number of frames that Mix() will try to be able to return
 	 * at once.  This should generally be slightly larger than the sound writeahead,
 	 * to allow filling the buffer after an underrun.  The default is 4096 frames. */
-	void SetDecodeBufferSize( int frames );
+	void SetDecodeBufferSize(int frames);
 
 	/* Override this to set the priority of the decoding thread, which should be above
 	 * normal priority but not realtime. */
-	virtual void SetupDecodingThread() { }
+	virtual void SetupDecodingThread() {
+	}
 
 	/*
 	 * Read mixed data.
@@ -97,12 +101,13 @@ protected:
 	 * This function only mixes data; it will not lock any mutexes or do any file access, and
 	 * is safe to call from a realtime thread.
 	 */
-	void Mix( std::int16_t *pBuf, int iFrames, std::int64_t iFrameNumber, std::int64_t iCurrentFrame );
-	void Mix( float *pBuf, int iFrames, std::int64_t iFrameNumber, std::int64_t iCurrentFrame );
+	void Mix(std::int16_t *pBuf, int iFrames, std::int64_t iFrameNumber, std::int64_t iCurrentFrame);
+	void Mix(float *pBuf, int iFrames, std::int64_t iFrameNumber, std::int64_t iCurrentFrame);
 
-	void MixDeinterlaced( float **pBufs, int iChannels, int iFrames, std::int64_t iFrameNumber, std::int64_t iCurrentFrame );
+	void
+	MixDeinterlaced(float **pBufs, int iChannels, int iFrames, std::int64_t iFrameNumber, std::int64_t iCurrentFrame);
 
-private:
+ private:
 	/* This mutex is used for serializing with the decoder thread.  Locking this mutex
 	 * can take a while. */
 	RageMutex m_Mutex;
@@ -152,20 +157,18 @@ private:
 	 * Do not allocate or deallocate memory in the mixing thread since allocating memory
 	 * involves taking a lock. Instead, push the deallocation to the main thread.
 	 */
-	struct sound_block
-	{
+	struct sound_block {
 		float m_Buffer[samples_per_block];
-		float *m_BufferNext; // beginning of the unread data
-		int m_FramesInBuffer; // total number of frames at m_BufferNext
+		float *m_BufferNext;      // beginning of the unread data
+		int m_FramesInBuffer;     // total number of frames at m_BufferNext
 		std::int64_t m_iPosition; // stream frame of m_BufferNext
-		sound_block(): m_BufferNext(m_Buffer),
-			m_FramesInBuffer(0), m_iPosition(0) {}
+		sound_block() : m_BufferNext(m_Buffer), m_FramesInBuffer(0), m_iPosition(0) {
+		}
 	};
 
-	struct Sound
-	{
+	struct Sound {
 		Sound();
-		void Allocate( int iFrames );
+		void Allocate(int iFrames);
 		void Deallocate();
 
 		RageSoundBase *m_pSound;
@@ -174,8 +177,7 @@ private:
 
 		bool m_bPaused;
 
-		struct QueuedPosMap
-		{
+		struct QueuedPosMap {
 			int iFrames;
 			std::int64_t iStreamFrame;
 			std::int64_t iHardwareFrame;
@@ -183,18 +185,17 @@ private:
 
 		CircBuf<QueuedPosMap> m_PosMapQueue;
 
-		enum
-		{
+		enum {
 			AVAILABLE,
 			BUFFERING,
-			STOPPED,	/* idle */
+			STOPPED, /* idle */
 
 			/* This state is set by the decoder thread, indicating that the sound has just
 			 * reached EOF.  Once the mixing thread finishes flushing buffer, it'll change
 			 * to the STOPPING_FINISH state. */
 			STOPPING,
 
-			HALTING,	/* stop immediately */
+			HALTING, /* stop immediately */
 			PLAYING
 		} m_State;
 	};
@@ -202,26 +203,27 @@ private:
 	/* List of currently playing sounds: XXX no vector */
 	Sound m_Sounds[32];
 
-	std::int64_t ClampHardwareFrame( std::int64_t iHardwareFrame ) const;
+	std::int64_t ClampHardwareFrame(std::int64_t iHardwareFrame) const;
 	mutable std::int64_t m_iMaxHardwareFrame;
 	mutable std::int64_t m_iVMaxHardwareFrame;
 	mutable std::int32_t soundDriverMaxSamples = 0;
 
 	bool m_bShutdownDecodeThread;
 
-	static int DecodeThread_start( void *p );
+	static int DecodeThread_start(void *p);
 	void DecodeThread();
-	RageSoundMixBuffer &MixIntoBuffer( int iFrames, std::int64_t iFrameNumber, std::int64_t iCurrentFrame );
+	RageSoundMixBuffer &MixIntoBuffer(int iFrames, std::int64_t iFrameNumber, std::int64_t iCurrentFrame);
 	RageThread m_DecodeThread;
 
-	int GetDataForSound( Sound &s );
+	int GetDataForSound(Sound &s);
 };
 
 // Can't use Create##name because many of these have -sw suffixes.
-#define REGISTER_SOUND_DRIVER_CLASS2( name, x ) \
-	static RegisterRageDriver register_##x( &RageSoundDriver::m_pDriverList, #name, CreateClass<RageSoundDriver_##x, RageDriver> )
-#define REGISTER_SOUND_DRIVER_CLASS( name ) REGISTER_SOUND_DRIVER_CLASS2( name, name )
-
+#define REGISTER_SOUND_DRIVER_CLASS2(name, x)                                                                          \
+	static RegisterRageDriver register_##x(                                                                             \
+	   &RageSoundDriver::m_pDriverList, #name, CreateClass<RageSoundDriver_##x, RageDriver>                             \
+	)
+#define REGISTER_SOUND_DRIVER_CLASS(name) REGISTER_SOUND_DRIVER_CLASS2(name, name)
 
 /*
  * (c) 2002-2004 Glenn Maynard

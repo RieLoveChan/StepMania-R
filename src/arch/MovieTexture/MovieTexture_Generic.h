@@ -12,20 +12,18 @@ struct RageTextureLock;
 class RageTextureRenderTarget;
 class Sprite;
 
-enum MovieDecoderPixelFormatYCbCr
-{
+enum MovieDecoderPixelFormatYCbCr {
 	PixelFormatYCbCr_YUYV422,
 	NUM_PixelFormatYCbCr,
 	PixelFormatYCbCr_Invalid
 };
 
+class MovieDecoder {
+ public:
+	virtual ~MovieDecoder() {
+	}
 
-class MovieDecoder
-{
-public:
-	virtual ~MovieDecoder() { }
-
-	virtual RString Open( RString sFile ) = 0;
+	virtual RString Open(RString sFile) = 0;
 	virtual void Close() = 0;
 	virtual void Rewind() = 0;
 
@@ -40,18 +38,20 @@ public:
 	/*
 	 * Get the currently-decoded frame.
 	 */
-	virtual bool GetFrame( RageSurface *pOut ) = 0;
+	virtual bool GetFrame(RageSurface *pOut) = 0;
 
 	// Returns true if the frame should be skipped.
 	virtual bool SkipNextFrame() = 0;
 
 	/* Return the dimensions of the image, in pixels (before aspect ratio
 	 * adjustments). */
-	virtual int GetWidth() const  = 0;
-	virtual int GetHeight() const  = 0;
+	virtual int GetWidth() const = 0;
+	virtual int GetHeight() const = 0;
 
 	/* Return the aspect ratio of a pixel in the image.  Usually 1. */
-	virtual float GetSourceAspectRatio() const { return 1.0f; }
+	virtual float GetSourceAspectRatio() const {
+		return 1.0f;
+	}
 
 	/*
 	 * Create a surface acceptable to pass to GetFrame.  This should be
@@ -64,7 +64,9 @@ public:
 	 * a packed-pixel YUV surface.  UYVY maps to RGBA, respectively.  If
 	 * used, set fmtout.
 	 */
-	virtual RageSurface *CreateCompatibleSurface( int iTextureWidth, int iTextureHeight, bool bPreferHighColor, MovieDecoderPixelFormatYCbCr &fmtout ) = 0;
+	virtual RageSurface *CreateCompatibleSurface(
+	   int iTextureWidth, int iTextureHeight, bool bPreferHighColor, MovieDecoderPixelFormatYCbCr &fmtout
+	) = 0;
 
 	/* The following functions return information about the current frame,
 	 * decoded by the last successful call to GetFrame, and will never be
@@ -78,11 +80,9 @@ public:
 	virtual void Cancel() = 0;
 };
 
-
-class MovieTexture_Generic: public RageMovieTexture
-{
-public:
-	MovieTexture_Generic( RageTextureID ID, MovieDecoder *pDecoder );
+class MovieTexture_Generic : public RageMovieTexture {
+ public:
+	MovieTexture_Generic(RageTextureID ID, MovieDecoder *pDecoder);
 	virtual ~MovieTexture_Generic();
 	RString Init();
 
@@ -91,19 +91,23 @@ public:
 
 	virtual void Reload();
 
-	virtual void SetPosition( float fSeconds );
+	virtual void SetPosition(float fSeconds);
 
 	// UpdateMovie tells the MovieTexture to update the displayed frame based
 	// on fSeconds passed in. (e.g., 5.9 input means show the frame that should
 	// be displayed 5.9 seconds into the movie).
-	virtual void UpdateMovie( float fSeconds );
-	virtual void SetPlaybackRate( float fRate ) { m_fRate = fRate; }
-	void SetLooping( bool bLooping=true ) { m_bLoop = bLooping; }
+	virtual void UpdateMovie(float fSeconds);
+	virtual void SetPlaybackRate(float fRate) {
+		m_fRate = fRate;
+	}
+	void SetLooping(bool bLooping = true) {
+		m_bLoop = bLooping;
+	}
 	std::uintptr_t GetTexHandle() const;
 
-	static EffectMode GetEffectMode( MovieDecoderPixelFormatYCbCr fmt );
+	static EffectMode GetEffectMode(MovieDecoderPixelFormatYCbCr fmt);
 
-private:
+ private:
 	MovieDecoder *m_pDecoder;
 
 	std::unique_ptr<std::thread> decoding_thread;

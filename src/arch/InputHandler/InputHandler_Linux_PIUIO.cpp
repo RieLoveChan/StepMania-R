@@ -19,32 +19,27 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+REGISTER_INPUT_HANDLER_CLASS2(PIUIO, Linux_PIUIO);
 
-REGISTER_INPUT_HANDLER_CLASS2( PIUIO, Linux_PIUIO );
-
-InputHandler_Linux_PIUIO::InputHandler_Linux_PIUIO()
-{
-	LOG->Trace( "InputHandler_Linux_PIUIO::InputHandler_Linux_PIUIO" );
+InputHandler_Linux_PIUIO::InputHandler_Linux_PIUIO() {
+	LOG->Trace("InputHandler_Linux_PIUIO::InputHandler_Linux_PIUIO");
 
 	// Open device file and make sure it's actually a device...
-	fd = open( "/dev/piuio0", O_RDONLY );
-	if( fd < 0 )
-	{
-		LOG->Warn( "Couldn't open PIUIO device: %s", strerror(errno) );
+	fd = open("/dev/piuio0", O_RDONLY);
+	if (fd < 0) {
+		LOG->Warn("Couldn't open PIUIO device: %s", strerror(errno));
 		return;
 	}
 
 	struct stat st;
-	if( fstat( fd, &st ) == -1 )
-	{
-		LOG->Warn( "Couldn't stat PIUIO device: %s", strerror(errno) );
+	if (fstat(fd, &st) == -1) {
+		LOG->Warn("Couldn't stat PIUIO device: %s", strerror(errno));
 		close(fd);
 		return;
 	}
 
-	if( !S_ISCHR( st.st_mode ) )
-	{
-		LOG->Warn( "Ignoring /dev/piuio0: not a character device" );
+	if (!S_ISCHR(st.st_mode)) {
+		LOG->Warn("Ignoring /dev/piuio0: not a character device");
 		close(fd);
 		return;
 	}
@@ -54,36 +49,31 @@ InputHandler_Linux_PIUIO::InputHandler_Linux_PIUIO()
 	// Set up a flag we can use to stop the input thread gracefully
 	m_bShutdown = false;
 
-	m_InputThread.SetName( "PIUIO thread" );
-	m_InputThread.Create( InputThread_Start, this );
+	m_InputThread.SetName("PIUIO thread");
+	m_InputThread.Create(InputThread_Start, this);
 }
 
-InputHandler_Linux_PIUIO::~InputHandler_Linux_PIUIO()
-{
+InputHandler_Linux_PIUIO::~InputHandler_Linux_PIUIO() {
 	// Shut down the thread if it's running
-	if( m_InputThread.IsCreated() )
-	{
+	if (m_InputThread.IsCreated()) {
 		m_bShutdown = true;
-		LOG->Trace( "Shutting down PIUIO thread ..." );
+		LOG->Trace("Shutting down PIUIO thread ...");
 		m_InputThread.Wait();
-		LOG->Info( "PIUIO thread shut down." );
+		LOG->Info("PIUIO thread shut down.");
 	}
 
 	if (fd >= 0)
 		close(fd);
 }
 
-int InputHandler_Linux_PIUIO::InputThread_Start( void *p )
-{
-	((InputHandler_Linux_PIUIO *) p)->InputThread();
+int InputHandler_Linux_PIUIO::InputThread_Start(void *p) {
+	((InputHandler_Linux_PIUIO *)p)->InputThread();
 	return 0;
 }
 
-void InputHandler_Linux_PIUIO::InputThread()
-{
+void InputHandler_Linux_PIUIO::InputThread() {
 	unsigned char inputs[32];
-	while( !m_bShutdown )
-	{
+	while (!m_bShutdown) {
 		// To get input from the PIUIO driver, just read from the
 		// device.  This returns 32 bytes:
 		//   8 bytes/64 bits - first set of sensors (e.g. top sensor in
@@ -93,8 +83,7 @@ void InputHandler_Linux_PIUIO::InputThread()
 		//   8 bytes/64 bits - fourth set of sensors
 
 		int ret = read(fd, &inputs, sizeof(inputs));
-		if (ret != sizeof(inputs))
-		{
+		if (ret != sizeof(inputs)) {
 			LOG->Warn("Unexpected packet (size %i != %i) from PIUIO", ret, (int)sizeof(inputs));
 			continue;
 		}
@@ -124,8 +113,7 @@ void InputHandler_Linux_PIUIO::InputThread()
 			if (lastInputs[i / 8] & (128 >> (i % 8)))
 				// Make a "pressed" event if the current reading
 				// is 0, and a "released" event if it's 1.
-				ButtonPressed(DeviceInput(id, enum_add2(JOY_BUTTON_1, i),
-						!(inputs[i / 8] & (128 >> (i % 8))), now));
+				ButtonPressed(DeviceInput(id, enum_add2(JOY_BUTTON_1, i), !(inputs[i / 8] & (128 >> (i % 8))), now));
 
 		// Save the current reading to use next time
 		memcpy(lastInputs, inputs, sizeof(lastInputs));
@@ -134,9 +122,8 @@ void InputHandler_Linux_PIUIO::InputThread()
 	InputHandler::UpdateTimer();
 }
 
-void InputHandler_Linux_PIUIO::GetDevicesAndDescriptions( std::vector<InputDeviceInfo>& vDevicesOut )
-{
-	vDevicesOut.push_back( InputDeviceInfo(InputDevice(DEVICE_PIUIO), "PIUIO") );
+void InputHandler_Linux_PIUIO::GetDevicesAndDescriptions(std::vector<InputDeviceInfo> &vDevicesOut) {
+	vDevicesOut.push_back(InputDeviceInfo(InputDevice(DEVICE_PIUIO), "PIUIO"));
 }
 
 /*

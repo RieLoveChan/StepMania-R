@@ -7,22 +7,20 @@
 
 #include <vector>
 
-
 class Course;
 
-class ScreenUnlockStatus : public ScreenAttract
-{
-public:
+class ScreenUnlockStatus : public ScreenAttract {
+ public:
 	virtual void Init();
 	~ScreenUnlockStatus();
 
-protected:
+ protected:
 	BitmapText PointsUntilNextUnlock;
-	std::vector<Sprite*> Unlocks;
-	std::vector<BitmapText*> item; // scrolling text
-	std::vector<Sprite*> ItemIcons;  // icons for scrolling text
+	std::vector<Sprite *> Unlocks;
+	std::vector<BitmapText *> item;  // scrolling text
+	std::vector<Sprite *> ItemIcons; // icons for scrolling text
 
-	std::vector<int> LastUnlocks;  // used for "last few" method
+	std::vector<int> LastUnlocks; // used for "last few" method
 };
 
 #endif

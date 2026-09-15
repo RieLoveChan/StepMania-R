@@ -6,62 +6,55 @@
 
 #include <vector>
 
+REGISTER_SCREEN_CLASS(ScreenSelectLanguage);
 
-REGISTER_SCREEN_CLASS( ScreenSelectLanguage );
-
-void ScreenSelectLanguage::Init()
-{
+void ScreenSelectLanguage::Init() {
 	// fill m_aGameCommands before calling Init()
 	std::vector<RString> vs;
-	THEME->GetLanguages( vs );
-	SortRStringArray( vs, true );
+	THEME->GetLanguages(vs);
+	SortRStringArray(vs, true);
 
 	int index = 0;
-	for (RString const &s : vs)
-	{
-		const LanguageInfo *pLI = GetLanguageInfo( s );
+	for (RString const &s : vs) {
+		const LanguageInfo *pLI = GetLanguageInfo(s);
 
 		GameCommand gc;
 		gc.m_iIndex = index++;
 		gc.m_sName = s;
 		gc.m_bInvalid = false;
-		if( pLI )
+		if (pLI)
 			gc.m_sText = THEME->GetString("NativeLanguageNames", pLI->szEnglishName);
 		else
 			gc.m_sText = s;
 
-		m_aGameCommands.push_back( gc );
+		m_aGameCommands.push_back(gc);
 	}
 
 	ScreenSelectMaster::Init();
 }
 
-RString ScreenSelectLanguage::GetDefaultChoice()
-{
+RString ScreenSelectLanguage::GetDefaultChoice() {
 	return HOOKS->GetPreferredLanguage();
 }
 
-void ScreenSelectLanguage::BeginScreen()
-{
+void ScreenSelectLanguage::BeginScreen() {
 	ScreenSelectMaster::BeginScreen();
 }
 
-bool ScreenSelectLanguage::MenuStart( const InputEventPlus &input )
-{
-	int iIndex = this->GetSelectionIndex( input.pn );
+bool ScreenSelectLanguage::MenuStart(const InputEventPlus &input) {
+	int iIndex = this->GetSelectionIndex(input.pn);
 	RString sLangCode = m_aGameCommands[iIndex].m_sName;
-	PREFSMAN->m_sLanguage.Set( sLangCode );
+	PREFSMAN->m_sLanguage.Set(sLangCode);
 	PREFSMAN->SavePrefsToDisk();
-	THEME->SwitchThemeAndLanguage( THEME->GetCurThemeName(), PREFSMAN->m_sLanguage, PREFSMAN->m_bPseudoLocalize );
+	THEME->SwitchThemeAndLanguage(THEME->GetCurThemeName(), PREFSMAN->m_sLanguage, PREFSMAN->m_bPseudoLocalize);
 
 	m_soundStart.Play(true);
-	this->PostScreenMessage( SM_BeginFadingOut, 0 );
+	this->PostScreenMessage(SM_BeginFadingOut, 0);
 	return true;
 }
 
-bool ScreenSelectLanguage::MenuBack( const InputEventPlus &/* input */ )
-{
-	return false;	// ignore the press
+bool ScreenSelectLanguage::MenuBack(const InputEventPlus & /* input */) {
+	return false; // ignore the press
 }
 
 /*

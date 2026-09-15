@@ -8,34 +8,30 @@
 #include <cmath>
 #include <cstdint>
 
-bool SuspendThread( std::uint64_t threadHandle )
-{
-	return !thread_suspend( thread_act_t(threadHandle) );
+bool SuspendThread(std::uint64_t threadHandle) {
+	return !thread_suspend(thread_act_t(threadHandle));
 }
 
-bool ResumeThread( std::uint64_t threadHandle )
-{
-	return !thread_resume( thread_act_t(threadHandle) );
+bool ResumeThread(std::uint64_t threadHandle) {
+	return !thread_resume(thread_act_t(threadHandle));
 }
 
-std::uint64_t GetCurrentThreadId()
-{
+std::uint64_t GetCurrentThreadId() {
 	return mach_thread_self();
 }
 
-bool GetThreadBacktraceContext( std::uint64_t iID, BacktraceContext *ctx )
-{
+bool GetThreadBacktraceContext(std::uint64_t iID, BacktraceContext *ctx) {
 	/* Can't GetThreadBacktraceContext the current thread. */
-	ASSERT( iID != GetCurrentThreadId() );
-	SuspendThread( iID );
+	ASSERT(iID != GetCurrentThreadId());
+	SuspendThread(iID);
 
-	thread_act_t thread = thread_act_t( iID );
+	thread_act_t thread = thread_act_t(iID);
 
 #if defined(__i386__)
 	i386_thread_state_t state;
 	mach_msg_type_number_t count = i386_THREAD_STATE_COUNT;
 
-	if( thread_get_state(thread, i386_THREAD_STATE, thread_state_t(&state), &count) )
+	if (thread_get_state(thread, i386_THREAD_STATE, thread_state_t(&state), &count))
 		return false;
 	ctx->ip = (void *)state.__eip;
 	ctx->bp = (void *)state.__ebp;
@@ -45,8 +41,7 @@ bool GetThreadBacktraceContext( std::uint64_t iID, BacktraceContext *ctx )
 	x86_thread_state64_t state;
 	mach_msg_type_number_t count = x86_THREAD_STATE64_COUNT;
 
-	if (thread_get_state(thread, x86_THREAD_STATE64, thread_state_t(&state), &count))
-	{
+	if (thread_get_state(thread, x86_THREAD_STATE64, thread_state_t(&state), &count)) {
 		return false;
 	}
 
@@ -59,16 +54,16 @@ bool GetThreadBacktraceContext( std::uint64_t iID, BacktraceContext *ctx )
 #endif
 }
 
-RString SetThreadPrecedence( float prec )
-{
+RString SetThreadPrecedence(float prec) {
 	// Real values are between 0 and 63.
-	DEBUG_ASSERT( 0.0f <= prec && prec <= 1.0f );
-	thread_precedence_policy po = { integer_t( std::lrint(prec * 63) ) };
-	kern_return_t ret = thread_policy_set( mach_thread_self(), THREAD_PRECEDENCE_POLICY,
-					       (thread_policy_t)&po, THREAD_PRECEDENCE_POLICY_COUNT );
+	DEBUG_ASSERT(0.0f <= prec && prec <= 1.0f);
+	thread_precedence_policy po = {integer_t(std::lrint(prec * 63))};
+	kern_return_t ret = thread_policy_set(
+	   mach_thread_self(), THREAD_PRECEDENCE_POLICY, (thread_policy_t)&po, THREAD_PRECEDENCE_POLICY_COUNT
+	);
 
-	if( ret != KERN_SUCCESS )
-		return mach_error_string( ret );
+	if (ret != KERN_SUCCESS)
+		return mach_error_string(ret);
 	return RString();
 }
 

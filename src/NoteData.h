@@ -8,70 +8,87 @@
 #include <iterator>
 #include <vector>
 
-
 /** @brief Act on each non empty row in the specific track. */
-#define FOREACH_NONEMPTY_ROW_IN_TRACK( nd, track, row ) \
-	for( int row = -1; (nd).GetNextTapNoteRowForTrack(track,row); )
+#define FOREACH_NONEMPTY_ROW_IN_TRACK(nd, track, row) for (int row = -1; (nd).GetNextTapNoteRowForTrack(track, row);)
 /** @brief Act on each non empty row in the specified track within the specified range. */
-#define FOREACH_NONEMPTY_ROW_IN_TRACK_RANGE( nd, track, row, start, last ) \
-	for( int row = start-1; (nd).GetNextTapNoteRowForTrack(track,row) && row < (last); )
+#define FOREACH_NONEMPTY_ROW_IN_TRACK_RANGE(nd, track, row, start, last)                                               \
+	for (int row = start - 1; (nd).GetNextTapNoteRowForTrack(track, row) && row < (last);)
 /** @brief Act on each non empty row in the specified track within the specified range,
  going in reverse order. */
-#define FOREACH_NONEMPTY_ROW_IN_TRACK_RANGE_REVERSE( nd, track, row, start, last ) \
-	for( int row = last; (nd).GetPrevTapNoteRowForTrack(track,row) && row >= (start); )
+#define FOREACH_NONEMPTY_ROW_IN_TRACK_RANGE_REVERSE(nd, track, row, start, last)                                       \
+	for (int row = last; (nd).GetPrevTapNoteRowForTrack(track, row) && row >= (start);)
 /** @brief Act on each non empty row for all of the tracks. */
-#define FOREACH_NONEMPTY_ROW_ALL_TRACKS( nd, row ) \
-	for( int row = -1; (nd).GetNextTapNoteRowForAllTracks(row); )
+#define FOREACH_NONEMPTY_ROW_ALL_TRACKS(nd, row) for (int row = -1; (nd).GetNextTapNoteRowForAllTracks(row);)
 /** @brief Act on each non empty row for all of the tracks within the specified range. */
-#define FOREACH_NONEMPTY_ROW_ALL_TRACKS_RANGE( nd, row, start, last ) \
-	for( int row = start-1; (nd).GetNextTapNoteRowForAllTracks(row) && row < (last); )
+#define FOREACH_NONEMPTY_ROW_ALL_TRACKS_RANGE(nd, row, start, last)                                                    \
+	for (int row = start - 1; (nd).GetNextTapNoteRowForAllTracks(row) && row < (last);)
 
 /** @brief Holds data about the notes that the player is supposed to hit. */
-class NoteData
-{
-public:
-	typedef std::map<int,TapNote> TrackMap;
-	typedef std::map<int,TapNote>::iterator iterator;
-	typedef std::map<int,TapNote>::const_iterator const_iterator;
-	typedef std::map<int,TapNote>::reverse_iterator reverse_iterator;
-	typedef std::map<int,TapNote>::const_reverse_iterator const_reverse_iterator;
+class NoteData {
+ public:
+	typedef std::map<int, TapNote> TrackMap;
+	typedef std::map<int, TapNote>::iterator iterator;
+	typedef std::map<int, TapNote>::const_iterator const_iterator;
+	typedef std::map<int, TapNote>::reverse_iterator reverse_iterator;
+	typedef std::map<int, TapNote>::const_reverse_iterator const_reverse_iterator;
 
-	NoteData(): m_TapNotes() {}
+	NoteData() : m_TapNotes() {
+	}
 
-	iterator begin( int iTrack )					{ return m_TapNotes[iTrack].begin(); }
-	const_iterator begin( int iTrack ) const			{ return m_TapNotes[iTrack].begin(); }
-	reverse_iterator rbegin( int iTrack )				{ return m_TapNotes[iTrack].rbegin(); }
-	const_reverse_iterator rbegin( int iTrack ) const		{ return m_TapNotes[iTrack].rbegin(); }
-	iterator end( int iTrack )					{ return m_TapNotes[iTrack].end(); }
-	const_iterator end( int iTrack ) const				{ return m_TapNotes[iTrack].end(); }
-	reverse_iterator rend( int iTrack )				{ return m_TapNotes[iTrack].rend(); }
-	const_reverse_iterator rend( int iTrack ) const			{ return m_TapNotes[iTrack].rend(); }
-	iterator lower_bound( int iTrack, int iRow )			{ return m_TapNotes[iTrack].lower_bound( iRow ); }
-	const_iterator lower_bound( int iTrack, int iRow ) const	{ return m_TapNotes[iTrack].lower_bound( iRow ); }
-	iterator upper_bound( int iTrack, int iRow )			{ return m_TapNotes[iTrack].upper_bound( iRow ); }
-	const_iterator upper_bound( int iTrack, int iRow ) const	{ return m_TapNotes[iTrack].upper_bound( iRow ); }
-	void swap( NoteData &nd )
-	{
+	iterator begin(int iTrack) {
+		return m_TapNotes[iTrack].begin();
+	}
+	const_iterator begin(int iTrack) const {
+		return m_TapNotes[iTrack].begin();
+	}
+	reverse_iterator rbegin(int iTrack) {
+		return m_TapNotes[iTrack].rbegin();
+	}
+	const_reverse_iterator rbegin(int iTrack) const {
+		return m_TapNotes[iTrack].rbegin();
+	}
+	iterator end(int iTrack) {
+		return m_TapNotes[iTrack].end();
+	}
+	const_iterator end(int iTrack) const {
+		return m_TapNotes[iTrack].end();
+	}
+	reverse_iterator rend(int iTrack) {
+		return m_TapNotes[iTrack].rend();
+	}
+	const_reverse_iterator rend(int iTrack) const {
+		return m_TapNotes[iTrack].rend();
+	}
+	iterator lower_bound(int iTrack, int iRow) {
+		return m_TapNotes[iTrack].lower_bound(iRow);
+	}
+	const_iterator lower_bound(int iTrack, int iRow) const {
+		return m_TapNotes[iTrack].lower_bound(iRow);
+	}
+	iterator upper_bound(int iTrack, int iRow) {
+		return m_TapNotes[iTrack].upper_bound(iRow);
+	}
+	const_iterator upper_bound(int iTrack, int iRow) const {
+		return m_TapNotes[iTrack].upper_bound(iRow);
+	}
+	void swap(NoteData &nd) {
 		m_TapNotes.swap(nd.m_TapNotes);
 		m_atis.swap(nd.m_atis);
 		m_const_atis.swap(nd.m_const_atis);
 	}
 
-
 	// This is ugly to make it templated but I don't want to have to write the same class twice.
-	template<typename ND, typename iter, typename TN>
-	class _all_tracks_iterator
-	{
-		ND		*m_pNoteData;
-		std::vector<iter>	m_vBeginIters;
+	template <typename ND, typename iter, typename TN> class _all_tracks_iterator {
+		ND *m_pNoteData;
+		std::vector<iter> m_vBeginIters;
 
 		/* There isn't a "past the beginning" iterator so this is hard to make a true bidirectional iterator.
-		* Use the "past the end" iterator in place of the "past the beginning" iterator when in reverse. */
-		std::vector<iter>	m_vCurrentIters;
+		 * Use the "past the end" iterator in place of the "past the beginning" iterator when in reverse. */
+		std::vector<iter> m_vCurrentIters;
 
-		std::vector<iter>	m_vEndIters;
-		int		m_iTrack;
-		bool		m_bReverse;
+		std::vector<iter> m_vEndIters;
+		int m_iTrack;
+		bool m_bReverse;
 
 		// These exist so that the iterator can be revalidated if the NoteData is
 		// transformed during this iterator's lifetime.
@@ -80,37 +97,59 @@ public:
 		int m_StartRow;
 		int m_EndRow;
 
-		void Find( bool bReverse );
-	public:
-		_all_tracks_iterator( ND &nd, int iStartRow, int iEndRow, bool bReverse, bool bInclusive );
-		_all_tracks_iterator( const _all_tracks_iterator &other );
+		void Find(bool bReverse);
+
+	 public:
+		_all_tracks_iterator(ND &nd, int iStartRow, int iEndRow, bool bReverse, bool bInclusive);
+		_all_tracks_iterator(const _all_tracks_iterator &other);
 		~_all_tracks_iterator();
-		_all_tracks_iterator &operator=( const _all_tracks_iterator &other );
-		_all_tracks_iterator &operator++();		// preincrement
-		_all_tracks_iterator operator++( int dummy );	// postincrement
+		_all_tracks_iterator &operator=(const _all_tracks_iterator &other);
+		_all_tracks_iterator &operator++();         // preincrement
+		_all_tracks_iterator operator++(int dummy); // postincrement
 		//_all_tracks_iterator &operator--();		// predecrement
 		//_all_tracks_iterator operator--( int dummy );	// postdecrement
-		inline int Track() const		{ return m_iTrack; }
-		inline int Row() const			{ return m_vCurrentIters[m_iTrack]->first; }
-		inline bool IsAtEnd() const		{ return m_iTrack == -1; }
-		inline iter GetIter( int iTrack ) const	{ return m_vCurrentIters[iTrack]; }
-		inline TN &operator*()			{ DEBUG_ASSERT( !IsAtEnd() ); return m_vCurrentIters[m_iTrack]->second; }
-		inline TN *operator->()			{ DEBUG_ASSERT( !IsAtEnd() ); return &m_vCurrentIters[m_iTrack]->second; }
-		inline const TN &operator*() const	{ DEBUG_ASSERT( !IsAtEnd() ); return m_vCurrentIters[m_iTrack]->second; }
-		inline const TN *operator->() const	{ DEBUG_ASSERT( !IsAtEnd() ); return &m_vCurrentIters[m_iTrack]->second; }
+		inline int Track() const {
+			return m_iTrack;
+		}
+		inline int Row() const {
+			return m_vCurrentIters[m_iTrack]->first;
+		}
+		inline bool IsAtEnd() const {
+			return m_iTrack == -1;
+		}
+		inline iter GetIter(int iTrack) const {
+			return m_vCurrentIters[iTrack];
+		}
+		inline TN &operator*() {
+			DEBUG_ASSERT(!IsAtEnd());
+			return m_vCurrentIters[m_iTrack]->second;
+		}
+		inline TN *operator->() {
+			DEBUG_ASSERT(!IsAtEnd());
+			return &m_vCurrentIters[m_iTrack]->second;
+		}
+		inline const TN &operator*() const {
+			DEBUG_ASSERT(!IsAtEnd());
+			return m_vCurrentIters[m_iTrack]->second;
+		}
+		inline const TN *operator->() const {
+			DEBUG_ASSERT(!IsAtEnd());
+			return &m_vCurrentIters[m_iTrack]->second;
+		}
 		// Use when transforming the NoteData.
-		void Revalidate(ND* notedata, std::vector<int> const& added_or_removed_tracks, bool added);
+		void Revalidate(ND *notedata, std::vector<int> const &added_or_removed_tracks, bool added);
 	};
-	typedef _all_tracks_iterator<NoteData, NoteData::iterator, TapNote> 			all_tracks_iterator;
-	typedef _all_tracks_iterator<const NoteData, NoteData::const_iterator, const TapNote>	all_tracks_const_iterator;
-	typedef all_tracks_iterator								all_tracks_reverse_iterator;
-	typedef all_tracks_const_iterator							all_tracks_const_reverse_iterator;
+	typedef _all_tracks_iterator<NoteData, NoteData::iterator, TapNote> all_tracks_iterator;
+	typedef _all_tracks_iterator<const NoteData, NoteData::const_iterator, const TapNote> all_tracks_const_iterator;
+	typedef all_tracks_iterator all_tracks_reverse_iterator;
+	typedef all_tracks_const_iterator all_tracks_const_reverse_iterator;
 	friend class _all_tracks_iterator<NoteData, NoteData::iterator, TapNote>;
 	friend class _all_tracks_iterator<const NoteData, NoteData::const_iterator, const TapNote>;
-private:
+
+ private:
 	// There's no point in inserting empty notes into the map.
 	// Any blank space in the map is defined to be empty.
-	std::vector<TrackMap>	m_TapNotes;
+	std::vector<TrackMap> m_TapNotes;
 
 	/**
 	 * @brief Determine whether this note is for Player 1 or Player 2.
@@ -147,52 +186,63 @@ private:
 	 * @return true if it's a fake, false otherwise. */
 	bool IsFake(const TapNote &tn, const int row) const;
 
-	std::pair<int, int> GetNumRowsWithSimultaneousTapsTwoPlayer(int minTaps = 2,
-														   int startRow = 0,
-														   int endRow = MAX_NOTE_ROW) const;
+	std::pair<int, int>
+	GetNumRowsWithSimultaneousTapsTwoPlayer(int minTaps = 2, int startRow = 0, int endRow = MAX_NOTE_ROW) const;
 
 	// These exist so that they can be revalidated when something that transforms
 	// the NoteData occurs. -Kyz
-	mutable std::set<all_tracks_iterator*> m_atis;
-	mutable std::set<all_tracks_const_iterator*> m_const_atis;
+	mutable std::set<all_tracks_iterator *> m_atis;
+	mutable std::set<all_tracks_const_iterator *> m_const_atis;
 
-	void AddATIToList(all_tracks_iterator* iter) const;
-	void AddATIToList(all_tracks_const_iterator* iter) const;
-	void RemoveATIFromList(all_tracks_iterator* iter) const;
-	void RemoveATIFromList(all_tracks_const_iterator* iter) const;
+	void AddATIToList(all_tracks_iterator *iter) const;
+	void AddATIToList(all_tracks_const_iterator *iter) const;
+	void RemoveATIFromList(all_tracks_iterator *iter) const;
+	void RemoveATIFromList(all_tracks_const_iterator *iter) const;
 
 	// Mina stuf (Used for chartkey hashing)
 	std::vector<int> NonEmptyRowVector;
 
-public:
+ public:
 	void Init();
 
 	// Mina stuf (Used for chartkey hashing)
 	void LogNonEmptyRows();
-	std::vector<int>& GetNonEmptyRowVector() { return NonEmptyRowVector; };
+	std::vector<int> &GetNonEmptyRowVector() {
+		return NonEmptyRowVector;
+	};
 
-	int GetNumTracks() const { return static_cast<int>(m_TapNotes.size()); }
-	void SetNumTracks( int iNewNumTracks );
+	int GetNumTracks() const {
+		return static_cast<int>(m_TapNotes.size());
+	}
+	void SetNumTracks(int iNewNumTracks);
 	bool IsComposite() const;
-	bool operator==( const NoteData &nd ) const			{ return m_TapNotes == nd.m_TapNotes; }
-	bool operator!=( const NoteData &nd ) const			{ return m_TapNotes != nd.m_TapNotes; }
+	bool operator==(const NoteData &nd) const {
+		return m_TapNotes == nd.m_TapNotes;
+	}
+	bool operator!=(const NoteData &nd) const {
+		return m_TapNotes != nd.m_TapNotes;
+	}
 
 	/* Return the note at the given track and row.  Row may be out of
 	 * range; pretend the song goes on with TAP_EMPTYs indefinitely. */
-	inline const TapNote &GetTapNote( unsigned track, int row ) const
-	{
+	inline const TapNote &GetTapNote(unsigned track, int row) const {
 		const TrackMap &mapTrack = m_TapNotes[track];
-		TrackMap::const_iterator iter = mapTrack.find( row );
-		if( iter != mapTrack.end() )
+		TrackMap::const_iterator iter = mapTrack.find(row);
+		if (iter != mapTrack.end())
 			return iter->second;
 		else
 			return TAP_EMPTY;
 	}
 
-
-	inline iterator FindTapNote( unsigned iTrack, int iRow )	{ return m_TapNotes[iTrack].find( iRow ); }
-	inline const_iterator FindTapNote( unsigned iTrack, int iRow ) const { return m_TapNotes[iTrack].find( iRow ); }
-	void RemoveTapNote( unsigned iTrack, iterator it )		{ m_TapNotes[iTrack].erase( it ); }
+	inline iterator FindTapNote(unsigned iTrack, int iRow) {
+		return m_TapNotes[iTrack].find(iRow);
+	}
+	inline const_iterator FindTapNote(unsigned iTrack, int iRow) const {
+		return m_TapNotes[iTrack].find(iRow);
+	}
+	void RemoveTapNote(unsigned iTrack, iterator it) {
+		m_TapNotes[iTrack].erase(it);
+	}
 
 	/**
 	 * @brief Return an iterator range for [rowBegin,rowEnd).
@@ -207,8 +257,9 @@ public:
 	 * @param iEndRow the ending point.
 	 * @param begin the eventual beginning point of the range.
 	 * @param end the eventual end point of the range. */
-	void GetTapNoteRange(int iTrack, int iStartRow, int iEndRow,
-						 TrackMap::const_iterator &begin, TrackMap::const_iterator &end ) const;
+	void GetTapNoteRange(
+	   int iTrack, int iStartRow, int iEndRow, TrackMap::const_iterator &begin, TrackMap::const_iterator &end
+	) const;
 	/**
 	 * @brief Return a constant iterator range for [rowBegin,rowEnd).
 	 * @param iTrack the column to use.
@@ -216,51 +267,60 @@ public:
 	 * @param iEndRow the ending point.
 	 * @param begin the eventual beginning point of the range.
 	 * @param end the eventual end point of the range. */
-	void GetTapNoteRange( int iTrack, int iStartRow, int iEndRow, TrackMap::iterator &begin, TrackMap::iterator &end );
-	all_tracks_iterator GetTapNoteRangeAllTracks( int iStartRow, int iEndRow, bool bInclusive = false )
-	{
-		return all_tracks_iterator( *this, iStartRow, iEndRow, false, bInclusive );
+	void GetTapNoteRange(int iTrack, int iStartRow, int iEndRow, TrackMap::iterator &begin, TrackMap::iterator &end);
+	all_tracks_iterator GetTapNoteRangeAllTracks(int iStartRow, int iEndRow, bool bInclusive = false) {
+		return all_tracks_iterator(*this, iStartRow, iEndRow, false, bInclusive);
 	}
-	all_tracks_const_iterator GetTapNoteRangeAllTracks( int iStartRow, int iEndRow, bool bInclusive = false ) const
-	{
-		return all_tracks_const_iterator( *this, iStartRow, iEndRow, false, bInclusive );
+	all_tracks_const_iterator GetTapNoteRangeAllTracks(int iStartRow, int iEndRow, bool bInclusive = false) const {
+		return all_tracks_const_iterator(*this, iStartRow, iEndRow, false, bInclusive);
 	}
-	all_tracks_reverse_iterator GetTapNoteRangeAllTracksReverse( int iStartRow, int iEndRow, bool bInclusive = false )
-	{
-		return all_tracks_iterator(*this, iStartRow, iEndRow, true, bInclusive );
+	all_tracks_reverse_iterator GetTapNoteRangeAllTracksReverse(int iStartRow, int iEndRow, bool bInclusive = false) {
+		return all_tracks_iterator(*this, iStartRow, iEndRow, true, bInclusive);
 	}
-	all_tracks_const_reverse_iterator GetTapNoteRangeAllTracksReverse( int iStartRow, int iEndRow, bool bInclusive = false ) const
-	{
-		return all_tracks_const_iterator(*this, iStartRow, iEndRow, true, bInclusive );
+	all_tracks_const_reverse_iterator
+	GetTapNoteRangeAllTracksReverse(int iStartRow, int iEndRow, bool bInclusive = false) const {
+		return all_tracks_const_iterator(*this, iStartRow, iEndRow, true, bInclusive);
 	}
 
 	// Call this after using any transform that changes the NoteData.
-	void RevalidateATIs(std::vector<int> const& added_or_removed_tracks, bool added);
-	void TransferATIs(NoteData& to);
+	void RevalidateATIs(std::vector<int> const &added_or_removed_tracks, bool added);
+	void TransferATIs(NoteData &to);
 
 	/* Return an iterator range include iStartRow to iEndRow.  Extend the range to include
 	 * hold notes overlapping the boundary. */
-	void GetTapNoteRangeInclusive(int iTrack, int iStartRow, int iEndRow,
-								  TrackMap::const_iterator &begin, TrackMap::const_iterator &end, bool bIncludeAdjacent=false ) const;
-	void GetTapNoteRangeInclusive(int iTrack, int iStartRow, int iEndRow,
-								  TrackMap::iterator &begin, TrackMap::iterator &end, bool bIncludeAdjacent=false );
+	void GetTapNoteRangeInclusive(
+	   int iTrack,
+	   int iStartRow,
+	   int iEndRow,
+	   TrackMap::const_iterator &begin,
+	   TrackMap::const_iterator &end,
+	   bool bIncludeAdjacent = false
+	) const;
+	void GetTapNoteRangeInclusive(
+	   int iTrack,
+	   int iStartRow,
+	   int iEndRow,
+	   TrackMap::iterator &begin,
+	   TrackMap::iterator &end,
+	   bool bIncludeAdjacent = false
+	);
 
 	/* Return an iterator range include iStartRow to iEndRow.  Shrink the range to exclude
 	 * hold notes overlapping the boundary. */
-	void GetTapNoteRangeExclusive(int iTrack, int iStartRow, int iEndRow,
-								  TrackMap::const_iterator &begin, TrackMap::const_iterator &end ) const;
-	void GetTapNoteRangeExclusive(int iTrack, int iStartRow, int iEndRow,
-								  TrackMap::iterator &begin, TrackMap::iterator &end );
-
+	void GetTapNoteRangeExclusive(
+	   int iTrack, int iStartRow, int iEndRow, TrackMap::const_iterator &begin, TrackMap::const_iterator &end
+	) const;
+	void
+	GetTapNoteRangeExclusive(int iTrack, int iStartRow, int iEndRow, TrackMap::iterator &begin, TrackMap::iterator &end);
 
 	/* Returns the row of the first TapNote on the track that has a row greater than rowInOut. */
-	bool GetNextTapNoteRowForTrack( int track, int &rowInOut, bool ignoreKeySounds=false ) const;
-	bool GetNextTapNoteRowForAllTracks( int &rowInOut ) const;
-	bool GetPrevTapNoteRowForTrack( int track, int &rowInOut ) const;
-	bool GetPrevTapNoteRowForAllTracks( int &rowInOut ) const;
+	bool GetNextTapNoteRowForTrack(int track, int &rowInOut, bool ignoreKeySounds = false) const;
+	bool GetNextTapNoteRowForAllTracks(int &rowInOut) const;
+	bool GetPrevTapNoteRowForTrack(int track, int &rowInOut) const;
+	bool GetPrevTapNoteRowForAllTracks(int &rowInOut) const;
 
-	void MoveTapNoteTrack( int dest, int src );
-	void SetTapNote( int track, int row, const TapNote& tn );
+	void MoveTapNoteTrack(int dest, int src);
+	void SetTapNote(int track, int row, const TapNote &tn);
 	/**
 	 * @brief Add a hold note, merging other overlapping holds and destroying
 	 * tap notes underneath.
@@ -268,129 +328,126 @@ public:
 	 * @param iStartRow the starting row.
 	 * @param iEndRow the ending row.
 	 * @param tn the tap note. */
-	void AddHoldNote(int iTrack,
-					 int iStartRow,
-					 int iEndRow,
-					 TapNote tn );
+	void AddHoldNote(int iTrack, int iStartRow, int iEndRow, TapNote tn);
 
-	void ClearRangeForTrack( int rowBegin, int rowEnd, int iTrack );
-	void ClearRange( int rowBegin, int rowEnd );
+	void ClearRangeForTrack(int rowBegin, int rowEnd, int iTrack);
+	void ClearRange(int rowBegin, int rowEnd);
 	void ClearAll();
-	void CopyRange( const NoteData& from, int rowFromBegin, int rowFromEnd, int rowToBegin = 0 );
-	void CopyAll( const NoteData& from );
+	void CopyRange(const NoteData &from, int rowFromBegin, int rowFromEnd, int rowToBegin = 0);
+	void CopyAll(const NoteData &from);
 
-	bool IsRowEmpty( int row ) const;
-	bool IsRangeEmpty( int track, int rowBegin, int rowEnd ) const;
-	int GetNumTapNonEmptyTracks( int row ) const;
-	void GetTapNonEmptyTracks( int row, std::set<int>& addTo ) const;
-	bool GetTapFirstNonEmptyTrack( int row, int &iNonEmptyTrackOut ) const;	// return false if no non-empty tracks at row
-	bool GetTapFirstEmptyTrack( int row, int &iEmptyTrackOut ) const;	// return false if no non-empty tracks at row
-	bool GetTapLastEmptyTrack( int row, int &iEmptyTrackOut ) const;	// return false if no empty tracks at row
-	int GetNumTracksWithTap( int row ) const;
-	int GetNumTracksWithTapOrHoldHead( int row ) const;
-	int GetFirstTrackWithTap( int row ) const;
-	int GetFirstTrackWithTapOrHoldHead( int row ) const;
-	int GetLastTrackWithTapOrHoldHead( int row ) const;
+	bool IsRowEmpty(int row) const;
+	bool IsRangeEmpty(int track, int rowBegin, int rowEnd) const;
+	int GetNumTapNonEmptyTracks(int row) const;
+	void GetTapNonEmptyTracks(int row, std::set<int> &addTo) const;
+	bool GetTapFirstNonEmptyTrack(int row, int &iNonEmptyTrackOut) const; // return false if no non-empty tracks at row
+	bool GetTapFirstEmptyTrack(int row, int &iEmptyTrackOut) const;       // return false if no non-empty tracks at row
+	bool GetTapLastEmptyTrack(int row, int &iEmptyTrackOut) const;        // return false if no empty tracks at row
+	int GetNumTracksWithTap(int row) const;
+	int GetNumTracksWithTapOrHoldHead(int row) const;
+	int GetFirstTrackWithTap(int row) const;
+	int GetFirstTrackWithTapOrHoldHead(int row) const;
+	int GetLastTrackWithTapOrHoldHead(int row) const;
 
-	inline bool IsThereATapAtRow( int row ) const			{ return GetFirstTrackWithTap( row ) != -1; }
-	inline bool IsThereATapOrHoldHeadAtRow( int row ) const		{ return GetFirstTrackWithTapOrHoldHead( row ) != -1; }
-	void GetTracksHeldAtRow( int row, std::set<int>& addTo );
-	int GetNumTracksHeldAtRow( int row );
+	inline bool IsThereATapAtRow(int row) const {
+		return GetFirstTrackWithTap(row) != -1;
+	}
+	inline bool IsThereATapOrHoldHeadAtRow(int row) const {
+		return GetFirstTrackWithTapOrHoldHead(row) != -1;
+	}
+	void GetTracksHeldAtRow(int row, std::set<int> &addTo);
+	int GetNumTracksHeldAtRow(int row);
 
-	bool IsHoldNoteAtRow( int iTrack, int iRow, int *pHeadRow = nullptr ) const;
-	bool IsHoldHeadOrBodyAtRow( int iTrack, int iRow, int *pHeadRow ) const;
+	bool IsHoldNoteAtRow(int iTrack, int iRow, int *pHeadRow = nullptr) const;
+	bool IsHoldHeadOrBodyAtRow(int iTrack, int iRow, int *pHeadRow) const;
 
 	// statistics
 	bool IsEmpty() const;
-	bool IsTrackEmpty( int iTrack ) const { return m_TapNotes[iTrack].empty(); }
+	bool IsTrackEmpty(int iTrack) const {
+		return m_TapNotes[iTrack].empty();
+	}
 	int GetFirstRow() const; // return the beat number of the first note
-	int GetLastRow() const;	 // return the beat number of the last note
-	float GetFirstBeat() const					{ return NoteRowToBeat( GetFirstRow() ); }
-	float GetLastBeat() const					{ return NoteRowToBeat( GetLastRow() ); }
-	int GetNumTapNotes( int iStartIndex = 0, int iEndIndex = MAX_NOTE_ROW ) const;
-	int GetNumTapNotesNoTiming( int iStartIndex = 0, int iEndIndex = MAX_NOTE_ROW ) const;
-	int GetNumTapNotesInRow( int iRow ) const;
-	int GetNumMines( int iStartIndex = 0, int iEndIndex = MAX_NOTE_ROW ) const;
-	int GetNumRowsWithTap( int iStartIndex = 0, int iEndIndex = MAX_NOTE_ROW ) const;
-	int GetNumRowsWithTapOrHoldHead( int iStartIndex = 0, int iEndIndex = MAX_NOTE_ROW ) const;
+	int GetLastRow() const;  // return the beat number of the last note
+	float GetFirstBeat() const {
+		return NoteRowToBeat(GetFirstRow());
+	}
+	float GetLastBeat() const {
+		return NoteRowToBeat(GetLastRow());
+	}
+	int GetNumTapNotes(int iStartIndex = 0, int iEndIndex = MAX_NOTE_ROW) const;
+	int GetNumTapNotesNoTiming(int iStartIndex = 0, int iEndIndex = MAX_NOTE_ROW) const;
+	int GetNumTapNotesInRow(int iRow) const;
+	int GetNumMines(int iStartIndex = 0, int iEndIndex = MAX_NOTE_ROW) const;
+	int GetNumRowsWithTap(int iStartIndex = 0, int iEndIndex = MAX_NOTE_ROW) const;
+	int GetNumRowsWithTapOrHoldHead(int iStartIndex = 0, int iEndIndex = MAX_NOTE_ROW) const;
 	/* Optimization: for the default of start to end, use the second (faster). XXX: Second what? -- Steve */
-	int GetNumHoldNotes( int iStartIndex = 0, int iEndIndex = MAX_NOTE_ROW ) const;
-	int GetNumRolls( int iStartIndex = 0, int iEndIndex = MAX_NOTE_ROW ) const;
+	int GetNumHoldNotes(int iStartIndex = 0, int iEndIndex = MAX_NOTE_ROW) const;
+	int GetNumRolls(int iStartIndex = 0, int iEndIndex = MAX_NOTE_ROW) const;
 
 	// Count rows that contain iMinTaps or more taps.
-	int GetNumRowsWithSimultaneousTaps( int iMinTaps, int iStartIndex = 0, int iEndIndex = MAX_NOTE_ROW ) const;
-	int GetNumJumps( int iStartIndex = 0, int iEndIndex = MAX_NOTE_ROW ) const
-	{
-		return GetNumRowsWithSimultaneousTaps( 2, iStartIndex, iEndIndex );
+	int GetNumRowsWithSimultaneousTaps(int iMinTaps, int iStartIndex = 0, int iEndIndex = MAX_NOTE_ROW) const;
+	int GetNumJumps(int iStartIndex = 0, int iEndIndex = MAX_NOTE_ROW) const {
+		return GetNumRowsWithSimultaneousTaps(2, iStartIndex, iEndIndex);
 	}
-
-
 
 	// This row needs at least iMinSimultaneousPresses either tapped or held.
-	bool RowNeedsAtLeastSimultaneousPresses( int iMinSimultaneousPresses, int row ) const;
-	bool RowNeedsHands( int row ) const { return RowNeedsAtLeastSimultaneousPresses(3,row); }
+	bool RowNeedsAtLeastSimultaneousPresses(int iMinSimultaneousPresses, int row) const;
+	bool RowNeedsHands(int row) const {
+		return RowNeedsAtLeastSimultaneousPresses(3, row);
+	}
 
 	// Count rows that need iMinSimultaneousPresses either tapped or held.
-	int GetNumRowsWithSimultaneousPresses( int iMinSimultaneousPresses, int iStartIndex = 0, int iEndIndex = MAX_NOTE_ROW ) const;
-	int GetNumHands( int iStartIndex = 0, int iEndIndex = MAX_NOTE_ROW ) const
-	{
-		return GetNumRowsWithSimultaneousPresses( 3, iStartIndex, iEndIndex );
+	int GetNumRowsWithSimultaneousPresses(
+	   int iMinSimultaneousPresses, int iStartIndex = 0, int iEndIndex = MAX_NOTE_ROW
+	) const;
+	int GetNumHands(int iStartIndex = 0, int iEndIndex = MAX_NOTE_ROW) const {
+		return GetNumRowsWithSimultaneousPresses(3, iStartIndex, iEndIndex);
 	}
-	int GetNumQuads( int iStartIndex = 0, int iEndIndex = MAX_NOTE_ROW ) const
-	{
-		return GetNumRowsWithSimultaneousPresses( 4, iStartIndex, iEndIndex );
+	int GetNumQuads(int iStartIndex = 0, int iEndIndex = MAX_NOTE_ROW) const {
+		return GetNumRowsWithSimultaneousPresses(4, iStartIndex, iEndIndex);
 	}
 
 	// and the other notetypes
-	int GetNumLifts( int iStartIndex = 0, int iEndIndex = MAX_NOTE_ROW ) const;
-	int GetNumFakes( int iStartIndex = 0, int iEndIndex = MAX_NOTE_ROW ) const;
+	int GetNumLifts(int iStartIndex = 0, int iEndIndex = MAX_NOTE_ROW) const;
+	int GetNumFakes(int iStartIndex = 0, int iEndIndex = MAX_NOTE_ROW) const;
 
 	// the couple/routine style variants of the above.
-	std::pair<int, int> GetNumTapNotesTwoPlayer(int startRow = 0,
-										   int endRow = MAX_NOTE_ROW) const;
+	std::pair<int, int> GetNumTapNotesTwoPlayer(int startRow = 0, int endRow = MAX_NOTE_ROW) const;
 
-	std::pair<int, int> GetNumJumpsTwoPlayer(int startRow = 0,
-										int endRow = MAX_NOTE_ROW) const;
+	std::pair<int, int> GetNumJumpsTwoPlayer(int startRow = 0, int endRow = MAX_NOTE_ROW) const;
 
-	std::pair<int, int> GetNumHandsTwoPlayer(int startRow = 0,
-										int endRow = MAX_NOTE_ROW) const;
+	std::pair<int, int> GetNumHandsTwoPlayer(int startRow = 0, int endRow = MAX_NOTE_ROW) const;
 
-	std::pair<int, int> GetNumQuadsTwoPlayer(int startRow = 0,
-										int endRow = MAX_NOTE_ROW) const;
+	std::pair<int, int> GetNumQuadsTwoPlayer(int startRow = 0, int endRow = MAX_NOTE_ROW) const;
 
-	std::pair<int, int> GetNumHoldNotesTwoPlayer(int startRow = 0,
-											int endRow = MAX_NOTE_ROW) const;
+	std::pair<int, int> GetNumHoldNotesTwoPlayer(int startRow = 0, int endRow = MAX_NOTE_ROW) const;
 
-	std::pair<int, int> GetNumMinesTwoPlayer(int startRow = 0,
-										int endRow = MAX_NOTE_ROW) const;
+	std::pair<int, int> GetNumMinesTwoPlayer(int startRow = 0, int endRow = MAX_NOTE_ROW) const;
 
-	std::pair<int, int> GetNumRollsTwoPlayer(int startRow = 0,
-										int endRow = MAX_NOTE_ROW) const;
+	std::pair<int, int> GetNumRollsTwoPlayer(int startRow = 0, int endRow = MAX_NOTE_ROW) const;
 
-	std::pair<int, int> GetNumLiftsTwoPlayer(int startRow = 0,
-										int endRow = MAX_NOTE_ROW) const;
+	std::pair<int, int> GetNumLiftsTwoPlayer(int startRow = 0, int endRow = MAX_NOTE_ROW) const;
 
-	std::pair<int, int> GetNumFakesTwoPlayer(int startRow = 0,
-										int endRow = MAX_NOTE_ROW) const;
+	std::pair<int, int> GetNumFakesTwoPlayer(int startRow = 0, int endRow = MAX_NOTE_ROW) const;
 
 	// Transformations
-	void LoadTransformed(const NoteData& original,
-						 int iNewNumTracks,
-						 const int iOriginalTrackToTakeFrom[] );	// -1 for iOriginalTracksToTakeFrom means no track
+	void LoadTransformed(
+	   const NoteData &original,
+	   int iNewNumTracks,
+	   const int iOriginalTrackToTakeFrom[]
+	); // -1 for iOriginalTracksToTakeFrom means no track
 
 	// XML
-	XNode* CreateNode() const;
-	void LoadFromNode( const XNode* pNode );
+	XNode *CreateNode() const;
+	void LoadFromNode(const XNode *pNode);
 };
 
 /** @brief Allow a quick way to swap notedata. */
-namespace std
-{
-	template<> inline void swap<NoteData>( NoteData &nd1, NoteData &nd2 ) noexcept
-	{
-		nd1.swap( nd2 );
-	}
+namespace std {
+template <> inline void swap<NoteData>(NoteData &nd1, NoteData &nd2) noexcept {
+	nd1.swap(nd2);
 }
+} // namespace std
 
 #endif
 

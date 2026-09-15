@@ -16,20 +16,17 @@
 
 #include <vector>
 
-
 // main page (type list)
-REGISTER_SCREEN_CLASS( ScreenOptionsExportPackage );
+REGISTER_SCREEN_CLASS(ScreenOptionsExportPackage);
 
-void ScreenOptionsExportPackage::Init()
-{
+void ScreenOptionsExportPackage::Init() {
 	ScreenOptions::Init();
 
-	SetNavigation( NAV_THREE_KEY_MENU );
-	SetInputMode( INPUTMODE_SHARE_CURSOR );
+	SetNavigation(NAV_THREE_KEY_MENU);
+	SetInputMode(INPUTMODE_SHARE_CURSOR);
 }
 
-void ScreenOptionsExportPackage::BeginScreen()
-{
+void ScreenOptionsExportPackage::BeginScreen() {
 	// Fill m_vsPackageTypes:
 	m_vsPackageTypes.push_back("Themes");
 	m_vsPackageTypes.push_back("NoteSkins");
@@ -37,39 +34,36 @@ void ScreenOptionsExportPackage::BeginScreen()
 	m_vsPackageTypes.push_back("Songs");
 	// announcers, characters, others?
 
-	std::vector<OptionRowHandler*> OptionRowHandlers;
-	for (RString const &s : m_vsPackageTypes)
-	{
+	std::vector<OptionRowHandler *> OptionRowHandlers;
+	for (RString const &s : m_vsPackageTypes) {
 		OptionRowHandler *pHand = OptionRowHandlerUtil::MakeNull();
 		OptionRowDefinition &def = pHand->m_Def;
 
 		def.m_sName = s;
 		def.m_bAllowExplanation = false;
-		//def.m_sExplanationName = "# files, # MB, # subdirs";
+		// def.m_sExplanationName = "# files, # MB, # subdirs";
 		def.m_bAllowThemeTitle = false;
 		def.m_bAllowThemeItems = false;
 		def.m_layoutType = LAYOUT_SHOW_ALL_IN_ROW;
 		def.m_bOneChoiceForAllPlayers = true;
 		def.m_vsChoices.clear();
-		def.m_vsChoices.push_back( "" );
-		OptionRowHandlers.push_back( pHand );
+		def.m_vsChoices.push_back("");
+		OptionRowHandlers.push_back(pHand);
 	}
-	ScreenOptions::InitMenu( OptionRowHandlers );
+	ScreenOptions::InitMenu(OptionRowHandlers);
 
 	ScreenOptions::BeginScreen();
 }
 
-void ScreenOptionsExportPackage::ProcessMenuStart( const InputEventPlus &input )
-{
-	if( IsTransitioning() )
+void ScreenOptionsExportPackage::ProcessMenuStart(const InputEventPlus &input) {
+	if (IsTransitioning())
 		return;
 
 	// switch to the subpage with the specified type
-	//int iCurRow = m_iCurrentRow[GAMESTATE->GetMasterPlayerNumber()];
+	// int iCurRow = m_iCurrentRow[GAMESTATE->GetMasterPlayerNumber()];
 	int iRow = GetCurrentRow();
-	if( m_pRows[iRow]->GetRowType() == OptionRow::RowType_Exit )
-	{
-		ScreenOptions::ProcessMenuStart( input );
+	if (m_pRows[iRow]->GetRowType() == OptionRow::RowType_Exit) {
+		ScreenOptions::ProcessMenuStart(input);
 		return;
 	}
 
@@ -83,87 +77,71 @@ void ScreenOptionsExportPackage::ProcessMenuStart( const InputEventPlus &input )
 
 // todo: process menu back in SubGroup mode
 
-void ScreenOptionsExportPackage::ImportOptions( int /* iRow */, const std::vector<PlayerNumber> & /* vpns */ )
-{
-
+void ScreenOptionsExportPackage::ImportOptions(int /* iRow */, const std::vector<PlayerNumber> & /* vpns */) {
 }
 
-void ScreenOptionsExportPackage::ExportOptions( int /* iRow */, const std::vector<PlayerNumber> & /* vpns */ )
-{
-
+void ScreenOptionsExportPackage::ExportOptions(int /* iRow */, const std::vector<PlayerNumber> & /* vpns */) {
 }
-
 
 // subpage (has all folders for the specified type)
-REGISTER_SCREEN_CLASS( ScreenOptionsExportPackageSubPage );
-void ScreenOptionsExportPackageSubPage::Init()
-{
+REGISTER_SCREEN_CLASS(ScreenOptionsExportPackageSubPage);
+void ScreenOptionsExportPackageSubPage::Init() {
 	ScreenOptions::Init();
 
-	SetNavigation( NAV_THREE_KEY_MENU );
-	SetInputMode( INPUTMODE_SHARE_CURSOR );
+	SetNavigation(NAV_THREE_KEY_MENU);
+	SetInputMode(INPUTMODE_SHARE_CURSOR);
 }
 
-void ScreenOptionsExportPackageSubPage::BeginScreen()
-{
+void ScreenOptionsExportPackageSubPage::BeginScreen() {
 	ScreenWithMenuElements::BeginScreen();
 
 	// Check type and fill m_vsPossibleDirsToExport
 	const RString *s_packageType = &ExportPackages::m_sPackageType;
-	if( *s_packageType == "Themes" )
-	{
+	if (*s_packageType == "Themes") {
 		// add themes
-		GetDirListing( SpecialFiles::THEMES_DIR + "*", m_vsPossibleDirsToExport, true, true );
+		GetDirListing(SpecialFiles::THEMES_DIR + "*", m_vsPossibleDirsToExport, true, true);
 	}
-	else if( *s_packageType == "NoteSkins" )
-	{
+	else if (*s_packageType == "NoteSkins") {
 		// add noteskins
 		std::vector<RString> vs;
-		GetDirListing( SpecialFiles::NOTESKINS_DIR + "*", vs, true, true );
+		GetDirListing(SpecialFiles::NOTESKINS_DIR + "*", vs, true, true);
 		for (RString const &s : vs)
-			GetDirListing( s + "*", m_vsPossibleDirsToExport, true, true );
+			GetDirListing(s + "*", m_vsPossibleDirsToExport, true, true);
 	}
-	else if( *s_packageType == "Courses" )
-	{
+	else if (*s_packageType == "Courses") {
 		// Add courses. Only support courses that are in a group folder.
 		// Support for courses not in a group folder should be phased out.
 		std::vector<RString> vs;
-		GetDirListing( SpecialFiles::COURSES_DIR + "*", vs, true, true );
-		StripCvsAndSvn( vs );
-		StripMacResourceForks( vs );
-		for (RString const &s : vs)
-		{
-			m_vsPossibleDirsToExport.push_back( s );
-			GetDirListing( s + "/*", m_vsPossibleDirsToExport, true, true );
+		GetDirListing(SpecialFiles::COURSES_DIR + "*", vs, true, true);
+		StripCvsAndSvn(vs);
+		StripMacResourceForks(vs);
+		for (RString const &s : vs) {
+			m_vsPossibleDirsToExport.push_back(s);
+			GetDirListing(s + "/*", m_vsPossibleDirsToExport, true, true);
 		}
 	}
-	else if( *s_packageType == "Songs" )
-	{
+	else if (*s_packageType == "Songs") {
 		// Add song groups
 		std::vector<RString> asAllGroups;
 		SONGMAN->GetSongGroupNames(asAllGroups);
-		for (RString const &s : asAllGroups)
-		{
+		for (RString const &s : asAllGroups) {
 			m_vsPossibleDirsToExport.push_back(s);
 		}
 	}
-	else if( *s_packageType == "SubGroup" )
-	{
-		//ExportPackages::m_sFolder
+	else if (*s_packageType == "SubGroup") {
+		// ExportPackages::m_sFolder
 		std::vector<RString> vs;
-		GetDirListing( SpecialFiles::SONGS_DIR + "/" + ExportPackages::m_sFolder + "/*", vs, true, true );
-		for (RString const &s : vs)
-		{
-			m_vsPossibleDirsToExport.push_back( s );
-			GetDirListing( s + "/*", m_vsPossibleDirsToExport, true, true );
+		GetDirListing(SpecialFiles::SONGS_DIR + "/" + ExportPackages::m_sFolder + "/*", vs, true, true);
+		for (RString const &s : vs) {
+			m_vsPossibleDirsToExport.push_back(s);
+			GetDirListing(s + "/*", m_vsPossibleDirsToExport, true, true);
 		}
 	}
-	StripCvsAndSvn( m_vsPossibleDirsToExport );
-	StripMacResourceForks( m_vsPossibleDirsToExport );
+	StripCvsAndSvn(m_vsPossibleDirsToExport);
+	StripMacResourceForks(m_vsPossibleDirsToExport);
 
-	std::vector<OptionRowHandler*> OptionRowHandlers;
-	for (RString const &s : m_vsPossibleDirsToExport)
-	{
+	std::vector<OptionRowHandler *> OptionRowHandlers;
+	for (RString const &s : m_vsPossibleDirsToExport) {
 		OptionRowHandler *pHand = OptionRowHandlerUtil::MakeNull();
 		OptionRowDefinition &def = pHand->m_Def;
 		def.m_layoutType = LAYOUT_SHOW_ALL_IN_ROW;
@@ -173,29 +151,24 @@ void ScreenOptionsExportPackageSubPage::BeginScreen()
 		def.m_sName = s;
 		def.m_sExplanationName = "# files, # MB, # subdirs";
 
-		def.m_vsChoices.push_back( "" );
-		OptionRowHandlers.push_back( pHand );
+		def.m_vsChoices.push_back("");
+		OptionRowHandlers.push_back(pHand);
 	}
-	ScreenOptions::InitMenu( OptionRowHandlers );
+	ScreenOptions::InitMenu(OptionRowHandlers);
 
 	ScreenOptions::BeginScreen();
 }
 
-static RString ReplaceInvalidFileNameChars( RString sOldFileName )
-{
+static RString ReplaceInvalidFileNameChars(RString sOldFileName) {
 	RString sNewFileName = sOldFileName;
-	const char charsToReplace[] = {
-		' ', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')',
-		'+', '=', '[', ']', '{', '}', '|', ':', '\"', '\\',
-		'<', '>', ',', '?', '/'
-	};
-	for( unsigned i=0; i<sizeof(charsToReplace); i++ )
-		sNewFileName.Replace( charsToReplace[i], '_' );
+	const char charsToReplace[] = {' ', '!', '@', '#', '$', '%', '^',  '&',  '*', '(', ')', '+', '=',
+	                               '[', ']', '{', '}', '|', ':', '\"', '\\', '<', '>', ',', '?', '/'};
+	for (unsigned i = 0; i < sizeof(charsToReplace); i++)
+		sNewFileName.Replace(charsToReplace[i], '_');
 	return sNewFileName;
 }
 
-static bool ExportPackage( RString /* sPackageName */, RString /* sDirToExport */, RString &sErrorOut )
-{
+static bool ExportPackage(RString /* sPackageName */, RString /* sDirToExport */, RString &sErrorOut) {
 	// Package (.smzip) export is not implemented. The old body used a
 	// long-gone RageFileObjZip API and had been #if 0'd out for years
 	// ("XXX: totally doesn't work. -aj"); the CreateZip fork it might
@@ -207,22 +180,20 @@ static bool ExportPackage( RString /* sPackageName */, RString /* sDirToExport *
 	return false;
 }
 
-void ScreenOptionsExportPackageSubPage::ProcessMenuStart( const InputEventPlus &input )
-{
-	if( IsTransitioning() )
+void ScreenOptionsExportPackageSubPage::ProcessMenuStart(const InputEventPlus &input) {
+	if (IsTransitioning())
 		return;
 
 	int iCurRow = m_iCurrentRow[GAMESTATE->GetMasterPlayerNumber()];
-	if( m_pRows[iCurRow]->GetRowType() == OptionRow::RowType_Exit )
-	{
-		ScreenOptions::ProcessMenuStart( input );
+	if (m_pRows[iCurRow]->GetRowType() == OptionRow::RowType_Exit) {
+		ScreenOptions::ProcessMenuStart(input);
 		return;
 	}
 
-	if( ExportPackages::m_sPackageType == "Courses"
-		|| ExportPackages::m_sPackageType == "NoteSkins"
-		|| ExportPackages::m_sPackageType == "Songs" )
-	{
+	if (
+	   ExportPackages::m_sPackageType == "Courses" || ExportPackages::m_sPackageType == "NoteSkins" ||
+	   ExportPackages::m_sPackageType == "Songs"
+	) {
 		// find folder name
 		ExportPackages::m_sPackageType = "SubGroup";
 		ExportPackages::m_sFolder = m_vsPossibleDirsToExport[iCurRow];
@@ -230,24 +201,20 @@ void ScreenOptionsExportPackageSubPage::ProcessMenuStart( const InputEventPlus &
 		return;
 	}
 
-	RString sDirToExport = m_vsPossibleDirsToExport[ iCurRow ];
-	RString sPackageName = ReplaceInvalidFileNameChars( sDirToExport + ".smzip" );
+	RString sDirToExport = m_vsPossibleDirsToExport[iCurRow];
+	RString sPackageName = ReplaceInvalidFileNameChars(sDirToExport + ".smzip");
 
 	RString sError;
-	if( ExportPackage(sPackageName, sDirToExport, sError) )
-		ScreenPrompt::Prompt( SM_None, ssprintf("Exported '%s' to the desktop", sDirToExport.c_str()) );
+	if (ExportPackage(sPackageName, sDirToExport, sError))
+		ScreenPrompt::Prompt(SM_None, ssprintf("Exported '%s' to the desktop", sDirToExport.c_str()));
 	else
-		ScreenPrompt::Prompt( SM_None, ssprintf("Failed to export package: %s",sError.c_str()) );
+		ScreenPrompt::Prompt(SM_None, ssprintf("Failed to export package: %s", sError.c_str()));
 }
 
-void ScreenOptionsExportPackageSubPage::ImportOptions( int /* iRow */, const std::vector<PlayerNumber>& /* vpns */ )
-{
-
+void ScreenOptionsExportPackageSubPage::ImportOptions(int /* iRow */, const std::vector<PlayerNumber> & /* vpns */) {
 }
 
-void ScreenOptionsExportPackageSubPage::ExportOptions( int /* iRow */, const std::vector<PlayerNumber>& /* vpns */ )
-{
-
+void ScreenOptionsExportPackageSubPage::ExportOptions(int /* iRow */, const std::vector<PlayerNumber> & /* vpns */) {
 }
 
 /*

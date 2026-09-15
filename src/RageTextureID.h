@@ -7,8 +7,7 @@
  * same file with two different dither settings is considered two
  * different textures, for example.)  See RageTexture.cpp for explanations
  * of these. */
-struct RageTextureID
-{
+struct RageTextureID {
 	RString filename;
 
 	// Maximum size of the texture, per dimension.
@@ -38,7 +37,7 @@ struct RageTextureID
 	// If true and color precision is being lost, dither. (slow)
 	bool bDither;
 
-	// If true, resize the image to fill the internal texture. (slow) 
+	// If true, resize the image to fill the internal texture. (slow)
 	bool bStretch;
 
 	/* If true, enable HOT PINK color keying. (deprecated but needed for
@@ -52,74 +51,71 @@ struct RageTextureID
 	 * Note that this property is not considered for ordering/equality. Loading
 	 * a texture with a different loading policy will reuse the same texture with
 	 * a different policy. */
-	enum TexPolicy { TEX_VOLATILE, TEX_DEFAULT } Policy;
+	enum TexPolicy {
+		TEX_VOLATILE,
+		TEX_DEFAULT
+	} Policy;
 
 	void Init();
 
-	RageTextureID(): filename(RString()), iMaxSize(0), bMipMaps(false),
-		iAlphaBits(0), iGrayscaleBits(0), iColorDepth(0),
-		bDither(false), bStretch(false), bHotPinkColorKey(false),
-		AdditionalTextureHints(RString()), Policy(TEX_DEFAULT)  { Init(); }
-	RageTextureID( const RString &fn ): filename(RString()), iMaxSize(0),
-		bMipMaps(false), iAlphaBits(0), iGrayscaleBits(0),
-		iColorDepth(0), bDither(false), bStretch(false),
-		bHotPinkColorKey(false), AdditionalTextureHints(RString()),
-		Policy(TEX_DEFAULT) { Init(); SetFilename(fn); }
-	void SetFilename( const RString &fn );
+	RageTextureID()
+	    : filename(RString()), iMaxSize(0), bMipMaps(false), iAlphaBits(0), iGrayscaleBits(0), iColorDepth(0),
+	      bDither(false), bStretch(false), bHotPinkColorKey(false), AdditionalTextureHints(RString()),
+	      Policy(TEX_DEFAULT) {
+		Init();
+	}
+	RageTextureID(const RString &fn)
+	    : filename(RString()), iMaxSize(0), bMipMaps(false), iAlphaBits(0), iGrayscaleBits(0), iColorDepth(0),
+	      bDither(false), bStretch(false), bHotPinkColorKey(false), AdditionalTextureHints(RString()),
+	      Policy(TEX_DEFAULT) {
+		Init();
+		SetFilename(fn);
+	}
+	void SetFilename(const RString &fn);
 };
 
-inline bool operator==(RageTextureID const &lhs, RageTextureID const &rhs)
-{
-#define EQUAL(a) (lhs.a==rhs.a)
-  return
-		EQUAL(filename) &&
-		EQUAL(iMaxSize) &&
-		EQUAL(bMipMaps) &&
-		EQUAL(iAlphaBits) &&
-		EQUAL(iGrayscaleBits) &&
-		EQUAL(iColorDepth) &&
-		EQUAL(bDither) &&
-		EQUAL(bStretch) &&
-		EQUAL(bHotPinkColorKey) &&
-		EQUAL(AdditionalTextureHints);
-		// EQUAL(Policy); // don't do this
+inline bool operator==(RageTextureID const &lhs, RageTextureID const &rhs) {
+#define EQUAL(a) (lhs.a == rhs.a)
+	return EQUAL(filename) && EQUAL(iMaxSize) && EQUAL(bMipMaps) && EQUAL(iAlphaBits) && EQUAL(iGrayscaleBits) &&
+	   EQUAL(iColorDepth) && EQUAL(bDither) && EQUAL(bStretch) && EQUAL(bHotPinkColorKey) &&
+	   EQUAL(AdditionalTextureHints);
+	// EQUAL(Policy); // don't do this
 #undef EQUAL
 }
 
-inline bool operator!=(RageTextureID const &lhs, RageTextureID const &rhs)
-{
-  return !operator==(lhs, rhs);
+inline bool operator!=(RageTextureID const &lhs, RageTextureID const &rhs) {
+	return !operator==(lhs, rhs);
 }
 
-inline bool operator<(RageTextureID const &lhs, RageTextureID const &rhs)
-{
-#define COMP(a) if(lhs.a<rhs.a) return true; if(lhs.a>rhs.a) return false;
-  COMP(filename);
-  COMP(iMaxSize);
-  COMP(bMipMaps);
-  COMP(iAlphaBits);
-  COMP(iGrayscaleBits);
-  COMP(iColorDepth);
-  COMP(bDither);
-  COMP(bStretch);
-  COMP(bHotPinkColorKey);
-  COMP(AdditionalTextureHints);
-  // COMP(Policy); // don't do this
+inline bool operator<(RageTextureID const &lhs, RageTextureID const &rhs) {
+#define COMP(a)                                                                                                        \
+	if (lhs.a < rhs.a)                                                                                                  \
+		return true;                                                                                                     \
+	if (lhs.a > rhs.a)                                                                                                  \
+		return false;
+	COMP(filename);
+	COMP(iMaxSize);
+	COMP(bMipMaps);
+	COMP(iAlphaBits);
+	COMP(iGrayscaleBits);
+	COMP(iColorDepth);
+	COMP(bDither);
+	COMP(bStretch);
+	COMP(bHotPinkColorKey);
+	COMP(AdditionalTextureHints);
+	// COMP(Policy); // don't do this
 #undef COMP
-  return false;
+	return false;
 }
 
-inline bool operator>(RageTextureID const &lhs, RageTextureID const &rhs)
-{
-  return operator<(rhs, lhs);
+inline bool operator>(RageTextureID const &lhs, RageTextureID const &rhs) {
+	return operator<(rhs, lhs);
 }
-inline bool operator<=(RageTextureID const &lhs, RageTextureID const &rhs)
-{
-  return !operator<(rhs, lhs);
+inline bool operator<=(RageTextureID const &lhs, RageTextureID const &rhs) {
+	return !operator<(rhs, lhs);
 }
-inline bool operator>=(RageTextureID const &lhs, RageTextureID const &rhs)
-{
-  return !operator<(lhs, rhs);
+inline bool operator>=(RageTextureID const &lhs, RageTextureID const &rhs) {
+	return !operator<(lhs, rhs);
 }
 
 #endif

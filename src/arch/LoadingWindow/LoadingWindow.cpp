@@ -6,10 +6,8 @@
 
 #include <vector>
 
-
-LoadingWindow *LoadingWindow::Create()
-{
-	if( !PREFSMAN->m_bShowLoadingWindow )
+LoadingWindow *LoadingWindow::Create() {
+	if (!PREFSMAN->m_bShowLoadingWindow)
 		return new LoadingWindow_Null;
 #if defined(UNIX) && !defined(HAVE_GTK)
 	return new LoadingWindow_Null;
@@ -17,41 +15,43 @@ LoadingWindow *LoadingWindow::Create()
 	// Don't load nullptr by default.
 	const RString drivers = "win32,macosx,gtk";
 	std::vector<RString> DriversToTry;
-	split( drivers, ",", DriversToTry, true );
+	split(drivers, ",", DriversToTry, true);
 
-	ASSERT( !DriversToTry.empty() );
+	ASSERT(!DriversToTry.empty());
 
 	RString Driver;
 	LoadingWindow *ret = nullptr;
 
-	for( unsigned i = 0; ret == nullptr && i < DriversToTry.size(); ++i )
-	{
+	for (unsigned i = 0; ret == nullptr && i < DriversToTry.size(); ++i) {
 		Driver = DriversToTry[i];
 
 #ifdef USE_LOADING_WINDOW_MACOSX
-		if( !DriversToTry[i].CompareNoCase("MacOSX") )	ret = new LoadingWindow_MacOSX;
+		if (!DriversToTry[i].CompareNoCase("MacOSX"))
+			ret = new LoadingWindow_MacOSX;
 #endif
 #ifdef USE_LOADING_WINDOW_GTK
-		if( !DriversToTry[i].CompareNoCase("Gtk") )	ret = new LoadingWindow_Gtk;
+		if (!DriversToTry[i].CompareNoCase("Gtk"))
+			ret = new LoadingWindow_Gtk;
 #endif
 #ifdef USE_LOADING_WINDOW_WIN32
-		if( !DriversToTry[i].CompareNoCase("Win32") )	ret = new LoadingWindow_Win32;
+		if (!DriversToTry[i].CompareNoCase("Win32"))
+			ret = new LoadingWindow_Win32;
 #endif
-		if( !DriversToTry[i].CompareNoCase("Null") )	ret = new LoadingWindow_Null;
+		if (!DriversToTry[i].CompareNoCase("Null"))
+			ret = new LoadingWindow_Null;
 
-		if( ret == nullptr )
+		if (ret == nullptr)
 			continue;
 
 		RString sError = ret->Init();
-		if( !sError.empty() )
-		{
-			LOG->Info( "Couldn't load driver %s: %s", DriversToTry[i].c_str(), sError.c_str() );
-			SAFE_DELETE( ret );
+		if (!sError.empty()) {
+			LOG->Info("Couldn't load driver %s: %s", DriversToTry[i].c_str(), sError.c_str());
+			SAFE_DELETE(ret);
 		}
 	}
 
-	if( ret ) {
-		LOG->Info( "Loading window: %s", Driver.c_str() );
+	if (ret) {
+		LOG->Info("Loading window: %s", Driver.c_str());
 
 		ret->SetIndeterminate(true);
 	}

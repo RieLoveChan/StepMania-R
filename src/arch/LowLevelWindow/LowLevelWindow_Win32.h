@@ -3,24 +3,27 @@
 
 #include "LowLevelWindow.h"
 
-class LowLevelWindow_Win32: public LowLevelWindow
-{
-public:
+class LowLevelWindow_Win32 : public LowLevelWindow {
+ public:
 	LowLevelWindow_Win32();
 	~LowLevelWindow_Win32();
-	void *GetProcAddress( RString s );
-	RString TryVideoMode( const VideoModeParams &p, bool &bNewDeviceOut );
-	void GetDisplaySpecs( DisplaySpecs &out ) const;
-	bool IsSoftwareRenderer( RString &sError );
+	void *GetProcAddress(RString s);
+	RString TryVideoMode(const VideoModeParams &p, bool &bNewDeviceOut);
+	void GetDisplaySpecs(DisplaySpecs &out) const;
+	bool IsSoftwareRenderer(RString &sError);
 	void SwapBuffers();
 	void Update();
 	bool SupportsThreadedRendering();
 	void BeginConcurrentRendering();
 	void EndConcurrentRendering();
-	virtual bool SupportsRenderToTexture() const { return true; }
+	virtual bool SupportsRenderToTexture() const {
+		return true;
+	}
 	virtual RenderTarget *CreateRenderTarget();
 
-	bool SupportsFullscreenBorderlessWindow() const { return true; }
+	bool SupportsFullscreenBorderlessWindow() const {
+		return true;
+	}
 
 	const ActualVideoModeParams GetActualVideoModeParams() const;
 };
@@ -35,7 +38,7 @@ public:
 /*
  * (c) 2004 Glenn Maynard
  * All rights reserved.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -45,7 +48,7 @@ public:
  * copyright notice(s) and this permission notice appear in all copies of
  * the Software and that both the above copyright notice(s) and this
  * permission notice appear in supporting documentation.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF

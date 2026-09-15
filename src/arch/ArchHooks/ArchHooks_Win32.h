@@ -4,23 +4,24 @@
 #include "ArchHooks.h"
 class RageMutex;
 
-class ArchHooks_Win32: public ArchHooks
-{
-public:
+class ArchHooks_Win32 : public ArchHooks {
+ public:
 	ArchHooks_Win32();
 	~ArchHooks_Win32();
-	RString GetArchName() const { return "Windows"; }
+	RString GetArchName() const {
+		return "Windows";
+	}
 	void DumpDebugInfo();
 	void RestartProgram();
-	bool CheckForMultipleInstances(int argc, char* argv[]);
+	bool CheckForMultipleInstances(int argc, char *argv[]);
 
-	void SetTime( tm newtime );
+	void SetTime(tm newtime);
 
 	void BoostPriority();
 	void UnBoostPriority();
 	void SetupConcurrentRenderingThread();
 
-	bool GoToURL( RString sUrl );
+	bool GoToURL(RString sUrl);
 	virtual float GetDisplayAspectRatio();
 	RString GetClipboard();
 };
@@ -34,7 +35,7 @@ public:
 /*
  * (c) 2002-2004 Glenn Maynard, Chris Danford
  * All rights reserved.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -44,7 +45,7 @@ public:
  * copyright notice(s) and this permission notice appear in all copies of
  * the Software and that both the above copyright notice(s) and this
  * permission notice appear in supporting documentation.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF

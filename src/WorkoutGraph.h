@@ -8,30 +8,28 @@
 
 #include <vector>
 
-
 class Trail;
 
-class WorkoutGraph : public ActorFrame
-{
-public:
+class WorkoutGraph : public ActorFrame {
+ public:
 	WorkoutGraph();
 	~WorkoutGraph();
 	virtual WorkoutGraph *Copy() const;
 
 	void Load();
-	void LoadFromNode( const XNode* pNode );
+	void LoadFromNode(const XNode *pNode);
 	void SetFromCurrentWorkout();
-	void SetFromGameStateAndHighlightSong( int iSongIndex );
+	void SetFromGameStateAndHighlightSong(int iSongIndex);
 
 	// Lua
-	void PushSelf( lua_State *L );
+	void PushSelf(lua_State *L);
 
-protected:
-	void SetInternal( int iNumSongsToShowForCurrentStage );
-	void HighlightSong( int iSongIndex );
+ protected:
+	void SetInternal(int iNumSongsToShowForCurrentStage);
+	void HighlightSong(int iSongIndex);
 
 	Sprite m_sprEmpty;
-	std::vector<Sprite*>	m_vpBars;
+	std::vector<Sprite *> m_vpBars;
 
 	int m_iSongsChoppedOffAtBeginning;
 };

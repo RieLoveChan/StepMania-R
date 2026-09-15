@@ -5,61 +5,53 @@
 
 #include <cmath>
 
-
-inline float sample_step_size(int samples_per_second)
-{
+inline float sample_step_size(int samples_per_second) {
 	return 1.0f / samples_per_second;
 }
 
-SampleHistory::SampleHistory()
-{
+SampleHistory::SampleHistory() {
 	m_iLastHistory = 0;
 	m_iHistorySamplesPerSecond = 60;
 	m_fHistorySeconds = 0.0f;
 	m_fToSample = sample_step_size(m_iHistorySamplesPerSecond);
 	m_fHistorySeconds = 10.0f;
-	int iSamples = std::lrint( m_iHistorySamplesPerSecond * m_fHistorySeconds );
-	m_afHistory.resize( iSamples );
+	int iSamples = std::lrint(m_iHistorySamplesPerSecond * m_fHistorySeconds);
+	m_afHistory.resize(iSamples);
 }
 
-float SampleHistory::GetSampleNum( float fSamplesAgo ) const
-{
-	fSamplesAgo = std::min( fSamplesAgo, (float) m_afHistory.size() - 1 );
-	if( fSamplesAgo < 0 )
+float SampleHistory::GetSampleNum(float fSamplesAgo) const {
+	fSamplesAgo = std::min(fSamplesAgo, (float)m_afHistory.size() - 1);
+	if (fSamplesAgo < 0)
 		fSamplesAgo = 0;
-	if( m_afHistory.empty() )
+	if (m_afHistory.empty())
 		return 0.0f;
 
 	float fSample = m_iLastHistory - fSamplesAgo - 1;
 
-	float f = std::floor( fSample );
+	float f = std::floor(fSample);
 	int iSample = std::lrint(f);
 	int iNextSample = iSample + 1;
-	wrap( iSample, static_cast<int>(m_afHistory.size()) );
-	wrap( iNextSample, static_cast<int>(m_afHistory.size()) );
+	wrap(iSample, static_cast<int>(m_afHistory.size()));
+	wrap(iNextSample, static_cast<int>(m_afHistory.size()));
 
 	float p = fSample - f;
-	float fRet = lerp( p, m_afHistory[iSample], m_afHistory[iNextSample] );
-//	LOG->Trace( "%.3f: %i, %i, %.3f (f %.3f, %.3f)", fSample, iSample, iNextSample, fRet, f, p );
+	float fRet = lerp(p, m_afHistory[iSample], m_afHistory[iNextSample]);
+	//	LOG->Trace( "%.3f: %i, %i, %.3f (f %.3f, %.3f)", fSample, iSample, iNextSample, fRet, f, p );
 	return fRet;
 }
 
-float SampleHistory::GetSample( float fSecondsAgo ) const
-{
+float SampleHistory::GetSample(float fSecondsAgo) const {
 	float fSamplesAgo = fSecondsAgo * m_iHistorySamplesPerSecond;
-	return GetSampleNum( fSamplesAgo );
+	return GetSampleNum(fSamplesAgo);
 }
 
-void SampleHistory::AddSample( float fSample, float fDeltaTime )
-{
-	while( fDeltaTime > 0.0001f )
-	{
-		float fTime = std::min( m_fToSample, fDeltaTime );
+void SampleHistory::AddSample(float fSample, float fDeltaTime) {
+	while (fDeltaTime > 0.0001f) {
+		float fTime = std::min(m_fToSample, fDeltaTime);
 		m_fToSample -= fTime;
 		fDeltaTime -= fTime;
 
-		if( m_fToSample < 0.0001f )
-		{
+		if (m_fToSample < 0.0001f) {
 			++m_iLastHistory;
 			m_iLastHistory %= m_afHistory.size();
 			m_fToSample += sample_step_size(m_iHistorySamplesPerSecond);

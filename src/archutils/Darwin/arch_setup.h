@@ -2,7 +2,7 @@
 #define ARCH_SETUP_DARWIN_H
 
 // Replace the main function.
-extern "C" int sm_main( int argc, char *argv[] );
+extern "C" int sm_main(int argc, char *argv[]);
 
 #define HAVE_CXA_DEMANGLE
 /* This must be defined to 1 because autoconf's AC_CHECK_DECLS macro decides to define
@@ -23,10 +23,10 @@ extern "C" int sm_main( int argc, char *argv[] );
 #define BACKTRACE_LOOKUP_METHOD_DLADDR
 
 #ifndef MACOSX
-# define MACOSX
+#define MACOSX
 #endif
 #ifndef __MACOSX__
-# define __MACOSX__
+#define __MACOSX__
 #endif
 
 #endif

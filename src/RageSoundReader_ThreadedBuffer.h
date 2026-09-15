@@ -9,52 +9,62 @@
 #include <list>
 
 class RageThread;
-class RageSoundReader_ThreadedBuffer: public RageSoundReader_Filter
-{
-public:
-	RageSoundReader_ThreadedBuffer( RageSoundReader *pSource );
-	RageSoundReader_ThreadedBuffer( const RageSoundReader_ThreadedBuffer &cpy );
+class RageSoundReader_ThreadedBuffer : public RageSoundReader_Filter {
+ public:
+	RageSoundReader_ThreadedBuffer(RageSoundReader *pSource);
+	RageSoundReader_ThreadedBuffer(const RageSoundReader_ThreadedBuffer &cpy);
 	~RageSoundReader_ThreadedBuffer() override;
-	RageSoundReader_ThreadedBuffer *Copy() const override { return new RageSoundReader_ThreadedBuffer(*this); }
+	RageSoundReader_ThreadedBuffer *Copy() const override {
+		return new RageSoundReader_ThreadedBuffer(*this);
+	}
 
-	int SetPosition( int iFrame ) override;
-	int Read( float *pBuffer, int iLength ) override;
+	int SetPosition(int iFrame) override;
+	int Read(float *pBuffer, int iLength) override;
 	int GetNextSourceFrame() const override;
 
 	int GetLength() const override;
 	int GetLength_Fast() const override;
-	int GetSampleRate() const override { return m_iSampleRate; }
-	unsigned GetNumChannels() const override { return m_iChannels; }
-	bool SetProperty( const RString &sProperty, float fValue ) override;
+	int GetSampleRate() const override {
+		return m_iSampleRate;
+	}
+	unsigned GetNumChannels() const override {
+		return m_iChannels;
+	}
+	bool SetProperty(const RString &sProperty, float fValue) override;
 	float GetStreamToSourceRatio() const override;
-	RageSoundReader *GetSource() override { return nullptr; }
+	RageSoundReader *GetSource() override {
+		return nullptr;
+	}
 
 	/* Enable and disable threaded buffering.  Disable buffering before accessing
 	 * the underlying sound.  DisableBuffering returns true if buffering was enabled. */
 	void EnableBuffering();
-	void EnableBuffering() const { const_cast<RageSoundReader_ThreadedBuffer *>(this)->EnableBuffering(); }
+	void EnableBuffering() const {
+		const_cast<RageSoundReader_ThreadedBuffer *>(this)->EnableBuffering();
+	}
 	bool DisableBuffering();
-	bool DisableBuffering() const { return const_cast<RageSoundReader_ThreadedBuffer *>(this)->DisableBuffering(); }
+	bool DisableBuffering() const {
+		return const_cast<RageSoundReader_ThreadedBuffer *>(this)->DisableBuffering();
+	}
 
-private:
-	int FillFrames( int iBytes );
+ private:
+	int FillFrames(int iBytes);
 	int FillBlock();
 	int GetFilledFrames() const;
 	int GetEmptyFrames() const;
-	void WaitUntilFrames( int iWaitUntilFrames );
+	void WaitUntilFrames(int iWaitUntilFrames);
 
 	int m_iSampleRate;
 	int m_iChannels;
 
 	CircBuf<float> m_DataBuffer;
 
-	struct Mapping
-	{
+	struct Mapping {
 		int iFramesBuffered;
 		int iPositionOfFirstFrame;
 		float fRate;
-		Mapping(): iFramesBuffered(0), iPositionOfFirstFrame(0),
-			fRate(1.0f) {}
+		Mapping() : iFramesBuffered(0), iPositionOfFirstFrame(0), fRate(1.0f) {
+		}
 	};
 	std::list<Mapping> m_StreamPosition;
 
@@ -70,9 +80,8 @@ private:
 
 	RageThread m_Thread;
 	bool m_bShutdownThread;
-	static int StartBufferingThread(void* p)
-	{
-		((RageSoundReader_ThreadedBuffer*)p)->BufferingThread();
+	static int StartBufferingThread(void *p) {
+		((RageSoundReader_ThreadedBuffer *)p)->BufferingThread();
 		return 0;
 	}
 

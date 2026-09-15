@@ -12,87 +12,73 @@
 
 #include <vector>
 
-
-void NotesLoaderJson::GetApplicableFiles( const RString &sPath, std::vector<RString> &out )
-{
-	GetDirListing( sPath + RString("*.json"), out );
+void NotesLoaderJson::GetApplicableFiles(const RString &sPath, std::vector<RString> &out) {
+	GetDirListing(sPath + RString("*.json"), out);
 }
 
-static void Deserialize( TimingSegment *seg, const Json::Value &root )
-{
-	switch( seg->GetType() )
-	{
-		case SEGMENT_BPM:
-		{
-			float fBPM = static_cast<float>(root["BPM"].asDouble());
-			static_cast<BPMSegment *>(seg)->SetBPM(fBPM);
-			break;
-		}
-		case SEGMENT_STOP:
-		{
-			float fStop = static_cast<float>(root["Seconds"].asDouble());
-			static_cast<StopSegment *>(seg)->SetPause(fStop);
-			break;
-		}
-		default: break; // The rest are unused.
+static void Deserialize(TimingSegment *seg, const Json::Value &root) {
+	switch (seg->GetType()) {
+	case SEGMENT_BPM: {
+		float fBPM = static_cast<float>(root["BPM"].asDouble());
+		static_cast<BPMSegment *>(seg)->SetBPM(fBPM);
+		break;
+	}
+	case SEGMENT_STOP: {
+		float fStop = static_cast<float>(root["Seconds"].asDouble());
+		static_cast<StopSegment *>(seg)->SetPause(fStop);
+		break;
+	}
+	default:
+		break; // The rest are unused.
 	}
 }
 
-static void Deserialize(BPMSegment &seg, const Json::Value &root)
-{
-	Deserialize( static_cast<TimingSegment*>(&seg), root );
+static void Deserialize(BPMSegment &seg, const Json::Value &root) {
+	Deserialize(static_cast<TimingSegment *>(&seg), root);
 }
 
-static void Deserialize(StopSegment &seg, const Json::Value &root)
-{
-	Deserialize( static_cast<TimingSegment*>(&seg), root );
+static void Deserialize(StopSegment &seg, const Json::Value &root) {
+	Deserialize(static_cast<TimingSegment *>(&seg), root);
 }
 
-static void Deserialize(TimingData &td, const Json::Value &root)
-{
-	std::vector<BPMSegment*> vBPMs;
-	std::vector<StopSegment*> vStops;
-	JsonUtil::DeserializeVectorPointers( vBPMs, Deserialize, root["BpmSegments"] );
-	JsonUtil::DeserializeVectorPointers( vStops, Deserialize, root["StopSegments"] );
+static void Deserialize(TimingData &td, const Json::Value &root) {
+	std::vector<BPMSegment *> vBPMs;
+	std::vector<StopSegment *> vStops;
+	JsonUtil::DeserializeVectorPointers(vBPMs, Deserialize, root["BpmSegments"]);
+	JsonUtil::DeserializeVectorPointers(vStops, Deserialize, root["StopSegments"]);
 
-	for( unsigned i = 0; i < vBPMs.size(); ++i )
-	{
-		td.AddSegment( *vBPMs[i] );
+	for (unsigned i = 0; i < vBPMs.size(); ++i) {
+		td.AddSegment(*vBPMs[i]);
 		delete vBPMs[i];
 	}
-	for( unsigned i = 0; i < vStops.size(); ++i )
-	{
-		td.AddSegment( *vStops[i] );
+	for (unsigned i = 0; i < vStops.size(); ++i) {
+		td.AddSegment(*vStops[i]);
 		delete vStops[i];
 	}
 }
 
-static void Deserialize(LyricSegment &o, const Json::Value &root)
-{
+static void Deserialize(LyricSegment &o, const Json::Value &root) {
 	o.m_fStartTime = (float)root["StartTime"].asDouble();
 	o.m_sLyric = root["Lyric"].asString();
-	o.m_Color.FromString( root["Color"].asString() );
+	o.m_Color.FromString(root["Color"].asString());
 }
 
-static void Deserialize(BackgroundDef &o, const Json::Value &root)
-{
+static void Deserialize(BackgroundDef &o, const Json::Value &root) {
 	o.m_sEffect = root["Effect"].asString();
 	o.m_sFile1 = root["File1"].asString();
 	o.m_sFile2 = root["File2"].asString();
 	o.m_sColor1 = root["Color1"].asString();
 }
 
-static void Deserialize(BackgroundChange &o, const Json::Value &root )
-{
-	Deserialize( o.m_def, root["Def"] );
+static void Deserialize(BackgroundChange &o, const Json::Value &root) {
+	Deserialize(o.m_def, root["Def"]);
 	o.m_fStartBeat = (float)root["StartBeat"].asDouble();
 	o.m_fRate = (float)root["Rate"].asDouble();
 	o.m_sTransition = root["Transition"].asString();
 }
 
-static void Deserialize( TapNote &o, const Json::Value &root )
-{
-	if( root.isInt() ) {
+static void Deserialize(TapNote &o, const Json::Value &root) {
+	if (root.isInt()) {
 		o.type = (TapNoteType)root["Type"].asInt();
 	}
 
@@ -106,56 +92,49 @@ static void Deserialize( TapNote &o, const Json::Value &root )
 	o.pn = (PlayerNumber)root["PlayerNumber"].asInt();
 }
 
-static void Deserialize( StepsType /* st */, NoteData &nd, const Json::Value &root )
-{
+static void Deserialize(StepsType /* st */, NoteData &nd, const Json::Value &root) {
 	int iTracks = nd.GetNumTracks();
-	nd.SetNumTracks( iTracks );
-	for( unsigned i=0; i<root.size(); i++ )
-	{
+	nd.SetNumTracks(iTracks);
+	for (unsigned i = 0; i < root.size(); i++) {
 		Json::Value root2 = root[i];
 		float fBeat = (float)root2[(unsigned)0].asDouble();
 		int iRow = BeatToNoteRow(fBeat);
 		int iTrack = root2[1].asInt();
 		const Json::Value &root3 = root2[2];
 		TapNote tn;
-		Deserialize( tn, root3 );
-		nd.SetTapNote( iTrack, iRow, tn );
+		Deserialize(tn, root3);
+		nd.SetTapNote(iTrack, iRow, tn);
 	}
 }
 
-static void Deserialize( RadarValues &o, const Json::Value &root )
-{
-	FOREACH_ENUM( RadarCategory, rc )
-	{
-		o[rc] = (float)root[ RadarCategoryToString(rc) ].asDouble();
+static void Deserialize(RadarValues &o, const Json::Value &root) {
+	FOREACH_ENUM(RadarCategory, rc) {
+		o[rc] = (float)root[RadarCategoryToString(rc)].asDouble();
 	}
 }
 
-static void Deserialize( Steps &o, const Json::Value &root )
-{
+static void Deserialize(Steps &o, const Json::Value &root) {
 	o.m_StepsType = GAMEMAN->StringToStepsType(root["StepsType"].asString());
 
 	o.Decompress();
 
 	NoteData nd;
-	Deserialize( o.m_StepsType, nd, root["NoteData"] );
-	o.SetNoteData( nd );
-	//o.SetHash( root["Hash"].asInt() );
-	o.SetDescription( root["Description"].asString() );
-	o.SetDifficulty( StringToDifficulty(root["Difficulty"].asString()) );
-	o.SetMeter( root["Meter"].asInt() );
+	Deserialize(o.m_StepsType, nd, root["NoteData"]);
+	o.SetNoteData(nd);
+	// o.SetHash( root["Hash"].asInt() );
+	o.SetDescription(root["Description"].asString());
+	o.SetDifficulty(StringToDifficulty(root["Difficulty"].asString()));
+	o.SetMeter(root["Meter"].asInt());
 
 	RadarValues rv[NUM_PLAYERS];
-	FOREACH_PlayerNumber( pn )
-	{
-		Deserialize( rv[pn], root["RadarValues"] );
+	FOREACH_PlayerNumber(pn) {
+		Deserialize(rv[pn], root["RadarValues"]);
 	}
-	o.SetCachedRadarValues( rv );
+	o.SetCachedRadarValues(rv);
 }
 
-static void Deserialize( Song &out, const Json::Value &root )
-{
-	out.SetSongDir( root["SongDir"].asString() );
+static void Deserialize(Song &out, const Json::Value &root) {
+	out.SetSongDir(root["SongDir"].asString());
 	out.m_sGroupName = root["GroupName"].asString();
 	out.m_sMainTitle = root["Title"].asString();
 	out.m_sSubTitle = root["SubTitle"].asString();
@@ -173,9 +152,9 @@ static void Deserialize( Song &out, const Json::Value &root )
 	out.m_fMusicSampleStartSeconds = (float)root["SampleStart"].asDouble();
 	out.m_fMusicSampleLengthSeconds = (float)root["SampleLength"].asDouble();
 	RString sSelectable = root["Selectable"].asString();
-	if( sSelectable.EqualsNoCase("YES") )
+	if (sSelectable.EqualsNoCase("YES"))
 		out.m_SelectionDisplay = out.SHOW_ALWAYS;
-	else if( sSelectable.EqualsNoCase("NO") )
+	else if (sSelectable.EqualsNoCase("NO"))
 		out.m_SelectionDisplay = out.SHOW_NEVER;
 
 	out.m_sSongFileName = root["SongFileName"].asString();
@@ -184,49 +163,46 @@ static void Deserialize( Song &out, const Json::Value &root )
 	out.m_fMusicLengthSeconds = (float)root["MusicLengthSeconds"].asDouble();
 
 	RString sDisplayBPMType = root["DisplayBpmType"].asString();
-	if( sDisplayBPMType == "*" )
+	if (sDisplayBPMType == "*")
 		out.m_DisplayBPMType = DISPLAY_BPM_RANDOM;
 	else
 		out.m_DisplayBPMType = DISPLAY_BPM_SPECIFIED;
 
-	if( out.m_DisplayBPMType == DISPLAY_BPM_SPECIFIED )
-	{
+	if (out.m_DisplayBPMType == DISPLAY_BPM_SPECIFIED) {
 		out.m_fSpecifiedBPMMin = (float)root["SpecifiedBpmMin"].asDouble();
 		out.m_fSpecifiedBPMMax = (float)root["SpecifiedBpmMax"].asDouble();
 	}
 
-	Deserialize( out.m_SongTiming, root["TimingData"] );
-	JsonUtil::DeserializeVectorObjects( out.m_LyricSegments, Deserialize, root["LyricSegments"] );
+	Deserialize(out.m_SongTiming, root["TimingData"]);
+	JsonUtil::DeserializeVectorObjects(out.m_LyricSegments, Deserialize, root["LyricSegments"]);
 
 	{
 		const Json::Value &root2 = root["BackgroundChanges"];
-		FOREACH_BackgroundLayer( bl )
-		{
+		FOREACH_BackgroundLayer(bl) {
 			const Json::Value &root3 = root2[bl];
 			std::vector<BackgroundChange> &vBgc = out.GetBackgroundChanges(bl);
-			JsonUtil::DeserializeVectorObjects( vBgc, Deserialize, root3 );
+			JsonUtil::DeserializeVectorObjects(vBgc, Deserialize, root3);
 		}
 	}
 
 	{
 		std::vector<BackgroundChange> &vBgc = out.GetForegroundChanges();
-		JsonUtil::DeserializeVectorObjects( vBgc, Deserialize, root["ForegroundChanges"] );
+		JsonUtil::DeserializeVectorObjects(vBgc, Deserialize, root["ForegroundChanges"]);
 	}
 
 	out.m_vsKeysoundFile = JsonUtil::DeserializeArrayStrings(root["KeySounds"]);
 
 	{
-		std::vector<Steps*> vpSteps;
-		JsonUtil::DeserializeVectorPointersParam<Steps,Song*>( vpSteps, Deserialize, root["Charts"], &out );
+		std::vector<Steps *> vpSteps;
+		JsonUtil::DeserializeVectorPointersParam<Steps, Song *>(vpSteps, Deserialize, root["Charts"], &out);
 		for (Steps *step : vpSteps)
-			out.AddSteps( step );
+			out.AddSteps(step);
 	}
 }
 
-bool NotesLoaderJson::LoadFromJsonFile( const RString &sPath, Song &out )
-{
+bool NotesLoaderJson::LoadFromJsonFile(const RString &sPath, Song &out) {
 	Json::Value root;
-	if( !JsonUtil::LoadFromFileShowErrors(root,sPath) )
+	if (!JsonUtil::LoadFromFileShowErrors(root, sPath))
 		return false;
 
 	Deserialize(out, root);
@@ -234,8 +210,7 @@ bool NotesLoaderJson::LoadFromJsonFile( const RString &sPath, Song &out )
 	return true;
 }
 
-bool NotesLoaderJson::LoadFromDir( const RString &sPath, Song &out )
-{
+bool NotesLoaderJson::LoadFromDir(const RString &sPath, Song &out) {
 	return LoadFromJsonFile(sPath, out);
 }
 

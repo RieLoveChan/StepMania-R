@@ -4,28 +4,32 @@
 #include "ScreenGameplayNormal.h"
 #include "Song.h"
 /** @brief A gameplay screen used for syncing the machine's timing. */
-class ScreenGameplaySyncMachine : public ScreenGameplayNormal
-{
-public:
+class ScreenGameplaySyncMachine : public ScreenGameplayNormal {
+ public:
 	virtual void Init();
 
-	virtual void Update( float fDelta );
-	virtual bool Input( const InputEventPlus &input );
+	virtual void Update(float fDelta);
+	virtual bool Input(const InputEventPlus &input);
 
-	virtual ScreenType GetScreenType() const { return system_menu; }
+	virtual ScreenType GetScreenType() const {
+		return system_menu;
+	}
 
-	void HandleScreenMessage( const ScreenMessage SM );
+	void HandleScreenMessage(const ScreenMessage SM);
 	void ResetAndRestartCurrentSong();
-protected:
-	virtual bool UseSongBackgroundAndForeground() const { return false; }
+
+ protected:
+	virtual bool UseSongBackgroundAndForeground() const {
+		return false;
+	}
 	void RefreshText();
 
 	/** @brief the Song used for this screen. */
-	Song	m_Song;
+	Song m_Song;
 	/** @brief the Steps used for this screen. */
-	const Steps	*m_pSteps;
+	const Steps *m_pSteps;
 
-	BitmapText	m_textSyncInfo;
+	BitmapText m_textSyncInfo;
 };
 
 #endif
@@ -35,7 +39,7 @@ protected:
  * @author Chris Danford (c) 2001-2004
  * @section LICENSE
  * All rights reserved.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -45,7 +49,7 @@ protected:
  * copyright notice(s) and this permission notice appear in all copies of
  * the Software and that both the above copyright notice(s) and this
  * permission notice appear in supporting documentation.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF

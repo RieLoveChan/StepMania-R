@@ -7,8 +7,7 @@
 
 #include <cstdint>
 
-class RageSoundDriver_OSS: public RageSoundDriver
-{
+class RageSoundDriver_OSS : public RageSoundDriver {
 	int fd;
 
 	bool shutdown;
@@ -19,11 +18,13 @@ class RageSoundDriver_OSS: public RageSoundDriver
 	void MixerThread();
 	RageThread MixingThread;
 
-	static RString CheckOSSVersion( int fd );
+	static RString CheckOSSVersion(int fd);
 
-public:
+ public:
 	bool GetData();
-	int GetSampleRate() const { return samplerate; }
+	int GetSampleRate() const {
+		return samplerate;
+	}
 
 	/* virtuals: */
 	std::int64_t GetPosition() const;

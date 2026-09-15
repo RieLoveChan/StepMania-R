@@ -9,26 +9,23 @@
 
 class RageCompiledGeometry;
 
-class RageModelGeometry
-{
-public:
-	RageModelGeometry ();
-	virtual ~RageModelGeometry ();
+class RageModelGeometry {
+ public:
+	RageModelGeometry();
+	virtual ~RageModelGeometry();
 
-	void LoadMilkshapeAscii( const RString& sMilkshapeAsciiFile, bool bNeedsNormals );
+	void LoadMilkshapeAscii(const RString &sMilkshapeAsciiFile, bool bNeedsNormals);
 	void OptimizeBones();
-	void MergeMeshes( int iFromIndex, int iToIndex );
+	void MergeMeshes(int iFromIndex, int iToIndex);
 	bool HasAnyPerVertexBones() const;
 
 	int m_iRefCount;
 
 	std::vector<msMesh> m_Meshes;
-	RageCompiledGeometry* m_pCompiledGeometry;	// video memory copy of geometry shared by all meshes
+	RageCompiledGeometry *m_pCompiledGeometry; // video memory copy of geometry shared by all meshes
 
 	RageVector3 m_vMins, m_vMaxs;
 };
-
-
 
 #endif
 

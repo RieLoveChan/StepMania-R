@@ -15,35 +15,30 @@ extern "C" {
 
 #include <vector>
 
+REGISTER_INPUT_HANDLER_CLASS2(Para, Win32_Para);
 
-REGISTER_INPUT_HANDLER_CLASS2( Para, Win32_Para );
-
-static void InitHack( HANDLE h )
-{
+static void InitHack(HANDLE h) {
 	UCHAR hack[] = {0, 1};
 
-	if( HidD_SetFeature(h, (PVOID) hack, 2) == TRUE )
-		LOG->Info( "Para controller powered on successfully" );
+	if (HidD_SetFeature(h, (PVOID)hack, 2) == TRUE)
+		LOG->Info("Para controller powered on successfully");
 	else
-		LOG->Warn( "Para controller power-on failed" );
+		LOG->Warn("Para controller power-on failed");
 }
 
-InputHandler_Win32_Para::InputHandler_Win32_Para()
-{
+InputHandler_Win32_Para::InputHandler_Win32_Para() {
 	const int para_usb_vid = 0x0507;
 	const int para_usb_pid = 0x0011;
 
 	USBDevice *dev = new USBDevice;
 
-	if( dev->Open(para_usb_vid, para_usb_pid, sizeof(long), 0, InitHack) )
-	{
+	if (dev->Open(para_usb_vid, para_usb_pid, sizeof(long), 0, InitHack)) {
 		LOG->Info("Para controller initialized");
 	}
-	SAFE_DELETE( dev );
+	SAFE_DELETE(dev);
 }
 
-void InputHandler_Win32_Para::GetDevicesAndDescriptions(std::vector<InputDeviceInfo>& /* vDevicesOut */ )
-{
+void InputHandler_Win32_Para::GetDevicesAndDescriptions(std::vector<InputDeviceInfo> & /* vDevicesOut */) {
 	// The device appears as a HID joystick
 }
 

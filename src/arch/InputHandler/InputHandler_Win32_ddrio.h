@@ -8,10 +8,9 @@
 #include <cstdint>
 #include <vector>
 
-
 static bool _ddriodll_loaded = false;
 
-//we want to use a
+// we want to use a
 #define DDRIO_DEVICEID DEVICE_JOY1
 
 enum p3io_light_bit {
@@ -62,23 +61,21 @@ enum extio_light_bit {
 	LIGHT_P1_UP = 0x1E
 };
 
-
-class InputHandler_Win32_ddrio: public InputHandler
-{
-public:
+class InputHandler_Win32_ddrio : public InputHandler {
+ public:
 	InputHandler_Win32_ddrio();
 	~InputHandler_Win32_ddrio();
 
-	RString GetDeviceSpecificInputString( const DeviceInput &di );
-	void GetDevicesAndDescriptions( std::vector<InputDeviceInfo>& vDevicesOut );
+	RString GetDeviceSpecificInputString(const DeviceInput &di);
+	void GetDevicesAndDescriptions(std::vector<InputDeviceInfo> &vDevicesOut);
 
-private:
+ private:
 	RageThread InputThread;
 	bool m_bShutdown;
 
 	bool LoadDLL();
 	bool MapFunctions();
-	static int InputThread_Start( void *p );
+	static int InputThread_Start(void *p);
 	void InputThreadMain();
 
 	void PushInputState(std::uint32_t newInput);
@@ -111,6 +108,5 @@ private:
  * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  * PERFORMANCE OF THIS SOFTWARE.
  */
-
 
 #endif

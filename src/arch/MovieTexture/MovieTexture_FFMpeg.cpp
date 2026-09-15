@@ -11,8 +11,7 @@
 #include <cstdint>
 #include <thread>
 
-static void FixLilEndian()
-{
+static void FixLilEndian() {
 	if constexpr (!Endian::little) {
 		return;
 	}
@@ -22,20 +21,21 @@ static void FixLilEndian()
 		return;
 	Initialized = true;
 
-	for (int i = 0; i < AVPixelFormats[i].bpp; ++i)
-	{
-		AVPixelFormat_t& pf = AVPixelFormats[i];
+	for (int i = 0; i < AVPixelFormats[i].bpp; ++i) {
+		AVPixelFormat_t &pf = AVPixelFormats[i];
 
 		if (!pf.bByteSwapOnLittleEndian)
 			continue;
 
-		for (int mask = 0; mask < 4; ++mask)
-		{
+		for (int mask = 0; mask < 4; ++mask) {
 			int m = pf.masks[mask];
-			switch (pf.bpp)
-			{
-			case 24: m = Swap24(m); break;
-			case 32: m = Swap32(m); break;
+			switch (pf.bpp) {
+			case 24:
+				m = Swap24(m);
+				break;
+			case 32:
+				m = Swap32(m);
+				break;
 			default:
 				FAIL_M(ssprintf("Unsupported BPP value: %i", pf.bpp));
 			}
@@ -44,28 +44,20 @@ static void FixLilEndian()
 	}
 }
 
-static int FindCompatibleAVFormat(bool bHighColor)
-{
-	for (int i = 0; AVPixelFormats[i].bpp; ++i)
-	{
-		AVPixelFormat_t& fmt = AVPixelFormats[i];
-		if (fmt.YUV != PixelFormatYCbCr_Invalid)
-		{
+static int FindCompatibleAVFormat(bool bHighColor) {
+	for (int i = 0; AVPixelFormats[i].bpp; ++i) {
+		AVPixelFormat_t &fmt = AVPixelFormats[i];
+		if (fmt.YUV != PixelFormatYCbCr_Invalid) {
 			EffectMode em = MovieTexture_Generic::GetEffectMode(fmt.YUV);
 			if (!DISPLAY->IsEffectModeSupported(em))
 				continue;
 		}
-		else if (fmt.bHighColor != bHighColor)
-		{
+		else if (fmt.bHighColor != bHighColor) {
 			continue;
 		}
 
-		RagePixelFormat pixfmt = DISPLAY->FindPixelFormat(fmt.bpp,
-			fmt.masks[0],
-			fmt.masks[1],
-			fmt.masks[2],
-			fmt.masks[3],
-			true /* realtime */
+		RagePixelFormat pixfmt = DISPLAY->FindPixelFormat(
+		   fmt.bpp, fmt.masks[0], fmt.masks[1], fmt.masks[2], fmt.masks[3], true /* realtime */
 		);
 
 		if (pixfmt == RagePixelFormat_Invalid)
@@ -77,16 +69,16 @@ static int FindCompatibleAVFormat(bool bHighColor)
 	return -1;
 }
 
-RageSurface* RageMovieTextureDriver_FFMpeg::AVCodecCreateCompatibleSurface(int iTextureWidth, int iTextureHeight, bool bPreferHighColor, int& iAVTexfmt, MovieDecoderPixelFormatYCbCr& fmtout)
-{
+RageSurface *RageMovieTextureDriver_FFMpeg::AVCodecCreateCompatibleSurface(
+   int iTextureWidth, int iTextureHeight, bool bPreferHighColor, int &iAVTexfmt, MovieDecoderPixelFormatYCbCr &fmtout
+) {
 	FixLilEndian();
 
 	int iAVTexfmtIndex = FindCompatibleAVFormat(bPreferHighColor);
 	if (iAVTexfmtIndex == -1)
 		iAVTexfmtIndex = FindCompatibleAVFormat(!bPreferHighColor);
 
-	if (iAVTexfmtIndex == -1)
-	{
+	if (iAVTexfmtIndex == -1) {
 		/* No dice.  Use the first avcodec format of the preferred bit depth,
 		 * and let the display system convert. */
 		for (iAVTexfmtIndex = 0; AVPixelFormats[iAVTexfmtIndex].bpp; ++iAVTexfmtIndex)
@@ -95,22 +87,30 @@ RageSurface* RageMovieTextureDriver_FFMpeg::AVCodecCreateCompatibleSurface(int i
 		ASSERT(AVPixelFormats[iAVTexfmtIndex].bpp != 0);
 	}
 
-	const AVPixelFormat_t* pfd = &AVPixelFormats[iAVTexfmtIndex];
+	const AVPixelFormat_t *pfd = &AVPixelFormats[iAVTexfmtIndex];
 	iAVTexfmt = pfd->pf;
 	fmtout = pfd->YUV;
 
-	LOG->Trace("Texture pixel format: %i %i (%ibpp, %08x %08x %08x %08x)", iAVTexfmt, fmtout,
-		pfd->bpp, pfd->masks[0], pfd->masks[1], pfd->masks[2], pfd->masks[3]);
+	LOG->Trace(
+	   "Texture pixel format: %i %i (%ibpp, %08x %08x %08x %08x)",
+	   iAVTexfmt,
+	   fmtout,
+	   pfd->bpp,
+	   pfd->masks[0],
+	   pfd->masks[1],
+	   pfd->masks[2],
+	   pfd->masks[3]
+	);
 
 	if (pfd->YUV == PixelFormatYCbCr_YUYV422)
 		iTextureWidth /= 2;
 
-	return CreateSurface(iTextureWidth, iTextureHeight, pfd->bpp,
-		pfd->masks[0], pfd->masks[1], pfd->masks[2], pfd->masks[3]);
+	return CreateSurface(
+	   iTextureWidth, iTextureHeight, pfd->bpp, pfd->masks[0], pfd->masks[1], pfd->masks[2], pfd->masks[3]
+	);
 }
 
-MovieDecoder_FFMpeg::MovieDecoder_FFMpeg()
-{
+MovieDecoder_FFMpeg::MovieDecoder_FFMpeg() {
 	FixLilEndian();
 
 	av_format_context_ = nullptr;
@@ -120,33 +120,27 @@ MovieDecoder_FFMpeg::MovieDecoder_FFMpeg()
 	Init();
 }
 
-MovieDecoder_FFMpeg::~MovieDecoder_FFMpeg()
-{
-	if (av_sws_context_)
-	{
+MovieDecoder_FFMpeg::~MovieDecoder_FFMpeg() {
+	if (av_sws_context_) {
 		avcodec::sws_freeContext(av_sws_context_);
 		av_sws_context_ = nullptr;
 	}
-	if (av_io_context_ != nullptr)
-	{
-		RageFile* file = (RageFile*)av_io_context_->opaque;
+	if (av_io_context_ != nullptr) {
+		RageFile *file = (RageFile *)av_io_context_->opaque;
 		file->Close();
 		delete file;
 		avcodec::av_free(av_io_context_);
 	}
-	if (av_buffer_ != nullptr)
-	{
+	if (av_buffer_ != nullptr) {
 		avcodec::av_free(av_buffer_);
 	}
-	if (av_stream_codec_ != nullptr)
-	{
+	if (av_stream_codec_ != nullptr) {
 		avcodec::avcodec_free_context(&av_stream_codec_);
 	}
 	frame_buffer_.clear();
 }
 
-void MovieDecoder_FFMpeg::Init()
-{
+void MovieDecoder_FFMpeg::Init() {
 	end_of_file_ = 0;
 	display_frame_num_ = 0;
 	total_frames_ = 0;
@@ -155,8 +149,7 @@ void MovieDecoder_FFMpeg::Init()
 	av_buffer_ = nullptr;
 }
 
-float MovieDecoder_FFMpeg::GetTimestamp() const
-{
+float MovieDecoder_FFMpeg::GetTimestamp() const {
 	// Always display the first frame.
 	if (display_frame_num_ == 0) {
 		return 0;
@@ -179,7 +172,6 @@ bool MovieDecoder_FFMpeg::IsCurrentFrameReady() {
 		return true;
 	}
 
-
 	std::lock_guard<std::mutex> lock(frame_buffer_[display_frame_num_]->lock);
 	if (frame_buffer_[display_frame_num_]->skip) {
 		LOG->Info("Frame %i not decoded, skipping...", display_frame_num_);
@@ -191,8 +183,7 @@ bool MovieDecoder_FFMpeg::IsCurrentFrameReady() {
 	return frame_buffer_[display_frame_num_]->decoded;
 }
 
-int MovieDecoder_FFMpeg::DecodeNextFrame()
-{
+int MovieDecoder_FFMpeg::DecodeNextFrame() {
 	// Add in a new FrameBuffer entry, and lock it immediately
 	frame_buffer_.emplace_back(std::make_unique<FrameHolder>());
 	std::unique_lock<std::mutex> lock(frame_buffer_.back()->lock);
@@ -217,8 +208,7 @@ int MovieDecoder_FFMpeg::DecodeNextFrame()
 	return status;
 }
 
-int MovieDecoder_FFMpeg::DecodeMovie()
-{
+int MovieDecoder_FFMpeg::DecodeMovie() {
 	using std::chrono::operator""ms;
 
 	// The first frame expected to be decoded and drawn already,
@@ -253,8 +243,7 @@ int MovieDecoder_FFMpeg::DecodeMovie()
 	return 0;
 }
 
-int MovieDecoder_FFMpeg::SendPacketToBuffer()
-{
+int MovieDecoder_FFMpeg::SendPacketToBuffer() {
 	if (cancel_) {
 		return -2;
 	}
@@ -262,19 +251,16 @@ int MovieDecoder_FFMpeg::SendPacketToBuffer()
 		return 0;
 	}
 
-	while (true)
-	{
+	while (true) {
 		int ret = avcodec::av_read_frame(av_format_context_, frame_buffer_.back()->packet);
 		/* XXX: why is avformat returning AVERROR_NOMEM on EOF? */
-		if (ret < 0)
-		{
+		if (ret < 0) {
 			/* EOF. */
 			end_of_file_ = 1;
 			return 0;
 		}
 
-		if (frame_buffer_.back()->packet->stream_index == av_stream_->index)
-		{
+		if (frame_buffer_.back()->packet->stream_index == av_stream_->index) {
 			current_packet_offset_ = 0;
 			return 1;
 		}
@@ -291,8 +277,7 @@ int MovieDecoder_FFMpeg::DecodePacketInBuffer() {
 		return 0; /* no packet */
 	}
 
-	while (end_of_file_ == 0 && current_packet_offset_ <= frame_buffer_.back()->packet->size)
-	{
+	while (end_of_file_ == 0 && current_packet_offset_ <= frame_buffer_.back()->packet->size) {
 		/* If we have no data on the first frame, just return EOF; passing an empty packet
 		 * to avcodec_decode_video in this case is crashing it.  However, passing an empty
 		 * packet is normal with B-frames, to flush.  This may be unnecessary in newer
@@ -303,34 +288,33 @@ int MovieDecoder_FFMpeg::DecodePacketInBuffer() {
 
 		/* Hack: we need to send size = 0 to flush frames at the end, but we have
 		 * to give it a buffer to read from since it tries to read anyway. */
-		frame_buffer_.back()->packet->data = frame_buffer_.back()->packet->size ? frame_buffer_.back()->packet->data : nullptr;
+		frame_buffer_.back()->packet->data =
+		   frame_buffer_.back()->packet->size ? frame_buffer_.back()->packet->data : nullptr;
 		int len = frame_buffer_.back()->packet->size;
 		avcodec::avcodec_send_packet(av_stream_codec_, frame_buffer_.back()->packet);
 		int avcodec_return = avcodec::avcodec_receive_frame(av_stream_codec_, frame_buffer_.back()->frame);
 
-		if (len < 0)
-		{
+		if (len < 0) {
 			LOG->Warn("avcodec_decode_video2 fatal error, packet size negative: %i", len);
 			return -1;
 		}
 
 		current_packet_offset_ += len;
 
-		if (avcodec_return != 0)
-		{
+		if (avcodec_return != 0) {
 			LOG->Warn(
-				"Frame number %i not successfully decoded into buffer. avcodec_receive_frame status: %i",
-				static_cast<int>(frame_buffer_.size() - 1),
-				avcodec_return);
+			   "Frame number %i not successfully decoded into buffer. avcodec_receive_frame status: %i",
+			   static_cast<int>(frame_buffer_.size() - 1),
+			   avcodec_return
+			);
 			continue;
 		}
 
-		if (frame_buffer_.back()->frame->pkt_dts != AV_NOPTS_VALUE)
-		{
-			frame_buffer_.back()->frame_timestamp = (float)(frame_buffer_.back()->frame->pkt_dts * av_q2d(av_stream_->time_base));
+		if (frame_buffer_.back()->frame->pkt_dts != AV_NOPTS_VALUE) {
+			frame_buffer_.back()->frame_timestamp =
+			   (float)(frame_buffer_.back()->frame->pkt_dts * av_q2d(av_stream_->time_base));
 		}
-		else
-		{
+		else {
 			/* If the timestamp is zero, this frame is to be played at the
 			 * time of the last frame plus the length of the last frame. */
 			if (!first_frame_) {
@@ -344,7 +328,8 @@ int MovieDecoder_FFMpeg::DecodePacketInBuffer() {
 		// Length of this frame, only used as a fallback for getting the frame
 		// timestamp above.
 		frame_buffer_.back()->frame_delay = (float)av_q2d(av_stream_->time_base);
-		frame_buffer_.back()->frame_delay += frame_buffer_.back()->frame->repeat_pict * (frame_buffer_.back()->frame_delay * 0.5f);
+		frame_buffer_.back()->frame_delay +=
+		   frame_buffer_.back()->frame->repeat_pict * (frame_buffer_.back()->frame_delay * 0.5f);
 		frame_buffer_.back()->decoded = true;
 
 		return 1;
@@ -371,32 +356,50 @@ bool MovieDecoder_FFMpeg::SkipNextFrame() {
 	return false;
 }
 
-bool MovieDecoder_FFMpeg::GetFrame(RageSurface* pSurface)
-{
+bool MovieDecoder_FFMpeg::GetFrame(RageSurface *pSurface) {
 	avcodec::AVFrame pict;
-	pict.data[0] = (unsigned char*)pSurface->pixels;
+	pict.data[0] = (unsigned char *)pSurface->pixels;
 	pict.linesize[0] = pSurface->pitch;
 
 	/* XXX 1: Do this in one of the Open() methods instead?
 	 * XXX 2: The problem of doing this in Open() is that m_AVTexfmt is not
 	 * already initialized with its correct value.
 	 */
-	if (av_sws_context_ == nullptr)
-	{
-		av_sws_context_ = avcodec::sws_getCachedContext(av_sws_context_,
-			GetWidth(), GetHeight(), av_stream_codec_->pix_fmt,
-			GetWidth(), GetHeight(), av_pixel_format_,
-			kSwsFlags, nullptr, nullptr, nullptr);
-		if (av_sws_context_ == nullptr)
-		{
-			LOG->Warn("Cannot initialize sws conversion context for (%d,%d) %d->%d", GetWidth(), GetHeight(), av_stream_codec_->pix_fmt, av_pixel_format_);
+	if (av_sws_context_ == nullptr) {
+		av_sws_context_ = avcodec::sws_getCachedContext(
+		   av_sws_context_,
+		   GetWidth(),
+		   GetHeight(),
+		   av_stream_codec_->pix_fmt,
+		   GetWidth(),
+		   GetHeight(),
+		   av_pixel_format_,
+		   kSwsFlags,
+		   nullptr,
+		   nullptr,
+		   nullptr
+		);
+		if (av_sws_context_ == nullptr) {
+			LOG->Warn(
+			   "Cannot initialize sws conversion context for (%d,%d) %d->%d",
+			   GetWidth(),
+			   GetHeight(),
+			   av_stream_codec_->pix_fmt,
+			   av_pixel_format_
+			);
 			return false;
 		}
 	}
 
-	avcodec::sws_scale(av_sws_context_,
-		frame_buffer_[display_frame_num_]->frame->data, frame_buffer_[display_frame_num_]->frame->linesize, 0, GetHeight(),
-		pict.data, pict.linesize);
+	avcodec::sws_scale(
+	   av_sws_context_,
+	   frame_buffer_[display_frame_num_]->frame->data,
+	   frame_buffer_[display_frame_num_]->frame->linesize,
+	   0,
+	   GetHeight(),
+	   pict.data,
+	   pict.linesize
+	);
 
 	// Don't advance the frame number past the (potential) end of the buffer.
 	// This can happen if display is outpacing decoding, or if we're at the
@@ -408,17 +411,16 @@ bool MovieDecoder_FFMpeg::GetFrame(RageSurface* pSurface)
 	return false;
 }
 
-static RString averr_ssprintf(int err, const char* fmt, ...)
-{
+static RString averr_ssprintf(int err, const char *fmt, ...) {
 	ASSERT(err < 0);
 
-	va_list     va;
+	va_list va;
 	va_start(va, fmt);
 	RString s = vssprintf(fmt, va);
 	va_end(va);
 
 	std::size_t errbuf_size = 512;
-	char* errbuf = new char[errbuf_size];
+	char *errbuf = new char[errbuf_size];
 	avcodec::av_strerror(err, errbuf, errbuf_size);
 	RString Error = ssprintf("%i: %s", err, errbuf);
 	delete[] errbuf;
@@ -426,23 +428,20 @@ static RString averr_ssprintf(int err, const char* fmt, ...)
 	return s + " (" + Error + ")";
 }
 
-static int AVIORageFile_ReadPacket(void* opaque, std::uint8_t* buf, int buf_size)
-{
-	RageFile* f = (RageFile*)opaque;
+static int AVIORageFile_ReadPacket(void *opaque, std::uint8_t *buf, int buf_size) {
+	RageFile *f = (RageFile *)opaque;
 	int n = f->Read(buf, buf_size);
 	if (n == 0)
 		return AVERROR_EOF;
 	return n;
 }
 
-static std::int64_t AVIORageFile_Seek(void* opaque, std::int64_t offset, int whence)
-{
-	RageFile* f = (RageFile*)opaque;
+static std::int64_t AVIORageFile_Seek(void *opaque, std::int64_t offset, int whence) {
+	RageFile *f = (RageFile *)opaque;
 	if (whence == AVSEEK_SIZE)
 		return f->GetFileSize();
 
-	if (whence != SEEK_SET && whence != SEEK_CUR && whence != SEEK_END)
-	{
+	if (whence != SEEK_SET && whence != SEEK_CUR && whence != SEEK_END) {
 		LOG->Trace("Error: unsupported seek whence: %d", whence);
 		return -1;
 	}
@@ -450,24 +449,24 @@ static std::int64_t AVIORageFile_Seek(void* opaque, std::int64_t offset, int whe
 	return f->Seek((int)offset, whence);
 }
 
-RString MovieDecoder_FFMpeg::Open(RString sFile)
-{
+RString MovieDecoder_FFMpeg::Open(RString sFile) {
 	av_format_context_ = avcodec::avformat_alloc_context();
 	if (!av_format_context_)
 		return "AVCodec: Couldn't allocate context";
 
-	RageFile* f = new RageFile;
+	RageFile *f = new RageFile;
 
-	if (!f->Open(sFile, RageFile::READ))
-	{
+	if (!f->Open(sFile, RageFile::READ)) {
 		RString errorMessage = f->GetError();
 		RString error = ssprintf("MovieDecoder_FFMpeg: Error opening \"%s\": %s", sFile.c_str(), errorMessage.c_str());
 		delete f;
 		return error;
 	}
 
-	av_buffer_ = (unsigned char*)avcodec::av_malloc(STEPMANIA_FFMPEG_BUFFER_SIZE);
-	av_io_context_ = avcodec::avio_alloc_context(av_buffer_, STEPMANIA_FFMPEG_BUFFER_SIZE, 0, f, AVIORageFile_ReadPacket, nullptr, AVIORageFile_Seek);
+	av_buffer_ = (unsigned char *)avcodec::av_malloc(STEPMANIA_FFMPEG_BUFFER_SIZE);
+	av_io_context_ = avcodec::avio_alloc_context(
+	   av_buffer_, STEPMANIA_FFMPEG_BUFFER_SIZE, 0, f, AVIORageFile_ReadPacket, nullptr, AVIORageFile_Seek
+	);
 	av_format_context_->pb = av_io_context_;
 	int ret = avcodec::avformat_open_input(&av_format_context_, sFile.c_str(), nullptr, nullptr);
 	if (ret < 0)
@@ -478,9 +477,10 @@ RString MovieDecoder_FFMpeg::Open(RString sFile)
 		return RString(averr_ssprintf(ret, "AVCodec (%s): Couldn't find codec parameters", sFile.c_str()));
 
 	int stream_idx = avcodec::av_find_best_stream(av_format_context_, avcodec::AVMEDIA_TYPE_VIDEO, -1, -1, nullptr, 0);
-	if (stream_idx < 0 ||
-		static_cast<unsigned int>(stream_idx) >= av_format_context_->nb_streams ||
-		av_format_context_->streams[stream_idx] == nullptr)
+	if (
+	   stream_idx < 0 || static_cast<unsigned int>(stream_idx) >= av_format_context_->nb_streams ||
+	   av_format_context_->streams[stream_idx] == nullptr
+	)
 		return "Couldn't find any video streams";
 	av_stream_ = av_format_context_->streams[stream_idx];
 	av_stream_codec_ = avcodec::avcodec_alloc_context3(nullptr);
@@ -500,8 +500,10 @@ RString MovieDecoder_FFMpeg::Open(RString sFile)
 	if (total_frames_ <= 0) {
 		// Sometimes we might not get a correct frame count.
 		// In that case, approximate and fix it later.
-		total_frames_ = static_cast<int>(av_format_context_->duration // microseconds
-			* (av_stream_->avg_frame_rate.num) / (av_stream_->avg_frame_rate.den) / (1000000));
+		total_frames_ = static_cast<int>(
+		   av_format_context_->duration // microseconds
+		   * (av_stream_->avg_frame_rate.num) / (av_stream_->avg_frame_rate.den) / (1000000)
+		);
 		LOG->Trace("Number of frames provided is inaccurate, estimating.");
 	}
 	LOG->Trace("Number of frames detected: %i", total_frames_);
@@ -509,15 +511,14 @@ RString MovieDecoder_FFMpeg::Open(RString sFile)
 	return RString();
 }
 
-RString MovieDecoder_FFMpeg::OpenCodec()
-{
+RString MovieDecoder_FFMpeg::OpenCodec() {
 	Init();
 
 	ASSERT(av_stream_ != nullptr);
 	if (av_stream_codec_->codec)
 		avcodec::avcodec_close(av_stream_codec_);
 
-	const avcodec::AVCodec* pCodec = avcodec::avcodec_find_decoder(av_stream_codec_->codec_id);
+	const avcodec::AVCodec *pCodec = avcodec::avcodec_find_decoder(av_stream_codec_->codec_id);
 	if (pCodec == nullptr)
 		return ssprintf("Couldn't find decoder %i", av_stream_codec_->codec_id);
 
@@ -535,16 +536,13 @@ RString MovieDecoder_FFMpeg::OpenCodec()
 	return RString();
 }
 
-void MovieDecoder_FFMpeg::Close()
-{
-	if (av_stream_ && av_stream_codec_->codec)
-	{
+void MovieDecoder_FFMpeg::Close() {
+	if (av_stream_ && av_stream_codec_->codec) {
 		avcodec::avcodec_close(av_stream_codec_);
 		av_stream_ = nullptr;
 	}
 
-	if (av_format_context_)
-	{
+	if (av_format_context_) {
 		avcodec::avformat_close_input(&av_format_context_);
 		av_format_context_ = nullptr;
 	}
@@ -552,24 +550,23 @@ void MovieDecoder_FFMpeg::Close()
 	Init();
 }
 
-void MovieDecoder_FFMpeg::Rewind()
-{
+void MovieDecoder_FFMpeg::Rewind() {
 	display_frame_num_ = 0;
 }
 
-RageSurface* MovieDecoder_FFMpeg::CreateCompatibleSurface(int iTextureWidth, int iTextureHeight, bool bPreferHighColor, MovieDecoderPixelFormatYCbCr& fmtout)
-{
-	return RageMovieTextureDriver_FFMpeg::AVCodecCreateCompatibleSurface(iTextureWidth, iTextureHeight, bPreferHighColor, *ConvertValue<int>(&av_pixel_format_), fmtout);
+RageSurface *MovieDecoder_FFMpeg::CreateCompatibleSurface(
+   int iTextureWidth, int iTextureHeight, bool bPreferHighColor, MovieDecoderPixelFormatYCbCr &fmtout
+) {
+	return RageMovieTextureDriver_FFMpeg::AVCodecCreateCompatibleSurface(
+	   iTextureWidth, iTextureHeight, bPreferHighColor, *ConvertValue<int>(&av_pixel_format_), fmtout
+	);
 }
 
-MovieTexture_FFMpeg::MovieTexture_FFMpeg(RageTextureID ID) :
-	MovieTexture_Generic(ID, new MovieDecoder_FFMpeg)
-{
+MovieTexture_FFMpeg::MovieTexture_FFMpeg(RageTextureID ID) : MovieTexture_Generic(ID, new MovieDecoder_FFMpeg) {
 }
 
-RageMovieTexture* RageMovieTextureDriver_FFMpeg::Create(RageTextureID ID, RString& sError)
-{
-	MovieTexture_FFMpeg* pRet = new MovieTexture_FFMpeg(ID);
+RageMovieTexture *RageMovieTextureDriver_FFMpeg::Create(RageTextureID ID, RString &sError) {
+	MovieTexture_FFMpeg *pRet = new MovieTexture_FFMpeg(ID);
 	sError = pRet->Init();
 	if (!sError.empty())
 		SAFE_DELETE(pRet);

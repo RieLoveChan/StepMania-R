@@ -5,9 +5,8 @@
 // (backlog item 9, phase 1 cluster 12 -- split-god-object.md). Exposed
 // under their original names via reference members, so no call site
 // outside GameState.h/.cpp changes. Pure data, no associated methods.
-class GameStateSectionData
-{
-public:
+class GameStateSectionData {
+ public:
 	RString sExpandedSectionName;
 	RString sLastOpenSection;
 };

@@ -8,9 +8,8 @@
 #include <pthread.h>
 #include <semaphore.h>
 
-class ThreadImpl_Pthreads: public ThreadImpl
-{
-public:
+class ThreadImpl_Pthreads : public ThreadImpl {
+ public:
 	pthread_t thread;
 	mutable char name[16];
 
@@ -21,45 +20,43 @@ public:
 	std::uint64_t threadHandle;
 
 	// These are only used during initialization.
-	int (*m_pFunc)( void *pData );
+	int (*m_pFunc)(void *pData);
 	void *m_pData;
 	std::uint64_t *m_piThreadID;
 	SemaImpl *m_StartFinishedSem;
 
-	void Halt( bool Kill );
+	void Halt(bool Kill);
 	void Resume();
 	std::uint64_t GetThreadId() const;
 	int Wait();
 };
 
-class MutexImpl_Pthreads: public MutexImpl
-{
+class MutexImpl_Pthreads : public MutexImpl {
 	friend class EventImpl_Pthreads;
 
-public:
-	MutexImpl_Pthreads( RageMutex *parent );
+ public:
+	MutexImpl_Pthreads(RageMutex *parent);
 	~MutexImpl_Pthreads();
 
 	bool Lock();
 	bool TryLock();
 	void Unlock();
 
-protected:
+ protected:
 	pthread_mutex_t mutex;
 };
 
-class EventImpl_Pthreads: public EventImpl
-{
-public:
-	EventImpl_Pthreads( MutexImpl_Pthreads *pParent );
+class EventImpl_Pthreads : public EventImpl {
+ public:
+	EventImpl_Pthreads(MutexImpl_Pthreads *pParent);
 	~EventImpl_Pthreads();
 
-	bool Wait( RageTimer *pTimeout );
+	bool Wait(RageTimer *pTimeout);
 	void Signal();
 	void Broadcast();
 	bool WaitTimeoutSupported() const;
 
-private:
+ private:
 	MutexImpl_Pthreads *m_pParent;
 	pthread_cond_t m_Cond;
 };
@@ -79,17 +76,18 @@ private:
 	sem_t sem;
 };
 #else
-class SemaImpl_Pthreads: public SemaImpl
-{
-public:
-	SemaImpl_Pthreads( int iInitialValue );
+class SemaImpl_Pthreads : public SemaImpl {
+ public:
+	SemaImpl_Pthreads(int iInitialValue);
 	~SemaImpl_Pthreads();
-	int GetValue() const { return m_iValue; }
+	int GetValue() const {
+		return m_iValue;
+	}
 	void Post();
 	bool Wait();
 	bool TryWait();
 
-private:
+ private:
 	pthread_cond_t m_Cond;
 	pthread_mutex_t m_Mutex;
 	unsigned m_iValue;

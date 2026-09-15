@@ -9,20 +9,18 @@
 
 #include <vector>
 
-
 /** @brief Shows PlayerOptions and SongOptions in icon form. */
-class ModIcon : public ActorFrame
-{
-public:
+class ModIcon : public ActorFrame {
+ public:
 	ModIcon();
-	ModIcon( const ModIcon &cpy );
-	void Load( RString sMetricsGroup );
-	void Set( const RString &sText );
+	ModIcon(const ModIcon &cpy);
+	void Load(RString sMetricsGroup);
+	void Set(const RString &sText);
 
-protected:
-	BitmapText	m_text;
-	AutoActor	m_sprFilled;
-	AutoActor	m_sprEmpty;
+ protected:
+	BitmapText m_text;
+	AutoActor m_sprFilled;
+	AutoActor m_sprEmpty;
 
 	ThemeMetric<int> CROP_TEXT_TO_WIDTH;
 	ThemeMetric<RString> STOP_WORDS;

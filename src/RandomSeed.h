@@ -1,4 +1,5 @@
-// NOTE: this is a temporary stand-in helper which was intended to be removed after upgrading the C++ baseline but did not finish getting replaced before the MIT license cutoff for ITGmania
+// NOTE: this is a temporary stand-in helper which was intended to be removed after upgrading the C++ baseline but did
+// not finish getting replaced before the MIT license cutoff for ITGmania
 
 #ifndef RANDOMSEED_H
 #define RANDOMSEED_H
@@ -6,11 +7,10 @@
 #include <random>
 #include <climits>
 
-inline int GetRandomInt()
-{
-    static std::random_device rd;
-    static std::mt19937 gen(rd());
-    return std::uniform_int_distribution<int>(0, INT_MAX)(gen);
+inline int GetRandomInt() {
+	static std::random_device rd;
+	static std::mt19937 gen(rd());
+	return std::uniform_int_distribution<int>(0, INT_MAX)(gen);
 }
 
 #endif // RANDOMSEED_H

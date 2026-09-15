@@ -7,25 +7,25 @@
 
 class ThreadedFileWorker;
 
-class RageFileDriverTimeout: public RageFileDriver
-{
-public:
-	RageFileDriverTimeout( const RString &path );
+class RageFileDriverTimeout : public RageFileDriver {
+ public:
+	RageFileDriverTimeout(const RString &path);
 	~RageFileDriverTimeout() override;
 
-	RageFileBasic *Open( const RString &path, int mode, int &err ) override;
-	void FlushDirCache( const RString &sPath ) override;
-	bool Move( const RString &sOldPath, const RString &sNewPath ) override;
-	bool Remove( const RString &sPath ) override;
+	RageFileBasic *Open(const RString &path, int mode, int &err) override;
+	void FlushDirCache(const RString &sPath) override;
+	bool Move(const RString &sOldPath, const RString &sNewPath) override;
+	bool Remove(const RString &sPath) override;
 
-	static void SetTimeout( float fSeconds );
-	static void ResetTimeout() { SetTimeout( -1 ); }
+	static void SetTimeout(float fSeconds);
+	static void ResetTimeout() {
+		SetTimeout(-1);
+	}
 
-private:
+ private:
 	RageFileDriver *m_pChild;
 	ThreadedFileWorker *m_pWorker;
 };
-
 
 #endif
 

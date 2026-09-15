@@ -7,9 +7,8 @@
 #define ALSA_PCM_NEW_SW_PARAMS_API
 #include <alsa/asoundlib.h>
 
-class Alsa9Buf
-{
-private:
+class Alsa9Buf {
+ private:
 	int channels, samplebits;
 	unsigned samplerate;
 	int buffersize;
@@ -20,35 +19,36 @@ private:
 
 	snd_pcm_t *pcm;
 
-	bool Recover( int r );
+	bool Recover(int r);
 	bool SetHWParams();
 	bool SetSWParams();
 
 	static void ErrorHandler(const char *file, int line, const char *function, int err, const char *fmt, ...);
 
-public:
+ public:
 	static void InitializeErrorHandler();
 	static void GetSoundCardDebugInfo();
-	static RString GetHardwareID( RString name="" );
+	static RString GetHardwareID(RString name = "");
 
 	Alsa9Buf();
-	RString Init( int channels,
-			int iWriteahead,
-			int iChunkSize,
-			int iSampleRate );
+	RString Init(int channels, int iWriteahead, int iChunkSize, int iSampleRate);
 	~Alsa9Buf();
 
 	int GetNumFramesToFill();
-	bool WaitUntilFramesCanBeFilled( int timeout_ms );
-	void Write( const std::int16_t *buffer, int frames );
+	bool WaitUntilFramesCanBeFilled(int timeout_ms);
+	void Write(const std::int16_t *buffer, int frames);
 
 	void Play();
 	void Stop();
 	void SetVolume(float vol);
-	int GetSampleRate() const { return samplerate; }
+	int GetSampleRate() const {
+		return samplerate;
+	}
 
 	std::int64_t GetPosition() const;
-	std::int64_t GetPlayPos() const { return last_cursor_pos; }
+	std::int64_t GetPlayPos() const {
+		return last_cursor_pos;
+	}
 };
 #endif
 

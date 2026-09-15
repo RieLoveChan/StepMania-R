@@ -13,30 +13,26 @@
 
 #include <vector>
 
-
-enum EditProfileRow
-{
+enum EditProfileRow {
 	ROW_CHARACTER,
 };
 
-REGISTER_SCREEN_CLASS( ScreenOptionsEditProfile );
+REGISTER_SCREEN_CLASS(ScreenOptionsEditProfile);
 
-void ScreenOptionsEditProfile::Init()
-{
+void ScreenOptionsEditProfile::Init() {
 	ScreenOptions::Init();
 }
 
-void ScreenOptionsEditProfile::BeginScreen()
-{
+void ScreenOptionsEditProfile::BeginScreen() {
 	m_Original = *GAMESTATE->GetEditLocalProfile();
 
-	std::vector<OptionRowHandler*> vHands;
+	std::vector<OptionRowHandler *> vHands;
 
-	Profile *pProfile = PROFILEMAN->GetLocalProfile( GAMESTATE->m_sEditLocalProfileID );
-	ASSERT( pProfile != nullptr );
+	Profile *pProfile = PROFILEMAN->GetLocalProfile(GAMESTATE->m_sEditLocalProfileID);
+	ASSERT(pProfile != nullptr);
 
 	{
-		vHands.push_back( OptionRowHandlerUtil::MakeNull() );
+		vHands.push_back(OptionRowHandlerUtil::MakeNull());
 		OptionRowDefinition &def = vHands.back()->m_Def;
 		def.m_layoutType = LAYOUT_SHOW_ONE_IN_ROW;
 		def.m_bOneChoiceForAllPlayers = true;
@@ -46,106 +42,89 @@ void ScreenOptionsEditProfile::BeginScreen()
 		def.m_bExportOnChange = true;
 		def.m_sName = "Character";
 		def.m_vsChoices.clear();
-		std::vector<Character*> vpCharacters;
-		CHARMAN->GetCharacters( vpCharacters );
+		std::vector<Character *> vpCharacters;
+		CHARMAN->GetCharacters(vpCharacters);
 		for (Character const *c : vpCharacters)
-			def.m_vsChoices.push_back( c->GetDisplayName() );
-		if( def.m_vsChoices.empty() )
-			def.m_vsChoices.push_back( RString() );
+			def.m_vsChoices.push_back(c->GetDisplayName());
+		if (def.m_vsChoices.empty())
+			def.m_vsChoices.push_back(RString());
 	}
 
-	InitMenu( vHands );
+	InitMenu(vHands);
 
 	ScreenOptions::BeginScreen();
 }
 
-ScreenOptionsEditProfile::~ScreenOptionsEditProfile()
-{
-
+ScreenOptionsEditProfile::~ScreenOptionsEditProfile() {
 }
 
-void ScreenOptionsEditProfile::ImportOptions( int iRow, const std::vector<PlayerNumber> &/* vpns */ )
-{
-	Profile *pProfile = PROFILEMAN->GetLocalProfile( GAMESTATE->m_sEditLocalProfileID );
-	ASSERT( pProfile != nullptr );
+void ScreenOptionsEditProfile::ImportOptions(int iRow, const std::vector<PlayerNumber> & /* vpns */) {
+	Profile *pProfile = PROFILEMAN->GetLocalProfile(GAMESTATE->m_sEditLocalProfileID);
+	ASSERT(pProfile != nullptr);
 	OptionRow &row = *m_pRows[iRow];
 
-	switch( iRow )
-	{
+	switch (iRow) {
 	case ROW_CHARACTER:
-		row.SetOneSharedSelectionIfPresent( pProfile->m_sCharacterID );
+		row.SetOneSharedSelectionIfPresent(pProfile->m_sCharacterID);
 		break;
 	}
 }
 
-void ScreenOptionsEditProfile::ExportOptions( int iRow, const std::vector<PlayerNumber> &/* vpns */ )
-{
-	Profile *pProfile = PROFILEMAN->GetLocalProfile( GAMESTATE->m_sEditLocalProfileID );
-	ASSERT( pProfile != nullptr );
+void ScreenOptionsEditProfile::ExportOptions(int iRow, const std::vector<PlayerNumber> & /* vpns */) {
+	Profile *pProfile = PROFILEMAN->GetLocalProfile(GAMESTATE->m_sEditLocalProfileID);
+	ASSERT(pProfile != nullptr);
 	OptionRow &row = *m_pRows[iRow];
-	int iIndex = row.GetOneSharedSelection( true );
+	int iIndex = row.GetOneSharedSelection(true);
 	RString sValue;
-	if( iIndex >= 0 )
-		sValue = row.GetRowDef().m_vsChoices[ iIndex ];
+	if (iIndex >= 0)
+		sValue = row.GetRowDef().m_vsChoices[iIndex];
 
-	switch( iRow )
-	{
+	switch (iRow) {
 	case ROW_CHARACTER:
 		pProfile->m_sCharacterID = sValue;
 		break;
 	}
 }
 
-void ScreenOptionsEditProfile::GoToNextScreen()
-{
+void ScreenOptionsEditProfile::GoToNextScreen() {
 }
 
-void ScreenOptionsEditProfile::GoToPrevScreen()
-{
+void ScreenOptionsEditProfile::GoToPrevScreen() {
 }
 
-void ScreenOptionsEditProfile::HandleScreenMessage( const ScreenMessage SM )
-{
-	if( SM == SM_GoToNextScreen )
-	{
-		PROFILEMAN->SaveLocalProfile( GAMESTATE->m_sEditLocalProfileID );
+void ScreenOptionsEditProfile::HandleScreenMessage(const ScreenMessage SM) {
+	if (SM == SM_GoToNextScreen) {
+		PROFILEMAN->SaveLocalProfile(GAMESTATE->m_sEditLocalProfileID);
 	}
-	else if( SM == SM_GoToPrevScreen )
-	{
+	else if (SM == SM_GoToPrevScreen) {
 		*GAMESTATE->GetEditLocalProfile() = m_Original;
 	}
 
-	ScreenOptions::HandleScreenMessage( SM );
+	ScreenOptions::HandleScreenMessage(SM);
 }
 
-void ScreenOptionsEditProfile::AfterChangeValueInRow( int iRow, PlayerNumber pn )
-{
-	ScreenOptions::AfterChangeValueInRow( iRow, pn );
+void ScreenOptionsEditProfile::AfterChangeValueInRow(int iRow, PlayerNumber pn) {
+	ScreenOptions::AfterChangeValueInRow(iRow, pn);
 
 	// cause the overlay to reload
-	GAMESTATE->m_sEditLocalProfileID.Set( GAMESTATE->m_sEditLocalProfileID );
+	GAMESTATE->m_sEditLocalProfileID.Set(GAMESTATE->m_sEditLocalProfileID);
 }
 
-void ScreenOptionsEditProfile::ProcessMenuStart( const InputEventPlus &input )
-{
-	if( IsTransitioning() )
+void ScreenOptionsEditProfile::ProcessMenuStart(const InputEventPlus &input) {
+	if (IsTransitioning())
 		return;
 
 	int iRow = GetCurrentRow();
-	//OptionRow &row = *m_pRows[iRow];
+	// OptionRow &row = *m_pRows[iRow];
 
-	switch( iRow )
-	{
-	case ROW_CHARACTER:
-		{
-		}
-		break;
+	switch (iRow) {
+	case ROW_CHARACTER: {
+	} break;
 	default:
-		ScreenOptions::ProcessMenuStart( input );
+		ScreenOptions::ProcessMenuStart(input);
 		break;
 	}
 }
-
 
 /*
  * (c) 2003-2004 Chris Danford

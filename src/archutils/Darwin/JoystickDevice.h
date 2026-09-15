@@ -5,9 +5,7 @@
 
 #include <vector>
 
-
-struct Joystick
-{
+struct Joystick {
 	InputDevice id;
 	// map cookie to button
 	std::unordered_map<IOHIDElementCookie, DeviceButton> mapping;
@@ -23,21 +21,22 @@ struct Joystick
 	Joystick();
 };
 
-class JoystickDevice : public HIDDevice
-{
-private:
+class JoystickDevice : public HIDDevice {
+ private:
 	std::vector<Joystick> m_vSticks;
 
-protected:
-	bool AddLogicalDevice( int usagePage, int usage );
-	void AddElement( int usagePage, int usage, IOHIDElementCookie cookie, const CFDictionaryRef properties );
+ protected:
+	bool AddLogicalDevice(int usagePage, int usage);
+	void AddElement(int usagePage, int usage, IOHIDElementCookie cookie, const CFDictionaryRef properties);
 	void Open();
-	bool InitDevice( int vid, int pid );
+	bool InitDevice(int vid, int pid);
 
-public:
-	void GetButtonPresses( std::vector<DeviceInput>& vPresses, IOHIDElementCookie cookie, int value, const RageTimer& now ) const;
-	int AssignIDs( InputDevice startID );
-	void GetDevicesAndDescriptions( std::vector<InputDeviceInfo>& vDevices ) const;
+ public:
+	void GetButtonPresses(
+	   std::vector<DeviceInput> &vPresses, IOHIDElementCookie cookie, int value, const RageTimer &now
+	) const;
+	int AssignIDs(InputDevice startID);
+	void GetDevicesAndDescriptions(std::vector<InputDeviceInfo> &vDevices) const;
 };
 
 #endif

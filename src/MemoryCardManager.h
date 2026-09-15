@@ -1,7 +1,7 @@
 #ifndef MemoryCardManager_H
 #define MemoryCardManager_H
 
-#include "GameConstantsAndTypes.h"	// for MemoryCardState
+#include "GameConstantsAndTypes.h" // for MemoryCardState
 #include "PlayerNumber.h"
 #include "RageSound.h"
 #include "arch/MemoryCard/MemoryCardDriver.h"
@@ -9,64 +9,72 @@
 
 #include <vector>
 
-
 extern const RString MEM_CARD_MOUNT_POINT[NUM_PLAYERS];
 
-class MemoryCardManager
-{
-public:
+class MemoryCardManager {
+ public:
 	MemoryCardManager();
 	~MemoryCardManager();
 
 	void Update();
 
-	MemoryCardState GetCardState( PlayerNumber pn ) const { return m_State[pn]; }
-	RString GetCardError( PlayerNumber pn ) const { return m_sError[pn]; }
+	MemoryCardState GetCardState(PlayerNumber pn) const {
+		return m_State[pn];
+	}
+	RString GetCardError(PlayerNumber pn) const {
+		return m_sError[pn];
+	}
 
 	void WaitForCheckingToComplete();
-	bool CardInserted( PlayerNumber pn );
-	void LockCard( PlayerNumber pn ); // prevent removing or changing of memory card
-	void UnlockCard( PlayerNumber pn );
-	bool MountCard( PlayerNumber pn, int iTimeout = 10 );
-	bool MountCard( PlayerNumber pn, const UsbStorageDevice &d, int iTimeout = 10 );
-	void UnmountCard( PlayerNumber pn );
+	bool CardInserted(PlayerNumber pn);
+	void LockCard(PlayerNumber pn); // prevent removing or changing of memory card
+	void UnlockCard(PlayerNumber pn);
+	bool MountCard(PlayerNumber pn, int iTimeout = 10);
+	bool MountCard(PlayerNumber pn, const UsbStorageDevice &d, int iTimeout = 10);
+	void UnmountCard(PlayerNumber pn);
 
-	bool IsMounted( PlayerNumber pn ) const { return m_bMounted[pn]; }
+	bool IsMounted(PlayerNumber pn) const {
+		return m_bMounted[pn];
+	}
 
 	// When paused, no changes in memory card state will be noticed until unpaused.
-	void PauseMountingThread( int iTimeout = 20 );
+	void PauseMountingThread(int iTimeout = 20);
 	void UnPauseMountingThread();
 
-	bool GetCardLocked( PlayerNumber pn ) const { return m_bCardLocked[pn]; }
+	bool GetCardLocked(PlayerNumber pn) const {
+		return m_bCardLocked[pn];
+	}
 
-	bool PathIsMemCard( RString sDir ) const;
+	bool PathIsMemCard(RString sDir) const;
 
-	bool IsNameAvailable( PlayerNumber pn ) const;
-	RString GetName( PlayerNumber pn ) const;
+	bool IsNameAvailable(PlayerNumber pn) const;
+	RString GetName(PlayerNumber pn) const;
 
-	const std::vector<UsbStorageDevice> &GetStorageDevices() { return m_vStorageDevices; }
+	const std::vector<UsbStorageDevice> &GetStorageDevices() {
+		return m_vStorageDevices;
+	}
 
-	static Preference1D<RString>	m_sMemoryCardOsMountPoint;
-	static Preference1D<int>	m_iMemoryCardUsbBus;
-	static Preference1D<int>	m_iMemoryCardUsbPort;
-	static Preference1D<int>	m_iMemoryCardUsbLevel;
+	static Preference1D<RString> m_sMemoryCardOsMountPoint;
+	static Preference1D<int> m_iMemoryCardUsbBus;
+	static Preference1D<int> m_iMemoryCardUsbPort;
+	static Preference1D<int> m_iMemoryCardUsbLevel;
 
-	static Preference<RString>	m_sEditorMemoryCardOsMountPoint;
+	static Preference<RString> m_sEditorMemoryCardOsMountPoint;
 
 	// Lua
-	void PushSelf( lua_State *L );
+	void PushSelf(lua_State *L);
 
-protected:
+ protected:
 	void UpdateAssignments();
 	void CheckStateChanges();
 
-	std::vector<UsbStorageDevice> m_vStorageDevices;	// all currently connected
+	std::vector<UsbStorageDevice> m_vStorageDevices; // all currently connected
 
-	bool	m_bCardLocked[NUM_PLAYERS];
-	bool	m_bMounted[NUM_PLAYERS];	// card is currently mounted
+	bool m_bCardLocked[NUM_PLAYERS];
+	bool m_bMounted[NUM_PLAYERS]; // card is currently mounted
 
-	UsbStorageDevice m_Device[NUM_PLAYERS];	// device in the memory card slot, blank if none
-	UsbStorageDevice m_FinalDevice[NUM_PLAYERS];	// device in the memory card slot when we finalized, blank if none
+	UsbStorageDevice m_Device[NUM_PLAYERS];      // device in the memory card slot, blank if none
+	UsbStorageDevice m_FinalDevice[NUM_PLAYERS]; // device in the memory card slot when we finalized, blank if none
 
 	MemoryCardState m_State[NUM_PLAYERS];
 	RString m_sError[NUM_PLAYERS]; // if MemoryCardState_Error
@@ -77,7 +85,7 @@ protected:
 	RageSound m_soundDisconnect;
 };
 
-extern MemoryCardManager*	MEMCARDMAN;	// global and accessible from anywhere in our program
+extern MemoryCardManager *MEMCARDMAN; // global and accessible from anywhere in our program
 
 #endif
 

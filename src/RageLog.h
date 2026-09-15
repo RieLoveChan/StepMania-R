@@ -3,26 +3,36 @@
 #ifndef RAGE_LOG_H
 #define RAGE_LOG_H
 
-namespace Log
-{
-	/* Subsystem tag for a log line. Seed set — extend as call sites are
-	 * migrated (ADR 0005 phase 4). CategoryToString gives the short
-	 * lowercase name shown in the log column and accepted by
-	 * --LogLevel=<cat>:<level>. */
-	enum Category
-	{
-		General,	// no subsystem / not yet categorised
-		Arch, File, Lua, Theme, Font, Gl, Sound, Input,
-		Song, Steps, Actor, Screen, Profile, Net, Cache,
-		NUM_Category
-	};
-	Category CategoryFromString( const RString &s );	// unknown -> General
-	const char *CategoryToString( Category c );
-}
+namespace Log {
+/* Subsystem tag for a log line. Seed set — extend as call sites are
+ * migrated (ADR 0005 phase 4). CategoryToString gives the short
+ * lowercase name shown in the log column and accepted by
+ * --LogLevel=<cat>:<level>. */
+enum Category {
+	General, // no subsystem / not yet categorised
+	Arch,
+	File,
+	Lua,
+	Theme,
+	Font,
+	Gl,
+	Sound,
+	Input,
+	Song,
+	Steps,
+	Actor,
+	Screen,
+	Profile,
+	Net,
+	Cache,
+	NUM_Category
+};
+Category CategoryFromString(const RString &s); // unknown -> General
+const char *CategoryToString(Category c);
+} // namespace Log
 
-class RageLog
-{
-public:
+class RageLog {
+ public:
 	RageLog();
 	~RageLog();
 
@@ -31,8 +41,7 @@ public:
 	 * below the effective minimum level is dropped from all
 	 * destinations. Default minimum is LogLevel_Trace (nothing dropped).
 	 * ADR 0005. */
-	enum LogLevel
-	{
+	enum LogLevel {
 		LogLevel_Trace,
 		LogLevel_Debug,
 		LogLevel_Info,
@@ -43,55 +52,54 @@ public:
 	};
 	/* Parse a level name ("trace".."error", "off"; case-insensitive); an
 	 * unrecognised string returns LogLevel_Trace. */
-	static LogLevel LogLevelFromString( const RString &s );
-	static const char *LogLevelToString( LogLevel l );
-	void SetLogLevel( LogLevel l );	// global minimum; drop lines below it
+	static LogLevel LogLevelFromString(const RString &s);
+	static const char *LogLevelToString(LogLevel l);
+	void SetLogLevel(LogLevel l); // global minimum; drop lines below it
 
 	/* Per-category minimum. LogLevel_Trace = "use the global minimum".
 	 * The effective minimum for a category is its own if set past Trace,
 	 * else the global one. */
-	void SetCategoryLevel( Log::Category c, LogLevel l );
-	LogLevel GetEffectiveLevel( Log::Category c ) const;
+	void SetCategoryLevel(Log::Category c, LogLevel l);
+	LogLevel GetEffectiveLevel(Log::Category c) const;
 
 	/* Parse a --LogLevel spec: comma-separated, a bare token is the
 	 * global level, a "cat:level" token sets that category
 	 * (e.g. "warn,gl:off,font:trace"). Unknown tokens are ignored. */
-	void SetLogLevelSpec( const RString &spec );
+	void SetLogLevelSpec(const RString &spec);
 
 	/* The category-aware sink the LOG_* macros below call. Formats
 	 * "<cat> <file>:<line>  <msg>" and routes it at `level`. */
-	void LogLine( LogLevel level, Log::Category cat,
-		const char *file, int line, const char *fmt, ... ) PRINTF(6,7);
+	void LogLine(LogLevel level, Log::Category cat, const char *file, int line, const char *fmt, ...) PRINTF(6, 7);
 
-	void Trace( const char *fmt, ... ) PRINTF(2,3);
+	void Trace(const char *fmt, ...) PRINTF(2, 3);
 	// Debug sits below Trace: even more verbose, off unless the log
 	// level is lowered to it. Goes to log.txt only, like Trace. ADR 0005.
-	void Debug( const char *fmt, ... ) PRINTF(2,3);
-	void Warn( const char *fmt, ... ) PRINTF(2,3);
+	void Debug(const char *fmt, ...) PRINTF(2, 3);
+	void Warn(const char *fmt, ...) PRINTF(2, 3);
 	// Error is for serious-but-recoverable failures. For unrecoverable
 	// ones use RageException::Throw (which also logs). See ADR 0005.
-	void Error( const char *fmt, ... ) PRINTF(2,3);
-	void Info( const char *fmt, ... ) PRINTF(2,3);
+	void Error(const char *fmt, ...) PRINTF(2, 3);
+	void Info(const char *fmt, ...) PRINTF(2, 3);
 	// Time is purely for writing profiling time data to the time log. -Kyz
-	void Time( const char *fmt, ... ) PRINTF(2,3);
-	void UserLog( const RString &sType, const RString &sElement, const char *fmt, ... ) PRINTF(4,5);
+	void Time(const char *fmt, ...) PRINTF(2, 3);
+	void UserLog(const RString &sType, const RString &sElement, const char *fmt, ...) PRINTF(4, 5);
 	void Flush();
 
-	void MapLog( const RString &key, const char *fmt, ... ) PRINTF(3,4);
-	void UnmapLog( const RString &key );
+	void MapLog(const RString &key, const char *fmt, ...) PRINTF(3, 4);
+	void UnmapLog(const RString &key);
 
 	static const char *GetAdditionalLog();
 	static const char *GetInfo();
 	/* Returns nullptr if past the last recent log. */
-	static const char *GetRecentLog( int n );
+	static const char *GetRecentLog(int n);
 
-	void SetShowLogOutput( bool show ); // enable or disable logging to stdout
-	void SetLogToDisk( bool b );	// enable or disable logging to file
-	void SetInfoToDisk( bool b );	// enable or disable logging info.txt to file
-	void SetUserLogToDisk( bool b);	// enable or disable logging user.txt to file
-	void SetFlushing( bool b );	// enable or disable flushing
+	void SetShowLogOutput(bool show); // enable or disable logging to stdout
+	void SetLogToDisk(bool b);        // enable or disable logging to file
+	void SetInfoToDisk(bool b);       // enable or disable logging info.txt to file
+	void SetUserLogToDisk(bool b);    // enable or disable logging user.txt to file
+	void SetFlushing(bool b);         // enable or disable flushing
 
-private:
+ private:
 	bool m_bLogToDisk;
 	bool m_bInfoToDisk;
 	bool m_bUserLogToDisk;
@@ -110,24 +118,24 @@ private:
 	int m_iLastWhere = 0;
 	int m_iRepeatCount = 0;
 
-	void Write( int where, LogLevel level, Log::Category cat, const RString &str );
-	void EmitLine( int where, const RString &sTagged );	// one line, no timestamp yet
-	void SpillRepeat();	// emit the pending "(repeated N×)" summary, if any
+	void Write(int where, LogLevel level, Log::Category cat, const RString &str);
+	void EmitLine(int where, const RString &sTagged); // one line, no timestamp yet
+	void SpillRepeat();                               // emit the pending "(repeated N×)" summary, if any
 	void UpdateMappedLog();
-	void AddToInfo( const RString &buf );
-	void AddToRecentLogs( const RString &buf );
+	void AddToInfo(const RString &buf);
+	void AddToRecentLogs(const RString &buf);
 };
 
-extern RageLog*	LOG;	// global and accessible from anywhere in our program
+extern RageLog *LOG; // global and accessible from anywhere in our program
 
 /* Category-aware, file:line-stamped logging. Prefer these at new /
  * migrated call sites (ADR 0005). The bare LOG->Trace(...) etc. stay
  * valid (they log as Log::General, no file:line). */
-#define LOG_TRACE( cat, ... )	LOG->LogLine( RageLog::LogLevel_Trace, (cat), __FILE__, __LINE__, __VA_ARGS__ )
-#define LOG_DEBUG( cat, ... )	LOG->LogLine( RageLog::LogLevel_Debug, (cat), __FILE__, __LINE__, __VA_ARGS__ )
-#define LOG_INFO(  cat, ... )	LOG->LogLine( RageLog::LogLevel_Info,  (cat), __FILE__, __LINE__, __VA_ARGS__ )
-#define LOG_WARN(  cat, ... )	LOG->LogLine( RageLog::LogLevel_Warn,  (cat), __FILE__, __LINE__, __VA_ARGS__ )
-#define LOG_ERROR( cat, ... )	LOG->LogLine( RageLog::LogLevel_Error, (cat), __FILE__, __LINE__, __VA_ARGS__ )
+#define LOG_TRACE(cat, ...) LOG->LogLine(RageLog::LogLevel_Trace, (cat), __FILE__, __LINE__, __VA_ARGS__)
+#define LOG_DEBUG(cat, ...) LOG->LogLine(RageLog::LogLevel_Debug, (cat), __FILE__, __LINE__, __VA_ARGS__)
+#define LOG_INFO(cat, ...) LOG->LogLine(RageLog::LogLevel_Info, (cat), __FILE__, __LINE__, __VA_ARGS__)
+#define LOG_WARN(cat, ...) LOG->LogLine(RageLog::LogLevel_Warn, (cat), __FILE__, __LINE__, __VA_ARGS__)
+#define LOG_ERROR(cat, ...) LOG->LogLine(RageLog::LogLevel_Error, (cat), __FILE__, __LINE__, __VA_ARGS__)
 
 #endif
 

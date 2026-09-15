@@ -7,13 +7,10 @@
 
 #include <vector>
 
-
-class ScreenGameplayNormal : public ScreenGameplay
-{
-public:
-	virtual void FillPlayerInfo( std::vector<PlayerInfo> &vPlayerInfoOut );
+class ScreenGameplayNormal : public ScreenGameplay {
+ public:
+	virtual void FillPlayerInfo(std::vector<PlayerInfo> &vPlayerInfoOut);
 };
-
 
 #endif
 

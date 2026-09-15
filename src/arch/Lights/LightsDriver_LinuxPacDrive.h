@@ -9,17 +9,16 @@ extern "C" {
 #include <usb.h>
 }
 
-#define BIT(i) (1<<(i))
+#define BIT(i) (1 << (i))
 
-class LightsDriver_LinuxPacDrive: public LightsDriver
-{
-public:
+class LightsDriver_LinuxPacDrive : public LightsDriver {
+ public:
 	LightsDriver_LinuxPacDrive();
 	~LightsDriver_LinuxPacDrive();
 
-	void Set( const LightsState *ls );
-private:
+	void Set(const LightsState *ls);
 
+ private:
 	void FindDevice();
 	void OpenDevice();
 	void WriteDevice(std::uint16_t out);

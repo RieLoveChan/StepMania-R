@@ -9,50 +9,50 @@
 
 #include <vector>
 
-
 class Steps;
 struct RadarValues;
 /** @brief The song's GrooveRadar displayed in SelectMusic. */
-class GrooveRadar : public ActorFrame
-{
-public:
+class GrooveRadar : public ActorFrame {
+ public:
 	GrooveRadar();
 	virtual GrooveRadar *Copy() const;
-	virtual void LoadFromNode( const XNode* pNode );
+	virtual void LoadFromNode(const XNode *pNode);
 
 	/**
 	 * @brief Give the Player an empty GrooveRadar.
 	 * @param pn the Player to give an empty GrooveRadar. */
-	void SetEmpty( PlayerNumber pn );
-	void SetFromRadarValues( PlayerNumber pn, const RadarValues &rv );
+	void SetEmpty(PlayerNumber pn);
+	void SetFromRadarValues(PlayerNumber pn, const RadarValues &rv);
 	/**
 	 * @brief Give the Player a GrooveRadar based on some Steps.
 	 * @param pn the Player to give a GrooveRadar.
 	 * @param pSteps the Steps to use to make the radar. If nullptr, there are no Steps. */
-	void SetFromSteps( PlayerNumber pn, Steps* pSteps );
-	void SetFromValues( PlayerNumber pn, std::vector<float> vals );
+	void SetFromSteps(PlayerNumber pn, Steps *pSteps);
+	void SetFromValues(PlayerNumber pn, std::vector<float> vals);
 
 	// Lua
-	void PushSelf( lua_State *L );
+	void PushSelf(lua_State *L);
 
-protected:
+ protected:
 	/**
 	 * @brief The companion ValueMap to the GrooveRadar.
 	 *
 	 * This must be a separate Actor so that it can be tweened separately from the labels. */
-	class GrooveRadarValueMap : public ActorFrame
-	{
-	public:
+	class GrooveRadarValueMap : public ActorFrame {
+	 public:
 		GrooveRadarValueMap();
 
-		virtual void Update( float fDeltaTime );
+		virtual void Update(float fDeltaTime);
 		virtual void DrawPrimitives();
 
 		void SetEmpty();
-		void SetFromSteps( const RadarValues &rv );
-		void SetFromValues( std::vector<float> vals );
+		void SetFromSteps(const RadarValues &rv);
+		void SetFromValues(std::vector<float> vals);
 
-		void SetRadius( float f ) { m_size.x = f; m_size.y = f; }
+		void SetRadius(float f) {
+			m_size.x = f;
+			m_size.y = f;
+		}
 
 		bool m_bValuesVisible;
 		float m_PercentTowardNew;

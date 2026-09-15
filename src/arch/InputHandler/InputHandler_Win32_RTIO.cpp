@@ -9,7 +9,6 @@
 #include <algorithm>
 #include <vector>
 
-
 // The coin counter won't accept an increment command immediately after acking
 // an older increment command. This delay is the minimum amount of time to wait
 // between receiving an ack for an increment command and sending a new
@@ -30,8 +29,7 @@ inline constexpr int RTIO_MAX_READ_FAILURES = 50;
 
 REGISTER_INPUT_HANDLER_CLASS2(Rtio, Win32_RTIO);
 
-InputHandler_Win32_RTIO::InputHandler_Win32_RTIO()
-{
+InputHandler_Win32_RTIO::InputHandler_Win32_RTIO() {
 	LOG->Trace("RTIO: Start");
 
 	if (!Initialize()) {
@@ -42,10 +40,8 @@ InputHandler_Win32_RTIO::InputHandler_Win32_RTIO()
 	input_thread_.Create(InputThread_Start, this);
 }
 
-InputHandler_Win32_RTIO::~InputHandler_Win32_RTIO()
-{
-	if (input_thread_.IsCreated())
-	{
+InputHandler_Win32_RTIO::~InputHandler_Win32_RTIO() {
+	if (input_thread_.IsCreated()) {
 		shutdown_ = true;
 		LOG->Trace("RTIO: Shutting down RTIO thread");
 		input_thread_.Wait();
@@ -55,40 +51,61 @@ InputHandler_Win32_RTIO::~InputHandler_Win32_RTIO()
 	rtio_.Disconnect();
 }
 
-void InputHandler_Win32_RTIO::GetDevicesAndDescriptions(std::vector<InputDeviceInfo>& vDevicesOut)
-{
+void InputHandler_Win32_RTIO::GetDevicesAndDescriptions(std::vector<InputDeviceInfo> &vDevicesOut) {
 	// We use a joystick device so we can get automatic input mapping
 	vDevicesOut.push_back(InputDeviceInfo(InputDevice(DEVICE_JOY1), "Raw Thrills I/O"));
 }
 
-RString InputHandler_Win32_RTIO::GetDeviceSpecificInputString(const DeviceInput &di)
-{
-	switch (di.button)
-	{
-	case JOY_BUTTON_1:  return "P1 Pad Left";
-	case JOY_BUTTON_2:  return "P1 Pad Down";
-	case JOY_BUTTON_3:  return "P1 Pad Up";
-	case JOY_BUTTON_4:  return "P1 Pad Right";
-	case JOY_BUTTON_5:  return "P1 Menu Left";
-	case JOY_BUTTON_6:  return "P1 Menu Down";
-	case JOY_BUTTON_7:  return "P1 Menu Up";
-	case JOY_BUTTON_8:  return "P1 Menu Right";
-	case JOY_BUTTON_9:  return "P1 Menu Start";
-	case JOY_BUTTON_10: return "P2 Pad Left";
-	case JOY_BUTTON_11: return "P2 Pad Down";
-	case JOY_BUTTON_12: return "P2 Pad Up";
-	case JOY_BUTTON_13: return "P2 Pad Right";
-	case JOY_BUTTON_14: return "P2 Menu Left";
-	case JOY_BUTTON_15: return "P2 Menu Down";
-	case JOY_BUTTON_16: return "P2 Menu Up";
-	case JOY_BUTTON_17: return "P2 Menu Right";
-	case JOY_BUTTON_18: return "P2 Menu Start";
-	case JOY_BUTTON_19: return "Test Switch";
-	case JOY_BUTTON_20: return "Service Switch";
-	case JOY_BUTTON_21: return "P1 Coin Slot";
-	case JOY_BUTTON_22: return "P2 Coin Slot";
-	case JOY_BUTTON_23: return "Volume Down";
-	case JOY_BUTTON_24: return "Volume Up";
+RString InputHandler_Win32_RTIO::GetDeviceSpecificInputString(const DeviceInput &di) {
+	switch (di.button) {
+	case JOY_BUTTON_1:
+		return "P1 Pad Left";
+	case JOY_BUTTON_2:
+		return "P1 Pad Down";
+	case JOY_BUTTON_3:
+		return "P1 Pad Up";
+	case JOY_BUTTON_4:
+		return "P1 Pad Right";
+	case JOY_BUTTON_5:
+		return "P1 Menu Left";
+	case JOY_BUTTON_6:
+		return "P1 Menu Down";
+	case JOY_BUTTON_7:
+		return "P1 Menu Up";
+	case JOY_BUTTON_8:
+		return "P1 Menu Right";
+	case JOY_BUTTON_9:
+		return "P1 Menu Start";
+	case JOY_BUTTON_10:
+		return "P2 Pad Left";
+	case JOY_BUTTON_11:
+		return "P2 Pad Down";
+	case JOY_BUTTON_12:
+		return "P2 Pad Up";
+	case JOY_BUTTON_13:
+		return "P2 Pad Right";
+	case JOY_BUTTON_14:
+		return "P2 Menu Left";
+	case JOY_BUTTON_15:
+		return "P2 Menu Down";
+	case JOY_BUTTON_16:
+		return "P2 Menu Up";
+	case JOY_BUTTON_17:
+		return "P2 Menu Right";
+	case JOY_BUTTON_18:
+		return "P2 Menu Start";
+	case JOY_BUTTON_19:
+		return "Test Switch";
+	case JOY_BUTTON_20:
+		return "Service Switch";
+	case JOY_BUTTON_21:
+		return "P1 Coin Slot";
+	case JOY_BUTTON_22:
+		return "P2 Coin Slot";
+	case JOY_BUTTON_23:
+		return "Volume Down";
+	case JOY_BUTTON_24:
+		return "Volume Up";
 	}
 
 	return InputHandler::GetDeviceSpecificInputString(di);
@@ -137,14 +154,12 @@ bool InputHandler_Win32_RTIO::Initialize() {
 	return true;
 }
 
-int InputHandler_Win32_RTIO::InputThread_Start(void *this_ptr)
-{
+int InputHandler_Win32_RTIO::InputThread_Start(void *this_ptr) {
 	((InputHandler_Win32_RTIO *)this_ptr)->InputThread();
 	return 0;
 }
 
-void InputHandler_Win32_RTIO::InputThread()
-{
+void InputHandler_Win32_RTIO::InputThread() {
 	RageTimer start_time;
 	std::vector<std::string> msgs;
 	int read_failures = 0;
@@ -167,7 +182,8 @@ void InputHandler_Win32_RTIO::InputThread()
 		}
 
 		for (auto msg : msgs) {
-			if (msg.empty()) continue;
+			if (msg.empty())
+				continue;
 			if (msg[0] == 'c') {
 				LOG->Trace("RTIO: Received init ack: %s", msg.c_str());
 				continue;
@@ -235,15 +251,13 @@ void InputHandler_Win32_RTIO::InputThread()
 	}
 }
 
-int HexCharToInt(char ch)
-{
+int HexCharToInt(char ch) {
 	if (ch >= 'A' && ch <= 'F')
 		return ch - 'A' + 10;
 	return ch - '0';
 }
 
-void InputHandler_Win32_RTIO::HandleGameInput(const std::string &msg, const RageTimer &now)
-{
+void InputHandler_Win32_RTIO::HandleGameInput(const std::string &msg, const RageTimer &now) {
 	InputDevice id = InputDevice(DEVICE_JOY1);
 
 	int pad1 = HexCharToInt(msg[1]);
@@ -327,20 +341,20 @@ void InputHandler_Win32_RTIO::HandleGameInput(const std::string &msg, const Rage
 	if (input_new.P2_MenuStart != last_game_input_.P2_MenuStart) {
 		ButtonPressed(DeviceInput(id, JOY_BUTTON_18, (float)input_new.P2_MenuStart, now));
 	}
-/*
-	if (memcmp(&last_game_input_, &input_new, sizeof(GAME_INPUT)) != 0) {
-	LOG->Trace("RTIO: P1:%d%d%d%d P2:%d%d%d%d M1:%d%d%d%d-%d M2:%d%d%d%d-%d",
-	input_new.P1_PadLeft, input_new.P1_PadDown, input_new.P1_PadUp, input_new.P1_PadRight,
-	input_new.P2_PadLeft, input_new.P2_PadDown, input_new.P2_PadUp, input_new.P2_PadRight,
-	input_new.P1_MenuLeft, input_new.P1_MenuDown, input_new.P1_MenuUp, input_new.P1_MenuRight, input_new.P1_MenuStart,
-	input_new.P2_MenuLeft, input_new.P2_MenuDown, input_new.P2_MenuUp, input_new.P2_MenuRight, input_new.P2_MenuStart);
-	}
-*/
+	/*
+	   if (memcmp(&last_game_input_, &input_new, sizeof(GAME_INPUT)) != 0) {
+	   LOG->Trace("RTIO: P1:%d%d%d%d P2:%d%d%d%d M1:%d%d%d%d-%d M2:%d%d%d%d-%d",
+	   input_new.P1_PadLeft, input_new.P1_PadDown, input_new.P1_PadUp, input_new.P1_PadRight,
+	   input_new.P2_PadLeft, input_new.P2_PadDown, input_new.P2_PadUp, input_new.P2_PadRight,
+	   input_new.P1_MenuLeft, input_new.P1_MenuDown, input_new.P1_MenuUp, input_new.P1_MenuRight, input_new.P1_MenuStart,
+	   input_new.P2_MenuLeft, input_new.P2_MenuDown, input_new.P2_MenuUp, input_new.P2_MenuRight,
+	   input_new.P2_MenuStart);
+	   }
+	*/
 	memcpy(&last_game_input_, &input_new, sizeof(GAME_INPUT));
 }
 
-void InputHandler_Win32_RTIO::HandleOperatorInput(const std::string &msg, const RageTimer &now)
-{
+void InputHandler_Win32_RTIO::HandleOperatorInput(const std::string &msg, const RageTimer &now) {
 	InputDevice id = InputDevice(DEVICE_JOY1);
 
 	int coin1 = HexCharToInt(msg[3]);
@@ -382,18 +396,17 @@ void InputHandler_Win32_RTIO::HandleOperatorInput(const std::string &msg, const 
 	if (input_new.VolumeUp != last_operator_input_.VolumeUp) {
 		ButtonPressed(DeviceInput(id, JOY_BUTTON_24, (float)input_new.VolumeUp, now));
 	}
-/*
-	if (memcmp(&last_operator_input_, &input_new, sizeof(OPERATOR_INPUT)) != 0) {
-	LOG->Trace("RTIO: C:%d%d V:%d%d S:%d%d",
-	input_new.P1_InsertCoin, input_new.P2_InsertCoin, input_new.VolumeUp, input_new.VolumeDown, input_new.TestSwitch, input_new.SelectSwitch);
-	}
-*/
+	/*
+	   if (memcmp(&last_operator_input_, &input_new, sizeof(OPERATOR_INPUT)) != 0) {
+	   LOG->Trace("RTIO: C:%d%d V:%d%d S:%d%d",
+	   input_new.P1_InsertCoin, input_new.P2_InsertCoin, input_new.VolumeUp, input_new.VolumeDown, input_new.TestSwitch,
+	   input_new.SelectSwitch);
+	   }
+	*/
 	memcpy(&last_operator_input_, &input_new, sizeof(OPERATOR_INPUT));
 }
 
-
-void InputHandler_Win32_RTIO::HandleCounterAck(const std::string &msg)
-{
+void InputHandler_Win32_RTIO::HandleCounterAck(const std::string &msg) {
 	int ack_num = HexCharToInt(msg[1]);
 
 	last_counter_recv_.Touch();
@@ -409,18 +422,16 @@ void InputHandler_Win32_RTIO::HandleCounterAck(const std::string &msg)
 		return;
 	}
 
-	LOG->Warn("RTIO: Received stray coin counter increment acknowledgement: state=%d, msg=%s", counter_state_, msg.c_str());
+	LOG->Warn(
+	   "RTIO: Received stray coin counter increment acknowledgement: state=%d, msg=%s", counter_state_, msg.c_str()
+	);
 }
 
-
-
-RtioDevice::~RtioDevice()
-{
+RtioDevice::~RtioDevice() {
 	Disconnect();
 }
 
-bool RtioDevice::Connect()
-{
+bool RtioDevice::Connect() {
 	for (int i = 1; i < 16; i++) {
 		if (serial_.Connect(i)) {
 			return true;
@@ -429,15 +440,13 @@ bool RtioDevice::Connect()
 	return false;
 }
 
-void RtioDevice::Disconnect()
-{
+void RtioDevice::Disconnect() {
 	serial_.Disconnect();
 }
 
 // Read any available messages from the RTIO device and return them as strings
 // with the prefixes/suffixes stripped.
-bool RtioDevice::ReadMsgs(std::vector<std::string> *msgs)
-{
+bool RtioDevice::ReadMsgs(std::vector<std::string> *msgs) {
 	msgs->clear();
 
 	int bytes_read = serial_.Read(&read_buffer_[read_offset_], sizeof(read_buffer_) - read_offset_);
@@ -458,7 +467,9 @@ bool RtioDevice::ReadMsgs(std::vector<std::string> *msgs)
 		int msg_size = ParseMsg(&read_buffer_[pos], read_offset_ - pos);
 
 		if (msg_size < 0) {
-			LOG->Warn("RTIO: RtioDevice: Bad msg start at offset %d (got %d); skipping invalid data", pos, read_buffer_[pos]);
+			LOG->Warn(
+			   "RTIO: RtioDevice: Bad msg start at offset %d (got %d); skipping invalid data", pos, read_buffer_[pos]
+			);
 			while (pos < read_offset_) {
 				if (read_buffer_[pos] == '\n')
 					break;
@@ -484,8 +495,7 @@ bool RtioDevice::ReadMsgs(std::vector<std::string> *msgs)
 // Received messages always begins with '\n' and end with '\r'. Find the length
 // of the first message in buffer and return its size, including the '\n' and
 // '\r' characters. Return -1 upon error.
-int RtioDevice::ParseMsg(char *buffer, int buffer_size)
-{
+int RtioDevice::ParseMsg(char *buffer, int buffer_size) {
 	if (buffer[0] != '\n') {
 		return -1;
 	}
@@ -500,8 +510,7 @@ int RtioDevice::ParseMsg(char *buffer, int buffer_size)
 // Sends a message to the RTIO device. This function adds the necessary prefix
 // and suffix ('\n' and '\r', respectively).  Messages sent to RTIO also
 // include a checksum, expressed in hex.
-bool RtioDevice::WriteMsg(const std::string &msg)
-{
+bool RtioDevice::WriteMsg(const std::string &msg) {
 	std::string buf;
 	buf = '\n';
 	buf += msg;
@@ -520,19 +529,23 @@ bool RtioDevice::WriteMsg(const std::string &msg)
 	return wrote == buf.length();
 }
 
-
-
-SerialDevice::~SerialDevice()
-{
+SerialDevice::~SerialDevice() {
 	Disconnect();
 }
 
-bool SerialDevice::Connect(int com_number)
-{
+bool SerialDevice::Connect(int com_number) {
 	std::string name("COM");
 	name += std::to_string(com_number);
 
-	com_handle_ = CreateFile(name.c_str(), GENERIC_READ | GENERIC_WRITE, 0, nullptr, OPEN_EXISTING, FILE_FLAG_OVERLAPPED | FILE_ATTRIBUTE_NORMAL, nullptr);
+	com_handle_ = CreateFile(
+	   name.c_str(),
+	   GENERIC_READ | GENERIC_WRITE,
+	   0,
+	   nullptr,
+	   OPEN_EXISTING,
+	   FILE_FLAG_OVERLAPPED | FILE_ATTRIBUTE_NORMAL,
+	   nullptr
+	);
 	if (com_handle_ == INVALID_HANDLE_VALUE) {
 		LOG->Info("RTIO: SerialDevice: Connect failed on %s: %d", name.c_str(), GetLastError());
 		return false;
@@ -547,8 +560,7 @@ bool SerialDevice::Connect(int com_number)
 	return true;
 }
 
-void SerialDevice::Disconnect()
-{
+void SerialDevice::Disconnect() {
 	if (com_handle_ != INVALID_HANDLE_VALUE) {
 		CloseHandle(read_overlapped_.hEvent);
 		CloseHandle(write_overlapped_.hEvent);
@@ -557,8 +569,7 @@ void SerialDevice::Disconnect()
 	}
 }
 
-bool SerialDevice::Setup()
-{
+bool SerialDevice::Setup() {
 	// Set the serial device to monitor for characters in the input buffer
 	if (!SetCommMask(com_handle_, EV_RXCHAR)) {
 		LOG->Warn("RTIO: SerialDevice: SetCommMask failed: %d", GetLastError());
@@ -629,8 +640,7 @@ bool SerialDevice::Setup()
 	return true;
 }
 
-void ResetOverlapped(OVERLAPPED *overlapped)
-{
+void ResetOverlapped(OVERLAPPED *overlapped) {
 	overlapped->Internal = 0;
 	overlapped->InternalHigh = 0;
 	overlapped->Offset = 0;
@@ -638,11 +648,9 @@ void ResetOverlapped(OVERLAPPED *overlapped)
 	ResetEvent(overlapped->hEvent);
 }
 
-
 // Reads up to buffer_size bytes from the serial device. Returns as fast as
 // possible by only reading bytes that are already available in the queue.
-int SerialDevice::Read(char *buffer, int buffer_size)
-{
+int SerialDevice::Read(char *buffer, int buffer_size) {
 	DWORD errors;
 	COMSTAT stat;
 
@@ -680,10 +688,9 @@ int SerialDevice::Read(char *buffer, int buffer_size)
 	return bytes_transferred;
 }
 
-int SerialDevice::Write(const char *buffer, int buffer_size)
-{
+int SerialDevice::Write(const char *buffer, int buffer_size) {
 	DWORD bytes_transferred;
-	DWORD write_size = std::min((DWORD) buffer_size, (DWORD) write_buffer_size_);
+	DWORD write_size = std::min((DWORD)buffer_size, (DWORD)write_buffer_size_);
 
 	ResetOverlapped(&write_overlapped_);
 

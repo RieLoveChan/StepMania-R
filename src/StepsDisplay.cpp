@@ -15,11 +15,9 @@
 #include "PlayerState.h"
 #include "RageLog.h"
 
-REGISTER_ACTOR_CLASS( StepsDisplay );
+REGISTER_ACTOR_CLASS(StepsDisplay);
 
-
-StepsDisplay::StepsDisplay()
-{
+StepsDisplay::StepsDisplay() {
 }
 
 /* sID experiment:
@@ -44,300 +42,279 @@ StepsDisplay::StepsDisplay()
  * so I'm trying it first in only this object.
  */
 
-void StepsDisplay::Load( const RString &sMetricsGroup, const PlayerState *pPlayerState )
-{
+void StepsDisplay::Load(const RString &sMetricsGroup, const PlayerState *pPlayerState) {
 	m_sMetricsGroup = sMetricsGroup;
 
 	/* We can't use global ThemeMetric<RString>s, because we can have multiple
 	 * StepsDisplays on screen at once, with different names. */
-	m_iNumTicks.Load(m_sMetricsGroup,"NumTicks");
-	m_iMaxTicks.Load(m_sMetricsGroup,"MaxTicks");
-	m_bShowTicks.Load(m_sMetricsGroup,"ShowTicks");
-	m_bShowMeter.Load(m_sMetricsGroup,"ShowMeter");
-	m_bShowDescription.Load(m_sMetricsGroup,"ShowDescription");
-	m_bShowCredit.Load(m_sMetricsGroup,"ShowCredit");
-	m_bShowAutogen.Load(m_sMetricsGroup,"ShowAutogen");
-	m_bShowStepsType.Load(m_sMetricsGroup,"ShowStepsType");
-	m_sZeroMeterString.Load(m_sMetricsGroup,"ZeroMeterString");
-	m_sMeterFormatString.Load(m_sMetricsGroup,"MeterFormatString");
+	m_iNumTicks.Load(m_sMetricsGroup, "NumTicks");
+	m_iMaxTicks.Load(m_sMetricsGroup, "MaxTicks");
+	m_bShowTicks.Load(m_sMetricsGroup, "ShowTicks");
+	m_bShowMeter.Load(m_sMetricsGroup, "ShowMeter");
+	m_bShowDescription.Load(m_sMetricsGroup, "ShowDescription");
+	m_bShowCredit.Load(m_sMetricsGroup, "ShowCredit");
+	m_bShowAutogen.Load(m_sMetricsGroup, "ShowAutogen");
+	m_bShowStepsType.Load(m_sMetricsGroup, "ShowStepsType");
+	m_sZeroMeterString.Load(m_sMetricsGroup, "ZeroMeterString");
+	m_sMeterFormatString.Load(m_sMetricsGroup, "MeterFormatString");
 
-	m_sprFrame.Load( THEME->GetPathG(m_sMetricsGroup,"frame") );
-	m_sprFrame->SetName( "Frame" );
-	ActorUtil::LoadAllCommandsAndSetXYAndOnCommand( m_sprFrame, m_sMetricsGroup );
-	this->AddChild( m_sprFrame );
+	m_sprFrame.Load(THEME->GetPathG(m_sMetricsGroup, "frame"));
+	m_sprFrame->SetName("Frame");
+	ActorUtil::LoadAllCommandsAndSetXYAndOnCommand(m_sprFrame, m_sMetricsGroup);
+	this->AddChild(m_sprFrame);
 
-	if( m_bShowTicks )
-	{
+	if (m_bShowTicks) {
 		RString sChars = "10"; // on, off (todo: make this metricable -aj)
-		m_textTicks.SetName( "Ticks" );
-		m_textTicks.LoadFromTextureAndChars( THEME->GetPathF(m_sMetricsGroup,"ticks"), sChars );
-		ActorUtil::LoadAllCommandsAndSetXYAndOnCommand( m_textTicks, m_sMetricsGroup );
-		this->AddChild( &m_textTicks );
+		m_textTicks.SetName("Ticks");
+		m_textTicks.LoadFromTextureAndChars(THEME->GetPathF(m_sMetricsGroup, "ticks"), sChars);
+		ActorUtil::LoadAllCommandsAndSetXYAndOnCommand(m_textTicks, m_sMetricsGroup);
+		this->AddChild(&m_textTicks);
 	}
 
-	if( m_bShowMeter )
-	{
-		m_textMeter.SetName( "Meter" );
-		m_textMeter.LoadFromFont( THEME->GetPathF(m_sMetricsGroup,"meter") );
-		ActorUtil::LoadAllCommandsAndSetXYAndOnCommand( m_textMeter, m_sMetricsGroup );
-		this->AddChild( &m_textMeter );
+	if (m_bShowMeter) {
+		m_textMeter.SetName("Meter");
+		m_textMeter.LoadFromFont(THEME->GetPathF(m_sMetricsGroup, "meter"));
+		ActorUtil::LoadAllCommandsAndSetXYAndOnCommand(m_textMeter, m_sMetricsGroup);
+		this->AddChild(&m_textMeter);
 
 		// These commands should have been loaded by SetXYAndOnCommand above.
-		ASSERT( m_textMeter.HasCommand("Set") );
+		ASSERT(m_textMeter.HasCommand("Set"));
 	}
 
-	if( m_bShowDescription )
-	{
-		m_textDescription.SetName( "Description" );
-		m_textDescription.LoadFromFont( THEME->GetPathF(m_sMetricsGroup,"Description") );
-		ActorUtil::LoadAllCommandsAndSetXYAndOnCommand( m_textDescription, m_sMetricsGroup );
-		this->AddChild( &m_textDescription );
+	if (m_bShowDescription) {
+		m_textDescription.SetName("Description");
+		m_textDescription.LoadFromFont(THEME->GetPathF(m_sMetricsGroup, "Description"));
+		ActorUtil::LoadAllCommandsAndSetXYAndOnCommand(m_textDescription, m_sMetricsGroup);
+		this->AddChild(&m_textDescription);
 	}
-	if( m_bShowCredit )
-	{
-		m_textAuthor.SetName( "Step Author" );
-		m_textAuthor.LoadFromFont( THEME->GetPathF(m_sMetricsGroup,"Credit") );
-		ActorUtil::LoadAllCommandsAndSetXYAndOnCommand( m_textAuthor, m_sMetricsGroup );
-		this->AddChild( &m_textAuthor );
+	if (m_bShowCredit) {
+		m_textAuthor.SetName("Step Author");
+		m_textAuthor.LoadFromFont(THEME->GetPathF(m_sMetricsGroup, "Credit"));
+		ActorUtil::LoadAllCommandsAndSetXYAndOnCommand(m_textAuthor, m_sMetricsGroup);
+		this->AddChild(&m_textAuthor);
 	}
 
-	if( m_bShowAutogen )
-	{
-		m_sprAutogen.Load( THEME->GetPathG(m_sMetricsGroup,"Autogen") );
-		m_sprAutogen->SetName( "Autogen" );
-		ActorUtil::LoadAllCommandsAndSetXYAndOnCommand( m_sprAutogen, m_sMetricsGroup );
-		this->AddChild( m_sprAutogen );
+	if (m_bShowAutogen) {
+		m_sprAutogen.Load(THEME->GetPathG(m_sMetricsGroup, "Autogen"));
+		m_sprAutogen->SetName("Autogen");
+		ActorUtil::LoadAllCommandsAndSetXYAndOnCommand(m_sprAutogen, m_sMetricsGroup);
+		this->AddChild(m_sprAutogen);
 	}
 
-	if( m_bShowStepsType )
-	{
-		m_sprStepsType.Load( THEME->GetPathG(m_sMetricsGroup,"StepsType") );
-		m_sprStepsType->SetName( "StepsType" );
-		ActorUtil::LoadAllCommandsAndSetXYAndOnCommand( m_sprStepsType, m_sMetricsGroup );
-		this->AddChild( m_sprStepsType );
+	if (m_bShowStepsType) {
+		m_sprStepsType.Load(THEME->GetPathG(m_sMetricsGroup, "StepsType"));
+		m_sprStepsType->SetName("StepsType");
+		ActorUtil::LoadAllCommandsAndSetXYAndOnCommand(m_sprStepsType, m_sMetricsGroup);
+		this->AddChild(m_sprStepsType);
 	}
 
 	// Play Load Command
-	PlayerState* pPlayerState_ = const_cast<PlayerState*>(pPlayerState);
+	PlayerState *pPlayerState_ = const_cast<PlayerState *>(pPlayerState);
 	Message msg("Load");
-	if( pPlayerState_ )
-		msg.SetParam( "PlayerState", LuaReference::CreateFromPush(*pPlayerState_) );
-	this->HandleMessage( msg );
+	if (pPlayerState_)
+		msg.SetParam("PlayerState", LuaReference::CreateFromPush(*pPlayerState_));
+	this->HandleMessage(msg);
 
 	Unset();
 }
 
-void StepsDisplay::SetFromGameState( PlayerNumber pn )
-{
-	if( GAMESTATE->IsCourseMode() )
-	{
+void StepsDisplay::SetFromGameState(PlayerNumber pn) {
+	if (GAMESTATE->IsCourseMode()) {
 		// figure out what course type is selected somehow.
-		const Trail* pTrail = GAMESTATE->m_pCurTrail[pn];
-		if( pTrail )
-			SetFromTrail( pTrail );
+		const Trail *pTrail = GAMESTATE->m_pCurTrail[pn];
+		if (pTrail)
+			SetFromTrail(pTrail);
 		else
-			SetFromStepsTypeAndMeterAndDifficultyAndCourseType( StepsType_Invalid, 0, GAMESTATE->m_PreferredCourseDifficulty[pn], CourseType_Invalid );
+			SetFromStepsTypeAndMeterAndDifficultyAndCourseType(
+			   StepsType_Invalid, 0, GAMESTATE->m_PreferredCourseDifficulty[pn], CourseType_Invalid
+			);
 	}
-	else
-	{
-		const Steps* pSteps = GAMESTATE->m_pCurSteps[pn];
-		if( pSteps )
-			SetFromSteps( pSteps );
+	else {
+		const Steps *pSteps = GAMESTATE->m_pCurSteps[pn];
+		if (pSteps)
+			SetFromSteps(pSteps);
 		else
-			SetFromStepsTypeAndMeterAndDifficultyAndCourseType( StepsType_Invalid, 0, GAMESTATE->m_PreferredDifficulty[pn], CourseType_Invalid );
+			SetFromStepsTypeAndMeterAndDifficultyAndCourseType(
+			   StepsType_Invalid, 0, GAMESTATE->m_PreferredDifficulty[pn], CourseType_Invalid
+			);
 	}
 }
 
-void StepsDisplay::SetFromSteps( const Steps* pSteps )
-{
-	if( pSteps == nullptr )
-	{
+void StepsDisplay::SetFromSteps(const Steps *pSteps) {
+	if (pSteps == nullptr) {
 		Unset();
 		return;
 	}
 
-	SetParams params = { pSteps, nullptr, pSteps->GetMeter(), pSteps->m_StepsType, pSteps->GetDifficulty(), CourseType_Invalid };
-	SetInternal( params );
+	SetParams params = {
+	   pSteps, nullptr, pSteps->GetMeter(), pSteps->m_StepsType, pSteps->GetDifficulty(), CourseType_Invalid
+	};
+	SetInternal(params);
 }
 
-void StepsDisplay::SetFromTrail( const Trail* pTrail )
-{
-	if( pTrail == nullptr )
-	{
+void StepsDisplay::SetFromTrail(const Trail *pTrail) {
+	if (pTrail == nullptr) {
 		Unset();
 		return;
 	}
 
-	SetParams params = { nullptr, pTrail, pTrail->GetMeter(), pTrail->m_StepsType, pTrail->m_CourseDifficulty, pTrail->m_CourseType };
-	SetInternal( params );
+	SetParams params = {
+	   nullptr, pTrail, pTrail->GetMeter(), pTrail->m_StepsType, pTrail->m_CourseDifficulty, pTrail->m_CourseType
+	};
+	SetInternal(params);
 }
 
-void StepsDisplay::Unset()
-{
-	this->SetVisible( false );
+void StepsDisplay::Unset() {
+	this->SetVisible(false);
 }
 
-void StepsDisplay::SetFromStepsTypeAndMeterAndDifficultyAndCourseType( StepsType st, int iMeter, Difficulty dc, CourseType ct )
-{
-	SetParams params = { nullptr, nullptr, iMeter, st, dc, ct };
-	SetInternal( params );
+void StepsDisplay::SetFromStepsTypeAndMeterAndDifficultyAndCourseType(
+   StepsType st, int iMeter, Difficulty dc, CourseType ct
+) {
+	SetParams params = {nullptr, nullptr, iMeter, st, dc, ct};
+	SetInternal(params);
 }
 
-void StepsDisplay::SetInternal( const SetParams &params )
-{
-	this->SetVisible( true );
-	Message msg( "Set" );
+void StepsDisplay::SetInternal(const SetParams &params) {
+	this->SetVisible(true);
+	Message msg("Set");
 
 	RString sCustomDifficulty;
-	if( params.pSteps )
+	if (params.pSteps)
 		sCustomDifficulty = StepsToCustomDifficulty(params.pSteps);
-	else if( params.pTrail )
+	else if (params.pTrail)
 		sCustomDifficulty = TrailToCustomDifficulty(params.pTrail);
 	else
-		sCustomDifficulty = GetCustomDifficulty( params.st, params.dc, params.ct );
-	msg.SetParam( "CustomDifficulty", sCustomDifficulty );
+		sCustomDifficulty = GetCustomDifficulty(params.st, params.dc, params.ct);
+	msg.SetParam("CustomDifficulty", sCustomDifficulty);
 
 	RString sDisplayDescription;
-	if( params.pSteps  &&  params.pSteps->IsAnEdit() )
+	if (params.pSteps && params.pSteps->IsAnEdit())
 		sDisplayDescription = params.pSteps->GetDescription();
-	else if( sCustomDifficulty.empty() )
+	else if (sCustomDifficulty.empty())
 		sDisplayDescription = RString();
 	else
-		sDisplayDescription = CustomDifficultyToLocalizedString( sCustomDifficulty );
-	msg.SetParam( "DisplayDescription", sDisplayDescription );
-	
+		sDisplayDescription = CustomDifficultyToLocalizedString(sCustomDifficulty);
+	msg.SetParam("DisplayDescription", sDisplayDescription);
+
 	RString sDisplayCredit;
-	if( params.pSteps )
+	if (params.pSteps)
 		sDisplayCredit = params.pSteps->GetCredit();
 
-	if( params.pSteps )
-		msg.SetParam( "Steps", LuaReference::CreateFromPush(*(Steps*)params.pSteps) );
-	if( params.pTrail )
-		msg.SetParam( "Trail", LuaReference::CreateFromPush(*(Trail*)params.pTrail) );
-	msg.SetParam( "Meter", params.iMeter );
-	msg.SetParam( "StepsType", params.st );
+	if (params.pSteps)
+		msg.SetParam("Steps", LuaReference::CreateFromPush(*(Steps *)params.pSteps));
+	if (params.pTrail)
+		msg.SetParam("Trail", LuaReference::CreateFromPush(*(Trail *)params.pTrail));
+	msg.SetParam("Meter", params.iMeter);
+	msg.SetParam("StepsType", params.st);
 
-	m_sprFrame->HandleMessage( msg );
+	m_sprFrame->HandleMessage(msg);
 
-	if( m_bShowTicks )
-	{
+	if (m_bShowTicks) {
 		// todo: let themers handle the logic of tick text. -aj
 		char on = char('1');
 		char off = '0';
 
 		RString sNewText;
-		int iNumOn = std::min( (int) m_iMaxTicks, params.iMeter );
-		sNewText.insert( sNewText.end(), iNumOn, on );
-		int iNumOff = std::max( 0, m_iNumTicks-iNumOn );
-		sNewText.insert( sNewText.end(), iNumOff, off );
-		m_textTicks.SetText( sNewText );
-		m_textTicks.HandleMessage( msg );
+		int iNumOn = std::min((int)m_iMaxTicks, params.iMeter);
+		sNewText.insert(sNewText.end(), iNumOn, on);
+		int iNumOff = std::max(0, m_iNumTicks - iNumOn);
+		sNewText.insert(sNewText.end(), iNumOff, off);
+		m_textTicks.SetText(sNewText);
+		m_textTicks.HandleMessage(msg);
 	}
 
-	if( m_bShowMeter )
-	{
-		if( params.iMeter == 0 )	// Unset calls with this
+	if (m_bShowMeter) {
+		if (params.iMeter == 0) // Unset calls with this
 		{
-			m_textMeter.SetText( m_sZeroMeterString );
+			m_textMeter.SetText(m_sZeroMeterString);
 		}
-		else
-		{
-			const RString sMeter = ssprintf( m_sMeterFormatString.GetValue().c_str(), params.iMeter );
-			m_textMeter.SetText( sMeter );
-			m_textMeter.HandleMessage( msg );
+		else {
+			const RString sMeter = ssprintf(m_sMeterFormatString.GetValue().c_str(), params.iMeter);
+			m_textMeter.SetText(sMeter);
+			m_textMeter.HandleMessage(msg);
 		}
 	}
 
-	if( m_bShowDescription )
-	{
-		m_textDescription.SetText( sDisplayDescription );
-		m_textDescription.HandleMessage( msg );
+	if (m_bShowDescription) {
+		m_textDescription.SetText(sDisplayDescription);
+		m_textDescription.HandleMessage(msg);
 	}
-	if( m_bShowCredit )
-	{
-		m_textAuthor.SetText( sDisplayCredit );
-		m_textAuthor.HandleMessage( msg );
+	if (m_bShowCredit) {
+		m_textAuthor.SetText(sDisplayCredit);
+		m_textAuthor.HandleMessage(msg);
 	}
 
-	if( m_bShowAutogen )
-	{
+	if (m_bShowAutogen) {
 		bool b = params.pSteps && params.pSteps->IsAutogen();
-		m_sprAutogen->HandleMessage( msg );
-		m_sprAutogen->SetVisible( b );
+		m_sprAutogen->HandleMessage(msg);
+		m_sprAutogen->SetVisible(b);
 	}
 
-	if( m_bShowStepsType )
-	{
-		if( params.st != StepsType_Invalid )
-		{
+	if (m_bShowStepsType) {
+		if (params.st != StepsType_Invalid) {
 			/*
 			RString sStepsType = GAMEMAN->GetStepsTypeInfo(params.st).szName;
 			m_sprStepsType.Load( THEME->GetPathG(m_sMetricsGroup,"StepsType "+sStepsType) );
 			*/
-			m_sprStepsType->HandleMessage( msg );
+			m_sprStepsType->HandleMessage(msg);
 		}
 	}
 
-	this->HandleMessage( msg );
+	this->HandleMessage(msg);
 }
 
 // lua start
 #include "LuaBinding.h"
 
-/** @brief Allow Lua to have access to the StepsDisplay. */ 
-class LunaStepsDisplay: public Luna<StepsDisplay>
-{
-public:
-	static int Load( T* p, lua_State *L )		{ p->Load( SArg(1), nullptr ); COMMON_RETURN_SELF; }
-	static int SetFromSteps( T* p, lua_State *L )
-	{ 
-		if( lua_isnil(L,1) )
-		{
+/** @brief Allow Lua to have access to the StepsDisplay. */
+class LunaStepsDisplay : public Luna<StepsDisplay> {
+ public:
+	static int Load(T *p, lua_State *L) {
+		p->Load(SArg(1), nullptr);
+		COMMON_RETURN_SELF;
+	}
+	static int SetFromSteps(T *p, lua_State *L) {
+		if (lua_isnil(L, 1)) {
 			p->SetFromSteps(nullptr);
 		}
-		else
-		{
-			Steps *pS = Luna<Steps>::check(L,1);
-			p->SetFromSteps( pS );
+		else {
+			Steps *pS = Luna<Steps>::check(L, 1);
+			p->SetFromSteps(pS);
 		}
 		COMMON_RETURN_SELF;
 	}
-	static int SetFromTrail( T* p, lua_State *L )
-	{ 
-		if( lua_isnil(L,1) )
-		{
+	static int SetFromTrail(T *p, lua_State *L) {
+		if (lua_isnil(L, 1)) {
 			p->SetFromTrail(nullptr);
 		}
-		else
-		{
-			Trail *pT = Luna<Trail>::check(L,1);
-			p->SetFromTrail( pT );
+		else {
+			Trail *pT = Luna<Trail>::check(L, 1);
+			p->SetFromTrail(pT);
 		}
 		COMMON_RETURN_SELF;
 	}
-	static int SetFromGameState( T* p, lua_State *L )
-	{
+	static int SetFromGameState(T *p, lua_State *L) {
 		PlayerNumber pn = Enum::Check<PlayerNumber>(L, 1);
-		p->SetFromGameState( pn );
+		p->SetFromGameState(pn);
 		COMMON_RETURN_SELF;
 	}
 
-	LunaStepsDisplay()
-	{
-		ADD_METHOD( Load );
-		ADD_METHOD( SetFromSteps );
-		ADD_METHOD( SetFromTrail );
-		ADD_METHOD( SetFromGameState );
+	LunaStepsDisplay() {
+		ADD_METHOD(Load);
+		ADD_METHOD(SetFromSteps);
+		ADD_METHOD(SetFromTrail);
+		ADD_METHOD(SetFromGameState);
 	}
 };
 
-LUA_REGISTER_DERIVED_CLASS( StepsDisplay, ActorFrame )
+LUA_REGISTER_DERIVED_CLASS(StepsDisplay, ActorFrame)
 // lua end
 
 /*
  * (c) 2001-2004 Chris Danford, Glenn Maynard
  * All rights reserved.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -347,7 +324,7 @@ LUA_REGISTER_DERIVED_CLASS( StepsDisplay, ActorFrame )
  * copyright notice(s) and this permission notice appear in all copies of
  * the Software and that both the above copyright notice(s) and this
  * permission notice appear in supporting documentation.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF

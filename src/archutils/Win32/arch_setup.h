@@ -4,7 +4,7 @@
 #define SUPPORT_OPENGL
 #define SUPPORT_D3D
 
-#pragma warning (disable : 4005) // macro redefinitions (ARRAYSIZE)
+#pragma warning(disable : 4005) // macro redefinitions (ARRAYSIZE)
 
 // Fix VC breakage.
 #define PATH_MAX _MAX_PATH
@@ -30,11 +30,11 @@
 
 typedef time_t time_t;
 struct tm;
-struct tm *my_localtime_r( const time_t *timep, struct tm *result );
+struct tm *my_localtime_r(const time_t *timep, struct tm *result);
 #define localtime_r my_localtime_r
-struct tm *my_gmtime_r( const time_t *timep, struct tm *result );
+struct tm *my_gmtime_r(const time_t *timep, struct tm *result);
 #define gmtime_r my_gmtime_r
-void my_usleep( unsigned long usec );
+void my_usleep(unsigned long usec);
 #define usleep my_usleep
 
 #undef min

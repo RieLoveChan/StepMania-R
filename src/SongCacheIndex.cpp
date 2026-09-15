@@ -30,19 +30,17 @@
  */
 #define CACHE_INDEX SpecialFiles::CACHE_DIR + "index.cache"
 
-
 SongCacheIndex *SONGINDEX; // global and accessible from anywhere in our program
 
-RString SongCacheIndex::GetCacheFilePath( const RString &sGroup, const RString &sPath )
-{
+RString SongCacheIndex::GetCacheFilePath(const RString &sGroup, const RString &sPath) {
 	/* Don't use GetHashForFile, since we don't want to spend time
 	 * checking the file size and date. */
 	RString s;
 
-	if( sPath.size() > 2 && sPath[0] == '/' && sPath[sPath.size()-1] == '/' )
-		s.assign( sPath, 1, sPath.size() - 2 );
-	else if( sPath.size() > 1 && sPath[0] == '/' )
-		s.assign( sPath, 1, sPath.size() - 1 );
+	if (sPath.size() > 2 && sPath[0] == '/' && sPath[sPath.size() - 1] == '/')
+		s.assign(sPath, 1, sPath.size() - 2);
+	else if (sPath.size() > 1 && sPath[0] == '/')
+		s.assign(sPath, 1, sPath.size() - 1);
 	else
 		s = sPath;
 	/* Change slashes and invalid utf-8 characters to _.
@@ -51,58 +49,51 @@ RString SongCacheIndex::GetCacheFilePath( const RString &sGroup, const RString &
 	 * so we should probably replace them with combining diacritics.
 	 * XXX How do we do this and is it even worth it? */
 	const char *invalid = "/\xc0\xc1\xfe\xff\xf8\xf9\xfa\xfb\xfc\xfd\xf5\xf6\xf7";
-	for( std::size_t pos = s.find_first_of(invalid); pos != RString::npos; pos = s.find_first_of(invalid, pos) )
+	for (std::size_t pos = s.find_first_of(invalid); pos != RString::npos; pos = s.find_first_of(invalid, pos))
 		s[pos] = '_';
 	// CACHE_DIR ends with a /.
-	return ssprintf( "%s%s/%s", SpecialFiles::CACHE_DIR.c_str(), sGroup.c_str(), s.c_str() );
+	return ssprintf("%s%s/%s", SpecialFiles::CACHE_DIR.c_str(), sGroup.c_str(), s.c_str());
 }
 
-SongCacheIndex::SongCacheIndex()
-{
+SongCacheIndex::SongCacheIndex() {
 	ReadCacheIndex();
 }
 
-SongCacheIndex::~SongCacheIndex()
-{
-
+SongCacheIndex::~SongCacheIndex() {
 }
 
-void SongCacheIndex::ReadFromDisk()
-{
+void SongCacheIndex::ReadFromDisk() {
 	ReadCacheIndex();
 }
 
-static void EmptyDir( RString dir )
-{
-	ASSERT(dir[dir.size()-1] == '/');
+static void EmptyDir(RString dir) {
+	ASSERT(dir[dir.size() - 1] == '/');
 
 	std::vector<RString> asCacheFileNames;
-	GetDirListing( dir, asCacheFileNames );
-	for( unsigned i=0; i<asCacheFileNames.size(); i++ )
-	{
-		if( !IsADirectory(dir + asCacheFileNames[i]) )
-			FILEMAN->Remove( dir + asCacheFileNames[i] );
+	GetDirListing(dir, asCacheFileNames);
+	for (unsigned i = 0; i < asCacheFileNames.size(); i++) {
+		if (!IsADirectory(dir + asCacheFileNames[i]))
+			FILEMAN->Remove(dir + asCacheFileNames[i]);
 	}
 }
 
-void SongCacheIndex::ReadCacheIndex()
-{
-	CacheIndex.ReadFile( CACHE_INDEX );	// don't care if this fails
+void SongCacheIndex::ReadCacheIndex() {
+	CacheIndex.ReadFile(CACHE_INDEX); // don't care if this fails
 
 	int iCacheVersion = -1;
-	CacheIndex.GetValue( "Cache", "CacheVersion", iCacheVersion );
-	if( iCacheVersion == FILE_CACHE_VERSION )
+	CacheIndex.GetValue("Cache", "CacheVersion", iCacheVersion);
+	if (iCacheVersion == FILE_CACHE_VERSION)
 		return; // OK
 
-	LOG_TRACE(Log::Song, "Cache format is out of date.  Deleting all cache files." );
-	EmptyDir( SpecialFiles::CACHE_DIR );
-	EmptyDir( SpecialFiles::CACHE_DIR+"Songs/" );
-	EmptyDir( SpecialFiles::CACHE_DIR+"Courses/" );
+	LOG_TRACE(Log::Song, "Cache format is out of date.  Deleting all cache files.");
+	EmptyDir(SpecialFiles::CACHE_DIR);
+	EmptyDir(SpecialFiles::CACHE_DIR + "Songs/");
+	EmptyDir(SpecialFiles::CACHE_DIR + "Courses/");
 
 	std::vector<RString> ImageDir;
-	split( CommonMetrics::IMAGES_TO_CACHE, ",", ImageDir );
-	for( unsigned c=0; c<ImageDir.size(); c++ )
-		EmptyDir( SpecialFiles::CACHE_DIR+ImageDir[c]+"/" );
+	split(CommonMetrics::IMAGES_TO_CACHE, ",", ImageDir);
+	for (unsigned c = 0; c < ImageDir.size(); c++)
+		EmptyDir(SpecialFiles::CACHE_DIR + ImageDir[c] + "/");
 
 	CacheIndex.Clear();
 	/* This is right now in place because our song file paths are apparently being
@@ -113,38 +104,33 @@ void SongCacheIndex::ReadCacheIndex()
 	FILEMAN->FlushDirCache();
 }
 
-void SongCacheIndex::SaveCacheIndex()
-{
+void SongCacheIndex::SaveCacheIndex() {
 	CacheIndex.WriteFile(CACHE_INDEX);
 }
 
-void SongCacheIndex::AddCacheIndex(const RString &path, unsigned hash)
-{
-	if( hash == 0 )
+void SongCacheIndex::AddCacheIndex(const RString &path, unsigned hash) {
+	if (hash == 0)
 		++hash; /* no 0 hash values */
-	CacheIndex.SetValue( "Cache", "CacheVersion", FILE_CACHE_VERSION );
-	CacheIndex.SetValue( "Cache", MangleName(path), hash );
-	if(!delay_save_cache)
-	{
+	CacheIndex.SetValue("Cache", "CacheVersion", FILE_CACHE_VERSION);
+	CacheIndex.SetValue("Cache", MangleName(path), hash);
+	if (!delay_save_cache) {
 		CacheIndex.WriteFile(CACHE_INDEX);
 	}
 }
 
-unsigned SongCacheIndex::GetCacheHash( const RString &path ) const
-{
+unsigned SongCacheIndex::GetCacheHash(const RString &path) const {
 	unsigned iDirHash = 0;
-	if( !CacheIndex.GetValue( "Cache", MangleName(path), iDirHash ) )
+	if (!CacheIndex.GetValue("Cache", MangleName(path), iDirHash))
 		return 0;
-	if( iDirHash == 0 )
+	if (iDirHash == 0)
 		++iDirHash; /* no 0 hash values */
 	return iDirHash;
 }
 
-RString SongCacheIndex::MangleName( const RString &Name )
-{
+RString SongCacheIndex::MangleName(const RString &Name) {
 	/* We store paths in an INI.  We can't store '='. */
 	RString ret = Name;
-	ret.Replace( "=", "");
+	ret.Replace("=", "");
 	return ret;
 }
 

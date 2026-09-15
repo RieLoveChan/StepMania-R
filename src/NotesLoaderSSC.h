@@ -13,10 +13,9 @@ class TimingData;
 /**
  * @brief The various states while parsing a .ssc file.
  */
-enum SSCLoadingStates
-{
-	GETTING_SONG_INFO, /**< Retrieving song information. */
-	GETTING_STEP_INFO, /**< Retrieving step information. */
+enum SSCLoadingStates {
+	GETTING_SONG_INFO,   /**< Retrieving song information. */
+	GETTING_STEP_INFO,   /**< Retrieving step information. */
 	NUM_SSCLoadingStates /**< The number of states used. */
 };
 
@@ -38,10 +37,10 @@ const float VERSION_RADAR_NOTECOUNT = 0.83f;
 /**
  * @brief The SSCLoader handles all of the parsing needed for .ssc files.
  */
-struct SSCLoader : public SMLoader
-{
-	SSCLoader() : SMLoader(".ssc") {}
-	
+struct SSCLoader : public SMLoader {
+	SSCLoader() : SMLoader(".ssc") {
+	}
+
 	/**
 	 * @brief Attempt to load the specified ssc file.
 	 * @param sPath a const reference to the path on the hard drive to check.
@@ -49,8 +48,8 @@ struct SSCLoader : public SMLoader
 	 * @param bFromCache a check to see if we are getting certain information from the cache file.
 	 * @return its success or failure.
 	 */
-	virtual bool LoadFromSimfile( const RString &sPath, Song &out, bool bFromCache = false );
-	
+	virtual bool LoadFromSimfile(const RString &sPath, Song &out, bool bFromCache = false);
+
 	/**
 	 * @brief Attempt to load an edit from the hard drive.
 	 * @param sEditFilePath a path on the hard drive to check.
@@ -58,7 +57,7 @@ struct SSCLoader : public SMLoader
 	 * @param bAddStepsToSong a flag to determine if we add the edit steps to the song file.
 	 * @return its success or failure.
 	 */
-	bool LoadEditFromFile( RString sEditFilePath, ProfileSlot slot, bool bAddStepsToSong, Song *givenSong=nullptr );
+	bool LoadEditFromFile(RString sEditFilePath, ProfileSlot slot, bool bAddStepsToSong, Song *givenSong = nullptr);
 	/**
 	 * @brief Attempt to parse the edit file in question.
 	 * @param msd the edit file itself.
@@ -67,21 +66,27 @@ struct SSCLoader : public SMLoader
 	 * @param bAddStepsToSong a flag to determine if we add the edit steps to the song file.
 	 * @return its success or failure.
 	 */
-	bool LoadEditFromMsd( const MsdFile &msd, const RString &sEditFilePath, ProfileSlot slot, bool bAddStepsToSong, Song *givenSong=nullptr );
-	
+	bool LoadEditFromMsd(
+	   const MsdFile &msd,
+	   const RString &sEditFilePath,
+	   ProfileSlot slot,
+	   bool bAddStepsToSong,
+	   Song *givenSong = nullptr
+	);
+
 	/**
 	 * @brief Retrieve the specific NoteData from the file.
 	 * @param cachePath the path to the cache file.
 	 * @param out the Steps to receive just the particular notedata.
 	 * @return true if successful, false otherwise. */
-	virtual bool LoadNoteDataFromSimfile( const RString &cachePath, Steps &out );
-	
-	void ProcessBPMs( TimingData &, const RString );
-	void ProcessStops( TimingData &, const RString );
-	void ProcessWarps( TimingData &, const RString, const float );
-	void ProcessLabels( TimingData &, const RString );
-	virtual void ProcessCombos( TimingData &, const RString, const int = -1 );
-	void ProcessScrolls( TimingData &, const RString );
+	virtual bool LoadNoteDataFromSimfile(const RString &cachePath, Steps &out);
+
+	void ProcessBPMs(TimingData &, const RString);
+	void ProcessStops(TimingData &, const RString);
+	void ProcessWarps(TimingData &, const RString, const float);
+	void ProcessLabels(TimingData &, const RString);
+	virtual void ProcessCombos(TimingData &, const RString, const int = -1);
+	void ProcessScrolls(TimingData &, const RString);
 };
 
 #endif
@@ -91,7 +96,7 @@ struct SSCLoader : public SMLoader
  *
  * @section LICENSE
  * All rights reserved.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -101,7 +106,7 @@ struct SSCLoader : public SMLoader
  * copyright notice(s) and this permission notice appear in all copies of
  * the Software and that both the above copyright notice(s) and this
  * permission notice appear in supporting documentation.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF

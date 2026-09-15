@@ -21,195 +21,176 @@ class Song;
 #include <string>
 #include <vector>
 
-
-struct PlayAfterLaunchInfo
-{
+struct PlayAfterLaunchInfo {
 	std::string sSongDir;
 	std::string sTheme;
 	bool bAnySongChanged;
 	bool bAnyThemeChanged;
 
-	PlayAfterLaunchInfo()
-	{
+	PlayAfterLaunchInfo() {
 		bAnySongChanged = false;
 		bAnyThemeChanged = false;
 	}
 
-	void OverlayWith( const PlayAfterLaunchInfo &other )
-	{
-		if( !other.sSongDir.empty() ) sSongDir = other.sSongDir;
-		if( !other.sTheme.empty() ) sTheme = other.sTheme;
+	void OverlayWith(const PlayAfterLaunchInfo &other) {
+		if (!other.sSongDir.empty())
+			sSongDir = other.sSongDir;
+		if (!other.sTheme.empty())
+			sTheme = other.sTheme;
 		bAnySongChanged |= other.bAnySongChanged;
 		bAnyThemeChanged |= other.bAnyThemeChanged;
 	}
 };
 
-void InstallSmzipOsArg( const RString &sOsZipFile, PlayAfterLaunchInfo &out );
-PlayAfterLaunchInfo DoInstalls( CommandLineActions::CommandLineArgs args );
+void InstallSmzipOsArg(const RString &sOsZipFile, PlayAfterLaunchInfo &out);
+PlayAfterLaunchInfo DoInstalls(CommandLineActions::CommandLineArgs args);
 
-static void Parse( const RString &sDir, PlayAfterLaunchInfo &out )
-{
+static void Parse(const RString &sDir, PlayAfterLaunchInfo &out) {
 	std::vector<RString> vsDirParts;
-	split( sDir, "/", vsDirParts, true );
-	if( vsDirParts.size() == 3 && vsDirParts[0].EqualsNoCase("Songs") )
+	split(sDir, "/", vsDirParts, true);
+	if (vsDirParts.size() == 3 && vsDirParts[0].EqualsNoCase("Songs"))
 		out.sSongDir = "/" + sDir;
-	else if( vsDirParts.size() == 2 && vsDirParts[0].EqualsNoCase("Themes") )
+	else if (vsDirParts.size() == 2 && vsDirParts[0].EqualsNoCase("Themes"))
 		out.sTheme = vsDirParts[1];
 }
 
 static const RString TEMP_ZIP_MOUNT_POINT = "/@temp-zip/";
 const RString TEMP_OS_MOUNT_POINT = "/@temp-os/";
 
-static void InstallSmzip( const RString &sZipFile, PlayAfterLaunchInfo &out )
-{
-	if( !FILEMAN->Mount( "zip", sZipFile, TEMP_ZIP_MOUNT_POINT ) )
-		FAIL_M("Failed to mount " + sZipFile );
+static void InstallSmzip(const RString &sZipFile, PlayAfterLaunchInfo &out) {
+	if (!FILEMAN->Mount("zip", sZipFile, TEMP_ZIP_MOUNT_POINT))
+		FAIL_M("Failed to mount " + sZipFile);
 
 	std::vector<RString> vsFiles;
 	{
 		std::vector<RString> vsRawFiles;
-		GetDirListingRecursive( TEMP_ZIP_MOUNT_POINT, "*", vsRawFiles);
+		GetDirListingRecursive(TEMP_ZIP_MOUNT_POINT, "*", vsRawFiles);
 
 		std::vector<RString> vsPrettyFiles;
-		for (RString const &s : vsRawFiles)
-		{
-			if( GetExtension(s).EqualsNoCase("ctl") )
+		for (RString const &s : vsRawFiles) {
+			if (GetExtension(s).EqualsNoCase("ctl"))
 				continue;
 
-			vsFiles.push_back( s);
+			vsFiles.push_back(s);
 
-			RString s2 = s.Right( static_cast<int>(s.length() - TEMP_ZIP_MOUNT_POINT.length()) );
-			vsPrettyFiles.push_back( s2 );
+			RString s2 = s.Right(static_cast<int>(s.length() - TEMP_ZIP_MOUNT_POINT.length()));
+			vsPrettyFiles.push_back(s2);
 		}
-		sort( vsPrettyFiles.begin(), vsPrettyFiles.end() );
+		sort(vsPrettyFiles.begin(), vsPrettyFiles.end());
 	}
 
 	RString sResult = "Success installing " + sZipFile;
-	for (RString &tmpFile : vsFiles)
-	{
+	for (RString &tmpFile : vsFiles) {
 		RString sDestFile = tmpFile;
-		sDestFile = sDestFile.Right( static_cast<int>(sDestFile.length() - TEMP_ZIP_MOUNT_POINT.length()) );
+		sDestFile = sDestFile.Right(static_cast<int>(sDestFile.length() - TEMP_ZIP_MOUNT_POINT.length()));
 
 		RString sDir, sThrowAway;
-		splitpath( sDestFile, sDir, sThrowAway, sThrowAway );
+		splitpath(sDestFile, sDir, sThrowAway, sThrowAway);
 
-		Parse( sDir, out );
+		Parse(sDir, out);
 		out.bAnySongChanged = true;
 
-		FILEMAN->CreateDir( sDir );
+		FILEMAN->CreateDir(sDir);
 
-		if( !FileCopy( tmpFile, sDestFile ) )
-		{
+		if (!FileCopy(tmpFile, sDestFile)) {
 			sResult = "Error extracting " + sDestFile;
 			break;
 		}
 	}
-	FILEMAN->Unmount( "zip", sZipFile, TEMP_ZIP_MOUNT_POINT );
+	FILEMAN->Unmount("zip", sZipFile, TEMP_ZIP_MOUNT_POINT);
 
-	SCREENMAN->SystemMessage( sResult );
+	SCREENMAN->SystemMessage(sResult);
 }
 
-void InstallSmzipOsArg( const RString &sOsZipFile, PlayAfterLaunchInfo &out )
-{
-	SCREENMAN->SystemMessage("Installing " + sOsZipFile );
+void InstallSmzipOsArg(const RString &sOsZipFile, PlayAfterLaunchInfo &out) {
+	SCREENMAN->SystemMessage("Installing " + sOsZipFile);
 
 	RString sOsDir, sFilename, sExt;
-	splitpath( sOsZipFile, sOsDir, sFilename, sExt );
+	splitpath(sOsZipFile, sOsDir, sFilename, sExt);
 
-	if( !FILEMAN->Mount( "dir", sOsDir, TEMP_OS_MOUNT_POINT ) )
-		FAIL_M("Failed to mount " + sOsDir );
-	InstallSmzip( TEMP_OS_MOUNT_POINT + sFilename + sExt, out );
+	if (!FILEMAN->Mount("dir", sOsDir, TEMP_OS_MOUNT_POINT))
+		FAIL_M("Failed to mount " + sOsDir);
+	InstallSmzip(TEMP_OS_MOUNT_POINT + sFilename + sExt, out);
 
-	FILEMAN->Unmount( "dir", sOsDir, TEMP_OS_MOUNT_POINT );
+	FILEMAN->Unmount("dir", sOsDir, TEMP_OS_MOUNT_POINT);
 }
 
-static bool IsPackageFile(const RString &arg)
-{
+static bool IsPackageFile(const RString &arg) {
 	RString ext = GetExtension(arg);
 	return ext.EqualsNoCase("smzip") || ext.EqualsNoCase("zip");
 }
 
-PlayAfterLaunchInfo DoInstalls( CommandLineActions::CommandLineArgs args )
-{
+PlayAfterLaunchInfo DoInstalls(CommandLineActions::CommandLineArgs args) {
 	PlayAfterLaunchInfo ret;
-	for( int i = 0; i<(int)args.argv.size(); i++ )
-	{
+	for (int i = 0; i < (int)args.argv.size(); i++) {
 		RString s = args.argv[i];
-		if( IsPackageFile(s) )
+		if (IsPackageFile(s))
 			InstallSmzipOsArg(s, ret);
 	}
 	return ret;
 }
 
-REGISTER_SCREEN_CLASS( ScreenInstallOverlay );
+REGISTER_SCREEN_CLASS(ScreenInstallOverlay);
 
-ScreenInstallOverlay::~ScreenInstallOverlay()
-{
+ScreenInstallOverlay::~ScreenInstallOverlay() {
 }
-void ScreenInstallOverlay::Init()
-{
+void ScreenInstallOverlay::Init() {
 	Screen::Init();
 
-	m_textStatus.LoadFromFont( THEME->GetPathF("ScreenInstallOverlay", "status") );
+	m_textStatus.LoadFromFont(THEME->GetPathF("ScreenInstallOverlay", "status"));
 	m_textStatus.SetName("Status");
-	ActorUtil::LoadAllCommandsAndSetXY(m_textStatus,"ScreenInstallOverlay");
-	this->AddChild( &m_textStatus );
+	ActorUtil::LoadAllCommandsAndSetXY(m_textStatus, "ScreenInstallOverlay");
+	this->AddChild(&m_textStatus);
 }
 
-bool ScreenInstallOverlay::Input( const InputEventPlus &input )
-{
+bool ScreenInstallOverlay::Input(const InputEventPlus &input) {
 	/*
 	if( input.DeviceI.button == g_buttonLogin && input.type == IET_FIRST_PRESS )
 	{
-		HOOKS->GoToURL("http://www.stepmania.com/launch.php");
-		return true;
+	   HOOKS->GoToURL("http://www.stepmania.com/launch.php");
+	   return true;
 	}
 	*/
 
 	return Screen::Input(input);
 }
 
-void ScreenInstallOverlay::Update( float fDeltaTime )
-{
+void ScreenInstallOverlay::Update(float fDeltaTime) {
 	Screen::Update(fDeltaTime);
 	PlayAfterLaunchInfo playAfterLaunchInfo;
-	while( !CommandLineActions::ToProcess.empty() )
-	{
+	while (!CommandLineActions::ToProcess.empty()) {
 		CommandLineActions::CommandLineArgs args = CommandLineActions::ToProcess.back();
 		CommandLineActions::ToProcess.pop_back();
- 		PlayAfterLaunchInfo pali2 = DoInstalls( args );
-		playAfterLaunchInfo.OverlayWith( pali2 );
+		PlayAfterLaunchInfo pali2 = DoInstalls(args);
+		playAfterLaunchInfo.OverlayWith(pali2);
 	}
-	if( playAfterLaunchInfo.bAnySongChanged )
-		SONGMAN->Reload( false );
+	if (playAfterLaunchInfo.bAnySongChanged)
+		SONGMAN->Reload(false);
 
-	if( !playAfterLaunchInfo.sSongDir.empty() )
-	{
-		Song* pSong = nullptr;
+	if (!playAfterLaunchInfo.sSongDir.empty()) {
+		Song *pSong = nullptr;
 		GAMESTATE->Reset();
 		RString sInitialScreen;
-		if( !playAfterLaunchInfo.sSongDir.empty() )
-			pSong = SONGMAN->GetSongFromDir( playAfterLaunchInfo.sSongDir );
-		if( pSong )
-		{
-			std::vector<const Style*> vpStyle;
-			GAMEMAN->GetStylesForGame( GAMESTATE->m_pCurGame, vpStyle, false );
-			GAMESTATE->m_PlayMode.Set( PLAY_MODE_REGULAR );
+		if (!playAfterLaunchInfo.sSongDir.empty())
+			pSong = SONGMAN->GetSongFromDir(playAfterLaunchInfo.sSongDir);
+		if (pSong) {
+			std::vector<const Style *> vpStyle;
+			GAMEMAN->GetStylesForGame(GAMESTATE->m_pCurGame, vpStyle, false);
+			GAMESTATE->m_PlayMode.Set(PLAY_MODE_REGULAR);
 			GAMESTATE->m_bSideIsJoined[0] = true;
 			GAMESTATE->SetMasterPlayerNumber(PLAYER_1);
-			GAMESTATE->SetCurrentStyle( vpStyle[0], PLAYER_1 );
-			GAMESTATE->m_pCurSong.Set( pSong );
+			GAMESTATE->SetCurrentStyle(vpStyle[0], PLAYER_1);
+			GAMESTATE->m_pCurSong.Set(pSong);
 			GAMESTATE->m_pPreferredSong = pSong;
 			sInitialScreen = StepMania::GetSelectMusicScreen();
 		}
-		else
-		{
+		else {
 			sInitialScreen = StepMania::GetInitialScreen();
 		}
 
 		Screen *curScreen = SCREENMAN->GetTopScreen();
-		if(curScreen->GetScreenType() == game_menu || curScreen->GetScreenType() == attract)
-			SCREENMAN->SetNewScreen( sInitialScreen );
+		if (curScreen->GetScreenType() == game_menu || curScreen->GetScreenType() == attract)
+			SCREENMAN->SetNewScreen(sInitialScreen);
 	}
 }
 

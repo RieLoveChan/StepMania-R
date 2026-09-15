@@ -7,87 +7,79 @@
 
 #include <vector>
 
-
 #define CHARACTERS_DIR "/Characters/"
 
-CharacterManager*	CHARMAN = nullptr;	// global object accessible from anywhere in the program
+CharacterManager *CHARMAN = nullptr; // global object accessible from anywhere in the program
 
-CharacterManager::CharacterManager()
-{
+CharacterManager::CharacterManager() {
 	// Register with Lua.
 	{
 		Lua *L = LUA->Get();
-		lua_pushstring( L, "CHARMAN" );
-		this->PushSelf( L );
-		lua_settable( L, LUA_GLOBALSINDEX );
-		LUA->Release( L );
+		lua_pushstring(L, "CHARMAN");
+		this->PushSelf(L);
+		lua_settable(L, LUA_GLOBALSINDEX);
+		LUA->Release(L);
 	}
 
-	for( unsigned i=0; i<m_pCharacters.size(); i++ )
-		SAFE_DELETE( m_pCharacters[i] );
+	for (unsigned i = 0; i < m_pCharacters.size(); i++)
+		SAFE_DELETE(m_pCharacters[i]);
 	m_pCharacters.clear();
 
 	std::vector<RString> as;
-	GetDirListing( CHARACTERS_DIR "*", as, true, true );
-	StripCvsAndSvn( as );
-	StripMacResourceForks( as );
+	GetDirListing(CHARACTERS_DIR "*", as, true, true);
+	StripCvsAndSvn(as);
+	StripMacResourceForks(as);
 
 	bool FoundDefault = false;
-	for( unsigned i=0; i<as.size(); i++ )
-	{
+	for (unsigned i = 0; i < as.size(); i++) {
 		RString sCharName, sDummy;
 		splitpath(as[i], sDummy, sCharName, sDummy);
 		sCharName.MakeLower();
 
-		if( sCharName.CompareNoCase("default")==0 )
+		if (sCharName.CompareNoCase("default") == 0)
 			FoundDefault = true;
 
-		Character* pChar = new Character;
-		if( pChar->Load( as[i] ) )
-			m_pCharacters.push_back( pChar );
+		Character *pChar = new Character;
+		if (pChar->Load(as[i]))
+			m_pCharacters.push_back(pChar);
 		else
 			delete pChar;
 	}
 
-	if( !FoundDefault )
-		RageException::Throw( "'Characters/default' is missing." );
+	if (!FoundDefault)
+		RageException::Throw("'Characters/default' is missing.");
 
 	// If FoundDefault, then we're not empty. -Chris
-//	if( m_pCharacters.empty() )
-//		RageException::Throw( "Couldn't find any character definitions" );
+	//	if( m_pCharacters.empty() )
+	//		RageException::Throw( "Couldn't find any character definitions" );
 }
 
-CharacterManager::~CharacterManager()
-{
-	for( unsigned i=0; i<m_pCharacters.size(); i++ )
-		SAFE_DELETE( m_pCharacters[i] );
+CharacterManager::~CharacterManager() {
+	for (unsigned i = 0; i < m_pCharacters.size(); i++)
+		SAFE_DELETE(m_pCharacters[i]);
 
 	// Unregister with Lua.
-	LUA->UnsetGlobal( "CHARMAN" );
+	LUA->UnsetGlobal("CHARMAN");
 }
 
-void CharacterManager::GetCharacters( std::vector<Character*> &apCharactersOut )
-{
-	for( unsigned i=0; i<m_pCharacters.size(); i++ )
-		if( !m_pCharacters[i]->IsDefaultCharacter() )
-			apCharactersOut.push_back( m_pCharacters[i] );
+void CharacterManager::GetCharacters(std::vector<Character *> &apCharactersOut) {
+	for (unsigned i = 0; i < m_pCharacters.size(); i++)
+		if (!m_pCharacters[i]->IsDefaultCharacter())
+			apCharactersOut.push_back(m_pCharacters[i]);
 }
 
-Character* CharacterManager::GetRandomCharacter()
-{
-	std::vector<Character*> apCharacters;
-	GetCharacters( apCharacters );
-	if( !apCharacters.empty() )
+Character *CharacterManager::GetRandomCharacter() {
+	std::vector<Character *> apCharacters;
+	GetCharacters(apCharacters);
+	if (!apCharacters.empty())
 		return apCharacters[RandomInt(static_cast<int>(apCharacters.size()))];
 	else
 		return GetDefaultCharacter();
 }
 
-Character* CharacterManager::GetDefaultCharacter()
-{
-	for (Character *c : m_pCharacters)
-	{
-		if( c->IsDefaultCharacter() )
+Character *CharacterManager::GetDefaultCharacter() {
+	for (Character *c : m_pCharacters) {
+		if (c->IsDefaultCharacter())
 			return c;
 	}
 
@@ -95,86 +87,74 @@ Character* CharacterManager::GetDefaultCharacter()
 	FAIL_M("There must be a default character available!");
 }
 
-void CharacterManager::DemandGraphics()
-{
+void CharacterManager::DemandGraphics() {
 	for (Character *c : m_pCharacters)
 		c->DemandGraphics();
 }
 
-void CharacterManager::UndemandGraphics()
-{
+void CharacterManager::UndemandGraphics() {
 	for (Character *c : m_pCharacters)
 		c->UndemandGraphics();
 }
 
-Character* CharacterManager::GetCharacterFromID( RString sCharacterID )
-{
-	for( unsigned i=0; i<m_pCharacters.size(); i++ )
-	{
-		if( m_pCharacters[i]->m_sCharacterID == sCharacterID )
+Character *CharacterManager::GetCharacterFromID(RString sCharacterID) {
+	for (unsigned i = 0; i < m_pCharacters.size(); i++) {
+		if (m_pCharacters[i]->m_sCharacterID == sCharacterID)
 			return m_pCharacters[i];
 	}
 
 	return nullptr;
 }
 
-
 // lua start
 #include "LuaBinding.h"
 
 /** @brief Allow Lua to have access to the CharacterManager. */
-class LunaCharacterManager: public Luna<CharacterManager>
-{
-public:
-	static int GetCharacter( T* p, lua_State *L )
-	{
+class LunaCharacterManager : public Luna<CharacterManager> {
+ public:
+	static int GetCharacter(T *p, lua_State *L) {
 		Character *pCharacter = p->GetCharacterFromID(SArg(1));
-		if( pCharacter != nullptr )
-			pCharacter->PushSelf( L );
+		if (pCharacter != nullptr)
+			pCharacter->PushSelf(L);
 		else
-			lua_pushnil( L );
+			lua_pushnil(L);
 
 		return 1;
 	}
-	static int GetRandomCharacter( T* p, lua_State *L )
-	{
+	static int GetRandomCharacter(T *p, lua_State *L) {
 		Character *pCharacter = p->GetRandomCharacter();
-		if( pCharacter != nullptr )
-			pCharacter->PushSelf( L );
+		if (pCharacter != nullptr)
+			pCharacter->PushSelf(L);
 		else
-			lua_pushnil( L );
+			lua_pushnil(L);
 
 		return 1;
 	}
-	static int GetAllCharacters( T* p, lua_State *L )
-	{
-		std::vector<Character*> vChars;
+	static int GetAllCharacters(T *p, lua_State *L) {
+		std::vector<Character *> vChars;
 		p->GetCharacters(vChars);
 
 		LuaHelpers::CreateTableFromArray(vChars, L);
 		return 1;
 	}
-	static int GetCharacterCount(T* p, lua_State *L)
-	{
-		std::vector<Character*> chars;
+	static int GetCharacterCount(T *p, lua_State *L) {
+		std::vector<Character *> chars;
 		p->GetCharacters(chars);
 		lua_pushnumber(L, static_cast<lua_Number>(chars.size()));
 		return 1;
 	}
 
-	LunaCharacterManager()
-	{
-		ADD_METHOD( GetCharacter );
+	LunaCharacterManager() {
+		ADD_METHOD(GetCharacter);
 		// sm-ssc adds:
-		ADD_METHOD( GetRandomCharacter );
-		ADD_METHOD( GetAllCharacters );
-		ADD_METHOD( GetCharacterCount );
+		ADD_METHOD(GetRandomCharacter);
+		ADD_METHOD(GetAllCharacters);
+		ADD_METHOD(GetCharacterCount);
 	}
 };
 
-LUA_REGISTER_CLASS( CharacterManager )
+LUA_REGISTER_CLASS(CharacterManager)
 // lua end
-
 
 /*
  * (c) 2001-2004 Chris Danford

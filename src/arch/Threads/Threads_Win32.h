@@ -5,55 +5,55 @@
 
 #include "Threads.h"
 #if defined(_WIN32)
-#  include <windows.h>
+#include <windows.h>
 #else
-#  include <windef.h>
+#include <windef.h>
 #endif
 
-class ThreadImpl_Win32: public ThreadImpl
-{
-public:
+class ThreadImpl_Win32 : public ThreadImpl {
+ public:
 	HANDLE ThreadHandle;
 	DWORD ThreadId;
 
-	int (*m_pFunc)( void *pData );
+	int (*m_pFunc)(void *pData);
 	void *m_pData;
 
-	void Halt( bool Kill );
+	void Halt(bool Kill);
 	void Resume();
 	std::uint64_t GetThreadId() const;
 	int Wait();
 };
 
-HANDLE Win32ThreadIdToHandle( std::uint64_t iID );
+HANDLE Win32ThreadIdToHandle(std::uint64_t iID);
 
-class MutexImpl_Win32: public MutexImpl
-{
+class MutexImpl_Win32 : public MutexImpl {
 	friend class EventImpl_Win32;
-public:
-	MutexImpl_Win32( RageMutex *parent );
+
+ public:
+	MutexImpl_Win32(RageMutex *parent);
 	~MutexImpl_Win32();
 
 	bool Lock();
 	bool TryLock();
 	void Unlock();
 
-private:
+ private:
 	HANDLE mutex;
 };
 
-class EventImpl_Win32: public EventImpl
-{
-public:
-	EventImpl_Win32( MutexImpl_Win32 *pParent );
+class EventImpl_Win32 : public EventImpl {
+ public:
+	EventImpl_Win32(MutexImpl_Win32 *pParent);
 	~EventImpl_Win32();
 
-	bool Wait( RageTimer *pTimeout );
+	bool Wait(RageTimer *pTimeout);
 	void Signal();
 	void Broadcast();
-	bool WaitTimeoutSupported() const { return true; }
+	bool WaitTimeoutSupported() const {
+		return true;
+	}
 
-private:
+ private:
 	MutexImpl_Win32 *m_pParent;
 
 	int m_iNumWaiting;
@@ -62,17 +62,18 @@ private:
 	HANDLE m_WaitersDone;
 };
 
-class SemaImpl_Win32: public SemaImpl
-{
-public:
-	SemaImpl_Win32( int iInitialValue );
+class SemaImpl_Win32 : public SemaImpl {
+ public:
+	SemaImpl_Win32(int iInitialValue);
 	~SemaImpl_Win32();
-	int GetValue() const { return m_iCounter; }
+	int GetValue() const {
+		return m_iCounter;
+	}
 	void Post();
 	bool Wait();
 	bool TryWait();
 
-private:
+ private:
 	HANDLE sem;
 
 	// We have to track the count ourself, since Windows gives no way to query it.

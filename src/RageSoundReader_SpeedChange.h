@@ -7,42 +7,47 @@
 
 #include <vector>
 
+class RageSoundReader_SpeedChange : public RageSoundReader_Filter {
+ public:
+	RageSoundReader_SpeedChange(RageSoundReader *pSource);
 
-class RageSoundReader_SpeedChange: public RageSoundReader_Filter
-{
-public:
-	RageSoundReader_SpeedChange( RageSoundReader *pSource );
-
-	int SetPosition( int iFrame ) override;
-	int Read( float *pBuf, int iFrames ) override;
-	RageSoundReader_SpeedChange *Copy() const override { return new RageSoundReader_SpeedChange(*this); }
-	bool SetProperty( const RString &sProperty, float fValue ) override;
+	int SetPosition(int iFrame) override;
+	int Read(float *pBuf, int iFrames) override;
+	RageSoundReader_SpeedChange *Copy() const override {
+		return new RageSoundReader_SpeedChange(*this);
+	}
+	bool SetProperty(const RString &sProperty, float fValue) override;
 	int GetNextSourceFrame() const override;
 	float GetStreamToSourceRatio() const override;
 
-	void SetSpeedRatio( float fRatio );
+	void SetSpeedRatio(float fRatio);
 
 	/* Return true if the next Read() will start a new block, allowing GetRatio() to
 	 * be updated to a new value.  Used by RageSoundReader_PitchChange. */
-	bool NextReadWillStep() const { return GetCursorAvail() == 0; }
+	bool NextReadWillStep() const {
+		return GetCursorAvail() == 0;
+	}
 
 	/* Get the ratio last set by SetSpeedRatio. */
-	float GetRatio() const { return m_fSpeedRatio; }
+	float GetRatio() const {
+		return m_fSpeedRatio;
+	}
 
-protected:
-	int FillData( int iMax );
-	void EraseData( int iToDelete );
+ protected:
+	int FillData(int iMax);
+	void EraseData(int iToDelete);
 	int Step();
 	void Reset();
 
 	int GetCursorAvail() const;
 
 	int GetWindowSizeFrames() const;
-	int GetToleranceFrames() const { return GetWindowSizeFrames() / 4; }
+	int GetToleranceFrames() const {
+		return GetWindowSizeFrames() / 4;
+	}
 
 	int m_iDataBufferAvailFrames;
-	struct ChannelInfo
-	{
+	struct ChannelInfo {
 		std::vector<float> m_DataBuffer;
 		int m_iCorrelatedPos;
 		int m_iLastCorrelatedPos;

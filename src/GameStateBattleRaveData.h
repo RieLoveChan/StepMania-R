@@ -5,11 +5,10 @@
 // (backlog item 9, phase 1 cluster 8 -- split-god-object.md). Exposed
 // under their original names via reference members, so no call site
 // outside GameState.h/.cpp changes. Pure data, no associated methods.
-class GameStateBattleRaveData
-{
-public:
+class GameStateBattleRaveData {
+ public:
 	float m_fOpponentHealthPercent; // used in PLAY_MODE_BATTLE
-	float m_fTugLifePercentP1; // used in PLAY_MODE_RAVE
+	float m_fTugLifePercentP1;      // used in PLAY_MODE_RAVE
 };
 
 #endif

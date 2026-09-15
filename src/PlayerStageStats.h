@@ -10,16 +10,16 @@
 #include <string>
 #include <vector>
 
-
 class Steps;
 class Style;
 struct lua_State;
 /** @brief Contains statistics for one stage of play - either one song, or a whole course. */
-class PlayerStageStats
-{
-public:
+class PlayerStageStats {
+ public:
 	/** @brief Set up the PlayerStageStats with default values. */
-	PlayerStageStats() { InternalInit(); }
+	PlayerStageStats() {
+		InternalInit();
+	}
 	void InternalInit();
 	void Init(PlayerNumber pn);
 	void Init(MultiPlayer pn);
@@ -27,11 +27,11 @@ public:
 	/**
 	 * @brief Add stats from one PlayerStageStats to another.
 	 * @param other the other stats to add to this one. */
-	void AddStats( const PlayerStageStats& other );		// accumulate
+	void AddStats(const PlayerStageStats &other); // accumulate
 
 	Grade GetGrade() const;
-	static float MakePercentScore( int iActual, int iPossible );
-	static std::string FormatPercentScore( float fPercentScore );
+	static float MakePercentScore(int iActual, int iPossible);
+	static std::string FormatPercentScore(float fPercentScore);
 	float GetPercentDancePoints() const;
 	float GetCurMaxPercentDancePoints() const;
 
@@ -42,17 +42,17 @@ public:
 	bool m_for_multiplayer;
 	PlayerNumber m_player_number;
 	MultiPlayer m_multiplayer_number;
-	const Style*	m_pStyle;
+	const Style *m_pStyle;
 
-	bool		m_bJoined;
-  bool    m_bPlayerCanAchieveFullCombo;
-	std::vector<Steps*>  m_vpPossibleSteps;
-	int		m_iStepsPlayed; // how many of m_vpPossibleStepshow many of m_vpPossibleSteps were played
+	bool m_bJoined;
+	bool m_bPlayerCanAchieveFullCombo;
+	std::vector<Steps *> m_vpPossibleSteps;
+	int m_iStepsPlayed; // how many of m_vpPossibleStepshow many of m_vpPossibleSteps were played
 	/**
 	 * @brief How far into the music did the Player last before failing?
 	 *
 	 * This is updated by Gameplay, and scaled by the music rate. */
-	float		m_fAliveSeconds;
+	float m_fAliveSeconds;
 
 	/**
 	 * @brief Have the Players failed at any point during the song?
@@ -61,57 +61,56 @@ public:
 	 *
 	 * If health recovery is possible after failing (requires two players),
 	 * this is only set if both players were failing at the same time. */
-	bool		m_bFailed;
+	bool m_bFailed;
 
-	int		m_iPossibleDancePoints;
-	int		m_iCurPossibleDancePoints;
-	int		m_iActualDancePoints;
-	int		m_iPossibleGradePoints;
-	int		m_iTapNoteScores[NUM_TapNoteScore];
-	int		m_iHoldNoteScores[NUM_HoldNoteScore];
+	int m_iPossibleDancePoints;
+	int m_iCurPossibleDancePoints;
+	int m_iActualDancePoints;
+	int m_iPossibleGradePoints;
+	int m_iTapNoteScores[NUM_TapNoteScore];
+	int m_iHoldNoteScores[NUM_HoldNoteScore];
 	/** @brief The Player's current combo. */
-	unsigned int		m_iCurCombo;
+	unsigned int m_iCurCombo;
 	/** @brief The Player's max combo. */
-	unsigned int		m_iMaxCombo;
+	unsigned int m_iMaxCombo;
 	/** @brief The Player's current miss combo. */
-	unsigned int		m_iCurMissCombo;
-	int		m_iCurScoreMultiplier;
+	unsigned int m_iCurMissCombo;
+	int m_iCurScoreMultiplier;
 	/** @brief The player's current score. */
-	unsigned int		m_iScore;
+	unsigned int m_iScore;
 	/** @brief The theoretically highest score the Player could have at this point. */
-	unsigned int		m_iCurMaxScore;
+	unsigned int m_iCurMaxScore;
 	/** @brief The maximum score the Player can get this goaround. */
-	unsigned int		m_iMaxScore;
+	unsigned int m_iMaxScore;
 
 	/**
 	 * @brief The possible RadarValues for a song.
 	 *
 	 * This is filled in by ScreenGameplay on the start of the notes. */
-	RadarValues	m_radarPossible;
-	RadarValues	m_radarActual;
+	RadarValues m_radarPossible;
+	RadarValues m_radarActual;
 	/** @brief How many songs were passed by the Player? */
-	int		m_iSongsPassed;
+	int m_iSongsPassed;
 	/** @brief How many songs were played by the Player? */
-	int		m_iSongsPlayed;
+	int m_iSongsPlayed;
 	/**
 	 * @brief How many seconds were left for the Player?
 	 *
 	 * This is used in the Survival mode. */
-	float		m_fLifeRemainingSeconds;
+	float m_fLifeRemainingSeconds;
 
 	// workout
-	float		m_iNumControllerSteps;
-	float		m_fCaloriesBurned;
+	float m_iNumControllerSteps;
+	float m_fCaloriesBurned;
 
-	std::map<float,float> m_fLifeRecord;
-	void	SetLifeRecordAt( float fLife, float fStepsSecond );
-	void	GetLifeRecord( float *fLifeOut, int iNumSamples, float fStepsEndSecond ) const;
-	float	GetLifeRecordAt( float fStepsSecond ) const;
-	float	GetLifeRecordLerpAt( float fStepsSecond ) const;
-	float	GetCurrentLife() const;
+	std::map<float, float> m_fLifeRecord;
+	void SetLifeRecordAt(float fLife, float fStepsSecond);
+	void GetLifeRecord(float *fLifeOut, int iNumSamples, float fStepsEndSecond) const;
+	float GetLifeRecordAt(float fStepsSecond) const;
+	float GetLifeRecordLerpAt(float fStepsSecond) const;
+	float GetCurrentLife() const;
 
-	struct Combo_t
-	{
+	struct Combo_t {
 		// Update GetComboList in PlayerStageStats.cpp when adding new members that should be visible from the Lua side.
 		/**
 		 * @brief The start time of the combo.
@@ -137,43 +136,52 @@ public:
 		/**
 		 * @brief Retrieve the size of the combo that came from this song.
 		 * @return this song's combo size. */
-		int GetStageCnt() const { return m_cnt - m_rollover; }
+		int GetStageCnt() const {
+			return m_cnt - m_rollover;
+		}
 
-		Combo_t(): m_fStartSecond(0), m_fSizeSeconds(0), m_cnt(0), m_rollover(0) { }
-		bool IsZero() const { return m_fStartSecond < 0; }
+		Combo_t() : m_fStartSecond(0), m_fSizeSeconds(0), m_cnt(0), m_rollover(0) {
+		}
+		bool IsZero() const {
+			return m_fStartSecond < 0;
+		}
 	};
 	std::vector<Combo_t> m_ComboList;
-	float	m_fFirstSecond;
-	float	m_fLastSecond;
+	float m_fFirstSecond;
+	float m_fLastSecond;
 
-	int	GetComboAtStartOfStage() const;
-	bool	FullComboOfScore( TapNoteScore tnsAllGreaterOrEqual ) const;
-	bool	FullCombo() const { return FullComboOfScore(TNS_W3); }
+	int GetComboAtStartOfStage() const;
+	bool FullComboOfScore(TapNoteScore tnsAllGreaterOrEqual) const;
+	bool FullCombo() const {
+		return FullComboOfScore(TNS_W3);
+	}
 	TapNoteScore GetBestFullComboTapNoteScore() const;
-	bool	SingleDigitsOfScore( TapNoteScore tnsAllGreaterOrEqual ) const;
-	bool	OneOfScore( TapNoteScore tnsAllGreaterOrEqual ) const;
-	int		GetTotalTaps() const;
-	float	GetPercentageOfTaps( TapNoteScore tns ) const;
-	void	UpdateComboList( float fSecond, bool rollover );
+	bool SingleDigitsOfScore(TapNoteScore tnsAllGreaterOrEqual) const;
+	bool OneOfScore(TapNoteScore tnsAllGreaterOrEqual) const;
+	int GetTotalTaps() const;
+	float GetPercentageOfTaps(TapNoteScore tns) const;
+	void UpdateComboList(float fSecond, bool rollover);
 	Combo_t GetMaxCombo() const;
 
-	float GetSurvivalSeconds() const { return m_fAliveSeconds + m_fLifeRemainingSeconds; }
+	float GetSurvivalSeconds() const {
+		return m_fAliveSeconds + m_fLifeRemainingSeconds;
+	}
 
 	// Final results:
-	void CalcAwards( PlayerNumber p, bool bGaveUp, bool bUsedAutoplay );
+	void CalcAwards(PlayerNumber p, bool bGaveUp, bool bUsedAutoplay);
 	StageAward m_StageAward;
 	PeakComboAward m_PeakComboAward;
 
-	int		m_iPersonalHighScoreIndex;
-	int		m_iMachineHighScoreIndex;
-	bool	m_bDisqualified;
-	bool	IsDisqualified() const;
+	int m_iPersonalHighScoreIndex;
+	int m_iMachineHighScoreIndex;
+	bool m_bDisqualified;
+	bool IsDisqualified() const;
 
-	RankingCategory	m_rc;
-	HighScore	m_HighScore;
+	RankingCategory m_rc;
+	HighScore m_HighScore;
 
 	// Lua
-	void PushSelf( lua_State *L );
+	void PushSelf(lua_State *L);
 };
 
 #endif

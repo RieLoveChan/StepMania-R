@@ -5,15 +5,14 @@
 
 #include <cstdint>
 
-class RageSoundDriver_Null: public RageSoundDriver
-{
-public:
+class RageSoundDriver_Null : public RageSoundDriver {
+ public:
 	RageSoundDriver_Null();
 	std::int64_t GetPosition() const;
 	int GetSampleRate() const;
 	void Update();
 
-private:
+ private:
 	std::int64_t m_iLastCursorPos;
 	int m_iSampleRate;
 };

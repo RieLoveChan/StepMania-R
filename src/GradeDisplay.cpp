@@ -8,35 +8,29 @@
 
 #include <cstddef>
 
-REGISTER_ACTOR_CLASS( GradeDisplay );
+REGISTER_ACTOR_CLASS(GradeDisplay);
 
-void GradeDisplay::Load( RString sMetricsGroup )
-{
-	ASSERT( m_vSpr.empty() );
-	m_vSpr.resize( NUM_POSSIBLE_GRADES );
+void GradeDisplay::Load(RString sMetricsGroup) {
+	ASSERT(m_vSpr.empty());
+	m_vSpr.resize(NUM_POSSIBLE_GRADES);
 	int i = 0;
-	FOREACH_PossibleGrade( g )
-	{
+	FOREACH_PossibleGrade(g) {
 		AutoActor &spr = m_vSpr[i];
-		spr.Load( THEME->GetPathG(sMetricsGroup,GradeToString(g)) );
-		spr->SetVisible( false );
-		this->AddChild( spr );
+		spr.Load(THEME->GetPathG(sMetricsGroup, GradeToString(g)));
+		spr->SetVisible(false);
+		this->AddChild(spr);
 		i++;
 	}
 }
 
-void GradeDisplay::SetGrade( Grade grade )
-{
+void GradeDisplay::SetGrade(Grade grade) {
 	std::size_t i = 0;
-	FOREACH_PossibleGrade( g )
-	{
-		if(i >= m_vSpr.size())
-		{
+	FOREACH_PossibleGrade(g) {
+		if (i >= m_vSpr.size()) {
 			LuaHelpers::ReportScriptError("GradeDisplay:SetGrade: No actor loaded for grade " + GradeToString(g));
 		}
-		else
-		{
-			m_vSpr[i]->SetVisible( g == grade );
+		else {
+			m_vSpr[i]->SetVisible(g == grade);
 			i++;
 		}
 	}
@@ -46,29 +40,25 @@ void GradeDisplay::SetGrade( Grade grade )
 #include "LuaBinding.h"
 
 /** @brief Allow Lua to have access to the GradeDisplay. */
-class LunaGradeDisplay: public Luna<GradeDisplay>
-{
-public:
-	static int Load( T* p, lua_State *L )
-	{
-		p->Load( SArg(1) );
+class LunaGradeDisplay : public Luna<GradeDisplay> {
+ public:
+	static int Load(T *p, lua_State *L) {
+		p->Load(SArg(1));
 		COMMON_RETURN_SELF;
 	}
-	static int SetGrade( T* p, lua_State *L )
-	{
+	static int SetGrade(T *p, lua_State *L) {
 		Grade g = Enum::Check<Grade>(L, 1);
-		p->SetGrade( g );
+		p->SetGrade(g);
 		COMMON_RETURN_SELF;
 	}
 
-	LunaGradeDisplay()
-	{
-		ADD_METHOD( Load );
-		ADD_METHOD( SetGrade );
+	LunaGradeDisplay() {
+		ADD_METHOD(Load);
+		ADD_METHOD(SetGrade);
 	}
 };
 
-LUA_REGISTER_DERIVED_CLASS( GradeDisplay, ActorFrame )
+LUA_REGISTER_DERIVED_CLASS(GradeDisplay, ActorFrame)
 // lua end
 
 /*

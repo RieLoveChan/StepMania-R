@@ -6,30 +6,27 @@
 #include <string>
 #include <vector>
 
-
 class RageSound;
 
-class RandomSample
-{
-public:
+class RandomSample {
+ public:
 	RandomSample();
 	virtual ~RandomSample();
 
-	bool Load( std::string sFilePath, int iMaxToLoad = 1000 /*load all*/ );
+	bool Load(std::string sFilePath, int iMaxToLoad = 1000 /*load all*/);
 	void UnloadAll();
 	void PlayRandom();
 	void PlayCopyOfRandom();
 	void Stop();
 
-private:
-	bool LoadSoundDir( std::string sDir, int iMaxToLoad  );
-	bool LoadSound( std::string sSoundFilePath );
+ private:
+	bool LoadSoundDir(std::string sDir, int iMaxToLoad);
+	bool LoadSound(std::string sSoundFilePath);
 	int GetNextToPlay();
 
-	std::vector<RageSound*> m_pSamples;
+	std::vector<RageSound *> m_pSamples;
 	int m_iIndexLastPlayed;
 };
-
 
 #endif
 

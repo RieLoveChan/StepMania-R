@@ -9,35 +9,34 @@
 
 #include <vector>
 
+void ChangeVolume(float fDelta);
+void ChangeVisualDelay(float fDelta);
 
-void ChangeVolume( float fDelta );
-void ChangeVisualDelay( float fDelta );
-
-class ScreenDebugOverlay : public Screen
-{
-public:
+class ScreenDebugOverlay : public Screen {
+ public:
 	virtual ~ScreenDebugOverlay();
 	virtual void Init();
 
-	bool Input( const InputEventPlus &input );
+	bool Input(const InputEventPlus &input);
 
-	void Update( float fDeltaTime );
+	void Update(float fDeltaTime);
 
-private:
+ private:
 	void UpdateText();
 
-	RString GetCurrentPageName() const { return m_asPages[m_iCurrentPage]; }
+	RString GetCurrentPageName() const {
+		return m_asPages[m_iCurrentPage];
+	}
 	std::vector<RString> m_asPages;
 	int m_iCurrentPage;
 	bool m_bForcedHidden;
 
 	Quad m_Quad;
 	BitmapText m_textHeader;
-	std::vector<BitmapText*> m_vptextPages;
-	std::vector<BitmapText*> m_vptextButton;
-	std::vector<BitmapText*> m_vptextFunction;
+	std::vector<BitmapText *> m_vptextPages;
+	std::vector<BitmapText *> m_vptextButton;
+	std::vector<BitmapText *> m_vptextFunction;
 };
-
 
 #endif
 

@@ -10,42 +10,40 @@
 #include <cstddef>
 #include <vector>
 
-
 struct RageFileObjMemFile;
-class RageFileObjMem: public RageFileObj
-{
-public:
-	RageFileObjMem( RageFileObjMemFile *pFile = nullptr );
-	RageFileObjMem( const RageFileObjMem &cpy );
+class RageFileObjMem : public RageFileObj {
+ public:
+	RageFileObjMem(RageFileObjMemFile *pFile = nullptr);
+	RageFileObjMem(const RageFileObjMem &cpy);
 	~RageFileObjMem() override;
 
-	int ReadInternal( void *buffer, std::size_t bytes ) override;
-	int WriteInternal( const void *buffer, std::size_t bytes ) override;
-	int SeekInternal( int offset ) override;
+	int ReadInternal(void *buffer, std::size_t bytes) override;
+	int WriteInternal(const void *buffer, std::size_t bytes) override;
+	int SeekInternal(int offset) override;
 	int GetFileSize() const override;
 	RageFileObjMem *Copy() const override;
 
 	/* Retrieve the contents of this file. */
 	RString GetString() const;
-	void PutString( const RString &sBuf );
+	void PutString(const RString &sBuf);
 
-private:
+ private:
 	RageFileObjMemFile *m_pFile;
 	int m_iFilePos;
 };
 
-class RageFileDriverMem: public RageFileDriver
-{
-public:
+class RageFileDriverMem : public RageFileDriver {
+ public:
 	RageFileDriverMem();
 	~RageFileDriverMem() override;
 
-	RageFileBasic *Open( const RString &sPath, int mode, int &err ) override;
-	void FlushDirCache( const RString & /* sPath */ ) override { }
+	RageFileBasic *Open(const RString &sPath, int mode, int &err) override;
+	void FlushDirCache(const RString & /* sPath */) override {
+	}
 
-	bool Remove( const RString &sPath ) override;
+	bool Remove(const RString &sPath) override;
 
-private:
+ private:
 	RageMutex m_Mutex;
 	std::vector<RageFileObjMemFile *> m_Files;
 };

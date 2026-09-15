@@ -7,9 +7,7 @@
 
 #include <vector>
 
-
-enum AutosyncType
-{
+enum AutosyncType {
 	AutosyncType_Off,
 	AutosyncType_Song,
 	AutosyncType_Machine,
@@ -17,28 +15,26 @@ enum AutosyncType
 	NUM_AutosyncType,
 	AutosyncType_Invalid
 };
-const RString& AutosyncTypeToString( AutosyncType cat );
-const RString& AutosyncTypeToLocalizedString( AutosyncType cat );
-LuaDeclareType( AutosyncType );
+const RString &AutosyncTypeToString(AutosyncType cat);
+const RString &AutosyncTypeToLocalizedString(AutosyncType cat);
+LuaDeclareType(AutosyncType);
 
-enum SoundEffectType
-{
+enum SoundEffectType {
 	SoundEffectType_Off,
 	SoundEffectType_Speed,
 	SoundEffectType_Pitch,
 	NUM_SoundEffectType,
 	SoundEffectType_Invalid
 };
-const RString& SoundEffectTypeToString( SoundEffectType cat );
-const RString& SoundEffectTypeToLocalizedString( SoundEffectType cat );
-LuaDeclareType( SoundEffectType );
+const RString &SoundEffectTypeToString(SoundEffectType cat);
+const RString &SoundEffectTypeToLocalizedString(SoundEffectType cat);
+LuaDeclareType(SoundEffectType);
 
-class SongOptions
-{
-public:
+class SongOptions {
+ public:
 	bool m_bAssistClap;
 	bool m_bAssistMetronome;
-	float m_fMusicRate,	m_SpeedfMusicRate;
+	float m_fMusicRate, m_SpeedfMusicRate;
 	float m_fHaste, m_SpeedfHaste;
 	AutosyncType m_AutosyncType;
 	SoundEffectType m_SoundEffectType;
@@ -50,27 +46,30 @@ public:
 	/**
 	 * @brief Set up the SongOptions with reasonable defaults.
 	 */
-	SongOptions(): m_bAssistClap(false),
-		m_bAssistMetronome(false), m_fMusicRate(1.0f),
-		m_SpeedfMusicRate(1.0f), m_fHaste(0.0f),
-		m_SpeedfHaste(1.0f), m_AutosyncType(AutosyncType_Off),
-		m_SoundEffectType(SoundEffectType_Off),
-		m_bStaticBackground(false), m_bRandomBGOnly(false),
-		m_bSaveScore(true), m_bSaveReplay(false) {};
-	void Init() { *this = {}; }
-	void Approach( const SongOptions& other, float fDeltaSeconds );
-	void GetMods( std::vector<RString> &AddTo ) const;
-	void GetLocalizedMods( std::vector<RString> &AddTo ) const;
+	SongOptions()
+	    : m_bAssistClap(false), m_bAssistMetronome(false), m_fMusicRate(1.0f), m_SpeedfMusicRate(1.0f), m_fHaste(0.0f),
+	      m_SpeedfHaste(1.0f), m_AutosyncType(AutosyncType_Off), m_SoundEffectType(SoundEffectType_Off),
+	      m_bStaticBackground(false), m_bRandomBGOnly(false), m_bSaveScore(true), m_bSaveReplay(false) {};
+	void Init() {
+		*this = {};
+	}
+	void Approach(const SongOptions &other, float fDeltaSeconds);
+	void GetMods(std::vector<RString> &AddTo) const;
+	void GetLocalizedMods(std::vector<RString> &AddTo) const;
 	RString GetString() const;
 	RString GetLocalizedString() const;
-	void FromString( const RString &sOptions );
-	bool FromOneModString( const RString &sOneMod, RString &sErrorDetailOut );	// On error, return false and optionally set sErrorDetailOut
+	void FromString(const RString &sOptions);
+	bool FromOneModString(
+	   const RString &sOneMod, RString &sErrorDetailOut
+	); // On error, return false and optionally set sErrorDetailOut
 
-	bool operator==( const SongOptions &other ) const;
-	bool operator!=( const SongOptions &other ) const { return !operator==(other); }
+	bool operator==(const SongOptions &other) const;
+	bool operator!=(const SongOptions &other) const {
+		return !operator==(other);
+	}
 
 	// Lua
-	void PushSelf( lua_State *L );
+	void PushSelf(lua_State *L);
 };
 
 #endif

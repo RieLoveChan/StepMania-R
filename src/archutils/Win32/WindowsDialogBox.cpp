@@ -1,39 +1,36 @@
 #include "global.h"
 #include "WindowsDialogBox.h"
 
-WindowsDialogBox::WindowsDialogBox()
-{
+WindowsDialogBox::WindowsDialogBox() {
 	m_hWnd = nullptr;
 }
 
-void WindowsDialogBox::Run( int iDialog )
-{
+void WindowsDialogBox::Run(int iDialog) {
 	char szFullAppPath[MAX_PATH];
-	GetModuleFileName( nullptr, szFullAppPath, MAX_PATH );
-	HINSTANCE hHandle = LoadLibrary( szFullAppPath );
+	GetModuleFileName(nullptr, szFullAppPath, MAX_PATH);
+	HINSTANCE hHandle = LoadLibrary(szFullAppPath);
 
-	DialogBoxParam( hHandle, MAKEINTRESOURCE(iDialog), nullptr, DlgProc, (LPARAM) this );
+	DialogBoxParam(hHandle, MAKEINTRESOURCE(iDialog), nullptr, DlgProc, (LPARAM)this);
 }
 
-INT_PTR APIENTRY WindowsDialogBox::DlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam )
-{
-	if( msg == WM_INITDIALOG )
-		SetProp( hDlg, "WindowsDialogBox", (HANDLE) lParam );
+INT_PTR APIENTRY WindowsDialogBox::DlgProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam) {
+	if (msg == WM_INITDIALOG)
+		SetProp(hDlg, "WindowsDialogBox", (HANDLE)lParam);
 
-	WindowsDialogBox *pThis = (WindowsDialogBox *) GetProp( hDlg, "WindowsDialogBox" );
-	if( pThis == nullptr )
+	WindowsDialogBox *pThis = (WindowsDialogBox *)GetProp(hDlg, "WindowsDialogBox");
+	if (pThis == nullptr)
 		return FALSE;
 
-	if( pThis->m_hWnd == nullptr )
+	if (pThis->m_hWnd == nullptr)
 		pThis->m_hWnd = hDlg;
 
-	return pThis->HandleMessage( msg, wParam, lParam );
+	return pThis->HandleMessage(msg, wParam, lParam);
 }
 
 /*
  * (c) 2006 Glenn Maynard
  * All rights reserved.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -43,7 +40,7 @@ INT_PTR APIENTRY WindowsDialogBox::DlgProc( HWND hDlg, UINT msg, WPARAM wParam, 
  * copyright notice(s) and this permission notice appear in all copies of
  * the Software and that both the above copyright notice(s) and this
  * permission notice appear in supporting documentation.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF

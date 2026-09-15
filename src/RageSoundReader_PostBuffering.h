@@ -5,16 +5,17 @@
 
 #include "RageSoundReader_Filter.h"
 
-class RageSoundReader_PostBuffering: public RageSoundReader_Filter
-{
-public:
-	RageSoundReader_PostBuffering( RageSoundReader *pSource );
-	RageSoundReader_PostBuffering *Copy() const override { return new RageSoundReader_PostBuffering(*this); }
-	static void SetMasterVolume( float fVolume );
-	int Read( float *pBuf, int iFrames ) override;
-	bool SetProperty( const RString &sProperty, float fValue ) override;
+class RageSoundReader_PostBuffering : public RageSoundReader_Filter {
+ public:
+	RageSoundReader_PostBuffering(RageSoundReader *pSource);
+	RageSoundReader_PostBuffering *Copy() const override {
+		return new RageSoundReader_PostBuffering(*this);
+	}
+	static void SetMasterVolume(float fVolume);
+	int Read(float *pBuf, int iFrames) override;
+	bool SetProperty(const RString &sProperty, float fValue) override;
 
-private:
+ private:
 	float m_fVolume;
 };
 

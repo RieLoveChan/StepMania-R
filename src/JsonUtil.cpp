@@ -8,13 +8,10 @@
 
 #include <vector>
 
-
-bool JsonUtil::LoadFromString(Json::Value &root, RString sData, RString &/* sErrorOut */)
-{
+bool JsonUtil::LoadFromString(Json::Value &root, RString sData, RString & /* sErrorOut */) {
 	Json::Reader reader;
 	bool parsingSuccessful = reader.parse(sData, root);
-	if (!parsingSuccessful)
-	{
+	if (!parsingSuccessful) {
 		RString err = reader.getFormattedErrorMessages();
 		LOG_ERROR(Log::File, "JSON: LoadFromFileShowErrors failed: %s", err.c_str());
 		return false;
@@ -22,19 +19,16 @@ bool JsonUtil::LoadFromString(Json::Value &root, RString sData, RString &/* sErr
 	return true;
 }
 
-bool JsonUtil::LoadFromFileShowErrors(Json::Value &root, RageFileBasic &f)
-{
+bool JsonUtil::LoadFromFileShowErrors(Json::Value &root, RageFileBasic &f) {
 	// Optimization opportunity: read this streaming instead of at once
 	RString sData;
 	f.Read(sData, f.GetFileSize());
 	return LoadFromStringShowErrors(root, sData);
 }
 
-bool JsonUtil::LoadFromFileShowErrors(Json::Value &root, const RString &sFile)
-{
+bool JsonUtil::LoadFromFileShowErrors(Json::Value &root, const RString &sFile) {
 	RageFile f;
-	if(!f.Open(sFile, RageFile::READ))
-	{
+	if (!f.Open(sFile, RageFile::READ)) {
 		LOG_ERROR(Log::File, "Couldn't open %s for reading: %s", sFile.c_str(), f.GetError().c_str());
 		return false;
 	}
@@ -42,34 +36,28 @@ bool JsonUtil::LoadFromFileShowErrors(Json::Value &root, const RString &sFile)
 	return LoadFromFileShowErrors(root, f);
 }
 
-bool JsonUtil::LoadFromStringShowErrors(Json::Value &root, RString sData)
-{
+bool JsonUtil::LoadFromStringShowErrors(Json::Value &root, RString sData) {
 	RString sError;
-	if(!LoadFromString(root, sData, sError))
-	{
+	if (!LoadFromString(root, sData, sError)) {
 		Dialog::OK(sError, "JSON_PARSE_ERROR");
 		return false;
 	}
 	return true;
 }
 
-bool JsonUtil::WriteFile(const Json::Value &root, const RString &sFile, bool bMinified)
-{
+bool JsonUtil::WriteFile(const Json::Value &root, const RString &sFile, bool bMinified) {
 	std::string s;
-	if(!bMinified)
-	{
+	if (!bMinified) {
 		Json::StyledWriter writer;
 		s = writer.write(root);
 	}
-	else
-	{
+	else {
 		Json::FastWriter writer;
 		s = writer.write(root);
 	}
 
 	RageFile f;
-	if(!f.Open(sFile, RageFile::WRITE))
-	{
+	if (!f.Open(sFile, RageFile::WRITE)) {
 		LOG_ERROR(Log::File, "Couldn't open %s for reading: %s", sFile.c_str(), f.GetError().c_str());
 		return false;
 	}
@@ -77,13 +65,10 @@ bool JsonUtil::WriteFile(const Json::Value &root, const RString &sFile, bool bMi
 	return true;
 }
 
-std::vector<RString> JsonUtil::DeserializeArrayStrings(const Json::Value &value)
-{
+std::vector<RString> JsonUtil::DeserializeArrayStrings(const Json::Value &value) {
 	std::vector<RString> values;
-	for(auto &&inner_value : value)
-	{
-		if(inner_value.isConvertibleTo(Json::stringValue))
-		{
+	for (auto &&inner_value : value) {
+		if (inner_value.isConvertibleTo(Json::stringValue)) {
 			values.push_back(inner_value.asString());
 		}
 	}

@@ -5,14 +5,12 @@
 
 #include <vector>
 
-
-class ScreenSongOptions : public ScreenOptionsMaster
-{
-public:
+class ScreenSongOptions : public ScreenOptionsMaster {
+ public:
 	virtual void Init();
 
-private:
-	virtual void ExportOptions( int iRow, const std::vector<PlayerNumber> &vpns );
+ private:
+	virtual void ExportOptions(int iRow, const std::vector<PlayerNumber> &vpns);
 };
 
 #endif

@@ -4,16 +4,15 @@
 #include "LoadingWindow.h"
 #include "global.h"
 /** @brief Loading window for macOS. */
-class LoadingWindow_MacOSX : public LoadingWindow
-{
-public:
+class LoadingWindow_MacOSX : public LoadingWindow {
+ public:
 	LoadingWindow_MacOSX();
 	~LoadingWindow_MacOSX();
-	void SetText( RString str );
-	void SetSplash( const RageSurface *pSplash );
-	void SetProgress( const int progress );
-	void SetTotalWork( const int totalWork );
-	void SetIndeterminate( bool indeterminate );
+	void SetText(RString str);
+	void SetSplash(const RageSurface *pSplash);
+	void SetProgress(const int progress);
+	void SetTotalWork(const int totalWork);
+	void SetIndeterminate(bool indeterminate);
 };
 #define USE_LOADING_WINDOW_MACOSX
 

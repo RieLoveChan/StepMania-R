@@ -21,8 +21,7 @@
 
 struct lua_State;
 
-enum HttpErrorCode
-{
+enum HttpErrorCode {
 	HttpErrorCode_Blocked,
 	HttpErrorCode_UnknownError,
 	HttpErrorCode_FileError,
@@ -47,12 +46,11 @@ enum HttpErrorCode
 	NUM_HttpErrorCode,
 	HttpErrorCode_Invalid,
 };
-const RString& HttpErrorCodeToString(HttpErrorCode dc);
-HttpErrorCode StringToHttpErrorCode(const RString& sDC);
+const RString &HttpErrorCodeToString(HttpErrorCode dc);
+HttpErrorCode StringToHttpErrorCode(const RString &sDC);
 LuaDeclareType(HttpErrorCode);
 
-enum WebSocketMessageType
-{
+enum WebSocketMessageType {
 	// from IXWebSocket
 	WebSocketMessageType_Message,
 	WebSocketMessageType_Open,
@@ -62,12 +60,11 @@ enum WebSocketMessageType
 	NUM_WebSocketMessageType,
 	WebSocketMessageType_Invalid,
 };
-const RString& WebSocketMessageTypeToString(WebSocketMessageType dc);
-WebSocketMessageType StringToWebSocketMessageType(const RString& sDC);
+const RString &WebSocketMessageTypeToString(WebSocketMessageType dc);
+WebSocketMessageType StringToWebSocketMessageType(const RString &sDC);
 LuaDeclareType(WebSocketMessageType);
 
-struct HttpRequestArgs
-{
+struct HttpRequestArgs {
 	std::string url;
 	std::string method = ix::HttpClient::kGet;
 	std::string body;
@@ -77,38 +74,35 @@ struct HttpRequestArgs
 	int transferTimeout = -1;
 	std::string downloadFile;
 	std::function<bool(int current, int total)> onProgress;
-	std::function<void(const ix::HttpResponsePtr& response)> onResponse;
-	std::function<void(const std::string& errorMessage)> onFileError;
+	std::function<void(const ix::HttpResponsePtr &response)> onResponse;
+	std::function<void(const std::string &errorMessage)> onFileError;
 };
 
-class HttpRequestFuture
-{
-public:
-	HttpRequestFuture(ix::HttpRequestArgsPtr& args) : args(args) {};
+class HttpRequestFuture {
+ public:
+	HttpRequestFuture(ix::HttpRequestArgsPtr &args) : args(args) {};
 
 	static int Collect(lua_State *L);
 	static int Cancel(lua_State *L);
 
-private:
+ private:
 	ix::HttpRequestArgsPtr args;
 };
 
 typedef std::shared_ptr<HttpRequestFuture> HttpRequestFuturePtr;
 
-struct WebSocketArgs
-{
+struct WebSocketArgs {
 	std::string url;
 	std::unordered_map<std::string, std::string> headers;
 	int handshakeTimeout = -1;
 	int pingInterval = -1;
 	bool automaticReconnect = true;
-	std::function<void(const ix::WebSocketMessagePtr& response)> onMessage;
+	std::function<void(const ix::WebSocketMessagePtr &response)> onMessage;
 	std::function<void()> onClose;
 };
 
-class WebSocketHandle
-{
-public:
+class WebSocketHandle {
+ public:
 	WebSocketHandle() {};
 
 	static int Collect(lua_State *L);
@@ -121,22 +115,21 @@ public:
 
 typedef std::shared_ptr<WebSocketHandle> WebSocketHandlePtr;
 
-class NetworkManager
-{
-public:
+class NetworkManager {
+ public:
 	NetworkManager();
 	~NetworkManager();
 
-	bool IsUrlAllowed(const std::string& url);
-	HttpRequestFuturePtr HttpRequest(const HttpRequestArgs& args);
-	WebSocketHandlePtr WebSocket(const WebSocketArgs& args);
-	std::string UrlEncode(const std::string& value);
-	std::string EncodeQueryParameters(const std::unordered_map<std::string, std::string>& query);
+	bool IsUrlAllowed(const std::string &url);
+	HttpRequestFuturePtr HttpRequest(const HttpRequestArgs &args);
+	WebSocketHandlePtr WebSocket(const WebSocketArgs &args);
+	std::string UrlEncode(const std::string &value);
+	std::string EncodeQueryParameters(const std::unordered_map<std::string, std::string> &query);
 
 	// Lua
 	void PushSelf(lua_State *L);
 
-private:
+ private:
 	std::string GetUserAgent();
 	void ClearDownloads();
 
@@ -148,7 +141,7 @@ private:
 	static Preference<RString> httpAllowHosts;
 };
 
-extern NetworkManager*	NETWORK;
+extern NetworkManager *NETWORK;
 
 #endif
 

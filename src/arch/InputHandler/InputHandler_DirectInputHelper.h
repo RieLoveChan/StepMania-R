@@ -9,40 +9,47 @@
 #include <dinput.h>
 extern LPDIRECTINPUT8 g_dinput;
 
-#define INPUT_QSIZE	32
+#define INPUT_QSIZE 32
 
-struct input_t
-{
+struct input_t {
 	// DirectInput offset for this input type:
 	DWORD ofs;
 
 	// Button, axis or hat:
-	enum Type { KEY, BUTTON, AXIS, HAT } type;
+	enum Type {
+		KEY,
+		BUTTON,
+		AXIS,
+		HAT
+	} type;
 
 	int num;
 
 	// Comparitor for finding the input_t with the matching ofs member in std containers.
-	class Compare
-	{
-	public:
+	class Compare {
+	 public:
+		Compare(DWORD _ofs) : ofs(_ofs) {
+		}
 
-		Compare(DWORD _ofs) : ofs(_ofs) { }
+		bool operator()(const input_t &input) const {
+			return input.ofs == ofs;
+		}
 
-		bool operator()(const input_t & input) const { return input.ofs == ofs; }
-
-	private:
-
+	 private:
 		DWORD ofs;
 	};
 };
 
-struct DIDevice
-{
+struct DIDevice {
 	DIDEVICEINSTANCE JoystickInst;
 	LPDIRECTINPUTDEVICE8 Device;
 	RString m_sName;
 
-	enum { KEYBOARD, JOYSTICK, MOUSE } type;
+	enum {
+		KEYBOARD,
+		JOYSTICK,
+		MOUSE
+	} type;
 
 	bool buffered;
 	int buttons, axes, hats;
@@ -55,8 +62,7 @@ struct DIDevice
 	void Close();
 };
 
-struct XIDevice
-{
+struct XIDevice {
 	std::string m_sName;
 	DWORD m_dwXInputSlot;
 	InputDevice dev;

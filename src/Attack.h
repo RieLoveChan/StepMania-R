@@ -8,13 +8,11 @@
 
 #include <vector>
 
-
 class Song;
 class PlayerState;
 /** @brief An action made against a Player to make things more difficult. */
-struct Attack
-{
-	AttackLevel	level;
+struct Attack {
+	AttackLevel level;
 	/**
 	 * @brief the starting point of this attack.
 	 *
@@ -24,12 +22,11 @@ struct Attack
 	float fSecsRemaining;
 	/** @brief The modifiers used for this attack. */
 	RString sModifiers;
-	bool bOn; // set and used by GAMESTATE
+	bool bOn;     // set and used by GAMESTATE
 	bool bGlobal; // true for song-wide course mods
 	bool bShowInAttackList;
 
-	void MakeBlank()
-	{
+	void MakeBlank() {
 		level = ATTACK_LEVEL_1;
 		fStartSecond = ATTACK_STARTS_NOW;
 		fSecsRemaining = 0;
@@ -38,43 +35,45 @@ struct Attack
 		bGlobal = false;
 		bShowInAttackList = true;
 	}
-	Attack(): level(ATTACK_LEVEL_1), fStartSecond(ATTACK_STARTS_NOW),
-		fSecsRemaining(0), sModifiers(RString()),
-		bOn(false), bGlobal(false), bShowInAttackList(true)
-		{} // MakeBlank() is effectively called here.
+	Attack()
+	    : level(ATTACK_LEVEL_1), fStartSecond(ATTACK_STARTS_NOW), fSecsRemaining(0), sModifiers(RString()), bOn(false),
+	      bGlobal(false), bShowInAttackList(true) {
+	} // MakeBlank() is effectively called here.
 	Attack(
-		AttackLevel	level_,
-		float fStartSecond_,
-		float fSecsRemaining_,
-		RString sModifiers_,
-		bool bOn_,
-		bool bGlobal_,
-		bool bShowInAttackList_ = true ):
-		level(level_), fStartSecond(fStartSecond_),
-		fSecsRemaining(fSecsRemaining_), sModifiers(sModifiers_),
-		bOn(bOn_), bGlobal(bGlobal_),
-		bShowInAttackList(bShowInAttackList_) {}
+	   AttackLevel level_,
+	   float fStartSecond_,
+	   float fSecsRemaining_,
+	   RString sModifiers_,
+	   bool bOn_,
+	   bool bGlobal_,
+	   bool bShowInAttackList_ = true
+	)
+	    : level(level_), fStartSecond(fStartSecond_), fSecsRemaining(fSecsRemaining_), sModifiers(sModifiers_),
+	      bOn(bOn_), bGlobal(bGlobal_), bShowInAttackList(bShowInAttackList_) {
+	}
 
-	void GetAttackBeats( const Song *pSong, float &fStartBeat, float &fEndBeat ) const;
-	void GetRealtimeAttackBeats( const Song *pSong, const PlayerState* pPlayerState, float &fStartBeat, float &fEndBeat ) const;
+	void GetAttackBeats(const Song *pSong, float &fStartBeat, float &fEndBeat) const;
+	void
+	GetRealtimeAttackBeats(const Song *pSong, const PlayerState *pPlayerState, float &fStartBeat, float &fEndBeat) const;
 	/**
 	 * @brief Determine if this attack has no modifiers, and is thus blank or empty.
 	 * @return true if it is blank/empty, or false otherwise. */
-	bool IsBlank() const { return sModifiers.empty(); }
+	bool IsBlank() const {
+		return sModifiers.empty();
+	}
 	/**
 	 * @brief Determine if two Attacks are equal to each other.
 	 * @param rhs the other Attack in question.
 	 * @return true if the two Attacks are equal, or false otherwise. */
-	bool operator== ( const Attack &rhs ) const;
+	bool operator==(const Attack &rhs) const;
 	bool ContainsTransformOrTurn() const;
-	static Attack FromGlobalCourseModifier( const RString &sModifiers );
+	static Attack FromGlobalCourseModifier(const RString &sModifiers);
 	RString GetTextDescription() const;
 
 	int GetNumAttacks() const;
 };
 
-struct AttackArray : public std::vector<Attack>
-{
+struct AttackArray : public std::vector<Attack> {
 	/**
 	 * @brief Determine if the list of attacks contains a transform or turn mod.
 	 * @return true if it does, or false otherwise. */
