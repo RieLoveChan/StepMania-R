@@ -12,9 +12,8 @@ class Profile;
 // split-god-object.md). GameState still exposes these under their
 // original names via reference members, so no call site outside
 // GameState.cpp/.h changes in this phase.
-class GameStateEditData
-{
-public:
+class GameStateEditData {
+ public:
 	GameStateEditData();
 
 	bool m_bIsUsingStepTiming;
@@ -26,7 +25,7 @@ public:
 	BroadcastOnChange<int> m_iEditCourseEntryIndex;
 	BroadcastOnChange<RString> m_sEditLocalProfileID;
 
-	Profile* GetEditLocalProfile();
+	Profile *GetEditLocalProfile();
 };
 
 #endif

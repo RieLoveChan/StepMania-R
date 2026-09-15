@@ -6,27 +6,27 @@
 
 #include <vector>
 
-
 struct LightsState;
 /** @brief Controls the lights. */
-class LightsDriver: public RageDriver
-{
-public:
-	static void Create( const RString &sDriver, std::vector<LightsDriver *> &apAdd );
+class LightsDriver : public RageDriver {
+ public:
+	static void Create(const RString &sDriver, std::vector<LightsDriver *> &apAdd);
 	static DriverList m_pDriverList;
 
 	LightsDriver() {};
 	virtual ~LightsDriver() {};
 
-	virtual void Set( const LightsState *ls ) = 0;
+	virtual void Set(const LightsState *ls) = 0;
 
 	// Reset all lights to off
 	void Reset();
 };
 
-#define REGISTER_LIGHTS_DRIVER_CLASS2( name, x ) \
-	static RegisterRageDriver register_##x( &LightsDriver::m_pDriverList, #name, CreateClass<LightsDriver_##x, RageDriver> )
-#define REGISTER_LIGHTS_DRIVER_CLASS( name ) REGISTER_LIGHTS_DRIVER_CLASS2( name, name )
+#define REGISTER_LIGHTS_DRIVER_CLASS2(name, x)                                                                         \
+	static RegisterRageDriver register_##x(                                                                             \
+	   &LightsDriver::m_pDriverList, #name, CreateClass<LightsDriver_##x, RageDriver>                                   \
+	)
+#define REGISTER_LIGHTS_DRIVER_CLASS(name) REGISTER_LIGHTS_DRIVER_CLASS2(name, name)
 
 #endif
 

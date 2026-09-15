@@ -12,15 +12,16 @@ class PlayerState;
 // GameState.h/.cpp changes. Deliberately excludes m_bSideIsJoined and
 // m_pPlayerState (the core 2-player state) -- those are far more
 // foundational and out of scope for this cluster.
-class GameStateMultiPlayerData
-{
-public:
+class GameStateMultiPlayerData {
+ public:
 	MultiPlayerStatus m_MultiPlayerStatus[NUM_MultiPlayer];
-	PlayerState* m_pMultiPlayerState[NUM_MultiPlayer];
+	PlayerState *m_pMultiPlayerState[NUM_MultiPlayer];
 	bool m_bMultiplayer;
 	int m_iNumMultiplayerNoteFields;
 
-	bool IsMultiPlayerEnabled( MultiPlayer mp ) const { return m_MultiPlayerStatus[ mp ] == MultiPlayerStatus_Joined; }
+	bool IsMultiPlayerEnabled(MultiPlayer mp) const {
+		return m_MultiPlayerStatus[mp] == MultiPlayerStatus_Joined;
+	}
 };
 
 #endif

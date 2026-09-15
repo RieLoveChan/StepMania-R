@@ -5,22 +5,20 @@
 
 #include <vector>
 
-
 class OptionRowHandler;
 
-class ScreenOptionsMaster : public ScreenOptions
-{
-public:
+class ScreenOptionsMaster : public ScreenOptions {
+ public:
 	virtual void Init();
 
-private:
+ private:
 	int m_iChangeMask;
 
-protected:
-	virtual void HandleScreenMessage( const ScreenMessage SM );
+ protected:
+	virtual void HandleScreenMessage(const ScreenMessage SM);
 
-	virtual void ImportOptions( int iRow, const std::vector<PlayerNumber> &vpns );
-	virtual void ExportOptions( int iRow, const std::vector<PlayerNumber> &vpns );
+	virtual void ImportOptions(int iRow, const std::vector<PlayerNumber> &vpns);
+	virtual void ExportOptions(int iRow, const std::vector<PlayerNumber> &vpns);
 };
 
 #endif

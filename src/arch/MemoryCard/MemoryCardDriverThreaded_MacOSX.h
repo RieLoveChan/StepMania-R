@@ -6,23 +6,23 @@
 
 #include <vector>
 
-
-class MemoryCardDriverThreaded_MacOSX : public MemoryCardDriver
-{
-public:
+class MemoryCardDriverThreaded_MacOSX : public MemoryCardDriver {
+ public:
 	MemoryCardDriverThreaded_MacOSX();
 	~MemoryCardDriverThreaded_MacOSX();
-	bool Mount( UsbStorageDevice *pDevice ) { return true; }
-	void Unmount( UsbStorageDevice *pDevice );
+	bool Mount(UsbStorageDevice *pDevice) {
+		return true;
+	}
+	void Unmount(UsbStorageDevice *pDevice);
 
-protected:
+ protected:
 	bool USBStorageDevicesChanged();
-	void GetUSBStorageDevices( std::vector<UsbStorageDevice>& vStorageDevicesOut );
-	bool TestWrite( UsbStorageDevice *pDevice );
+	void GetUSBStorageDevices(std::vector<UsbStorageDevice> &vStorageDevicesOut);
+	bool TestWrite(UsbStorageDevice *pDevice);
 
-private:
-	MemoryCardDriverThreaded_MacOSX( const MemoryCardDriverThreaded_MacOSX &m );
-	MemoryCardDriverThreaded_MacOSX &operator=( const MemoryCardDriverThreaded_MacOSX &m );
+ private:
+	MemoryCardDriverThreaded_MacOSX(const MemoryCardDriverThreaded_MacOSX &m);
+	MemoryCardDriverThreaded_MacOSX &operator=(const MemoryCardDriverThreaded_MacOSX &m);
 	bool m_bChanged;
 	RageMutex m_ChangedLock;
 	class Helper;
@@ -34,7 +34,6 @@ private:
 #error "More than one MemoryCardDriver selected."
 #endif
 #define ARCH_MEMORY_CARD_DRIVER MemoryCardDriverThreaded_MacOSX
-
 
 #endif
 

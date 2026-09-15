@@ -5,17 +5,15 @@
 
 #include <vector>
 
+class MemoryCardDriverThreaded_Linux : public MemoryCardDriver {
+ public:
+	virtual bool Mount(UsbStorageDevice *pDevice);
+	virtual void Unmount(UsbStorageDevice *pDevice);
 
-class MemoryCardDriverThreaded_Linux : public MemoryCardDriver
-{
-public:
-	virtual bool Mount( UsbStorageDevice* pDevice );
-	virtual void Unmount( UsbStorageDevice* pDevice );
-
-protected:
-	void GetUSBStorageDevices( std::vector<UsbStorageDevice>& vDevicesOut );
+ protected:
+	void GetUSBStorageDevices(std::vector<UsbStorageDevice> &vDevicesOut);
 	bool USBStorageDevicesChanged();
-	bool TestWrite( UsbStorageDevice* pDevice );
+	bool TestWrite(UsbStorageDevice *pDevice);
 
 	RString m_sLastDevices;
 };

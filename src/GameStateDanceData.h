@@ -9,9 +9,8 @@
 // call site outside GameState.h/.cpp changes. Pure data, no
 // associated methods -- GAMESTATE->m_DanceStartTime/m_DanceDuration
 // are read/written directly from ScreenGameplay.cpp.
-class GameStateDanceData
-{
-public:
+class GameStateDanceData {
+ public:
 	RageTimer m_DanceStartTime;
 	float m_DanceDuration;
 };

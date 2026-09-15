@@ -9,9 +9,8 @@
 
 #define USE_RAGE_SOUND_JACK
 
-class RageSoundDriver_JACK: public RageSoundDriver
-{
-public:
+class RageSoundDriver_JACK : public RageSoundDriver {
+ public:
 	RageSoundDriver_JACK();
 	~RageSoundDriver_JACK();
 
@@ -20,7 +19,7 @@ public:
 	int GetSampleRate() const;
 	std::int64_t GetPosition() const;
 
-private:
+ private:
 	jack_client_t *client;
 	jack_port_t *port_l;
 	jack_port_t *port_r;

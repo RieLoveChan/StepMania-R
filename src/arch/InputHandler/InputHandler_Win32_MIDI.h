@@ -6,23 +6,22 @@
 
 #include <vector>
 
-
-class InputHandler_Win32_MIDI: public InputHandler
-{
-public:
+class InputHandler_Win32_MIDI : public InputHandler {
+ public:
 	InputHandler_Win32_MIDI();
 	~InputHandler_Win32_MIDI();
 
-	void GetDevicesAndDescriptions( std::vector<InputDeviceInfo>& vDevicesOut );
+	void GetDevicesAndDescriptions(std::vector<InputDeviceInfo> &vDevicesOut);
 
-	void SetDev( DeviceInput key ) { ButtonPressed( key ); }
+	void SetDev(DeviceInput key) {
+		ButtonPressed(key);
+	}
 
-private:
+ private:
 	bool m_bFoundDevice;
 };
 
 #endif
-
 
 /*
  * (c) 2002-2005 Charles Lohr, Glenn Maynard
@@ -48,4 +47,3 @@ private:
  * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  * PERFORMANCE OF THIS SOFTWARE.
  */
-

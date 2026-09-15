@@ -9,36 +9,34 @@
 
 #include <vector>
 
-
 class PlayerOptions;
 struct lua_State;
 
-class ModIconRow : public ActorFrame
-{
-public:
+class ModIconRow : public ActorFrame {
+ public:
 	ModIconRow();
 	~ModIconRow();
 
-	void Load( const RString &sMetricsGroup, PlayerNumber pn );
+	void Load(const RString &sMetricsGroup, PlayerNumber pn);
 
 	virtual ModIconRow *Copy() const;
 	void SetFromGameState();
 
-	virtual void HandleMessage( const Message &msg );
+	virtual void HandleMessage(const Message &msg);
 
 	// Commands
-	virtual void PushSelf( lua_State *L );
+	virtual void PushSelf(lua_State *L);
 
-protected:
+ protected:
 	RString m_sMetricsGroup;
 	PlayerNumber m_pn;
 
-	ThemeMetric<float>	SPACING_X;
-	ThemeMetric<float>	SPACING_Y;
-	ThemeMetric<int>	NUM_OPTION_ICONS;
-	ThemeMetric<RString>	OPTION_ICON_METRICS_GROUP;
+	ThemeMetric<float> SPACING_X;
+	ThemeMetric<float> SPACING_Y;
+	ThemeMetric<int> NUM_OPTION_ICONS;
+	ThemeMetric<RString> OPTION_ICON_METRICS_GROUP;
 
-	std::vector<ModIcon*> m_vpModIcon;
+	std::vector<ModIcon *> m_vpModIcon;
 };
 
 #endif

@@ -7,12 +7,11 @@
 // GameState.h/.cpp changes. Pure data, no associated methods --
 // GAMESTATE->m_fHasteRate etc. are read/written directly from
 // ScreenGameplay.cpp.
-class GameStateHasteData
-{
-public:
-	float	m_fHasteRate; // [-1,+1]; 0 = normal speed
-	float	m_fLastHasteUpdateMusicSeconds;
-	float	m_fAccumulatedHasteSeconds;
+class GameStateHasteData {
+ public:
+	float m_fHasteRate; // [-1,+1]; 0 = normal speed
+	float m_fLastHasteUpdateMusicSeconds;
+	float m_fAccumulatedHasteSeconds;
 };
 
 #endif

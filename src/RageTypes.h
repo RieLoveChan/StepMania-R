@@ -8,8 +8,7 @@
 #include <array>
 #include <cstdint>
 
-enum BlendMode
-{
+enum BlendMode {
 	BLEND_NORMAL,
 	BLEND_ADD,
 	BLEND_SUBTRACT,
@@ -24,10 +23,9 @@ enum BlendMode
 	NUM_BlendMode,
 	BlendMode_Invalid
 };
-LuaDeclareType( BlendMode );
+LuaDeclareType(BlendMode);
 
-enum TextureMode
-{
+enum TextureMode {
 	// Affects one texture stage. Texture is modulated with the diffuse color.
 	TextureMode_Modulate,
 
@@ -41,10 +39,9 @@ enum TextureMode
 	NUM_TextureMode,
 	TextureMode_Invalid
 };
-LuaDeclareType( TextureMode );
+LuaDeclareType(TextureMode);
 
-enum EffectMode
-{
+enum EffectMode {
 	EffectMode_Normal,
 	EffectMode_Unpremultiply,
 	EffectMode_ColorBurn,
@@ -58,143 +55,247 @@ enum EffectMode
 	NUM_EffectMode,
 	EffectMode_Invalid
 };
-LuaDeclareType( EffectMode );
+LuaDeclareType(EffectMode);
 
-enum CullMode
-{
+enum CullMode {
 	CULL_BACK,
 	CULL_FRONT,
 	CULL_NONE,
 	NUM_CullMode,
 	CullMode_Invalid
 };
-LuaDeclareType( CullMode );
+LuaDeclareType(CullMode);
 
-enum ZTestMode
-{
+enum ZTestMode {
 	ZTEST_OFF,
 	ZTEST_WRITE_ON_PASS,
 	ZTEST_WRITE_ON_FAIL,
 	NUM_ZTestMode,
 	ZTestMode_Invalid
 };
-LuaDeclareType( ZTestMode );
+LuaDeclareType(ZTestMode);
 
-enum PolygonMode
-{
+enum PolygonMode {
 	POLYGON_FILL,
 	POLYGON_LINE,
 	NUM_PolygonMode,
 	PolygonMode_Invalid
 };
-LuaDeclareType( PolygonMode );
+LuaDeclareType(PolygonMode);
 
-enum TextGlowMode
-{
+enum TextGlowMode {
 	TextGlowMode_Inner,
 	TextGlowMode_Stroke,
 	TextGlowMode_Both,
 	NUM_TextGlowMode,
 	TextGlowMode_Invalid
 };
-LuaDeclareType( TextGlowMode );
+LuaDeclareType(TextGlowMode);
 
 struct lua_State;
 
-struct RageVector2
-{
-public:
-	RageVector2(): x(0), y(0) {}
-	RageVector2( const float * f ): x(f[0]), y(f[1]) {}
-	RageVector2( float x1, float y1 ): x(x1), y(y1) {}
+struct RageVector2 {
+ public:
+	RageVector2() : x(0), y(0) {
+	}
+	RageVector2(const float *f) : x(f[0]), y(f[1]) {
+	}
+	RageVector2(float x1, float y1) : x(x1), y(y1) {
+	}
 
 	// casting
-	operator float* ()			{ return &x; };
-	operator const float* () const		{ return &x; };
+	operator float *() {
+		return &x;
+	};
+	operator const float *() const {
+		return &x;
+	};
 
 	// assignment operators
-	RageVector2& operator += ( const RageVector2& other )	{ x+=other.x; y+=other.y; return *this; }
-	RageVector2& operator -= ( const RageVector2& other )	{ x-=other.x; y-=other.y; return *this; }
-	RageVector2& operator *= ( float f )			{ x*=f; y*=f; return *this; }
-	RageVector2& operator /= ( float f )			{ x/=f; y/=f; return *this; }
+	RageVector2 &operator+=(const RageVector2 &other) {
+		x += other.x;
+		y += other.y;
+		return *this;
+	}
+	RageVector2 &operator-=(const RageVector2 &other) {
+		x -= other.x;
+		y -= other.y;
+		return *this;
+	}
+	RageVector2 &operator*=(float f) {
+		x *= f;
+		y *= f;
+		return *this;
+	}
+	RageVector2 &operator/=(float f) {
+		x /= f;
+		y /= f;
+		return *this;
+	}
 
 	// binary operators
-	RageVector2 operator + ( const RageVector2& other ) const	{ return RageVector2( x+other.x, y+other.y ); }
-	RageVector2 operator - ( const RageVector2& other ) const	{ return RageVector2( x-other.x, y-other.y ); }
-	RageVector2 operator * ( float f ) const			{ return RageVector2( x*f, y*f ); }
-	RageVector2 operator / ( float f ) const			{ return RageVector2( x/f, y/f ); }
+	RageVector2 operator+(const RageVector2 &other) const {
+		return RageVector2(x + other.x, y + other.y);
+	}
+	RageVector2 operator-(const RageVector2 &other) const {
+		return RageVector2(x - other.x, y - other.y);
+	}
+	RageVector2 operator*(float f) const {
+		return RageVector2(x * f, y * f);
+	}
+	RageVector2 operator/(float f) const {
+		return RageVector2(x / f, y / f);
+	}
 
-	friend RageVector2 operator * ( float f, const RageVector2& other )	{ return other*f; }
+	friend RageVector2 operator*(float f, const RageVector2 &other) {
+		return other * f;
+	}
 
 	float x, y;
 };
 
-
-struct RageVector3
-{
-public:
-	RageVector3(): x(0), y(0), z(0) {}
-	RageVector3( const float * f ):	x(f[0]), y(f[1]), z(f[2]) {}
-	RageVector3( float x1, float y1, float z1 ): x(x1), y(y1), z(z1) {}
+struct RageVector3 {
+ public:
+	RageVector3() : x(0), y(0), z(0) {
+	}
+	RageVector3(const float *f) : x(f[0]), y(f[1]), z(f[2]) {
+	}
+	RageVector3(float x1, float y1, float z1) : x(x1), y(y1), z(z1) {
+	}
 
 	// casting
-	operator float* ()				{ return &x; };
-	operator const float* () const			{ return &x; };
+	operator float *() {
+		return &x;
+	};
+	operator const float *() const {
+		return &x;
+	};
 
 	// assignment operators
-	RageVector3& operator += ( const RageVector3& other )	{ x+=other.x; y+=other.y; z+=other.z; return *this; }
-	RageVector3& operator -= ( const RageVector3& other )	{ x-=other.x; y-=other.y; z-=other.z; return *this; }
-	RageVector3& operator *= ( float f )			{ x*=f; y*=f; z*=f; return *this; }
-	RageVector3& operator /= ( float f )			{ x/=f; y/=f; z/=f; return *this; }
+	RageVector3 &operator+=(const RageVector3 &other) {
+		x += other.x;
+		y += other.y;
+		z += other.z;
+		return *this;
+	}
+	RageVector3 &operator-=(const RageVector3 &other) {
+		x -= other.x;
+		y -= other.y;
+		z -= other.z;
+		return *this;
+	}
+	RageVector3 &operator*=(float f) {
+		x *= f;
+		y *= f;
+		z *= f;
+		return *this;
+	}
+	RageVector3 &operator/=(float f) {
+		x /= f;
+		y /= f;
+		z /= f;
+		return *this;
+	}
 
 	// binary operators
-	RageVector3 operator + ( const RageVector3& other ) const	{ return RageVector3( x+other.x, y+other.y, z+other.z ); }
-	RageVector3 operator - ( const RageVector3& other ) const	{ return RageVector3( x-other.x, y-other.y, z-other.z ); }
-	RageVector3 operator * ( float f ) const			{ return RageVector3( x*f, y*f, z*f ); }
-	RageVector3 operator / ( float f ) const			{ return RageVector3( x/f, y/f, z/f ); }
+	RageVector3 operator+(const RageVector3 &other) const {
+		return RageVector3(x + other.x, y + other.y, z + other.z);
+	}
+	RageVector3 operator-(const RageVector3 &other) const {
+		return RageVector3(x - other.x, y - other.y, z - other.z);
+	}
+	RageVector3 operator*(float f) const {
+		return RageVector3(x * f, y * f, z * f);
+	}
+	RageVector3 operator/(float f) const {
+		return RageVector3(x / f, y / f, z / f);
+	}
 
-	friend RageVector3 operator * ( float f, const RageVector3& other )	{ return other*f; }
+	friend RageVector3 operator*(float f, const RageVector3 &other) {
+		return other * f;
+	}
 
 	float x, y, z;
 };
 
-
-struct RageVector4
-{
-public:
-	RageVector4(): x(0), y(0), z(0), w(0) {}
-	RageVector4( const float * f ): x(f[0]), y(f[1]), z(f[2]), w(f[3]) {}
-	RageVector4( float x1, float y1, float z1, float w1 ): x(x1), y(y1), z(z1), w(w1) {}
+struct RageVector4 {
+ public:
+	RageVector4() : x(0), y(0), z(0), w(0) {
+	}
+	RageVector4(const float *f) : x(f[0]), y(f[1]), z(f[2]), w(f[3]) {
+	}
+	RageVector4(float x1, float y1, float z1, float w1) : x(x1), y(y1), z(z1), w(w1) {
+	}
 
 	// casting
-	operator float* ()					{ return &x; };
-	operator const float* () const				{ return &x; };
+	operator float *() {
+		return &x;
+	};
+	operator const float *() const {
+		return &x;
+	};
 
 	// assignment operators
-	RageVector4& operator += ( const RageVector4& other )	{ x+=other.x; y+=other.y; z+=other.z; w+=other.w; return *this; }
-	RageVector4& operator -= ( const RageVector4& other )	{ x-=other.x; y-=other.y; z-=other.z; w-=other.w; return *this; }
-	RageVector4& operator *= ( float f )			{ x*=f; y*=f; z*=f; w*=f; return *this; }
-	RageVector4& operator /= ( float f )			{ x/=f; y/=f; z/=f; w/=f; return *this; }
+	RageVector4 &operator+=(const RageVector4 &other) {
+		x += other.x;
+		y += other.y;
+		z += other.z;
+		w += other.w;
+		return *this;
+	}
+	RageVector4 &operator-=(const RageVector4 &other) {
+		x -= other.x;
+		y -= other.y;
+		z -= other.z;
+		w -= other.w;
+		return *this;
+	}
+	RageVector4 &operator*=(float f) {
+		x *= f;
+		y *= f;
+		z *= f;
+		w *= f;
+		return *this;
+	}
+	RageVector4 &operator/=(float f) {
+		x /= f;
+		y /= f;
+		z /= f;
+		w /= f;
+		return *this;
+	}
 
 	// binary operators
-	RageVector4 operator + ( const RageVector4& other ) const	{ return RageVector4( x+other.x, y+other.y, z+other.z, w+other.w ); }
-	RageVector4 operator - ( const RageVector4& other ) const	{ return RageVector4( x-other.x, y-other.y, z-other.z, w-other.w ); }
-	RageVector4 operator * ( float f ) const			{ return RageVector4( x*f, y*f, z*f, w*f ); }
-	RageVector4 operator / ( float f ) const			{ return RageVector4( x/f, y/f, z/f, w/f ); }
+	RageVector4 operator+(const RageVector4 &other) const {
+		return RageVector4(x + other.x, y + other.y, z + other.z, w + other.w);
+	}
+	RageVector4 operator-(const RageVector4 &other) const {
+		return RageVector4(x - other.x, y - other.y, z - other.z, w - other.w);
+	}
+	RageVector4 operator*(float f) const {
+		return RageVector4(x * f, y * f, z * f, w * f);
+	}
+	RageVector4 operator/(float f) const {
+		return RageVector4(x / f, y / f, z / f, w / f);
+	}
 
-	friend RageVector4 operator * ( float f, const RageVector4& other )	{ return other*f; }
+	friend RageVector4 operator*(float f, const RageVector4 &other) {
+		return other * f;
+	}
 
 	float x, y, z, w;
 };
 
-struct RageColor
-{
-public:
-	RageColor(): r(0), g(0), b(0), a(0) {}
-	explicit RageColor( const float * f ): r(f[0]), g(f[1]), b(f[2]), a(f[3]) {}
-	RageColor( float r1, float g1, float b1, float a1 ): r(r1), g(g1), b(b1), a(a1) {}
+struct RageColor {
+ public:
+	RageColor() : r(0), g(0), b(0), a(0) {
+	}
+	explicit RageColor(const float *f) : r(f[0]), g(f[1]), b(f[2]), a(f[3]) {
+	}
+	RageColor(float r1, float g1, float b1, float a1) : r(r1), g(g1), b(b1), a(a1) {
+	}
 
-	RageColor& operator=( const RageVector4& rv4 ) {
+	RageColor &operator=(const RageVector4 &rv4) {
 		r = rv4.x;
 		g = rv4.y;
 		b = rv4.z;
@@ -203,64 +304,110 @@ public:
 	}
 
 	// casting
-	operator float* ()					{ return &r; };
-	operator const float* () const				{ return &r; };
+	operator float *() {
+		return &r;
+	};
+	operator const float *() const {
+		return &r;
+	};
 
 	// assignment operators
-	RageColor& operator += ( const RageColor& other )	{ r+=other.r; g+=other.g; b+=other.b; a+=other.a; return *this; }
-	RageColor& operator -= ( const RageColor& other )	{ r-=other.r; g-=other.g; b-=other.b; a-=other.a; return *this; }
-	RageColor& operator *= ( const RageColor& other )	{ r*=other.r; g*=other.g; b*=other.b; a*=other.a; return *this; }
-	RageColor& operator *= ( float f )			{ r*=f; g*=f; b*=f; a*=f; return *this; }
+	RageColor &operator+=(const RageColor &other) {
+		r += other.r;
+		g += other.g;
+		b += other.b;
+		a += other.a;
+		return *this;
+	}
+	RageColor &operator-=(const RageColor &other) {
+		r -= other.r;
+		g -= other.g;
+		b -= other.b;
+		a -= other.a;
+		return *this;
+	}
+	RageColor &operator*=(const RageColor &other) {
+		r *= other.r;
+		g *= other.g;
+		b *= other.b;
+		a *= other.a;
+		return *this;
+	}
+	RageColor &operator*=(float f) {
+		r *= f;
+		g *= f;
+		b *= f;
+		a *= f;
+		return *this;
+	}
 	/* Divide is rarely useful: you can always use multiplication, and you don't have to
-		* worry about div/0. */
+	 * worry about div/0. */
 	//    RageColor& operator /= ( float f )		{ r/=f; g/=f; b/=f; a/=f; return *this; }
 
 	// binary operators
-	RageColor operator + ( const RageColor& other ) const	{ return RageColor( r+other.r, g+other.g, b+other.b, a+other.a ); }
-	RageColor operator - ( const RageColor& other ) const	{ return RageColor( r-other.r, g-other.g, b-other.b, a-other.a ); }
-	RageColor operator * ( const RageColor& other ) const	{ return RageColor( r*other.r, g*other.g, b*other.b, a*other.a ); }
-	RageColor operator * ( float f ) const			{ return RageColor( r*f, g*f, b*f, a*f ); }
+	RageColor operator+(const RageColor &other) const {
+		return RageColor(r + other.r, g + other.g, b + other.b, a + other.a);
+	}
+	RageColor operator-(const RageColor &other) const {
+		return RageColor(r - other.r, g - other.g, b - other.b, a - other.a);
+	}
+	RageColor operator*(const RageColor &other) const {
+		return RageColor(r * other.r, g * other.g, b * other.b, a * other.a);
+	}
+	RageColor operator*(float f) const {
+		return RageColor(r * f, g * f, b * f, a * f);
+	}
 	// Divide is useful for using with the SCALE macro
-	RageColor operator / ( float f ) const			{ return RageColor( r/f, g/f, b/f, a/f ); }
+	RageColor operator/(float f) const {
+		return RageColor(r / f, g / f, b / f, a / f);
+	}
 
-	friend RageColor operator * ( float f, const RageColor& other )	{ return other*f; } // What is this for?  Did I add this?  -Chris
+	friend RageColor operator*(float f, const RageColor &other) {
+		return other * f;
+	} // What is this for?  Did I add this?  -Chris
 
-	bool operator == ( const RageColor& other ) const	{ return r==other.r && g==other.g && b==other.b && a==other.a; }
-	bool operator != ( const RageColor& other ) const	{ return !operator==(other); }
+	bool operator==(const RageColor &other) const {
+		return r == other.r && g == other.g && b == other.b && a == other.a;
+	}
+	bool operator!=(const RageColor &other) const {
+		return !operator==(other);
+	}
 
-	bool FromString( const RString &str )
-	{
-		int result = sscanf( str, "%f,%f,%f,%f", &r, &g, &b, &a );
-		if( result == 3 )
-		{
+	bool FromString(const RString &str) {
+		int result = sscanf(str, "%f,%f,%f,%f", &r, &g, &b, &a);
+		if (result == 3) {
 			a = 1;
 			return true;
 		}
-		if( result == 4 )
+		if (result == 4)
 			return true;
 
-		unsigned int ir=255, ib=255, ig=255, ia=255;
-		result = sscanf( str, "#%2x%2x%2x%2x", &ir, &ig, &ib, &ia );
-		if( result >= 3 )
-		{
-			r = ir / 255.0f; g = ig / 255.0f; b = ib / 255.0f;
-			if( result == 4 )
+		unsigned int ir = 255, ib = 255, ig = 255, ia = 255;
+		result = sscanf(str, "#%2x%2x%2x%2x", &ir, &ig, &ib, &ia);
+		if (result >= 3) {
+			r = ir / 255.0f;
+			g = ig / 255.0f;
+			b = ib / 255.0f;
+			if (result == 4)
 				a = ia / 255.0f;
 			else
 				a = 1;
 			return true;
 		}
 
-		r=1; b=1; g=1; a=1;
+		r = 1;
+		b = 1;
+		g = 1;
+		a = 1;
 		return false;
 	}
 
 	RString ToString() const;
-	static RString NormalizeColorString( RString sColor );
+	static RString NormalizeColorString(RString sColor);
 
-	void PushTable( lua_State *L ) const;
-	void FromStack( lua_State *L, int iPos );
-	void FromStackCompat( lua_State *L, int iPos );
+	void PushTable(lua_State *L) const;
+	void FromStack(lua_State *L, int iPos);
+	void FromStackCompat(lua_State *L, int iPos);
 
 	float r, g, b, a;
 };
@@ -275,8 +422,7 @@ public:
  *
  * should output the same value (+-1) 256 times.  If this function is
  * incorrect, the first and/or last values may be biased. */
-inline unsigned char FTOC(float a)
-{
+inline unsigned char FTOC(float a) {
 	int value = static_cast<int>(a * 256.0f);
 	return static_cast<unsigned char>(std::clamp(value, 0, 255));
 }
@@ -287,83 +433,94 @@ inline unsigned char FTOC(float a)
  * manip RageColors. */
 /* Perhaps the math in RageColor could be moved to RageVColor.  We don't need the
  * precision of a float for our calculations anyway.   -Chris */
-class RageVColor
-{
-public:
-	std::uint8_t b,g,r,a;	// specific ordering required by Direct3D
+class RageVColor {
+ public:
+	std::uint8_t b, g, r, a; // specific ordering required by Direct3D
 
-	RageVColor(): b(0), g(0), r(0), a(0) { }
-	RageVColor(const RageColor &rc): b(0), g(0), r(0), a(0) { *this = rc; }
-	RageVColor &operator= (const RageColor &rc)
-	{
-		r = FTOC(rc.r); g = FTOC(rc.g); b = FTOC(rc.b); a = FTOC(rc.a);
+	RageVColor() : b(0), g(0), r(0), a(0) {
+	}
+	RageVColor(const RageColor &rc) : b(0), g(0), r(0), a(0) {
+		*this = rc;
+	}
+	RageVColor &operator=(const RageColor &rc) {
+		r = FTOC(rc.r);
+		g = FTOC(rc.g);
+		b = FTOC(rc.b);
+		a = FTOC(rc.a);
 		return *this;
 	}
 };
 
-namespace StepMania
-{
-	template <class T>
-	class Rect
-	{
-public:
-		Rect(): left(0), top(0), right(0), bottom(0) {}
-		Rect(T l, T t, T r, T b): left(l), top(t), right(r), bottom(b) {}
+namespace StepMania {
+template <class T> class Rect {
+ public:
+	Rect() : left(0), top(0), right(0), bottom(0) {
+	}
+	Rect(T l, T t, T r, T b) : left(l), top(t), right(r), bottom(b) {
+	}
 
-		T GetWidth() const	{ return right-left; };
-		T GetHeight() const	{ return bottom-top;  };
-		T GetCenterX() const	{ return (left+right)/2; };
-		T GetCenterY() const	{ return (top+bottom)/2; };
-
-		bool operator==( const Rect &other ) const
-		{
-#define COMPARE( x )	if( x != other.x ) return false
-			COMPARE( left );
-			COMPARE( top );
-			COMPARE( right );
-			COMPARE( bottom );
-#undef COMPARE
-			return true;
-		}
-		bool operator!=( const Rect &other ) const { return !operator==(other); }
-
-		T left, top, right, bottom;
+	T GetWidth() const {
+		return right - left;
 	};
-}
+	T GetHeight() const {
+		return bottom - top;
+	};
+	T GetCenterX() const {
+		return (left + right) / 2;
+	};
+	T GetCenterY() const {
+		return (top + bottom) / 2;
+	};
+
+	bool operator==(const Rect &other) const {
+#define COMPARE(x)                                                                                                     \
+	if (x != other.x)                                                                                                   \
+	return false
+		COMPARE(left);
+		COMPARE(top);
+		COMPARE(right);
+		COMPARE(bottom);
+#undef COMPARE
+		return true;
+	}
+	bool operator!=(const Rect &other) const {
+		return !operator==(other);
+	}
+
+	T left, top, right, bottom;
+};
+} // namespace StepMania
 typedef StepMania::Rect<int> RectI;
 typedef StepMania::Rect<float> RectF;
 
 /* Structure for our custom vertex type.  Note that these data structes
  * have the same layout that D3D expects. */
-struct RageSpriteVertex	// has color
+struct RageSpriteVertex // has color
 {
-	RageSpriteVertex(): p(), n(), c(), t() {}
+	RageSpriteVertex() : p(), n(), c(), t() {
+	}
 	RageVector3 p; // position
 	RageVector3 n; // normal
-	RageVColor  c; // diffuse color
+	RageVColor c;  // diffuse color
 	RageVector2 t; // texture coordinates
 };
 
-void lerp_rage_color(RageColor& out, RageColor const& a, RageColor const& b, float t);
-void WeightedAvergeOfRSVs(RageSpriteVertex& average_out, RageSpriteVertex const& rsv1, RageSpriteVertex const& rsv2, float percent_between);
+void lerp_rage_color(RageColor &out, RageColor const &a, RageColor const &b, float t);
+void WeightedAvergeOfRSVs(
+   RageSpriteVertex &average_out, RageSpriteVertex const &rsv1, RageSpriteVertex const &rsv2, float percent_between
+);
 
-struct RageModelVertex	// doesn't have color.  Relies on material color
+struct RageModelVertex // doesn't have color.  Relies on material color
 {
 	/* Zero out by default. */
-	RageModelVertex():
-		p(0,0,0),
-		n(0,0,0),
-		t(0,0),
-		bone(0),
-		TextureMatrixScale(1,1)
-		{ }
-	RageVector3 p;	// position
-	RageVector3 n;	// normal
-	RageVector2 t;	// texture coordinates
+	RageModelVertex() : p(0, 0, 0), n(0, 0, 0), t(0, 0), bone(0), TextureMatrixScale(1, 1) {
+	}
+	RageVector3 p; // position
+	RageVector3 n; // normal
+	RageVector2 t; // texture coordinates
 	std::int8_t bone;
 	RageVector2 TextureMatrixScale; // usually 1,1
 };
-
 
 // RageMatrix elements are specified in row-major order.  This
 // means that the translate terms are located in the fourth row and the
@@ -371,23 +528,48 @@ struct RageModelVertex	// doesn't have color.  Relies on material color
 // MAX, Direct3D, and OpenGL all handle matrices.  Even though the OpenGL
 // documentation is in column-major form, the OpenGL code is designed to
 // handle matrix operations in row-major form.
-struct RageMatrix
-{
-public:
+struct RageMatrix {
+ public:
 	RageMatrix() = default;
-	RageMatrix( const float *f )	{ for(int i=0; i<4; i++) for(int j=0; j<4; j++) m[j][i]=f[j*4+i]; }
-	RageMatrix( float v00, float v01, float v02, float v03,
-                float v10, float v11, float v12, float v13,
-                float v20, float v21, float v22, float v23,
-                float v30, float v31, float v32, float v33 );
+	RageMatrix(const float *f) {
+		for (int i = 0; i < 4; i++)
+			for (int j = 0; j < 4; j++)
+				m[j][i] = f[j * 4 + i];
+	}
+	RageMatrix(
+	   float v00,
+	   float v01,
+	   float v02,
+	   float v03,
+	   float v10,
+	   float v11,
+	   float v12,
+	   float v13,
+	   float v20,
+	   float v21,
+	   float v22,
+	   float v23,
+	   float v30,
+	   float v31,
+	   float v32,
+	   float v33
+	);
 
 	// access grants
-	float& operator () ( int iRow, int iCol )	{ return m[iCol][iRow]; }
-	float  operator () ( int iRow, int iCol ) const { return m[iCol][iRow]; }
+	float &operator()(int iRow, int iCol) {
+		return m[iCol][iRow];
+	}
+	float operator()(int iRow, int iCol) const {
+		return m[iCol][iRow];
+	}
 
 	// casting operators
-	operator float* ()				{ return m[0].data(); }
-	operator const float* () const			{ return m[0].data(); }
+	operator float *() {
+		return m[0].data();
+	}
+	operator const float *() const {
+		return m[0].data();
+	}
 
 	RageMatrix GetTranspose() const;
 

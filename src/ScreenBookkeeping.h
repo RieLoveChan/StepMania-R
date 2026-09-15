@@ -8,11 +8,9 @@
 
 #include <vector>
 
-
 const int NUM_BOOKKEEPING_COLS = 4;
 
-enum BookkeepingView
-{
+enum BookkeepingView {
 	BookkeepingView_SongPlays,
 	BookkeepingView_LastDays,
 	BookkeepingView_LastWeeks,
@@ -22,30 +20,28 @@ enum BookkeepingView
 	BookkeepingView_Invalid,
 };
 
-class ScreenBookkeeping : public ScreenWithMenuElements
-{
-public:
+class ScreenBookkeeping : public ScreenWithMenuElements {
+ public:
 	virtual void Init();
 
-	virtual void Update( float fDelta );
-	virtual bool Input( const InputEventPlus &input );
+	virtual void Update(float fDelta);
+	virtual bool Input(const InputEventPlus &input);
 
-	virtual bool MenuLeft( const InputEventPlus &input );
-	virtual bool MenuRight( const InputEventPlus &input );
-	virtual bool MenuStart( const InputEventPlus &input );
-	virtual bool MenuBack( const InputEventPlus &input );
-	virtual bool MenuCoin( const InputEventPlus &input );
+	virtual bool MenuLeft(const InputEventPlus &input);
+	virtual bool MenuRight(const InputEventPlus &input);
+	virtual bool MenuStart(const InputEventPlus &input);
+	virtual bool MenuBack(const InputEventPlus &input);
+	virtual bool MenuCoin(const InputEventPlus &input);
 
-private:
-
+ private:
 	void UpdateView();
 
 	int m_iViewIndex;
 	std::vector<BookkeepingView> m_vBookkeepingViews;
 
-	BitmapText	m_textAllTime;
-	BitmapText	m_textTitle;
-	BitmapText	m_textData[NUM_BOOKKEEPING_COLS];
+	BitmapText m_textAllTime;
+	BitmapText m_textTitle;
+	BitmapText m_textData[NUM_BOOKKEEPING_COLS];
 };
 
 #endif

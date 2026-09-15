@@ -9,10 +9,9 @@ class Character;
 // cluster 10 -- split-god-object.md). Exposed under its original name
 // via a reference member, so no call site outside GameState.h/.cpp
 // changes. Pure data, no associated methods.
-class GameStateCharacterData
-{
-public:
-	Character* m_pCurCharacters[NUM_PLAYERS];
+class GameStateCharacterData {
+ public:
+	Character *m_pCurCharacters[NUM_PLAYERS];
 };
 
 #endif

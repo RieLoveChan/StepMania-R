@@ -7,20 +7,18 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-
-class MemoryCardDriverThreaded_Windows: public MemoryCardDriver
-{
-public:
+class MemoryCardDriverThreaded_Windows : public MemoryCardDriver {
+ public:
 	MemoryCardDriverThreaded_Windows();
 	virtual ~MemoryCardDriverThreaded_Windows();
 
-	virtual bool Mount( UsbStorageDevice* pDevice );
-	virtual void Unmount( UsbStorageDevice* pDevice );
+	virtual bool Mount(UsbStorageDevice *pDevice);
+	virtual void Unmount(UsbStorageDevice *pDevice);
 
-private:
-	void GetUSBStorageDevices( std::vector<UsbStorageDevice>& vDevicesOut );
+ private:
+	void GetUSBStorageDevices(std::vector<UsbStorageDevice> &vDevicesOut);
 	bool USBStorageDevicesChanged();
-	bool TestWrite( UsbStorageDevice* pDevice );
+	bool TestWrite(UsbStorageDevice *pDevice);
 
 	DWORD m_dwLastLogicalDrives;
 };

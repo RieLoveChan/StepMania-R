@@ -43,30 +43,25 @@
 #include <set>
 #include <vector>
 
-
 class RageSoundReader_Split;
 
 /* This class is refcounted, freed when all RageSoundReader_Split and RageSoundSplitter
  * classes release it. */
-class RageSoundSplitterImpl
-{
-public:
-	RageSoundSplitterImpl( RageSoundReader *pSource )
-	{
+class RageSoundSplitterImpl {
+ public:
+	RageSoundSplitterImpl(RageSoundReader *pSource) {
 		m_iRefCount = 1;
 		m_pSource = pSource;
 		m_iBufferPositionFrames = 0;
 	}
 
-	~RageSoundSplitterImpl()
-	{
+	~RageSoundSplitterImpl() {
 		delete m_pSource;
 	}
 
-	static void Release( RageSoundSplitterImpl *pImpl )
-	{
+	static void Release(RageSoundSplitterImpl *pImpl) {
 		--pImpl->m_iRefCount;
-		if( pImpl->m_iRefCount == 0 )
+		if (pImpl->m_iRefCount == 0)
 			delete pImpl;
 	}
 
@@ -83,44 +78,53 @@ public:
 	std::vector<float> m_sBuffer;
 };
 
-int RageSoundReader_Split::GetLength() const { return m_pImpl->m_pSource->GetLength(); }
-int RageSoundReader_Split::GetLength_Fast() const { return m_pImpl->m_pSource->GetLength_Fast(); }
-int RageSoundReader_Split::GetSampleRate() const { return m_pImpl->m_pSource->GetSampleRate(); }
-unsigned RageSoundReader_Split::GetNumChannels() const { return m_iNumOutputChannels; }
-int RageSoundReader_Split::GetNextSourceFrame() const { return m_iPositionFrame; }
-float RageSoundReader_Split::GetStreamToSourceRatio() const { return 1.0f; }
-RString RageSoundReader_Split::GetError() const { return m_pImpl->m_pSource->GetError(); }
+int RageSoundReader_Split::GetLength() const {
+	return m_pImpl->m_pSource->GetLength();
+}
+int RageSoundReader_Split::GetLength_Fast() const {
+	return m_pImpl->m_pSource->GetLength_Fast();
+}
+int RageSoundReader_Split::GetSampleRate() const {
+	return m_pImpl->m_pSource->GetSampleRate();
+}
+unsigned RageSoundReader_Split::GetNumChannels() const {
+	return m_iNumOutputChannels;
+}
+int RageSoundReader_Split::GetNextSourceFrame() const {
+	return m_iPositionFrame;
+}
+float RageSoundReader_Split::GetStreamToSourceRatio() const {
+	return 1.0f;
+}
+RString RageSoundReader_Split::GetError() const {
+	return m_pImpl->m_pSource->GetError();
+}
 
-RageSoundReader_Split::RageSoundReader_Split( RageSoundSplitterImpl *pImpl )
-{
+RageSoundReader_Split::RageSoundReader_Split(RageSoundSplitterImpl *pImpl) {
 	m_pImpl = pImpl;
 	++m_pImpl->m_iRefCount;
-	m_pImpl->m_apSounds.insert( this );
+	m_pImpl->m_apSounds.insert(this);
 	m_iNumOutputChannels = 0;
 	m_iPositionFrame = 0;
 	m_iRequestFrames = 0;
 }
 
-RageSoundReader_Split::RageSoundReader_Split( const RageSoundReader_Split &cpy ):
-	RageSoundReader( cpy )
-{
+RageSoundReader_Split::RageSoundReader_Split(const RageSoundReader_Split &cpy) : RageSoundReader(cpy) {
 	m_pImpl = cpy.m_pImpl;
 	++m_pImpl->m_iRefCount;
-	m_pImpl->m_apSounds.insert( this );
+	m_pImpl->m_apSounds.insert(this);
 	m_aChannels = cpy.m_aChannels;
 	m_iNumOutputChannels = cpy.m_iNumOutputChannels;
 	m_iPositionFrame = cpy.m_iPositionFrame;
 	m_iRequestFrames = cpy.m_iRequestFrames;
 }
 
-RageSoundReader_Split::~RageSoundReader_Split()
-{
-	m_pImpl->m_apSounds.erase( this );
-	RageSoundSplitterImpl::Release( m_pImpl );
+RageSoundReader_Split::~RageSoundReader_Split() {
+	m_pImpl->m_apSounds.erase(this);
+	RageSoundSplitterImpl::Release(m_pImpl);
 }
 
-int RageSoundReader_Split::SetPosition( int iFrame )
-{
+int RageSoundReader_Split::SetPosition(int iFrame) {
 	m_iPositionFrame = iFrame;
 
 	/* We can't tell whether we're past EOF.  We can't ReadBuffer here, because the
@@ -130,20 +134,17 @@ int RageSoundReader_Split::SetPosition( int iFrame )
 	return 1;
 }
 
-bool RageSoundReader_Split::SetProperty( const RString &sProperty, float fValue )
-{
-	return m_pImpl->m_pSource->SetProperty( sProperty, fValue );
+bool RageSoundReader_Split::SetProperty(const RString &sProperty, float fValue) {
+	return m_pImpl->m_pSource->SetProperty(sProperty, fValue);
 }
 
-int RageSoundReader_Split::Read( float *pBuf, int iFrames )
-{
+int RageSoundReader_Split::Read(float *pBuf, int iFrames) {
 	m_iRequestFrames = iFrames;
 	int iRet = m_pImpl->ReadBuffer();
 
 	int iSamplesAvailable = static_cast<int>(m_pImpl->m_sBuffer.size());
 	const float *pSrc = &m_pImpl->m_sBuffer[0];
-	if( m_pImpl->m_iBufferPositionFrames < m_iPositionFrame )
-	{
+	if (m_pImpl->m_iBufferPositionFrames < m_iPositionFrame) {
 		int iSkipFrames = m_iPositionFrame - m_pImpl->m_iBufferPositionFrames;
 		int iSkipSamples = iSkipFrames * m_pImpl->m_pSource->GetNumChannels();
 		pSrc += iSkipSamples;
@@ -155,21 +156,22 @@ int RageSoundReader_Split::Read( float *pBuf, int iFrames )
 
 	/* Report any errors from Read() if we don't have any data buffered to
 	 * return.  If we do have data, finish returning it first. */
-	if( iFramesAvailable == 0 && iRet < 0 )
+	if (iFramesAvailable == 0 && iRet < 0)
 		return iRet;
 
-	iFramesAvailable = std::min( iFramesAvailable, iFramesWanted );
+	iFramesAvailable = std::min(iFramesAvailable, iFramesWanted);
 
 	{
 		RageSoundMixBuffer mix;
-		for( int i = 0; i < (int) m_aChannels.size(); ++i )
-		{
+		for (int i = 0; i < (int)m_aChannels.size(); ++i) {
 			const ChannelMap &chan = m_aChannels[i];
-			mix.SetWriteOffset( chan.m_iToChannel );
-			mix.write( pSrc + chan.m_iFromChannel, iFramesAvailable, m_pImpl->m_pSource->GetNumChannels(), m_iNumOutputChannels );
+			mix.SetWriteOffset(chan.m_iToChannel);
+			mix.write(
+			   pSrc + chan.m_iFromChannel, iFramesAvailable, m_pImpl->m_pSource->GetNumChannels(), m_iNumOutputChannels
+			);
 		}
 
-		mix.read( pBuf );
+		mix.read(pBuf);
 	}
 
 	m_iPositionFrame += iFramesAvailable;
@@ -181,28 +183,24 @@ int RageSoundReader_Split::Read( float *pBuf, int iFrames )
 	return iFramesAvailable;
 }
 
-int RageSoundSplitterImpl::ReadBuffer()
-{
+int RageSoundSplitterImpl::ReadBuffer() {
 	/* Discard any bytes that are no longer requested by any sound. */
 	int iMinFrameRequested = INT_MAX;
 	int iMaxFrameRequested = INT_MIN;
-	for (RageSoundReader_Split *snd : m_apSounds)
-	{
-		iMinFrameRequested = std::min( iMinFrameRequested, snd->m_iPositionFrame );
-		iMaxFrameRequested = std::max( iMaxFrameRequested, snd->m_iPositionFrame + snd->m_iRequestFrames );
+	for (RageSoundReader_Split *snd : m_apSounds) {
+		iMinFrameRequested = std::min(iMinFrameRequested, snd->m_iPositionFrame);
+		iMaxFrameRequested = std::max(iMaxFrameRequested, snd->m_iPositionFrame + snd->m_iRequestFrames);
 	}
 
-	if( iMinFrameRequested > m_iBufferPositionFrames )
-	{
+	if (iMinFrameRequested > m_iBufferPositionFrames) {
 		int iEraseFrames = iMinFrameRequested - m_iBufferPositionFrames;
-		iEraseFrames = std::min( iEraseFrames, (int) m_sBuffer.size() );
-		m_sBuffer.erase( m_sBuffer.begin(), m_sBuffer.begin() + iEraseFrames * m_pSource->GetNumChannels() );
+		iEraseFrames = std::min(iEraseFrames, (int)m_sBuffer.size());
+		m_sBuffer.erase(m_sBuffer.begin(), m_sBuffer.begin() + iEraseFrames * m_pSource->GetNumChannels());
 		m_iBufferPositionFrames += iEraseFrames;
 	}
 
-	if( iMinFrameRequested != m_iBufferPositionFrames )
-	{
-		m_pSource->SetPosition( iMinFrameRequested );
+	if (iMinFrameRequested != m_iBufferPositionFrames) {
+		m_pSource->SetPosition(iMinFrameRequested);
 		m_iBufferPositionFrames = iMinFrameRequested;
 		m_sBuffer.clear();
 	}
@@ -210,43 +208,38 @@ int RageSoundSplitterImpl::ReadBuffer()
 	int iFramesBuffered = static_cast<int>(m_sBuffer.size()) / m_pSource->GetNumChannels();
 
 	int iFramesToRead = iMaxFrameRequested - (m_iBufferPositionFrames + iFramesBuffered);
-	if( iFramesToRead <= 0 )
+	if (iFramesToRead <= 0)
 		return 1; // requested data already buffered
 
 	int iSamplesToRead = iFramesToRead * m_pSource->GetNumChannels();
 	int iOldSizeSamples = static_cast<int>(m_sBuffer.size());
-	m_sBuffer.resize( iOldSizeSamples + iSamplesToRead );
-	int iGotFrames = m_pSource->Read( &m_sBuffer[0] + iOldSizeSamples, iFramesToRead );
-	if( iGotFrames < 0 )
-	{
-		m_sBuffer.resize( iOldSizeSamples );
+	m_sBuffer.resize(iOldSizeSamples + iSamplesToRead);
+	int iGotFrames = m_pSource->Read(&m_sBuffer[0] + iOldSizeSamples, iFramesToRead);
+	if (iGotFrames < 0) {
+		m_sBuffer.resize(iOldSizeSamples);
 		return iGotFrames;
 	}
 
 	int iGotSamples = iGotFrames * m_pSource->GetNumChannels();
-	m_sBuffer.resize( iOldSizeSamples + iGotSamples );
+	m_sBuffer.resize(iOldSizeSamples + iGotSamples);
 	return 1;
 }
 
-void RageSoundReader_Split::AddSourceChannelToSound( int iFromChannel, int iToChannel )
-{
-	m_aChannels.push_back( ChannelMap(iFromChannel, iToChannel) );
-	m_iNumOutputChannels = std::max( m_iNumOutputChannels, iToChannel + 1 );
+void RageSoundReader_Split::AddSourceChannelToSound(int iFromChannel, int iToChannel) {
+	m_aChannels.push_back(ChannelMap(iFromChannel, iToChannel));
+	m_iNumOutputChannels = std::max(m_iNumOutputChannels, iToChannel + 1);
 }
 
-RageSoundSplitter::RageSoundSplitter( RageSoundReader *pSource )
-{
-	m_pImpl = new RageSoundSplitterImpl( pSource );
+RageSoundSplitter::RageSoundSplitter(RageSoundReader *pSource) {
+	m_pImpl = new RageSoundSplitterImpl(pSource);
 }
 
-RageSoundSplitter::~RageSoundSplitter()
-{
-	RageSoundSplitterImpl::Release( m_pImpl );
+RageSoundSplitter::~RageSoundSplitter() {
+	RageSoundSplitterImpl::Release(m_pImpl);
 }
 
-RageSoundReader_Split *RageSoundSplitter::CreateSound()
-{
-	return new RageSoundReader_Split( m_pImpl );
+RageSoundReader_Split *RageSoundSplitter::CreateSound() {
+	return new RageSoundReader_Split(m_pImpl);
 }
 
 /*

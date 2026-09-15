@@ -11,9 +11,8 @@
 struct WinWdmStream;
 struct WinWdmFilter;
 
-class RageSoundDriver_WDMKS: public RageSoundDriver
-{
-public:
+class RageSoundDriver_WDMKS : public RageSoundDriver {
+ public:
 	RageSoundDriver_WDMKS();
 	~RageSoundDriver_WDMKS();
 	RString Init();
@@ -22,11 +21,11 @@ public:
 	float GetPlayLatency() const;
 	int GetSampleRate() const;
 
-private:
-	static int MixerThread_start( void *p );
+ private:
+	static int MixerThread_start(void *p);
 	void MixerThread();
-	bool Fill( int iPacket, RString &sError );
-	void Read( void *pData, int iFrames, int iLastCursorPos, int iCurrentFrame );
+	bool Fill(int iPacket, RString &sError);
+	void Read(void *pData, int iFrames, int iLastCursorPos, int iCurrentFrame);
 
 	RageThread MixingThread;
 	void SetupDecodingThread();

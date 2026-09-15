@@ -16,39 +16,45 @@
  * completely distinct methods of getting input for the same device; we have no
  * method to allocate device numbers. We don't need this now; I'll write it
  * if it becomes needed.) */
-#include "RageInputDevice.h"	// for InputDevice
+#include "RageInputDevice.h" // for InputDevice
 #include "arch/RageDriver.h"
 
 #include <vector>
 
-
 /** @brief A class designed to handle special input devices. */
-class InputHandler: public RageDriver
-{
-public:
-	static void Create( const RString &sDrivers, std::vector<InputHandler *> &apAdd );
+class InputHandler : public RageDriver {
+ public:
+	static void Create(const RString &sDrivers, std::vector<InputHandler *> &apAdd);
 	static DriverList m_pDriverList;
 
-	InputHandler(): m_LastUpdate(), m_iInputsSinceUpdate(0) {}
-	virtual ~InputHandler() { }
-	virtual void Update() { }
-	virtual bool DevicesChanged() { return false; }
-	virtual void GetDevicesAndDescriptions( std::vector<InputDeviceInfo>& vDevicesOut ) = 0;
+	InputHandler() : m_LastUpdate(), m_iInputsSinceUpdate(0) {
+	}
+	virtual ~InputHandler() {
+	}
+	virtual void Update() {
+	}
+	virtual bool DevicesChanged() {
+		return false;
+	}
+	virtual void GetDevicesAndDescriptions(std::vector<InputDeviceInfo> &vDevicesOut) = 0;
 
 	// Override to return a pretty string that's specific to the controller type.
-	virtual RString GetDeviceSpecificInputString( const DeviceInput &di );
-	virtual RString GetLocalizedInputString( const DeviceInput &di );
-	virtual wchar_t DeviceButtonToChar( DeviceButton button, bool bUseCurrentKeyModifiers );
+	virtual RString GetDeviceSpecificInputString(const DeviceInput &di);
+	virtual RString GetLocalizedInputString(const DeviceInput &di);
+	virtual wchar_t DeviceButtonToChar(DeviceButton button, bool bUseCurrentKeyModifiers);
 
 	// Override to find out whether the controller is currently plugged in.
 	// Not all InputHandlers will support this.  Not applicable to all InputHandlers.
-	virtual InputDeviceState GetInputDeviceState( InputDevice /* id */ ) { return InputDeviceState_Connected; }
+	virtual InputDeviceState GetInputDeviceState(InputDevice /* id */) {
+		return InputDeviceState_Connected;
+	}
 
 	/* In Windows, some devices need to be recreated if we recreate our main window.
 	 * Override this if you need to do that. */
-	virtual void WindowReset() { }
+	virtual void WindowReset() {
+	}
 
-protected:
+ protected:
 	/* Convenience function: Call this to queue a received event.
 	 * This may be called in a thread.
 	 *
@@ -62,20 +68,21 @@ protected:
 	 * to happen, you need to explicitly call di.ts.SetZero().
 	 *
 	 * If the timestamp is set, it'll be left alone. */
-	void ButtonPressed( DeviceInput di );
+	void ButtonPressed(DeviceInput di);
 
 	/* Call this at the end of polling input. */
 	void UpdateTimer();
 
-private:
+ private:
 	RageTimer m_LastUpdate;
 	int m_iInputsSinceUpdate;
 };
 
-#define REGISTER_INPUT_HANDLER_CLASS2( name, x ) \
-	static RegisterRageDriver register_##name( &InputHandler::m_pDriverList, #name, CreateClass<InputHandler_##x, RageDriver> )
-#define REGISTER_INPUT_HANDLER_CLASS( name ) REGISTER_INPUT_HANDLER_CLASS2( name, name )
-
+#define REGISTER_INPUT_HANDLER_CLASS2(name, x)                                                                         \
+	static RegisterRageDriver register_##name(                                                                          \
+	   &InputHandler::m_pDriverList, #name, CreateClass<InputHandler_##x, RageDriver>                                   \
+	)
+#define REGISTER_INPUT_HANDLER_CLASS(name) REGISTER_INPUT_HANDLER_CLASS2(name, name)
 
 #endif
 

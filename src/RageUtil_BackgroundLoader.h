@@ -8,12 +8,10 @@
 #include <map>
 #include <vector>
 
-
 class RageFileDriverCached;
 
-class BackgroundLoader
-{
-public:
+class BackgroundLoader {
+ public:
 	BackgroundLoader();
 
 	/* Note that destruction of this object will wait for any existing requests
@@ -21,27 +19,30 @@ public:
 	~BackgroundLoader();
 
 	/* Read the file in a background thread.  Files will be read in the order requested. */
-	void CacheFile( const RString &file );
+	void CacheFile(const RString &file);
 
 	/* Return true if the requested CacheFile request has finished.  If true is returned,
 	 * the cached file can be read using the path returned in sActualPath. */
-	bool IsCacheFileFinished( const RString &sFile, RString &sActualPath );
+	bool IsCacheFileFinished(const RString &sFile, RString &sActualPath);
 
 	/* Call this when finished with a cached file, to release any resources. */
-	void FinishedWithCachedFile( RString sFile );
+	void FinishedWithCachedFile(RString sFile);
 
 	/* Abort all loads. */
 	void Abort();
 
-private:
+ private:
 	RageThread m_LoadThread;
 	bool m_bShutdownThread;
 	void LoadThread();
-	static int LoadThread_Start( void *p ) { ((BackgroundLoader *) p)->LoadThread(); return 0; }
+	static int LoadThread_Start(void *p) {
+		((BackgroundLoader *)p)->LoadThread();
+		return 0;
+	}
 
 	RString GetRequest();
 
-	RString GetCachePath( RString sPath ) const;
+	RString GetCachePath(RString sPath) const;
 	RString m_sCachePathPrefix;
 
 	RageSemaphore m_StartSem;

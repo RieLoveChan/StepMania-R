@@ -6,33 +6,31 @@
 
 #include <vector>
 
-
 class StageStats;
 class PlayerStageStats;
 class GraphLine;
 class GraphBody;
 /** @brief A graph of the player's life over the course of Gameplay, used on Evaluation. */
-class GraphDisplay: public ActorFrame
-{
-public:
+class GraphDisplay : public ActorFrame {
+ public:
 	GraphDisplay();
 	~GraphDisplay();
 	virtual GraphDisplay *Copy() const;
 
-	void Load( RString sMetricsGroup );
-	void Set( const StageStats &ss, const PlayerStageStats &s );
+	void Load(RString sMetricsGroup);
+	void Set(const StageStats &ss, const PlayerStageStats &s);
 
 	// Lua
-	virtual void PushSelf( lua_State *L );
+	virtual void PushSelf(lua_State *L);
 
-private:
+ private:
 	void UpdateVerts();
 
 	std::vector<float> m_Values;
 
 	RectF m_quadVertices;
 
-	std::vector<Actor*> m_vpSongBoundaries;
+	std::vector<Actor *> m_vpSongBoundaries;
 	AutoActor m_sprBarely;
 	AutoActor m_sprBacking;
 	AutoActor m_sprSongBoundary;

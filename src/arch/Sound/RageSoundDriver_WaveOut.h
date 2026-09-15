@@ -9,18 +9,20 @@
 #include <windows.h>
 #include <mmsystem.h>
 
-class RageSoundDriver_WaveOut: public RageSoundDriver
-{
-public:
+class RageSoundDriver_WaveOut : public RageSoundDriver {
+ public:
 	RageSoundDriver_WaveOut();
 	~RageSoundDriver_WaveOut();
 	RString Init();
 	std::int64_t GetPosition() const;
 	float GetPlayLatency() const;
-	int GetSampleRate() const { return m_iSampleRate; }
+	int GetSampleRate() const {
+		return m_iSampleRate;
+	}
 	static const int NUM_BUFFERS = 32;
-private:
-	static int MixerThread_start( void *p );
+
+ private:
+	static int MixerThread_start(void *p);
 	void MixerThread();
 	RageThread MixingThread;
 	bool GetData();

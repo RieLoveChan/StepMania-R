@@ -8,77 +8,67 @@
 #include <string>
 #include <vector>
 
-
 class Song;
 class Steps;
 struct lua_State;
 
 /** @brief One such Song and
  * <a class="el" href="class_steps.html">Step</a> in the entire Trail. */
-struct TrailEntry
-{
-	TrailEntry():
-		pSong(nullptr),
-		pSteps(nullptr),
-		Modifiers(""),
-		Attacks(),
-		bSecret(false),
-		iLowMeter(-1),
-		iHighMeter(-1),
-		dc(Difficulty_Invalid)
-	{
+struct TrailEntry {
+	TrailEntry()
+	    : pSong(nullptr), pSteps(nullptr), Modifiers(""), Attacks(), bSecret(false), iLowMeter(-1), iHighMeter(-1),
+	      dc(Difficulty_Invalid) {
 	}
-	void GetAttackArray( AttackArray &out ) const;
+	void GetAttackArray(AttackArray &out) const;
 
 	/** @brief The Song involved in the entry. */
-	Song*		pSong;
+	Song *pSong;
 	/** @brief The <a class="el" href="class_steps.html">Step</a> involved in the entry. */
-	Steps*		pSteps;
+	Steps *pSteps;
 	/** @brief The Modifiers applied for the whole Song. */
-	std::string	Modifiers;
+	std::string Modifiers;
 	/** @brief The Attacks that will take place durring the Song. */
-	AttackArray	Attacks;
+	AttackArray Attacks;
 	/**
 	 * @brief Is this Song and its Step meant to be a secret?
 	 * If so, it will show text such as "???" to indicate that it's a mystery. */
-	bool		bSecret;
+	bool bSecret;
 
 	/* These represent the meter and difficulty used by the course to pick the
 	 * steps; if you want the real difficulty and meter, look at pSteps. */
-	int		iLowMeter;
-	int		iHighMeter;
-	Difficulty	dc;
-	bool operator== ( const TrailEntry &rhs ) const;
-	bool operator!= ( const TrailEntry &rhs ) const { return !(*this==rhs); }
+	int iLowMeter;
+	int iHighMeter;
+	Difficulty dc;
+	bool operator==(const TrailEntry &rhs) const;
+	bool operator!=(const TrailEntry &rhs) const {
+		return !(*this == rhs);
+	}
 	bool ContainsTransformOrTurn() const;
 
 	// Lua
-	void PushSelf( lua_State *L );
+	void PushSelf(lua_State *L);
 };
 
 /** @brief A queue of Songs and Steps that are generated from a Course. */
-class Trail
-{
-public:
-	StepsType		m_StepsType;
-	CourseType		m_CourseType;
-	CourseDifficulty	m_CourseDifficulty;
-	std::vector<TrailEntry>	m_vEntries;
-	int			m_iSpecifiedMeter;	// == -1 if no meter specified
-	mutable bool		m_bRadarValuesCached;
-	mutable RadarValues	m_CachedRadarValues;
+class Trail {
+ public:
+	StepsType m_StepsType;
+	CourseType m_CourseType;
+	CourseDifficulty m_CourseDifficulty;
+	std::vector<TrailEntry> m_vEntries;
+	int m_iSpecifiedMeter; // == -1 if no meter specified
+	mutable bool m_bRadarValuesCached;
+	mutable RadarValues m_CachedRadarValues;
 
 	/**
 	 * @brief Set up the Trail with default values.
 	 *
 	 * This used to call Init(), which is still available. */
-	Trail(): m_StepsType(StepsType_Invalid),
-		m_CourseType(CourseType_Invalid),
-		m_CourseDifficulty(Difficulty_Invalid),
-		m_vEntries(), m_iSpecifiedMeter(-1),
-		m_bRadarValuesCached(false), m_CachedRadarValues() {}
-	void Init()
-	{
+	Trail()
+	    : m_StepsType(StepsType_Invalid), m_CourseType(CourseType_Invalid), m_CourseDifficulty(Difficulty_Invalid),
+	      m_vEntries(), m_iSpecifiedMeter(-1), m_bRadarValuesCached(false), m_CachedRadarValues() {
+	}
+	void Init() {
 		m_StepsType = StepsType_Invalid;
 		m_CourseDifficulty = Difficulty_Invalid;
 		m_iSpecifiedMeter = -1;
@@ -87,16 +77,16 @@ public:
 	}
 
 	const RadarValues &GetRadarValues() const;
-	void SetRadarValues( const RadarValues &rv ); // for pre-populating cache
+	void SetRadarValues(const RadarValues &rv); // for pre-populating cache
 	int GetMeter() const;
 	int GetTotalMeter() const;
 	float GetLengthSeconds() const;
-	void GetDisplayBpms( DisplayBpms &AddTo ) const;
+	void GetDisplayBpms(DisplayBpms &AddTo) const;
 	bool IsSecret() const;
-	bool ContainsSong( const Song *pSong ) const;
+	bool ContainsSong(const Song *pSong) const;
 
 	// Lua
-	void PushSelf( lua_State *L );
+	void PushSelf(lua_State *L);
 };
 
 #endif

@@ -2,23 +2,17 @@
 #include "GameStateEditData.h"
 #include "ProfileManager.h"
 
-GameStateEditData::GameStateEditData() :
-	m_bIsUsingStepTiming(		true ),
-	m_bInStepEditor(		false ),
-	m_stEdit(				Message_EditStepsTypeChanged ),
-	m_cdEdit(				Message_EditCourseDifficultyChanged ),
-	m_pEditSourceSteps(		Message_EditSourceStepsChanged ),
-	m_stEditSource(			Message_EditSourceStepsTypeChanged ),
-	m_iEditCourseEntryIndex(	Message_EditCourseEntryIndexChanged ),
-	m_sEditLocalProfileID(		Message_EditLocalProfileIDChanged )
-{
+GameStateEditData::GameStateEditData()
+    : m_bIsUsingStepTiming(true), m_bInStepEditor(false), m_stEdit(Message_EditStepsTypeChanged),
+      m_cdEdit(Message_EditCourseDifficultyChanged), m_pEditSourceSteps(Message_EditSourceStepsChanged),
+      m_stEditSource(Message_EditSourceStepsTypeChanged), m_iEditCourseEntryIndex(Message_EditCourseEntryIndexChanged),
+      m_sEditLocalProfileID(Message_EditLocalProfileIDChanged) {
 }
 
-Profile* GameStateEditData::GetEditLocalProfile()
-{
-	if( m_sEditLocalProfileID.Get().empty() )
+Profile *GameStateEditData::GetEditLocalProfile() {
+	if (m_sEditLocalProfileID.Get().empty())
 		return nullptr;
-	return PROFILEMAN->GetLocalProfile( m_sEditLocalProfileID );
+	return PROFILEMAN->GetLocalProfile(m_sEditLocalProfileID);
 }
 
 /*

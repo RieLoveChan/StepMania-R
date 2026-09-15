@@ -6,23 +6,26 @@
 struct ThreadSlot;
 class RageTimer;
 /** @brief Thread, mutex, semaphore, and event classes. */
-class RageThread
-{
-public:
+class RageThread {
+ public:
 	RageThread();
-	RageThread( const RageThread &cpy );
+	RageThread(const RageThread &cpy);
 	~RageThread();
 
-	void SetName( const RString &n ) { m_sName = n; }
-	RString GetName() const { return m_sName; }
-	void Create( int (*fn)(void *), void *data );
+	void SetName(const RString &n) {
+		m_sName = n;
+	}
+	RString GetName() const {
+		return m_sName;
+	}
+	void Create(int (*fn)(void *), void *data);
 
-	void Halt( bool Kill=false);
+	void Halt(bool Kill = false);
 	void Resume();
 
 	/* For crash handlers: kill or suspend all threads (except for
 	 * the running one) immediately. */
-	static void HaltAllThreads( bool Kill=false );
+	static void HaltAllThreads(bool Kill = false);
 
 	/* If HaltAllThreads was called (with Kill==false), resume. */
 	static void ResumeAllThreads();
@@ -30,22 +33,32 @@ public:
 	static std::uint64_t GetCurrentThreadID();
 
 	static const char *GetCurrentThreadName();
-	static const char *GetThreadNameByID( std::uint64_t iID );
-	static bool EnumThreadIDs( int n, std::uint64_t &iID );
+	static const char *GetThreadNameByID(std::uint64_t iID);
+	static bool EnumThreadIDs(int n, std::uint64_t &iID);
 	int Wait();
-	bool IsCreated() const { return m_pSlot != nullptr; }
+	bool IsCreated() const {
+		return m_pSlot != nullptr;
+	}
 
 	/* A system can define HAVE_TLS, indicating that it can compile thread_local
 	 * code, but an individual environment may not actually have functional TLS.
 	 * If this returns false, thread_local variables are considered undefined. */
-	static bool GetSupportsTLS() { return s_bSystemSupportsTLS; }
-	static void SetSupportsTLS( bool b ) { s_bSystemSupportsTLS = b; }
+	static bool GetSupportsTLS() {
+		return s_bSystemSupportsTLS;
+	}
+	static void SetSupportsTLS(bool b) {
+		s_bSystemSupportsTLS = b;
+	}
 
-	static bool GetIsShowingDialog() { return s_bIsShowingDialog; }
-	static void SetIsShowingDialog( bool b ) { s_bIsShowingDialog = b; }
+	static bool GetIsShowingDialog() {
+		return s_bIsShowingDialog;
+	}
+	static void SetIsShowingDialog(bool b) {
+		s_bIsShowingDialog = b;
+	}
 	static std::uint64_t GetInvalidThreadID();
 
-private:
+ private:
 	ThreadSlot *m_pSlot;
 	RString m_sName;
 
@@ -53,7 +66,7 @@ private:
 	static bool s_bIsShowingDialog;
 
 	// Swallow up warnings. If they must be used, define them.
-	RageThread& operator=(const RageThread& rhs);
+	RageThread &operator=(const RageThread &rhs);
 };
 
 /**
@@ -61,25 +74,23 @@ private:
  *
  * This gives it a name for RageThread::GetCurrentThreadName,
  * and allocates a slot for checkpoints. */
-class RageThreadRegister
-{
-public:
-	RageThreadRegister( const RString &sName );
+class RageThreadRegister {
+ public:
+	RageThreadRegister(const RString &sName);
 	~RageThreadRegister();
 
-private:
+ private:
 	ThreadSlot *m_pSlot;
 	// Swallow up warnings. If they must be used, define them.
-	RageThreadRegister& operator=(const RageThreadRegister& rhs);
-	RageThreadRegister(const RageThreadRegister& rhs);
+	RageThreadRegister &operator=(const RageThreadRegister &rhs);
+	RageThreadRegister(const RageThreadRegister &rhs);
 };
 
-namespace Checkpoints
-{
-	void LogCheckpoints( bool yes=true );
-	void SetCheckpoint( const char *file, int line, const char *message );
-	void GetLogs( char *pBuf, int iSize, const char *delim );
-};
+namespace Checkpoints {
+void LogCheckpoints(bool yes = true);
+void SetCheckpoint(const char *file, int line, const char *message);
+void GetLogs(char *pBuf, int iSize, const char *delim);
+}; // namespace Checkpoints
 
 #define CHECKPOINT_M(m) (Checkpoints::SetCheckpoint(__FILE__, __LINE__, m))
 
@@ -89,20 +100,23 @@ namespace Checkpoints
  * convenient, though much slower on some archs.  (We don't have any tightly-
  * coupled threads, so that's OK.) */
 class MutexImpl;
-class RageMutex
-{
-public:
-	RString GetName() const { return m_sName; }
-	void SetName( const RString &s ) { m_sName = s; }
+class RageMutex {
+ public:
+	RString GetName() const {
+		return m_sName;
+	}
+	void SetName(const RString &s) {
+		m_sName = s;
+	}
 	virtual void Lock();
 	virtual bool TryLock();
 	virtual void Unlock();
 	virtual bool IsLockedByThisThread() const;
 
-	RageMutex( const RString &name );
+	RageMutex(const RString &name);
 	virtual ~RageMutex();
 
-protected:
+ protected:
 	MutexImpl *m_pMutex;
 	RString m_sName;
 
@@ -112,18 +126,18 @@ protected:
 	int m_LockCnt;
 
 	void MarkLockedMutex();
-private:
+
+ private:
 	// Swallow up warnings. If they must be used, define them.
-	RageMutex& operator=(const RageMutex& rhs);
-	RageMutex(const RageMutex& rhs);
+	RageMutex &operator=(const RageMutex &rhs);
+	RageMutex(const RageMutex &rhs);
 };
 
 /**
  * @brief Lock a mutex on construction, unlock it on destruction.
  *
  * Helps for functions with more than one return path. */
-class LockMutex
-{
+class LockMutex {
 	RageMutex &mutex;
 
 	const char *file;
@@ -131,29 +145,33 @@ class LockMutex
 	float locked_at;
 	bool locked;
 
-public:
+ public:
 	LockMutex(RageMutex &mut, const char *file, int line);
-	LockMutex(RageMutex &mut): mutex(mut), file(nullptr), line(-1), locked_at(-1), locked(true) { mutex.Lock(); }
+	LockMutex(RageMutex &mut) : mutex(mut), file(nullptr), line(-1), locked_at(-1), locked(true) {
+		mutex.Lock();
+	}
 	~LockMutex();
-	LockMutex(LockMutex &cpy): mutex(cpy.mutex), file(nullptr), line(-1), locked_at(cpy.locked_at), locked(true) { mutex.Lock(); }
+	LockMutex(LockMutex &cpy) : mutex(cpy.mutex), file(nullptr), line(-1), locked_at(cpy.locked_at), locked(true) {
+		mutex.Lock();
+	}
 
 	/**
 	 * @brief Unlock the mutex (before this would normally go out of scope).
 	 *
 	 * This can only be called once. */
 	void Unlock();
-private:
+
+ private:
 	// Swallow up warnings. If they must be used, define them.
-	LockMutex& operator=(const LockMutex& rhs);
+	LockMutex &operator=(const LockMutex &rhs);
 };
 
-#define LockMut(m) LockMutex SM_UNIQUE_NAME(LocalLock) (m, __FILE__, __LINE__)
+#define LockMut(m) LockMutex SM_UNIQUE_NAME(LocalLock)(m, __FILE__, __LINE__)
 
 class EventImpl;
-class RageEvent: public RageMutex
-{
-public:
-	RageEvent( RString name );
+class RageEvent : public RageMutex {
+ public:
+	RageEvent(RString name);
 	~RageEvent() override;
 
 	/*
@@ -162,38 +180,39 @@ public:
 	 * If false is returned, the wait timed out (and the mutex is locked, as if the
 	 * event had been signalled).
 	 */
-	bool Wait( RageTimer *pTimeout = nullptr );
+	bool Wait(RageTimer *pTimeout = nullptr);
 	void Signal();
 	void Broadcast();
 	bool WaitTimeoutSupported() const;
 	// Swallow up warnings. If they must be used, define them.
-	RageEvent& operator=(const RageEvent& rhs);
-	RageEvent(const RageEvent& rhs);
+	RageEvent &operator=(const RageEvent &rhs);
+	RageEvent(const RageEvent &rhs);
 
-private:
+ private:
 	EventImpl *m_pEvent;
 };
 
 class SemaImpl;
-class RageSemaphore
-{
-public:
-	RageSemaphore( RString sName, int iInitialValue = 0 );
+class RageSemaphore {
+ public:
+	RageSemaphore(RString sName, int iInitialValue = 0);
 	~RageSemaphore();
 
-	RString GetName() const { return m_sName; }
+	RString GetName() const {
+		return m_sName;
+	}
 	int GetValue() const;
 	void Post();
-	void Wait( bool bFailOnTimeout=true );
+	void Wait(bool bFailOnTimeout = true);
 	bool TryWait();
 
-private:
+ private:
 	SemaImpl *m_pSema;
 	RString m_sName;
 
 	// Swallow up warnings. If they must be used, define them.
-	RageSemaphore& operator=(const RageSemaphore& rhs);
-	RageSemaphore(const RageSemaphore& rhs);
+	RageSemaphore &operator=(const RageSemaphore &rhs);
+	RageSemaphore(const RageSemaphore &rhs);
 };
 
 #endif

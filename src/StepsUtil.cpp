@@ -13,32 +13,31 @@
 #include <cstddef>
 #include <vector>
 
-
-bool StepsCriteria::Matches( const Song *pSong, const Steps *pSteps ) const
-{
-	if( m_difficulty != Difficulty_Invalid  &&  pSteps->GetDifficulty() != m_difficulty )
+bool StepsCriteria::Matches(const Song *pSong, const Steps *pSteps) const {
+	if (m_difficulty != Difficulty_Invalid && pSteps->GetDifficulty() != m_difficulty)
 		return false;
-	
-	if(m_vDifficulties.size() > 0 && std::find(m_vDifficulties.begin(), m_vDifficulties.end(), pSteps->GetDifficulty()) == m_vDifficulties.end() )
-	{
+
+	if (
+	   m_vDifficulties.size() > 0 &&
+	   std::find(m_vDifficulties.begin(), m_vDifficulties.end(), pSteps->GetDifficulty()) == m_vDifficulties.end()
+	) {
 		return false;
 	}
 
-	if( m_iLowMeter != -1  &&  pSteps->GetMeter() < m_iLowMeter )
+	if (m_iLowMeter != -1 && pSteps->GetMeter() < m_iLowMeter)
 		return false;
-	if( m_iHighMeter != -1  &&  pSteps->GetMeter() > m_iHighMeter )
+	if (m_iHighMeter != -1 && pSteps->GetMeter() > m_iHighMeter)
 		return false;
-	if( m_st != StepsType_Invalid  &&  pSteps->m_StepsType != m_st )
+	if (m_st != StepsType_Invalid && pSteps->m_StepsType != m_st)
 		return false;
-	switch( m_Locked )
-	{
-	DEFAULT_FAIL(m_Locked);
+	switch (m_Locked) {
+		DEFAULT_FAIL(m_Locked);
 	case Locked_Locked:
-		if( UNLOCKMAN  &&  !UNLOCKMAN->StepsIsLocked(pSong,pSteps) )
+		if (UNLOCKMAN && !UNLOCKMAN->StepsIsLocked(pSong, pSteps))
 			return false;
 		break;
 	case Locked_Unlocked:
-		if( UNLOCKMAN  &&  UNLOCKMAN->StepsIsLocked(pSong,pSteps) )
+		if (UNLOCKMAN && UNLOCKMAN->StepsIsLocked(pSong, pSteps))
 			return false;
 		break;
 	case Locked_DontCare:
@@ -48,85 +47,71 @@ bool StepsCriteria::Matches( const Song *pSong, const Steps *pSteps ) const
 	return true;
 }
 
-void StepsUtil::GetAllMatching( const SongCriteria &soc, const StepsCriteria &stc, std::vector<SongAndSteps> &out )
-{
-	
+void StepsUtil::GetAllMatching(const SongCriteria &soc, const StepsCriteria &stc, std::vector<SongAndSteps> &out) {
+
 	std::vector<RString> groupNames = soc.m_vsGroupNames;
-	if( groupNames.size() == 0 )
-	{
+	if (groupNames.size() == 0) {
 		groupNames.push_back(GROUP_ALL);
 	}
 	std::vector<Song *> songs;
-	for (unsigned i = 0; i < groupNames.size(); i++)
-	{
+	for (unsigned i = 0; i < groupNames.size(); i++) {
 		const std::vector<Song *> &groupSongs = SONGMAN->GetSongs(groupNames[i]);
 		songs.insert(songs.end(), groupSongs.begin(), groupSongs.end());
 	}
 
-	for (Song *so : songs)
-	{
-		if( !soc.Matches(so) )
+	for (Song *so : songs) {
+		if (!soc.Matches(so))
 			continue;
-		GetAllMatching( so, stc, out ); // TODO: Look into why this can't be const.
+		GetAllMatching(so, stc, out); // TODO: Look into why this can't be const.
 	}
 }
 
-void StepsUtil::GetAllMatching( Song *pSong, const StepsCriteria &stc, std::vector<SongAndSteps> &out )
-{
-	const std::vector<Steps*> &vSteps = ( stc.m_st == StepsType_Invalid ?  pSong->GetAllSteps() :
-					 pSong->GetStepsByStepsType(stc.m_st) );
+void StepsUtil::GetAllMatching(Song *pSong, const StepsCriteria &stc, std::vector<SongAndSteps> &out) {
+	const std::vector<Steps *> &vSteps =
+	   (stc.m_st == StepsType_Invalid ? pSong->GetAllSteps() : pSong->GetStepsByStepsType(stc.m_st));
 
 	for (Steps *st : vSteps)
-		if( stc.Matches(pSong, st) )
-			out.push_back( SongAndSteps(pSong, st) );
+		if (stc.Matches(pSong, st))
+			out.push_back(SongAndSteps(pSong, st));
 }
 
-void StepsUtil::GetAllMatchingEndless( Song *pSong, const StepsCriteria &stc, std::vector<SongAndSteps> &out )
-{
-	const std::vector<Steps*> &vSteps = ( stc.m_st == StepsType_Invalid ? pSong->GetAllSteps() :
-		pSong->GetStepsByStepsType( stc.m_st ) );
+void StepsUtil::GetAllMatchingEndless(Song *pSong, const StepsCriteria &stc, std::vector<SongAndSteps> &out) {
+	const std::vector<Steps *> &vSteps =
+	   (stc.m_st == StepsType_Invalid ? pSong->GetAllSteps() : pSong->GetStepsByStepsType(stc.m_st));
 	const std::size_t previousSize = out.size();
 	int successful = false;
 
-	GetAllMatching( pSong, stc, out );
-	if( out.size() != previousSize )
-	{
+	GetAllMatching(pSong, stc, out);
+	if (out.size() != previousSize) {
 		successful = true;
 	}
 
-	if( !successful && vSteps.size() > 0 )
-	{
-		Difficulty difficulty = ( *( vSteps.begin() ) )->GetDifficulty();
+	if (!successful && vSteps.size() > 0) {
+		Difficulty difficulty = (*(vSteps.begin()))->GetDifficulty();
 		Difficulty previousDifficulty = difficulty;
 		int lowestDifficultyIndex = 0;
 		std::vector<Difficulty> difficulties;
-		for (auto st = vSteps.begin(); st != vSteps.end(); ++st)
-		{
+		for (auto st = vSteps.begin(); st != vSteps.end(); ++st) {
 			previousDifficulty = difficulty;
-			difficulty = ( *st )->GetDifficulty();
-			if( ( st - vSteps.begin() ) == 0 )
-			{
+			difficulty = (*st)->GetDifficulty();
+			if ((st - vSteps.begin()) == 0) {
 				continue;
 			}
-			if( difficulty < previousDifficulty )
-			{
+			if (difficulty < previousDifficulty) {
 				lowestDifficultyIndex = static_cast<int>(st - vSteps.begin());
 			}
 		}
-		out.push_back( SongAndSteps( pSong, vSteps.at( lowestDifficultyIndex ) ) );
+		out.push_back(SongAndSteps(pSong, vSteps.at(lowestDifficultyIndex)));
 	}
 }
 
-bool StepsUtil::HasMatching( const SongCriteria &soc, const StepsCriteria &stc )
-{
+bool StepsUtil::HasMatching(const SongCriteria &soc, const StepsCriteria &stc) {
 	std::vector<RString> groupNames = soc.m_vsGroupNames;
-	if( groupNames.size() == 0 )
-	{
+	if (groupNames.size() == 0) {
 		groupNames.push_back(GROUP_ALL);
 	}
 	std::vector<Song *> songs;
-	for (unsigned i = 0; i < groupNames.size(); i++)
-	{
+	for (unsigned i = 0; i < groupNames.size(); i++) {
 		const std::vector<Song *> &groupSongs = SONGMAN->GetSongs(groupNames[i]);
 		songs.insert(songs.end(), groupSongs.begin(), groupSongs.end());
 	}
@@ -136,157 +121,142 @@ bool StepsUtil::HasMatching( const SongCriteria &soc, const StepsCriteria &stc )
 	});
 }
 
-bool StepsUtil::HasMatching( const Song *pSong, const StepsCriteria &stc )
-{
-	const std::vector<Steps*> &vSteps = stc.m_st == StepsType_Invalid? pSong->GetAllSteps():pSong->GetStepsByStepsType( stc.m_st );
+bool StepsUtil::HasMatching(const Song *pSong, const StepsCriteria &stc) {
+	const std::vector<Steps *> &vSteps =
+	   stc.m_st == StepsType_Invalid ? pSong->GetAllSteps() : pSong->GetStepsByStepsType(stc.m_st);
 	return std::any_of(vSteps.begin(), vSteps.end(), [&](Steps const *st) {
 		return stc.Matches(pSong, st);
 	});
 }
 
 // Sorting stuff
-std::map<const Steps*, RString> steps_sort_val;
+std::map<const Steps *, RString> steps_sort_val;
 
-static bool CompareStepsPointersBySortValueAscending(const Steps *pSteps1, const Steps *pSteps2)
-{
+static bool CompareStepsPointersBySortValueAscending(const Steps *pSteps1, const Steps *pSteps2) {
 	return steps_sort_val[pSteps1] < steps_sort_val[pSteps2];
 }
 
-static bool CompareStepsPointersBySortValueDescending(const Steps *pSteps1, const Steps *pSteps2)
-{
+static bool CompareStepsPointersBySortValueDescending(const Steps *pSteps1, const Steps *pSteps2) {
 	return steps_sort_val[pSteps1] > steps_sort_val[pSteps2];
 }
 
-void StepsUtil::SortStepsPointerArrayByNumPlays( std::vector<Steps*> &vStepsPointers, ProfileSlot slot, bool bDescending )
-{
-	if( !PROFILEMAN->IsPersistentProfile(slot) )
-		return;	// nothing to do since we don't have data
-	Profile* pProfile = PROFILEMAN->GetProfile(slot);
-	SortStepsPointerArrayByNumPlays( vStepsPointers, pProfile, bDescending );
+void StepsUtil::SortStepsPointerArrayByNumPlays(
+   std::vector<Steps *> &vStepsPointers, ProfileSlot slot, bool bDescending
+) {
+	if (!PROFILEMAN->IsPersistentProfile(slot))
+		return; // nothing to do since we don't have data
+	Profile *pProfile = PROFILEMAN->GetProfile(slot);
+	SortStepsPointerArrayByNumPlays(vStepsPointers, pProfile, bDescending);
 }
 
-void StepsUtil::SortStepsPointerArrayByNumPlays( std::vector<Steps*> &vStepsPointers, const Profile* pProfile, bool bDecending )
-{
+void StepsUtil::SortStepsPointerArrayByNumPlays(
+   std::vector<Steps *> &vStepsPointers, const Profile *pProfile, bool bDecending
+) {
 	// ugly...
-	std::vector<Song*> vpSongs = SONGMAN->GetAllSongs();
-	std::vector<Steps*> vpAllSteps;
-	std::map<Steps*, Song*> mapStepsToSong;
+	std::vector<Song *> vpSongs = SONGMAN->GetAllSongs();
+	std::vector<Steps *> vpAllSteps;
+	std::map<Steps *, Song *> mapStepsToSong;
 	{
-		for( unsigned i=0; i<vpSongs.size(); i++ )
-		{
-			Song* pSong = vpSongs[i];
-			std::vector<Steps*> vpSteps = pSong->GetAllSteps();
-			for( unsigned j=0; j<vpSteps.size(); j++ )
-			{
-				Steps* pSteps = vpSteps[j];
-				if( pSteps->IsAutogen() )
-					continue;	// skip
-				vpAllSteps.push_back( pSteps );
+		for (unsigned i = 0; i < vpSongs.size(); i++) {
+			Song *pSong = vpSongs[i];
+			std::vector<Steps *> vpSteps = pSong->GetAllSteps();
+			for (unsigned j = 0; j < vpSteps.size(); j++) {
+				Steps *pSteps = vpSteps[j];
+				if (pSteps->IsAutogen())
+					continue; // skip
+				vpAllSteps.push_back(pSteps);
 				mapStepsToSong[pSteps] = pSong;
 			}
 		}
 	}
 
-	ASSERT( pProfile != nullptr );
-	for(unsigned i = 0; i < vStepsPointers.size(); ++i)
-	{
-		Steps* pSteps = vStepsPointers[i];
-		Song* pSong = mapStepsToSong[pSteps];
-		steps_sort_val[vStepsPointers[i]] = ssprintf("%9i", pProfile->GetStepsNumTimesPlayed(pSong,pSteps));
+	ASSERT(pProfile != nullptr);
+	for (unsigned i = 0; i < vStepsPointers.size(); ++i) {
+		Steps *pSteps = vStepsPointers[i];
+		Song *pSong = mapStepsToSong[pSteps];
+		steps_sort_val[vStepsPointers[i]] = ssprintf("%9i", pProfile->GetStepsNumTimesPlayed(pSong, pSteps));
 	}
-	stable_sort( vStepsPointers.begin(), vStepsPointers.end(), bDecending ? CompareStepsPointersBySortValueDescending : CompareStepsPointersBySortValueAscending );
+	stable_sort(
+	   vStepsPointers.begin(),
+	   vStepsPointers.end(),
+	   bDecending ? CompareStepsPointersBySortValueDescending : CompareStepsPointersBySortValueAscending
+	);
 	steps_sort_val.clear();
 }
 
-bool StepsUtil::CompareNotesPointersByRadarValues(const Steps* pSteps1, const Steps* pSteps2)
-{
+bool StepsUtil::CompareNotesPointersByRadarValues(const Steps *pSteps1, const Steps *pSteps2) {
 	float fScore1 = 0;
 	float fScore2 = 0;
 
-	fScore1 += pSteps1->GetRadarValues( PLAYER_1 )[RadarCategory_TapsAndHolds];
-	fScore2 += pSteps2->GetRadarValues( PLAYER_1 )[RadarCategory_TapsAndHolds];
+	fScore1 += pSteps1->GetRadarValues(PLAYER_1)[RadarCategory_TapsAndHolds];
+	fScore2 += pSteps2->GetRadarValues(PLAYER_1)[RadarCategory_TapsAndHolds];
 
 	return fScore1 < fScore2;
 }
 
-bool StepsUtil::CompareNotesPointersByMeter(const Steps *pSteps1, const Steps* pSteps2)
-{
+bool StepsUtil::CompareNotesPointersByMeter(const Steps *pSteps1, const Steps *pSteps2) {
 	return pSteps1->GetMeter() < pSteps2->GetMeter();
 }
 
-bool StepsUtil::CompareNotesPointersByDifficulty(const Steps *pSteps1, const Steps *pSteps2)
-{
+bool StepsUtil::CompareNotesPointersByDifficulty(const Steps *pSteps1, const Steps *pSteps2) {
 	return pSteps1->GetDifficulty() < pSteps2->GetDifficulty();
 }
 
-void StepsUtil::SortNotesArrayByDifficulty( std::vector<Steps*> &arraySteps )
-{
+void StepsUtil::SortNotesArrayByDifficulty(std::vector<Steps *> &arraySteps) {
 	/* Sort in reverse order of priority. Sort by description first, to get
 	 * a predictable order for songs with no radar values (edits). */
-	stable_sort( arraySteps.begin(), arraySteps.end(), CompareStepsPointersByDescription );
-	stable_sort( arraySteps.begin(), arraySteps.end(), CompareNotesPointersByRadarValues );
-	stable_sort( arraySteps.begin(), arraySteps.end(), CompareNotesPointersByMeter );
-	stable_sort( arraySteps.begin(), arraySteps.end(), CompareNotesPointersByDifficulty );
+	stable_sort(arraySteps.begin(), arraySteps.end(), CompareStepsPointersByDescription);
+	stable_sort(arraySteps.begin(), arraySteps.end(), CompareNotesPointersByRadarValues);
+	stable_sort(arraySteps.begin(), arraySteps.end(), CompareNotesPointersByMeter);
+	stable_sort(arraySteps.begin(), arraySteps.end(), CompareNotesPointersByDifficulty);
 }
 
-bool StepsUtil::CompareStepsPointersByTypeAndDifficulty(const Steps *pStep1, const Steps *pStep2)
-{
-	if( pStep1->m_StepsType < pStep2->m_StepsType )
+bool StepsUtil::CompareStepsPointersByTypeAndDifficulty(const Steps *pStep1, const Steps *pStep2) {
+	if (pStep1->m_StepsType < pStep2->m_StepsType)
 		return true;
-	if( pStep1->m_StepsType > pStep2->m_StepsType )
+	if (pStep1->m_StepsType > pStep2->m_StepsType)
 		return false;
 	return pStep1->GetDifficulty() < pStep2->GetDifficulty();
 }
 
-void StepsUtil::SortStepsByTypeAndDifficulty( std::vector<Steps*> &arraySongPointers )
-{
-	sort( arraySongPointers.begin(), arraySongPointers.end(), CompareStepsPointersByTypeAndDifficulty );
+void StepsUtil::SortStepsByTypeAndDifficulty(std::vector<Steps *> &arraySongPointers) {
+	sort(arraySongPointers.begin(), arraySongPointers.end(), CompareStepsPointersByTypeAndDifficulty);
 }
 
-bool StepsUtil::CompareStepsPointersByDescription(const Steps *pStep1, const Steps *pStep2)
-{
-	return pStep1->GetDescription().CompareNoCase( pStep2->GetDescription() ) < 0;
+bool StepsUtil::CompareStepsPointersByDescription(const Steps *pStep1, const Steps *pStep2) {
+	return pStep1->GetDescription().CompareNoCase(pStep2->GetDescription()) < 0;
 }
 
-void StepsUtil::SortStepsByDescription( std::vector<Steps*> &arraySongPointers )
-{
-	sort( arraySongPointers.begin(), arraySongPointers.end(), CompareStepsPointersByDescription );
+void StepsUtil::SortStepsByDescription(std::vector<Steps *> &arraySongPointers) {
+	sort(arraySongPointers.begin(), arraySongPointers.end(), CompareStepsPointersByDescription);
 }
 
-void StepsUtil::RemoveLockedSteps( const Song *pSong, std::vector<Steps*> &vpSteps )
-{
-	for( int i=static_cast<int>(vpSteps.size())-1; i>=0; i-- )
-	{
-		if( UNLOCKMAN->StepsIsLocked(pSong, vpSteps[i]) )
-			vpSteps.erase( vpSteps.begin()+i );
+void StepsUtil::RemoveLockedSteps(const Song *pSong, std::vector<Steps *> &vpSteps) {
+	for (int i = static_cast<int>(vpSteps.size()) - 1; i >= 0; i--) {
+		if (UNLOCKMAN->StepsIsLocked(pSong, vpSteps[i]))
+			vpSteps.erase(vpSteps.begin() + i);
 	}
 }
-
 
 ////////////////////////////////
 // StepsID
 ////////////////////////////////
 
-void StepsID::FromSteps( const Steps *p )
-{
-	if( p == nullptr )
-	{
+void StepsID::FromSteps(const Steps *p) {
+	if (p == nullptr) {
 		st = StepsType_Invalid;
 		dc = Difficulty_Invalid;
 		sDescription = "";
 		uHash = 0;
 	}
-	else
-	{
+	else {
 		st = p->m_StepsType;
 		dc = p->GetDifficulty();
-		if( dc == Difficulty_Edit )
-		{
+		if (dc == Difficulty_Edit) {
 			sDescription = p->GetDescription();
 			uHash = p->GetHash();
 		}
-		else
-		{
+		else {
 			sDescription = "";
 			uHash = 0;
 		}
@@ -302,112 +272,103 @@ void StepsID::FromSteps( const Steps *p )
  * We could do this during the actual Steps::GetID() call, instead, but then it'd have
  * to have access to Song::m_LoadedFromProfile. */
 
-Steps *StepsID::ToSteps( const Song *p, bool bAllowNull ) const
-{
-	if( st == StepsType_Invalid || dc == Difficulty_Invalid )
+Steps *StepsID::ToSteps(const Song *p, bool bAllowNull) const {
+	if (st == StepsType_Invalid || dc == Difficulty_Invalid)
 		return nullptr;
 
 	SongID songID;
-	songID.FromSong( p );
+	songID.FromSong(p);
 
 	Steps *pRet = nullptr;
-	if( dc == Difficulty_Edit )
-	{
-		pRet = SongUtil::GetOneSteps( p, st, dc, -1, -1, RString(sDescription), "", uHash, true );
+	if (dc == Difficulty_Edit) {
+		pRet = SongUtil::GetOneSteps(p, st, dc, -1, -1, RString(sDescription), "", uHash, true);
 	}
-	else
-	{
-		pRet = SongUtil::GetOneSteps( p, st, dc, -1, -1, "", "", 0, true );
+	else {
+		pRet = SongUtil::GetOneSteps(p, st, dc, -1, -1, "", "", 0, true);
 	}
 
-	if( !bAllowNull && pRet == nullptr )
-		FAIL_M( ssprintf("%i, %i, \"%s\"", st, dc, sDescription.c_str()) );
+	if (!bAllowNull && pRet == nullptr)
+		FAIL_M(ssprintf("%i, %i, \"%s\"", st, dc, sDescription.c_str()));
 
 	return pRet;
 }
 
-XNode* StepsID::CreateNode() const
-{
-	XNode* pNode = new XNode( "Steps" );
+XNode *StepsID::CreateNode() const {
+	XNode *pNode = new XNode("Steps");
 
-	pNode->AppendAttr( "StepsType", GAMEMAN->GetStepsTypeInfo(st).szName );
-	pNode->AppendAttr( "Difficulty", DifficultyToString(dc) );
-	if( dc == Difficulty_Edit )
-	{
-		pNode->AppendAttr( "Description", sDescription );
-		pNode->AppendAttr( "Hash", uHash );
+	pNode->AppendAttr("StepsType", GAMEMAN->GetStepsTypeInfo(st).szName);
+	pNode->AppendAttr("Difficulty", DifficultyToString(dc));
+	if (dc == Difficulty_Edit) {
+		pNode->AppendAttr("Description", sDescription);
+		pNode->AppendAttr("Hash", uHash);
 	}
 
 	return pNode;
 }
 
-void StepsID::LoadFromNode( const XNode* pNode )
-{
-	ASSERT( pNode->GetName() == "Steps" );
+void StepsID::LoadFromNode(const XNode *pNode) {
+	ASSERT(pNode->GetName() == "Steps");
 
 	RString sTemp;
 
-	pNode->GetAttrValue( "StepsType", sTemp );
-	st = GAMEMAN->StringToStepsType( sTemp );
+	pNode->GetAttrValue("StepsType", sTemp);
+	st = GAMEMAN->StringToStepsType(sTemp);
 
-	pNode->GetAttrValue( "Difficulty", sTemp );
-	dc = StringToDifficulty( sTemp );
+	pNode->GetAttrValue("Difficulty", sTemp);
+	dc = StringToDifficulty(sTemp);
 
-	if( dc == Difficulty_Edit )
-	{
+	if (dc == Difficulty_Edit) {
 		RString sDescriptionTmp;
-		pNode->GetAttrValue( "Description", sDescriptionTmp );
+		pNode->GetAttrValue("Description", sDescriptionTmp);
 		sDescription = sDescriptionTmp;
-		pNode->GetAttrValue( "Hash", uHash );
+		pNode->GetAttrValue("Hash", uHash);
 	}
-	else
-	{
+	else {
 		sDescription = "";
 		uHash = 0;
 	}
 }
 
-RString StepsID::ToString() const
-{
-	RString s = GAMEMAN->GetStepsTypeInfo( st ).szName;
-	s += " " + DifficultyToString( dc );
-	if( dc == Difficulty_Edit )
-	{
+RString StepsID::ToString() const {
+	RString s = GAMEMAN->GetStepsTypeInfo(st).szName;
+	s += " " + DifficultyToString(dc);
+	if (dc == Difficulty_Edit) {
 		s += " " + sDescription;
-		s += ssprintf(" %u", uHash );
+		s += ssprintf(" %u", uHash);
 	}
 	return s;
 }
 
-bool StepsID::IsValid() const
-{
+bool StepsID::IsValid() const {
 	return st != StepsType_Invalid && dc != Difficulty_Invalid;
 }
 
-bool StepsID::operator<( const StepsID &rhs ) const
-{
-#define COMP(a) if(a<rhs.a) return true; if(a>rhs.a) return false;
+bool StepsID::operator<(const StepsID &rhs) const {
+#define COMP(a)                                                                                                        \
+	if (a < rhs.a)                                                                                                      \
+		return true;                                                                                                     \
+	if (a > rhs.a)                                                                                                      \
+		return false;
 	COMP(st);
 	COMP(dc);
 	COMP(sDescription);
 	// See explanation in class declaration. -Kyz
-	if(uHash != 0 && rhs.uHash != 0)
-	{
+	if (uHash != 0 && rhs.uHash != 0) {
 		COMP(uHash);
 	}
 #undef COMP
 	return false;
 }
 
-bool StepsID::operator==(const StepsID &rhs) const
-{
-#define COMP(a) if(a != rhs.a) return false;
+bool StepsID::operator==(const StepsID &rhs) const {
+#define COMP(a)                                                                                                        \
+	if (a != rhs.a)                                                                                                     \
+		return false;
 	COMP(st);
 	COMP(dc);
 	COMP(sDescription);
 	// See explanation in class declaration. -Kyz
-	if(uHash != 0 && rhs.uHash != 0)
-	{
+	if (uHash != 0 && rhs.uHash != 0) {
 		COMP(uHash);
 	}
 #undef COMP

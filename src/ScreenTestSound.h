@@ -7,17 +7,15 @@
 
 #include <vector>
 
-
 /** @brief The number of sounds allowed for testing. */
 const int nsounds = 5;
 
-class ScreenTestSound : public Screen
-{
-public:
+class ScreenTestSound : public Screen {
+ public:
 	virtual void Init();
 	~ScreenTestSound();
 
-	virtual bool Input( const InputEventPlus &input );
+	virtual bool Input(const InputEventPlus &input);
 
 	void Update(float f);
 	void UpdateText(int n);
@@ -27,7 +25,7 @@ public:
 		BitmapText txt;
 	};
 	Sound s[nsounds];
-	std::vector<RageSound*> m_sSoundCopies[nsounds];
+	std::vector<RageSound *> m_sSoundCopies[nsounds];
 	BitmapText HEEEEEEEEELP;
 
 	int selected;

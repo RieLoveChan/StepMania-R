@@ -7,46 +7,45 @@
 #include <cstddef>
 
 /** @brief File driver for accessing a regular filesystem. */
-class RageFileDriverDirect: public RageFileDriver
-{
-public:
-	RageFileDriverDirect( const RString &sRoot );
+class RageFileDriverDirect : public RageFileDriver {
+ public:
+	RageFileDriverDirect(const RString &sRoot);
 
-	RageFileBasic *Open( const RString &sPath, int iMode, int &iError ) override;
-	bool Move( const RString &sOldPath, const RString &sNewPath ) override;
-	bool Remove( const RString &sPath ) override;
-	bool Remount( const RString &sPath ) override;
+	RageFileBasic *Open(const RString &sPath, int iMode, int &iError) override;
+	bool Move(const RString &sOldPath, const RString &sNewPath) override;
+	bool Remove(const RString &sPath) override;
+	bool Remount(const RString &sPath) override;
 
-private:
+ private:
 	RString m_sRoot;
 };
 
-class RageFileDriverDirectReadOnly: public RageFileDriverDirect
-{
-public:
-	RageFileDriverDirectReadOnly( const RString &sRoot );
-	RageFileBasic *Open( const RString &sPath, int iMode, int &iError ) override;
-	bool Move( const RString &sOldPath, const RString &sNewPath ) override;
-	bool Remove( const RString &sPath ) override;
+class RageFileDriverDirectReadOnly : public RageFileDriverDirect {
+ public:
+	RageFileDriverDirectReadOnly(const RString &sRoot);
+	RageFileBasic *Open(const RString &sPath, int iMode, int &iError) override;
+	bool Move(const RString &sOldPath, const RString &sNewPath) override;
+	bool Remove(const RString &sPath) override;
 };
 
 /** @brief This driver handles direct file access. */
 
-class RageFileObjDirect: public RageFileObj
-{
-public:
-	RageFileObjDirect( const RString &sPath, int iFD, int iMode );
+class RageFileObjDirect : public RageFileObj {
+ public:
+	RageFileObjDirect(const RString &sPath, int iFD, int iMode);
 	~RageFileObjDirect() override;
-	int ReadInternal( void *pBuffer, std::size_t iBytes ) override;
-	int WriteInternal( const void *pBuffer, std::size_t iBytes ) override;
+	int ReadInternal(void *pBuffer, std::size_t iBytes) override;
+	int WriteInternal(const void *pBuffer, std::size_t iBytes) override;
 	int FlushInternal() override;
-	int SeekInternal( int offset ) override;
+	int SeekInternal(int offset) override;
 	RageFileObjDirect *Copy() const override;
-	RString GetDisplayPath() const override { return m_sPath; }
+	RString GetDisplayPath() const override {
+		return m_sPath;
+	}
 	int GetFileSize() const override;
 	int GetFD() override;
 
-private:
+ private:
 	bool FinalFlush();
 
 	int m_iFD;
@@ -59,13 +58,14 @@ private:
 	 * disk, allow recovering from errors.
 	 */
 	bool m_bWriteFailed;
-	bool WriteFailed() const { return !(m_iMode & RageFile::STREAMED) && m_bWriteFailed; }
+	bool WriteFailed() const {
+		return !(m_iMode & RageFile::STREAMED) && m_bWriteFailed;
+	}
 
 	// unused
-	RageFileObjDirect& operator=(const RageFileObjDirect& rhs);
-	RageFileObjDirect(const RageFileObjDirect& rhs);
+	RageFileObjDirect &operator=(const RageFileObjDirect &rhs);
+	RageFileObjDirect(const RageFileObjDirect &rhs);
 };
-
 
 #endif
 
@@ -93,4 +93,3 @@ private:
  * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  * PERFORMANCE OF THIS SOFTWARE.
  */
-

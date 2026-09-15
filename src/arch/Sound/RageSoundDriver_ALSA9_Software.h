@@ -8,9 +8,8 @@
 
 #include <cstdint>
 
-class RageSoundDriver_ALSA9_Software: public RageSoundDriver
-{
-public:
+class RageSoundDriver_ALSA9_Software : public RageSoundDriver {
+ public:
 	RageSoundDriver_ALSA9_Software();
 	~RageSoundDriver_ALSA9_Software();
 	RString Init();
@@ -18,12 +17,14 @@ public:
 	/* virtuals: */
 	std::int64_t GetPosition() const;
 	float GetPlayLatency() const;
-	int GetSampleRate() const { return m_iSampleRate; }
+	int GetSampleRate() const {
+		return m_iSampleRate;
+	}
 
 	void SetupDecodingThread();
 
-private:
-	static int MixerThread_start( void *p );
+ private:
+	static int MixerThread_start(void *p);
 	void MixerThread();
 	bool GetData();
 

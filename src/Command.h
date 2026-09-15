@@ -6,43 +6,44 @@
 #include <string>
 #include <vector>
 
+class Command {
+ public:
+	void Load(const RString &sCommand);
 
-class Command
-{
-public:
-	void Load( const RString &sCommand );
+	std::string GetOriginalCommandString() const; // used when reporting an error in number of args
+	std::string GetName() const; // the first argument, Trim()'d (NOT lower-cased -- callers that need case-insensitive
+	                             // matching lower-case it themselves)
 
-	std::string GetOriginalCommandString() const;	// used when reporting an error in number of args
-	std::string GetName() const;	// the first argument, Trim()'d (NOT lower-cased -- callers that need case-insensitive matching lower-case it themselves)
+	void Clear() {
+		m_vsArgs.clear();
+	}
 
-	void Clear() { m_vsArgs.clear(); }
-
-	struct Arg
-	{
+	struct Arg {
 		std::string s;
-		Arg(): s("") {}
+		Arg() : s("") {
+		}
 	};
-	Arg GetArg( unsigned index ) const;
+	Arg GetArg(unsigned index) const;
 
 	std::vector<RString> m_vsArgs;
 
-	Command(): m_vsArgs() {}
+	Command() : m_vsArgs() {
+	}
 };
 
-class Commands
-{
-public:
+class Commands {
+ public:
 	std::vector<Command> v;
 
-	std::string GetOriginalCommandString() const;	// used when reporting an error in number of args
+	std::string GetOriginalCommandString() const; // used when reporting an error in number of args
 };
 
 // Take a command list string and return pointers to each of the tokens in the
 // string. sCommand list is a list of commands separated by ';'.
 // TODO: This is expensive to do during the game.  Eventually,  move all calls to
 // ParseCommands to happen during load, then execute from the parsed Command structures.
-void ParseCommands( const RString &sCmds, Commands &vCmdsOut, bool bLegacy );
-Commands ParseCommands( const RString &sCmds );
+void ParseCommands(const RString &sCmds, Commands &vCmdsOut, bool bLegacy);
+Commands ParseCommands(const RString &sCmds);
 
 #endif
 

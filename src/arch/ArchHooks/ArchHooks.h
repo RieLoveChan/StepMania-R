@@ -5,27 +5,32 @@
 #include <ctime>
 
 struct lua_State;
-class ArchHooks
-{
-public:
+class ArchHooks {
+ public:
 	static ArchHooks *Create();
 	ArchHooks();
-	virtual ~ArchHooks() { }
-	virtual void Init() { }
+	virtual ~ArchHooks() {
+	}
+	virtual void Init() {
+	}
 	/*
 	 * Return the general name of the architecture, eg. "Windows", "macOS", "Unix".
 	 */
-	virtual RString GetArchName() const { return "generic"; }
+	virtual RString GetArchName() const {
+		return "generic";
+	}
 
 	/* This is called as soon as the loading window is shown, and we can
 	 * safely log. */
-	virtual void DumpDebugInfo() { }
+	virtual void DumpDebugInfo() {
+	}
 
 	/**
 	 * @brief Re-exec the game.
 	 *
 	 * If this is implemented, it doesn't return. */
-	virtual void RestartProgram() { }
+	virtual void RestartProgram() {
+	}
 
 	/*
 	 * Get the 2-letter RFC-639 code of the user's preferred language
@@ -35,12 +40,17 @@ public:
 
 	/* If this is a second instance, return true.
 	 * Optionally, give focus to the existing window. */
-	virtual bool CheckForMultipleInstances(int /* argc */, char* [] /* argv[] */) { return false; }
+	virtual bool CheckForMultipleInstances(int /* argc */, char *[] /* argv[] */) {
+		return false;
+	}
 
-	virtual void SetTime( tm ) { }
+	virtual void SetTime(tm) {
+	}
 
-	virtual void BoostPriority() { }
-	virtual void UnBoostPriority() { }
+	virtual void BoostPriority() {
+	}
+	virtual void UnBoostPriority() {
+	}
 
 	/**
 	 * @brief Setup the rendering threads for concurrency.
@@ -48,13 +58,18 @@ public:
 	 * The priority of the concurrent rendering thread may need to be boosted
 	 * on some schedulers.
 	 */
-	virtual void SetupConcurrentRenderingThread() { }
+	virtual void SetupConcurrentRenderingThread() {
+	}
 
 	/**
 	 * @brief Determine if the user wants to quit (eg. ^C, or clicked a "close window" button).
 	 * @return true if the user wants to quit, false otherwise. */
-	static bool UserQuit() { return g_bQuitting; }
-	static void SetUserQuit() { g_bQuitting = true; }
+	static bool UserQuit() {
+		return g_bQuitting;
+	}
+	static void SetUserQuit() {
+		g_bQuitting = true;
+	}
 
 	/*
 	 * Returns true if the user wants to toggle windowed mode and atomically clears
@@ -87,27 +102,29 @@ public:
 	 * underlying timers may be 32-bit, but implementations should try to avoid
 	 * wrapping if possible.
 	 */
-	static std::int64_t GetMicrosecondsSinceStart( bool bAccurate );
+	static std::int64_t GetMicrosecondsSinceStart(bool bAccurate);
 
 	/*
 	 * Add file search paths, higher priority first.
 	 */
-	static void MountInitialFilesystems( const RString &sDirOfExecutable );
+	static void MountInitialFilesystems(const RString &sDirOfExecutable);
 
 	/*
 	 * Add file search paths for user-writable directories.
 	 */
-	static void MountUserFilesystems( const RString &sDirOfExecutable );
+	static void MountUserFilesystems(const RString &sDirOfExecutable);
 
 	/*
 	 * Platform-specific code calls this to indicate focus changes.
 	 */
-	void SetHasFocus( bool bAppHasFocus );
+	void SetHasFocus(bool bAppHasFocus);
 
 	/*
 	 * Return true if the application has input focus.
 	 */
-	bool AppHasFocus() const { return m_bHasFocus; }
+	bool AppHasFocus() const {
+		return m_bHasFocus;
+	}
 
 	/*
 	 * Returns true if the application's focus has changed since last called.
@@ -117,7 +134,7 @@ public:
 	/*
 	 * Open a URL in the default web browser
 	 */
-	virtual bool GoToURL( RString sUrl );
+	virtual bool GoToURL(RString sUrl);
 
 	virtual float GetDisplayAspectRatio() = 0;
 
@@ -125,14 +142,14 @@ public:
 	virtual RString GetClipboard();
 
 	// Lua
-	void PushSelf( lua_State *L );
+	void PushSelf(lua_State *L);
 	void RegisterWithLua();
 
-private:
+ private:
 	/* This are helpers for GetMicrosecondsSinceStart on systems with a timer
 	 * that may loop or move backwards. */
-	static std::int64_t FixupTimeIfLooped( std::int64_t usecs );
-	static std::int64_t FixupTimeIfBackwards( std::int64_t usecs );
+	static std::int64_t FixupTimeIfLooped(std::int64_t usecs);
+	static std::int64_t FixupTimeIfBackwards(std::int64_t usecs);
 
 	static bool g_bQuitting;
 	static bool g_bToggleWindowed;
@@ -142,7 +159,7 @@ private:
 
 #endif
 
-extern ArchHooks *HOOKS;	// global and accessible from anywhere in our program
+extern ArchHooks *HOOKS; // global and accessible from anywhere in our program
 
 /**
  * @file

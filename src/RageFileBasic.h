@@ -11,10 +11,10 @@
 /* This is a simple file I/O interface.  Although most of these operations
  * are straightforward, there are several of them; most of the time, you'll
  * only want to implement RageFileObj. */
-class RageFileBasic
-{
-public:
-	virtual ~RageFileBasic() { }
+class RageFileBasic {
+ public:
+	virtual ~RageFileBasic() {
+	}
 
 	virtual RString GetError() const = 0;
 	virtual void ClearError() = 0;
@@ -23,22 +23,22 @@ public:
 	/* Seek to the given absolute offset.  Return to the position actually
 	 * seeked to; if the position given was beyond the end of the file, the
 	 * return value will be the size of the file. */
-	virtual int Seek( int iOffset ) = 0;
-	virtual int Seek( int offset, int whence ) = 0;
+	virtual int Seek(int iOffset) = 0;
+	virtual int Seek(int offset, int whence) = 0;
 	virtual int Tell() const = 0;
 
 	/* Read at most iSize bytes into pBuf.  Return the number of bytes read,
 	 * 0 on end of stream, or -1 on error.  Note that reading less than iSize
 	 * does not necessarily mean that the end of the stream has been reached;
 	 * keep reading until 0 is returned. */
-	virtual int Read( void *pBuffer, std::size_t iBytes ) = 0;
-	virtual int Read( RString &buffer, int bytes = -1 ) = 0;
-	virtual int Read( void *buffer, std::size_t bytes, int nmemb ) = 0;
+	virtual int Read(void *pBuffer, std::size_t iBytes) = 0;
+	virtual int Read(RString &buffer, int bytes = -1) = 0;
+	virtual int Read(void *buffer, std::size_t bytes, int nmemb) = 0;
 
 	/* Write iSize bytes of data from pBuf.  Return 0 on success, -1 on error. */
-	virtual int Write( const void *pBuffer, std::size_t iBytes ) = 0;
-	virtual int Write( const RString &sString ) = 0;
-	virtual int Write( const void *buffer, std::size_t bytes, int nmemb ) = 0;
+	virtual int Write(const void *pBuffer, std::size_t iBytes) = 0;
+	virtual int Write(const RString &sString) = 0;
+	virtual int Write(const void *buffer, std::size_t bytes, int nmemb) = 0;
 
 	/* Due to buffering, writing may not happen by the end of a Write() call, so not
 	 * all errors may be returned by it.  Data will be flushed when the stream (or its
@@ -47,15 +47,17 @@ public:
 	virtual int Flush() = 0;
 
 	/* This returns a descriptive path for the file, or "". */
-	virtual RString GetDisplayPath() const { return RString(); }
+	virtual RString GetDisplayPath() const {
+		return RString();
+	}
 
 	virtual RageFileBasic *Copy() const = 0;
 
-	virtual int GetLine( RString &out ) = 0;
-	virtual int PutLine( const RString &str ) = 0;
+	virtual int GetLine(RString &out) = 0;
+	virtual int PutLine(const RString &str) = 0;
 
-	virtual void EnableCRC32( bool on=true ) = 0;
-	virtual bool GetCRC32( std::uint32_t *iRet ) = 0;
+	virtual void EnableCRC32(bool on = true) = 0;
+	virtual bool GetCRC32(std::uint32_t *iRet) = 0;
 
 	virtual int GetFileSize() const = 0;
 
@@ -65,56 +67,77 @@ public:
 	virtual int GetFD() = 0;
 };
 
-class RageFileObj: public RageFileBasic
-{
-public:
+class RageFileObj : public RageFileBasic {
+ public:
 	RageFileObj();
-	RageFileObj( const RageFileObj &cpy );
+	RageFileObj(const RageFileObj &cpy);
 	~RageFileObj() override;
 
-	RString GetError() const override { return m_sError; }
-	void ClearError() override { SetError(""); }
+	RString GetError() const override {
+		return m_sError;
+	}
+	void ClearError() override {
+		SetError("");
+	}
 
-	bool AtEOF() const override { return m_bEOF; }
+	bool AtEOF() const override {
+		return m_bEOF;
+	}
 
-	int Seek( int iOffset ) override;
-	int Seek( int offset, int whence ) override;
-	int Tell() const override { return m_iFilePos; }
+	int Seek(int iOffset) override;
+	int Seek(int offset, int whence) override;
+	int Tell() const override {
+		return m_iFilePos;
+	}
 
-	int Read( void *pBuffer, std::size_t iBytes ) override;
-	int Read( RString &buffer, int bytes = -1 ) override;
-	int Read( void *buffer, std::size_t bytes, int nmemb ) override;
+	int Read(void *pBuffer, std::size_t iBytes) override;
+	int Read(RString &buffer, int bytes = -1) override;
+	int Read(void *buffer, std::size_t bytes, int nmemb) override;
 
-	int Write( const void *pBuffer, std::size_t iBytes ) override;
-	int Write( const RString &sString ) override { return Write( sString.data(), sString.size() ); }
-	int Write( const void *buffer, std::size_t bytes, int nmemb ) override;
+	int Write(const void *pBuffer, std::size_t iBytes) override;
+	int Write(const RString &sString) override {
+		return Write(sString.data(), sString.size());
+	}
+	int Write(const void *buffer, std::size_t bytes, int nmemb) override;
 
 	int Flush() override;
 
-	int GetLine( RString &out ) override;
-	int PutLine( const RString &str ) override;
+	int GetLine(RString &out) override;
+	int PutLine(const RString &str) override;
 
-	void EnableCRC32( bool on=true ) override;
-	bool GetCRC32( std::uint32_t *iRet ) override;
+	void EnableCRC32(bool on = true) override;
+	bool GetCRC32(std::uint32_t *iRet) override;
 
 	int GetFileSize() const override = 0;
-	int GetFD() override { return -1; }
-	RString GetDisplayPath() const override { return RString(); }
-	RageFileBasic *Copy() const override { FAIL_M( "Copying unimplemented" ); }
+	int GetFD() override {
+		return -1;
+	}
+	RString GetDisplayPath() const override {
+		return RString();
+	}
+	RageFileBasic *Copy() const override {
+		FAIL_M("Copying unimplemented");
+	}
 
-protected:
-	virtual int SeekInternal( int /* iOffset */ ) { FAIL_M( "Seeking unimplemented" ); }
-	virtual int ReadInternal( void *pBuffer, std::size_t iBytes ) = 0;
-	virtual int WriteInternal( const void *pBuffer, std::size_t iBytes ) = 0;
-	virtual int FlushInternal() { return 0; }
+ protected:
+	virtual int SeekInternal(int /* iOffset */) {
+		FAIL_M("Seeking unimplemented");
+	}
+	virtual int ReadInternal(void *pBuffer, std::size_t iBytes) = 0;
+	virtual int WriteInternal(const void *pBuffer, std::size_t iBytes) = 0;
+	virtual int FlushInternal() {
+		return 0;
+	}
 
 	void EnableReadBuffering();
-	void EnableWriteBuffering( int iBytes=1024*64 );
+	void EnableWriteBuffering(int iBytes = 1024 * 64);
 
-	void SetError( const RString &sError ) { m_sError = sError; }
+	void SetError(const RString &sError) {
+		m_sError = sError;
+	}
 	RString m_sError;
 
-private:
+ private:
 	int FillReadBuf();
 	void ResetReadBuf();
 	int EmptyWriteBuf();
@@ -138,10 +161,12 @@ private:
 	 * to avoid reads being passed through several buffers, which is only a waste of
 	 * memory.
 	 */
-	enum { BSIZE = 1024 };
+	enum {
+		BSIZE = 1024
+	};
 	char *m_pReadBuffer;
 	char *m_pReadBuf;
-	int  m_iReadBufAvail;
+	int m_iReadBufAvail;
 
 	/*
 	 * If write buffering is enabled, m_pWriteBuffer will be allocated, and m_iWriteBufferPos
@@ -159,7 +184,7 @@ private:
 	std::uint32_t m_iCRC32;
 
 	// Swallow up warnings. If they must be used, define them.
-	RageFileObj& operator=(const RageFileObj& rhs);
+	RageFileObj &operator=(const RageFileObj &rhs);
 };
 
 #endif
@@ -188,4 +213,3 @@ private:
  * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  * PERFORMANCE OF THIS SOFTWARE.
  */
-

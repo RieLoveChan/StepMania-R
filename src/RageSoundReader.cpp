@@ -3,10 +3,10 @@
 #include "RageLog.h"
 #include "RageUtil_AutoPtr.h"
 
-REGISTER_CLASS_TRAITS( RageSoundReader, pCopy->Copy() );
+REGISTER_CLASS_TRAITS(RageSoundReader, pCopy->Copy());
 
 /* Read(), handling the STREAM_LOOPED and empty return cases. */
-int RageSoundReader::RetriedRead(float* pBuffer, int iFrames, int* iSourceFrame, float* fRate) {
+int RageSoundReader::RetriedRead(float *pBuffer, int iFrames, int *iSourceFrame, float *fRate) {
 	if (iFrames == 0) {
 		return 0;
 	}

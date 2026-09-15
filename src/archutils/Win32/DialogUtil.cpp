@@ -9,18 +9,17 @@
 // Create*Font copied from MFC's CFont
 
 // pLogFont->nHeight is interpreted as PointSize * 10
-static HFONT CreatePointFontIndirect(const LOGFONT* lpLogFont)
-{
+static HFONT CreatePointFontIndirect(const LOGFONT *lpLogFont) {
 	HDC hDC = ::GetDC(nullptr);
 
 	// convert nPointSize to logical units based on pDC
 	LOGFONT logFont = *lpLogFont;
 	POINT pt;
 	pt.y = ::GetDeviceCaps(hDC, LOGPIXELSY) * logFont.lfHeight;
-	pt.y /= 720;	// 72 points/inch * 10 decipoints/point
+	pt.y /= 720; // 72 points/inch * 10 decipoints/point
 	pt.x = 0;
 	::DPtoLP(hDC, &pt, 1);
-	POINT ptOrg = { 0, 0 };
+	POINT ptOrg = {0, 0};
 	::DPtoLP(hDC, &ptOrg, 1);
 	logFont.lfHeight = -std::abs(pt.y - ptOrg.y);
 
@@ -30,8 +29,7 @@ static HFONT CreatePointFontIndirect(const LOGFONT* lpLogFont)
 }
 
 // nPointSize is actually scaled 10x
-static HFONT CreatePointFont(int nPointSize, LPCTSTR lpszFaceName)
-{
+static HFONT CreatePointFont(int nPointSize, LPCTSTR lpszFaceName) {
 	ASSERT(lpszFaceName != nullptr);
 
 	LOGFONT logFont;
@@ -43,43 +41,41 @@ static HFONT CreatePointFont(int nPointSize, LPCTSTR lpszFaceName)
 	return ::CreatePointFontIndirect(&logFont);
 }
 
-void DialogUtil::SetHeaderFont( HWND hdlg, int nID )
-{
-	ASSERT( hdlg != nullptr );
+void DialogUtil::SetHeaderFont(HWND hdlg, int nID) {
+	ASSERT(hdlg != nullptr);
 
-	HWND hControl = ::GetDlgItem( hdlg, nID );
-	ASSERT( hControl != nullptr );
+	HWND hControl = ::GetDlgItem(hdlg, nID);
+	ASSERT(hControl != nullptr);
 
 	// TODO: Fix font leak
 	const int FONT_POINTS = 16;
-	HFONT hfont = CreatePointFont( FONT_POINTS*10, "Arial Black" );
-	::SendMessage( hControl, WM_SETFONT, (WPARAM)hfont, TRUE );
+	HFONT hfont = CreatePointFont(FONT_POINTS * 10, "Arial Black");
+	::SendMessage(hControl, WM_SETFONT, (WPARAM)hfont, TRUE);
 }
 
-void DialogUtil::LocalizeDialogAndContents( HWND hdlg )
-{
-	ASSERT( THEME != nullptr );
+void DialogUtil::LocalizeDialogAndContents(HWND hdlg) {
+	ASSERT(THEME != nullptr);
 
 	const int LARGE_STRING = 256;
 	char szTemp[LARGE_STRING] = "";
 	RString sGroup;
 
 	{
-		::GetWindowText( hdlg, szTemp, ARRAYLEN(szTemp) );
+		::GetWindowText(hdlg, szTemp, ARRAYLEN(szTemp));
 		RString s = szTemp;
-		sGroup = "Dialog-"+s;
-		s = THEME->GetString( sGroup, s );
-		::SetWindowText( hdlg, ConvertUTF8ToACP(s).c_str() );
+		sGroup = "Dialog-" + s;
+		s = THEME->GetString(sGroup, s);
+		::SetWindowText(hdlg, ConvertUTF8ToACP(s).c_str());
 	}
 
-	for( HWND hwndChild = ::GetTopWindow(hdlg); hwndChild != nullptr; hwndChild = ::GetNextWindow(hwndChild,GW_HWNDNEXT) )
-	{
-		::GetWindowText( hwndChild, szTemp, ARRAYLEN(szTemp) );
+	for (HWND hwndChild = ::GetTopWindow(hdlg); hwndChild != nullptr;
+	     hwndChild = ::GetNextWindow(hwndChild, GW_HWNDNEXT)) {
+		::GetWindowText(hwndChild, szTemp, ARRAYLEN(szTemp));
 		RString s = szTemp;
-		if( s.empty() )
+		if (s.empty())
 			continue;
-		s = THEME->GetString( sGroup, s );
-		::SetWindowText( hwndChild, ConvertUTF8ToACP(s).c_str() );
+		s = THEME->GetString(sGroup, s);
+		::SetWindowText(hwndChild, ConvertUTF8ToACP(s).c_str());
 	}
 }
 
@@ -107,4 +103,3 @@ void DialogUtil::LocalizeDialogAndContents( HWND hdlg )
  * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  * PERFORMANCE OF THIS SOFTWARE.
  */
-

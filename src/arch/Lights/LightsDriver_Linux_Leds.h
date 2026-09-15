@@ -7,9 +7,8 @@
 
 #include <cstdint>
 
-class LightsDriver_Linux_Leds : public LightsDriver
-{
-private:
+class LightsDriver_Linux_Leds : public LightsDriver {
+ private:
 	static const std::uint8_t LINUX_LED_STATE_ON = 255;
 	static const std::uint8_t LINUX_LED_STATE_OFF = 0;
 	static const int LINUX_LED_MAX_DIRECTORY_LENGTH = PATH_MAX;
@@ -19,7 +18,7 @@ private:
 
 	bool WriteLight(const char *filename, bool state);
 
-protected:
+ protected:
 	LightsState previousLS;
 
 	bool IsDance();
@@ -33,7 +32,7 @@ protected:
 	void SetGameControllerLights(GameController gc, const char *stringArray[], const LightsState *ls);
 	void SetGameControllerLights(GameController gc, const int intArray[], const LightsState *ls);
 
-public:
+ public:
 	virtual void Set(const LightsState *ls) = 0;
 	virtual const char *GetGameControllerLightFile() = 0;
 };

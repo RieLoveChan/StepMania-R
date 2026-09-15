@@ -13,7 +13,6 @@
 
 #include <vector>
 
-
 struct lua_State;
 
 struct CacheDisplayedBeat {
@@ -29,9 +28,8 @@ struct CacheNoteStat {
 };
 
 /** @brief The player's indivdual state. */
-class PlayerState
-{
-public:
+class PlayerState {
+ public:
 	/** @brief Set up the PlayerState with initial values. */
 	PlayerState();
 	/** @brief Reset the PlayerState with the initial values. */
@@ -39,7 +37,7 @@ public:
 	/**
 	 * @brief Update the PlayerState based on the present time.
 	 * @param fDelta the current time. */
-	void Update( float fDelta );
+	void Update(float fDelta);
 
 	void SetPlayerNumber(PlayerNumber pn);
 
@@ -49,13 +47,13 @@ public:
 	 * TODO: Remove use of PlayerNumber.  All data about the player should live
 	 * in PlayerState and callers should not use PlayerNumber to index into
 	 * GameState. */
-	PlayerNumber	m_PlayerNumber;
+	PlayerNumber m_PlayerNumber;
 	/**
 	 * @brief The MultiPlayer number assigned to this Player, typically 1-32.
 	 *
 	 * This is only used if GAMESTATE->m_bMultiplayer is true.
 	 */
-	MultiPlayer		m_mp;
+	MultiPlayer m_mp;
 
 	// This is used by ArrowEffects and the NoteField to zoom both appropriately
 	// to fit in the space available. -Kyz
@@ -65,7 +63,7 @@ public:
 	SongPosition m_Position;
 
 	const SongPosition &GetDisplayedPosition() const;
-	const TimingData   &GetDisplayedTiming()   const;
+	const TimingData &GetDisplayedTiming() const;
 
 	/**
 	 * @brief Holds a vector sorted by real beat, the beat that would be displayed
@@ -86,56 +84,56 @@ public:
 	 * @brief Change the PlayerOptions to their default.
 	 * @param l the level of mods to reset.
 	 */
-	void ResetToDefaultPlayerOptions( ModsLevel l );
+	void ResetToDefaultPlayerOptions(ModsLevel l);
 	/** @brief The PlayerOptions presently in use by the Player. */
-	ModsGroup<PlayerOptions>	m_PlayerOptions;
+	ModsGroup<PlayerOptions> m_PlayerOptions;
 
 	/**
 	 * @brief Used to push note-changing modifiers back so that notes don't pop.
 	 *
 	 * This is used during gameplay and set by NoteField. */
-	mutable float	m_fLastDrawnBeat;
+	mutable float m_fLastDrawnBeat;
 	/** @brief The Player's HealthState in general terms. */
-	HealthState		m_HealthState;
+	HealthState m_HealthState;
 
 	/** @brief The type of person/machine controlling the Player. */
-	PlayerController	m_PlayerController;
+	PlayerController m_PlayerController;
 
 	SampleHistory m_EffectHistory;
 
 	// Used in Battle and Rave
-	void LaunchAttack( const Attack& a );
-	void RemoveActiveAttacks( AttackLevel al=NUM_ATTACK_LEVELS /*all*/ );
+	void LaunchAttack(const Attack &a);
+	void RemoveActiveAttacks(AttackLevel al = NUM_ATTACK_LEVELS /*all*/);
 	void EndActiveAttacks();
 	void RebuildPlayerOptionsFromActiveAttacks();
 	int GetSumOfActiveAttackLevels() const;
-	int		m_iCpuSkill;	// only used when m_PlayerController is PC_CPU
+	int m_iCpuSkill; // only used when m_PlayerController is PC_CPU
 	// Attacks take a while to transition out of use.  Account for this in PlayerAI
 	// by still penalizing it for 1 second after the player options are rebuilt.
-	int		m_iLastPositiveSumOfAttackLevels;
-	float	m_fSecondsUntilAttacksPhasedOut; // positive means PlayerAI is still affected
-	bool	m_bAttackBeganThisUpdate;	// flag for other objects to watch (play sounds)
-	bool	m_bAttackEndedThisUpdate;	// flag for other objects to watch (play sounds)
+	int m_iLastPositiveSumOfAttackLevels;
+	float m_fSecondsUntilAttacksPhasedOut; // positive means PlayerAI is still affected
+	bool m_bAttackBeganThisUpdate;         // flag for other objects to watch (play sounds)
+	bool m_bAttackEndedThisUpdate;         // flag for other objects to watch (play sounds)
 
-	AttackArray		m_ActiveAttacks;
-	std::vector<Attack>	m_ModsToApply;
+	AttackArray m_ActiveAttacks;
+	std::vector<Attack> m_ModsToApply;
 
 	// Haste
-	int		m_iTapsHitSinceLastHasteUpdate;
-	int		m_iTapsMissedSinceLastHasteUpdate;
+	int m_iTapsHitSinceLastHasteUpdate;
+	int m_iTapsMissedSinceLastHasteUpdate;
 
 	// Stores the bpm that was picked for reading the chart if the player is using an mmod.
 	float m_fReadBPM;
 
 	// Used in Rave
-	float	m_fSuperMeter;	// between 0 and NUM_ATTACK_LEVELS
-	float	m_fSuperMeterGrowthScale;
+	float m_fSuperMeter; // between 0 and NUM_ATTACK_LEVELS
+	float m_fSuperMeterGrowthScale;
 	// Used in Battle
 	void RemoveAllInventory();
-	Attack	m_Inventory[NUM_INVENTORY_SLOTS];
+	Attack m_Inventory[NUM_INVENTORY_SLOTS];
 
 	// Lua
-	void PushSelf( lua_State *L );
+	void PushSelf(lua_State *L);
 };
 
 #endif

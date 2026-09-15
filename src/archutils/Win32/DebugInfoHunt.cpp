@@ -10,81 +10,73 @@
 #include <windows.h>
 #include <mmsystem.h>
 
-
-static void LogVideoDriverInfo( VideoDriverInfo info )
-{
-	LOG->Info( "Video driver: %s [%s]", info.sDescription.c_str(), info.sProvider.c_str() );
-	LOG->Info( "              %s, %s [%s]", info.sVersion.c_str(), info.sDate.c_str(), info.sDeviceID.c_str() );
+static void LogVideoDriverInfo(VideoDriverInfo info) {
+	LOG->Info("Video driver: %s [%s]", info.sDescription.c_str(), info.sProvider.c_str());
+	LOG->Info("              %s, %s [%s]", info.sVersion.c_str(), info.sDate.c_str(), info.sDeviceID.c_str());
 }
 
-static void GetMemoryDebugInfo()
-{
+static void GetMemoryDebugInfo() {
 	MEMORYSTATUS mem;
 	GlobalMemoryStatus(&mem);
 
-	LOG->Info("Memory: %imb total, %imb swap (%imb swap avail)",
-		mem.dwTotalPhys / 1048576,
-		mem.dwTotalPageFile / 1048576,
-		mem.dwAvailPageFile / 1048576);
+	LOG->Info(
+	   "Memory: %imb total, %imb swap (%imb swap avail)",
+	   mem.dwTotalPhys / 1048576,
+	   mem.dwTotalPageFile / 1048576,
+	   mem.dwAvailPageFile / 1048576
+	);
 }
 
-static void GetDisplayDriverDebugInfo()
-{
+static void GetDisplayDriverDebugInfo() {
 	RString sPrimaryDeviceName = GetPrimaryVideoName();
 
-	if( sPrimaryDeviceName.empty() )
-		LOG->Info( "Primary display driver could not be determined." );
+	if (sPrimaryDeviceName.empty())
+		LOG->Info("Primary display driver could not be determined.");
 
 	bool LoggedSomething = false;
-	for( int i=0; true; i++ )
-	{
+	for (int i = 0; true; i++) {
 		VideoDriverInfo info;
-		if( !GetVideoDriverInfo(i, info) )
+		if (!GetVideoDriverInfo(i, info))
 			break;
 
-		if( sPrimaryDeviceName.empty() )	// failed to get primary display name (NT4)
+		if (sPrimaryDeviceName.empty()) // failed to get primary display name (NT4)
 		{
-			LogVideoDriverInfo( info );
+			LogVideoDriverInfo(info);
 			LoggedSomething = true;
 		}
-		else if( info.sDescription == sPrimaryDeviceName )
-		{
-			LogVideoDriverInfo( info );
+		else if (info.sDescription == sPrimaryDeviceName) {
+			LogVideoDriverInfo(info);
 			LoggedSomething = true;
 			break;
 		}
 	}
-	if( !LoggedSomething )
-	{
-		LOG->Info( "Primary display driver: %s", sPrimaryDeviceName.c_str() );
+	if (!LoggedSomething) {
+		LOG->Info("Primary display driver: %s", sPrimaryDeviceName.c_str());
 		LOG->Warn("Couldn't find primary display driver; logging all drivers");
 
-		for( int i=0; true; i++ )
-		{
+		for (int i = 0; true; i++) {
 			VideoDriverInfo info;
-			if( !GetVideoDriverInfo(i, info) )
+			if (!GetVideoDriverInfo(i, info))
 				break;
 
-			LogVideoDriverInfo( info );
+			LogVideoDriverInfo(info);
 		}
 	}
 }
 
-static RString wo_ssprintf( MMRESULT err, const char *fmt, ...)
-{
+static RString wo_ssprintf(MMRESULT err, const char *fmt, ...) {
 	char buf[MAXERRORLENGTH];
 	waveOutGetErrorText(err, buf, MAXERRORLENGTH);
 
-	va_list	va;
+	va_list va;
 	va_start(va, fmt);
-	RString s = vssprintf( fmt, va );
+	RString s = vssprintf(fmt, va);
 	va_end(va);
 
-	return s += ssprintf( "(%s)", buf );
+	return s += ssprintf("(%s)", buf);
 }
 
-static void GetDriveDebugInfo()
-{
+static void GetDriveDebugInfo() {
 	/*
 	 * HKEY_LOCAL_MACHINE\HARDWARE\DEVICEMAP\Scsi\
 	 *    Scsi Port *\
@@ -97,124 +89,118 @@ static void GetDriveDebugInfo()
 	 *			 Type        "DiskPeripheral"
 	 */
 	std::vector<RString> Ports;
-	if( !RegistryAccess::GetRegSubKeys( "HKEY_LOCAL_MACHINE\\HARDWARE\\DEVICEMAP\\Scsi", Ports ) )
+	if (!RegistryAccess::GetRegSubKeys("HKEY_LOCAL_MACHINE\\HARDWARE\\DEVICEMAP\\Scsi", Ports))
 		return;
 
-	for( unsigned i = 0; i < Ports.size(); ++i )
-	{
+	for (unsigned i = 0; i < Ports.size(); ++i) {
 		int DMAEnabled = -1;
-		RegistryAccess::GetRegValue( Ports[i], "DMAEnabled", DMAEnabled );
+		RegistryAccess::GetRegValue(Ports[i], "DMAEnabled", DMAEnabled);
 
 		RString Driver;
-		RegistryAccess::GetRegValue( Ports[i], "Driver", Driver );
+		RegistryAccess::GetRegValue(Ports[i], "Driver", Driver);
 
 		std::vector<RString> Busses;
-		if( !RegistryAccess::GetRegSubKeys( Ports[i], Busses, "Scsi Bus .*" ) )
+		if (!RegistryAccess::GetRegSubKeys(Ports[i], Busses, "Scsi Bus .*"))
 			continue;
 
-		for( unsigned bus = 0; bus < Busses.size(); ++bus )
-		{
+		for (unsigned bus = 0; bus < Busses.size(); ++bus) {
 			std::vector<RString> TargetIDs;
-			if( !RegistryAccess::GetRegSubKeys( Busses[bus], TargetIDs, "Target Id .*" ) )
+			if (!RegistryAccess::GetRegSubKeys(Busses[bus], TargetIDs, "Target Id .*"))
 				continue;
 
-			for( unsigned tid = 0; tid < TargetIDs.size(); ++tid )
-			{
+			for (unsigned tid = 0; tid < TargetIDs.size(); ++tid) {
 				std::vector<RString> LUIDs;
-				if( !RegistryAccess::GetRegSubKeys( TargetIDs[tid], LUIDs, "Logical Unit Id .*" ) )
+				if (!RegistryAccess::GetRegSubKeys(TargetIDs[tid], LUIDs, "Logical Unit Id .*"))
 					continue;
 
-				for( unsigned luid = 0; luid < LUIDs.size(); ++luid )
-				{
+				for (unsigned luid = 0; luid < LUIDs.size(); ++luid) {
 					RString Identifier;
-					RegistryAccess::GetRegValue( LUIDs[luid], "Identifier", Identifier );
-					TrimRight( Identifier );
-					LOG->Info( "Drive: \"%s\" Driver: %s DMA: %s",
-						Identifier.c_str(), Driver.c_str(), DMAEnabled == 1? "yes":DMAEnabled == -1? "N/A":"NO" );
+					RegistryAccess::GetRegValue(LUIDs[luid], "Identifier", Identifier);
+					TrimRight(Identifier);
+					LOG->Info(
+					   "Drive: \"%s\" Driver: %s DMA: %s",
+					   Identifier.c_str(),
+					   Driver.c_str(),
+					   DMAEnabled == 1       ? "yes"
+					      : DMAEnabled == -1 ? "N/A"
+					                         : "NO"
+					);
 				}
 			}
 		}
 	}
 }
 
-static void GetWindowsVersionDebugInfo()
-{
+static void GetWindowsVersionDebugInfo() {
 	// Detect operating system.
 	OSVERSIONINFO ovi;
 	ovi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-#pragma warning( push )
-#pragma warning( disable : 4996 )
+#pragma warning(push)
+#pragma warning(disable : 4996)
 	if (!GetVersionEx(&ovi))
-#pragma warning( pop )
+#pragma warning(pop)
 	{
 		LOG->Info("GetVersionEx failed!");
 		return;
 	}
 
 	RString Ver = ssprintf("Windows %i.%i (", ovi.dwMajorVersion, ovi.dwMinorVersion);
-	if(ovi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS)
-	{
-		if(ovi.dwMinorVersion == 0)
+	if (ovi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS) {
+		if (ovi.dwMinorVersion == 0)
 			Ver += "Win95";
-		else if(ovi.dwMinorVersion == 10)
+		else if (ovi.dwMinorVersion == 10)
 			Ver += "Win98";
-		else if(ovi.dwMinorVersion == 90)
+		else if (ovi.dwMinorVersion == 90)
 			Ver += "WinME";
 		else
 			Ver += "unknown 9x-based";
 	}
-	else if(ovi.dwPlatformId == VER_PLATFORM_WIN32_NT)
-	{
-		if(ovi.dwMajorVersion == 4 && ovi.dwMinorVersion == 0)
+	else if (ovi.dwPlatformId == VER_PLATFORM_WIN32_NT) {
+		if (ovi.dwMajorVersion == 4 && ovi.dwMinorVersion == 0)
 			Ver += "WinNT 4.0";
-		else if(ovi.dwMajorVersion == 5 && ovi.dwMinorVersion == 0)
+		else if (ovi.dwMajorVersion == 5 && ovi.dwMinorVersion == 0)
 			Ver += "Win2000";
-		else if(ovi.dwMajorVersion == 5 && ovi.dwMinorVersion == 1)
+		else if (ovi.dwMajorVersion == 5 && ovi.dwMinorVersion == 1)
 			Ver += "WinXP";
-		else if(ovi.dwMajorVersion == 5 && ovi.dwMinorVersion == 2)
-		{
+		else if (ovi.dwMajorVersion == 5 && ovi.dwMinorVersion == 2) {
 			Ver += "WinServer2003";
 			// todo: check for R2
 			/*
 			if(GetSystemMetrics(SM_SERVERR2) != 0)
-				Ver += "R2";
+			   Ver += "R2";
 			*/
 		}
-		else if(ovi.dwMajorVersion == 6 && ovi.dwMinorVersion == 0)
-		{
+		else if (ovi.dwMajorVersion == 6 && ovi.dwMinorVersion == 0) {
 			Ver += "Vista";
 			// todo: make this check work
 			/*
 			if(ovi.wProductType == VER_NT_WORKSTATION)
-				Ver += "Vista";
+			   Ver += "Vista";
 			else
-				Ver += "WinServer2008";
+			   Ver += "WinServer2008";
 			*/
 		}
-		else if(ovi.dwMajorVersion == 6 && ovi.dwMinorVersion == 1)
-		{
+		else if (ovi.dwMajorVersion == 6 && ovi.dwMinorVersion == 1) {
 			Ver += "Win7";
 			// todo: make this check work
 			/*
 			if(ovi.wProductType == VER_NT_WORKSTATION)
-				Ver += "Win7";
+			   Ver += "Win7";
 			else
-				Ver += "WinServer2008 R2";
+			   Ver += "WinServer2008 R2";
 			*/
 		}
-		else if(ovi.dwMajorVersion == 6 && ovi.dwMinorVersion == 2)
-		{
+		else if (ovi.dwMajorVersion == 6 && ovi.dwMinorVersion == 2) {
 			Ver += "Win8";
 			// todo: make this check work
 			/*
 			if(ovi.wProductType == VER_NT_WORKSTATION)
-				Ver += "Win7";
+			   Ver += "Win7";
 			else
-				Ver += "WinServer2008 R2";
+			   Ver += "WinServer2008 R2";
 			*/
 		}
-		else if(ovi.dwMajorVersion == 10 && ovi.dwMinorVersion == 0)
-		{
+		else if (ovi.dwMajorVersion == 10 && ovi.dwMinorVersion == 0) {
 			// Windows 11 is still NT 10.0 -- Microsoft never introduced a
 			// separate major/minor for it, so build number is the only way
 			// to tell them apart (11 starts at build 22000).
@@ -222,36 +208,39 @@ static void GetWindowsVersionDebugInfo()
 		}
 		else
 			Ver += "unknown NT-based";
-	} else Ver += "???";
+	}
+	else
+		Ver += "???";
 
 	Ver += ssprintf(") build %i [%s]", ovi.dwBuildNumber & 0xffff, ovi.szCSDVersion);
 	LOG->Info("%s", Ver.c_str());
 }
 
-static void GetSoundDriverDebugInfo()
-{
+static void GetSoundDriverDebugInfo() {
 	int cnt = waveOutGetNumDevs();
 
-	for(int i = 0; i < cnt; ++i)
-	{
+	for (int i = 0; i < cnt; ++i) {
 		WAVEOUTCAPS caps;
 
 		MMRESULT ret = waveOutGetDevCaps(i, &caps, sizeof(caps));
-		if(ret != MMSYSERR_NOERROR)
-		{
+		if (ret != MMSYSERR_NOERROR) {
 			LOG->Info(wo_ssprintf(ret, "waveOutGetDevCaps(%i) failed", i));
 			continue;
 		}
-		LOG->Info("Sound device %i: %s, %i.%i, MID %i, PID %i %s", i, caps.szPname,
-			HIBYTE(caps.vDriverVersion),
-			LOBYTE(caps.vDriverVersion),
-			caps.wMid, caps.wPid,
-			caps.dwSupport & WAVECAPS_SAMPLEACCURATE? "":"(INACCURATE)");
+		LOG->Info(
+		   "Sound device %i: %s, %i.%i, MID %i, PID %i %s",
+		   i,
+		   caps.szPname,
+		   HIBYTE(caps.vDriverVersion),
+		   LOBYTE(caps.vDriverVersion),
+		   caps.wMid,
+		   caps.wPid,
+		   caps.dwSupport & WAVECAPS_SAMPLEACCURATE ? "" : "(INACCURATE)"
+		);
 	}
 }
 
-void SearchForDebugInfo()
-{
+void SearchForDebugInfo() {
 	GetWindowsVersionDebugInfo();
 	GetMemoryDebugInfo();
 	GetDisplayDriverDebugInfo();

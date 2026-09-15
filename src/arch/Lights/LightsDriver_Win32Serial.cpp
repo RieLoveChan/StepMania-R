@@ -12,27 +12,21 @@ static Preference<RString> g_sLightsComPort("LightsComPort", "COM54");
 
 HANDLE serialPort;
 
-LightsDriver_Win32Serial::LightsDriver_Win32Serial()
-{
+LightsDriver_Win32Serial::LightsDriver_Win32Serial() {
 	// Ensure a non-match the first time
 	lastOutput[0] = 0;
 
 	RString sComPort = g_sLightsComPort.Get();
 
-	serialPort = CreateFile(RString("\\\\.\\").append(sComPort).c_str(),
-		GENERIC_WRITE,
-		0,
-		nullptr,
-		OPEN_EXISTING,
-		0,
-		nullptr);
+	serialPort =
+	   CreateFile(RString("\\\\.\\").append(sComPort).c_str(), GENERIC_WRITE, 0, nullptr, OPEN_EXISTING, 0, nullptr);
 
 	if (serialPort == INVALID_HANDLE_VALUE) {
 		MessageBox(nullptr, "Could not find a device on the configured COM port.", "ERROR", MB_OK);
 		return;
 	}
 
-	DCB dcb_serial_params = { 0 };
+	DCB dcb_serial_params = {0};
 	dcb_serial_params.DCBlength = sizeof(dcb_serial_params);
 
 	if (GetCommState(serialPort, &dcb_serial_params) == 0) {
@@ -40,21 +34,21 @@ LightsDriver_Win32Serial::LightsDriver_Win32Serial()
 		return;
 	}
 
-	dcb_serial_params.BaudRate = CBR_115200;  // Setting BaudRate = 115200
-	dcb_serial_params.ByteSize = 8;         // Setting ByteSize = 8
-	dcb_serial_params.StopBits = ONESTOPBIT;// Setting StopBits = 1
-	dcb_serial_params.Parity = NOPARITY;  // Setting Parity = None
+	dcb_serial_params.BaudRate = CBR_115200; // Setting BaudRate = 115200
+	dcb_serial_params.ByteSize = 8;          // Setting ByteSize = 8
+	dcb_serial_params.StopBits = ONESTOPBIT; // Setting StopBits = 1
+	dcb_serial_params.Parity = NOPARITY;     // Setting Parity = None
 
 	if (SetCommState(serialPort, &dcb_serial_params) == 0) {
 		MessageBox(nullptr, "Could not setup the device parameters on the configured COM port.", "ERROR", MB_OK);
 		return;
 	}
 
-	COMMTIMEOUTS timeouts = { 0 };
-	timeouts.ReadIntervalTimeout = 50; // in milliseconds
-	timeouts.ReadTotalTimeoutConstant = 50; // in milliseconds
-	timeouts.ReadTotalTimeoutMultiplier = 10; // in milliseconds
-	timeouts.WriteTotalTimeoutConstant = 50; // in milliseconds
+	COMMTIMEOUTS timeouts = {0};
+	timeouts.ReadIntervalTimeout = 50;         // in milliseconds
+	timeouts.ReadTotalTimeoutConstant = 50;    // in milliseconds
+	timeouts.ReadTotalTimeoutMultiplier = 10;  // in milliseconds
+	timeouts.WriteTotalTimeoutConstant = 50;   // in milliseconds
 	timeouts.WriteTotalTimeoutMultiplier = 10; // in milliseconds
 
 	if (SetCommTimeouts(serialPort, &timeouts) == 0) {
@@ -63,21 +57,18 @@ LightsDriver_Win32Serial::LightsDriver_Win32Serial()
 	}
 }
 
-LightsDriver_Win32Serial::~LightsDriver_Win32Serial()
-{
+LightsDriver_Win32Serial::~LightsDriver_Win32Serial() {
 	CloseHandle(serialPort);
 }
 
-void LightsDriver_Win32Serial::Set(const LightsState* ls)
-{
+void LightsDriver_Win32Serial::Set(const LightsState *ls) {
 	if (serialPort != INVALID_HANDLE_VALUE) {
 		std::uint8_t buffer[FULL_SEXTET_COUNT];
 
 		packLine(buffer, ls);
 
 		// Only write if the message has changed since the last write.
-		if (memcmp(buffer, lastOutput, FULL_SEXTET_COUNT) != 0)
-		{
+		if (memcmp(buffer, lastOutput, FULL_SEXTET_COUNT) != 0) {
 			DWORD bytesWritten = 0;
 			WriteFile(serialPort, buffer, FULL_SEXTET_COUNT, &bytesWritten, nullptr);
 

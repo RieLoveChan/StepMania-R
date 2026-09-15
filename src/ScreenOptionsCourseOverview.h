@@ -5,25 +5,23 @@
 
 #include <vector>
 
-
-class ScreenOptionsCourseOverview : public ScreenOptions
-{
-public:
+class ScreenOptionsCourseOverview : public ScreenOptions {
+ public:
 	virtual ~ScreenOptionsCourseOverview();
 
 	virtual void Init();
 	virtual void BeginScreen();
 
-protected:
-private:
-	virtual void ImportOptions( int row, const std::vector<PlayerNumber> &vpns );
-	virtual void ExportOptions( int row, const std::vector<PlayerNumber> &vpns );
+ protected:
+ private:
+	virtual void ImportOptions(int row, const std::vector<PlayerNumber> &vpns);
+	virtual void ExportOptions(int row, const std::vector<PlayerNumber> &vpns);
 
-	virtual void HandleScreenMessage( const ScreenMessage SM );
-	virtual void AfterChangeValueInRow( int iRow, PlayerNumber pn );
-	virtual void ProcessMenuStart( const InputEventPlus &input );
+	virtual void HandleScreenMessage(const ScreenMessage SM);
+	virtual void AfterChangeValueInRow(int iRow, PlayerNumber pn);
+	virtual void ProcessMenuStart(const InputEventPlus &input);
 
-	RageSound	m_soundSave;
+	RageSound m_soundSave;
 	ThemeMetric<RString> PLAY_SCREEN;
 	ThemeMetric<RString> EDIT_SCREEN;
 };

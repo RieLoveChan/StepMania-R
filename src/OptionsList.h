@@ -13,44 +13,43 @@
 
 #include <vector>
 
-
 class OptionsList;
-class OptionListRow: public ActorFrame
-{
-public:
-	void Load( OptionsList *pOptions, const RString &sType );
-	void SetFromHandler( const OptionRowHandler *pHandler );
-	void SetTextFromHandler( const OptionRowHandler *pHandler );
-	void SetUnderlines( const std::vector<bool> &aSelections, const OptionRowHandler *pHandler );
+class OptionListRow : public ActorFrame {
+ public:
+	void Load(OptionsList *pOptions, const RString &sType);
+	void SetFromHandler(const OptionRowHandler *pHandler);
+	void SetTextFromHandler(const OptionRowHandler *pHandler);
+	void SetUnderlines(const std::vector<bool> &aSelections, const OptionRowHandler *pHandler);
 
-	void PositionCursor( Actor *pCursor, int iSelection );
+	void PositionCursor(Actor *pCursor, int iSelection);
 
 	void Start();
 
-private:
+ private:
 	OptionsList *m_pOptions;
 
 	std::vector<BitmapText> m_Text;
 	// underline for each ("self or child has selection")
 	std::vector<AutoActor> m_Underlines;
 
-	bool	m_bItemsInTwoRows;
+	bool m_bItemsInTwoRows;
 
-	ThemeMetric<float>	ITEMS_SPACING_Y;
+	ThemeMetric<float> ITEMS_SPACING_Y;
 };
 /** @brief A popup options list. */
-class OptionsList: public ActorFrame
-{
-public:
+class OptionsList : public ActorFrame {
+ public:
 	friend class OptionListRow;
 
 	OptionsList();
 	~OptionsList();
 
-	void Load( RString sType, PlayerNumber pn );
+	void Load(RString sType, PlayerNumber pn);
 	void Reset();
 
-	void Link( OptionsList *pLink ) { m_pLinked = pLink; }
+	void Link(OptionsList *pLink) {
+		m_pLinked = pLink;
+	}
 
 	/** @brief Show the top-level menu. */
 	void Open();
@@ -58,42 +57,44 @@ public:
 	/** @brief Close all menus (for menu timer). */
 	void Close();
 
-	bool Input( const InputEventPlus &input );
-	bool IsOpened() const { return m_asMenuStack.size() > 0; }
+	bool Input(const InputEventPlus &input);
+	bool IsOpened() const {
+		return m_asMenuStack.size() > 0;
+	}
 
-	bool Start();	// return true if the last menu was popped in response to this press
+	bool Start(); // return true if the last menu was popped in response to this press
 
-private:
+ private:
 	ThemeMetric<RString> TOP_MENU;
 
-	void SelectItem( const RString &sRowName, int iMenuItem );
-	void MoveItem( const RString &sRowName, int iMove );
-	void SwitchMenu( int iDir );
+	void SelectItem(const RString &sRowName, int iMenuItem);
+	void MoveItem(const RString &sRowName, int iMove);
+	void SwitchMenu(int iDir);
 	void PositionCursor();
-	void SelectionsChanged( const RString &sRowName );
+	void SelectionsChanged(const RString &sRowName);
 	void UpdateMenuFromSelections();
 	RString GetCurrentRow() const;
 	OptionRowHandler *GetCurrentHandler();
-	int GetOneSelection( RString sRow, bool bAllowFail=false ) const;
+	int GetOneSelection(RString sRow, bool bAllowFail = false) const;
 	void SwitchToCurrentRow();
-	void TweenOnCurrentRow( bool bForward );
+	void TweenOnCurrentRow(bool bForward);
 	void SetDefaultCurrentRow();
-	void Push( RString sDest );
+	void Push(RString sDest);
 	void Pop();
-	void ImportRow( RString sRow );
-	void ExportRow( RString sRow );
-	static int FindScreenInHandler( const OptionRowHandler *pHandler, RString sScreen );
+	void ImportRow(RString sRow);
+	void ExportRow(RString sRow);
+	static int FindScreenInHandler(const OptionRowHandler *pHandler, RString sScreen);
 
-	InputQueueCodeSet	m_Codes;
+	InputQueueCodeSet m_Codes;
 
-	OptionsList		*m_pLinked;
+	OptionsList *m_pLinked;
 
-	bool			m_bStartIsDown;
-	bool			m_bAcceptStartRelease;
+	bool m_bStartIsDown;
+	bool m_bAcceptStartRelease;
 
 	std::vector<RString> m_asLoadedRows;
 	std::map<RString, OptionRowHandler *> m_Rows;
-	std::map<RString, std::vector<bool> > m_bSelections;
+	std::map<RString, std::vector<bool>> m_bSelections;
 	std::set<RString> m_setDirectRows;
 	std::set<RString> m_setTopMenus; // list of top-level menus, pointing to submenus
 
@@ -104,11 +105,11 @@ private:
 
 	std::vector<RString> m_asMenuStack;
 	int m_iMenuStackSelection;
-protected:
+
+ protected:
 	GameButton m_GameButtonPreviousItem;
 	GameButton m_GameButtonNextItem;
 };
-
 
 #endif
 
@@ -138,4 +139,3 @@ protected:
  * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  * PERFORMANCE OF THIS SOFTWARE.
  */
-

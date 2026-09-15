@@ -9,9 +9,8 @@
 // call site outside GameState.h/.cpp changes. Already private to
 // GameState, so this has zero external exposure to begin with. Pure
 // data, no associated methods.
-class GameStatePositionCorrectionData
-{
-public:
+class GameStatePositionCorrectionData {
+ public:
 	RageTimer m_LastPositionTimer;
 	float m_LastPositionSeconds;
 	bool m_paused;

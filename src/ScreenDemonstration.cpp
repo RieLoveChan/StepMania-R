@@ -14,86 +14,77 @@
 
 #include <vector>
 
+#define SECONDS_TO_SHOW THEME->GetMetricF(m_sName, "SecondsToShow")
+#define ALLOW_STYLE_TYPES THEME->GetMetric(m_sName, "AllowStyleTypes")
 
-#define SECONDS_TO_SHOW			THEME->GetMetricF(m_sName,"SecondsToShow")
-#define ALLOW_STYLE_TYPES		THEME->GetMetric (m_sName,"AllowStyleTypes")
-
-REGISTER_SCREEN_CLASS( ScreenDemonstration );
-ScreenDemonstration::ScreenDemonstration()
-{
+REGISTER_SCREEN_CLASS(ScreenDemonstration);
+ScreenDemonstration::ScreenDemonstration() {
 	m_bDemonstration = true;
 }
 
-void ScreenDemonstration::Init()
-{
+void ScreenDemonstration::Init() {
 	GAMESTATE->Reset();
-	GAMESTATE->VisitAttractScreen( m_sName );
-	ScreenAttract::SetAttractVolume( true );
+	GAMESTATE->VisitAttractScreen(m_sName);
+	ScreenAttract::SetAttractVolume(true);
 
 	// Choose a Style
 	{
 		std::vector<RString> v;
-		split( ALLOW_STYLE_TYPES, ",", v );
+		split(ALLOW_STYLE_TYPES, ",", v);
 		std::vector<StyleType> vStyleTypeAllow;
-		for (RString const &s : v)
-		{
-			StyleType st = StringToStyleType( s );
-			ASSERT( st != StyleType_Invalid );
-			vStyleTypeAllow.push_back( st );
+		for (RString const &s : v) {
+			StyleType st = StringToStyleType(s);
+			ASSERT(st != StyleType_Invalid);
+			vStyleTypeAllow.push_back(st);
 		}
 
-		std::vector<const Style*> vStylePossible;
-		GAMEMAN->GetDemonstrationStylesForGame( GAMESTATE->m_pCurGame, vStylePossible );
-		for( int i=(int)(vStylePossible.size())-1; i>=0; i-- )
-		{
-			bool bAllowThis = find( vStyleTypeAllow.begin(), vStyleTypeAllow.end(), vStylePossible[i]->m_StyleType ) != vStyleTypeAllow.end();
-			if( !bAllowThis )
-				vStylePossible.erase( vStylePossible.begin()+i );
+		std::vector<const Style *> vStylePossible;
+		GAMEMAN->GetDemonstrationStylesForGame(GAMESTATE->m_pCurGame, vStylePossible);
+		for (int i = (int)(vStylePossible.size()) - 1; i >= 0; i--) {
+			bool bAllowThis = find(vStyleTypeAllow.begin(), vStyleTypeAllow.end(), vStylePossible[i]->m_StyleType) !=
+			   vStyleTypeAllow.end();
+			if (!bAllowThis)
+				vStylePossible.erase(vStylePossible.begin() + i);
 		}
 
-		ASSERT( !vStylePossible.empty() );
-		const Style* pStyle = vStylePossible[ RandomInt(static_cast<int>(vStylePossible.size())) ];
-		GAMESTATE->SetCurrentStyle( pStyle, PLAYER_INVALID );
+		ASSERT(!vStylePossible.empty());
+		const Style *pStyle = vStylePossible[RandomInt(static_cast<int>(vStylePossible.size()))];
+		GAMESTATE->SetCurrentStyle(pStyle, PLAYER_INVALID);
 	}
 
-	GAMESTATE->m_PlayMode.Set( PLAY_MODE_REGULAR );
+	GAMESTATE->m_PlayMode.Set(PLAY_MODE_REGULAR);
 
 	ScreenJukebox::Init();
 
-	if( GAMESTATE->m_pCurSong == nullptr )	// we didn't find a song.
+	if (GAMESTATE->m_pCurSong == nullptr) // we didn't find a song.
 	{
-		PostScreenMessage( SM_GoToNextScreen, 0 );	// Abort demonstration.
+		PostScreenMessage(SM_GoToNextScreen, 0); // Abort demonstration.
 		return;
 	}
 
-	ClearMessageQueue();	// remove all of the messages set in ScreenGameplay that drive "ready", "go", etc.
+	ClearMessageQueue(); // remove all of the messages set in ScreenGameplay that drive "ready", "go", etc.
 
-	GAMESTATE->m_bGameplayLeadIn.Set( false );
+	GAMESTATE->m_bGameplayLeadIn.Set(false);
 
 	m_DancingState = STATE_DANCING;
-	this->PostScreenMessage( SM_BeginFadingOut, SECONDS_TO_SHOW );		// TODO: Use MenuTimer instead?
+	this->PostScreenMessage(SM_BeginFadingOut, SECONDS_TO_SHOW); // TODO: Use MenuTimer instead?
 }
 
-void ScreenDemonstration::HandleScreenMessage( const ScreenMessage SM )
-{
-	if( SM == SM_NotesEnded ||
-		SM == SM_BeginFadingOut )
-	{
-		if(!m_Out.IsTransitioning())
-			m_Out.StartTransitioning( SM_GoToNextScreen );
+void ScreenDemonstration::HandleScreenMessage(const ScreenMessage SM) {
+	if (SM == SM_NotesEnded || SM == SM_BeginFadingOut) {
+		if (!m_Out.IsTransitioning())
+			m_Out.StartTransitioning(SM_GoToNextScreen);
 		return;
 	}
-	else if( SM == SM_LoseFocus )
-	{
-		ScreenAttract::SetAttractVolume( false );
+	else if (SM == SM_LoseFocus) {
+		ScreenAttract::SetAttractVolume(false);
 	}
-	ScreenJukebox::HandleScreenMessage( SM );
+	ScreenJukebox::HandleScreenMessage(SM);
 }
 
-void ScreenDemonstration::Cancel( ScreenMessage smSendWhenDone )
-{
-	ScreenAttract::SetAttractVolume( false ); // unmute attract sounds
-	ScreenJukebox::Cancel( smSendWhenDone );
+void ScreenDemonstration::Cancel(ScreenMessage smSendWhenDone) {
+	ScreenAttract::SetAttractVolume(false); // unmute attract sounds
+	ScreenJukebox::Cancel(smSendWhenDone);
 }
 
 /*

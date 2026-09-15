@@ -9,50 +9,43 @@
 
 #include <vector>
 
-ActiveAttackList::ActiveAttackList()
-{
+ActiveAttackList::ActiveAttackList() {
 }
 
-void ActiveAttackList::Init( const PlayerState* pPlayerState )
-{
+void ActiveAttackList::Init(const PlayerState *pPlayerState) {
 	m_pPlayerState = pPlayerState;
 }
 
-void ActiveAttackList::Update( float fDelta )
-{
-	bool bTimeToRefresh =
-		IsFirstUpdate() || // check this before running Actor::Update()
-		m_pPlayerState->m_bAttackBeganThisUpdate ||
-		m_pPlayerState->m_bAttackEndedThisUpdate;
+void ActiveAttackList::Update(float fDelta) {
+	bool bTimeToRefresh = IsFirstUpdate() || // check this before running Actor::Update()
+	   m_pPlayerState->m_bAttackBeganThisUpdate || m_pPlayerState->m_bAttackEndedThisUpdate;
 
-	BitmapText::Update( fDelta );
+	BitmapText::Update(fDelta);
 
-	if( bTimeToRefresh )
+	if (bTimeToRefresh)
 		Refresh();
 }
 
-void ActiveAttackList::Refresh()
-{
-	const AttackArray& attacks = m_pPlayerState->m_ActiveAttacks;
+void ActiveAttackList::Refresh() {
+	const AttackArray &attacks = m_pPlayerState->m_ActiveAttacks;
 
 	std::vector<RString> vsThemedMods;
-	for( unsigned i=0; i<attacks.size(); i++ )
-	{
-		const Attack& attack = attacks[i];
+	for (unsigned i = 0; i < attacks.size(); i++) {
+		const Attack &attack = attacks[i];
 
-		if( !attack.bOn )
+		if (!attack.bOn)
 			continue; // hasn't started yet
-		if( !attack.bShowInAttackList )
+		if (!attack.bShowInAttackList)
 			continue;
 
 		PlayerOptions po;
-		po.FromString( attack.sModifiers );
-		po.GetLocalizedMods( vsThemedMods );
+		po.FromString(attack.sModifiers);
+		po.GetLocalizedMods(vsThemedMods);
 	}
 
-	RString s = join( "\n", vsThemedMods );
+	RString s = join("\n", vsThemedMods);
 
-	this->SetText( s );	// BitmapText will not rebuild vertices if these strings are the same.
+	this->SetText(s); // BitmapText will not rebuild vertices if these strings are the same.
 }
 
 /*

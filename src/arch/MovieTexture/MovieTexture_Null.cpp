@@ -9,25 +9,34 @@
 #include <cstdint>
 
 class MovieTexture_Null : public RageMovieTexture {
-public:
+ public:
 	MovieTexture_Null(RageTextureID ID);
 	~MovieTexture_Null() override;
-	void Invalidate() override { texHandle = 0; }
-	std::uintptr_t GetTexHandle() const override { return texHandle; }
-	void Update(float /* delta */) override { }
-	void Reload() override { }
-	void SetPosition(float /* seconds */) override { }
-	void SetPlaybackRate(float) override { }
-	void SetLooping(bool looping=true) override { loop = looping; }
+	void Invalidate() override {
+		texHandle = 0;
+	}
+	std::uintptr_t GetTexHandle() const override {
+		return texHandle;
+	}
+	void Update(float /* delta */) override {
+	}
+	void Reload() override {
+	}
+	void SetPosition(float /* seconds */) override {
+	}
+	void SetPlaybackRate(float) override {
+	}
+	void SetLooping(bool looping = true) override {
+		loop = looping;
+	}
 
-private:
+ private:
 	bool playing;
 	bool loop;
 	std::uintptr_t texHandle;
 };
 
-MovieTexture_Null::MovieTexture_Null(RageTextureID ID) : RageMovieTexture(ID)
-{
+MovieTexture_Null::MovieTexture_Null(RageTextureID ID) : RageMovieTexture(ID) {
 	LOG->Trace("MovieTexture_Null::MovieTexture_Null(ID)");
 	texHandle = 0;
 
@@ -47,30 +56,27 @@ MovieTexture_Null::MovieTexture_Null(RageTextureID ID) : RageMovieTexture(ID)
 	CreateFrameRects();
 
 	RagePixelFormat pixfmt = RagePixelFormat_RGBA4;
-	if( !DISPLAY->SupportsTextureFormat(pixfmt) )
+	if (!DISPLAY->SupportsTextureFormat(pixfmt))
 		pixfmt = RagePixelFormat_RGBA8;
-	ASSERT( DISPLAY->SupportsTextureFormat(pixfmt) );
+	ASSERT(DISPLAY->SupportsTextureFormat(pixfmt));
 
-	const RageDisplay::RagePixelFormatDesc *pfd = DISPLAY->GetPixelFormatDesc( pixfmt );
-	RageSurface *img = CreateSurface( size, size, pfd->bpp,
-		pfd->masks[0], pfd->masks[1], pfd->masks[2], pfd->masks[3] );
-	memset( img->pixels, 0, img->pitch*img->h );
+	const RageDisplay::RagePixelFormatDesc *pfd = DISPLAY->GetPixelFormatDesc(pixfmt);
+	RageSurface *img = CreateSurface(size, size, pfd->bpp, pfd->masks[0], pfd->masks[1], pfd->masks[2], pfd->masks[3]);
+	memset(img->pixels, 0, img->pitch * img->h);
 
-	texHandle = DISPLAY->CreateTexture( pixfmt, img, false );
+	texHandle = DISPLAY->CreateTexture(pixfmt, img, false);
 
 	delete img;
 }
 
-MovieTexture_Null::~MovieTexture_Null()
-{
-	DISPLAY->DeleteTexture( texHandle );
+MovieTexture_Null::~MovieTexture_Null() {
+	DISPLAY->DeleteTexture(texHandle);
 }
 
-REGISTER_MOVIE_TEXTURE_CLASS( Null );
+REGISTER_MOVIE_TEXTURE_CLASS(Null);
 
-RageMovieTexture *RageMovieTextureDriver_Null::Create( RageTextureID ID, RString &/* sError */ )
-{
-	return new MovieTexture_Null( ID );
+RageMovieTexture *RageMovieTextureDriver_Null::Create(RageTextureID ID, RString & /* sError */) {
+	return new MovieTexture_Null(ID);
 }
 
 /*

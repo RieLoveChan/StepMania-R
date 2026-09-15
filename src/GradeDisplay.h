@@ -8,21 +8,20 @@
 
 #include <vector>
 
-
 struct lua_State;
 /** @brief Grade shown on ScreenEvaluation. */
-class GradeDisplay : public ActorFrame
-{
-public:
-	virtual void Load( RString sMetricsGroup );
-	void SetGrade( Grade g );
+class GradeDisplay : public ActorFrame {
+ public:
+	virtual void Load(RString sMetricsGroup);
+	void SetGrade(Grade g);
 
 	virtual GradeDisplay *Copy() const;
 
 	// Lua
-	void PushSelf( lua_State *L );
-protected:
-	std::vector<AutoActor>	m_vSpr;
+	void PushSelf(lua_State *L);
+
+ protected:
+	std::vector<AutoActor> m_vSpr;
 };
 
 #endif

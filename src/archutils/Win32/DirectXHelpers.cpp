@@ -2,15 +2,14 @@
 #include "DirectXHelpers.h"
 #include "RageUtil.h"
 
-RString hr_ssprintf( int hr, const char *fmt, ... )
-{
-	va_list	va;
+RString hr_ssprintf(int hr, const char *fmt, ...) {
+	va_list va;
 	va_start(va, fmt);
-	RString s = vssprintf( fmt, va );
+	RString s = vssprintf(fmt, va);
 	va_end(va);
 
-	const char *szError = GetErrorString( hr );
-	return s + ssprintf( " (%s)", szError );
+	const char *szError = GetErrorString(hr);
+	return s + ssprintf(" (%s)", szError);
 }
 
 // needed for defines
@@ -21,14 +20,15 @@ RString hr_ssprintf( int hr, const char *fmt, ... )
 #include <mmsystem.h> // dsound.h needs this
 #include <dsound.h>
 
-#define DXERRMSG(hrcode, dummy) case hrcode: return #hrcode;
+#define DXERRMSG(hrcode, dummy)                                                                                        \
+	case hrcode:                                                                                                        \
+		return #hrcode;
 
-RString GetErrorString(HRESULT hr)
-{
-	switch (hr)
-	{
+RString GetErrorString(HRESULT hr) {
+	switch (hr) {
 #include "DirectXErrorList.h"
-	default: return ssprintf("unknown HRESULT 0x%8.8X", hr);
+	default:
+		return ssprintf("unknown HRESULT 0x%8.8X", hr);
 	}
 }
 

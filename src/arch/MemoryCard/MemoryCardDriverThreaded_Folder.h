@@ -5,20 +5,18 @@
 
 #include <vector>
 
+class MemoryCardDriverThreaded_Folder : public MemoryCardDriver {
+ public:
+	MemoryCardDriverThreaded_Folder();
+	virtual ~MemoryCardDriverThreaded_Folder();
 
-class MemoryCardDriverThreaded_Folder : public MemoryCardDriver
-{
-public:
-    MemoryCardDriverThreaded_Folder();
-    virtual ~MemoryCardDriverThreaded_Folder();
+	virtual bool Mount(UsbStorageDevice *pDevice);
+	virtual void Unmount(UsbStorageDevice *pDevice);
 
-	virtual bool Mount( UsbStorageDevice* pDevice );
-	virtual void Unmount( UsbStorageDevice* pDevice );
-
-protected:
-	void GetUSBStorageDevices( std::vector<UsbStorageDevice>& vDevicesOut );
+ protected:
+	void GetUSBStorageDevices(std::vector<UsbStorageDevice> &vDevicesOut);
 	bool USBStorageDevicesChanged();
-	bool TestWrite( UsbStorageDevice* pDevice );
+	bool TestWrite(UsbStorageDevice *pDevice);
 	bool FolderExists(RString path);
 
 	int GetActivePlayerMask();
@@ -26,7 +24,6 @@ protected:
 };
 
 #endif
-
 
 /*
  * (c) 2018-2019 Electromuis

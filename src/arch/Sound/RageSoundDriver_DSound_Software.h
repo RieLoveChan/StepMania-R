@@ -7,9 +7,8 @@
 
 #include <cstdint>
 
-class RageSoundDriver_DSound_Software: public RageSoundDriver
-{
-public:
+class RageSoundDriver_DSound_Software : public RageSoundDriver {
+ public:
 	RageSoundDriver_DSound_Software();
 	virtual ~RageSoundDriver_DSound_Software();
 	RString Init();
@@ -18,10 +17,10 @@ public:
 	float GetPlayLatency() const;
 	int GetSampleRate() const;
 
-protected:
+ protected:
 	void SetupDecodingThread();
 
-private:
+ private:
 	DSound ds;
 	DSoundBuf *m_pPCM;
 	int m_iSampleRate;

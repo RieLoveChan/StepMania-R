@@ -1,4 +1,6 @@
-// NOTE:  RageSoundPosMap (as well as a 44100/48000hz sample rate inconsistency) are two of the biggest sources of timing drift that aren't addressed in this commit as is. ITGmania has fixed these issues, but that code is GPL3 licensed so I'll have to make an alternate implementation for StepMania. --sukibaby
+// NOTE:  RageSoundPosMap (as well as a 44100/48000hz sample rate inconsistency) are two of the biggest sources of
+// timing drift that aren't addressed in this commit as is. ITGmania has fixed these issues, but that code is GPL3
+// licensed so I'll have to make an alternate implementation for StepMania. --sukibaby
 #include "global.h"
 #include "RageSoundPosMap.h"
 #include "RageLog.h"
@@ -17,61 +19,62 @@
 // Making the queue larger than 200k hasn't been tested extensively.
 const int pos_map_backlog_frames = 200000;
 
-struct pos_map_t
-{
+struct pos_map_t {
 	std::int64_t m_iSourceFrame;
 	std::int64_t m_iDestFrame;
 	std::int64_t m_iFrames;
 	double m_fSourceToDestRatio;
 
-	pos_map_t() { m_iSourceFrame = 0; m_iDestFrame = 0; m_iFrames = 0; m_fSourceToDestRatio = 1.0; }
+	pos_map_t() {
+		m_iSourceFrame = 0;
+		m_iDestFrame = 0;
+		m_iFrames = 0;
+		m_fSourceToDestRatio = 1.0;
+	}
 };
 
-struct pos_map_impl
-{
+struct pos_map_impl {
 	std::list<pos_map_t> m_Queue;
 	void Cleanup();
 };
 
-pos_map_queue::pos_map_queue()
-{
+pos_map_queue::pos_map_queue() {
 	m_pImpl = new pos_map_impl;
 }
 
-pos_map_queue::~pos_map_queue()
-{
+pos_map_queue::~pos_map_queue() {
 	delete m_pImpl;
 }
 
-pos_map_queue::pos_map_queue( const pos_map_queue &cpy )
-{
+pos_map_queue::pos_map_queue(const pos_map_queue &cpy) {
 	*this = cpy;
-	m_pImpl = new pos_map_impl( *cpy.m_pImpl );
+	m_pImpl = new pos_map_impl(*cpy.m_pImpl);
 }
 
-pos_map_queue &pos_map_queue::operator=( const pos_map_queue &rhs )
-{
-	if (this != &rhs)
-	{
-		pos_map_impl* tempImpl = new pos_map_impl(*rhs.m_pImpl);
+pos_map_queue &pos_map_queue::operator=(const pos_map_queue &rhs) {
+	if (this != &rhs) {
+		pos_map_impl *tempImpl = new pos_map_impl(*rhs.m_pImpl);
 		std::swap(m_pImpl, tempImpl);
 		delete tempImpl;
 	}
 	return *this;
 }
 
-void pos_map_queue::Insert(std::int64_t iSourceFrame, std::int64_t iFrames, std::int64_t iDestFrame, double fSourceToDestRatio)
-{
+void pos_map_queue::Insert(
+   std::int64_t iSourceFrame, std::int64_t iFrames, std::int64_t iDestFrame, double fSourceToDestRatio
+) {
 	bool merged = false;
-	if (!m_pImpl->m_Queue.empty())
-	{
+	if (!m_pImpl->m_Queue.empty()) {
 		// Check if the last entry can be merged with the new entry
-		pos_map_t& last = m_pImpl->m_Queue.back();
-		if (last.m_iSourceFrame + last.m_iFrames == iSourceFrame &&
-			last.m_fSourceToDestRatio == fSourceToDestRatio &&
+		pos_map_t &last = m_pImpl->m_Queue.back();
+		if (
+		   last.m_iSourceFrame + last.m_iFrames == iSourceFrame && last.m_fSourceToDestRatio == fSourceToDestRatio &&
 
-			// llabs() is used instead of abs() because abs() would be susceptible to an integer overflow.
-			llabs(last.m_iDestFrame + static_cast<int64_t>((last.m_iFrames * last.m_fSourceToDestRatio) + 0.5) - iDestFrame) <= 1)
+		   // llabs() is used instead of abs() because abs() would be susceptible to an integer overflow.
+		   llabs(
+		      last.m_iDestFrame + static_cast<int64_t>((last.m_iFrames * last.m_fSourceToDestRatio) + 0.5) - iDestFrame
+		   ) <= 1
+		)
 
 		{
 			// Merge the frames and set the merged flag to true.
@@ -80,10 +83,9 @@ void pos_map_queue::Insert(std::int64_t iSourceFrame, std::int64_t iFrames, std:
 		}
 	}
 
-	if (!merged)
-	{
+	if (!merged) {
 		m_pImpl->m_Queue.push_back(pos_map_t());
-		pos_map_t& m = m_pImpl->m_Queue.back();
+		pos_map_t &m = m_pImpl->m_Queue.back();
 		m.m_iSourceFrame = iSourceFrame;
 		m.m_iDestFrame = iDestFrame;
 		m.m_iFrames = iFrames;
@@ -93,13 +95,11 @@ void pos_map_queue::Insert(std::int64_t iSourceFrame, std::int64_t iFrames, std:
 	m_pImpl->Cleanup();
 }
 
-void pos_map_impl::Cleanup()
-{
+void pos_map_impl::Cleanup() {
 	std::list<pos_map_t>::iterator it = m_Queue.end();
 	std::int64_t iTotalFrames = 0;
 	// Scan backwards until we have at least pos_map_backlog_frames.
-	while (iTotalFrames < pos_map_backlog_frames)
-	{
+	while (iTotalFrames < pos_map_backlog_frames) {
 		if (it == m_Queue.begin())
 			break;
 		--it;
@@ -109,41 +109,34 @@ void pos_map_impl::Cleanup()
 	m_Queue.erase(m_Queue.begin(), it);
 }
 
-std::int64_t pos_map_queue::Search( std::int64_t iSourceFrame, bool */* bApproximate */ ) const
-{
-	if( IsEmpty() )
-	{
+std::int64_t pos_map_queue::Search(std::int64_t iSourceFrame, bool * /* bApproximate */) const {
+	if (IsEmpty()) {
 		return 0;
 	}
 
 	// iSourceFrame is probably in pos_map.  Search to figure out what position it maps to.
 	std::int64_t iClosestPosition = 0, iClosestPositionDist = std::numeric_limits<int64_t>::max();
-	for (pos_map_t const &pm : m_pImpl->m_Queue)
-	{
+	for (pos_map_t const &pm : m_pImpl->m_Queue) {
 		// Loop over the queue until we know generally where iSourceFrame is
-		if( iSourceFrame >= pm.m_iSourceFrame &&
-			iSourceFrame < pm.m_iSourceFrame+pm.m_iFrames )
-		{
+		if (iSourceFrame >= pm.m_iSourceFrame && iSourceFrame < pm.m_iSourceFrame + pm.m_iFrames) {
 			// If we are in the correct block, calculate its current position
 			std::int64_t iDiff = static_cast<std::int64_t>(iSourceFrame - pm.m_iSourceFrame);
-			iDiff = static_cast<int64_t>(( iDiff * pm.m_fSourceToDestRatio) + 0.5 ); 
+			iDiff = static_cast<int64_t>((iDiff * pm.m_fSourceToDestRatio) + 0.5);
 			return pm.m_iDestFrame + iDiff;
 		}
 
 		// See if the current position is close to the beginning of this block.
-		std::int64_t dist = llabs( pm.m_iSourceFrame - iSourceFrame );
-		if( dist < iClosestPositionDist )
-		{
+		std::int64_t dist = llabs(pm.m_iSourceFrame - iSourceFrame);
+		if (dist < iClosestPositionDist) {
 			iClosestPositionDist = dist;
 			iClosestPosition = pm.m_iDestFrame;
 		}
 
 		// See if the current position is close to the end of this block.
-		dist = llabs( pm.m_iSourceFrame + pm.m_iFrames - iSourceFrame );
-		if( dist < iClosestPositionDist )
-		{
+		dist = llabs(pm.m_iSourceFrame + pm.m_iFrames - iSourceFrame);
+		if (dist < iClosestPositionDist) {
 			iClosestPositionDist = dist;
-			iClosestPosition = pm.m_iDestFrame + static_cast<int64_t>((pm.m_iFrames * pm.m_fSourceToDestRatio) + 0.5 );
+			iClosestPosition = pm.m_iDestFrame + static_cast<int64_t>((pm.m_iFrames * pm.m_fSourceToDestRatio) + 0.5);
 		}
 	}
 
@@ -158,22 +151,23 @@ std::int64_t pos_map_queue::Search( std::int64_t iSourceFrame, bool */* bApproxi
 	 * 3. Underflow; we'll be given a larger frame number than we know about.
 	 */
 	static RageTimer last;
-	if( last.PeekDeltaTime() >= 1.0f )
-	{
+	if (last.PeekDeltaTime() >= 1.0f) {
 		last.Touch();
-		LOG_TRACE(Log::Sound, "Audio frame was out of range of the data sent - possible buffer underflow? This is not always an error, however if you see it frequently there could be sound buffer problems.");
+		LOG_TRACE(
+		   Log::Sound,
+		   "Audio frame was out of range of the data sent - possible buffer underflow? This is not always an error, "
+			"however if you see it frequently there could be sound buffer problems."
+		);
 	}
 
 	return iClosestPosition;
 }
 
-void pos_map_queue::Clear()
-{
+void pos_map_queue::Clear() {
 	m_pImpl->m_Queue.clear();
 }
 
-bool pos_map_queue::IsEmpty() const
-{
+bool pos_map_queue::IsEmpty() const {
 	return m_pImpl->m_Queue.empty();
 }
 

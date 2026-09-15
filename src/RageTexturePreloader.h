@@ -3,24 +3,25 @@
 
 #include <vector>
 
-
 class RageTexture;
 struct RageTextureID;
 /** @brief Load the textures in advance for using them later. */
-class RageTexturePreloader
-{
-public:
-	RageTexturePreloader(): m_apTextures() { }
-	RageTexturePreloader( const RageTexturePreloader &cpy ):
-		m_apTextures(cpy.m_apTextures) { }
-	RageTexturePreloader &operator=( const RageTexturePreloader &rhs );
+class RageTexturePreloader {
+ public:
+	RageTexturePreloader() : m_apTextures() {
+	}
+	RageTexturePreloader(const RageTexturePreloader &cpy) : m_apTextures(cpy.m_apTextures) {
+	}
+	RageTexturePreloader &operator=(const RageTexturePreloader &rhs);
 	~RageTexturePreloader();
-	void Load( const RageTextureID &ID );
+	void Load(const RageTextureID &ID);
 	void UnloadAll();
-	void Swap( RageTexturePreloader &rhs ) { swap( m_apTextures, rhs.m_apTextures ); }
+	void Swap(RageTexturePreloader &rhs) {
+		swap(m_apTextures, rhs.m_apTextures);
+	}
 
-private:
-	std::vector<RageTexture*> m_apTextures;
+ private:
+	std::vector<RageTexture *> m_apTextures;
 };
 
 #endif

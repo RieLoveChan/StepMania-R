@@ -12,9 +12,8 @@ class TimingData;
  * song itself or the machine. The other style adjusts both the BPM and the
  * offset of the song, but it needs more data.
  */
-class AdjustSync
-{
-public:
+class AdjustSync {
+ public:
 	/**
 	 * @brief The original TimingData before adjustments were made.
 	 *
@@ -33,12 +32,12 @@ public:
 
 	static void SaveSyncChanges();
 	static void RevertSyncChanges();
-	static void HandleAutosync( float fNoteOffBySeconds, float fStepTime );
+	static void HandleAutosync(float fNoteOffBySeconds, float fStepTime);
 	static void HandleSongEnd();
 	static void AutosyncOffset();
 	static void AutosyncTempo();
-	static void GetSyncChangeTextGlobal( std::vector<RString> &vsAddTo );
-	static void GetSyncChangeTextSong( std::vector<RString> &vsAddTo );
+	static void GetSyncChangeTextGlobal(std::vector<RString> &vsAddTo);
+	static void GetSyncChangeTextSong(std::vector<RString> &vsAddTo);
 
 	/** @brief The minimum number of steps to hit for syncing purposes. */
 	static const int OFFSET_SAMPLE_COUNT = 24;

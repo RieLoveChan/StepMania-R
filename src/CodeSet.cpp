@@ -6,37 +6,32 @@
 
 #include <vector>
 
-
-#define CODE_NAMES		THEME->GetMetric (RString(sType),"CodeNames")
-#define CODE( s )		THEME->GetMetric (RString(sType),ssprintf("Code%s",(s).c_str()))
-void InputQueueCodeSet::Load( const std::string &sType )
-{
+#define CODE_NAMES THEME->GetMetric(RString(sType), "CodeNames")
+#define CODE(s) THEME->GetMetric(RString(sType), ssprintf("Code%s", (s).c_str()))
+void InputQueueCodeSet::Load(const std::string &sType) {
 	//
 	// Load codes
 	//
-	split( CODE_NAMES, ",", m_asCodeNames, true );
+	split(CODE_NAMES, ",", m_asCodeNames, true);
 
-	for( unsigned c=0; c<m_asCodeNames.size(); c++ )
-	{
+	for (unsigned c = 0; c < m_asCodeNames.size(); c++) {
 		std::vector<RString> asBits;
-		split( m_asCodeNames[c], "=", asBits, true );
+		split(m_asCodeNames[c], "=", asBits, true);
 		RString sCodeName = asBits[0];
-		if( asBits.size() > 1 )
+		if (asBits.size() > 1)
 			m_asCodeNames[c] = asBits[1];
 
 		InputQueueCode code;
-		if( !code.Load(CODE(sCodeName)) )
+		if (!code.Load(CODE(sCodeName)))
 			continue;
 
-		m_aCodes.push_back( code );
+		m_aCodes.push_back(code);
 	}
 }
 
-std::string InputQueueCodeSet::Input( const InputEventPlus &input ) const
-{
-	for( unsigned i = 0; i < m_aCodes.size(); ++i )
-	{
-		if( !m_aCodes[i].EnteredCode(input.GameI.controller) )
+std::string InputQueueCodeSet::Input(const InputEventPlus &input) const {
+	for (unsigned i = 0; i < m_aCodes.size(); ++i) {
+		if (!m_aCodes[i].EnteredCode(input.GameI.controller))
 			continue;
 
 		return m_asCodeNames[i];
@@ -44,15 +39,14 @@ std::string InputQueueCodeSet::Input( const InputEventPlus &input ) const
 	return "";
 }
 
-bool InputQueueCodeSet::InputMessage( const InputEventPlus &input, Message &msg ) const
-{
-	std::string sCodeName = Input( input );
-	if( sCodeName.empty() )
+bool InputQueueCodeSet::InputMessage(const InputEventPlus &input, Message &msg) const {
+	std::string sCodeName = Input(input);
+	if (sCodeName.empty())
 		return false;
 
 	msg.SetName("Code");
-	msg.SetParam( "PlayerNumber", input.pn );
-	msg.SetParam( "Name", sCodeName );
+	msg.SetParam("PlayerNumber", input.pn);
+	msg.SetParam("Name", sCodeName);
 	return true;
 }
 

@@ -7,28 +7,25 @@
 #include <map>
 #include <vector>
 
-
 class XNode;
 
 /** @brief Layer elements used by BGAnimation. */
-class BGAnimationLayer : public ActorFrame
-{
-public:
+class BGAnimationLayer : public ActorFrame {
+ public:
 	BGAnimationLayer();
 	~BGAnimationLayer();
 
-	void LoadFromAniLayerFile( const RString& sPath );
-	void LoadFromNode( const XNode* pNode );
+	void LoadFromAniLayerFile(const RString &sPath);
+	void LoadFromNode(const XNode *pNode);
 
-	void UpdateInternal( float fDeltaTime );
+	void UpdateInternal(float fDeltaTime);
 
 	float GetMaxTweenTimeLeft() const;
 
-protected:
+ protected:
 	std::vector<RageVector3> m_vParticleVelocity;
 
-	enum Type
-	{
+	enum Type {
 		TYPE_SPRITE,
 		TYPE_PARTICLES,
 		TYPE_TILES,
@@ -40,7 +37,7 @@ protected:
 	float m_fTexCoordVelocityY;
 
 	// particles stuff
-	bool  m_bParticlesBounce;
+	bool m_bParticlesBounce;
 
 	// tiles stuff
 	int m_iNumTilesWide;

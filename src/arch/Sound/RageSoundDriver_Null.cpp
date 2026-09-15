@@ -6,39 +6,34 @@
 
 #include <cstdint>
 
-REGISTER_SOUND_DRIVER_CLASS( Null );
+REGISTER_SOUND_DRIVER_CLASS(Null);
 
 const int channels = 2;
 
-void RageSoundDriver_Null::Update()
-{
+void RageSoundDriver_Null::Update() {
 	/* "Play" frames. */
-	while( m_iLastCursorPos < GetPosition()+1024*4 )
-	{
-		std::int16_t buf[256*channels];
-		this->Mix( buf, 256, m_iLastCursorPos, GetPosition() );
+	while (m_iLastCursorPos < GetPosition() + 1024 * 4) {
+		std::int16_t buf[256 * channels];
+		this->Mix(buf, 256, m_iLastCursorPos, GetPosition());
 		m_iLastCursorPos += 256;
 	}
 
 	RageSoundDriver::Update();
 }
 
-std::int64_t RageSoundDriver_Null::GetPosition() const
-{
-	return std::int64_t( RageTimer::GetTimeSinceStart() * m_iSampleRate );
+std::int64_t RageSoundDriver_Null::GetPosition() const {
+	return std::int64_t(RageTimer::GetTimeSinceStart() * m_iSampleRate);
 }
 
-RageSoundDriver_Null::RageSoundDriver_Null()
-{
+RageSoundDriver_Null::RageSoundDriver_Null() {
 	m_iSampleRate = PREFSMAN->m_iSoundPreferredSampleRate;
-	if( m_iSampleRate == 0 )
+	if (m_iSampleRate == 0)
 		m_iSampleRate = 44100;
 	m_iLastCursorPos = GetPosition();
 	StartDecodeThread();
 }
 
-int RageSoundDriver_Null::GetSampleRate() const
-{
+int RageSoundDriver_Null::GetSampleRate() const {
 	return m_iSampleRate;
 }
 

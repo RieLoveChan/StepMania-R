@@ -30,52 +30,44 @@
 #include <cstdint>
 #include <map>
 
-RageTextureManager*		TEXTUREMAN		= nullptr; // global and accessible from anywhere in our program
+RageTextureManager *TEXTUREMAN = nullptr; // global and accessible from anywhere in our program
 
-namespace
-{
-	std::map<RageTextureID, RageTexture*> m_mapPathToTexture;
-	std::map<RageTextureID, RageTexture*> m_textures_to_update;
-	std::map<RageTexture*, RageTextureID> m_texture_ids_by_pointer;
-};
+namespace {
+std::map<RageTextureID, RageTexture *> m_mapPathToTexture;
+std::map<RageTextureID, RageTexture *> m_textures_to_update;
+std::map<RageTexture *, RageTextureID> m_texture_ids_by_pointer;
+}; // namespace
 
-RageTextureManager::RageTextureManager():
-	m_iNoWarnAboutOddDimensions(0),
-	m_TexturePolicy(RageTextureID::TEX_DEFAULT) {}
+RageTextureManager::RageTextureManager() : m_iNoWarnAboutOddDimensions(0), m_TexturePolicy(RageTextureID::TEX_DEFAULT) {
+}
 
-RageTextureManager::~RageTextureManager()
-{
-	for (std::pair<RageTextureID const &, RageTexture *> i : m_mapPathToTexture)
-	{
-		RageTexture* pTexture = i.second;
-		if( pTexture->m_iRefCount )
-			LOG_WARN(Log::Cache, "TEXTUREMAN LEAK: '%s', RefCount = %d.", i.first.filename.c_str(), pTexture->m_iRefCount );
-		SAFE_DELETE( pTexture );
+RageTextureManager::~RageTextureManager() {
+	for (std::pair<RageTextureID const &, RageTexture *> i : m_mapPathToTexture) {
+		RageTexture *pTexture = i.second;
+		if (pTexture->m_iRefCount)
+			LOG_WARN(Log::Cache, "TEXTUREMAN LEAK: '%s', RefCount = %d.", i.first.filename.c_str(), pTexture->m_iRefCount);
+		SAFE_DELETE(pTexture);
 	}
 	m_textures_to_update.clear();
 	m_texture_ids_by_pointer.clear();
 }
 
-void RageTextureManager::Update( float fDeltaTime )
-{
-	for(std::pair<RageTextureID const &, RageTexture *> i : m_textures_to_update)
-	{
-		RageTexture* pTexture = i.second;
-		pTexture->Update( fDeltaTime );
+void RageTextureManager::Update(float fDeltaTime) {
+	for (std::pair<RageTextureID const &, RageTexture *> i : m_textures_to_update) {
+		RageTexture *pTexture = i.second;
+		pTexture->Update(fDeltaTime);
 	}
 }
 
-void RageTextureManager::AdjustTextureID( RageTextureID &ID ) const
-{
-	if( ID.iColorDepth == -1 )
+void RageTextureManager::AdjustTextureID(RageTextureID &ID) const {
+	if (ID.iColorDepth == -1)
 		ID.iColorDepth = m_Prefs.m_iTextureColorDepth;
-	ID.iMaxSize = std::min( ID.iMaxSize, m_Prefs.m_iMaxTextureResolution );
-	if( m_Prefs.m_bMipMaps )
+	ID.iMaxSize = std::min(ID.iMaxSize, m_Prefs.m_iMaxTextureResolution);
+	if (m_Prefs.m_bMipMaps)
 		ID.bMipMaps = true;
 }
 
-bool RageTextureManager::IsTextureRegistered( RageTextureID ID ) const
-{
+bool RageTextureManager::IsTextureRegistered(RageTextureID ID) const {
 	AdjustTextureID(ID);
 	return m_mapPathToTexture.find(ID) != m_mapPathToTexture.end();
 }
@@ -83,173 +75,150 @@ bool RageTextureManager::IsTextureRegistered( RageTextureID ID ) const
 /* If you've set up a texture yourself, register it here so it can be referenced
  * and deleted by ID.  This takes ownership; the texture will be freed according to
  * its GC policy. */
-void RageTextureManager::RegisterTexture( RageTextureID ID, RageTexture *pTexture )
-{
+void RageTextureManager::RegisterTexture(RageTextureID ID, RageTexture *pTexture) {
 	AdjustTextureID(ID);
 
 	/* Make sure we don't already have a texture with this ID.  If we do, the
 	 * caller should have used it. */
-	std::map<RageTextureID, RageTexture*>::iterator p = m_mapPathToTexture.find(ID);
-	if( p != m_mapPathToTexture.end() )
-	{
+	std::map<RageTextureID, RageTexture *>::iterator p = m_mapPathToTexture.find(ID);
+	if (p != m_mapPathToTexture.end()) {
 		/* Oops, found the texture. */
-		RageException::Throw( "Custom texture \"%s\" already registered!", ID.filename.c_str() );
+		RageException::Throw("Custom texture \"%s\" already registered!", ID.filename.c_str());
 	}
 
 	m_mapPathToTexture[ID] = pTexture;
-	m_texture_ids_by_pointer[pTexture]= ID;
+	m_texture_ids_by_pointer[pTexture] = ID;
 }
 
-void RageTextureManager::RegisterTextureForUpdating(RageTextureID id, RageTexture* tex)
-{
-	m_textures_to_update[id]= tex;
+void RageTextureManager::RegisterTextureForUpdating(RageTextureID id, RageTexture *tex) {
+	m_textures_to_update[id] = tex;
 }
 
 static const RString g_sDefaultTextureName = "__blank__";
-RageTextureID RageTextureManager::GetDefaultTextureID()
-{
-	return RageTextureID( g_sDefaultTextureName );
+RageTextureID RageTextureManager::GetDefaultTextureID() {
+	return RageTextureID(g_sDefaultTextureName);
 }
 
 static const RString g_ScreenTextureName = "__screen__";
-RageTextureID RageTextureManager::GetScreenTextureID()
-{
+RageTextureID RageTextureManager::GetScreenTextureID() {
 	return RageTextureID(g_ScreenTextureName);
 }
 
-RageSurface* RageTextureManager::GetScreenSurface()
-{
+RageSurface *RageTextureManager::GetScreenSurface() {
 	return DISPLAY->CreateScreenshot();
 }
 
-class RageTexture_Default: public RageTexture
-{
-public:
-	RageTexture_Default():
-		RageTexture( RageTextureID() ), m_uTexHandle(0)
-	{
+class RageTexture_Default : public RageTexture {
+ public:
+	RageTexture_Default() : RageTexture(RageTextureID()), m_uTexHandle(0) {
 		m_iSourceWidth = m_iSourceHeight = 1;
 		m_iTextureWidth = m_iTextureHeight = 1;
 		m_iImageWidth = m_iImageHeight = 1;
 		CreateFrameRects();
 	}
-	std::uintptr_t GetTexHandle() const override { return m_uTexHandle; }
+	std::uintptr_t GetTexHandle() const override {
+		return m_uTexHandle;
+	}
 
-private:
+ private:
 	std::uintptr_t m_uTexHandle;
 };
 
 // Load and unload textures from disk.
-RageTexture* RageTextureManager::LoadTextureInternal( RageTextureID ID )
-{
-	CHECKPOINT_M( ssprintf( "RageTextureManager::LoadTexture(%s).", ID.filename.c_str() ) );
+RageTexture *RageTextureManager::LoadTextureInternal(RageTextureID ID) {
+	CHECKPOINT_M(ssprintf("RageTextureManager::LoadTexture(%s).", ID.filename.c_str()));
 
 	AdjustTextureID(ID);
 
 	/* We could have two copies of the same bitmap if there are equivalent but
 	 * different paths, e.g. "Bitmaps\me.bmp" and "..\Rage PC Edition\Bitmaps\me.bmp". */
-	std::map<RageTextureID, RageTexture*>::iterator p = m_mapPathToTexture.find(ID);
-	if( p != m_mapPathToTexture.end() )
-	{
+	std::map<RageTextureID, RageTexture *>::iterator p = m_mapPathToTexture.find(ID);
+	if (p != m_mapPathToTexture.end()) {
 		/* Found the texture.  Just increase the refcount and return it. */
-		RageTexture* pTexture = p->second;
+		RageTexture *pTexture = p->second;
 		pTexture->m_iRefCount++;
 		return pTexture;
 	}
 
 	// The texture is not already loaded.  Load it.
 
-	RageTexture* pTexture;
-	if( ID.filename == g_sDefaultTextureName )
-	{
+	RageTexture *pTexture;
+	if (ID.filename == g_sDefaultTextureName) {
 		pTexture = new RageTexture_Default;
 	}
-	else if(ActorUtil::GetFileType(ID.filename) == FT_Movie)
-	{
-		pTexture = RageMovieTexture::Create( ID );
+	else if (ActorUtil::GetFileType(ID.filename) == FT_Movie) {
+		pTexture = RageMovieTexture::Create(ID);
 	}
-	else
-	{
-		pTexture = new RageBitmapTexture( ID );
+	else {
+		pTexture = new RageBitmapTexture(ID);
 	}
 
 	m_mapPathToTexture[ID] = pTexture;
-	m_texture_ids_by_pointer[pTexture]= ID;
+	m_texture_ids_by_pointer[pTexture] = ID;
 
 	return pTexture;
 }
 
 /* Load a normal texture.  Use this call to actually use a texture. */
-RageTexture* RageTextureManager::LoadTexture( RageTextureID ID )
-{
-	RageTexture* pTexture = LoadTextureInternal( ID );
-	if( pTexture )
+RageTexture *RageTextureManager::LoadTexture(RageTextureID ID) {
+	RageTexture *pTexture = LoadTextureInternal(ID);
+	if (pTexture)
 		pTexture->m_bWasUsed = true;
 	return pTexture;
 }
 
-RageTexture* RageTextureManager::CopyTexture( RageTexture *pCopy )
-{
+RageTexture *RageTextureManager::CopyTexture(RageTexture *pCopy) {
 	++pCopy->m_iRefCount;
 	return pCopy;
 }
 
-void RageTextureManager::VolatileTexture( RageTextureID ID )
-{
-	RageTexture* pTexture = LoadTextureInternal( ID );
-	pTexture->GetPolicy() = std::min( pTexture->GetPolicy(), RageTextureID::TEX_VOLATILE );
-	UnloadTexture( pTexture );
+void RageTextureManager::VolatileTexture(RageTextureID ID) {
+	RageTexture *pTexture = LoadTextureInternal(ID);
+	pTexture->GetPolicy() = std::min(pTexture->GetPolicy(), RageTextureID::TEX_VOLATILE);
+	UnloadTexture(pTexture);
 }
 
-void RageTextureManager::UnloadTexture( RageTexture *t )
-{
-	if( t == nullptr )
+void RageTextureManager::UnloadTexture(RageTexture *t) {
+	if (t == nullptr)
 		return;
 
 	t->m_iRefCount--;
-	ASSERT_M( t->m_iRefCount >= 0, ssprintf("%i, %s", t->m_iRefCount, t->GetID().filename.c_str()) );
+	ASSERT_M(t->m_iRefCount >= 0, ssprintf("%i, %s", t->m_iRefCount, t->GetID().filename.c_str()));
 
-	if( t->m_iRefCount )
+	if (t->m_iRefCount)
 		return; /* Can't unload textures that are still referenced. */
 
 	bool bDeleteThis = false;
 
 	/* Always unload movies, so we don't waste time decoding. */
-	if( t->IsAMovie() )
+	if (t->IsAMovie())
 		bDeleteThis = true;
 
 	/* Delete normal textures immediately unless m_bDelayedDelete is is on. */
-	if( t->GetPolicy() == RageTextureID::TEX_DEFAULT && !m_Prefs.m_bDelayedDelete )
+	if (t->GetPolicy() == RageTextureID::TEX_DEFAULT && !m_Prefs.m_bDelayedDelete)
 		bDeleteThis = true;
 
 	/* Delete volatile textures after they've been used at least once. */
-	if( t->GetPolicy() == RageTextureID::TEX_VOLATILE && t->m_bWasUsed )
+	if (t->GetPolicy() == RageTextureID::TEX_VOLATILE && t->m_bWasUsed)
 		bDeleteThis = true;
 
-	if( bDeleteThis )
-		DeleteTexture( t );
+	if (bDeleteThis)
+		DeleteTexture(t);
 }
 
-void RageTextureManager::DeleteTexture( RageTexture *t )
-{
-	ASSERT( t->m_iRefCount == 0 );
-	//LOG->Trace( "RageTextureManager: deleting '%s'.", t->GetID().filename.c_str() );
+void RageTextureManager::DeleteTexture(RageTexture *t) {
+	ASSERT(t->m_iRefCount == 0);
+	// LOG->Trace( "RageTextureManager: deleting '%s'.", t->GetID().filename.c_str() );
 
-	std::map<RageTexture*, RageTextureID>::iterator id_entry=
-		m_texture_ids_by_pointer.find(t);
-	if(id_entry != m_texture_ids_by_pointer.end())
-	{
-		std::map<RageTextureID, RageTexture*>::iterator tex_entry=
-			m_mapPathToTexture.find(id_entry->second);
-		if(tex_entry != m_mapPathToTexture.end())
-		{
+	std::map<RageTexture *, RageTextureID>::iterator id_entry = m_texture_ids_by_pointer.find(t);
+	if (id_entry != m_texture_ids_by_pointer.end()) {
+		std::map<RageTextureID, RageTexture *>::iterator tex_entry = m_mapPathToTexture.find(id_entry->second);
+		if (tex_entry != m_mapPathToTexture.end()) {
 			m_mapPathToTexture.erase(tex_entry);
 			SAFE_DELETE(t);
 		}
-		std::map<RageTextureID, RageTexture*>::iterator tex_update_entry=
-			m_textures_to_update.find(id_entry->second);
-		if(tex_update_entry != m_textures_to_update.end())
-		{
+		std::map<RageTextureID, RageTexture *>::iterator tex_update_entry = m_textures_to_update.find(id_entry->second);
+		if (tex_update_entry != m_textures_to_update.end()) {
 			m_textures_to_update.erase(tex_update_entry);
 		}
 		m_texture_ids_by_pointer.erase(id_entry);
@@ -259,34 +228,30 @@ void RageTextureManager::DeleteTexture( RageTexture *t )
 	FAIL_M("Tried to delete a texture that wasn't in the ids by pointer list.");
 }
 
-void RageTextureManager::GarbageCollect( GCType type )
-{
+void RageTextureManager::GarbageCollect(GCType type) {
 	// Search for old textures with refcount==0 to unload
 	LOG_TRACE(Log::Cache, "Performing texture garbage collection.");
 
-	for( std::map<RageTextureID, RageTexture*>::iterator i = m_mapPathToTexture.begin();
-		i != m_mapPathToTexture.end(); )
-	{
-		std::map<RageTextureID, RageTexture*>::iterator j = i;
+	for (std::map<RageTextureID, RageTexture *>::iterator i = m_mapPathToTexture.begin();
+	     i != m_mapPathToTexture.end();) {
+		std::map<RageTextureID, RageTexture *>::iterator j = i;
 		i++;
 
 		RString sPath = j->first.filename;
-		RageTexture* t = j->second;
+		RageTexture *t = j->second;
 
-		if( t->m_iRefCount )
+		if (t->m_iRefCount)
 			continue; /* Can't unload textures that are still referenced. */
 
 		bool bDeleteThis = false;
-		if( type==screen_changed )
-		{
+		if (type == screen_changed) {
 			RageTextureID::TexPolicy policy = t->GetPolicy();
-			switch( policy )
-			{
+			switch (policy) {
 			case RageTextureID::TEX_DEFAULT:
 				/* If m_bDelayedDelete, wait until delayed_delete.  If !m_bDelayedDelete,
 				 * it should have been deleted when it reached no references, but we
 				 * might have just changed the preference. */
-				if( !m_Prefs.m_bDelayedDelete )
+				if (!m_Prefs.m_bDelayedDelete)
 					bDeleteThis = true;
 				break;
 			case RageTextureID::TEX_VOLATILE:
@@ -298,25 +263,22 @@ void RageTextureManager::GarbageCollect( GCType type )
 		}
 
 		/* This happens when we change themes; free all textures. */
-		if( type==delayed_delete )
+		if (type == delayed_delete)
 			bDeleteThis = true;
 
-		if( bDeleteThis )
-			DeleteTexture( t );
+		if (bDeleteThis)
+			DeleteTexture(t);
 	}
 }
 
-
-void RageTextureManager::ReloadAll()
-{
+void RageTextureManager::ReloadAll() {
 	DisableOddDimensionWarning();
 
 	/* Let's get rid of all unreferenced textures, so we don't reload a
 	 * ton of cached data that we're not necessarily going to use. */
 	DoDelayedDelete();
 
-	for (auto const & i : m_mapPathToTexture)
-	{
+	for (auto const &i : m_mapPathToTexture) {
 		i.second->Reload();
 	}
 
@@ -329,50 +291,44 @@ void RageTextureManager::ReloadAll()
  * textures.  Instead, tell all textures that their texture ID is invalid, so it
  * doesn't try to free it later when we really do reload (since that ID might be
  * associated with a different texture).  Ack. */
-void RageTextureManager::InvalidateTextures()
-{
-	for (auto const & i : m_mapPathToTexture)
-	{
-		RageTexture* pTexture = i.second;
+void RageTextureManager::InvalidateTextures() {
+	for (auto const &i : m_mapPathToTexture) {
+		RageTexture *pTexture = i.second;
 		pTexture->Invalidate();
 	}
 }
 
-bool RageTextureManager::SetPrefs( RageTextureManagerPrefs prefs )
-{
+bool RageTextureManager::SetPrefs(RageTextureManagerPrefs prefs) {
 	bool bNeedReload = false;
-	if( m_Prefs != prefs )
+	if (m_Prefs != prefs)
 		bNeedReload = true;
 
 	m_Prefs = prefs;
 
-	ASSERT( m_Prefs.m_iTextureColorDepth==16 || m_Prefs.m_iTextureColorDepth==32 );
-	ASSERT( m_Prefs.m_iMovieColorDepth==16 || m_Prefs.m_iMovieColorDepth==32 );
+	ASSERT(m_Prefs.m_iTextureColorDepth == 16 || m_Prefs.m_iTextureColorDepth == 32);
+	ASSERT(m_Prefs.m_iMovieColorDepth == 16 || m_Prefs.m_iMovieColorDepth == 32);
 	return bNeedReload;
 }
 
-void RageTextureManager::DiagnosticOutput() const
-{
-	unsigned iCount = static_cast<unsigned>(distance( m_mapPathToTexture.begin(), m_mapPathToTexture.end() ));
-	LOG_TRACE(Log::Cache, "%u textures loaded:", iCount );
+void RageTextureManager::DiagnosticOutput() const {
+	unsigned iCount = static_cast<unsigned>(distance(m_mapPathToTexture.begin(), m_mapPathToTexture.end()));
+	LOG_TRACE(Log::Cache, "%u textures loaded:", iCount);
 
 	int iTotal = 0;
-	for (auto const &i : m_mapPathToTexture)
-	{
+	for (auto const &i : m_mapPathToTexture) {
 		const RageTextureID &ID = i.first;
 		const RageTexture *pTex = i.second;
 
-		RString sDiags = DISPLAY->GetTextureDiagnostics( pTex->GetTexHandle() );
-		RString sStr = ssprintf( "%3ix%3i (%2i)", pTex->GetTextureHeight(), pTex->GetTextureWidth(),
-			pTex->m_iRefCount );
+		RString sDiags = DISPLAY->GetTextureDiagnostics(pTex->GetTexHandle());
+		RString sStr = ssprintf("%3ix%3i (%2i)", pTex->GetTextureHeight(), pTex->GetTextureWidth(), pTex->m_iRefCount);
 
-		if( !sDiags.empty() )
+		if (!sDiags.empty())
 			sStr += " " + sDiags;
 
-		LOG_TRACE(Log::Cache, " %-40s %s", sStr.c_str(), Basename(ID.filename).c_str() );
+		LOG_TRACE(Log::Cache, " %-40s %s", sStr.c_str(), Basename(ID.filename).c_str());
 		iTotal += pTex->GetTextureHeight() * pTex->GetTextureWidth();
 	}
-	LOG_TRACE(Log::Cache, "total %3i texels", iTotal );
+	LOG_TRACE(Log::Cache, "total %3i texels", iTotal);
 }
 
 /*

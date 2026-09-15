@@ -10,31 +10,33 @@
 
 struct WavReader;
 
-RString ReadString( RageFileBasic &f, int iSize, RString &sError );
+RString ReadString(RageFileBasic &f, int iSize, RString &sError);
 
-class RageSoundReader_WAV: public RageSoundReader_FileReader
-{
-public:
-	OpenResult Open( RageFileBasic *pFile ) override;
+class RageSoundReader_WAV : public RageSoundReader_FileReader {
+ public:
+	OpenResult Open(RageFileBasic *pFile) override;
 	void Close();
 	int GetLength() const override;
-	int SetPosition( int iFrame ) override;
-	int Read( float *pBuf, int iFrames ) override;
-	int GetSampleRate() const override { return m_WavData.m_iSampleRate; }
-	unsigned GetNumChannels() const override { return m_WavData.m_iChannels; }
+	int SetPosition(int iFrame) override;
+	int Read(float *pBuf, int iFrames) override;
+	int GetSampleRate() const override {
+		return m_WavData.m_iSampleRate;
+	}
+	unsigned GetNumChannels() const override {
+		return m_WavData.m_iChannels;
+	}
 	int GetNextSourceFrame() const override;
 	RageSoundReader_WAV();
 	~RageSoundReader_WAV() override;
-	RageSoundReader_WAV( const RageSoundReader_WAV & ); /* not defined; don't use */
+	RageSoundReader_WAV(const RageSoundReader_WAV &); /* not defined; don't use */
 	RageSoundReader_WAV *Copy() const override;
 
-	struct WavData
-	{
+	struct WavData {
 		std::int32_t m_iDataChunkPos, m_iDataChunkSize, m_iExtraFmtPos, m_iSampleRate, m_iFormatTag;
 		std::int16_t m_iChannels, m_iBitsPerSample, m_iBlockAlign, m_iExtraFmtBytes;
 	};
 
-private:
+ private:
 	WavData m_WavData;
 
 	WavReader *m_pImpl;

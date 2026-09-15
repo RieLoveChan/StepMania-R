@@ -5,54 +5,49 @@
 
 #include <map>
 
-struct ModelManagerPrefs
-{
+struct ModelManagerPrefs {
 	bool m_bDelayedUnload;
 
-	ModelManagerPrefs()
-	{
+	ModelManagerPrefs() {
 		m_bDelayedUnload = false;
 	}
-	ModelManagerPrefs( bool bDelayedUnload )
-	{
+	ModelManagerPrefs(bool bDelayedUnload) {
 		m_bDelayedUnload = bDelayedUnload;
 	}
 
-	bool operator!=( const ModelManagerPrefs& rhs )
-	{
-		return 
-			m_bDelayedUnload != rhs.m_bDelayedUnload;
+	bool operator!=(const ModelManagerPrefs &rhs) {
+		return m_bDelayedUnload != rhs.m_bDelayedUnload;
 	}
 };
 /**
  * @brief Class for loading and releasing textures.
  *
  * Funnily enough, the original documentation claimed this was an Interface. */
-class ModelManager
-{
-public:
+class ModelManager {
+ public:
 	ModelManager();
 	~ModelManager();
 
-	RageModelGeometry* LoadMilkshapeAscii( const RString& sFile, bool bNeedNormals );
-	void UnloadModel( RageModelGeometry *m );
-//	void ReloadAll();
+	RageModelGeometry *LoadMilkshapeAscii(const RString &sFile, bool bNeedNormals);
+	void UnloadModel(RageModelGeometry *m);
+	//	void ReloadAll();
 
 	/**
 	 * @brief Set up new preferences.
 	 * @param prefs the new preferences to set up.
 	 * @return true if the display needs to be reset, false otherwise. */
-	bool SetPrefs( const ModelManagerPrefs& prefs );
-	const ModelManagerPrefs& GetPrefs() { return m_Prefs; }
+	bool SetPrefs(const ModelManagerPrefs &prefs);
+	const ModelManagerPrefs &GetPrefs() {
+		return m_Prefs;
+	}
 
-protected:
-
-	std::map<RString, RageModelGeometry*> m_mapFileToGeometry;
+ protected:
+	std::map<RString, RageModelGeometry *> m_mapFileToGeometry;
 
 	ModelManagerPrefs m_Prefs;
 };
 
-extern ModelManager*	MODELMAN;	// global and accessible from anywhere in our program
+extern ModelManager *MODELMAN; // global and accessible from anywhere in our program
 
 #endif
 
@@ -61,7 +56,7 @@ extern ModelManager*	MODELMAN;	// global and accessible from anywhere in our pro
  * @author Chris Danford (c) 2003-2004
  * @section LICENSE
  * All rights reserved.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -71,7 +66,7 @@ extern ModelManager*	MODELMAN;	// global and accessible from anywhere in our pro
  * copyright notice(s) and this permission notice appear in all copies of
  * the Software and that both the above copyright notice(s) and this
  * permission notice appear in supporting documentation.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF

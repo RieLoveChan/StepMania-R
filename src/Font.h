@@ -11,14 +11,12 @@
 #include <map>
 #include <vector>
 
-
 class FontPage;
 class RageTexture;
 class IniFile;
 
 /** @brief The textures used by the font. */
-struct FontPageTextures
-{
+struct FontPageTextures {
 	/** @brief The primary texture drawn underneath Main. */
 	RageTexture *m_pTextureMain;
 	/** @brief an optional texture drawn underneath Main.
@@ -27,26 +25,27 @@ struct FontPageTextures
 	RageTexture *m_pTextureStroke;
 
 	/** @brief Set up the initial textures. */
-	FontPageTextures(): m_pTextureMain(nullptr), m_pTextureStroke(nullptr) {}
-
-	bool operator == (const struct FontPageTextures& other) const {
-		return m_pTextureMain == other.m_pTextureMain &&
-			m_pTextureStroke == other.m_pTextureStroke;
+	FontPageTextures() : m_pTextureMain(nullptr), m_pTextureStroke(nullptr) {
 	}
 
-	bool operator != (const struct FontPageTextures& other) const {
+	bool operator==(const struct FontPageTextures &other) const {
+		return m_pTextureMain == other.m_pTextureMain && m_pTextureStroke == other.m_pTextureStroke;
+	}
+
+	bool operator!=(const struct FontPageTextures &other) const {
 		return !operator==(other);
 	}
 };
 
 /** @brief The components of a glyph (not technically a character). */
-struct glyph
-{
+struct glyph {
 	/** @brief the FontPage that is needed. */
 	FontPage *m_pPage;
 	/** @brief the textures for the glyph. */
 	FontPageTextures m_FontPageTextures;
-	FontPageTextures *GetFontPageTextures() const { return const_cast<FontPageTextures *>(&m_FontPageTextures); }
+	FontPageTextures *GetFontPageTextures() const {
+		return const_cast<FontPageTextures *>(&m_FontPageTextures);
+	}
 
 	/** @brief Number of pixels to advance horizontally after drawing this character. */
 	int m_iHadvance;
@@ -63,44 +62,30 @@ struct glyph
 	RectF m_TexRect;
 
 	/** @brief Set up the glyph with default values. */
-	glyph() : m_pPage(nullptr), m_FontPageTextures(), m_iHadvance(0),
-		m_fWidth(0), m_fHeight(0), m_fHshift(0), m_TexRect() {}
+	glyph()
+	    : m_pPage(nullptr), m_FontPageTextures(), m_iHadvance(0), m_fWidth(0), m_fHeight(0), m_fHshift(0), m_TexRect() {
+	}
 };
 
 /** @brief The settings used for the FontPage. */
-struct FontPageSettings
-{
+struct FontPageSettings {
 	RString m_sTexturePath;
 
-	int m_iDrawExtraPixelsLeft,
-		m_iDrawExtraPixelsRight,
-		m_iAddToAllWidths,
-		m_iLineSpacing,
-		m_iTop,
-		m_iBaseline,
-		m_iDefaultWidth,
-		m_iAdvanceExtraPixels;
+	int m_iDrawExtraPixelsLeft, m_iDrawExtraPixelsRight, m_iAddToAllWidths, m_iLineSpacing, m_iTop, m_iBaseline,
+	   m_iDefaultWidth, m_iAdvanceExtraPixels;
 	float m_fScaleAllWidthsBy;
 	RString m_sTextureHints;
 
-	std::map<wchar_t,int> CharToGlyphNo;
+	std::map<wchar_t, int> CharToGlyphNo;
 	// If a value is missing, the width of the texture frame is used.
-	std::map<int,int> m_mapGlyphWidths;
+	std::map<int, int> m_mapGlyphWidths;
 
 	/** @brief The initial settings for the FontPage. */
-	FontPageSettings(): m_sTexturePath(""),
-		m_iDrawExtraPixelsLeft(0), m_iDrawExtraPixelsRight(0),
-		m_iAddToAllWidths(0),
-		m_iLineSpacing(-1),
-		m_iTop(-1),
-		m_iBaseline(-1),
-		m_iDefaultWidth(-1),
-		m_iAdvanceExtraPixels(1),
-		m_fScaleAllWidthsBy(1),
-		m_sTextureHints("default"),
-		CharToGlyphNo(),
-		m_mapGlyphWidths()
-	{ }
+	FontPageSettings()
+	    : m_sTexturePath(""), m_iDrawExtraPixelsLeft(0), m_iDrawExtraPixelsRight(0), m_iAddToAllWidths(0),
+	      m_iLineSpacing(-1), m_iTop(-1), m_iBaseline(-1), m_iDefaultWidth(-1), m_iAdvanceExtraPixels(1),
+	      m_fScaleAllWidthsBy(1), m_sTextureHints("default"), CharToGlyphNo(), m_mapGlyphWidths() {
+	}
 
 	/**
 	 * @brief Map a range from a character map to glyphs.
@@ -109,26 +94,26 @@ struct FontPageSettings
 	 * @param iGlyphOffset the number of glyphs to offset.
 	 * @param iCount the range to map. If -1, the range is the entire map.
 	 * @return the empty string on success, or an error message on failure. */
-	RString MapRange( RString sMapping, int iMapOffset, int iGlyphOffset, int iCount );
+	RString MapRange(RString sMapping, int iMapOffset, int iGlyphOffset, int iCount);
 };
 
-class FontPage
-{
-public:
+class FontPage {
+ public:
 	FontPage();
 	~FontPage();
 
-	void Load( const FontPageSettings &cfg );
+	void Load(const FontPageSettings &cfg);
 
 	// Page-global properties.
 	int m_iHeight;
 	int m_iLineSpacing;
 	float m_fVshift;
-	int GetCenter() const { return m_iHeight/2; }
+	int GetCenter() const {
+		return m_iHeight / 2;
+	}
 
 	// Remember these only for GetLineWidthInSourcePixels.
-	int m_iDrawExtraPixelsLeft,
-	m_iDrawExtraPixelsRight;
+	int m_iDrawExtraPixelsLeft, m_iDrawExtraPixelsRight;
 
 	FontPageTextures m_FontPageTextures;
 
@@ -138,29 +123,28 @@ public:
 	/** @brief All glyphs in this list will point to m_pTexture. */
 	std::vector<glyph> m_aGlyphs;
 
-	std::map<wchar_t,int> m_iCharToGlyphNo;
+	std::map<wchar_t, int> m_iCharToGlyphNo;
 
-private:
-	void SetExtraPixels( int iDrawExtraPixelsLeft, int DrawExtraPixelsRight );
-	void SetTextureCoords( const std::vector<int> &aiWidths, int iAdvanceExtraPixels );
+ private:
+	void SetExtraPixels(int iDrawExtraPixelsLeft, int DrawExtraPixelsRight);
+	void SetTextureCoords(const std::vector<int> &aiWidths, int iAdvanceExtraPixels);
 };
 
-class Font
-{
-public:
+class Font {
+ public:
 	int m_iRefCount;
 	RString path;
 
 	Font();
 	~Font();
 
-	const glyph &GetGlyph( wchar_t c ) const;
+	const glyph &GetGlyph(wchar_t c) const;
 
-	int GetLineWidthInSourcePixels( const std::wstring &szLine ) const;
-	int GetLineHeightInSourcePixels( const std::wstring &szLine ) const;
-	std::size_t GetGlyphsThatFit(const std::wstring& line, int* width) const;
+	int GetLineWidthInSourcePixels(const std::wstring &szLine) const;
+	int GetLineHeightInSourcePixels(const std::wstring &szLine) const;
+	std::size_t GetGlyphsThatFit(const std::wstring &line, int *width) const;
 
-	bool FontCompleteForString( const std::wstring &str ) const;
+	bool FontCompleteForString(const std::wstring &str) const;
 
 	/**
 	 * @brief Add a FontPage to this font.
@@ -180,17 +164,29 @@ public:
 	// Load font-wide settings.
 	void CapsOnly();
 
-	int GetHeight() const { return m_pDefault->m_iHeight; }
-	int GetCenter() const { return m_pDefault->GetCenter(); }
-	int GetLineSpacing() const { return m_pDefault->m_iLineSpacing; }
+	int GetHeight() const {
+		return m_pDefault->m_iHeight;
+	}
+	int GetCenter() const {
+		return m_pDefault->GetCenter();
+	}
+	int GetLineSpacing() const {
+		return m_pDefault->m_iLineSpacing;
+	}
 
-	void SetDefaultGlyph( FontPage *pPage );
+	void SetDefaultGlyph(FontPage *pPage);
 
-	bool IsRightToLeft() const { return m_bRightToLeft; };
-	bool IsDistanceField() const { return m_bDistanceField; };
-	const RageColor &GetDefaultStrokeColor() const { return m_DefaultStrokeColor; };
+	bool IsRightToLeft() const {
+		return m_bRightToLeft;
+	};
+	bool IsDistanceField() const {
+		return m_bDistanceField;
+	};
+	const RageColor &GetDefaultStrokeColor() const {
+		return m_DefaultStrokeColor;
+	};
 
-private:
+ private:
 	/** @brief List of pages and fonts that we use (and are responsible for freeing). */
 	std::vector<FontPage *> m_apPages;
 
@@ -202,7 +198,7 @@ private:
 	FontPage *m_pDefault;
 
 	/** @brief Map from characters to glyphs. */
-	std::map<wchar_t,glyph*> m_iCharToGlyph;
+	std::map<wchar_t, glyph *> m_iCharToGlyph;
 	/** @brief Each glyph is part of one of the pages[]. */
 	glyph *m_iCharToGlyphCache[128];
 
@@ -220,12 +216,14 @@ private:
 	/** @brief We keep this around only for reloading. */
 	RString m_sChars;
 
-	void LoadFontPageSettings( FontPageSettings &cfg, IniFile &ini, const RString &sTexturePath, const RString &PageName, RString sChars );
-	static void GetFontPaths( const RString &sFontOrTextureFilePath, std::vector<RString> &sTexturePaths );
-	RString GetPageNameFromFileName( const RString &sFilename );
+	void LoadFontPageSettings(
+	   FontPageSettings &cfg, IniFile &ini, const RString &sTexturePath, const RString &PageName, RString sChars
+	);
+	static void GetFontPaths(const RString &sFontOrTextureFilePath, std::vector<RString> &sTexturePaths);
+	RString GetPageNameFromFileName(const RString &sFilename);
 
-	Font(const Font& rhs);
-	Font& operator=(const Font& rhs);
+	Font(const Font &rhs);
+	Font &operator=(const Font &rhs);
 };
 
 /**

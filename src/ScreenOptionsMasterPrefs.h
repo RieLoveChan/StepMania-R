@@ -5,28 +5,25 @@
 
 #include <vector>
 
-
-static const int MAX_OPTIONS=16;
-enum OptEffect
-{
-	OPT_SAVE_PREFERENCES		=	(1<<0),
-	OPT_APPLY_GRAPHICS			=	(1<<1),
-	OPT_APPLY_THEME				=	(1<<2),
-	OPT_CHANGE_GAME				=	(1<<3),
-	OPT_APPLY_SOUND				=	(1<<4),
-	OPT_APPLY_SONG				=	(1<<5),
-	OPT_APPLY_ASPECT_RATIO		=	(1<<6),
-	OPT_APPLY_PROFILES			=	(1<<7),
-	NUM_OptEffect				=	8,
-	OptEffect_Invalid			=	MAX_OPTIONS+1
+static const int MAX_OPTIONS = 16;
+enum OptEffect {
+	OPT_SAVE_PREFERENCES = (1 << 0),
+	OPT_APPLY_GRAPHICS = (1 << 1),
+	OPT_APPLY_THEME = (1 << 2),
+	OPT_CHANGE_GAME = (1 << 3),
+	OPT_APPLY_SOUND = (1 << 4),
+	OPT_APPLY_SONG = (1 << 5),
+	OPT_APPLY_ASPECT_RATIO = (1 << 6),
+	OPT_APPLY_PROFILES = (1 << 7),
+	NUM_OptEffect = 8,
+	OptEffect_Invalid = MAX_OPTIONS + 1
 };
-const RString& OptEffectToString( OptEffect e );
-OptEffect StringToOptEffect( const std::string &e );
-LuaDeclareType( OptEffect );
+const RString &OptEffectToString(OptEffect e);
+OptEffect StringToOptEffect(const std::string &e);
+LuaDeclareType(OptEffect);
 
-struct ConfOption
-{
-	static ConfOption *Find( RString name );
+struct ConfOption {
+	static ConfOption *Find(RString name);
 
 	// Name of this option.
 	RString name;
@@ -34,7 +31,7 @@ struct ConfOption
 	// Name of the preference this option affects.
 	RString m_sPrefName;
 
-	typedef void (*MoveData_t)( int &sel, bool ToSel, const ConfOption *pConfOption );
+	typedef void (*MoveData_t)(int &sel, bool ToSel, const ConfOption *pConfOption);
 	MoveData_t MoveData;
 	int m_iEffects;
 	bool m_bAllowThemeItems;
@@ -45,30 +42,78 @@ struct ConfOption
 
 	/* Return the list of available selections; Get() and Put() use indexes into
 	 * this array. UpdateAvailableOptions() should be called before using this. */
-	void MakeOptionsList( std::vector<RString> &out ) const;
+	void MakeOptionsList(std::vector<RString> &out) const;
 
-	inline int Get() const { int sel; MoveData( sel, true, this ); return sel; }
-	inline void Put( int sel ) const { MoveData( sel, false, this ); }
+	inline int Get() const {
+		int sel;
+		MoveData(sel, true, this);
+		return sel;
+	}
+	inline void Put(int sel) const {
+		MoveData(sel, false, this);
+	}
 	int GetEffects() const;
 
-	ConfOption( const char *n, MoveData_t m,
-		const char *c0=nullptr, const char *c1=nullptr, const char *c2=nullptr, const char *c3=nullptr, const char *c4=nullptr, const char *c5=nullptr, const char *c6=nullptr, const char *c7=nullptr, const char *c8=nullptr, const char *c9=nullptr, const char *c10=nullptr, const char *c11=nullptr, const char *c12=nullptr, const char *c13=nullptr, const char *c14=nullptr, const char *c15=nullptr, const char *c16=nullptr, const char *c17=nullptr, const char *c18=nullptr, const char *c19=nullptr )
-	{
+	ConfOption(
+	   const char *n,
+	   MoveData_t m,
+	   const char *c0 = nullptr,
+	   const char *c1 = nullptr,
+	   const char *c2 = nullptr,
+	   const char *c3 = nullptr,
+	   const char *c4 = nullptr,
+	   const char *c5 = nullptr,
+	   const char *c6 = nullptr,
+	   const char *c7 = nullptr,
+	   const char *c8 = nullptr,
+	   const char *c9 = nullptr,
+	   const char *c10 = nullptr,
+	   const char *c11 = nullptr,
+	   const char *c12 = nullptr,
+	   const char *c13 = nullptr,
+	   const char *c14 = nullptr,
+	   const char *c15 = nullptr,
+	   const char *c16 = nullptr,
+	   const char *c17 = nullptr,
+	   const char *c18 = nullptr,
+	   const char *c19 = nullptr
+	) {
 		name = n;
 		m_sPrefName = name; // copy from name (not n), to allow refcounting
 		MoveData = m;
 		MakeOptionsListCB = nullptr;
 		m_iEffects = 0;
 		m_bAllowThemeItems = true;
-#define PUSH( c )	if(c) names.push_back(c);
-		PUSH(c0);PUSH(c1);PUSH(c2);PUSH(c3);PUSH(c4);PUSH(c5);PUSH(c6);PUSH(c7);PUSH(c8);PUSH(c9);PUSH(c10);PUSH(c11);PUSH(c12);PUSH(c13);PUSH(c14);PUSH(c15);PUSH(c16);PUSH(c17);PUSH(c18);PUSH(c19);
+#define PUSH(c)                                                                                                        \
+	if (c)                                                                                                              \
+		names.push_back(c);
+		PUSH(c0);
+		PUSH(c1);
+		PUSH(c2);
+		PUSH(c3);
+		PUSH(c4);
+		PUSH(c5);
+		PUSH(c6);
+		PUSH(c7);
+		PUSH(c8);
+		PUSH(c9);
+		PUSH(c10);
+		PUSH(c11);
+		PUSH(c12);
+		PUSH(c13);
+		PUSH(c14);
+		PUSH(c15);
+		PUSH(c16);
+		PUSH(c17);
+		PUSH(c18);
+		PUSH(c19);
 	}
-	void AddOption( const RString &sName ) { PUSH(sName); }
+	void AddOption(const RString &sName) {
+		PUSH(sName);
+	}
 #undef PUSH
 
-	ConfOption( const char *n, MoveData_t m,
-			void (*lst)( std::vector<RString> &out ) )
-	{
+	ConfOption(const char *n, MoveData_t m, void (*lst)(std::vector<RString> &out)) {
 		name = n;
 		MoveData = m;
 		MakeOptionsListCB = lst;
@@ -76,10 +121,9 @@ struct ConfOption
 		m_bAllowThemeItems = false; // don't theme dynamic choices
 	}
 
-
-// private:
+	// private:
 	std::vector<RString> names;
-	void (*MakeOptionsListCB)( std::vector<RString> &out );
+	void (*MakeOptionsListCB)(std::vector<RString> &out);
 };
 
 #endif

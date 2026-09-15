@@ -8,76 +8,58 @@
 
 #include <vector>
 
-
-static LocalizedString CHANGED_TIMING_OF	("ScreenSaveSync","You have changed the timing of");
-static LocalizedString WOULD_YOU_LIKE_TO_SAVE	("ScreenSaveSync","Would you like to save these changes?");
-static LocalizedString CHOOSING_NO_WILL_DISCARD	("ScreenSaveSync","Choosing NO will discard your changes.");
-static RString GetPromptText()
-{
+static LocalizedString CHANGED_TIMING_OF("ScreenSaveSync", "You have changed the timing of");
+static LocalizedString WOULD_YOU_LIKE_TO_SAVE("ScreenSaveSync", "Would you like to save these changes?");
+static LocalizedString CHOOSING_NO_WILL_DISCARD("ScreenSaveSync", "Choosing NO will discard your changes.");
+static RString GetPromptText() {
 	RString s;
 
 	{
 		std::vector<RString> vs;
-		AdjustSync::GetSyncChangeTextGlobal( vs );
-		if( !vs.empty() )
-			s += join( "\n", vs ) + "\n\n";
+		AdjustSync::GetSyncChangeTextGlobal(vs);
+		if (!vs.empty())
+			s += join("\n", vs) + "\n\n";
 	}
 
 	{
 		std::vector<RString> vs;
-		AdjustSync::GetSyncChangeTextSong( vs );
-		if( !vs.empty() )
-		{
+		AdjustSync::GetSyncChangeTextSong(vs);
+		if (!vs.empty()) {
 			s += ssprintf(
-				CHANGED_TIMING_OF.GetValue()+"\n"
-				"%s:\n"
-				"\n",
-				GAMESTATE->m_pCurSong->GetDisplayFullTitle().c_str() );
+			   CHANGED_TIMING_OF.GetValue() +
+			      "\n"
+			      "%s:\n"
+			      "\n",
+			   GAMESTATE->m_pCurSong->GetDisplayFullTitle().c_str()
+			);
 
-			s += join( "\n", vs ) + "\n\n";
+			s += join("\n", vs) + "\n\n";
 		}
 	}
 
-	s += WOULD_YOU_LIKE_TO_SAVE.GetValue()+"\n"+
-		CHOOSING_NO_WILL_DISCARD.GetValue();
+	s += WOULD_YOU_LIKE_TO_SAVE.GetValue() + "\n" + CHOOSING_NO_WILL_DISCARD.GetValue();
 	return s;
 }
 
-static void SaveSyncChanges( void* /* pThrowAway */ )
-{
+static void SaveSyncChanges(void * /* pThrowAway */) {
 	AdjustSync::SaveSyncChanges();
 }
 
-static void RevertSyncChanges( void* /* pThrowAway */ )
-{
+static void RevertSyncChanges(void * /* pThrowAway */) {
 	AdjustSync::RevertSyncChanges();
 }
 
-void ScreenSaveSync::Init()
-{
+void ScreenSaveSync::Init() {
 	ScreenPrompt::Init();
 
 	ScreenPrompt::SetPromptSettings(
-		GetPromptText(),
-		PROMPT_YES_NO,
-		ANSWER_YES,
-		SaveSyncChanges,
-		RevertSyncChanges,
-		nullptr );
+	   GetPromptText(), PROMPT_YES_NO, ANSWER_YES, SaveSyncChanges, RevertSyncChanges, nullptr
+	);
 }
 
-void ScreenSaveSync::PromptSaveSync( ScreenMessage sm )
-{
-	ScreenPrompt::Prompt(
-		sm,
-		GetPromptText(),
-		PROMPT_YES_NO,
-		ANSWER_YES,
-		SaveSyncChanges,
-		RevertSyncChanges,
-		nullptr );
+void ScreenSaveSync::PromptSaveSync(ScreenMessage sm) {
+	ScreenPrompt::Prompt(sm, GetPromptText(), PROMPT_YES_NO, ANSWER_YES, SaveSyncChanges, RevertSyncChanges, nullptr);
 }
-
 
 /*
  * (c) 2001-2005 Chris Danford

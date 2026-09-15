@@ -7,15 +7,13 @@
 
 #include <vector>
 
-
 class Song;
 
-namespace NotesLoaderJson
-{
-	void GetApplicableFiles( const RString &sPath, std::vector<RString> &out );
-	bool LoadFromDir( const RString &sPath, Song &out );
-	bool LoadFromJsonFile( const RString &sPath, Song &out );
-};
+namespace NotesLoaderJson {
+void GetApplicableFiles(const RString &sPath, std::vector<RString> &out);
+bool LoadFromDir(const RString &sPath, Song &out);
+bool LoadFromJsonFile(const RString &sPath, Song &out);
+}; // namespace NotesLoaderJson
 
 #endif
 

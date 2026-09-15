@@ -2,7 +2,7 @@
 #define DIRECTX_HELPERS_H
 #include "windows.h"
 
-RString hr_ssprintf( int hr, const char *fmt, ... );
+RString hr_ssprintf(int hr, const char *fmt, ...);
 
 RString GetErrorString(HRESULT hr);
 

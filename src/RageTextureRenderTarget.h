@@ -9,21 +9,24 @@
 
 #include <cstdint>
 
-class RageTextureRenderTarget: public RageTexture
-{
-public:
-	RageTextureRenderTarget( RageTextureID name, const RenderTargetParam &param );
+class RageTextureRenderTarget : public RageTexture {
+ public:
+	RageTextureRenderTarget(RageTextureID name, const RenderTargetParam &param);
 	~RageTextureRenderTarget() override;
-	void Invalidate() override { m_iTexHandle = 0; /* don't Destroy() */ }
+	void Invalidate() override {
+		m_iTexHandle = 0; /* don't Destroy() */
+	}
 	void Reload() override;
-	std::uintptr_t GetTexHandle() const override { return m_iTexHandle; }
+	std::uintptr_t GetTexHandle() const override {
+		return m_iTexHandle;
+	}
 
-	void BeginRenderingTo( bool bPreserveTexture = true );
+	void BeginRenderingTo(bool bPreserveTexture = true);
 	void FinishRenderingTo();
 
-	void PushSelf( lua_State *L ) override;
+	void PushSelf(lua_State *L) override;
 
-private:
+ private:
 	const RenderTargetParam m_Param;
 
 	void Create();

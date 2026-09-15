@@ -9,19 +9,17 @@
 
 #include <vector>
 
-
 class Song;
 class Steps;
 
-class StepsDisplayList: public ActorFrame
-{
-public:
+class StepsDisplayList : public ActorFrame {
+ public:
 	StepsDisplayList();
 	virtual ~StepsDisplayList();
 	virtual StepsDisplayList *Copy() const;
-	virtual void LoadFromNode( const XNode* pNode );
+	virtual void LoadFromNode(const XNode *pNode);
 
-	void HandleMessage( const Message &msg );
+	void HandleMessage(const Message &msg);
 
 	void SetFromGameState();
 	void TweenOnScreen();
@@ -30,12 +28,12 @@ public:
 	void Show();
 
 	// Lua
-	void PushSelf( lua_State *L );
+	void PushSelf(lua_State *L);
 
-private:
+ private:
 	void UpdatePositions();
 	void PositionItems();
-	int GetCurrentRowIndex( PlayerNumber pn ) const;
+	int GetCurrentRowIndex(PlayerNumber pn) const;
 	void HideRows();
 
 	ThemeMetric<float> ITEMS_SPACING_Y;
@@ -43,22 +41,19 @@ private:
 	ThemeMetric<bool> CAPITALIZE_DIFFICULTY_NAMES;
 	ThemeMetric<apActorCommands> MOVE_COMMAND;
 
-	AutoActor		m_Cursors[NUM_PLAYERS];
-	ActorFrame		m_CursorFrames[NUM_PLAYERS];	// contains Cursor so that color can fade independent of other tweens
+	AutoActor m_Cursors[NUM_PLAYERS];
+	ActorFrame m_CursorFrames[NUM_PLAYERS]; // contains Cursor so that color can fade independent of other tweens
 
-	struct Line
-	{
+	struct Line {
 		StepsDisplay m_Meter;
 	};
-	std::vector<Line>	m_Lines;
+	std::vector<Line> m_Lines;
 
-	const Song		*m_CurSong;
-	bool			m_bShown;
+	const Song *m_CurSong;
+	bool m_bShown;
 
-	struct Row
-	{
-		Row()
-		{
+	struct Row {
+		Row() {
 			m_Steps = nullptr;
 			m_dc = Difficulty_Invalid;
 			m_fY = 0;
@@ -71,8 +66,7 @@ private:
 		bool m_bHidden; // currently off screen
 	};
 
-	std::vector<Row>		m_Rows;
-
+	std::vector<Row> m_Rows;
 };
 
 #endif

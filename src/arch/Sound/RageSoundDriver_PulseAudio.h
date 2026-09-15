@@ -10,18 +10,19 @@
 
 #include <pulse/pulseaudio.h>
 
-class RageSoundDriver_PulseAudio : public RageSoundDriver
-{
-public:
+class RageSoundDriver_PulseAudio : public RageSoundDriver {
+ public:
 	RageSoundDriver_PulseAudio();
 	virtual ~RageSoundDriver_PulseAudio();
 
 	RString Init();
 
 	std::int64_t GetPosition() const;
-	inline int GetSampleRate() const { return m_ss.rate; };
+	inline int GetSampleRate() const {
+		return m_ss.rate;
+	};
 
-protected:
+ protected:
 	std::int64_t GetPositionUnlocked() const;
 
 	std::int64_t m_LastPosition;
@@ -33,9 +34,9 @@ protected:
 
 	pa_threaded_mainloop *m_PulseMainLoop;
 	pa_context *m_PulseCtx;
-	pa_stream  *m_PulseStream;
+	pa_stream *m_PulseStream;
 
-public:
+ public:
 	void CtxStateCb(pa_context *c);
 	void StreamStateCb(pa_stream *s);
 	void StreamWriteCb(pa_stream *s, std::size_t length);

@@ -5,32 +5,32 @@
 
 #include <vector>
 
-
 struct lua_State;
 
-class ScreenPlayerOptions : public ScreenOptionsMaster
-{
-public:
+class ScreenPlayerOptions : public ScreenOptionsMaster {
+ public:
 	virtual void Init();
 	virtual void BeginScreen();
 
-	virtual bool Input( const InputEventPlus &input );
-	virtual void HandleScreenMessage( const ScreenMessage SM );
-	bool GetGoToOptions() const { return m_bGoToOptions; }
+	virtual bool Input(const InputEventPlus &input);
+	virtual void HandleScreenMessage(const ScreenMessage SM);
+	bool GetGoToOptions() const {
+		return m_bGoToOptions;
+	}
 
 	// Lua
-	virtual void PushSelf( lua_State *L );
+	virtual void PushSelf(lua_State *L);
 
-private:
-	std::vector<bool>	m_bRowCausesDisqualified[NUM_PLAYERS];
-	void UpdateDisqualified( int row, PlayerNumber pn );
+ private:
+	std::vector<bool> m_bRowCausesDisqualified[NUM_PLAYERS];
+	void UpdateDisqualified(int row, PlayerNumber pn);
 
-	bool        m_bAcceptedChoices;
-	bool        m_bGoToOptions;
-	bool        m_bAskOptionsMessage;
+	bool m_bAcceptedChoices;
+	bool m_bGoToOptions;
+	bool m_bAskOptionsMessage;
 
 	// show if the current selections will disqualify a high score
-	AutoActor		m_sprDisqualify[NUM_PLAYERS];
+	AutoActor m_sprDisqualify[NUM_PLAYERS];
 };
 
 #endif

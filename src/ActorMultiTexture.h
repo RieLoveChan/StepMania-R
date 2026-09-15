@@ -10,34 +10,35 @@
 
 class RageTexture;
 
-class ActorMultiTexture: public Actor
-{
-public:
+class ActorMultiTexture : public Actor {
+ public:
 	ActorMultiTexture();
-	ActorMultiTexture( const ActorMultiTexture &cpy );
+	ActorMultiTexture(const ActorMultiTexture &cpy);
 	virtual ~ActorMultiTexture();
 
-	void LoadFromNode( const XNode* pNode );
+	void LoadFromNode(const XNode *pNode);
 	virtual ActorMultiTexture *Copy() const;
 
 	virtual bool EarlyAbortDraw() const;
 	virtual void DrawPrimitives();
 
 	void ClearTextures();
-	int AddTexture( RageTexture *pTexture );
-	void SetTextureMode( int iIndex, TextureMode tm );
+	int AddTexture(RageTexture *pTexture);
+	void SetTextureMode(int iIndex, TextureMode tm);
 
-	void SetSizeFromTexture( RageTexture *pTexture );
-	void SetTextureCoords( const RectF &r );
-	void SetEffectMode( EffectMode em ) { m_EffectMode = em; }
+	void SetSizeFromTexture(RageTexture *pTexture);
+	void SetTextureCoords(const RectF &r);
+	void SetEffectMode(EffectMode em) {
+		m_EffectMode = em;
+	}
 
-	virtual void PushSelf( lua_State *L );
+	virtual void PushSelf(lua_State *L);
 
-private:
+ private:
 	EffectMode m_EffectMode;
-	struct TextureUnitState
-	{
-		TextureUnitState(): m_pTexture(nullptr), m_TextureMode(TextureMode_Modulate) {}
+	struct TextureUnitState {
+		TextureUnitState() : m_pTexture(nullptr), m_TextureMode(TextureMode_Modulate) {
+		}
 		RageTexture *m_pTexture;
 		TextureMode m_TextureMode;
 	};

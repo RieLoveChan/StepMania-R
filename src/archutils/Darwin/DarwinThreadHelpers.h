@@ -7,12 +7,12 @@
  * @brief Attempt to suspend the specified thread.
  * @param threadHandle the thread to suspend.
  * @return true if the thread is suspended, false otherwise. */
-bool SuspendThread( std::uint64_t threadHandle );
+bool SuspendThread(std::uint64_t threadHandle);
 /**
  * @brief Attempt to resume the specified thread.
  * @param threadHandle the thread to resume.
  * @return true if the thread is resumed, false otherwise. */
-bool ResumeThread( std::uint64_t threadHandle );
+bool ResumeThread(std::uint64_t threadHandle);
 /**
  * @brief Retrieve the current thread ID.
  * @return the current thread ID. */
@@ -23,7 +23,7 @@ std::uint64_t GetCurrentThreadId();
  * Valid values for the thread are from 0.0f to 1.0f.
  * 0.5f is the default.
  * @param prec the precedence to set. */
-RString SetThreadPrecedence( float prec );
+RString SetThreadPrecedence(float prec);
 
 #endif
 

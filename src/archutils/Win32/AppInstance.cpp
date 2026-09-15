@@ -1,8 +1,7 @@
 #include "global.h"
 #include "AppInstance.h"
 
-AppInstance::AppInstance()
-{
+AppInstance::AppInstance() {
 	// Little trick to get an HINSTANCE of ourself without having access to the hwnd.
 	TCHAR szFullAppPath[MAX_PATH];
 	GetModuleFileName(nullptr, szFullAppPath, MAX_PATH);
@@ -11,16 +10,15 @@ AppInstance::AppInstance()
 	 * will still work without one (but may be missing graphics); that's OK. */
 }
 
-AppInstance::~AppInstance()
-{
-	if(h)
+AppInstance::~AppInstance() {
+	if (h)
 		FreeLibrary(h);
 }
 
 /*
  * (c) 2002-2004 Glenn Maynard
  * All rights reserved.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -30,7 +28,7 @@ AppInstance::~AppInstance()
  * copyright notice(s) and this permission notice appear in all copies of
  * the Software and that both the above copyright notice(s) and this
  * permission notice appear in supporting documentation.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF
@@ -41,4 +39,3 @@ AppInstance::~AppInstance()
  * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  * PERFORMANCE OF THIS SOFTWARE.
  */
-

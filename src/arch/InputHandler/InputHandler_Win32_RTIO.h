@@ -47,14 +47,17 @@ enum COUNTER_STATE {
 };
 
 class SerialDevice {
-public:
-	SerialDevice(int read_buffer_size = 0x1000, int write_buffer_size = 0x1000) : read_buffer_size_(read_buffer_size), write_buffer_size_(write_buffer_size) {}
+ public:
+	SerialDevice(int read_buffer_size = 0x1000, int write_buffer_size = 0x1000)
+	    : read_buffer_size_(read_buffer_size), write_buffer_size_(write_buffer_size) {
+	}
 	~SerialDevice();
 	bool Connect(int com_number);
 	void Disconnect();
 	int Read(char *buffer, int buffer_size);
 	int Write(const char *buffer, int buffer_size);
-private:
+
+ private:
 	bool Setup();
 
 	HANDLE com_handle_ = INVALID_HANDLE_VALUE;
@@ -65,13 +68,14 @@ private:
 };
 
 class RtioDevice {
-public:
+ public:
 	~RtioDevice();
 	bool Connect();
 	void Disconnect();
 	bool ReadMsgs(std::vector<std::string> *msgs);
 	bool WriteMsg(const std::string &msg);
-private:
+
+ private:
 	int ParseMsg(char *buffer, int buffer_size);
 
 	SerialDevice serial_;
@@ -79,16 +83,15 @@ private:
 	int read_offset_ = 0;
 };
 
-class InputHandler_Win32_RTIO : public InputHandler
-{
-public:
+class InputHandler_Win32_RTIO : public InputHandler {
+ public:
 	InputHandler_Win32_RTIO();
 	~InputHandler_Win32_RTIO();
-	void GetDevicesAndDescriptions(std::vector<InputDeviceInfo>& vDevicesOut);
+	void GetDevicesAndDescriptions(std::vector<InputDeviceInfo> &vDevicesOut);
 	RString GetDeviceSpecificInputString(const DeviceInput &di);
 	static int InputThread_Start(void *this_ptr);
 
-private:
+ private:
 	bool Initialize();
 	void InputThread();
 	void HandleGameInput(const std::string &msg, const RageTimer &now);

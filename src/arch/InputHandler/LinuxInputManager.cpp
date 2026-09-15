@@ -15,67 +15,70 @@
 
 #include <errno.h>
 
-RString getDevice(RString inputDir, RString type)
-{
+RString getDevice(RString inputDir, RString type) {
 	RString result = "";
-	DIR* dir = opendir( inputDir.c_str() );
-	if(dir == nullptr)
-		{ LOG->Warn("LinuxInputManager: Couldn't open %s: %s.", inputDir.c_str(), strerror(errno) ); return ""; }
-	
-	struct dirent* d;
-	while( ( d = readdir(dir) ) != nullptr)
-		if( strncmp( type.c_str(), d->d_name, type.size() ) == 0)
-		{
+	DIR *dir = opendir(inputDir.c_str());
+	if (dir == nullptr) {
+		LOG->Warn("LinuxInputManager: Couldn't open %s: %s.", inputDir.c_str(), strerror(errno));
+		return "";
+	}
+
+	struct dirent *d;
+	while ((d = readdir(dir)) != nullptr)
+		if (strncmp(type.c_str(), d->d_name, type.size()) == 0) {
 			result = RString("/dev/input/") + d->d_name;
 			break;
 		}
-	
+
 	closedir(dir);
 	return result;
 }
 
-static bool cmpDevices(RString a, RString b)
-{
+static bool cmpDevices(RString a, RString b) {
 	return a < b;
 }
 
-LinuxInputManager::LinuxInputManager()
-{
+LinuxInputManager::LinuxInputManager() {
 	m_bEventEnabled = g_sInputDrivers.Get().find("LinuxEvent") != std::string::npos;
 	m_bJoystickEnabled = g_sInputDrivers.Get().find("LinuxJoystick") != std::string::npos;
 	// HACK: If empty, assume both are enabled
-	if( g_sInputDrivers.Get() == "" )
-		{ m_bEventEnabled = true; m_bJoystickEnabled = true; }
-	
+	if (g_sInputDrivers.Get() == "") {
+		m_bEventEnabled = true;
+		m_bJoystickEnabled = true;
+	}
+
 	m_EventDriver = nullptr;
 	m_JoystickDriver = nullptr;
-	
+
 	// XXX: Can I use RageFile for this?
-	DIR* sysClassInput = opendir("/sys/class/input");
-	if( sysClassInput == nullptr)
-	{
+	DIR *sysClassInput = opendir("/sys/class/input");
+	if (sysClassInput == nullptr) {
 		// XXX: Probably should throw a Dialog. But Linux doesn't have a DialogDriver yet so eh.
-		LOG->Warn("Couldn't open /sys/class/input: %s. Joysticks will not work!", strerror(errno) );
+		LOG->Warn("Couldn't open /sys/class/input: %s. Joysticks will not work!", strerror(errno));
 		return;
 	}
-	
-	struct dirent* d;
-	while( ( d = readdir(sysClassInput) ) != nullptr)
-	{
-		if( strncmp( "input", d->d_name, 5) != 0) continue;
-		
+
+	struct dirent *d;
+	while ((d = readdir(sysClassInput)) != nullptr) {
+		if (strncmp("input", d->d_name, 5) != 0)
+			continue;
+
 		RString dName = RString("/sys/class/input/") + d->d_name;
-		
+
 		bool bEventPresent = getDevice(dName, "event") != "";
-		if( m_bEventEnabled && bEventPresent ) 
-			{ m_vsPendingEventDevices.push_back(dName); continue; }
-		
+		if (m_bEventEnabled && bEventPresent) {
+			m_vsPendingEventDevices.push_back(dName);
+			continue;
+		}
+
 		bool bJoystickPresent = getDevice(dName, "js") != "";
-		if( m_bJoystickEnabled && bJoystickPresent )
-			{ m_vsPendingJoystickDevices.push_back(dName); continue; }
-			
-		if( !bEventPresent && !bJoystickPresent )
-			LOG->Info("LinuxInputManager: %s seems to have no eventNN or jsNN.", dName.c_str() );
+		if (m_bJoystickEnabled && bJoystickPresent) {
+			m_vsPendingJoystickDevices.push_back(dName);
+			continue;
+		}
+
+		if (!bEventPresent && !bJoystickPresent)
+			LOG->Info("LinuxInputManager: %s seems to have no eventNN or jsNN.", dName.c_str());
 	}
 
 	// Sort devices for more consistent numbering.
@@ -85,43 +88,40 @@ LinuxInputManager::LinuxInputManager()
 	closedir(sysClassInput);
 }
 
-void LinuxInputManager::InitDriver(InputHandler_Linux_Event* driver)
-{
+void LinuxInputManager::InitDriver(InputHandler_Linux_Event *driver) {
 	m_EventDriver = driver;
 
-	for (RString &dev : m_vsPendingEventDevices)
-	{
+	for (RString &dev : m_vsPendingEventDevices) {
 		RString devFile = getDevice(dev, "event");
-		ASSERT( devFile != "" );
-		
-		if( ! driver->TryDevice(devFile) && m_bJoystickEnabled && getDevice(dev, "js") != "" )
+		ASSERT(devFile != "");
+
+		if (!driver->TryDevice(devFile) && m_bJoystickEnabled && getDevice(dev, "js") != "")
 			m_vsPendingJoystickDevices.push_back(dev);
 	}
-	if( m_JoystickDriver != nullptr ) InitDriver(m_JoystickDriver);
+	if (m_JoystickDriver != nullptr)
+		InitDriver(m_JoystickDriver);
 
 	m_vsPendingEventDevices.clear();
 }
 
-void LinuxInputManager::InitDriver(InputHandler_Linux_Joystick* driver)
-{
+void LinuxInputManager::InitDriver(InputHandler_Linux_Joystick *driver) {
 	m_JoystickDriver = driver;
-	// Discard all the joystick devices if they were assigned manually via 
+	// Discard all the joystick devices if they were assigned manually via
 	// 	InputDeviceOrder
-	if( g_sInputDeviceOrder.Get() != "" ) {
+	if (g_sInputDeviceOrder.Get() != "") {
 		m_vsPendingJoystickDevices.clear();
 	}
 
-	for (RString &dev : m_vsPendingJoystickDevices)
-	{
+	for (RString &dev : m_vsPendingJoystickDevices) {
 		RString devFile = getDevice(dev, "js");
-		ASSERT( devFile != "" );
-		
+		ASSERT(devFile != "");
+
 		driver->TryDevice(devFile);
 	}
 
 	// If any, add the manually specified devices via InputDeviceOrder
 	std::vector<RString> fixedDevices;
-	split( g_sInputDeviceOrder, ",", fixedDevices, true );
+	split(g_sInputDeviceOrder, ",", fixedDevices, true);
 
 	for (RString dev : fixedDevices) {
 		RString devFile = dev;
@@ -129,12 +129,12 @@ void LinuxInputManager::InitDriver(InputHandler_Linux_Joystick* driver)
 	}
 }
 
-LinuxInputManager* LINUXINPUT = nullptr; // global and accessible anywhere in our program
+LinuxInputManager *LINUXINPUT = nullptr; // global and accessible anywhere in our program
 
 /*
  * (c) 2013 Ben "root" Anderson
  * All rights reserved.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -144,7 +144,7 @@ LinuxInputManager* LINUXINPUT = nullptr; // global and accessible anywhere in ou
  * copyright notice(s) and this permission notice appear in all copies of
  * the Software and that both the above copyright notice(s) and this
  * permission notice appear in supporting documentation.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF

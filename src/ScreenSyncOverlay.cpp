@@ -13,29 +13,24 @@
 
 #include <vector>
 
-
-static bool IsGameplay()
-{
+static bool IsGameplay() {
 	return SCREENMAN && SCREENMAN->GetTopScreen() && SCREENMAN->GetTopScreen()->GetScreenType() == gameplay;
 }
 
-REGISTER_SCREEN_CLASS( ScreenSyncOverlay );
+REGISTER_SCREEN_CLASS(ScreenSyncOverlay);
 
-void ScreenSyncOverlay::Init()
-{
+void ScreenSyncOverlay::Init() {
 	Screen::Init();
 
 	m_overlay.Load(THEME->GetPathB(m_sName, "overlay"));
 	AddChild(m_overlay);
 
-	Update( 0 );
+	Update(0);
 }
 
-void ScreenSyncOverlay::Update( float fDeltaTime )
-{
-	this->SetVisible( IsGameplay() );
-	if( !IsGameplay() )
-	{
+void ScreenSyncOverlay::Update(float fDeltaTime) {
+	this->SetVisible(IsGameplay());
+	if (!IsGameplay()) {
 		HideHelp();
 		return;
 	}
@@ -45,87 +40,92 @@ void ScreenSyncOverlay::Update( float fDeltaTime )
 	UpdateText();
 }
 
-static LocalizedString AUTO_PLAY		( "ScreenSyncOverlay", "AutoPlay" );
-static LocalizedString AUTO_PLAY_CPU		( "ScreenSyncOverlay", "AutoPlayCPU" );
-static LocalizedString AUTO_SYNC_SONG		( "ScreenSyncOverlay", "AutoSync Song" );
-static LocalizedString AUTO_SYNC_MACHINE	( "ScreenSyncOverlay", "AutoSync Machine" );
-static LocalizedString AUTO_SYNC_TEMPO		( "ScreenSyncOverlay", "AutoSync Tempo" );
-static LocalizedString OLD_OFFSET	( "ScreenSyncOverlay", "Old offset" );
-static LocalizedString NEW_OFFSET	( "ScreenSyncOverlay", "New offset" );
-static LocalizedString COLLECTING_SAMPLE( "ScreenSyncOverlay", "Collecting sample" );
-static LocalizedString STANDARD_DEVIATION( "ScreenSyncOverlay", "Standard deviation" );
-void ScreenSyncOverlay::UpdateText()
-{
+static LocalizedString AUTO_PLAY("ScreenSyncOverlay", "AutoPlay");
+static LocalizedString AUTO_PLAY_CPU("ScreenSyncOverlay", "AutoPlayCPU");
+static LocalizedString AUTO_SYNC_SONG("ScreenSyncOverlay", "AutoSync Song");
+static LocalizedString AUTO_SYNC_MACHINE("ScreenSyncOverlay", "AutoSync Machine");
+static LocalizedString AUTO_SYNC_TEMPO("ScreenSyncOverlay", "AutoSync Tempo");
+static LocalizedString OLD_OFFSET("ScreenSyncOverlay", "Old offset");
+static LocalizedString NEW_OFFSET("ScreenSyncOverlay", "New offset");
+static LocalizedString COLLECTING_SAMPLE("ScreenSyncOverlay", "Collecting sample");
+static LocalizedString STANDARD_DEVIATION("ScreenSyncOverlay", "Standard deviation");
+void ScreenSyncOverlay::UpdateText() {
 	// Update Status
 	std::vector<RString> vs;
 
 	PlayerController pc = GamePreferences::m_AutoPlay.Get();
-	switch( pc )
-	{
-		case PC_HUMAN:						break;
-		case PC_AUTOPLAY:	vs.push_back(AUTO_PLAY);	break;
-		case PC_CPU:		vs.push_back(AUTO_PLAY_CPU);	break;
-		default:
-			FAIL_M(ssprintf("Invalid PlayerController: %i", pc));
+	switch (pc) {
+	case PC_HUMAN:
+		break;
+	case PC_AUTOPLAY:
+		vs.push_back(AUTO_PLAY);
+		break;
+	case PC_CPU:
+		vs.push_back(AUTO_PLAY_CPU);
+		break;
+	default:
+		FAIL_M(ssprintf("Invalid PlayerController: %i", pc));
 	}
 
 	AutosyncType type = GAMESTATE->m_SongOptions.GetCurrent().m_AutosyncType;
-	switch( type )
-	{
-	case AutosyncType_Off:							break;
-	case AutosyncType_Song:	vs.push_back(AUTO_SYNC_SONG);		break;
-	case AutosyncType_Machine:	vs.push_back(AUTO_SYNC_MACHINE);	break;
-	case AutosyncType_Tempo:	vs.push_back(AUTO_SYNC_TEMPO);		break;
+	switch (type) {
+	case AutosyncType_Off:
+		break;
+	case AutosyncType_Song:
+		vs.push_back(AUTO_SYNC_SONG);
+		break;
+	case AutosyncType_Machine:
+		vs.push_back(AUTO_SYNC_MACHINE);
+		break;
+	case AutosyncType_Tempo:
+		vs.push_back(AUTO_SYNC_TEMPO);
+		break;
 	default:
 		FAIL_M(ssprintf("Invalid autosync type: %i", type));
 	}
 
-	if( GAMESTATE->m_pCurSong != nullptr  &&  !GAMESTATE->IsCourseMode() )	// sync controls available
+	if (GAMESTATE->m_pCurSong != nullptr && !GAMESTATE->IsCourseMode()) // sync controls available
 	{
-		AdjustSync::GetSyncChangeTextGlobal( vs );
-		AdjustSync::GetSyncChangeTextSong( vs );
+		AdjustSync::GetSyncChangeTextGlobal(vs);
+		AdjustSync::GetSyncChangeTextSong(vs);
 	}
 
 	Message set_status("SetStatus");
-	set_status.SetParam("text", join("\n",vs));
+	set_status.SetParam("text", join("\n", vs));
 	m_overlay->HandleMessage(set_status);
 
-
 	// Update SyncInfo
-	bool visible= GAMESTATE->m_SongOptions.GetCurrent().m_AutosyncType != AutosyncType_Off;
+	bool visible = GAMESTATE->m_SongOptions.GetCurrent().m_AutosyncType != AutosyncType_Off;
 	Message set_adjustments("SetAdjustments");
 	set_adjustments.SetParam("visible", visible);
-	if(visible)
-	{
+	if (visible) {
 		float fNew = PREFSMAN->m_fGlobalOffsetSeconds;
 		float fOld = AdjustSync::s_fGlobalOffsetSecondsOriginal;
 		float fStdDev = AdjustSync::s_fStandardDeviation;
 		RString s;
-		s += OLD_OFFSET.GetValue() + ssprintf( ": %0.3f\n", fOld );
-		s += NEW_OFFSET.GetValue() + ssprintf( ": %0.3f\n", fNew );
-		s += STANDARD_DEVIATION.GetValue() + ssprintf( ": %0.3f\n", fStdDev );
-		s += COLLECTING_SAMPLE.GetValue() + ssprintf( ": %d / %d", AdjustSync::s_iAutosyncOffsetSample+1, AdjustSync::OFFSET_SAMPLE_COUNT );
+		s += OLD_OFFSET.GetValue() + ssprintf(": %0.3f\n", fOld);
+		s += NEW_OFFSET.GetValue() + ssprintf(": %0.3f\n", fNew);
+		s += STANDARD_DEVIATION.GetValue() + ssprintf(": %0.3f\n", fStdDev);
+		s += COLLECTING_SAMPLE.GetValue() +
+		   ssprintf(": %d / %d", AdjustSync::s_iAutosyncOffsetSample + 1, AdjustSync::OFFSET_SAMPLE_COUNT);
 		set_adjustments.SetParam("text", s);
 	}
-	else
-	{
+	else {
 		set_adjustments.SetParam("text", RString(""));
 	}
 	m_overlay->HandleMessage(set_adjustments);
 }
 
-static LocalizedString CANT_SYNC_WHILE_PLAYING_A_COURSE	("ScreenSyncOverlay","Can't sync while playing a course.");
-static LocalizedString SYNC_CHANGES_REVERTED		("ScreenSyncOverlay","Sync changes reverted.");
-bool ScreenSyncOverlay::Input( const InputEventPlus &input )
-{
-	if( !IsGameplay() )
+static LocalizedString CANT_SYNC_WHILE_PLAYING_A_COURSE("ScreenSyncOverlay", "Can't sync while playing a course.");
+static LocalizedString SYNC_CHANGES_REVERTED("ScreenSyncOverlay", "Sync changes reverted.");
+bool ScreenSyncOverlay::Input(const InputEventPlus &input) {
+	if (!IsGameplay())
 		return Screen::Input(input);
 
-	if( input.DeviceI.device != DEVICE_KEYBOARD )
+	if (input.DeviceI.device != DEVICE_KEYBOARD)
 		return Screen::Input(input);
 
-	enum Action
-	{
+	enum Action {
 		RevertSyncChanges,
 		ChangeSongBPM,
 		ChangeGlobalOffset,
@@ -135,8 +135,7 @@ bool ScreenSyncOverlay::Input( const InputEventPlus &input )
 	Action a = Action_Invalid;
 
 	bool bIncrease = true;
-	switch( input.DeviceI.button )
-	{
+	switch (input.DeviceI.button) {
 	case KEY_F4:
 		a = RevertSyncChanges;
 		break;
@@ -152,8 +151,10 @@ bool ScreenSyncOverlay::Input( const InputEventPlus &input )
 		bIncrease = false;
 		[[fallthrough]];
 	case KEY_F12:
-		if( INPUTFILTER->IsBeingPressed( DeviceInput(DEVICE_KEYBOARD, KEY_RSHIFT)) ||
-		    INPUTFILTER->IsBeingPressed( DeviceInput(DEVICE_KEYBOARD, KEY_LSHIFT)) )
+		if (
+		   INPUTFILTER->IsBeingPressed(DeviceInput(DEVICE_KEYBOARD, KEY_RSHIFT)) ||
+		   INPUTFILTER->IsBeingPressed(DeviceInput(DEVICE_KEYBOARD, KEY_LSHIFT))
+		)
 			a = ChangeGlobalOffset;
 		else
 			a = ChangeSongOffset;
@@ -163,125 +164,114 @@ bool ScreenSyncOverlay::Input( const InputEventPlus &input )
 		return Screen::Input(input);
 	}
 
-	if( GAMESTATE->IsCourseMode() && a != ChangeGlobalOffset )
-	{
-		SCREENMAN->SystemMessage( CANT_SYNC_WHILE_PLAYING_A_COURSE );
+	if (GAMESTATE->IsCourseMode() && a != ChangeGlobalOffset) {
+		SCREENMAN->SystemMessage(CANT_SYNC_WHILE_PLAYING_A_COURSE);
 		return true;
 	}
 
 	// Release the lookup tables being used for the timing data because
 	// changing the timing data invalidates them. -Kyz
-	if(a != Action_Invalid)
-	{
-		FOREACH_EnabledPlayer(pn)
-		{
-			if(GAMESTATE->m_pCurSteps[pn])
-			{
+	if (a != Action_Invalid) {
+		FOREACH_EnabledPlayer(pn) {
+			if (GAMESTATE->m_pCurSteps[pn]) {
 				GAMESTATE->m_pCurSteps[pn]->GetTimingData()->ReleaseLookup();
 			}
 		}
 	}
 
-	switch( a )
-	{
+	switch (a) {
 	case RevertSyncChanges:
-		if( input.type != IET_FIRST_PRESS )
+		if (input.type != IET_FIRST_PRESS)
 			return false;
-		SCREENMAN->SystemMessage( SYNC_CHANGES_REVERTED );
+		SCREENMAN->SystemMessage(SYNC_CHANGES_REVERTED);
 		AdjustSync::RevertSyncChanges();
 		break;
-	case ChangeSongBPM:
-		{
-			float fDelta = bIncrease? +0.02f:-0.02f;
-			if( INPUTFILTER->IsBeingPressed( DeviceInput(DEVICE_KEYBOARD, KEY_RALT)) ||
-				INPUTFILTER->IsBeingPressed( DeviceInput(DEVICE_KEYBOARD, KEY_LALT)) )
-			{
-				fDelta /= 20;
+	case ChangeSongBPM: {
+		float fDelta = bIncrease ? +0.02f : -0.02f;
+		if (
+		   INPUTFILTER->IsBeingPressed(DeviceInput(DEVICE_KEYBOARD, KEY_RALT)) ||
+		   INPUTFILTER->IsBeingPressed(DeviceInput(DEVICE_KEYBOARD, KEY_LALT))
+		) {
+			fDelta /= 20;
+		}
+		switch (input.type) {
+		case IET_RELEASE:
+			fDelta *= 0;
+			break;
+		case IET_REPEAT: {
+			if (INPUTFILTER->GetSecsHeld(input.DeviceI) < 1.0f)
+				fDelta *= 0;
+			else
+				fDelta *= 10;
+			break;
+		}
+		default:
+			break;
+		}
+		if (GAMESTATE->m_pCurSong != nullptr) {
+			TimingData &sTiming = GAMESTATE->m_pCurSong->m_SongTiming;
+			BPMSegment *seg = sTiming.GetBPMSegmentAtBeat(GAMESTATE->m_Position.m_fSongBeat);
+			seg->SetBPS(seg->GetBPS() + fDelta);
+			const std::vector<Steps *> &vpSteps = GAMESTATE->m_pCurSong->GetAllSteps();
+			for (Steps *s : vpSteps) {
+				TimingData &pTiming = s->m_Timing;
+				// Empty means it inherits song timing,
+				// which has already been updated.
+				if (pTiming.empty())
+					continue;
+				float second = sTiming.GetElapsedTimeFromBeat(GAMESTATE->m_Position.m_fSongBeat);
+				seg = pTiming.GetBPMSegmentAtBeat(pTiming.GetBeatFromElapsedTime(second));
+				seg->SetBPS(seg->GetBPS() + fDelta);
 			}
-			switch( input.type )
-			{
-				case IET_RELEASE:	fDelta *= 0;	break;
-				case IET_REPEAT:
-				{
-					if( INPUTFILTER->GetSecsHeld(input.DeviceI) < 1.0f )
-						fDelta *= 0;
-					else
-						fDelta *= 10;
-					break;
-				}
-				default: break;
-			}
-			if( GAMESTATE->m_pCurSong != nullptr )
-			{
-				TimingData &sTiming = GAMESTATE->m_pCurSong->m_SongTiming;
-				BPMSegment * seg = sTiming.GetBPMSegmentAtBeat( GAMESTATE->m_Position.m_fSongBeat );
-				seg->SetBPS( seg->GetBPS() + fDelta );
-				const std::vector<Steps*>& vpSteps = GAMESTATE->m_pCurSong->GetAllSteps();
-				for (Steps *s : vpSteps)
-				{
-					TimingData &pTiming = s->m_Timing;
+		}
+	} break;
+	case ChangeGlobalOffset:
+	case ChangeSongOffset: {
+		float fDelta = bIncrease ? +0.02f : -0.02f;
+		if (
+		   INPUTFILTER->IsBeingPressed(DeviceInput(DEVICE_KEYBOARD, KEY_RALT)) ||
+		   INPUTFILTER->IsBeingPressed(DeviceInput(DEVICE_KEYBOARD, KEY_LALT))
+		) {
+			fDelta /= 20; /* 1ms */
+		}
+		switch (input.type) {
+		case IET_RELEASE:
+			fDelta *= 0;
+			break;
+		case IET_REPEAT: {
+			if (INPUTFILTER->GetSecsHeld(input.DeviceI) < 1.0f)
+				fDelta *= 0;
+			else
+				fDelta *= 10;
+		}
+		default:
+			break;
+		}
+
+		switch (a) {
+		case ChangeGlobalOffset: {
+			PREFSMAN->m_fGlobalOffsetSeconds.Set(PREFSMAN->m_fGlobalOffsetSeconds + fDelta);
+			break;
+		}
+
+		case ChangeSongOffset: {
+			if (GAMESTATE->m_pCurSong != nullptr) {
+				GAMESTATE->m_pCurSong->m_SongTiming.m_fBeat0OffsetInSeconds += fDelta;
+				const std::vector<Steps *> &vpSteps = GAMESTATE->m_pCurSong->GetAllSteps();
+				for (Steps *s : vpSteps) {
 					// Empty means it inherits song timing,
 					// which has already been updated.
-					if( pTiming.empty() )
+					if (s->m_Timing.empty())
 						continue;
-					float second = sTiming.GetElapsedTimeFromBeat(GAMESTATE->m_Position.m_fSongBeat);
-					seg = pTiming.GetBPMSegmentAtBeat(pTiming.GetBeatFromElapsedTime(second));
-					seg->SetBPS( seg->GetBPS() + fDelta );
+					s->m_Timing.m_fBeat0OffsetInSeconds += fDelta;
 				}
 			}
+			break;
 		}
-		break;
-	case ChangeGlobalOffset:
-	case ChangeSongOffset:
-		{
-			float fDelta = bIncrease? +0.02f:-0.02f;
-			if( INPUTFILTER->IsBeingPressed( DeviceInput(DEVICE_KEYBOARD, KEY_RALT)) ||
-				INPUTFILTER->IsBeingPressed( DeviceInput(DEVICE_KEYBOARD, KEY_LALT)) )
-			{
-				fDelta /= 20; /* 1ms */
-			}
-			switch( input.type )
-			{
-				case IET_RELEASE:	fDelta *= 0;	break;
-				case IET_REPEAT:
-				{
-					if( INPUTFILTER->GetSecsHeld(input.DeviceI) < 1.0f )
-						fDelta *= 0;
-					else
-						fDelta *= 10;
-				}
-				default: break;
-			}
-
-			switch( a )
-			{
-				case ChangeGlobalOffset:
-				{
-				PREFSMAN->m_fGlobalOffsetSeconds.Set( PREFSMAN->m_fGlobalOffsetSeconds + fDelta );
-				break;
-				}
-
-				case ChangeSongOffset:
-				{
-					if( GAMESTATE->m_pCurSong != nullptr )
-					{
-						GAMESTATE->m_pCurSong->m_SongTiming.m_fBeat0OffsetInSeconds += fDelta;
-						const std::vector<Steps*>& vpSteps = GAMESTATE->m_pCurSong->GetAllSteps();
-						for (Steps *s : vpSteps)
-						{
-							// Empty means it inherits song timing,
-							// which has already been updated.
-							if( s->m_Timing.empty() )
-								continue;
-							s->m_Timing.m_fBeat0OffsetInSeconds += fDelta;
-						}
-					}
-					break;
-				}
-				default: break;
-			}
+		default:
+			break;
 		}
-		break;
+	} break;
 	default:
 		FAIL_M(ssprintf("Invalid sync action choice: %i", a));
 	}
@@ -291,16 +281,13 @@ bool ScreenSyncOverlay::Input( const InputEventPlus &input )
 	return true;
 }
 
-void ScreenSyncOverlay::ShowHelp()
-{
+void ScreenSyncOverlay::ShowHelp() {
 	m_overlay->PlayCommand("Show");
 }
 
-void ScreenSyncOverlay::HideHelp()
-{
+void ScreenSyncOverlay::HideHelp() {
 	m_overlay->PlayCommand("Hide");
 }
-
 
 /*
  * (c) 2001-2005 Chris Danford

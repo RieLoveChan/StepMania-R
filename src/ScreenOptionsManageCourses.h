@@ -7,29 +7,27 @@
 
 #include <vector>
 
-
 class Course;
 
-class ScreenOptionsManageCourses : public ScreenOptions
-{
-public:
+class ScreenOptionsManageCourses : public ScreenOptions {
+ public:
 	void Init();
 	virtual void BeginScreen();
-	virtual void HandleScreenMessage( const ScreenMessage SM );
-	virtual bool MenuSelect( const InputEventPlus &input );
+	virtual void HandleScreenMessage(const ScreenMessage SM);
+	virtual bool MenuSelect(const InputEventPlus &input);
 
-protected:
-	virtual void ImportOptions( int iRow, const std::vector<PlayerNumber> &vpns );
-	virtual void ExportOptions( int iRow, const std::vector<PlayerNumber> &vpns );
+ protected:
+	virtual void ImportOptions(int iRow, const std::vector<PlayerNumber> &vpns);
+	virtual void ExportOptions(int iRow, const std::vector<PlayerNumber> &vpns);
 
-	virtual void AfterChangeRow( PlayerNumber pn );
-	virtual void ProcessMenuStart( const InputEventPlus &input );
+	virtual void AfterChangeRow(PlayerNumber pn);
+	virtual void ProcessMenuStart(const InputEventPlus &input);
 
-private:
+ private:
 	Course *GetCourseWithFocus() const;
 
 	RageSound m_soundDifficultyChanged;
-	std::vector<Course*> m_vpCourses;
+	std::vector<Course *> m_vpCourses;
 	ThemeMetric<EditMode> EDIT_MODE;
 	ThemeMetric<RString> CREATE_NEW_SCREEN;
 };

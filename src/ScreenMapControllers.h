@@ -11,22 +11,19 @@
 
 #include <vector>
 
-
-class ScreenMapControllers : public ScreenWithMenuElements
-{
-public:
+class ScreenMapControllers : public ScreenWithMenuElements {
+ public:
 	ScreenMapControllers();
 	~ScreenMapControllers();
 	virtual void Init();
 	virtual void BeginScreen();
 
-	virtual void Update( float fDeltaTime );
-	virtual bool Input( const InputEventPlus &input );
-	virtual void HandleMessage( const Message &msg );
-	virtual void HandleScreenMessage( const ScreenMessage SM );
+	virtual void Update(float fDeltaTime);
+	virtual bool Input(const InputEventPlus &input);
+	virtual void HandleMessage(const Message &msg);
+	virtual void HandleScreenMessage(const ScreenMessage SM);
 
-private:
-
+ private:
 	Actor *GetActorWithFocus();
 	void BeforeChangeFocus();
 	void AfterChangeFocus();
@@ -54,12 +51,11 @@ private:
 	RageTimer m_WaitingForPress;
 	DeviceInput m_DeviceIToMap;
 
-	struct KeyToMap
-	{
+	struct KeyToMap {
 		GameButton m_GameButton;
 
 		// owned by m_Line
-		BitmapText	*m_textMappedTo[NUM_GameController][NUM_SHOWN_GAME_TO_DEVICE_SLOTS];
+		BitmapText *m_textMappedTo[NUM_GameController][NUM_SHOWN_GAME_TO_DEVICE_SLOTS];
 	};
 	std::vector<KeyToMap> m_KeysToMap;
 
@@ -78,21 +74,17 @@ private:
 	float m_AutoDismissSanitySecs;
 	AutoActor m_SanityMessage;
 
-	struct SetListEntry
-	{
+	struct SetListEntry {
 		int m_button;
 		int m_controller;
 		int m_slot;
-		SetListEntry(int b, int c, int s)
-			:m_button(b), m_controller(c), m_slot(s) {}
-		bool operator<(SetListEntry const& rhs) const
-		{
-			if(m_controller != rhs.m_controller)
-			{
+		SetListEntry(int b, int c, int s) : m_button(b), m_controller(c), m_slot(s) {
+		}
+		bool operator<(SetListEntry const &rhs) const {
+			if (m_controller != rhs.m_controller) {
 				return m_controller < rhs.m_controller;
 			}
-			if(m_button != rhs.m_button)
-			{
+			if (m_button != rhs.m_button) {
 				return m_button < rhs.m_button;
 			}
 			return m_slot < rhs.m_slot;
@@ -102,15 +94,18 @@ private:
 	std::set<SetListEntry>::iterator m_SetListCurrent;
 	bool m_InSetListMode;
 
-	typedef void (ScreenMapControllers::* action_fun_t)();
-	struct ActionRow
-	{
+	typedef void (ScreenMapControllers::*action_fun_t)();
+	struct ActionRow {
 		RString m_name;
 		AutoActor m_actor;
 		action_fun_t m_action;
-		void Load(RString const& scr_name, RString const& name,
-			ScreenMapControllers::action_fun_t action, ActorFrame* line,
-			ActorScroller* scroller);
+		void Load(
+		   RString const &scr_name,
+		   RString const &name,
+		   ScreenMapControllers::action_fun_t action,
+		   ActorFrame *line,
+		   ActorScroller *scroller
+		);
 	};
 	void ClearToDefault();
 	void ReloadFromDisk();
@@ -121,7 +116,7 @@ private:
 
 	std::vector<ActionRow> m_Actions;
 
-	std::vector<ActorFrame*> m_Line;
+	std::vector<ActorFrame *> m_Line;
 	ActorScroller m_LineScroller;
 
 	RageSound m_soundChange;

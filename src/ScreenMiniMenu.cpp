@@ -12,59 +12,58 @@
 
 #include <vector>
 
-
-void PrepareToLoadScreen( const RString &sScreenName );
+void PrepareToLoadScreen(const RString &sScreenName);
 void FinishedLoadingScreen();
 
-AutoScreenMessage( SM_GoToOK );
-AutoScreenMessage( SM_GoToCancel );
+AutoScreenMessage(SM_GoToOK);
+AutoScreenMessage(SM_GoToCancel);
 
 bool ScreenMiniMenu::s_bCancelled = false;
-int	ScreenMiniMenu::s_iLastRowCode = -1;
-std::vector<int>	ScreenMiniMenu::s_viLastAnswers;
+int ScreenMiniMenu::s_iLastRowCode = -1;
+std::vector<int> ScreenMiniMenu::s_viLastAnswers;
 
 // Hooks for profiling
-void PrepareToLoadScreen( const RString& /* sScreenName */ ) {}
-void FinishedLoadingScreen() {}
+void PrepareToLoadScreen(const RString & /* sScreenName */) {
+}
+void FinishedLoadingScreen() {
+}
 
 // Settings:
-namespace
-{
-	const MenuDef* g_pMenuDef = nullptr;
-	ScreenMessage g_SendOnOK;
-	ScreenMessage g_SendOnCancel;
-};
+namespace {
+const MenuDef *g_pMenuDef = nullptr;
+ScreenMessage g_SendOnOK;
+ScreenMessage g_SendOnCancel;
+}; // namespace
 
-void ScreenMiniMenu::MiniMenu( const MenuDef* pDef, ScreenMessage SM_SendOnOK, ScreenMessage SM_SendOnCancel, float fX, float fY )
-{
-	PrepareToLoadScreen( pDef->sClassName );
+void ScreenMiniMenu::MiniMenu(
+   const MenuDef *pDef, ScreenMessage SM_SendOnOK, ScreenMessage SM_SendOnCancel, float fX, float fY
+) {
+	PrepareToLoadScreen(pDef->sClassName);
 
 	g_pMenuDef = pDef;
 	g_SendOnOK = SM_SendOnOK;
 	g_SendOnCancel = SM_SendOnCancel;
 
-	SCREENMAN->AddNewScreenToTop( pDef->sClassName );
+	SCREENMAN->AddNewScreenToTop(pDef->sClassName);
 	Screen *pNewScreen = SCREENMAN->GetTopScreen();
-	pNewScreen->SetXY( fX, fY );
+	pNewScreen->SetXY(fX, fY);
 
 	FinishedLoadingScreen();
 }
 
-REGISTER_SCREEN_CLASS( ScreenMiniMenu );
+REGISTER_SCREEN_CLASS(ScreenMiniMenu);
 
-void ScreenMiniMenu::Init()
-{
-	if( PREFSMAN->m_iArcadeOptionsNavigation )
-		SetNavigation( NAV_THREE_KEY_MENU );
+void ScreenMiniMenu::Init() {
+	if (PREFSMAN->m_iArcadeOptionsNavigation)
+		SetNavigation(NAV_THREE_KEY_MENU);
 
 	ScreenOptions::Init();
 }
 
-void ScreenMiniMenu::BeginScreen()
-{
-	ASSERT( g_pMenuDef != nullptr );
+void ScreenMiniMenu::BeginScreen() {
+	ASSERT(g_pMenuDef != nullptr);
 
-	LoadMenu( g_pMenuDef );
+	LoadMenu(g_pMenuDef);
 	m_SMSendOnOK = g_SendOnOK;
 	m_SMSendOnCancel = g_SendOnCancel;
 	g_pMenuDef = nullptr;
@@ -77,87 +76,74 @@ void ScreenMiniMenu::BeginScreen()
 	m_sNextScreen = "xxx";
 }
 
-void ScreenMiniMenu::LoadMenu( const MenuDef* pDef )
-{
+void ScreenMiniMenu::LoadMenu(const MenuDef *pDef) {
 	m_vMenuRows = pDef->rows;
 
-	s_viLastAnswers.resize( m_vMenuRows.size() );
+	s_viLastAnswers.resize(m_vMenuRows.size());
 	// Convert from m_vMenuRows to std::vector<OptionRowDefinition>
-	std::vector<OptionRowHandler*> vHands;
-	for( unsigned r=0; r<m_vMenuRows.size(); r++ )
-	{
+	std::vector<OptionRowHandler *> vHands;
+	for (unsigned r = 0; r < m_vMenuRows.size(); r++) {
 		const MenuRowDef &mr = m_vMenuRows[r];
-		OptionRowHandler *pHand = OptionRowHandlerUtil::MakeSimple( mr );
-		vHands.push_back( pHand );
+		OptionRowHandler *pHand = OptionRowHandlerUtil::MakeSimple(mr);
+		vHands.push_back(pHand);
 	}
 
-	ScreenOptions::InitMenu( vHands );
+	ScreenOptions::InitMenu(vHands);
 }
 
-void ScreenMiniMenu::AfterChangeValueOrRow( PlayerNumber pn )
-{
-	ScreenOptions::AfterChangeValueOrRow( pn );
+void ScreenMiniMenu::AfterChangeValueOrRow(PlayerNumber pn) {
+	ScreenOptions::AfterChangeValueOrRow(pn);
 
 	std::vector<PlayerNumber> vpns;
-	FOREACH_PlayerNumber( p )
-		vpns.push_back( p );
-	for( unsigned i=0; i<m_pRows.size(); i++ )
-		ExportOptions( i, vpns );
+	FOREACH_PlayerNumber(p) vpns.push_back(p);
+	for (unsigned i = 0; i < m_pRows.size(); i++)
+		ExportOptions(i, vpns);
 
 	// Changing one option can affect whether other options are available.
-	for( unsigned i=0; i<m_pRows.size(); i++ )
-	{
+	for (unsigned i = 0; i < m_pRows.size(); i++) {
 		const MenuRowDef &mr = m_vMenuRows[i];
-		if( mr.pfnEnabled )
-		{
+		if (mr.pfnEnabled) {
 			OptionRow &optrow = *m_pRows[i];
 			optrow.GetRowDef().m_vEnabledForPlayers.clear();
-			if( mr.pfnEnabled() )
-				optrow.GetRowDef().m_vEnabledForPlayers.insert( GAMESTATE->GetMasterPlayerNumber() );
+			if (mr.pfnEnabled())
+				optrow.GetRowDef().m_vEnabledForPlayers.insert(GAMESTATE->GetMasterPlayerNumber());
 		}
 		m_pRows[i]->UpdateEnabledDisabled();
 	}
 }
 
-void ScreenMiniMenu::ImportOptions( int r, const std::vector<PlayerNumber>& /* vpns */ )
-{
+void ScreenMiniMenu::ImportOptions(int r, const std::vector<PlayerNumber> & /* vpns */) {
 	OptionRow &optrow = *m_pRows[r];
 	const MenuRowDef &mr = m_vMenuRows[r];
-	if( !mr.choices.empty() )
-		optrow.SetOneSharedSelection( mr.iDefaultChoice );
+	if (!mr.choices.empty())
+		optrow.SetOneSharedSelection(mr.iDefaultChoice);
 }
 
-void ScreenMiniMenu::ExportOptions( int r, const std::vector<PlayerNumber>& /* vpns */ )
-{
-	if( r == GetCurrentRow() )
+void ScreenMiniMenu::ExportOptions(int r, const std::vector<PlayerNumber> & /* vpns */) {
+	if (r == GetCurrentRow())
 		s_iLastRowCode = m_vMenuRows[r].iRowCode;
-	s_viLastAnswers.resize( m_vMenuRows.size() );
-	s_viLastAnswers[r] = m_pRows[r]->GetOneSharedSelection( true );
+	s_viLastAnswers.resize(m_vMenuRows.size());
+	s_viLastAnswers[r] = m_pRows[r]->GetOneSharedSelection(true);
 }
 
-void ScreenMiniMenu::HandleScreenMessage( const ScreenMessage SM )
-{
-	if( SM == SM_GoToNextScreen )
-	{
+void ScreenMiniMenu::HandleScreenMessage(const ScreenMessage SM) {
+	if (SM == SM_GoToNextScreen) {
 		s_bCancelled = false;
-		SCREENMAN->PopTopScreen( m_SMSendOnOK );
+		SCREENMAN->PopTopScreen(m_SMSendOnOK);
 		return;
 	}
-	else if( SM == SM_GoToPrevScreen )
-	{
+	else if (SM == SM_GoToPrevScreen) {
 		s_bCancelled = true;
-		SCREENMAN->PopTopScreen( m_SMSendOnCancel );
+		SCREENMAN->PopTopScreen(m_SMSendOnCancel);
 		return;
 	}
 
-	ScreenOptions::HandleScreenMessage( SM );
+	ScreenOptions::HandleScreenMessage(SM);
 }
 
-bool ScreenMiniMenu::FocusedItemEndsScreen( PlayerNumber /* pn */ ) const
-{
+bool ScreenMiniMenu::FocusedItemEndsScreen(PlayerNumber /* pn */) const {
 	return true;
 }
-
 
 /*
  * (c) 2003-2004 Chris Danford

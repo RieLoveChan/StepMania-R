@@ -15,35 +15,33 @@
  * (Look at a grid: map coordinates to the lines, not the squares between the
  * lines.) */
 
-static void InitVectors( std::vector<int> &s0, std::vector<int> &s1, std::vector<std::uint32_t> &percent, int src, int dst )
-{
-	if( src >= dst )
-	{
+static void
+InitVectors(std::vector<int> &s0, std::vector<int> &s1, std::vector<std::uint32_t> &percent, int src, int dst) {
+	if (src >= dst) {
 		float sx = float(src) / dst;
-		for( int x = 0; x < dst; x++ )
-		{
+		for (int x = 0; x < dst; x++) {
 			/* sax is the exact (floating-point) x coordinate in the source
 			 * that the destination pixel at x should from.  For example, if we're
 			 * going 512->256, then dst[0] should come from the pixels from 0..1 and
 			 * 1..2, so sax[0] is 1. sx is the total number of pixels, so sx/2 is the
 			 * distance from the start of the sample to its center. */
-			const float sax = sx*x + sx/2.0f;
+			const float sax = sx * x + sx / 2.0f;
 
 			/* sx/2 is the distance from the start of the sample to the center;
 			 * sx/4 is the distance from the center of the sample to the center of
 			 * either pixel. */
-			const float xstep = sx/4.0f;
+			const float xstep = sx / 4.0f;
 
 			// source x coordinates of left and right pixels to sample
-			s0.push_back(int(sax-xstep));
-			s1.push_back(int(sax+xstep));
+			s0.push_back(int(sax - xstep));
+			s1.push_back(int(sax + xstep));
 
-			if( s0[x] == s1[x] )
-			{
+			if (s0[x] == s1[x]) {
 				/* If the sampled pixels happen to be the same, the distance
 				 * will be 0.  Avoid division by zero. */
-				percent.push_back( 1<<24 );
-			} else {
+				percent.push_back(1 << 24);
+			}
+			else {
 				const int xdist = s1[x] - s0[x];
 
 				// fleft is the left pixel sampled; +.5 is the center:
@@ -52,12 +50,11 @@ static void InitVectors( std::vector<int> &s0, std::vector<int> &s1, std::vector
 				/* sax is somewhere between the centers of both sampled
 				 * pixels; find the percentage: */
 				const float p = (1.0f - (sax - fleft) / xdist) * 16777216.0f;
-				percent.push_back( std::uint32_t(p) );
+				percent.push_back(std::uint32_t(p));
 			}
 		}
 	}
-	else
-	{
+	else {
 		/* Fencepost: If we have source:
 		 *    abcd
 		 * and dest:
@@ -65,53 +62,48 @@ static void InitVectors( std::vector<int> &s0, std::vector<int> &s1, std::vector
 		 * then we want x to be sampled entirely from a, and z entirely from d;
 		 * the inner pixels are interpolated.  (This behavior mimics Photoshop's
 		 * resize.) */
-		float sx = float(src-1) / (dst-1);
-		for( int x = 0; x < dst; x++ )
-		{
-			const float sax = sx*x;
+		float sx = float(src - 1) / (dst - 1);
+		for (int x = 0; x < dst; x++) {
+			const float sax = sx * x;
 
 			// source x coordinates of left and right pixels to sample
-			s0.push_back( std::clamp(int(sax), 0, src-1));
-			s1.push_back( std::clamp(int(sax+1), 0, src-1) );
+			s0.push_back(std::clamp(int(sax), 0, src - 1));
+			s1.push_back(std::clamp(int(sax + 1), 0, src - 1));
 
 			const float p = (1.0f - (sax - std::floor(sax))) * 16777216.0f;
-			percent.push_back( std::uint32_t(p) );
+			percent.push_back(std::uint32_t(p));
 		}
 	}
 }
 
-static void ZoomSurface( const RageSurface * src, RageSurface * dst )
-{
+static void ZoomSurface(const RageSurface *src, RageSurface *dst) {
 	/* For each destination coordinate, two source rows, two source columns
 	 * and the percentage of the first row and first column: */
 	std::vector<int> esx0, esx1, esy0, esy1;
 	std::vector<std::uint32_t> ex0, ey0;
 
-	InitVectors( esx0, esx1, ex0, src->w, dst->w );
-	InitVectors( esy0, esy1, ey0, src->h, dst->h );
+	InitVectors(esx0, esx1, ex0, src->w, dst->w);
+	InitVectors(esy0, esy1, ey0, src->h, dst->h);
 
 	// This is where all of the real work is done.
-	const std::uint8_t *sp = (std::uint8_t *) src->pixels;
+	const std::uint8_t *sp = (std::uint8_t *)src->pixels;
 	const int height = dst->h;
 	const int width = dst->w;
-	for( int y = 0; y < height; y++ )
-	{
-		std::uint8_t *dp = (std::uint8_t *) (dst->pixels + dst->pitch*y);
+	for (int y = 0; y < height; y++) {
+		std::uint8_t *dp = (std::uint8_t *)(dst->pixels + dst->pitch * y);
 		/* current source pointer and next source pointer (first and second
 		 * rows sampled for this row): */
 		const std::uint8_t *csp = sp + esy0[y] * src->pitch;
 		const std::uint8_t *ncsp = sp + esy1[y] * src->pitch;
 
-		for( int x = 0; x < width; x++ )
-		{
+		for (int x = 0; x < width; x++) {
 			// Grab pointers to the sampled pixels:
-			const std::uint8_t *c00 = csp + esx0[x]*4;
-			const std::uint8_t *c01 = csp + esx1[x]*4;
-			const std::uint8_t *c10 = ncsp + esx0[x]*4;
-			const std::uint8_t *c11 = ncsp + esx1[x]*4;
+			const std::uint8_t *c00 = csp + esx0[x] * 4;
+			const std::uint8_t *c01 = csp + esx1[x] * 4;
+			const std::uint8_t *c10 = ncsp + esx0[x] * 4;
+			const std::uint8_t *c11 = ncsp + esx1[x] * 4;
 
-			for( int c = 0; c < 4; ++c )
-			{
+			for (int c = 0; c < 4; ++c) {
 				std::uint32_t x0 = std::uint32_t(c00[c]) * ex0[x];
 				x0 += std::uint32_t(c01[c]) * (16777216 - ex0[x]);
 				x0 >>= 24;
@@ -119,7 +111,7 @@ static void ZoomSurface( const RageSurface * src, RageSurface * dst )
 				x1 += std::uint32_t(c11[c]) * (16777216 - ex0[x]);
 				x1 >>= 24;
 
-				const std::uint32_t res = ((x0 * ey0[y]) + (x1 * (16777216-ey0[y])) + 8388608) >> 24;
+				const std::uint32_t res = ((x0 * ey0[y]) + (x1 * (16777216 - ey0[y])) + 8388608) >> 24;
 				dp[c] = std::uint8_t(res);
 			}
 
@@ -129,44 +121,38 @@ static void ZoomSurface( const RageSurface * src, RageSurface * dst )
 	}
 }
 
-
-void RageSurfaceUtils::Zoom( RageSurface *&src, int dstwidth, int dstheight )
-{
-	ASSERT_M( dstwidth > 0, ssprintf("%i",dstwidth) );
-	ASSERT_M( dstheight > 0, ssprintf("%i",dstheight) );
-	if( src == nullptr )
+void RageSurfaceUtils::Zoom(RageSurface *&src, int dstwidth, int dstheight) {
+	ASSERT_M(dstwidth > 0, ssprintf("%i", dstwidth));
+	ASSERT_M(dstheight > 0, ssprintf("%i", dstheight));
+	if (src == nullptr)
 		return;
 
-	if( src->w == dstwidth && src->h == dstheight )
+	if (src->w == dstwidth && src->h == dstheight)
 		return;
 
 	// resize currently only does RGBA8888
-	if( src->fmt.BytesPerPixel != 4 )
-	{
-		RageSurfaceUtils::ConvertSurface( src, src->w, src->h, 32,
-			0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
+	if (src->fmt.BytesPerPixel != 4) {
+		RageSurfaceUtils::ConvertSurface(src, src->w, src->h, 32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
 	}
 
-	while( src->w != dstwidth || src->h != dstheight )
-	{
-		float xscale = float(dstwidth)/src->w;
-		float yscale = float(dstheight)/src->h;
+	while (src->w != dstwidth || src->h != dstheight) {
+		float xscale = float(dstwidth) / src->w;
+		float yscale = float(dstheight) / src->h;
 
 		/* Our filter is a simple linear filter, so it can't scale to less than
 		 * 1:2 or more than 2:1 very well. If we need to go beyond that, do it
 		 * iteratively. */
-		xscale = std::clamp( xscale, .5f, 2.0f );
-		yscale = std::clamp( yscale, .5f, 2.0f );
+		xscale = std::clamp(xscale, .5f, 2.0f);
+		yscale = std::clamp(yscale, .5f, 2.0f);
 
-		int target_width = std::lrint( src->w*xscale );
-		int target_height = std::lrint( src->h*yscale );
+		int target_width = std::lrint(src->w * xscale);
+		int target_height = std::lrint(src->h * yscale);
 
-		RageSurface *dst =
-			CreateSurface(target_width, target_height, 32,
-					src->format->Rmask, src->format->Gmask,
-					src->format->Bmask, src->format->Amask);
+		RageSurface *dst = CreateSurface(
+		   target_width, target_height, 32, src->format->Rmask, src->format->Gmask, src->format->Bmask, src->format->Amask
+		);
 
-		ZoomSurface( src, dst );
+		ZoomSurface(src, dst);
 
 		delete src;
 
@@ -201,4 +187,3 @@ void RageSurfaceUtils::Zoom( RageSurface *&src, int dstwidth, int dstheight )
  * This is based on code from SDL_rotozoom, under the above license with
  * permission from Andreas Schiffler.
  */
-

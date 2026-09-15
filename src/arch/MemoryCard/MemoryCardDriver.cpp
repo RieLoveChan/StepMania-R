@@ -6,7 +6,6 @@
 
 #include <vector>
 
-
 static const RString TEMP_MOUNT_POINT = "/@mctemptimeout/";
 
 enum MemoryCardDriverType {
@@ -16,44 +15,39 @@ enum MemoryCardDriverType {
 	MemoryCardDriverType_Invalid
 };
 
-static const char *MemoryCardDriverTypeNames[] = {
-	"USB",
-	"Directory"
-};
+static const char *MemoryCardDriverTypeNames[] = {"USB", "Directory"};
 XToString(MemoryCardDriverType);
 StringToX(MemoryCardDriverType);
 LuaXType(MemoryCardDriverType);
 
-Preference<MemoryCardDriverType> g_MemoryCardDriver("MemoryCardDriver", MemoryCardDriverType_Usb, nullptr, PreferenceType::Immutable);
+Preference<MemoryCardDriverType>
+   g_MemoryCardDriver("MemoryCardDriver", MemoryCardDriverType_Usb, nullptr, PreferenceType::Immutable);
 
-bool UsbStorageDevice::operator==(const UsbStorageDevice& other) const
-{
-  //  LOG->Trace( "Comparing %d %d %d %s %s to %d %d %d %s %s",
-  //	      iBus, iPort, iLevel, sName.c_str(), sOsMountDir.c_str(),
-  //	      other.iBus, other.iPort, other.iLevel, other.sName.c_str(), other.sOsMountDir.c_str() );
-#define COMPARE(x) if( (x) != other.x ) return false
-  COMPARE( iBus );
-  COMPARE( iPort );
-  COMPARE( iLevel );
-  COMPARE( sOsMountDir );
-  return true;
+bool UsbStorageDevice::operator==(const UsbStorageDevice &other) const {
+	//  LOG->Trace( "Comparing %d %d %d %s %s to %d %d %d %s %s",
+	//	      iBus, iPort, iLevel, sName.c_str(), sOsMountDir.c_str(),
+	//	      other.iBus, other.iPort, other.iLevel, other.sName.c_str(), other.sOsMountDir.c_str() );
+#define COMPARE(x)                                                                                                     \
+	if ((x) != other.x)                                                                                                 \
+	return false
+	COMPARE(iBus);
+	COMPARE(iPort);
+	COMPARE(iLevel);
+	COMPARE(sOsMountDir);
+	return true;
 #undef COMPARE
 }
 
-void UsbStorageDevice::SetOsMountDir( const RString &s )
-{
+void UsbStorageDevice::SetOsMountDir(const RString &s) {
 	sOsMountDir = s;
 }
 
-bool MemoryCardDriver::NeedUpdate( bool bMount )
-{
-	if( bMount )
-	{
+bool MemoryCardDriver::NeedUpdate(bool bMount) {
+	if (bMount) {
 		/* Check if any devices need a write test. */
-		for( unsigned i=0; i<m_vDevicesLastSeen.size(); i++ )
-		{
+		for (unsigned i = 0; i < m_vDevicesLastSeen.size(); i++) {
 			const UsbStorageDevice &d = m_vDevicesLastSeen[i];
-			if( d.m_State == UsbStorageDevice::STATE_CHECKING )
+			if (d.m_State == UsbStorageDevice::STATE_CHECKING)
 				return true;
 		}
 	}
@@ -61,36 +55,33 @@ bool MemoryCardDriver::NeedUpdate( bool bMount )
 	return USBStorageDevicesChanged();
 }
 
-bool MemoryCardDriver::DoOneUpdate( bool bMount, std::vector<UsbStorageDevice>& vStorageDevicesOut )
-{
-	if( !NeedUpdate(bMount) )
+bool MemoryCardDriver::DoOneUpdate(bool bMount, std::vector<UsbStorageDevice> &vStorageDevicesOut) {
+	if (!NeedUpdate(bMount))
 		return false;
 
 	std::vector<UsbStorageDevice> vOld = m_vDevicesLastSeen; // copy
-	GetUSBStorageDevices( vStorageDevicesOut );
+	GetUSBStorageDevices(vStorageDevicesOut);
 
 	// log connects
-	for (UsbStorageDevice &newd : vStorageDevicesOut)
-	{
-		std::vector<UsbStorageDevice>::iterator iter = find( vOld.begin(), vOld.end(), newd );
-		if( iter == vOld.end() )    // didn't find
-			LOG->Trace( "New device connected: %s", newd.sDevice.c_str() );
+	for (UsbStorageDevice &newd : vStorageDevicesOut) {
+		std::vector<UsbStorageDevice>::iterator iter = find(vOld.begin(), vOld.end(), newd);
+		if (iter == vOld.end()) // didn't find
+			LOG->Trace("New device connected: %s", newd.sDevice.c_str());
 	}
 
 	/* When we first see a device, regardless of bMount, just return it as CHECKING,
 	 * so the main thread knows about the device.  On the next call where bMount is
 	 * true, check it. */
-	for( unsigned i=0; i<vStorageDevicesOut.size(); i++ )
-	{
+	for (unsigned i = 0; i < vStorageDevicesOut.size(); i++) {
 		UsbStorageDevice &d = vStorageDevicesOut[i];
 
 		/* If this device was just connected (it wasn't here last time), set it to
 		 * CHECKING and return it, to let the main thread know about the device before
 		 * we start checking. */
-		std::vector<UsbStorageDevice>::iterator iter = find( vOld.begin(), vOld.end(), d );
-		if( iter == vOld.end() )    // didn't find
+		std::vector<UsbStorageDevice>::iterator iter = find(vOld.begin(), vOld.end(), d);
+		if (iter == vOld.end()) // didn't find
 		{
-			LOG->Trace( "New device entering CHECKING: %s", d.sDevice.c_str() );
+			LOG->Trace("New device entering CHECKING: %s", d.sDevice.c_str());
 			d.m_State = UsbStorageDevice::STATE_CHECKING;
 			continue;
 		}
@@ -102,36 +93,36 @@ bool MemoryCardDriver::DoOneUpdate( bool bMount, std::vector<UsbStorageDevice>& 
 
 		/* The device was here last time.  If CHECKING, check the device now, if
 		 * we're allowed to. */
-		if( d.m_State == UsbStorageDevice::STATE_CHECKING )
-		{
-			if( !bMount )
-			{
+		if (d.m_State == UsbStorageDevice::STATE_CHECKING) {
+			if (!bMount) {
 				/* We can't check it now.  Keep STATE_CHECKING, and check it when we can. */
 				d.m_State = UsbStorageDevice::STATE_CHECKING;
 				continue;
 			}
 
-			if( !this->Mount(&d) )
-			{
-				d.SetError( "MountFailed" );
+			if (!this->Mount(&d)) {
+				d.SetError("MountFailed");
 				continue;
 			}
 
-			if( TestWrite(&d) )
-			{
+			if (TestWrite(&d)) {
 				/* We've successfully mounted and tested the device.  Read the
 				 * profile name (by mounting a temporary, private mountpoint),
 				 * and then unmount it until Mount() is called. */
 				d.m_State = UsbStorageDevice::STATE_READY;
 
-				FILEMAN->Mount( "dirro", d.sOsMountDir, TEMP_MOUNT_POINT );
-				d.bIsNameAvailable = PROFILEMAN->FastLoadProfileNameFromMemoryCard( TEMP_MOUNT_POINT, d.sName );
-				FILEMAN->Unmount( "dirro", d.sOsMountDir, TEMP_MOUNT_POINT );
+				FILEMAN->Mount("dirro", d.sOsMountDir, TEMP_MOUNT_POINT);
+				d.bIsNameAvailable = PROFILEMAN->FastLoadProfileNameFromMemoryCard(TEMP_MOUNT_POINT, d.sName);
+				FILEMAN->Unmount("dirro", d.sOsMountDir, TEMP_MOUNT_POINT);
 			}
 
-			this->Unmount( &d );
+			this->Unmount(&d);
 
-			LOG->Trace( "WriteTest: %s, Name: %s", d.m_State == UsbStorageDevice::STATE_ERROR? "failed":"succeeded", d.sName.c_str() );
+			LOG->Trace(
+			   "WriteTest: %s, Name: %s",
+			   d.m_State == UsbStorageDevice::STATE_ERROR ? "failed" : "succeeded",
+			   d.sName.c_str()
+			);
 		}
 	}
 
@@ -141,30 +132,27 @@ bool MemoryCardDriver::DoOneUpdate( bool bMount, std::vector<UsbStorageDevice>& 
 }
 
 #include "arch/arch_default.h"
-MemoryCardDriver *MemoryCardDriver::Create()
-{
+MemoryCardDriver *MemoryCardDriver::Create() {
 	MemoryCardDriver *ret = nullptr;
 
-	switch( g_MemoryCardDriver )
-	{
-		case MemoryCardDriverType_Directory:
-			ret = new MemoryCardDriverThreaded_Folder;
-			break;
-		case MemoryCardDriverType_Usb:
+	switch (g_MemoryCardDriver) {
+	case MemoryCardDriverType_Directory:
+		ret = new MemoryCardDriverThreaded_Folder;
+		break;
+	case MemoryCardDriverType_Usb:
 #ifdef ARCH_MEMORY_CARD_DRIVER
-			ret = new ARCH_MEMORY_CARD_DRIVER;
+		ret = new ARCH_MEMORY_CARD_DRIVER;
 #endif
-			break;
-		default:
-			break;
+		break;
+	default:
+		break;
 	}
 
-	if( !ret )
+	if (!ret)
 		ret = new MemoryCardDriver_Null;
 
 	return ret;
 }
-
 
 /*
  * (c) 2002-2004 Glenn Maynard

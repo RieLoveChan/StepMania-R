@@ -6,27 +6,29 @@
 
 #include <vector>
 
-
 /** @brief A read-only file driver for ZIPs. */
-class RageFileDriverZip: public RageFileDriver
-{
-public:
+class RageFileDriverZip : public RageFileDriver {
+ public:
 	RageFileDriverZip();
-	RageFileDriverZip( const RString &sPath );
-	bool Load( const RString &sPath );
-	bool Load( RageFileBasic *pFile );
+	RageFileDriverZip(const RString &sPath);
+	bool Load(const RString &sPath);
+	bool Load(RageFileBasic *pFile);
 
 	~RageFileDriverZip() override;
 
-	RageFileBasic *Open( const RString &sPath, int iMode, int &iErr ) override;
-	void FlushDirCache( const RString &sPath ) override;
+	RageFileBasic *Open(const RString &sPath, int iMode, int &iErr) override;
+	void FlushDirCache(const RString &sPath) override;
 
-	void DeleteFileWhenFinished() { m_bFileOwned = true; }
+	void DeleteFileWhenFinished() {
+		m_bFileOwned = true;
+	}
 
 	/* Lower-level access: */
-	enum ZipCompressionMethod { STORED = 0, DEFLATED = 8 };
-	struct FileInfo
-	{
+	enum ZipCompressionMethod {
+		STORED = 0,
+		DEFLATED = 8
+	};
+	struct FileInfo {
 		RString m_sName;
 		int m_iOffset;
 		int m_iDataOffset;
@@ -38,11 +40,13 @@ public:
 		/* If 0, unknown. */
 		int m_iFilePermissions;
 	};
-	const FileInfo *GetFileInfo( const RString &sPath ) const;
+	const FileInfo *GetFileInfo(const RString &sPath) const;
 
-	RString GetGlobalComment() const { return m_sComment; }
+	RString GetGlobalComment() const {
+		return m_sComment;
+	}
 
-private:
+ private:
 	bool m_bFileOwned;
 
 	RageFileBasic *m_pZip;
@@ -56,10 +60,10 @@ private:
 	RageMutex m_Mutex;
 
 	bool ParseZipfile();
-	bool ReadEndCentralRecord( int &total_entries_central_dir, int &offset_start_central_directory );
-	int ProcessCdirFileHdr( FileInfo &info );
+	bool ReadEndCentralRecord(int &total_entries_central_dir, int &offset_start_central_directory);
+	int ProcessCdirFileHdr(FileInfo &info);
 	bool SeekToEndCentralRecord();
-	bool ReadLocalFileHeader( FileInfo &info );
+	bool ReadLocalFileHeader(FileInfo &info);
 };
 
 #endif

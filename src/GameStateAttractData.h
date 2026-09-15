@@ -5,9 +5,8 @@
 // cluster 3 -- split-god-object.md). GameState exposes these under
 // their original names via reference members, so no call site outside
 // GameState.h/.cpp changes.
-class GameStateAttractData
-{
-public:
+class GameStateAttractData {
+ public:
 	GameStateAttractData();
 
 	// negative means play attract sounds regardless of
@@ -15,7 +14,7 @@ public:
 	int m_iNumTimesThroughAttract;
 
 	bool IsTimeToPlayAttractSounds() const;
-	void VisitAttractScreen( const RString sScreenName );
+	void VisitAttractScreen(const RString sScreenName);
 };
 
 #endif

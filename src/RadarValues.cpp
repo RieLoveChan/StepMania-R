@@ -7,50 +7,38 @@
 
 #include <vector>
 
+ThemeMetric<bool> RadarValues::WRITE_SIMPLE_VALIES("RadarValues", "WriteSimpleValues");
+ThemeMetric<bool> RadarValues::WRITE_COMPLEX_VALIES("RadarValues", "WriteComplexValues");
 
-ThemeMetric<bool> RadarValues::WRITE_SIMPLE_VALIES( "RadarValues", "WriteSimpleValues" );
-ThemeMetric<bool> RadarValues::WRITE_COMPLEX_VALIES( "RadarValues", "WriteComplexValues" );
-
-RadarValues::RadarValues()
-{
+RadarValues::RadarValues() {
 	MakeUnknown();
 }
 
-void RadarValues::MakeUnknown()
-{
-	FOREACH_ENUM( RadarCategory, rc )
-	{
+void RadarValues::MakeUnknown() {
+	FOREACH_ENUM(RadarCategory, rc) {
 		(*this)[rc] = RADAR_VAL_UNKNOWN;
 	}
 }
 
-void RadarValues::Zero()
-{
-	FOREACH_ENUM( RadarCategory, rc )
-	{
+void RadarValues::Zero() {
+	FOREACH_ENUM(RadarCategory, rc) {
 		(*this)[rc] = 0;
 	}
 }
 
-XNode* RadarValues::CreateNode( bool bIncludeSimpleValues, bool bIncludeComplexValues ) const
-{
-	XNode* pNode = new XNode( "RadarValues" );
+XNode *RadarValues::CreateNode(bool bIncludeSimpleValues, bool bIncludeComplexValues) const {
+	XNode *pNode = new XNode("RadarValues");
 
 	// TRICKY: Don't print a remainder for the integer values.
-	FOREACH_ENUM( RadarCategory, rc )
-	{
-		if( rc >= RadarCategory_TapsAndHolds )
-		{
-			if( bIncludeSimpleValues )
-			{
-				pNode->AppendChild(RadarCategoryToString(rc),	(int)((*this)[rc]));
+	FOREACH_ENUM(RadarCategory, rc) {
+		if (rc >= RadarCategory_TapsAndHolds) {
+			if (bIncludeSimpleValues) {
+				pNode->AppendChild(RadarCategoryToString(rc), (int)((*this)[rc]));
 			}
 		}
-		else
-		{
-			if( bIncludeComplexValues )
-			{
-				pNode->AppendChild(RadarCategoryToString(rc),	(*this)[rc]);
+		else {
+			if (bIncludeComplexValues) {
+				pNode->AppendChild(RadarCategoryToString(rc), (*this)[rc]);
 			}
 		}
 	}
@@ -58,69 +46,62 @@ XNode* RadarValues::CreateNode( bool bIncludeSimpleValues, bool bIncludeComplexV
 	return pNode;
 }
 
-void RadarValues::LoadFromNode( const XNode* pNode )
-{
-	ASSERT( pNode->GetName() == "RadarValues" );
+void RadarValues::LoadFromNode(const XNode *pNode) {
+	ASSERT(pNode->GetName() == "RadarValues");
 
 	Zero();
 
-	FOREACH_ENUM( RadarCategory, rc )
-	{
-		pNode->GetChildValue( RadarCategoryToString(rc),	(*this)[rc] );
+	FOREACH_ENUM(RadarCategory, rc) {
+		pNode->GetChildValue(RadarCategoryToString(rc), (*this)[rc]);
 	}
 }
 
 /* iMaxValues is only used for writing compatibility fields in non-cache
  * SM files; they're never actually read. */
-RString RadarValues::ToString( int iMaxValues ) const
-{
-	if( iMaxValues == -1 )
+RString RadarValues::ToString(int iMaxValues) const {
+	if (iMaxValues == -1)
 		iMaxValues = NUM_RadarCategory;
-	iMaxValues = std::min( iMaxValues, (int)NUM_RadarCategory );
+	iMaxValues = std::min(iMaxValues, (int)NUM_RadarCategory);
 
 	std::vector<RString> asRadarValues;
-	for( int r=0; r < iMaxValues; r++ )
-	{
+	for (int r = 0; r < iMaxValues; r++) {
 		asRadarValues.push_back(ssprintf("%.3f", (*this)[r]));
 	}
 
-	return join( ",",asRadarValues );
+	return join(",", asRadarValues);
 }
 
-void RadarValues::FromString( RString sRadarValues )
-{
+void RadarValues::FromString(RString sRadarValues) {
 	std::vector<RString> saValues;
-	split( sRadarValues, ",", saValues, true );
+	split(sRadarValues, ",", saValues, true);
 
-	if( saValues.size() != NUM_RadarCategory )
-	{
+	if (saValues.size() != NUM_RadarCategory) {
 		MakeUnknown();
 		return;
 	}
 
-	FOREACH_ENUM( RadarCategory, rc )
-	{
+	FOREACH_ENUM(RadarCategory, rc) {
 		(*this)[rc] = StringToFloat(saValues[rc]);
 	}
-
 }
 
 // lua start
 #include "LuaBinding.h"
 
 /** @brief Allow Lua to have access to the RadarValues. */
-class LunaRadarValues: public Luna<RadarValues>
-{
-public:
-	static int GetValue( T* p, lua_State *L ) { lua_pushnumber( L, (*p)[Enum::Check<RadarCategory>(L, 1)] ); return 1; }
+class LunaRadarValues : public Luna<RadarValues> {
+ public:
+	static int GetValue(T *p, lua_State *L) {
+		lua_pushnumber(L, (*p)[Enum::Check<RadarCategory>(L, 1)]);
+		return 1;
+	}
 
-	LunaRadarValues()
-	{
-		ADD_METHOD( GetValue );
+	LunaRadarValues() {
+		ADD_METHOD(GetValue);
 	}
 };
 
-LUA_REGISTER_CLASS( RadarValues )
+LUA_REGISTER_CLASS(RadarValues)
 // lua end
 
 /*

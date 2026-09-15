@@ -3,19 +3,25 @@
 #ifndef RAGE_SOUND_READER_H
 #define RAGE_SOUND_READER_H
 
-class RageSoundReader
-{
-public:
+class RageSoundReader {
+ public:
 	virtual int GetLength() const = 0; /* ms */
-	virtual int GetLength_Fast() const { return GetLength(); } /* ms */
-	virtual int SetPosition( int iFrame ) = 0;
-	virtual int Read( float *pBuf, int iFrames ) = 0;
-	virtual ~RageSoundReader() { }
+	virtual int GetLength_Fast() const {
+		return GetLength();
+	} /* ms */
+	virtual int SetPosition(int iFrame) = 0;
+	virtual int Read(float *pBuf, int iFrames) = 0;
+	virtual ~RageSoundReader() {
+	}
 	virtual RageSoundReader *Copy() const = 0;
 	virtual int GetSampleRate() const = 0;
 	virtual unsigned GetNumChannels() const = 0;
-	virtual bool SetProperty( const RString & /* sProperty */, float /* fValue */ ) { return false; }
-	virtual RageSoundReader *GetSource() { return nullptr; }
+	virtual bool SetProperty(const RString & /* sProperty */, float /* fValue */) {
+		return false;
+	}
+	virtual RageSoundReader *GetSource() {
+		return nullptr;
+	}
 
 	/* Return values for Read(). */
 	enum {
@@ -40,7 +46,7 @@ public:
 	virtual float GetStreamToSourceRatio() const = 0;
 
 	virtual RString GetError() const = 0;
-	int RetriedRead( float *pBuffer, int iFrames, int *iSourceFrame = nullptr, float *fRate = nullptr );
+	int RetriedRead(float *pBuffer, int iFrames, int *iSourceFrame = nullptr, float *fRate = nullptr);
 };
 
 #endif

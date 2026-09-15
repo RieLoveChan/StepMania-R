@@ -17,9 +17,8 @@ class RageSoundReader;
 class RageSoundReader_Preload;
 class RageTimer;
 
-class RageSoundManager
-{
-public:
+class RageSoundManager {
+ public:
 	RageSoundManager();
 	~RageSoundManager();
 
@@ -32,24 +31,26 @@ public:
 	void Init();
 
 	void SetMixVolume();
-	float GetVolumeOfNonCriticalSounds() const { return m_fVolumeOfNonCriticalSounds; }
-	void SetVolumeOfNonCriticalSounds( float fVolumeOfNonCriticalSounds );
+	float GetVolumeOfNonCriticalSounds() const {
+		return m_fVolumeOfNonCriticalSounds;
+	}
+	void SetVolumeOfNonCriticalSounds(float fVolumeOfNonCriticalSounds);
 
 	void Update();
-	void StartMixing( RageSoundBase *snd );	/* used by RageSound */
-	void StopMixing( RageSoundBase *snd );	/* used by RageSound */
-	bool Pause( RageSoundBase *snd, bool bPause );	/* used by RageSound */
-	std::int64_t GetPosition( RageTimer *pTimer ) const;	/* used by RageSound */
+	void StartMixing(RageSoundBase *snd);              /* used by RageSound */
+	void StopMixing(RageSoundBase *snd);               /* used by RageSound */
+	bool Pause(RageSoundBase *snd, bool bPause);       /* used by RageSound */
+	std::int64_t GetPosition(RageTimer *pTimer) const; /* used by RageSound */
 	float GetPlayLatency() const;
 	int GetDriverSampleRate() const;
 
-	RageSoundReader *GetLoadedSound( const RString &sPath );
-	void AddLoadedSound( const RString &sPath, RageSoundReader_Preload *pSound );
+	RageSoundReader *GetLoadedSound(const RString &sPath);
+	void AddLoadedSound(const RString &sPath, RageSoundReader_Preload *pSound);
 
-	void fix_bogus_sound_driver_pref(RString const& valid_setting);
+	void fix_bogus_sound_driver_pref(RString const &valid_setting);
 	void low_sample_count_workaround();
 
-private:
+ private:
 	std::map<RString, RageSoundReader_Preload *> m_mapPreloadedSounds;
 
 	RageSoundDriver *m_pDriver;
@@ -57,8 +58,8 @@ private:
 	/* Prefs: */
 	float m_fVolumeOfNonCriticalSounds;
 	// Swallow up warnings. If they must be used, define them.
-	RageSoundManager& operator=(const RageSoundManager& rhs);
-	RageSoundManager(const RageSoundManager& rhs);
+	RageSoundManager &operator=(const RageSoundManager &rhs);
+	RageSoundManager(const RageSoundManager &rhs);
 };
 
 extern RageSoundManager *SOUNDMAN;

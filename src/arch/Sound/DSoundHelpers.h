@@ -11,55 +11,68 @@
 struct IDirectSound;
 struct IDirectSoundBuffer;
 
-class DSound
-{
-public:
-	IDirectSound *GetDS() const { return m_pDS; }
+class DSound {
+ public:
+	IDirectSound *GetDS() const {
+		return m_pDS;
+	}
 	bool IsEmulated() const;
 
 	DSound();
 	~DSound();
 	RString Init();
 
-private:
+ private:
 	IDirectSound *m_pDS;
-	static BOOL CALLBACK EnumCallback( LPGUID lpGuid, LPCSTR lpcstrDescription, LPCSTR  lpcstrModule, LPVOID lpContext);
+	static BOOL CALLBACK EnumCallback(LPGUID lpGuid, LPCSTR lpcstrDescription, LPCSTR lpcstrModule, LPVOID lpContext);
 
 	void SetPrimaryBufferMode();
 };
 
-class DSoundBuf
-{
-public:
-	enum hw { HW_HARDWARE, HW_SOFTWARE, HW_DONT_CARE };
+class DSoundBuf {
+ public:
+	enum hw {
+		HW_HARDWARE,
+		HW_SOFTWARE,
+		HW_DONT_CARE
+	};
 
 	/* If samplerate is DYNAMIC_SAMPLERATE, then call SetSampleRate before
 	 * you use the sample. */
-	enum { DYNAMIC_SAMPLERATE = -1 };
+	enum {
+		DYNAMIC_SAMPLERATE = -1
+	};
 
 	DSoundBuf();
-	RString Init( DSound &ds, hw hardware,
-		int iChannels, int iSampleRate, int iSampleBits, int iWriteAhead );
+	RString Init(DSound &ds, hw hardware, int iChannels, int iSampleRate, int iSampleBits, int iWriteAhead);
 
-	bool get_output_buf( char **pBuffer, unsigned *iBuffersize, int iChunksize );
-	void release_output_buf( char *pBuffer, unsigned iBuffersize );
+	bool get_output_buf(char **pBuffer, unsigned *iBuffersize, int iChunksize);
+	void release_output_buf(char *pBuffer, unsigned iBuffersize);
 
 	void Play();
 	void Stop();
-	void SetVolume( float fVolume );
-	void SetSampleRate( int iRate );
-	int GetSampleRate() const { return m_iSampleRate; }
+	void SetVolume(float fVolume);
+	void SetSampleRate(int iRate);
+	int GetSampleRate() const {
+		return m_iSampleRate;
+	}
 
 	~DSoundBuf();
 	std::int64_t GetPosition() const;
-	std::int64_t GetOutputPosition() const { return m_iWriteCursorPos; }
+	std::int64_t GetOutputPosition() const {
+		return m_iWriteCursorPos;
+	}
 
-private:
-	int buffersize_frames() const { return m_iBufferSize / bytes_per_frame(); }
-	int bytes_per_frame() const { return m_iChannels*m_iSampleBits/8; }
+ private:
+	int buffersize_frames() const {
+		return m_iBufferSize / bytes_per_frame();
+	}
+	int bytes_per_frame() const {
+		return m_iChannels * m_iSampleBits / 8;
+	}
 
-	void CheckWriteahead( int iCursorStart, int iCursorEnd );
-	void CheckUnderrun( int iCursorStart, int iCursorEnd );
+	void CheckWriteahead(int iCursorStart, int iCursorEnd);
+	void CheckUnderrun(int iCursorStart, int iCursorEnd);
 
 	IDirectSoundBuffer *m_pBuffer;
 

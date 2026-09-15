@@ -8,22 +8,23 @@
 typedef struct OggVorbis_File OggVorbis_File;
 class RageFileBasic;
 
-class RageSoundReader_Vorbisfile: public RageSoundReader_FileReader
-{
-public:
-	OpenResult Open( RageFileBasic *pFile ) override;
+class RageSoundReader_Vorbisfile : public RageSoundReader_FileReader {
+ public:
+	OpenResult Open(RageFileBasic *pFile) override;
 
 	int GetLength() const override;
-	int SetPosition( int iFrame ) override;
-	int Read( float *pBuf, int iFrames ) override;
+	int SetPosition(int iFrame) override;
+	int Read(float *pBuf, int iFrames) override;
 	int GetSampleRate() const override;
-	unsigned GetNumChannels() const override { return channels; }
+	unsigned GetNumChannels() const override {
+		return channels;
+	}
 	int GetNextSourceFrame() const override;
 	RageSoundReader_Vorbisfile();
 	~RageSoundReader_Vorbisfile() override;
 	RageSoundReader_Vorbisfile *Copy() const override;
 
-private:
+ private:
 	OggVorbis_File *vf;
 	bool eof;
 	bool FillBuf();
@@ -58,4 +59,3 @@ private:
  * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  * PERFORMANCE OF THIS SOFTWARE.
  */
-

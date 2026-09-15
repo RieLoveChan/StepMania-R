@@ -8,16 +8,14 @@
 
 #include <vector>
 
-
 class Song;
 class Steps;
 class Course;
 struct DisplayBpms;
 
 /** @brief Displays a BPM or a range of BPMs. */
-class BPMDisplay : public BitmapText
-{
-public:
+class BPMDisplay : public BitmapText {
+ public:
 	/** @brief Set up the BPM Display with default values. */
 	BPMDisplay();
 	/** @brief Copy the BPMDisplay to another. */
@@ -28,28 +26,28 @@ public:
 	 * @brief Update the display as required.
 	 * @param fDeltaTime the changed time.
 	 */
-	virtual void Update( float fDeltaTime );
-	void LoadFromNode( const XNode *pNode );
+	virtual void Update(float fDeltaTime);
+	void LoadFromNode(const XNode *pNode);
 	/**
 	 * @brief Use the BPM[s] from a song.
 	 * @param pSong the song in question.
 	 */
-	void SetBpmFromSong( const Song* pSong );
+	void SetBpmFromSong(const Song *pSong);
 	/**
 	 * @brief Use the BPM[s] from a steps.
 	 * @param pSteps the steps in question.
 	 */
-	void SetBpmFromSteps( const Steps* pSteps );
+	void SetBpmFromSteps(const Steps *pSteps);
 	/**
 	 * @brief Use the BPM[s] from a course.
 	 * @param pCourse the course in question.
 	 */
-	void SetBpmFromCourse( const Course* pCourse );
+	void SetBpmFromCourse(const Course *pCourse);
 	/**
 	 * @brief Use a specified, constant BPM.
 	 * @param fBPM the constant BPM.
 	 */
-	void SetConstantBpm( float fBPM );
+	void SetConstantBpm(float fBPM);
 	/**
 	 * @brief Have the BPMDisplay cycle between various BPMs.
 	 */
@@ -62,9 +60,9 @@ public:
 	void SetFromGameState();
 
 	// Lua
-	virtual void PushSelf( lua_State *L );
+	virtual void PushSelf(lua_State *L);
 
-protected:
+ protected:
 	/**
 	 * @brief Retrieve the active BPM on display.
 	 * @return the active BPM on display.
@@ -74,7 +72,7 @@ protected:
 	 * @brief Set the range to be used for the display.
 	 * @param bpms the set of BPMs to be used.
 	 */
-	void SetBPMRange( const DisplayBpms &bpms );
+	void SetBPMRange(const DisplayBpms &bpms);
 
 	/** @brief The commands to use when there is no BPM. */
 	ThemeMetric<apActorCommands> SET_NO_BPM_COMMAND;

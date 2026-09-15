@@ -10,365 +10,302 @@
 #include "RageLog.h"
 #include "SpecialFiles.h"
 
-//DEFAULTS_INI_PATH	= "Data/Defaults.ini";		// these can be overridden
-//PREFERENCES_INI_PATH	// overlay on Defaults.ini, contains the user's choices
-//STATIC_INI_PATH	= "Data/Static.ini";		// overlay on the 2 above, can't be overridden
-//TYPE_TXT_FILE	= "Data/Type.txt";
+// DEFAULTS_INI_PATH	= "Data/Defaults.ini";		// these can be overridden
+// PREFERENCES_INI_PATH	// overlay on Defaults.ini, contains the user's choices
+// STATIC_INI_PATH	= "Data/Static.ini";		// overlay on the 2 above, can't be overridden
+// TYPE_TXT_FILE	= "Data/Type.txt";
 
-PrefsManager*	PREFSMAN = nullptr;	// global and accessible from anywhere in our program
+PrefsManager *PREFSMAN = nullptr; // global and accessible from anywhere in our program
 
 static const char *MusicWheelUsesSectionsNames[] = {
-	"Never",
-	"Always",
-	"ABCOnly",
+   "Never",
+   "Always",
+   "ABCOnly",
 };
-XToString( MusicWheelUsesSections );
-StringToX( MusicWheelUsesSections );
-LuaXType( MusicWheelUsesSections );
+XToString(MusicWheelUsesSections);
+StringToX(MusicWheelUsesSections);
+LuaXType(MusicWheelUsesSections);
 
 static const char *AllowW1Names[] = {
-	"Never",
-	"CoursesOnly",
-	"Everywhere",
+   "Never",
+   "CoursesOnly",
+   "Everywhere",
 };
-XToString( AllowW1 );
-StringToX( AllowW1 );
-LuaXType( AllowW1 );
+XToString(AllowW1);
+StringToX(AllowW1);
+LuaXType(AllowW1);
 
 static const char *MaybeNames[] = {
-	"Ask",
-	"No",
-	"Yes",
+   "Ask",
+   "No",
+   "Yes",
 };
-XToString( Maybe );
-StringToX( Maybe );
-LuaXType( Maybe );
+XToString(Maybe);
+StringToX(Maybe);
+LuaXType(Maybe);
 
 static const char *GetRankingNameNames[] = {
-	"Off",
-	"On",
-	"List",
+   "Off",
+   "On",
+   "List",
 };
-XToString( GetRankingName );
-StringToX( GetRankingName );
-LuaXType( GetRankingName );
-
+XToString(GetRankingName);
+StringToX(GetRankingName);
+LuaXType(GetRankingName);
 
 static const char *RandomBackgroundModeNames[] = {
-	"Off",
-	"Animations",
-	"RandomMovies",
+   "Off",
+   "Animations",
+   "RandomMovies",
 };
-XToString( RandomBackgroundMode );
-StringToX( RandomBackgroundMode );
-LuaXType( RandomBackgroundMode );
+XToString(RandomBackgroundMode);
+StringToX(RandomBackgroundMode);
+LuaXType(RandomBackgroundMode);
 
 static const char *ShowDancingCharactersNames[] = {
-	"Off",
-	"Random",
-	"Select",
+   "Off",
+   "Random",
+   "Select",
 };
-XToString( ShowDancingCharacters );
-StringToX( ShowDancingCharacters );
-LuaXType( ShowDancingCharacters );
+XToString(ShowDancingCharacters);
+StringToX(ShowDancingCharacters);
+LuaXType(ShowDancingCharacters);
 
-static const char *ImageCacheModeNames[] = {
-	"Off",
-	"LowResPreload",
-	"LowResLoadOnDemand",
-	"Full"
-};
-XToString( ImageCacheMode );
-StringToX( ImageCacheMode );
-LuaXType( ImageCacheMode );
+static const char *ImageCacheModeNames[] = {"Off", "LowResPreload", "LowResLoadOnDemand", "Full"};
+XToString(ImageCacheMode);
+StringToX(ImageCacheMode);
+LuaXType(ImageCacheMode);
 
 static const char *HighResolutionTexturesNames[] = {
-	"Auto",
-	"ForceOff",
-	"ForceOn",
+   "Auto",
+   "ForceOff",
+   "ForceOn",
 };
-XToString( HighResolutionTextures );
-StringToX( HighResolutionTextures );
-LuaXType( HighResolutionTextures );
+XToString(HighResolutionTextures);
+StringToX(HighResolutionTextures);
+LuaXType(HighResolutionTextures);
 
 static const char *AttractSoundFrequencyNames[] = {
-	"Never",
-	"EveryTime",
-	"Every2Times",
-	"Every3Times",
-	"Every4Times",
-	"Every5Times",
+   "Never",
+   "EveryTime",
+   "Every2Times",
+   "Every3Times",
+   "Every4Times",
+   "Every5Times",
 };
-XToString( AttractSoundFrequency );
-StringToX( AttractSoundFrequency );
-LuaXType( AttractSoundFrequency );
+XToString(AttractSoundFrequency);
+StringToX(AttractSoundFrequency);
+LuaXType(AttractSoundFrequency);
 
 static const char *CourseSortOrdersNames[] = {
-	"Preferred",
-	"Songs",
-	"Meter",
-	"MeterSum",
-	"MeterRank",
+   "Preferred",
+   "Songs",
+   "Meter",
+   "MeterSum",
+   "MeterRank",
 };
-XToString( CourseSortOrders );
-StringToX( CourseSortOrders );
-LuaXType( CourseSortOrders );
+XToString(CourseSortOrders);
+StringToX(CourseSortOrders);
+LuaXType(CourseSortOrders);
 
 static const char *BackgroundFitModeNames[] = {
-	"CoverDistort",
-	"CoverPreserve",
-	"FitInside",
-	"FitInsideAvoidLetter",
-	"FitInsideAvoidPillar",
+   "CoverDistort",
+   "CoverPreserve",
+   "FitInside",
+   "FitInsideAvoidLetter",
+   "FitInsideAvoidPillar",
 };
-XToString( BackgroundFitMode );
-StringToX( BackgroundFitMode );
-LuaXType( BackgroundFitMode );
+XToString(BackgroundFitMode);
+StringToX(BackgroundFitMode);
+LuaXType(BackgroundFitMode);
 
-static const char* ProfileSortOrderNames[] = {
-	"Priority",
-	"Recent",
-	"Alphabetical"
-};
+static const char *ProfileSortOrderNames[] = {"Priority", "Recent", "Alphabetical"};
 XToString(ProfileSortOrder);
 StringToX(ProfileSortOrder);
 LuaXType(ProfileSortOrder);
 
 bool g_bAutoRestart = false;
 #ifdef DEBUG
-# define TRUE_IF_DEBUG true
+#define TRUE_IF_DEBUG true
 #else
-# define TRUE_IF_DEBUG false
+#define TRUE_IF_DEBUG false
 #endif
 
-void ValidateDisplayAspectRatio( float &val )
-{
-	if( val < 0 )
-		val = 16/9.f;
+void ValidateDisplayAspectRatio(float &val) {
+	if (val < 0)
+		val = 16 / 9.f;
 }
 
-void ValidateSongsPerPlay( int &val )
-{
-	CLAMP(val,0,MAX_SONGS_PER_PLAY);
+void ValidateSongsPerPlay(int &val) {
+	CLAMP(val, 0, MAX_SONGS_PER_PLAY);
 }
 
-PrefsManager::PrefsManager() :
-	m_sCurrentGame			( "CurrentGame",		"" ),
+PrefsManager::PrefsManager()
+    : m_sCurrentGame("CurrentGame", ""),
 
-	m_sAnnouncer			( "Announcer",			"" ),
-	m_sTheme			( "Theme",			SpecialFiles::BASE_THEME_NAME ),
-	m_sDefaultModifiers		( "DefaultModifiers",		"" ),
+      m_sAnnouncer("Announcer", ""), m_sTheme("Theme", SpecialFiles::BASE_THEME_NAME),
+      m_sDefaultModifiers("DefaultModifiers", ""),
 
-	m_bWindowed			( "Windowed",			true ),
-	m_sDisplayId			( "DisplayId", "" ),
-	m_iDisplayWidth			( "DisplayWidth",		854 ),
-	m_iDisplayHeight		( "DisplayHeight",		480 ),
-	m_fDisplayAspectRatio		( "DisplayAspectRatio",		16/9.f, ValidateDisplayAspectRatio ),
-	m_iDisplayColorDepth		( "DisplayColorDepth",		32 ),
-	m_iTextureColorDepth		( "TextureColorDepth",		32 ),
-	m_iMovieColorDepth		( "MovieColorDepth",		32 ),
-	m_bStretchBackgrounds		( "StretchBackgrounds",		false ),
-	m_BGFitMode			( "BackgroundFitMode",		BFM_CoverPreserve),
-	m_HighResolutionTextures	( "HighResolutionTextures",	HighResolutionTextures_Auto ),
-	m_iMaxTextureResolution		( "MaxTextureResolution",	2048 ),
-	m_iRefreshRate			( "RefreshRate",		REFRESH_DEFAULT ),
-	m_bAllowMultitexture		( "AllowMultitexture",		true ),
-	m_bFullscreenIsBorderlessWindow( "FullscreenIsBorderlessWindow", true ),
-	m_bShowStats			( "ShowStats",			TRUE_IF_DEBUG),
-	m_bShowBanners			( "ShowBanners",		true ),
-	m_bShowMouseCursor		( "ShowMouseCursor",		false ),
+      m_bWindowed("Windowed", true), m_sDisplayId("DisplayId", ""), m_iDisplayWidth("DisplayWidth", 854),
+      m_iDisplayHeight("DisplayHeight", 480),
+      m_fDisplayAspectRatio("DisplayAspectRatio", 16 / 9.f, ValidateDisplayAspectRatio),
+      m_iDisplayColorDepth("DisplayColorDepth", 32), m_iTextureColorDepth("TextureColorDepth", 32),
+      m_iMovieColorDepth("MovieColorDepth", 32), m_bStretchBackgrounds("StretchBackgrounds", false),
+      m_BGFitMode("BackgroundFitMode", BFM_CoverPreserve),
+      m_HighResolutionTextures("HighResolutionTextures", HighResolutionTextures_Auto),
+      m_iMaxTextureResolution("MaxTextureResolution", 2048), m_iRefreshRate("RefreshRate", REFRESH_DEFAULT),
+      m_bAllowMultitexture("AllowMultitexture", true),
+      m_bFullscreenIsBorderlessWindow("FullscreenIsBorderlessWindow", true), m_bShowStats("ShowStats", TRUE_IF_DEBUG),
+      m_bShowBanners("ShowBanners", true), m_bShowMouseCursor("ShowMouseCursor", false),
 
-	m_bHiddenSongs			( "HiddenSongs",		false ),
-	m_bVsync			( "Vsync",			true ),
-	m_FastNoteRendering		( "FastNoteRendering",		false),
-	m_bInterlaced			( "Interlaced",			false ),
-	m_bPAL				( "PAL",			false ),
-	m_bDelayedTextureDelete		( "DelayedTextureDelete",	false ),
-	m_bDelayedModelDelete		( "DelayedModelDelete",		false ),
-	m_ImageCache			( "ImageCache",			IMGCACHE_LOW_RES_PRELOAD ),
-	m_bFastLoad			( "FastLoad",			true ),
-	m_NeverCacheList		( "NeverCacheList", ""),
+      m_bHiddenSongs("HiddenSongs", false), m_bVsync("Vsync", true), m_FastNoteRendering("FastNoteRendering", false),
+      m_bInterlaced("Interlaced", false), m_bPAL("PAL", false), m_bDelayedTextureDelete("DelayedTextureDelete", false),
+      m_bDelayedModelDelete("DelayedModelDelete", false), m_ImageCache("ImageCache", IMGCACHE_LOW_RES_PRELOAD),
+      m_bFastLoad("FastLoad", true), m_NeverCacheList("NeverCacheList", ""),
 
-	m_bOnlyDedicatedMenuButtons	( "OnlyDedicatedMenuButtons",	false ),
-	m_bMenuTimer			( "MenuTimer",			false ),
+      m_bOnlyDedicatedMenuButtons("OnlyDedicatedMenuButtons", false), m_bMenuTimer("MenuTimer", false),
 
-	m_fLifeDifficultyScale		( "LifeDifficultyScale",	1.0f ),
+      m_fLifeDifficultyScale("LifeDifficultyScale", 1.0f),
 
-	m_bRateModsAffectTweens		( "RateModsAffectFGChanges",	false ),
+      m_bRateModsAffectTweens("RateModsAffectFGChanges", false),
 
-	m_iRegenComboAfterMiss		( "RegenComboAfterMiss",	5 ),
-	m_iMaxRegenComboAfterMiss	( "MaxRegenComboAfterMiss",	5 ), // this was 10 by default in SM3.95 -dguzek
-	m_bMercifulDrain		( "MercifulDrain",		false ),	// negative life deltas are scaled by the players life percentage
-	m_HarshHotLifePenalty		( "HarshHotLifePenalty",	true ),
-	m_bMinimum1FullSongInCourses	( "Minimum1FullSongInCourses",	false ),	// FEoS for 1st song, FailImmediate thereafter
-	m_bFailOffInBeginner		( "FailOffInBeginner",		false ),
-	m_bFailOffForFirstStageEasy	( "FailOffForFirstStageEasy",	false ),
-	m_bMercifulBeginner		( "MercifulBeginner",		false ),
-	m_bMercifulSuperMeter		( "MercifulSuperMeter",		true ),
-	m_bDelayedBack			( "DelayedBack",		true ),
-	m_AllowHoldForOptions		( "AllowHoldForOptions",	true ),
-	m_bShowInstructions		( "ShowInstructions",		true ),
-	m_bShowCaution			( "ShowCaution",		true ),
-	m_bShowNativeLanguage		( "ShowNativeLanguage",		true ),
-	m_iArcadeOptionsNavigation	( "ArcadeOptionsNavigation",	0 ),
-	m_ThreeKeyNavigation		( "ThreeKeyNavigation",		false ),
-	m_MusicWheelUsesSections	( "MusicWheelUsesSections",	MusicWheelUsesSections_ALWAYS ),
-	m_iMusicWheelSwitchSpeed	( "MusicWheelSwitchSpeed",	15 ),
-	m_AllowW1			( "AllowW1",			ALLOW_W1_EVERYWHERE ),
-	m_bEventMode			( "EventMode",			true ),
-	m_iCoinsPerCredit		( "CoinsPerCredit",		1 ),
-	m_iMaxNumCredits		( "MaxNumCredits",		20 ),
-	m_iSongsPerPlay			( "SongsPerPlay",		3, ValidateSongsPerPlay ),
-	m_bDelayedCreditsReconcile	( "DelayedCreditsReconcile",	false ),
-	m_bComboContinuesBetweenSongs	( "ComboContinuesBetweenSongs",	false ),
-	m_AllowMultipleToasties		( "AllowMultipleToasties",	true ),
-	m_MinTNSToHideNotes		( "MinTNSToHideNotes",		TNS_W3 ),
-	m_ShowSongOptions		( "ShowSongOptions",		Maybe_NO ),
-	m_bPercentageScoring		( "PercentageScoring",		true ),
-	// Wow, these preference names are *seriously* long -Colby
-	m_fMinPercentageForMachineSongHighScore		( "MinPercentageForMachineSongHighScore",	0.0001f ), // This is for home, who cares how bad you do?
-	m_fMinPercentageForMachineCourseHighScore	( "MinPercentageForMachineCourseHighScore",	0.0001f ), // don't save course scores with 0 percentage
-	m_bDisqualification		( "Disqualification",			false ),
-	m_bAutogenSteps			( "AutogenSteps",			false ),
-	m_bAutogenGroupCourses		( "AutogenGroupCourses",		true ),
-	m_bOnlyPreferredDifficulties	( "OnlyPreferredDifficulties",		false ),
-	m_bBreakComboToGetItem		( "BreakComboToGetItem",		false ),
-	m_bLockCourseDifficulties	( "LockCourseDifficulties",		false ),
-	m_ShowDancingCharacters		( "ShowDancingCharacters",		SDC_Random ),
-	m_bUseUnlockSystem		( "UseUnlockSystem",			false ),
-	m_fGlobalOffsetSeconds		( "GlobalOffsetSeconds",		-0.008f ),
-	m_iProgressiveLifebar		( "ProgressiveLifebar",			0 ),
-	m_iProgressiveStageLifebar	( "ProgressiveStageLifebar",		0 ),
-	m_iProgressiveNonstopLifebar	( "ProgressiveNonstopLifebar",		0 ),
-	m_bShowBeginnerHelper		( "ShowBeginnerHelper",			false ),
-	m_bDisableScreenSaver		( "DisableScreenSaver",			true ),
-	m_sLanguage			( "Language",				"" ),	// ThemeManager will deal with this invalid language
-	m_sMemoryCardProfileSubdir	( "MemoryCardProfileSubdir",		PRODUCT_ID ),
-	m_iProductID			( "ProductID",				1 ),
-	m_iCenterImageTranslateX	( "CenterImageTranslateX",		0 ),
-	m_iCenterImageTranslateY	( "CenterImageTranslateY",		0 ),
-	m_fCenterImageAddWidth		( "CenterImageAddWidth",		0 ),
-	m_fCenterImageAddHeight		( "CenterImageAddHeight",		0 ),
-	m_AttractSoundFrequency		( "AttractSoundFrequency",		ASF_EVERY_TIME ),
-	m_bAllowExtraStage		( "AllowExtraStage",			false ),
-	m_iMaxHighScoresPerListForMachine	( "MaxHighScoresPerListForMachine",	10 ),
-	m_iMaxHighScoresPerListForPlayer	( "MaxHighScoresPerListForPlayer",	3 ),
-	m_bAllowMultipleHighScoreWithSameName	( "AllowMultipleHighScoreWithSameName",	true ),
-	m_DisableUploadDir("DisableUploadDir", false),
-	m_bCelShadeModels		( "CelShadeModels",			false ),	// Work-In-Progress.. disable by default.
-	m_bPreferredSortUsesGroups	( "PreferredSortUsesGroups",		true ),
-	m_fDebounceCoinInputTime	( "DebounceCoinInputTime",		0 ),
+      m_iRegenComboAfterMiss("RegenComboAfterMiss", 5),
+      m_iMaxRegenComboAfterMiss("MaxRegenComboAfterMiss", 5), // this was 10 by default in SM3.95 -dguzek
+      m_bMercifulDrain("MercifulDrain", false), // negative life deltas are scaled by the players life percentage
+      m_HarshHotLifePenalty("HarshHotLifePenalty", true),
+      m_bMinimum1FullSongInCourses("Minimum1FullSongInCourses", false), // FEoS for 1st song, FailImmediate thereafter
+      m_bFailOffInBeginner("FailOffInBeginner", false), m_bFailOffForFirstStageEasy("FailOffForFirstStageEasy", false),
+      m_bMercifulBeginner("MercifulBeginner", false), m_bMercifulSuperMeter("MercifulSuperMeter", true),
+      m_bDelayedBack("DelayedBack", true), m_AllowHoldForOptions("AllowHoldForOptions", true),
+      m_bShowInstructions("ShowInstructions", true), m_bShowCaution("ShowCaution", true),
+      m_bShowNativeLanguage("ShowNativeLanguage", true), m_iArcadeOptionsNavigation("ArcadeOptionsNavigation", 0),
+      m_ThreeKeyNavigation("ThreeKeyNavigation", false),
+      m_MusicWheelUsesSections("MusicWheelUsesSections", MusicWheelUsesSections_ALWAYS),
+      m_iMusicWheelSwitchSpeed("MusicWheelSwitchSpeed", 15), m_AllowW1("AllowW1", ALLOW_W1_EVERYWHERE),
+      m_bEventMode("EventMode", true), m_iCoinsPerCredit("CoinsPerCredit", 1), m_iMaxNumCredits("MaxNumCredits", 20),
+      m_iSongsPerPlay("SongsPerPlay", 3, ValidateSongsPerPlay),
+      m_bDelayedCreditsReconcile("DelayedCreditsReconcile", false),
+      m_bComboContinuesBetweenSongs("ComboContinuesBetweenSongs", false),
+      m_AllowMultipleToasties("AllowMultipleToasties", true), m_MinTNSToHideNotes("MinTNSToHideNotes", TNS_W3),
+      m_ShowSongOptions("ShowSongOptions", Maybe_NO), m_bPercentageScoring("PercentageScoring", true),
+      // Wow, these preference names are *seriously* long -Colby
+      m_fMinPercentageForMachineSongHighScore(
+         "MinPercentageForMachineSongHighScore", 0.0001f
+      ), // This is for home, who cares how bad you do?
+      m_fMinPercentageForMachineCourseHighScore(
+         "MinPercentageForMachineCourseHighScore", 0.0001f
+      ), // don't save course scores with 0 percentage
+      m_bDisqualification("Disqualification", false), m_bAutogenSteps("AutogenSteps", false),
+      m_bAutogenGroupCourses("AutogenGroupCourses", true),
+      m_bOnlyPreferredDifficulties("OnlyPreferredDifficulties", false),
+      m_bBreakComboToGetItem("BreakComboToGetItem", false), m_bLockCourseDifficulties("LockCourseDifficulties", false),
+      m_ShowDancingCharacters("ShowDancingCharacters", SDC_Random), m_bUseUnlockSystem("UseUnlockSystem", false),
+      m_fGlobalOffsetSeconds("GlobalOffsetSeconds", -0.008f), m_iProgressiveLifebar("ProgressiveLifebar", 0),
+      m_iProgressiveStageLifebar("ProgressiveStageLifebar", 0),
+      m_iProgressiveNonstopLifebar("ProgressiveNonstopLifebar", 0), m_bShowBeginnerHelper("ShowBeginnerHelper", false),
+      m_bDisableScreenSaver("DisableScreenSaver", true),
+      m_sLanguage("Language", ""), // ThemeManager will deal with this invalid language
+      m_sMemoryCardProfileSubdir("MemoryCardProfileSubdir", PRODUCT_ID), m_iProductID("ProductID", 1),
+      m_iCenterImageTranslateX("CenterImageTranslateX", 0), m_iCenterImageTranslateY("CenterImageTranslateY", 0),
+      m_fCenterImageAddWidth("CenterImageAddWidth", 0), m_fCenterImageAddHeight("CenterImageAddHeight", 0),
+      m_AttractSoundFrequency("AttractSoundFrequency", ASF_EVERY_TIME), m_bAllowExtraStage("AllowExtraStage", false),
+      m_iMaxHighScoresPerListForMachine("MaxHighScoresPerListForMachine", 10),
+      m_iMaxHighScoresPerListForPlayer("MaxHighScoresPerListForPlayer", 3),
+      m_bAllowMultipleHighScoreWithSameName("AllowMultipleHighScoreWithSameName", true),
+      m_DisableUploadDir("DisableUploadDir", false),
+      m_bCelShadeModels("CelShadeModels", false), // Work-In-Progress.. disable by default.
+      m_bPreferredSortUsesGroups("PreferredSortUsesGroups", true), m_fDebounceCoinInputTime("DebounceCoinInputTime", 0),
 
-	m_fPadStickSeconds		( "PadStickSeconds",			0 ),
-	m_EditRecordModeLeadIn		("EditRecordModeLeadIn",		1.0f ),
-	m_EditClearPromptThreshold	("EditClearPromptThreshold",		50),
-	m_bForceMipMaps			( "ForceMipMaps",			false ),
-	m_bTrilinearFiltering		( "TrilinearFiltering",			false ),
-	m_bAnisotropicFiltering		( "AnisotropicFiltering",		false ),
+      m_fPadStickSeconds("PadStickSeconds", 0), m_EditRecordModeLeadIn("EditRecordModeLeadIn", 1.0f),
+      m_EditClearPromptThreshold("EditClearPromptThreshold", 50), m_bForceMipMaps("ForceMipMaps", false),
+      m_bTrilinearFiltering("TrilinearFiltering", false), m_bAnisotropicFiltering("AnisotropicFiltering", false),
 
-	m_bSignProfileData		( "SignProfileData",			false ),
-	m_ProfileSortOrder		( "ProfileSortOrder",			ProfileSortOrder_Priority ),
-	m_bProfileSortOrderAscending		( "ProfileSortOrderAscending",			true ),
-	m_CourseSortOrder		( "CourseSortOrder",			COURSE_SORT_SONGS ),
-	m_bSubSortByNumSteps		( "SubSortByNumSteps",			false ),
-	m_GetRankingName		( "GetRankingName",			RANKING_ON ),
-	m_sAdditionalSongFoldersReadOnly( "AdditionalSongFoldersReadOnly",	"", nullptr, PreferenceType::Immutable ),
-	m_sAdditionalSongFoldersWritable( "AdditionalSongFoldersWritable",	"", nullptr, PreferenceType::Immutable ),
-	m_sAdditionalCourseFoldersReadOnly( "AdditionalCourseFoldersReadOnly",	"", nullptr, PreferenceType::Immutable ),
-	m_sAdditionalCourseFoldersWritable( "AdditionalCourseFoldersWritable",	"", nullptr, PreferenceType::Immutable ),
-	m_sAdditionalFoldersReadOnly	( "AdditionalFoldersReadOnly",		"", nullptr, PreferenceType::Immutable ),
-	m_sAdditionalFoldersWritable	( "AdditionalFoldersWritable",		"", nullptr, PreferenceType::Immutable ),
-	m_sDefaultTheme			( "DefaultTheme",			"default" ),
-	m_sLastSeenVideoDriver		( "LastSeenVideoDriver",		"" ),
-	m_sVideoRenderers		( "VideoRenderers",			"" ),	// StepMania.cpp sets these on first run:
-	m_bSmoothLines			( "SmoothLines",			true ),
-	m_iSoundWriteAhead		( "SoundWriteAhead",			0 ),
-	m_iSoundDevice			( "SoundDevice",			"" ),
-	m_iRageSoundSampleCountClamp	("RageSoundSampleCountClamp", 0), //some sound drivers mask the sample location number, the most popular number for this is 2^27, this causes lockup after ~50 minutes at 44.1khz sample rate
-	m_iSoundPreferredSampleRate	( "SoundPreferredSampleRate",		0 ),
-	m_sLightsStepsDifficulty	( "LightsStepsDifficulty",		"hard,medium" ),
-	m_bLightsSimplifyBass		( "LightsSimplifyBass",		false),
-	m_bAllowUnacceleratedRenderer	( "AllowUnacceleratedRenderer",		false ),
-	m_bThreadedInput		( "ThreadedInput",			true ),
-	m_bThreadedMovieDecode		( "ThreadedMovieDecode",		true ),
-	m_sTestInitialScreen		( "TestInitialScreen",			"" ),
-	m_bDebugLights			( "DebugLights",			false ),
-	m_bMonkeyInput			( "MonkeyInput",			false ),
-	m_sMachineName			( "MachineName",			"" ),
-	m_sCoursesToShowRanking		( "CoursesToShowRanking",		"" ),
-	m_MuteActions			( "MuteActions",			false ),
-	m_bAllowSongDeletion		( "AllowSongDeletion",			false ),
+      m_bSignProfileData("SignProfileData", false), m_ProfileSortOrder("ProfileSortOrder", ProfileSortOrder_Priority),
+      m_bProfileSortOrderAscending("ProfileSortOrderAscending", true),
+      m_CourseSortOrder("CourseSortOrder", COURSE_SORT_SONGS), m_bSubSortByNumSteps("SubSortByNumSteps", false),
+      m_GetRankingName("GetRankingName", RANKING_ON),
+      m_sAdditionalSongFoldersReadOnly("AdditionalSongFoldersReadOnly", "", nullptr, PreferenceType::Immutable),
+      m_sAdditionalSongFoldersWritable("AdditionalSongFoldersWritable", "", nullptr, PreferenceType::Immutable),
+      m_sAdditionalCourseFoldersReadOnly("AdditionalCourseFoldersReadOnly", "", nullptr, PreferenceType::Immutable),
+      m_sAdditionalCourseFoldersWritable("AdditionalCourseFoldersWritable", "", nullptr, PreferenceType::Immutable),
+      m_sAdditionalFoldersReadOnly("AdditionalFoldersReadOnly", "", nullptr, PreferenceType::Immutable),
+      m_sAdditionalFoldersWritable("AdditionalFoldersWritable", "", nullptr, PreferenceType::Immutable),
+      m_sDefaultTheme("DefaultTheme", "default"), m_sLastSeenVideoDriver("LastSeenVideoDriver", ""),
+      m_sVideoRenderers("VideoRenderers", ""), // StepMania.cpp sets these on first run:
+      m_bSmoothLines("SmoothLines", true), m_iSoundWriteAhead("SoundWriteAhead", 0), m_iSoundDevice("SoundDevice", ""),
+      m_iRageSoundSampleCountClamp(
+         "RageSoundSampleCountClamp", 0
+      ), // some sound drivers mask the sample location number, the most popular number for this is 2^27, this causes
+		   // lockup after ~50 minutes at 44.1khz sample rate
+      m_iSoundPreferredSampleRate("SoundPreferredSampleRate", 0),
+      m_sLightsStepsDifficulty("LightsStepsDifficulty", "hard,medium"),
+      m_bLightsSimplifyBass("LightsSimplifyBass", false),
+      m_bAllowUnacceleratedRenderer("AllowUnacceleratedRenderer", false), m_bThreadedInput("ThreadedInput", true),
+      m_bThreadedMovieDecode("ThreadedMovieDecode", true), m_sTestInitialScreen("TestInitialScreen", ""),
+      m_bDebugLights("DebugLights", false), m_bMonkeyInput("MonkeyInput", false), m_sMachineName("MachineName", ""),
+      m_sCoursesToShowRanking("CoursesToShowRanking", ""), m_MuteActions("MuteActions", false),
+      m_bAllowSongDeletion("AllowSongDeletion", false),
 
-	m_bQuirksMode			( "QuirksMode",		false ),
+      m_bQuirksMode("QuirksMode", false),
 
-	m_custom_songs_enable("CustomSongsEnable", false),
-	m_custom_songs_max_count("CustomSongsMaxCount", 1000), // No limit. -- 2 Unlimited
-	m_custom_songs_load_timeout("CustomSongsLoadTimeout", 5.f),
-	m_custom_songs_max_seconds("CustomSongsMaxSeconds", 120.f),
-	m_custom_songs_max_megabytes("CustomSongsMaxMegabytes", 5.f),
+      m_custom_songs_enable("CustomSongsEnable", false),
+      m_custom_songs_max_count("CustomSongsMaxCount", 1000), // No limit. -- 2 Unlimited
+      m_custom_songs_load_timeout("CustomSongsLoadTimeout", 5.f),
+      m_custom_songs_max_seconds("CustomSongsMaxSeconds", 120.f),
+      m_custom_songs_max_megabytes("CustomSongsMaxMegabytes", 5.f),
 
-	/* Debug: */
-	m_bLogToDisk			( "LogToDisk",		true ),
+      /* Debug: */
+      m_bLogToDisk("LogToDisk", true),
 #if defined(DEBUG)
-	m_bForceLogFlush		( "ForceLogFlush",	true ),
-	m_bShowLogOutput		( "ShowLogOutput",	true ),
+      m_bForceLogFlush("ForceLogFlush", true), m_bShowLogOutput("ShowLogOutput", true),
 #else
-	m_bForceLogFlush		( "ForceLogFlush",	false ),
-	m_bShowLogOutput		( "ShowLogOutput",	false ),
+      m_bForceLogFlush("ForceLogFlush", false), m_bShowLogOutput("ShowLogOutput", false),
 #endif
-	m_sLogLevel			( "LogLevel",		"trace" ),
-	m_bLogSkips			( "LogSkips",		false ),
-	m_bLogCheckpoints		( "LogCheckpoints",	false ),
-	m_bShowLoadingWindow		( "ShowLoadingWindow",	true ),
-	m_bPseudoLocalize		( "PseudoLocalize",	false ),
-	m_show_theme_errors		( "ShowThemeErrors",	false ),
-	m_sAdditionalSongFolders	( "AdditionalSongFolders",		"", nullptr, PreferenceType::Deprecated ),
-	m_sAdditionalCourseFolders	( "AdditionalCourseFolders",		"", nullptr, PreferenceType::Deprecated ),
-	m_sAdditionalFolders		( "AdditionalFolders",			"", nullptr, PreferenceType::Deprecated )
-{
+      m_sLogLevel("LogLevel", "trace"), m_bLogSkips("LogSkips", false), m_bLogCheckpoints("LogCheckpoints", false),
+      m_bShowLoadingWindow("ShowLoadingWindow", true), m_bPseudoLocalize("PseudoLocalize", false),
+      m_show_theme_errors("ShowThemeErrors", false),
+      m_sAdditionalSongFolders("AdditionalSongFolders", "", nullptr, PreferenceType::Deprecated),
+      m_sAdditionalCourseFolders("AdditionalCourseFolders", "", nullptr, PreferenceType::Deprecated),
+      m_sAdditionalFolders("AdditionalFolders", "", nullptr, PreferenceType::Deprecated) {
 	Init();
 	ReadPrefsFromDisk();
 
 	// Register with Lua.
 	{
 		Lua *L = LUA->Get();
-		lua_pushstring( L, "PREFSMAN" );
-		this->PushSelf( L );
-		lua_settable( L, LUA_GLOBALSINDEX );
-		LUA->Release( L );
+		lua_pushstring(L, "PREFSMAN");
+		this->PushSelf(L);
+		lua_settable(L, LUA_GLOBALSINDEX);
+		LUA->Release(L);
 	}
 }
 #undef TRUE_IF_DEBUG
 
-void PrefsManager::Init()
-{
+void PrefsManager::Init() {
 	IPreference::LoadAllDefaults();
 
 	m_mapGameNameToGamePrefs.clear();
 }
 
-PrefsManager::~PrefsManager()
-{
+PrefsManager::~PrefsManager() {
 	// Unregister with Lua.
-	LUA->UnsetGlobal( "PREFSMAN" );
+	LUA->UnsetGlobal("PREFSMAN");
 }
 
-void PrefsManager::SetCurrentGame( const RString &sGame )
-{
-	if( m_sCurrentGame.Get() == sGame )
-		return;	// redundant
+void PrefsManager::SetCurrentGame(const RString &sGame) {
+	if (m_sCurrentGame.Get() == sGame)
+		return; // redundant
 
-	if( !m_sCurrentGame.Get().empty() )
+	if (!m_sCurrentGame.Get().empty())
 		StoreGamePrefs();
 
-	m_sCurrentGame.Set( sGame );
+	m_sCurrentGame.Set(sGame);
 
 	RestoreGamePrefs();
 }
 
-void PrefsManager::StoreGamePrefs()
-{
-	ASSERT( !m_sCurrentGame.Get().empty() );
+void PrefsManager::StoreGamePrefs() {
+	ASSERT(!m_sCurrentGame.Get().empty());
 
 	// save off old values
 	GamePrefs &gp = m_mapGameNameToGamePrefs[m_sCurrentGame.Get()];
@@ -377,74 +314,70 @@ void PrefsManager::StoreGamePrefs()
 	gp.m_sDefaultModifiers = m_sDefaultModifiers;
 }
 
-void PrefsManager::RestoreGamePrefs()
-{
-	ASSERT( !m_sCurrentGame.Get().empty() );
+void PrefsManager::RestoreGamePrefs() {
+	ASSERT(!m_sCurrentGame.Get().empty());
 
 	// load prefs
 	GamePrefs gp;
-	std::map<RString, GamePrefs>::const_iterator iter = m_mapGameNameToGamePrefs.find( m_sCurrentGame );
-	if( iter != m_mapGameNameToGamePrefs.end() )
+	std::map<RString, GamePrefs>::const_iterator iter = m_mapGameNameToGamePrefs.find(m_sCurrentGame);
+	if (iter != m_mapGameNameToGamePrefs.end())
 		gp = iter->second;
 
-	m_sAnnouncer		.Set( gp.m_sAnnouncer );
-	m_sTheme		.Set( gp.m_sTheme );
-	m_sDefaultModifiers	.Set( gp.m_sDefaultModifiers );
+	m_sAnnouncer.Set(gp.m_sAnnouncer);
+	m_sTheme.Set(gp.m_sTheme);
+	m_sDefaultModifiers.Set(gp.m_sDefaultModifiers);
 
 	// give Static.ini a chance to clobber the saved game prefs
-	ReadPrefsFromFile( SpecialFiles::STATIC_INI_PATH, GetPreferencesSection(), true );
+	ReadPrefsFromFile(SpecialFiles::STATIC_INI_PATH, GetPreferencesSection(), true);
 }
 
-PrefsManager::GamePrefs::GamePrefs() : m_sAnnouncer(""), m_sTheme(SpecialFiles::BASE_THEME_NAME), m_sDefaultModifiers("") {}
+PrefsManager::GamePrefs::GamePrefs()
+    : m_sAnnouncer(""), m_sTheme(SpecialFiles::BASE_THEME_NAME), m_sDefaultModifiers("") {
+}
 
-void PrefsManager::ReadPrefsFromDisk()
-{
-	ReadDefaultsFromFile( SpecialFiles::DEFAULTS_INI_PATH, GetPreferencesSection() );
+void PrefsManager::ReadPrefsFromDisk() {
+	ReadDefaultsFromFile(SpecialFiles::DEFAULTS_INI_PATH, GetPreferencesSection());
 	IPreference::LoadAllDefaults();
 
-	ReadPrefsFromFile( SpecialFiles::PREFERENCES_INI_PATH, "Options", false );
-	ReadGamePrefsFromIni( SpecialFiles::PREFERENCES_INI_PATH );
-	ReadPrefsFromFile( SpecialFiles::STATIC_INI_PATH, GetPreferencesSection(), true );
+	ReadPrefsFromFile(SpecialFiles::PREFERENCES_INI_PATH, "Options", false);
+	ReadGamePrefsFromIni(SpecialFiles::PREFERENCES_INI_PATH);
+	ReadPrefsFromFile(SpecialFiles::STATIC_INI_PATH, GetPreferencesSection(), true);
 
 	TranslateDeprecatedFlags();
 
-	if( !m_sCurrentGame.Get().empty() )
+	if (!m_sCurrentGame.Get().empty())
 		RestoreGamePrefs();
 }
 
-void PrefsManager::ResetToFactoryDefaults()
-{
+void PrefsManager::ResetToFactoryDefaults() {
 	// clobber the users prefs by initing then applying defaults
 	Init();
 	IPreference::LoadAllDefaults();
-	ReadPrefsFromFile( SpecialFiles::STATIC_INI_PATH, GetPreferencesSection(), true );
+	ReadPrefsFromFile(SpecialFiles::STATIC_INI_PATH, GetPreferencesSection(), true);
 
 	TranslateDeprecatedFlags();
 
 	SavePrefsToDisk();
 }
 
-void PrefsManager::ReadPrefsFromFile( const RString &sIni, const RString &sSection, bool bIsStatic )
-{
+void PrefsManager::ReadPrefsFromFile(const RString &sIni, const RString &sSection, bool bIsStatic) {
 	IniFile ini;
-	if( !ini.ReadFile(sIni) )
+	if (!ini.ReadFile(sIni))
 		return;
 
-	ReadPrefsFromIni( ini, sSection, bIsStatic );
+	ReadPrefsFromIni(ini, sSection, bIsStatic);
 }
 
 static const RString GAME_SECTION_PREFIX = "Game-";
 
-void PrefsManager::ReadPrefsFromIni( const IniFile &ini, const RString &sSection, bool bIsStatic )
-{
+void PrefsManager::ReadPrefsFromIni(const IniFile &ini, const RString &sSection, bool bIsStatic) {
 	// Apply our fallback recursively (if any) before applying ourself.
 	static int s_iDepth = 0;
 	s_iDepth++;
-	ASSERT( s_iDepth < 100 );
+	ASSERT(s_iDepth < 100);
 	RString sFallback;
-	if( ini.GetValue(sSection,"Fallback",sFallback) )
-	{
-		ReadPrefsFromIni( ini, sFallback, bIsStatic );
+	if (ini.GetValue(sSection, "Fallback", sFallback)) {
+		ReadPrefsFromIni(ini, sFallback, bIsStatic);
 	}
 	s_iDepth--;
 
@@ -452,200 +385,180 @@ void PrefsManager::ReadPrefsFromIni( const IniFile &ini, const RString &sSection
 	IPreference *pPref = PREFSMAN->GetPreferenceByName( *sName );
 	if( pPref == nullptr )
 	{
-		LOG_WARN(Log::General, "Unknown preference in [%s]: %s", sClassName.c_str(), sName->c_str() );
-		continue;
+	   LOG_WARN(Log::General, "Unknown preference in [%s]: %s", sClassName.c_str(), sName->c_str() );
+	   continue;
 	}
 	pPref->FromString( sVal );
 	*/
 
 	const XNode *pChild = ini.GetChild(sSection);
-	if( pChild )
-		IPreference::ReadAllPrefsFromNode( pChild, bIsStatic );
+	if (pChild)
+		IPreference::ReadAllPrefsFromNode(pChild, bIsStatic);
 }
 
-void PrefsManager::ReadGamePrefsFromIni( const RString &sIni )
-{
+void PrefsManager::ReadGamePrefsFromIni(const RString &sIni) {
 	IniFile ini;
-	if( !ini.ReadFile(sIni) )
+	if (!ini.ReadFile(sIni))
 		return;
 
-	FOREACH_CONST_Child( &ini, section )
-	{
-		RString section_name= section->GetName();
-		if( !BeginsWith(section_name, GAME_SECTION_PREFIX) )
+	FOREACH_CONST_Child(&ini, section) {
+		RString section_name = section->GetName();
+		if (!BeginsWith(section_name, GAME_SECTION_PREFIX))
 			continue;
 
-		RString sGame = section_name.Right( static_cast<int>(section_name.length() - GAME_SECTION_PREFIX.length()) );
-		GamePrefs &gp = m_mapGameNameToGamePrefs[ sGame ];
+		RString sGame = section_name.Right(static_cast<int>(section_name.length() - GAME_SECTION_PREFIX.length()));
+		GamePrefs &gp = m_mapGameNameToGamePrefs[sGame];
 
 		// todo: read more prefs here? -aj
-		ini.GetValue(section_name, "Announcer",		gp.m_sAnnouncer);
-		ini.GetValue(section_name, "Theme",		gp.m_sTheme);
-		ini.GetValue(section_name, "DefaultModifiers",	gp.m_sDefaultModifiers);
+		ini.GetValue(section_name, "Announcer", gp.m_sAnnouncer);
+		ini.GetValue(section_name, "Theme", gp.m_sTheme);
+		ini.GetValue(section_name, "DefaultModifiers", gp.m_sDefaultModifiers);
 	}
 }
 
-void PrefsManager::ReadDefaultsFromFile( const RString &sIni, const RString &sSection )
-{
+void PrefsManager::ReadDefaultsFromFile(const RString &sIni, const RString &sSection) {
 	IniFile ini;
-	if( !ini.ReadFile(sIni) )
+	if (!ini.ReadFile(sIni))
 		return;
 
-	ReadDefaultsFromIni( ini, sSection );
+	ReadDefaultsFromIni(ini, sSection);
 }
 
-void PrefsManager::ReadDefaultsFromIni( const IniFile &ini, const RString &sSection )
-{
+void PrefsManager::ReadDefaultsFromIni(const IniFile &ini, const RString &sSection) {
 	// Apply our fallback recursively (if any) before applying ourself.
 	// TODO: detect circular?
 	RString sFallback;
-	if( ini.GetValue(sSection,"Fallback",sFallback) )
-		ReadDefaultsFromIni( ini, sFallback );
+	if (ini.GetValue(sSection, "Fallback", sFallback))
+		ReadDefaultsFromIni(ini, sFallback);
 
-	IPreference::ReadAllDefaultsFromNode( ini.GetChild(sSection) );
+	IPreference::ReadAllDefaultsFromNode(ini.GetChild(sSection));
 }
 
-void PrefsManager::TranslateDeprecatedFlags()
-{
-	if(!m_sAdditionalFolders.Get().empty())
+void PrefsManager::TranslateDeprecatedFlags() {
+	if (!m_sAdditionalFolders.Get().empty())
 		m_sAdditionalFoldersWritable.Set(m_sAdditionalFolders.Get());
-	if(!m_sAdditionalSongFolders.Get().empty())
+	if (!m_sAdditionalSongFolders.Get().empty())
 		m_sAdditionalSongFoldersWritable.Set(m_sAdditionalSongFolders.Get());
-	if(!m_sAdditionalCourseFolders.Get().empty())
+	if (!m_sAdditionalCourseFolders.Get().empty())
 		m_sAdditionalCourseFoldersWritable.Set(m_sAdditionalCourseFolders.Get());
 }
 
-void PrefsManager::SavePrefsToDisk()
-{
+void PrefsManager::SavePrefsToDisk() {
 	IniFile ini;
-	SavePrefsToIni( ini );
-	ini.WriteFile( SpecialFiles::PREFERENCES_INI_PATH );
+	SavePrefsToIni(ini);
+	ini.WriteFile(SpecialFiles::PREFERENCES_INI_PATH);
 }
 
-void PrefsManager::SavePrefsToIni( IniFile &ini )
-{
-	if( !m_sCurrentGame.Get().empty() )
+void PrefsManager::SavePrefsToIni(IniFile &ini) {
+	if (!m_sCurrentGame.Get().empty())
 		StoreGamePrefs();
 
-	XNode* pNode = ini.GetChild( "Options" );
-	if( pNode == nullptr )
-		pNode = ini.AppendChild( "Options" );
-	IPreference::SavePrefsToNode( pNode );
+	XNode *pNode = ini.GetChild("Options");
+	if (pNode == nullptr)
+		pNode = ini.AppendChild("Options");
+	IPreference::SavePrefsToNode(pNode);
 
-	for (auto const &iter : m_mapGameNameToGamePrefs)
-	{
-		RString sSection = "Game-" + RString( iter.first );
+	for (auto const &iter : m_mapGameNameToGamePrefs) {
+		RString sSection = "Game-" + RString(iter.first);
 
 		// todo: write more values here? -aj
-		ini.SetValue( sSection, "Announcer",		iter.second.m_sAnnouncer );
-		ini.SetValue( sSection, "Theme",		iter.second.m_sTheme );
-		ini.SetValue( sSection, "DefaultModifiers",	iter.second.m_sDefaultModifiers );
+		ini.SetValue(sSection, "Announcer", iter.second.m_sAnnouncer);
+		ini.SetValue(sSection, "Theme", iter.second.m_sTheme);
+		ini.SetValue(sSection, "DefaultModifiers", iter.second.m_sDefaultModifiers);
 	}
 }
 
-
-RString PrefsManager::GetPreferencesSection() const
-{
+RString PrefsManager::GetPreferencesSection() const {
 	RString sSection = "Options";
 
 	// OK if this fails
-	GetFileContents( SpecialFiles::TYPE_TXT_FILE, sSection, true );
+	GetFileContents(SpecialFiles::TYPE_TXT_FILE, sSection, true);
 
 	// OK if this fails
-	GetCommandlineArgument( "Type", &sSection );
+	GetCommandlineArgument("Type", &sSection);
 
 	return sSection;
 }
-
 
 // lua start
 #include "LuaBinding.h"
 
 /** @brief Allow Lua to have access to the PrefsManager. */
-class LunaPrefsManager: public Luna<PrefsManager>
-{
-public:
-	static int GetPreference( T* /* p */, lua_State *L )
-	{
+class LunaPrefsManager : public Luna<PrefsManager> {
+ public:
+	static int GetPreference(T * /* p */, lua_State *L) {
 		RString sName = SArg(1);
-		IPreference *pPref = IPreference::GetPreferenceByName( sName );
-		if( pPref == nullptr )
-		{
-			LuaHelpers::ReportScriptErrorFmt( "GetPreference: unknown preference \"%s\"", sName.c_str() );
-			lua_pushnil( L );
+		IPreference *pPref = IPreference::GetPreferenceByName(sName);
+		if (pPref == nullptr) {
+			LuaHelpers::ReportScriptErrorFmt("GetPreference: unknown preference \"%s\"", sName.c_str());
+			lua_pushnil(L);
 			return 1;
 		}
 
-		pPref->PushValue( L );
+		pPref->PushValue(L);
 		return 1;
 	}
-	static int SetPreference( T* p, lua_State *L )
-	{
+	static int SetPreference(T *p, lua_State *L) {
 		RString sName = SArg(1);
 
-		IPreference *pPref = IPreference::GetPreferenceByName( sName );
-		if( pPref == nullptr )
-		{
-			LuaHelpers::ReportScriptErrorFmt( "SetPreference: unknown preference \"%s\"", sName.c_str() );
+		IPreference *pPref = IPreference::GetPreferenceByName(sName);
+		if (pPref == nullptr) {
+			LuaHelpers::ReportScriptErrorFmt("SetPreference: unknown preference \"%s\"", sName.c_str());
 			COMMON_RETURN_SELF;
 		}
-		else if (pPref->IsImmutable())
-		{
-			LuaHelpers::ReportScriptErrorFmt( "SetPreference: preference \"%s\" is immutable", sName.c_str() );
+		else if (pPref->IsImmutable()) {
+			LuaHelpers::ReportScriptErrorFmt("SetPreference: preference \"%s\" is immutable", sName.c_str());
 			COMMON_RETURN_SELF;
 		}
 
-		lua_pushvalue( L, 2 );
-		pPref->SetFromStack( L );
+		lua_pushvalue(L, 2);
+		pPref->SetFromStack(L);
 		COMMON_RETURN_SELF;
 	}
-	static int SetPreferenceToDefault( T* p, lua_State *L )
-	{
+	static int SetPreferenceToDefault(T *p, lua_State *L) {
 		RString sName = SArg(1);
 
-		IPreference *pPref = IPreference::GetPreferenceByName( sName );
-		if( pPref == nullptr )
-		{
-			LuaHelpers::ReportScriptErrorFmt( "SetPreferenceToDefault: unknown preference \"%s\"", sName.c_str() );
+		IPreference *pPref = IPreference::GetPreferenceByName(sName);
+		if (pPref == nullptr) {
+			LuaHelpers::ReportScriptErrorFmt("SetPreferenceToDefault: unknown preference \"%s\"", sName.c_str());
 			COMMON_RETURN_SELF;
 		}
-		else if (pPref->IsImmutable())
-		{
-			LuaHelpers::ReportScriptErrorFmt( "SetPreference: preference \"%s\" is immutable", sName.c_str() );
+		else if (pPref->IsImmutable()) {
+			LuaHelpers::ReportScriptErrorFmt("SetPreference: preference \"%s\" is immutable", sName.c_str());
 			COMMON_RETURN_SELF;
 		}
 
 		pPref->LoadDefault();
-		LOG_TRACE(Log::General, "Restored preference \"%s\" to default \"%s\"", sName.c_str(), pPref->ToString().c_str() );
+		LOG_TRACE(Log::General, "Restored preference \"%s\" to default \"%s\"", sName.c_str(), pPref->ToString().c_str());
 		COMMON_RETURN_SELF;
 	}
-	static int PreferenceExists( T* /* p */, lua_State *L )
-	{
+	static int PreferenceExists(T * /* p */, lua_State *L) {
 		RString sName = SArg(1);
 
-		IPreference *pPref = IPreference::GetPreferenceByName( sName );
-		if( pPref == nullptr )
-		{
-			lua_pushboolean( L, false );
+		IPreference *pPref = IPreference::GetPreferenceByName(sName);
+		if (pPref == nullptr) {
+			lua_pushboolean(L, false);
 			return 1;
 		}
-		lua_pushboolean( L, true );
+		lua_pushboolean(L, true);
 		return 1;
 	}
 
-	static int SavePreferences( T* p, lua_State *L ) { p->SavePrefsToDisk(); COMMON_RETURN_SELF; }
+	static int SavePreferences(T *p, lua_State *L) {
+		p->SavePrefsToDisk();
+		COMMON_RETURN_SELF;
+	}
 
-	LunaPrefsManager()
-	{
-		ADD_METHOD( GetPreference );
-		ADD_METHOD( SetPreference );
-		ADD_METHOD( SetPreferenceToDefault );
-		ADD_METHOD( PreferenceExists );
-		ADD_METHOD( SavePreferences );
+	LunaPrefsManager() {
+		ADD_METHOD(GetPreference);
+		ADD_METHOD(SetPreference);
+		ADD_METHOD(SetPreferenceToDefault);
+		ADD_METHOD(PreferenceExists);
+		ADD_METHOD(SavePreferences);
 	}
 };
 
-LUA_REGISTER_CLASS( PrefsManager )
+LUA_REGISTER_CLASS(PrefsManager)
 // lua end
 
 /*

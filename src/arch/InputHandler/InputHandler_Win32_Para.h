@@ -7,12 +7,10 @@
 
 #include <vector>
 
-
-class InputHandler_Win32_Para: public InputHandler
-{
-public:
+class InputHandler_Win32_Para : public InputHandler {
+ public:
 	InputHandler_Win32_Para();
-	void GetDevicesAndDescriptions( std::vector<InputDeviceInfo>& vDevicesOut );
+	void GetDevicesAndDescriptions(std::vector<InputDeviceInfo> &vDevicesOut);
 };
 
 #endif

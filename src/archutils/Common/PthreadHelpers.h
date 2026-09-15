@@ -13,11 +13,11 @@ std::uint64_t GetCurrentThreadId();
 /* Return true if NPTL libraries are in use, false if linuxthreads. */
 bool UsingNPTL();
 
-int SuspendThread( std::uint64_t ThreadID );
-int ResumeThread( std::uint64_t ThreadID );
+int SuspendThread(std::uint64_t ThreadID);
+int ResumeThread(std::uint64_t ThreadID);
 
 struct BacktraceContext;
-int GetThreadContext( std::uint64_t ThreadID, BacktraceContext *ctx );
+int GetThreadContext(std::uint64_t ThreadID, BacktraceContext *ctx);
 
 #endif
 

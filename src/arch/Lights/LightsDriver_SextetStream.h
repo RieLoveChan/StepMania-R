@@ -17,25 +17,24 @@
 #include "LightsDriver.h"
 #include "RageFile.h"
 
-class LightsDriver_SextetStream : public LightsDriver
-{
-public:
+class LightsDriver_SextetStream : public LightsDriver {
+ public:
 	LightsDriver_SextetStream();
 	virtual ~LightsDriver_SextetStream();
 	virtual void Set(const LightsState *ls);
-protected:
-	void * _impl;
+
+ protected:
+	void *_impl;
 };
 
-class LightsDriver_SextetStreamToFile : public LightsDriver_SextetStream
-{
-public:
+class LightsDriver_SextetStreamToFile : public LightsDriver_SextetStream {
+ public:
 	LightsDriver_SextetStreamToFile();
-	LightsDriver_SextetStreamToFile(const RString& filename);
+	LightsDriver_SextetStreamToFile(const RString &filename);
 
 	// The file object passed here should already be open, and will be
 	// flushed, closed, and deleted in the destructor.
-	LightsDriver_SextetStreamToFile(RageFile * file);
+	LightsDriver_SextetStreamToFile(RageFile *file);
 };
 
 #endif
