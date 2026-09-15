@@ -237,12 +237,38 @@ across 17 files; `use-override` finished with the `MovieTexture_*` /
 **Every mechanical check with a clean autofix is now clear outside the
 §5 parse path + vendored `ixwebsocket`.** The only tidy debt left in
 first-party non-§5 code:
-- `modernize-use-equals-default` (38) + `readability-redundant-member-init`
-  (28) — `--fix` output too dirty (out-of-line `= default`, dangling
-  init-list commas); need a coupled `clang-format`, which ADR 0002 says
-  is its own change → **maintainer call.**
-- `bugprone-integer-division` (14) — maintainer-flagged (sub-pixel
-  render maths on untested paths).
+- ~~`modernize-use-equals-default` (38) + `readability-redundant-member-init`
+  (28)~~ — **DONE 2026-09-14.** Unblocked by first landing the repo-wide
+  `clang-format` pass (`a7f575fd83`, maintainer-approved, its own
+  commit per ADR 0002) as a prerequisite, then applying `--fix
+  --format-style=none` per file and running `clang-format` only on the
+  touched files afterward to clean up the dangling-comma/double-space
+  raggedness the mechanical fix left behind (`f2530e8bc8`). Real count
+  at fix time was 63 across 43 files (41 + 22) — close to the original
+  38+28 estimate; some drift is expected since the tree moved between
+  counts. Every hunk hand-verified: trivial `Foo(){}`/`~Foo(){}` → `=
+  default`, or a member-init explicitly calling a type's default ctor
+  removed from an init-list. 5 §5-adjacent files touched (`Course.cpp`,
+  `NotesLoaderBMS.cpp`, `SongCacheIndex.cpp`, `Steps.cpp`,
+  `XmlFile.cpp`) — `[corpus]`/`[crs]`/`[bms]` all re-verified unchanged.
+  **Tooling note:** neither `clang-format` nor `clang-tidy` were
+  installed on the machine this session ran on, and the official LLVM
+  MSI installer requires admin rights this session didn't have;
+  unblocked by extracting just the two executables from LLVM's
+  portable Windows `.tar.xz` release (no installer needed) plus a
+  portable Ninja binary (to generate `compile_commands.json`, since
+  the VS-generator CMake build can't emit one) — see
+  `DocsAgents/modernization-backlog.md` item 12 for the full story,
+  including a real `InsertBraces: true`-vs-`FOREACH_*`-macro
+  correctness bug caught and fixed before the repo-wide format landed.
+- `bugprone-integer-division` (14) — **10 of 14 unchanged** (false
+  positive / intentional, per the 2026-09-08 verdict); **the 4 genuine
+  ≤0.5px-imprecision sites (`Font.cpp`, `NoteField.cpp`,
+  `SnapDisplay.cpp`, `ScreenSelectCharacter.cpp`) fixed 2026-09-14**
+  after asking the maintainer directly (previously left as a
+  standing "flagged for maintainer" item) — see
+  `DocsAgents/modernization-backlog.md` item 12 for the per-file
+  breakdown and commits (`87db244dd0`, `b14a82793a`).
 - `bugprone-suspicious-string-compare` (8) — idiomatic `if(memcmp(...))`,
   not defects (2026-09-08 verdict).
 - 4 unfixable `bugprone-macro-parentheses` (`StatsManager` ×2,

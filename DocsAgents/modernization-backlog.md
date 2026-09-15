@@ -1916,16 +1916,85 @@ remainder.
   regression corpus.
 - vendored `ixwebsocket` subtree (`src/IX*.cpp`) — ~13 hits, don't
   touch vendored code.
-- `modernize-use-equals-default` (38) and `readability-redundant-member-init`
-  (28) — deferred: `--fix` output is too dirty to land without a
-  coupled `clang-format` run, which ADR 0002 says must be its own
-  change. `modernize-use-bool-literals` — DONE 2026-09-09
-  (`3be07f669d`, closeout `3479323da9`), the diff was clean enough to
-  land on its own.
-- `bugprone-integer-division` (14) — flagged for the maintainer
-  (sub-pixel render maths on untested paths), see `baseline.md`.
+- ~~`modernize-use-equals-default` (38) and `readability-redundant-member-init`
+  (28)~~ — **DONE 2026-09-14.** Was deferred because `--fix` output is
+  too dirty to land without a coupled `clang-format` run (ADR 0002
+  says that must be its own change). Asked the maintainer directly;
+  answer was to do the full repo-wide `clang-format` for real, so:
+  1. **Tooling gap found and closed:** neither `clang-format` nor
+     `clang-tidy` were installed on this session's machine, and the
+     official LLVM MSI installer needs admin rights (not available
+     here — tried, got Windows error 1303 "insufficient privileges"
+     even after retargeting the install dir, since the MSI always
+     touches `Program Files` for some component regardless). Unblocked
+     by downloading LLVM's **portable** Windows release
+     (`clang+llvm-*-x86_64-pc-windows-msvc.tar.xz` from
+     `github.com/llvm/llvm-project` releases) and extracting *only*
+     `clang-format.exe`/`clang-tidy.exe` from it (no installer, no
+     admin) into `~/bin` (already on `PATH`); also needed a portable
+     Ninja binary (`ninja-build/ninja` releases) to generate
+     `compile_commands.json` for clang-tidy, since the default VS-
+     generator CMake build can't emit one — configured a `build-tidy/`
+     Ninja tree per `baseline.md`'s existing clang-tidy recipe.
+  2. **A real correctness bug caught before the repo-wide format
+     landed, not just a formatting risk:** `.clang-format`'s
+     `InsertBraces: true` is unsafe on this codebase. clang-format
+     doesn't expand macros, so it can't see that
+     `FOREACH_ENUM`/`FOREACH_CONST_Attr`/etc (used in ~98 files) expand
+     to a brace-less `for(...)` header controlling the next bare
+     statement — a real, common idiom here
+     (`if (cond) FOREACH_ENUM(Type, x) statement;`). With
+     `InsertBraces` on, clang-format mis-attributed the closing brace
+     to the enclosing `if` instead of the `for` it couldn't see,
+     silently moving the real loop body outside *both* the `if` and
+     the `for` — confirmed via compile errors in `HighScore.cpp`/
+     `NoteDataUtil.cpp`/`Profile.cpp` on the first attempt. Reverted
+     that attempt in full, disabled `InsertBraces` in `.clang-format`
+     as its own commit (`a38d1d225b`, reasoning recorded in the file
+     itself), and re-ran clean — verified this time by programmatically
+     checking all 33 real instances of the dangerous
+     `if`/`FOREACH-or-for`/statement (brace-less, 3-line) shape in the
+     tree, not just the 3 that happened to produce compile errors.
+  3. **Repo-wide `clang-format` landed** (`a7f575fd83`): 993 in-scope
+     `src/` files (excludes `Texture Font Generator/`, already excluded
+     from tidy sweeps by convention, and `verstub.in.cpp`, a CMake
+     `configure_file` template whose `@VAR@` tokens clang-format
+     doesn't understand and would corrupt — caught this too, on the
+     first attempt, before it reached a commit). ~231k total line diff.
+     Own dedicated commit per ADR 0002 / the clang-tidy-subsystem-pass
+     playbook's explicit warning against bundling a reformat into a
+     tidy/logic PR.
+  4. **The actual `--fix` applied** (`f2530e8bc8`): 63 sites across 43
+     files (41 equals-default + 22 redundant-member-init), applied
+     per-file sequentially with `--fix --format-style=none`, every
+     hunk hand-reviewed, then `clang-format` run on just those 43
+     touched files afterward to clean up the mechanical fix's
+     raggedness (double-spaces where a removed init used to sit).
+  Full gate green at every step (Release + Debug builds, ctest 100%,
+  `sm_tests` 5981/230 unchanged, `--SelfTest`); `[corpus]`/`[crs]`/
+  `[bms]` re-verified unchanged given 5 §5-adjacent files were touched
+  by the final fix commit. `modernize-use-bool-literals` — DONE
+  2026-09-09 (`3be07f669d`, closeout `3479323da9`), the diff was clean
+  enough to land on its own, before any of the above.
+- ~~`bugprone-integer-division` (14)~~ — **10 of 14 confirmed
+  false-positive/intentional (2026-09-08 verdict, unchanged); the 4
+  genuine ≤0.5px-imprecision sites fixed 2026-09-14** after asking the
+  maintainer directly (`Font.cpp` FontPage::Load baseline/top calc,
+  `SnapDisplay.cpp` arrow-indicator X position, `ScreenSelectCharacter.cpp`
+  character-icon carousel Y position — the last one triggers on every
+  render since `MAX_CHAR_ICONS_TO_SHOW` is literally `11`, odd;
+  `NoteField.cpp`'s `ARROW_SIZE/2` found afterward once `clang-tidy`
+  became available, currently exact since `ARROW_SIZE=64` but fixed for
+  pattern-consistency). Commits `87db244dd0` (first 3) and
+  `b14a82793a` (NoteField.cpp, completes 4/4). No automated test can
+  catch a sub-pixel rendering shift, so this relied on the maintainer's
+  explicit go-ahead rather than test coverage.
 - 4 unfixable `bugprone-macro-parentheses` sites (`StatsManager` ×2
   `::`-scoped, `OptionRowHandler` MAKE(type), `Profile` LOAD_NODE(X)).
+**This closes out every item-12 bucket that wasn't blocked by a
+genuine external constraint.** What's left (§5-protected files needing
+a regression corpus first, vendored `ixwebsocket`, the 4 unfixable
+macro-parentheses sites) is blocked for real reasons, not effort.
 **Done:** `arch/` + `archutils/Win32/` driver code is now cleared for
 `container-size-empty` / `use-override` / `use-nullptr` /
 `macro-parentheses` (Windows-only TUs — `AGENTS.md` §3 allows Windows
