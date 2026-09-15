@@ -2327,19 +2327,6 @@ void Player::Step( int col, int row, const RageTimer &tm, bool bHeld, bool bRele
 		{
 			score = PlayerAI::GetTapNoteScore(m_pPlayerState);
 
-			/* XXX: This doesn't make sense.
-			 * Step should only be called in autoplay for hit notes. */
-#if 0
-			// GetTapNoteScore always returns TNS_W1 in autoplay.
-			// If the step is far away, don't judge it.
-			if( m_pPlayerState->m_PlayerController == PC_AUTOPLAY &&
-				fSecondsFromExact > GetWindowSeconds(TW_W5) )
-			{
-				score = TNS_None;
-				break;
-			}
-#endif
-
 			// TRICKY:  We're asking the AI to judge mines. Consider TNS_W4 and
 			// below as "mine was hit" and everything else as "mine was avoided"
 			if ( pTN->type == TapNoteType_Mine )

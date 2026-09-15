@@ -3313,21 +3313,6 @@ void ScreenEdit::TransitionEditState( EditState em )
 
 	const bool bStateChanging = em != old;
 
-#if 0
-	// If switching out of record, open the menu.
-	{
-		bool bGoToRecordMenu = (old == STATE_RECORDING);
-		if( m_bReturnToRecordMenuAfterPlay && old == STATE_PLAYING )
-		{
-			bGoToRecordMenu = true;
-			m_bReturnToRecordMenuAfterPlay = false;
-		}
-
-		if( bGoToRecordMenu )
-			em = STATE_RECORDING_PAUSED;
-	}
-#endif
-
 	// If we're playing music or assist ticks when changing modes, stop.
 	SOUND->StopMusic();
 	if( m_pSoundMusic )
