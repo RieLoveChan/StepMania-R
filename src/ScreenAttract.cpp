@@ -151,8 +151,7 @@ void ScreenAttract::GoToStartScreen(RString sScreenName) {
 /** @brief Allow Lua to have access to the ScreenAttract. */
 class LunaScreenAttract : public Luna<ScreenAttract> {
  public:
-	LunaScreenAttract() {
-	}
+	LunaScreenAttract() = default;
 };
 
 LUA_REGISTER_DERIVED_CLASS(ScreenAttract, ScreenWithMenuElements)

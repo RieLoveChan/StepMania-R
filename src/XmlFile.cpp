@@ -15,8 +15,7 @@
 
 const RString XNode::TEXT_ATTRIBUTE = "__TEXT__";
 
-XNode::XNode() {
-}
+XNode::XNode() = default;
 
 XNode::XNode(const RString &sName) {
 	m_sName = sName;

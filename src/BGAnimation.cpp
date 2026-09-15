@@ -12,8 +12,7 @@
 
 REGISTER_ACTOR_CLASS(BGAnimation);
 
-BGAnimation::BGAnimation() {
-}
+BGAnimation::BGAnimation() = default;
 
 BGAnimation::~BGAnimation() {
 	DeleteAllChildren();

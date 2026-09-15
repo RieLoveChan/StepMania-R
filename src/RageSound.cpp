@@ -49,7 +49,7 @@ RageSoundLoadParams::RageSoundLoadParams() : m_bSupportRateChanging(false), m_bS
 }
 
 RageSound::RageSound()
-    : m_Mutex("RageSound"), m_pSource(nullptr), m_sFilePath(""), m_Param(), m_iStreamFrame(0), m_iStoppedSourceFrame(0),
+    : m_Mutex("RageSound"), m_pSource(nullptr), m_sFilePath(""), m_iStreamFrame(0), m_iStoppedSourceFrame(0),
       m_bPlaying(false), m_bDeleteWhenFinished(false), m_sError("") {
 	ASSERT(SOUNDMAN != nullptr);
 }

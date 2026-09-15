@@ -18,8 +18,7 @@ MemoryCardDriverThreaded_Folder::MemoryCardDriverThreaded_Folder() {
 	m_LastDevices = 0;
 }
 
-MemoryCardDriverThreaded_Folder::~MemoryCardDriverThreaded_Folder() {
-}
+MemoryCardDriverThreaded_Folder::~MemoryCardDriverThreaded_Folder() = default;
 
 bool MemoryCardDriverThreaded_Folder::FolderExists(RString path) {
 	if (path.empty()) {

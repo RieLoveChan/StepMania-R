@@ -40,8 +40,7 @@ class ScreenReloadSongsLoadingWindow : public LoadingWindow {
  * computer while songs load. */
 REGISTER_SCREEN_CLASS(ScreenReloadSongs);
 
-ScreenReloadSongs::ScreenReloadSongs() {
-}
+ScreenReloadSongs::ScreenReloadSongs() = default;
 
 void ScreenReloadSongs::Init() {
 	Screen::Init();

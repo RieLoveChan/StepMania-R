@@ -220,8 +220,7 @@ void ScreenOptionsEditCourse::BeginScreen() {
 	// this->AfterChangeRow( PLAYER_1 );
 }
 
-ScreenOptionsEditCourse::~ScreenOptionsEditCourse() {
-}
+ScreenOptionsEditCourse::~ScreenOptionsEditCourse() = default;
 
 void ScreenOptionsEditCourse::ImportOptions(int iRow, const std::vector<PlayerNumber> & /* vpns */) {
 	OptionRow &row = *m_pRows[iRow];

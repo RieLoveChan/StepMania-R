@@ -87,8 +87,7 @@ void ScreenOptionsCourseOverview::BeginScreen() {
 	GAMESTATE->m_pCurSong.Set(nullptr);
 }
 
-ScreenOptionsCourseOverview::~ScreenOptionsCourseOverview() {
-}
+ScreenOptionsCourseOverview::~ScreenOptionsCourseOverview() = default;
 
 void ScreenOptionsCourseOverview::ImportOptions(int /* iRow */, const std::vector<PlayerNumber> & /* vpns */) {
 	// OptionRow &row = *m_pRows[iRow];

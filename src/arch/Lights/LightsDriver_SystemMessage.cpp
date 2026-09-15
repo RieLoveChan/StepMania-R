@@ -6,11 +6,9 @@
 
 REGISTER_LIGHTS_DRIVER_CLASS(SystemMessage);
 
-LightsDriver_SystemMessage::LightsDriver_SystemMessage() {
-}
+LightsDriver_SystemMessage::LightsDriver_SystemMessage() = default;
 
-LightsDriver_SystemMessage::~LightsDriver_SystemMessage() {
-}
+LightsDriver_SystemMessage::~LightsDriver_SystemMessage() = default;
 
 void LightsDriver_SystemMessage::Set(const LightsState *ls) {
 	if (!PREFSMAN || !LIGHTSMAN || !SCREENMAN) {

@@ -12,8 +12,7 @@ RageTexture::RageTexture(RageTextureID name)
       m_iTextureHeight(0), m_iImageWidth(0), m_iImageHeight(0), m_iFramesWide(1), m_iFramesHigh(1) {
 }
 
-RageTexture::~RageTexture() {
-}
+RageTexture::~RageTexture() = default;
 
 void RageTexture::CreateFrameRects() {
 	GetFrameDimensionsFromFileName(GetID().filename, &m_iFramesWide, &m_iFramesHigh, m_iSourceWidth, m_iSourceHeight);

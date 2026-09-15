@@ -17,8 +17,7 @@
 
 REGISTER_ACTOR_CLASS(StepsDisplay);
 
-StepsDisplay::StepsDisplay() {
-}
+StepsDisplay::StepsDisplay() = default;
 
 /* sID experiment:
  *

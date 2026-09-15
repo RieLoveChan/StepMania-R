@@ -11,8 +11,7 @@ FontManager *FONT = nullptr; // global and accessible from anywhere in our progr
 typedef std::pair<RString, RString> FontName;
 static std::map<FontName, Font *> g_mapPathToFont;
 
-FontManager::FontManager() {
-}
+FontManager::FontManager() = default;
 
 FontManager::~FontManager() {
 	for (std::map<FontName, Font *>::iterator i = g_mapPathToFont.begin(); i != g_mapPathToFont.end(); ++i) {

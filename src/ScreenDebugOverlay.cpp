@@ -67,8 +67,7 @@ class IDebugLine {
 			g_pvpSubscribers = new std::vector<IDebugLine *>;
 		g_pvpSubscribers->push_back(this);
 	}
-	virtual ~IDebugLine() {
-	}
+	virtual ~IDebugLine() = default;
 	enum Type {
 		all_screens,
 		gameplay_only

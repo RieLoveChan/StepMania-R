@@ -426,8 +426,7 @@ struct VideoCardDefaults {
 	int iTextureSize;
 	bool bSmoothLines;
 
-	VideoCardDefaults() {
-	}
+	VideoCardDefaults() = default;
 	VideoCardDefaults(
 	   RString sDriverRegex_,
 	   RString sVideoRenderers_,

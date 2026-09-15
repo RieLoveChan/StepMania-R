@@ -132,8 +132,7 @@ PlayAfterLaunchInfo DoInstalls(CommandLineActions::CommandLineArgs args) {
 
 REGISTER_SCREEN_CLASS(ScreenInstallOverlay);
 
-ScreenInstallOverlay::~ScreenInstallOverlay() {
-}
+ScreenInstallOverlay::~ScreenInstallOverlay() = default;
 void ScreenInstallOverlay::Init() {
 	Screen::Init();
 

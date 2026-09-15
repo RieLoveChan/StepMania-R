@@ -12,8 +12,7 @@
 
 REGISTER_ACTOR_CLASS(ScoreDisplayCalories);
 
-ScoreDisplayCalories::ScoreDisplayCalories() {
-}
+ScoreDisplayCalories::ScoreDisplayCalories() = default;
 
 ScoreDisplayCalories::~ScoreDisplayCalories() {
 	if (!m_sMessageOnStep.empty())
@@ -67,8 +66,7 @@ void ScoreDisplayCalories::UpdateNumber() {
 /** @brief Allow Lua to have access to the ScoreDisplayCalories. */
 class LunaScoreDisplayCalories : public Luna<ScoreDisplayCalories> {
  public:
-	LunaScoreDisplayCalories() {
-	}
+	LunaScoreDisplayCalories() = default;
 };
 
 LUA_REGISTER_DERIVED_CLASS(ScoreDisplayCalories, BitmapText)
