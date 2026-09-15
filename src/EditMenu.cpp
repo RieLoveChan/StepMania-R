@@ -89,8 +89,7 @@ void EditMenu::GetGroupsToShow(std::vector<RString> &vsGroupsOut) {
 	}
 }
 
-EditMenu::EditMenu() {
-}
+EditMenu::EditMenu() = default;
 
 EditMenu::~EditMenu() {
 	IMAGECACHE->Undemand("Banner");

@@ -14,8 +14,7 @@ MemoryCardDriverThreaded_Windows::MemoryCardDriverThreaded_Windows() {
 	m_dwLastLogicalDrives = 0;
 }
 
-MemoryCardDriverThreaded_Windows::~MemoryCardDriverThreaded_Windows() {
-}
+MemoryCardDriverThreaded_Windows::~MemoryCardDriverThreaded_Windows() = default;
 
 static bool TestReady(const RString &sDrive, RString &sVolumeLabelOut) {
 	TCHAR szVolumeNameBuffer[MAX_PATH];

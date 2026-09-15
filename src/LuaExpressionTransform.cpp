@@ -7,8 +7,7 @@ LuaExpressionTransform::LuaExpressionTransform() {
 	m_iNumSubdivisions = 1;
 }
 
-LuaExpressionTransform::~LuaExpressionTransform() {
-}
+LuaExpressionTransform::~LuaExpressionTransform() = default;
 
 void LuaExpressionTransform::SetFromReference(const LuaReference &ref) {
 	m_exprTransformFunction = ref;

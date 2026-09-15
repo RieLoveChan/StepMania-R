@@ -267,7 +267,7 @@ class MatrixStack {
 	std::vector<RageMatrix> stack;
 
  public:
-	MatrixStack() : stack() {
+	MatrixStack() {
 		stack.resize(1);
 		LoadIdentity();
 	}
@@ -719,7 +719,7 @@ bool RageDisplay::SaveScreenshot(RString sPath, GraphicsFileFormat format) {
 		timer.Touch();
 		RageSurfaceUtils::Zoom(surface, iWidth, iHeight);
 		//		LOG->Trace( "%ix%i -> %ix%i (%.3f) in %f seconds", surface->w, surface->h, iWidth, iHeight,
-		//GetActualVideoModeParams().fDisplayAspectRatio, timer.GetDeltaTime() );
+		// GetActualVideoModeParams().fDisplayAspectRatio, timer.GetDeltaTime() );
 	}
 
 	RageFile out;

@@ -5,8 +5,7 @@
 #include "RageUtil.h"
 #include "ActorUtil.h"
 
-ModIcon::ModIcon() {
-}
+ModIcon::ModIcon() = default;
 
 ModIcon::ModIcon(const ModIcon &cpy)
     : ActorFrame(cpy), m_text(cpy.m_text), m_sprFilled(cpy.m_sprFilled), m_sprEmpty(cpy.m_sprEmpty),

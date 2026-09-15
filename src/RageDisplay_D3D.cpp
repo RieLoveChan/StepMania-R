@@ -161,8 +161,7 @@ const RageDisplay::RagePixelFormatDesc *RageDisplay_D3D::GetPixelFormatDesc(Rage
 	return &PIXEL_FORMAT_DESC[pf];
 }
 
-RageDisplay_D3D::RageDisplay_D3D() {
-}
+RageDisplay_D3D::RageDisplay_D3D() = default;
 
 static LocalizedString
    D3D_NOT_INSTALLED("RageDisplay_D3D", "DirectX 9.0c or greater is not installed.  You can download it from:");
@@ -170,7 +169,7 @@ const RString D3D_URL = "http://www.microsoft.com/en-us/download/details.aspx?id
 static LocalizedString HARDWARE_ACCELERATION_NOT_AVAILABLE(
    "RageDisplay_D3D",
    "Your system is reporting that Direct3D hardware acceleration is not available.  Please obtain an updated driver "
-	"from your video card manufacturer."
+   "from your video card manufacturer."
 );
 RString RageDisplay_D3D::Init(const VideoModeParams &p, bool /* bAllowUnacceleratedRenderer */) {
 	GraphicsWindow::Initialize(true);

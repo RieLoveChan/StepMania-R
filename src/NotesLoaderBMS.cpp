@@ -182,8 +182,7 @@ class BMSChart {
 	void TidyUpData();
 };
 
-BMSChart::BMSChart() {
-}
+BMSChart::BMSChart() = default;
 
 bool BMSChart::GetHeader(const RString &header, RString &out) {
 	if (headers.find(header) == headers.end())
@@ -246,8 +245,7 @@ struct bmsCommandTree {
 		currentNode = &root;
 	}
 
-	~bmsCommandTree() {
-	}
+	~bmsCommandTree() = default;
 
 	bmsNodeS *addConditionalChain() {
 		bmsNodeS *newNode = new bmsNodeS;

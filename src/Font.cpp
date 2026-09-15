@@ -17,7 +17,7 @@
 
 FontPage::FontPage()
     : m_iHeight(0), m_iLineSpacing(0), m_fVshift(0), m_iDrawExtraPixelsLeft(0), m_iDrawExtraPixelsRight(0),
-      m_FontPageTextures(), m_sTexturePath(""), m_aGlyphs(), m_iCharToGlyphNo() {
+      m_sTexturePath("") {
 }
 
 void FontPage::Load(const FontPageSettings &cfg) {
@@ -245,8 +245,7 @@ std::size_t Font::GetGlyphsThatFit(const std::wstring &line, int *width) const {
 }
 
 Font::Font()
-    : m_iRefCount(1), path(""), m_apPages(), m_pDefault(nullptr), m_iCharToGlyph(), m_bRightToLeft(false),
-      m_bDistanceField(false),
+    : m_iRefCount(1), path(""), m_pDefault(nullptr), m_bRightToLeft(false), m_bDistanceField(false),
       // strokes aren't shown by default, hence the Color.
       m_DefaultStrokeColor(RageColor(0, 0, 0, 0)), m_sChars("") {
 }

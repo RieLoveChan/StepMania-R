@@ -76,8 +76,7 @@ void ConvertLittleEndian32BitToFloat(void *pBuf, int iSamples) {
 struct WavReader {
 	WavReader(RageFileBasic &f, const RageSoundReader_WAV::WavData &data) : m_File(f), m_WavData(data) {
 	}
-	virtual ~WavReader() {
-	}
+	virtual ~WavReader() = default;
 	virtual int Read(float *pBuf, int iFrames) = 0;
 	virtual int GetLength() const = 0;
 	virtual bool Init() = 0;

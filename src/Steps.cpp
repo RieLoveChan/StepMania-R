@@ -55,8 +55,7 @@ Steps::Steps(Song *song)
       displayBPMType(DISPLAY_BPM_ACTUAL), specifiedBPMMin(0), specifiedBPMMax(0) {
 }
 
-Steps::~Steps() {
-}
+Steps::~Steps() = default;
 
 void Steps::GetDisplayBpms(DisplayBpms &AddTo) const {
 	if (this->GetDisplayBPM() == DISPLAY_BPM_SPECIFIED) {

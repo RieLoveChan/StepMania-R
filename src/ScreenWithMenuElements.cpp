@@ -360,8 +360,7 @@ LUA_REGISTER_DERIVED_CLASS(ScreenWithMenuElements, Screen)
 /** @brief Allow Lua to have access to the ScreenWithMenuElementsSimple. */
 class LunaScreenWithMenuElementsSimple : public Luna<ScreenWithMenuElementsSimple> {
  public:
-	LunaScreenWithMenuElementsSimple() {
-	}
+	LunaScreenWithMenuElementsSimple() = default;
 };
 
 LUA_REGISTER_DERIVED_CLASS(ScreenWithMenuElementsSimple, ScreenWithMenuElements)

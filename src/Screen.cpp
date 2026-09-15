@@ -30,8 +30,7 @@ void Screen::InitScreen(Screen *pScreen) {
 	pScreen->Init();
 }
 
-Screen::~Screen() {
-}
+Screen::~Screen() = default;
 
 bool Screen::SortMessagesByDelayRemaining(
    const Screen::QueuedScreenMessage &m1, const Screen::QueuedScreenMessage &m2

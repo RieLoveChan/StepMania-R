@@ -6,8 +6,7 @@
 
 #include <vector>
 
-CsvFile::CsvFile() {
-}
+CsvFile::CsvFile() = default;
 
 bool CsvFile::ReadFile(const RString &sPath) {
 	m_sPath = sPath;

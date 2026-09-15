@@ -55,8 +55,7 @@ void ScreenOptionsEditProfile::BeginScreen() {
 	ScreenOptions::BeginScreen();
 }
 
-ScreenOptionsEditProfile::~ScreenOptionsEditProfile() {
-}
+ScreenOptionsEditProfile::~ScreenOptionsEditProfile() = default;
 
 void ScreenOptionsEditProfile::ImportOptions(int iRow, const std::vector<PlayerNumber> & /* vpns */) {
 	Profile *pProfile = PROFILEMAN->GetLocalProfile(GAMESTATE->m_sEditLocalProfileID);

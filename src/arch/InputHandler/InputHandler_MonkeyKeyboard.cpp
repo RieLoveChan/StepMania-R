@@ -9,8 +9,7 @@ InputHandler_MonkeyKeyboard::InputHandler_MonkeyKeyboard() {
 	m_dbLast = DeviceButton_Invalid;
 }
 
-InputHandler_MonkeyKeyboard::~InputHandler_MonkeyKeyboard() {
-}
+InputHandler_MonkeyKeyboard::~InputHandler_MonkeyKeyboard() = default;
 
 void InputHandler_MonkeyKeyboard::GetDevicesAndDescriptions(std::vector<InputDeviceInfo> &vDevicesOut) {
 	vDevicesOut.push_back(InputDeviceInfo(DEVICE_KEYBOARD, "MonkeyKeyboard"));

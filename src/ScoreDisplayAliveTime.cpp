@@ -16,8 +16,7 @@ ScoreDisplayAliveTime::ScoreDisplayAliveTime() {
 	m_MultiPlayer = MultiPlayer_Invalid;
 }
 
-ScoreDisplayAliveTime::~ScoreDisplayAliveTime() {
-}
+ScoreDisplayAliveTime::~ScoreDisplayAliveTime() = default;
 
 void ScoreDisplayAliveTime::LoadFromNode(const XNode *pNode) {
 	BitmapText::LoadFromNode(pNode);
@@ -62,8 +61,7 @@ void ScoreDisplayAliveTime::UpdateNumber() {
 /** @brief Allow Lua to have access to the ScoreDisplayAliveTime. */
 class LunaScoreDisplayAliveTime : public Luna<ScoreDisplayAliveTime> {
  public:
-	LunaScoreDisplayAliveTime() {
-	}
+	LunaScoreDisplayAliveTime() = default;
 };
 
 LUA_REGISTER_DERIVED_CLASS(ScoreDisplayAliveTime, BitmapText)

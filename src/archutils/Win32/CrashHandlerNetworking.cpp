@@ -56,10 +56,8 @@ class NetworkStream {
 		CONN_TCP,
 		CONN_UDP,
 	};
-	NetworkStream() {
-	}
-	virtual ~NetworkStream() {
-	}
+	NetworkStream() = default;
+	virtual ~NetworkStream() = default;
 
 	// Open a connection. Must be in STATE_IDLE.
 	virtual void Open(const RString &sHost, int iPort, ConnectionType ct = CONN_TCP) = 0;

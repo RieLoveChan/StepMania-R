@@ -7,8 +7,7 @@
 
 ModelManager *MODELMAN = nullptr; // global and accessible from anywhere in our program
 
-ModelManager::ModelManager() {
-}
+ModelManager::ModelManager() = default;
 
 ModelManager::~ModelManager() {
 	for (std::map<RString, RageModelGeometry *>::iterator i = m_mapFileToGeometry.begin();

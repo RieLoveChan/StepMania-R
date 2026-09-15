@@ -9,8 +9,7 @@
 
 #include <vector>
 
-ActiveAttackList::ActiveAttackList() {
-}
+ActiveAttackList::ActiveAttackList() = default;
 
 void ActiveAttackList::Init(const PlayerState *pPlayerState) {
 	m_pPlayerState = pPlayerState;

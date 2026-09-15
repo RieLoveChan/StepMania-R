@@ -1341,11 +1341,11 @@ void Regex::Release() {
 	m_sPattern = RString();
 }
 
-Regex::Regex(const RString &sStr) : m_pReg(nullptr), m_iBackrefs(0), m_sPattern(RString()) {
+Regex::Regex(const RString &sStr) : m_pReg(nullptr), m_iBackrefs(0) {
 	Set(sStr);
 }
 
-Regex::Regex(const Regex &rhs) : m_pReg(nullptr), m_iBackrefs(0), m_sPattern(RString()) {
+Regex::Regex(const Regex &rhs) : m_pReg(nullptr), m_iBackrefs(0) {
 	Set(rhs.m_sPattern);
 }
 

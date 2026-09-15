@@ -59,8 +59,7 @@ SongCacheIndex::SongCacheIndex() {
 	ReadCacheIndex();
 }
 
-SongCacheIndex::~SongCacheIndex() {
-}
+SongCacheIndex::~SongCacheIndex() = default;
 
 void SongCacheIndex::ReadFromDisk() {
 	ReadCacheIndex();
