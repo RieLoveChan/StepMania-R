@@ -2253,7 +2253,7 @@ the push that carries it is itself the verification that the trimmed
 `ci.yml` still parses and all remaining jobs (Windows/Ubuntu/macOS
 arm64 × build+tests, Lua.xml validation) run green.
 
-### 15. `#if 0` dead blocks — two batches DONE, ~7 remain (fragile ones)
+### 15. `#if 0` dead blocks — three batches DONE, 8 remain (all correctly kept)
 First pass (`a2c3d44522`, 2026-09-04): 10 dead blocks across 8 files
 (`CodeDetector.cpp`/`.h`, `CourseUtil.cpp`, `NoteDataUtil.cpp` ×3,
 `NoteDataWithScoring.cpp`, `NotesWriterSSC.cpp`,
@@ -2282,10 +2282,40 @@ sense" comment, but it's CPU/autoplay scoring — too fragile a hot path
 to guess at) and `ScreenEdit.cpp` (looks superseded by the logic that
 replaced it, but no explicit disowning comment and it's fragile editor
 state-machine code).
-**Remaining (~7 sites):** `Player.cpp`, `ScreenEdit.cpp`, plus
-whatever's left after re-verifying the rest weren't miscounted. Both
-need someone to actually reason through gameplay/editor logic, not a
-mechanical read. Out of scope: `archutils/Unix/*` and
+**Third pass, `Player.cpp`/`ScreenEdit.cpp` — DONE 2026-09-14
+(`edc73a1c0a`).** Re-derived the actual current site count first (a
+fresh full-tree grep found exactly 10 `#if 0` sites, matching the
+first-pass total minus nothing lost): `NoteData.cpp`,
+`RageDisplay_GLES2.cpp`, `RageFileManager_ReadAhead.cpp`,
+`RageSoundReader_MP3.cpp`, `RageThreads.cpp`,
+`RageUtil_CachedObject.cpp`, `RandomSample.cpp`,
+`ScoreKeeperNormal.cpp` — already correctly identified above as
+kept-for-reference or active `#else`/`#elif` selectors — plus
+`Player.cpp`/`ScreenEdit.cpp`, the two genuinely removable ones.
+**Key realization that unblocks this kind of site going forward: a
+plain `#if 0 ... #endif` with no `#else` branch is never compiled
+regardless of what its disabled logic does** — so deleting the dead
+text cannot change runtime behavior by construction, once you've
+confirmed (by reading to the literal matching `#endif`, this doc's own
+long-standing warning) that it isn't secretly one arm of an active
+selector and has no nested directives. That reduces "reason through
+fragile gameplay/editor logic" to a much smaller, purely mechanical
+check: locate the true boundary, confirm no `#else`, confirm no nested
+`#if`/`#ifdef` inside. Both `Player.cpp` (a `PC_CPU`/`PC_AUTOPLAY`
+tap-scoring cutoff, the author's own comment already called it "doesn't
+make sense") and `ScreenEdit.cpp` (a `TransitionEditState` record-menu
+shortcut superseded by the live `m_bReturnToRecordMenuAfterPlay`
+handling elsewhere in the same function) passed that check cleanly.
+Full gate green (Release + Debug builds, ctest 100%, sm_tests 5981/230
+unchanged, `--SelfTest`).
+**Remaining (8 sites, all previously confirmed as either active
+`#if 0`/`#else` selectors or deliberate kept-for-reference blocks — see
+the categorization above, none need further action unless one turns
+out to be miscategorized on a future re-read):** `NoteData.cpp`,
+`RageDisplay_GLES2.cpp`, `RageFileManager_ReadAhead.cpp`,
+`RageSoundReader_MP3.cpp`, `RageThreads.cpp`,
+`RageUtil_CachedObject.cpp`, `RandomSample.cpp`,
+`ScoreKeeperNormal.cpp`. Out of scope: `archutils/Unix/*` and
 `arch/Threads/Threads_Pthreads.*` (non-Windows, `AGENTS.md` §3),
 `src/tests/` (unsalvageable, ADR 0006).
 **Action:** locate the actual matching `#endif` before judging a
