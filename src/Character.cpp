@@ -238,7 +238,7 @@ class LunaCharacter : public Luna<Character> {
 		return 1;
 	}
 	static int GetCharacterDir(T *p, lua_State *L) {
-		lua_pushstring(L, p->m_sCharDir);
+		lua_pushstring(L, p->m_sCharDir.c_str());
 		return 1;
 	}
 	static int GetCharacterID(T *p, lua_State *L) {
