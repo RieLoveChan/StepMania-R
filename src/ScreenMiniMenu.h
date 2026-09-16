@@ -12,7 +12,7 @@ typedef bool (*MenuRowUpdateEnabled)();
 
 struct MenuRowDef {
 	int iRowCode;
-	RString sName;
+	std::string sName;
 	bool bEnabled;
 	MenuRowUpdateEnabled pfnEnabled; // if ! nullptr, used instead of bEnabled
 	EditMode emShowIn;
