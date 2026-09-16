@@ -45,7 +45,7 @@ struct RageTextureID {
 	bool bHotPinkColorKey; // #FF00FF
 
 	// These hints will be used in addition to any in the filename.
-	RString AdditionalTextureHints;
+	std::string AdditionalTextureHints;
 
 	/* Used by RageTextureManager. Order is important; see RageTextureManager.cpp.
 	 * Note that this property is not considered for ordering/equality. Loading
