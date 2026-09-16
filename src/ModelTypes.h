@@ -13,7 +13,7 @@ struct msTriangle {
 };
 
 struct msMesh {
-	RString sName;
+	std::string sName;
 	std::int8_t nMaterialIndex;
 
 	std::vector<RageModelVertex> Vertices;
@@ -76,7 +76,7 @@ class AnimatedTexture {
 
 struct msMaterial {
 	int nFlags;
-	RString sName;
+	std::string sName;
 	RageColor Ambient;
 	RageColor Diffuse;
 	RageColor Specular;
@@ -110,8 +110,8 @@ struct msRotationKey {
 
 struct msBone {
 	int nFlags;
-	RString sName;
-	RString sParentName;
+	std::string sName;
+	std::string sParentName;
 	RageVector3 Position;
 	RageVector3 Rotation;
 
