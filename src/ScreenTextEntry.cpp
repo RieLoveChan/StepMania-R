@@ -28,7 +28,7 @@ static const char *g_szKeys[NUM_KeyboardRow][KEYS_PER_ROW] = {
    {"", "", "Space", "", "", "Backspace", "", "", "Cancel", "", "", "Done", ""},
 };
 
-RString ScreenTextEntry::s_sLastAnswer = "";
+std::string ScreenTextEntry::s_sLastAnswer = "";
 
 // Settings:
 namespace {
