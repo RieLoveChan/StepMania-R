@@ -73,8 +73,8 @@ class ScreenTextEntry : public ScreenWithMenuElements {
 		      OnCancel(), ValidateAppend(), FormatAnswerForDisplay() {
 		}
 		ScreenMessage smSendOnPop;
-		RString sQuestion;
-		RString sInitialAnswer;
+		std::string sQuestion;
+		std::string sInitialAnswer;
 		int iMaxInputLength;
 		/** @brief Is there a password involved with this setting?
 		 *
