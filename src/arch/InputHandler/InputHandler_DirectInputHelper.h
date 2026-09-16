@@ -43,7 +43,7 @@ struct input_t {
 struct DIDevice {
 	DIDEVICEINSTANCE JoystickInst;
 	LPDIRECTINPUTDEVICE8 Device;
-	RString m_sName;
+	std::string m_sName;
 
 	enum {
 		KEYBOARD,
