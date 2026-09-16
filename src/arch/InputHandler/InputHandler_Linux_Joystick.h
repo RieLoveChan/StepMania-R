@@ -24,7 +24,7 @@ class InputHandler_Linux_Joystick : public InputHandler {
 
 	struct FileDescriptor {
 		int fd = -1;
-		RString description = "";
+		std::string description = "";
 	};
 
 	std::vector<FileDescriptor> m_files;
