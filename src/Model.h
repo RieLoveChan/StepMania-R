@@ -91,7 +91,7 @@ class Model : public Actor {
 	void AdvanceFrame(float fDeltaTime);
 
 	float m_fCurFrame;
-	RString m_sDefaultAnimation;
+	std::string m_sDefaultAnimation;
 	float m_fDefaultAnimationRate;
 	float m_fCurAnimationRate;
 	bool m_bLoop;
