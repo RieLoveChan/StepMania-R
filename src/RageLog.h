@@ -114,7 +114,7 @@ class RageLog {
 	/* Consecutive-identical-line collapsing (ADR 0005 phase 3): the last
 	 * emitted tag+message (no timestamp), its destination bits and tag,
 	 * and how many identical lines have been suppressed since. */
-	RString m_sLastEmit, m_sLastTag;
+	std::string m_sLastEmit, m_sLastTag;
 	int m_iLastWhere = 0;
 	int m_iRepeatCount = 0;
 
