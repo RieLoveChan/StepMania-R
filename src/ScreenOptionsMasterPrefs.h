@@ -26,10 +26,10 @@ struct ConfOption {
 	static ConfOption *Find(RString name);
 
 	// Name of this option.
-	RString name;
+	std::string name;
 
 	// Name of the preference this option affects.
-	RString m_sPrefName;
+	std::string m_sPrefName;
 
 	typedef void (*MoveData_t)(int &sel, bool ToSel, const ConfOption *pConfOption);
 	MoveData_t MoveData;

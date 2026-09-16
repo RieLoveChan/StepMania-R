@@ -108,14 +108,14 @@ template <class T>
 static void MoveMap(int &sel, const ConfOption *pConfOption, bool ToSel, const T *mapping, unsigned cnt) {
 	ASSERT(pConfOption != nullptr);
 	IPreference *pPref = IPreference::GetPreferenceByName(pConfOption->m_sPrefName);
-	ASSERT_M(pPref != nullptr, pConfOption->m_sPrefName);
+	ASSERT_M(pPref != nullptr, pConfOption->m_sPrefName.c_str());
 
 	MoveMap(sel, *pPref, ToSel, mapping, cnt);
 }
 
 template <class T> static void MovePref(int &iSel, bool bToSel, const ConfOption *pConfOption) {
 	IPreference *pPref = IPreference::GetPreferenceByName(pConfOption->m_sPrefName);
-	ASSERT_M(pPref != nullptr, pConfOption->m_sPrefName);
+	ASSERT_M(pPref != nullptr, pConfOption->m_sPrefName.c_str());
 
 	if (bToSel) {
 		// TODO: why not get the int directly from pPref?
@@ -131,7 +131,7 @@ template <class T> static void MovePref(int &iSel, bool bToSel, const ConfOption
 
 template <> void MovePref<bool>(int &iSel, bool bToSel, const ConfOption *pConfOption) {
 	IPreference *pPref = IPreference::GetPreferenceByName(pConfOption->m_sPrefName);
-	ASSERT_M(pPref != nullptr, pConfOption->m_sPrefName);
+	ASSERT_M(pPref != nullptr, pConfOption->m_sPrefName.c_str());
 
 	if (bToSel) {
 		// TODO: why not get the int directly from pPref?
