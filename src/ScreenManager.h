@@ -79,8 +79,8 @@ class ScreenManager {
 	Screen *m_pInputFocus; // nullptr = top of m_ScreenStack
 
 	// Screen loads, removals, and concurrent prepares are delayed until the next update.
-	RString m_sDelayedScreen;
-	RString m_sDelayedConcurrentPrepare;
+	std::string m_sDelayedScreen;
+	std::string m_sDelayedConcurrentPrepare;
 	ScreenMessage m_OnDonePreparingScreen;
 	ScreenMessage m_PopTopScreen;
 
