@@ -34,6 +34,9 @@
 #ifndef SM_SONGS_DIR
 #error "EngineTestEnvPaths.h did not define SM_SONGS_DIR"
 #endif
+#ifndef SM_GAMES_DIR
+#error "EngineTestEnvPaths.h did not define SM_GAMES_DIR"
+#endif
 #ifndef SM_THEMES_DIR
 #error "EngineTestEnvPaths.h did not define SM_THEMES_DIR"
 #endif
@@ -119,6 +122,7 @@ namespace
 		// the scripts-free minimal theme SwitchThemeAndLanguage loads.
 		FILEMAN->Mount( "dir", SM_TEST_DATA_DIR, "/testdata" );
 		FILEMAN->Mount( "dir", SM_SONGS_DIR, "/Songs" );
+		FILEMAN->Mount( "dir", SM_GAMES_DIR, "/Games" );
 		FILEMAN->Mount( "dir", SM_THEMES_DIR, "/Themes" );
 		FILEMAN->Mount( "dir", SM_TESTTHEME_DIR, "/Themes" );
 		FILEMAN->Mount( "dir", SM_NOTESKINS_DIR, "/NoteSkins" );
@@ -142,11 +146,16 @@ namespace
 			GAMESTATE = new GameState;
 
 		// GameManager's ctor is trivial -- it only registers GAMEMAN with
-		// Lua; every game/style/StepsType table it serves is file-scope
-		// static data in GameManager.cpp. Any real simfile load resolves
-		// its #STEPSTYPE through GAMEMAN->StringToStepsType. Needs LUA.
+		// Lua. LoadGames() is the real setup: it reads every Game/Style
+		// definition from Games/<name>/ (mounted above) via GameDataIO,
+		// and must run after the GAMEMAN global itself is assigned, since
+		// LoadGameFromDisk resolves #STEPSTYPE strings through
+		// GAMEMAN->StringToStepsType. Needs LUA + the /Games mount.
 		if( GAMEMAN == nullptr )
+		{
 			GAMEMAN = new GameManager;
+			GAMEMAN->LoadGames();
+		}
 
 		// NoteSkinManager. Trivial ctor (Lua registration + invalid
 		// members). Must exist before GAMEMAN->GetDefaultGame() below --
