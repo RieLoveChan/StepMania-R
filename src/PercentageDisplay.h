@@ -41,8 +41,8 @@ class PercentageDisplay : public ActorFrame {
 	int m_LastMax;
 	BitmapText m_textPercent;
 	BitmapText m_textPercentRemainder;
-	RString m_sPercentFormat;
-	RString m_sRemainderFormat;
+	std::string m_sPercentFormat;
+	std::string m_sRemainderFormat;
 
 	LuaReference m_FormatPercentScore;
 };
