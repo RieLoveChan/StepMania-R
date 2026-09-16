@@ -47,7 +47,7 @@ class RageSoundReader_FileReader : public RageSoundReader {
  private:
 	static RageSoundReader_FileReader *
 	TryOpenFile(RageFileBasic *pFile, RString &error, RString format, bool &bKeepTrying);
-	mutable RString m_sError;
+	mutable std::string m_sError;
 };
 
 #endif
