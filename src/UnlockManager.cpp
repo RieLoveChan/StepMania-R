@@ -787,7 +787,7 @@ class LunaUnlockEntry : public Luna<UnlockEntry> {
 		return 0;
 	}
 	static int GetCode(T *p, lua_State *L) {
-		lua_pushstring(L, p->m_sEntryID);
+		lua_pushstring(L, p->m_sEntryID.c_str());
 		return 1;
 	}
 
