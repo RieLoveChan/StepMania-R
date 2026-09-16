@@ -133,7 +133,7 @@ class FontPage {
 class Font {
  public:
 	int m_iRefCount;
-	RString path;
+	std::string path;
 
 	Font();
 	~Font();
@@ -214,7 +214,7 @@ class Font {
 	RageColor m_DefaultStrokeColor;
 
 	/** @brief We keep this around only for reloading. */
-	RString m_sChars;
+	std::string m_sChars;
 
 	void LoadFontPageSettings(
 	   FontPageSettings &cfg, IniFile &ini, const RString &sTexturePath, const RString &PageName, RString sChars
