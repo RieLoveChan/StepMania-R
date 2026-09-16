@@ -677,15 +677,15 @@ void BMSSong::PrecacheBackgrounds(const RString &dir) {
 }
 
 struct BMSChartInfo {
-	RString title;
-	RString artist;
-	RString genre;
+	std::string title;
+	std::string artist;
+	std::string genre;
 
-	RString bannerFile;
-	RString backgroundFile;
-	RString stageFile;
-	RString musicFile;
-	RString previewFile;
+	std::string bannerFile;
+	std::string backgroundFile;
+	std::string stageFile;
+	std::string musicFile;
+	std::string previewFile;
 
 	std::map<int, RString> backgroundChanges;
 	float previewStart;
