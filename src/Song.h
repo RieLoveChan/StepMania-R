@@ -63,7 +63,7 @@ struct LyricSegment {
 /** @brief Holds all music metadata and steps for one song. */
 class Song {
 	RString m_sSongDir;
-	RString m_pre_customify_song_dir;
+	std::string m_pre_customify_song_dir;
 
  public:
 	void SetSongDir(const RString sDir) {
