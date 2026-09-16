@@ -47,13 +47,13 @@ class Character {
 		return !m_sDisplayName.empty() ? m_sDisplayName : m_sCharacterID;
 	}
 
-	RString m_sCharDir;
+	std::string m_sCharDir;
 	RString m_sCharacterID;
 
  private:
 	RString m_sDisplayName;
-	RString m_sCardPath;
-	RString m_sIconPath;
+	std::string m_sCardPath;
+	std::string m_sIconPath;
 
  public:
 	apActorCommands m_cmdInit;
