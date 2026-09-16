@@ -288,7 +288,7 @@ class Steps {
 	mutable RString m_sNoteDataCompressed;
 
 	/** @brief The name of the file where these steps are stored. */
-	RString m_sFilename;
+	std::string m_sFilename;
 	/** @brief true if these Steps were loaded from or saved to disk. */
 	bool m_bSavedToDisk;
 	/** @brief allows the steps to specify their own music file. */
@@ -303,7 +303,7 @@ class Steps {
 	 This used to also contain the step author's name. */
 	RString m_sDescription;
 	/** @brief The style of the chart. (e.g. "Pad", "Keyboard") */
-	RString m_sChartStyle;
+	std::string m_sChartStyle;
 	/** @brief The difficulty that these steps are assigned to. */
 	Difficulty m_Difficulty;
 	/** @brief The numeric difficulty of the Steps, ranging from MIN_METER to MAX_METER. */
@@ -312,7 +312,7 @@ class Steps {
 	RadarValues m_CachedRadarValues[NUM_PLAYERS];
 	bool m_bAreCachedRadarValuesJustLoaded;
 	/** @brief The name of the person who created the Steps. */
-	RString m_sCredit;
+	std::string m_sCredit;
 	/** @brief The name of the chart. */
 	RString chartName;
 	/** @brief How is the BPM displayed for this chart? */
