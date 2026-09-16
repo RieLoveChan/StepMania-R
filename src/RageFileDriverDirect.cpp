@@ -136,7 +136,7 @@ bool RageFileDriverDirect::Move(const RString &sOldPath_, const RString &sNewPat
 	int size = FDB->GetFileSize(sOldPath);
 	int hash = FDB->GetFileHash(sOldPath);
 	TRACE(ssprintf("rename \"%s\" -> \"%s\"", (m_sRoot + sOldPath).c_str(), (m_sRoot + sNewPath).c_str()));
-	if (DoRename(m_sRoot + sOldPath, m_sRoot + sNewPath) == -1) {
+	if (DoRename((m_sRoot + sOldPath).c_str(), (m_sRoot + sNewPath).c_str()) == -1) {
 		WARN(ssprintf(
 		   "rename(%s,%s) failed: %s", (m_sRoot + sOldPath).c_str(), (m_sRoot + sNewPath).c_str(), strerror(errno)
 		));
@@ -159,7 +159,7 @@ bool RageFileDriverDirect::Remove(const RString &sPath_) {
 	switch (type) {
 	case RageFileManager::TYPE_FILE:
 		TRACE(ssprintf("remove '%s'", (m_sRoot + sPath).c_str()));
-		if (DoRemove(m_sRoot + sPath) == -1) {
+		if (DoRemove((m_sRoot + sPath).c_str()) == -1) {
 			WARN(ssprintf("remove(%s) failed: %s", (m_sRoot + sPath).c_str(), strerror(errno)));
 			return false;
 		}
@@ -168,7 +168,7 @@ bool RageFileDriverDirect::Remove(const RString &sPath_) {
 
 	case RageFileManager::TYPE_DIR:
 		TRACE(ssprintf("rmdir '%s'", (m_sRoot + sPath).c_str()));
-		if (DoRmdir(m_sRoot + sPath) == -1) {
+		if (DoRmdir((m_sRoot + sPath).c_str()) == -1) {
 			WARN(ssprintf("rmdir(%s) failed: %s", (m_sRoot + sPath).c_str(), strerror(errno)));
 			return false;
 		}
@@ -353,7 +353,7 @@ RageFileObjDirect::~RageFileObjDirect() {
 	} while (false);
 
 	// The write or the rename failed. Delete the incomplete temporary file.
-	DoRemove(MakeTempFilename(m_sPath));
+	DoRemove(MakeTempFilename(m_sPath).c_str());
 }
 
 int RageFileObjDirect::ReadInternal(void *pBuf, std::size_t iBytes) {
