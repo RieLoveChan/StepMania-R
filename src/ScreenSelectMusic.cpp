@@ -52,7 +52,7 @@ AutoScreenMessage(SM_SortOrderChanged);
 AutoScreenMessage(SM_BackFromPlayerOptions);
 AutoScreenMessage(SM_ConfirmDeleteSong);
 
-static RString g_sCDTitlePath;
+static std::string g_sCDTitlePath;
 static bool g_bWantFallbackCdTitle;
 static bool g_bCDTitleWaiting = false;
 static RString g_sBannerPath;
