@@ -147,7 +147,7 @@ struct Message {
 	}
 
  private:
-	RString m_sName;
+	std::string m_sName;
 	LuaTable *m_pParams;
 	bool m_bBroadcast;
 
