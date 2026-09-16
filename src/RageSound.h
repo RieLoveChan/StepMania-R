@@ -163,7 +163,7 @@ class RageSound : public RageSoundBase {
 	pos_map_queue m_HardwareToStreamMap;
 	pos_map_queue m_StreamToSourceMap;
 
-	RString m_sFilePath;
+	std::string m_sFilePath;
 
 	void ApplyParams();
 	RageSoundParams m_Param;
@@ -182,7 +182,7 @@ class RageSound : public RageSoundBase {
 	bool m_bPlaying;
 	bool m_bDeleteWhenFinished;
 
-	RString m_sError;
+	std::string m_sError;
 
 	int GetSourceFrameFromHardwareFrame(std::int64_t iHardwareFrame, bool *bApproximate = nullptr) const;
 
