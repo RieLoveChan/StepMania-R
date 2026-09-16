@@ -26,7 +26,7 @@ class OptionRowType {
 	void Load(const RString &sMetricsGroup, Actor *pParent);
 
  private:
-	RString m_sMetricsGroup;
+	std::string m_sMetricsGroup;
 
 	BitmapText m_textItem;
 	OptionsCursor m_Underline[NUM_PLAYERS];
