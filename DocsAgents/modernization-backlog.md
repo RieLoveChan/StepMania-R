@@ -3060,38 +3060,39 @@ spec is the whole config.)
   fix) — see `DocsAgents/log.md` for the complete batch-by-batch
   history. **Item 18 is closed.**
 
-### 20. Replace the archaic hard-coded game-type system
-Game types are defined by hand-written `static const Game g_Game_X = {…}`
-struct literals in `src/GameManager.cpp` (~150 lines each: controllers,
-button maps, per-style mappings, menu buttons), registered in a
-hand-maintained `g_Games[]` array, with a **compile-time `StepsType`
-enum** and a parallel `g_StepsTypeInfos[]` array. Adding or editing a game
-means editing a 3600-line `.cpp` and rebuilding. All game types are now
-enabled (`229d0769d5`); the *mechanism* is what needs replacing.
-**Goal:** a **data-driven game/style/stepstype registry** — defined in
-data (Lua or a `Games/` tree, like NoteSkins/Themes are), loaded at
-startup, with the C++ side working off a runtime id instead of the
-`StepsType` enum.
+### 20. Replace the archaic hard-coded game-type system — stage 1 DONE (ADR 0008)
+**Stage 1 complete, 2026-09-16.** The hand-written `static const Game
+g_Game_X = {…}` / `g_Style_*` / `g_AutoKeyMappings_*` struct literals
+(~3600 lines) and the hand-maintained `g_Games[]` array are **gone**
+from `src/GameManager.cpp`. All 12 games (dance, pump, techno, lights,
+kb7, ez2, para, ds3ddx, beat, maniax, popn, kickbox) now live as an
+ini-tree under `Games/<name>/` (`game.ini`, `autokeymap.ini`,
+`styles/*.ini`; see `src/GameDataIO.h`/`.cpp`), generated field-for-field
+from the old literals (proven via `tests/test_GameDataIO.cpp`'s
+round-trip characterization test before the literals were deleted, and
+CI-verified across Windows/macOS/Ubuntu both before and after deletion:
+`dd56cf3d91`). `GameManager::LoadGames()` reads that tree into a
+`GameDataStore` (`std::deque`-backed, stable addresses) and builds
+`g_Games` as a plain `std::vector<const Game *>` at startup, right after
+the `GAMEMAN` global itself is assigned — `LoadGameFromDisk` resolves
+`#STEPSTYPE` strings through `GAMEMAN->StringToStepsType`, so it can't
+run from inside `GameManager`'s own constructor. Adding a game is now:
+drop a definition under `Games/<name>/` + a `NoteSkins/<name>/` folder —
+no `.cpp` edit, no rebuild. (`NoteSkins/Para/`'s capitalization mismatch
+was fixed separately, `ea82d3ab3d`.)
 
-**End-state — `NoteSkins/` is the switch for supported games.** A game is
-offered iff `NoteSkins/<gamename>/` holds ≥1 valid skin. This is *already*
-how enablement works (`GameManager::GetEnabledGames` →
-`IsGameEnabled` → `NoteSkinManager::DoNoteSkinsExistForGame`); after
-`229d0769d5` `g_Games[]` lists all defined games, so the NoteSkins check
-is the only gate that reaches the UI. What remains: the `g_Games[]` array
-+ `g_Game_*` structs are still hand-maintained C++. Target: adding a game
-= drop in a definition file + a `NoteSkins/<name>/` folder — no `.cpp`
-edit, no rebuild. `g_Games[]` becomes "every definition found", the
-NoteSkin dir stays the on/off.
-**Hard constraint:** the on-disk `#STEPSTYPE` strings (`dance-single`,
-`pump-double`, `bm-single7`, `pnm-nine`, …) are a stable contract with the
-~20-year simfile library (`AGENTS.md` §5) — every existing value must
-resolve identically, no mass cache invalidation.
-**Scope:** big. `StepsType` (enum → runtime id) ripples through
-`NoteData`, `Style`, `Steps`, `RadarValues`, score keepers, the editor,
-Lua bindings, `Profile` serialization. **Deserves its own ADR** when
-picked up. Also: `NoteSkins/Para/` is capitalised but the game name is
-`para` — rename for Linux (case-sensitive FS).
+**What's left (bigger, its own ADR territory):** the compile-time
+`StepsType` **enum** and its parallel `g_StepsTypeInfos[]` array in
+`GameManager.cpp` are still hand-written C++ — stage 1 only replaced the
+Game/Style/InputScheme/AutoMappings data, not StepsType itself. Turning
+`StepsType` into a runtime id ripples through `NoteData`, `Style`,
+`Steps`, `RadarValues`, score keepers, the editor, Lua bindings, `Profile`
+serialization. **Hard constraint, unchanged:** the on-disk `#STEPSTYPE`
+strings (`dance-single`, `pump-double`, `bm-single7`, `pnm-nine`, …) are a
+stable contract with the ~20-year simfile library (`AGENTS.md` §5) —
+every existing value must resolve identically, no mass cache
+invalidation. Pick this up as its own ADR (a stage 2 of 0008, or a new
+one) rather than folding it into stage 1's scope.
 
 ### 29. Networking/multiplayer (SMOnline) subsystem is orphaned from the CMake build — DELETED 2026-09-14 (`9887258c71`)
 **Maintainer decided: delete, not revive** (asked directly, per this

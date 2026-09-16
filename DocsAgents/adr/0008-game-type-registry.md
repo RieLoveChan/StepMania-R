@@ -9,6 +9,19 @@ tags: [adr, game-types, stepstype, data-driven, proposed]
 
 **Accepted** — 2026-09-15. Maintainer decision. Backlog item 20.
 
+**Stage 1 implemented and closed — 2026-09-16.** All 12 games migrated
+to `Games/<name>/` ini files (`src/GameDataIO.h`/`.cpp`), `GameManager::
+LoadGames()` reads that tree at startup, and the old `g_Games[]`/
+`g_Game_*`/`g_Style_*`/`g_AutoKeyMappings_*` C++ literals are deleted
+(`dd56cf3d91`, ~3600 lines removed from `GameManager.cpp`). Verified via
+a field-for-field round-trip characterization test
+(`tests/test_GameDataIO.cpp`) run *before* the literals were deleted, the
+full `sm_tests` suite (231 cases) and `--SelfTest` both before and after
+deletion, and green CI on Windows/macOS/Ubuntu for both the migration
+commit and the deletion commit. `StepsType` (stage 2, deferred per this
+ADR's own scope below) is untouched. See `modernization-backlog.md` item
+20 for the up-to-date detail.
+
 # Decision
 
 - **Staged, not one-pass.** This ADR covers **stage 1 only**: make
