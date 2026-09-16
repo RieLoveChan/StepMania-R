@@ -46,7 +46,7 @@ class StepsDisplay : public ActorFrame {
 	};
 	void SetInternal(const SetParams &params);
 
-	RString m_sMetricsGroup;
+	std::string m_sMetricsGroup;
 
 	AutoActor m_sprFrame;
 	BitmapText m_textTicks; // 111100000
