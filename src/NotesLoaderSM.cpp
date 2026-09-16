@@ -1202,7 +1202,7 @@ void SMLoader::TidyUpData(Song &song, bool bFromCache) {
 		bool bHasNoSongBgTag = false;
 
 		for (unsigned i = 0; !bHasNoSongBgTag && i < bg.size(); ++i) {
-			if (!bg[i].m_def.m_sFile1.CompareNoCase(NO_SONG_BG_FILE)) {
+			if (StdString::ssicmp(bg[i].m_def.m_sFile1.c_str(), NO_SONG_BG_FILE.c_str()) == 0) {
 				bg.erase(bg.begin() + i);
 				bHasNoSongBgTag = true;
 			}
@@ -1223,7 +1223,8 @@ void SMLoader::TidyUpData(Song &song, bool bFromCache) {
 					break;
 
 				// If the last BGA is already the song BGA, don't add a duplicate.
-				if (!bg.empty() && !bg.back().m_def.m_sFile1.CompareNoCase(song.m_sBackgroundFile))
+				if (!bg.empty() &&
+				    StdString::ssicmp(bg.back().m_def.m_sFile1.c_str(), song.m_sBackgroundFile.c_str()) == 0)
 					break;
 
 				if (!IsAFile(song.GetBackgroundPath()))
