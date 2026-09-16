@@ -964,7 +964,7 @@ class Actor : public MessageSubscriber {
 		/** @brief The number of seconds between Start and End positions/zooms. */
 		float m_fTweenTime;
 		/** @brief The command to execute when this TweenState goes into effect. */
-		RString m_sCommandName;
+		std::string m_sCommandName;
 	};
 
 	RageVector3 m_baseRotation;
