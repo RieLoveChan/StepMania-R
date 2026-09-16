@@ -145,7 +145,7 @@ class BitmapText : public Actor {
  protected:
 	Font *m_pFont;
 	bool m_bUppercase;
-	RString m_sText;
+	std::string m_sText;
 	std::vector<std::wstring> m_wTextLines;
 	std::vector<int> m_iLineWidths; // in source pixels
 	int m_iWrapWidthPixels;         // -1 = no wrap
