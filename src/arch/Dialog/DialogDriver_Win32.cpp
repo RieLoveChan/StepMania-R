@@ -25,7 +25,7 @@ int __stdcall AfxMessageBox(LPCTSTR lpszText, UINT nType, UINT nIDHelp);
 REGISTER_DIALOG_DRIVER_CLASS(Win32);
 
 static bool g_bHush;
-static RString g_sMessage;
+static std::string g_sMessage;
 static bool g_bAllowHush;
 
 #if !defined(SMPACKAGE)
@@ -127,7 +127,7 @@ Dialog::Result DialogDriver_Win32::OKCancel(RString sMessage, RString sID) {
 }
 
 #if !defined(SMPACKAGE)
-static RString g_sErrorString;
+static std::string g_sErrorString;
 
 static INT_PTR CALLBACK ErrorWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	switch (msg) {
