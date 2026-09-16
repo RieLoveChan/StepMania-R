@@ -58,7 +58,7 @@ struct BackgroundChange {
 	BackgroundDef m_def;
 	float m_fStartBeat;
 	float m_fRate;
-	RString m_sTransition;
+	std::string m_sTransition;
 
 	RString GetTextDescription() const;
 
