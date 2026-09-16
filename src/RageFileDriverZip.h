@@ -29,7 +29,7 @@ class RageFileDriverZip : public RageFileDriver {
 		DEFLATED = 8
 	};
 	struct FileInfo {
-		RString m_sName;
+		std::string m_sName;
 		int m_iOffset;
 		int m_iDataOffset;
 
@@ -52,8 +52,8 @@ class RageFileDriverZip : public RageFileDriver {
 	RageFileBasic *m_pZip;
 	std::vector<FileInfo *> m_pFiles;
 
-	RString m_sPath;
-	RString m_sComment;
+	std::string m_sPath;
+	std::string m_sComment;
 
 	/* Open() must be threadsafe.  Mutex access to "zip", since we seek
 	 * around in it when reading files. */
