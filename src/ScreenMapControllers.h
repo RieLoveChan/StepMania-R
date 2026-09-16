@@ -96,7 +96,7 @@ class ScreenMapControllers : public ScreenWithMenuElements {
 
 	typedef void (ScreenMapControllers::*action_fun_t)();
 	struct ActionRow {
-		RString m_name;
+		std::string m_name;
 		AutoActor m_actor;
 		action_fun_t m_action;
 		void Load(
