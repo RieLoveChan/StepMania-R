@@ -100,7 +100,7 @@ class GameCommand {
 	int m_iGoalCalories; // -1 == none specified
 	GoalType m_GoalType;
 	RString m_sProfileID;
-	RString m_sUrl;
+	std::string m_sUrl;
 	// sm-ssc adds:
 	bool m_bUrlExits; // for making stepmania not exit on url
 
