@@ -172,7 +172,7 @@ class ProfileManager {
 	RString m_sProfileDir[NUM_PLAYERS];
 
 	// MemoryCardProfileImportSubdirs name, if the profile was imported.
-	RString m_sProfileDirImportedFrom[NUM_PLAYERS];
+	std::string m_sProfileDirImportedFrom[NUM_PLAYERS];
 
 	std::string m_stats_prefix;
 
