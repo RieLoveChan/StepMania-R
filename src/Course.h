@@ -206,9 +206,9 @@ class Course {
 	RString m_sScripter;
 	RString m_sDescription;
 
-	RString m_sBannerPath;
-	RString m_sBackgroundPath;
-	RString m_sCDTitlePath;
+	std::string m_sBannerPath;
+	std::string m_sBackgroundPath;
+	std::string m_sCDTitlePath;
 	RString m_sGroupName;
 
 	bool m_bRepeat;       // repeat after last song?  "Endless"
