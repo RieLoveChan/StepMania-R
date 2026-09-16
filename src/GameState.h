@@ -415,8 +415,8 @@ class GameState {
 		Grade grade;
 		int iScore;
 		float fPercentDP;
-		RString Banner;
-		RString Feat;
+		std::string Banner;
+		std::string Feat;
 		RString *pStringToFill;
 	};
 
