@@ -201,7 +201,7 @@ class Song {
 	/** @brief The transliterated artist of the Song, if it exists. */
 	RString m_sArtistTranslit;
 
-	RString m_sFileHash;
+	std::string m_sFileHash;
 	RString GetFileHash();
 
 	/* If PREFSMAN->m_bShowNative is off, these are the same as GetTranslit*
@@ -244,7 +244,7 @@ class Song {
 	 * This is read and saved, but never actually used. */
 	RString m_sCredit;
 
-	RString m_sOrigin; // song origin (for .ssc format)
+	std::string m_sOrigin; // song origin (for .ssc format)
 
 	RString m_sMusicFile;
 	RString m_PreviewFile;
