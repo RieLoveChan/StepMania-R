@@ -50,7 +50,7 @@ struct FileDriverEntry {
 	virtual ~FileDriverEntry();
 	virtual RageFileDriver *Create(const RString &sRoot) const = 0;
 
-	RString m_sType;
+	std::string m_sType;
 	const FileDriverEntry *m_pLink;
 };
 RageFileDriver *MakeFileDriver(const RString &Type, const RString &Root);
