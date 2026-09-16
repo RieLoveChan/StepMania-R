@@ -17,7 +17,7 @@ class RageFileDriverDirect : public RageFileDriver {
 	bool Remount(const RString &sPath) override;
 
  private:
-	RString m_sRoot;
+	std::string m_sRoot;
 };
 
 class RageFileDriverDirectReadOnly : public RageFileDriverDirect {
@@ -50,7 +50,7 @@ class RageFileObjDirect : public RageFileObj {
 
 	int m_iFD;
 	int m_iMode;
-	RString m_sPath; /* for Copy */
+	std::string m_sPath; /* for Copy */
 
 	/*
 	 * When not streaming to disk, we write to a temporary file, and rename to the
