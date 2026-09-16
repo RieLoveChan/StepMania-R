@@ -43,17 +43,17 @@ class NetworkPostData {
 	}
 
 	mutable RageMutex m_Mutex;
-	RString m_sStatus;
+	std::string m_sStatus;
 	float m_fProgress;
 
 	// When the thread exists, it owns the rest of the data, regardless of m_Mutex.
 	std::map<RString, RString> m_Data;
 
 	bool m_bFinished;
-	RString m_sHost;
+	std::string m_sHost;
 	int m_iPort;
-	RString m_sPath;
-	RString m_sResult;
+	std::string m_sPath;
+	std::string m_sResult;
 
 	NetworkStream *m_pStream;
 };
