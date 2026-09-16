@@ -13,6 +13,8 @@
 #include "LightsManager.h" // for NUM_CabinetLight
 #include "Game.h"
 #include "Style.h"
+#include "GameDataIO.h"
+#include "SpecialFiles.h"
 
 #include <cstddef>
 #include <vector>
@@ -3686,20 +3688,12 @@ static const Game g_Game_Kickbox = {
  * data-driven registry (without breaking the on-disk #STEPSTYPE contract,
  * AGENTS.md section 5) is tracked in DocsAgents/modernization-backlog.md
  * item 20. */
-static const Game *g_Games[] = {
-   &g_Game_Dance,
-   &g_Game_Pump,
-   &g_Game_Techno,
-   &g_Game_Lights,
-   &g_Game_KB7,
-   &g_Game_Ez2,
-   &g_Game_Para,
-   &g_Game_DS3DDX,
-   &g_Game_Beat,
-   &g_Game_Maniax,
-   &g_Game_Popn,
-   &g_Game_Kickbox,
-};
+// Populated by LoadGames() from Games/<name>/ on disk (GameDataIO.h, ADR
+// 0008) -- the g_Game_*/g_Style_*/g_AutoKeyMappings_* literals above are no
+// longer read at runtime (modernization-backlog.md item 20 tracks removing
+// them once this loader is proven).
+static GameDataStore g_GameDataStore;
+static std::vector<const Game *> g_Games;
 
 GameManager::GameManager() {
 	// Register with Lua.
@@ -3710,6 +3704,29 @@ GameManager::GameManager() {
 		lua_settable(L, LUA_GLOBALSINDEX);
 		LUA->Release(L);
 	}
+}
+
+void GameManager::LoadGames() {
+	if (!g_Games.empty())
+		return;
+
+	// On-disk directory names under Games/. Order is preserved from the old
+	// hardcoded g_Games[] array for behavioral parity (e.g. GetIndexFromGame/
+	// GetGameFromIndex); nothing persists this order across runs.
+	static const char *const asGameDirNames[] = {
+	   "dance", "pump", "techno", "lights", "kb7", "ez2", "para", "ds3ddx", "beat", "maniax", "popn", "kickbox",
+	};
+	for (const char *szName : asGameDirNames) {
+		const Game *pGame = LoadGameFromDisk(szName, SpecialFiles::GAMES_DIR, &g_GameDataStore);
+		if (pGame != nullptr) {
+			g_Games.push_back(pGame);
+		} else {
+			LOG_ERROR(
+			   Log::General, "GameManager::LoadGames: couldn't load \"%s\" from %s", szName, SpecialFiles::GAMES_DIR.c_str()
+			);
+		}
+	}
+	ASSERT_M(!g_Games.empty(), "GameManager::LoadGames: no games could be loaded from " + SpecialFiles::GAMES_DIR);
 }
 
 GameManager::~GameManager() {
@@ -3730,7 +3747,7 @@ void GameManager::GetStylesForGame(const Game *pGame, std::vector<const Style *>
 }
 
 const Game *GameManager::GetGameForStyle(const Style *pStyle) {
-	for (std::size_t g = 0; g < ARRAYLEN(g_Games); ++g) {
+	for (std::size_t g = 0; g < g_Games.size(); ++g) {
 		const Game *pGame = g_Games[g];
 		for (int s = 0; pGame->m_apStyles[s]; ++s) {
 			if (pGame->m_apStyles[s] == pStyle)
@@ -3741,7 +3758,7 @@ const Game *GameManager::GetGameForStyle(const Style *pStyle) {
 }
 
 const Style *GameManager::GetEditorStyleForStepsType(StepsType st) {
-	for (std::size_t g = 0; g < ARRAYLEN(g_Games); ++g) {
+	for (std::size_t g = 0; g < g_Games.size(); ++g) {
 		const Game *pGame = g_Games[g];
 		for (int s = 0; pGame->m_apStyles[s]; ++s) {
 			const Style *style = pGame->m_apStyles[s];
@@ -3838,7 +3855,7 @@ const Style *GameManager::GetFirstCompatibleStyle(const Game *pGame, int iNumPla
 }
 
 void GameManager::GetEnabledGames(std::vector<const Game *> &aGamesOut) {
-	for (std::size_t g = 0; g < ARRAYLEN(g_Games); ++g) {
+	for (std::size_t g = 0; g < g_Games.size(); ++g) {
 		const Game *pGame = g_Games[g];
 		if (IsGameEnabled(pGame))
 			aGamesOut.push_back(pGame);
@@ -3848,7 +3865,7 @@ void GameManager::GetEnabledGames(std::vector<const Game *> &aGamesOut) {
 const Game *GameManager::GetDefaultGame() {
 	const Game *pDefault = nullptr;
 	if (pDefault == nullptr) {
-		for (std::size_t i = 0; pDefault == nullptr && i < ARRAYLEN(g_Games); ++i) {
+		for (std::size_t i = 0; pDefault == nullptr && i < g_Games.size(); ++i) {
 			if (IsGameEnabled(g_Games[i]))
 				pDefault = g_Games[i];
 		}
@@ -3861,7 +3878,7 @@ const Game *GameManager::GetDefaultGame() {
 }
 
 int GameManager::GetIndexFromGame(const Game *pGame) {
-	for (std::size_t g = 0; g < ARRAYLEN(g_Games); ++g) {
+	for (std::size_t g = 0; g < g_Games.size(); ++g) {
 		if (g_Games[g] == pGame)
 			return static_cast<int>(g);
 	}
@@ -3870,7 +3887,7 @@ int GameManager::GetIndexFromGame(const Game *pGame) {
 
 const Game *GameManager::GetGameFromIndex(int index) {
 	ASSERT(index >= 0);
-	ASSERT(index < (int)ARRAYLEN(g_Games));
+	ASSERT(index < (int)g_Games.size());
 	return g_Games[index];
 }
 
@@ -3903,7 +3920,7 @@ RString GameManager::StyleToLocalizedString(const Style *style) {
 }
 
 const Game *GameManager::StringToGame(RString sGame) {
-	for (std::size_t i = 0; i < ARRAYLEN(g_Games); ++i)
+	for (std::size_t i = 0; i < g_Games.size(); ++i)
 		if (!sGame.CompareNoCase(g_Games[i]->m_szName))
 			return g_Games[i];
 

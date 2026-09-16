@@ -53,7 +53,9 @@ add_executable(sm_tests ${SM_TEST_SRC})
 # its own binary (for the RageFileManager ctor's chdir on non-Windows),
 # the tests/data/ tree (non-simfile fixtures), the repo's Songs/ tree
 # (the real committed simfiles the parse-regression loads -- toy
-# simfiles are not used, see tests/data/README.md), and the repo's
+# simfiles are not used, see tests/data/README.md), the repo's Games/
+# tree (GameManager::LoadGames() reads real Game/Style definitions from
+# it -- see DocsAgents/adr/0008-game-type-registry.md), and the repo's
 # Themes/ + NoteSkins/ trees (so ThemeManager / NoteSkinManager can come
 # up with a real theme). Emit them into a generated header as raw string
 # literals so Windows backslashes need no escaping.
@@ -64,6 +66,7 @@ file(GENERATE
 #define SM_TESTS_ARGV0 R\"($<TARGET_FILE:sm_tests>)\"
 #define SM_TEST_DATA_DIR R\"(${CMAKE_CURRENT_SOURCE_DIR}/data)\"
 #define SM_SONGS_DIR R\"(${CMAKE_SOURCE_DIR}/Songs)\"
+#define SM_GAMES_DIR R\"(${CMAKE_SOURCE_DIR}/Games)\"
 #define SM_THEMES_DIR R\"(${CMAKE_SOURCE_DIR}/Themes)\"
 #define SM_NOTESKINS_DIR R\"(${CMAKE_SOURCE_DIR}/NoteSkins)\"
 #define SM_TESTTHEME_DIR R\"(${CMAKE_CURRENT_SOURCE_DIR}/data/test-theme)\"

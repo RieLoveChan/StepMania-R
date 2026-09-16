@@ -29,6 +29,14 @@ class GameManager {
 	GameManager();
 	~GameManager();
 
+	// Loads every Game/Style/InputScheme/AutoMappings definition from
+	// Games/<name>/ on disk (GameDataIO.h, ADR 0008). Must be called once,
+	// after the global GAMEMAN pointer itself has already been assigned --
+	// LoadGameFromDisk resolves #STEPSTYPE strings through
+	// GAMEMAN->StringToStepsType -- and before any other GameManager method
+	// that walks the game list.
+	void LoadGames();
+
 	void GetStylesForGame(const Game *pGame, std::vector<const Style *> &aStylesAddTo, bool editor = false);
 	const Game *GetGameForStyle(const Style *pStyle);
 	void GetStepsTypesForGame(const Game *pGame, std::vector<StepsType> &aStepsTypeAddTo);

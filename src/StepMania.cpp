@@ -47,6 +47,7 @@
 #include "MemoryCardManager.h"
 #include "ScreenManager.h"
 #include "LuaManager.h"
+#include "GameDataIO.h"
 #include "GameManager.h"
 #include "FontManager.h"
 #include "InputFilter.h"
@@ -911,6 +912,7 @@ int sm_main(int argc, char *argv[]) {
 	AdjustForChangedSystemCapabilities();
 
 	GAMEMAN = new GameManager;
+	GAMEMAN->LoadGames();
 	THEME = new ThemeManager;
 	ANNOUNCER = new AnnouncerManager;
 	NOTESKIN = new NoteSkinManager;
@@ -1011,6 +1013,49 @@ int sm_main(int argc, char *argv[]) {
 		SCREENMAN->SystemMessage(sMessage);
 
 	CodeDetector::RefreshCacheItems();
+
+	/* --ExportGames: ADR 0008 stage-1 one-shot migration tool. Originally
+	 * used to transcribe the compiled-in g_Game_/g_Style_ literals to
+	 * Games/<name>/... on real disk; GameManager now loads from Games/
+	 * directly (GameManager::LoadGames()), so this just re-serializes the
+	 * already-disk-loaded games back to disk -- kept as a round-trip sanity
+	 * check until the g_Game_ and g_Style_ literals themselves are deleted
+	 * (modernization-backlog.md item 20), at which point this whole block
+	 * should go with them. */
+	if (GetCommandlineArgument("ExportGames")) {
+		static const char *const asGameNames[] = {
+		   "dance", "pump", "techno", "lights", "kb7", "ez2", "para", "ds3ddx", "beat", "maniax", "popn", "kickbox",
+		};
+		// The install root is mounted read-only at "/" (see
+		// ArchHooks::MountInitialFilesystems). Temporarily overlay a
+		// writable "dir" driver on top of the real Games/ directory --
+		// same pattern ScreenInstallOverlay uses for its temp OS mount --
+		// so ExportGameToDisk's normal IniFile::WriteFile calls can land
+		// on real disk for this one-shot migration.
+		const RString sGamesMountPoint = "/" + SpecialFiles::GAMES_DIR;
+		RString sRealInstallRoot = FILEMAN->ResolvePath("/");
+		// ResolvePath() always re-adds a leading '/' via its own
+		// NormalizePath() call, even when the resolved path is already a
+		// real, drive-letter-rooted OS path (e.g. "/S:/repos/...") -- strip
+		// that spurious slash before using the result as an OS path.
+		if (sRealInstallRoot.size() >= 3 && sRealInstallRoot[0] == '/' && isalpha(sRealInstallRoot[1]) &&
+		    sRealInstallRoot[2] == ':')
+			sRealInstallRoot = sRealInstallRoot.substr(1);
+		const RString sRealGamesDir = sRealInstallRoot + "/" + SpecialFiles::GAMES_DIR;
+		FILEMAN->Mount("dir", sRealGamesDir, sGamesMountPoint);
+		for (const char *szName : asGameNames) {
+			const Game *pGame = GAMEMAN->StringToGame(szName);
+			if (pGame == nullptr) {
+				LOG_ERROR(Log::General, "[ExportGames] GAMEMAN->StringToGame(\"%s\") returned nullptr, skipped.", szName);
+				continue;
+			}
+			ExportGameToDisk(pGame, sGamesMountPoint);
+			LOG_INFO(Log::General, "[ExportGames] Exported %s to %s%s/", szName, SpecialFiles::GAMES_DIR.c_str(), szName);
+		}
+		FILEMAN->Unmount("dir", sRealGamesDir, sGamesMountPoint);
+		ShutdownGame();
+		return 0;
+	}
 
 	/* --SelfTest: headless smoke test. Everything above has run (managers,
 	 * display, input, fonts, song scan, initial screen), so if we got here
