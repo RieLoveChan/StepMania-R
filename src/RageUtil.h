@@ -550,7 +550,7 @@ class Regex {
 
 	void *m_pReg;
 	unsigned m_iBackrefs;
-	RString m_sPattern;
+	std::string m_sPattern;
 };
 
 void ReplaceEntityText(RString &sText, const std::map<RString, RString> &m);
