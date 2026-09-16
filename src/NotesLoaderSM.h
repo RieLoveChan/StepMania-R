@@ -219,7 +219,7 @@ struct SMLoader {
 	/** @brief The file extension in use. */
 	const RString fileExt;
 	/** @brief The song title that is being processed. */
-	RString songTitle;
+	std::string songTitle;
 
 	std::vector<RString> m_SongDirFiles;
 };
