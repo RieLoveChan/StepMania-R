@@ -2,19 +2,17 @@
 #include "Threads_Win32.h"
 #include "RageUtil.h"
 #include "RageThreads.h"
-#include "RageTimer.h"
 #include "archutils/Win32/ErrorStrings.h"
 
 #include <cstdint>
+#include <mutex>
 
 const int MAX_THREADS = 128;
 
-static MutexImpl_Win32 *g_pThreadIdMutex = nullptr;
-static void InitThreadIdMutex() {
-	if (g_pThreadIdMutex != nullptr)
-		return;
-	g_pThreadIdMutex = new MutexImpl_Win32(nullptr);
-}
+// Guards g_ThreadIds/g_ThreadHandles below. Plain std::mutex -- this is
+// internal bookkeeping private to this file, not a MutexImpl (which now
+// lives in Threads_Std.cpp and would be circular to depend on here).
+static std::mutex g_ThreadIdMutex;
 
 static std::uint64_t g_ThreadIds[MAX_THREADS];
 static HANDLE g_ThreadHandles[MAX_THREADS];
@@ -101,9 +99,7 @@ static DWORD WINAPI StartThread(LPVOID pData) {
 }
 
 static int GetOpenSlot(std::uint64_t iID) {
-	InitThreadIdMutex();
-
-	g_pThreadIdMutex->Lock();
+	std::lock_guard<std::mutex> lock(g_ThreadIdMutex);
 
 	// Find an open slot in g_ThreadIds.
 	int slot = 0;
@@ -112,8 +108,6 @@ static int GetOpenSlot(std::uint64_t iID) {
 	ASSERT(slot < MAX_THREADS);
 
 	g_ThreadIds[slot] = iID;
-
-	g_pThreadIdMutex->Unlock();
 
 	return slot;
 }
@@ -160,248 +154,12 @@ ThreadImpl *MakeThread(int (*pFunc)(void *pData), void *pData, std::uint64_t *pi
 	return thread;
 }
 
-MutexImpl_Win32::MutexImpl_Win32(RageMutex *pParent) : MutexImpl(pParent) {
-	mutex = CreateMutex(nullptr, false, nullptr);
-	ASSERT_M(mutex != nullptr, werr_ssprintf(GetLastError(), "CreateMutex"));
-}
-
-MutexImpl_Win32::~MutexImpl_Win32() {
-	CloseHandle(mutex);
-}
-
-static bool SimpleWaitForSingleObject(HANDLE h, DWORD ms) {
-	ASSERT(h != nullptr);
-
-	DWORD ret = WaitForSingleObject(h, ms);
-	switch (ret) {
-	case WAIT_OBJECT_0:
-		return true;
-
-	case WAIT_TIMEOUT:
-		return false;
-
-	case WAIT_ABANDONED:
-		// The docs aren't particular about what this does, but it should never happen.
-		FAIL_M("WAIT_ABANDONED");
-
-	case WAIT_FAILED:
-		FAIL_M(werr_ssprintf(GetLastError(), "WaitForSingleObject"));
-
-	default:
-		FAIL_M("unknown");
-	}
-}
-
-bool MutexImpl_Win32::Lock() {
-	DWORD dwWaitResult = WaitForSingleObject(mutex, INFINITE);
-	switch (dwWaitResult) {
-	case WAIT_OBJECT_0:
-		return true;
-
-	case WAIT_TIMEOUT:
-		return false;
-
-	case WAIT_ABANDONED:
-		return false;
-
-	default:
-		FAIL_M("WaitForSingleObject failed in a way that shouldn't have been possible");
-	}
-}
-
-bool MutexImpl_Win32::TryLock() {
-	return SimpleWaitForSingleObject(mutex, 0);
-}
-
-void MutexImpl_Win32::Unlock() {
-	const bool ret = !!ReleaseMutex(mutex);
-
-	/* We can't ASSERT here, since this is called from checkpoints,
-	 * which is called from ASSERT. */
-	if (!ret)
-		sm_crash(werr_ssprintf(GetLastError(), "ReleaseMutex failed"));
-}
-
 std::uint64_t GetThisThreadId() {
 	return GetCurrentThreadId();
 }
 
 std::uint64_t GetInvalidThreadId() {
 	return 0;
-}
-
-MutexImpl *MakeMutex(RageMutex *pParent) {
-	return new MutexImpl_Win32(pParent);
-}
-
-EventImpl_Win32::EventImpl_Win32(MutexImpl_Win32 *pParent) {
-	m_pParent = pParent;
-	m_iNumWaiting = 0;
-	m_WakeupSema = CreateSemaphore(nullptr, 0, 0x7fffffff, nullptr);
-	InitializeCriticalSection(&m_iNumWaitingLock);
-	m_WaitersDone = CreateEvent(nullptr, FALSE, FALSE, nullptr);
-}
-
-EventImpl_Win32::~EventImpl_Win32() {
-	ASSERT_M(m_iNumWaiting == 0, ssprintf("event destroyed while still in use (%i)", m_iNumWaiting));
-
-	// We don't own m_pParent; don't free it.
-	CloseHandle(m_WakeupSema);
-	DeleteCriticalSection(&m_iNumWaitingLock);
-	CloseHandle(m_WaitersDone);
-}
-
-static bool PortableSignalObjectAndWait(
-   HANDLE hObjectToSignal, HANDLE hObjectToWaitOn, bool bFirstParamIsMutex, unsigned iMilliseconds = INFINITE
-) {
-	if (bFirstParamIsMutex) {
-		const bool bRet = !!ReleaseMutex(hObjectToSignal);
-		if (!bRet)
-			sm_crash(werr_ssprintf(GetLastError(), "ReleaseMutex failed"));
-	}
-	else {
-		SetEvent(hObjectToSignal);
-	}
-
-	DWORD ret = WaitForSingleObject(hObjectToWaitOn, iMilliseconds);
-	switch (ret) {
-	case WAIT_OBJECT_0:
-		return true;
-
-	case WAIT_ABANDONED:
-		// The docs aren't particular about what this does, but it should never happen.
-		FAIL_M("WAIT_ABANDONED");
-
-	case WAIT_TIMEOUT:
-		return false;
-
-	default:
-		FAIL_M("unknown");
-	}
-}
-
-// Event logic from http://www.cs.wustl.edu/~schmidt/win32-cv-1.html.
-bool EventImpl_Win32::Wait(RageTimer *pTimeout) {
-	EnterCriticalSection(&m_iNumWaitingLock);
-	++m_iNumWaiting;
-	LeaveCriticalSection(&m_iNumWaitingLock);
-
-	unsigned iMilliseconds = INFINITE;
-	if (pTimeout != nullptr) {
-		float fSecondsInFuture = -pTimeout->Ago();
-		iMilliseconds = static_cast<unsigned>(std::max(0, static_cast<int>(fSecondsInFuture * 1000)));
-	}
-
-	// Unlock the mutex and wait for a signal.
-	bool bSuccess = PortableSignalObjectAndWait(m_pParent->mutex, m_WakeupSema, true, iMilliseconds);
-
-	EnterCriticalSection(&m_iNumWaitingLock);
-	if (!bSuccess) {
-		/* Avoid a race condition: someone may have signalled the object
-		 * between PortableSignalObjectAndWait and EnterCriticalSection.
-		 * While we hold m_iNumWaitingLock, poll (with a zero timeout) the
-		 * object one last time. */
-		if (WaitForSingleObject(m_WakeupSema, 0) == WAIT_OBJECT_0)
-			bSuccess = true;
-	}
-	--m_iNumWaiting;
-	bool bLastWaiting = m_iNumWaiting == 0;
-	LeaveCriticalSection(&m_iNumWaitingLock);
-
-	/* If we're the last waiter to wake up, and we were actually woken by
-	 * another thread (not by timeout), wake up the signaller. */
-	if (bLastWaiting && bSuccess)
-		PortableSignalObjectAndWait(m_WaitersDone, m_pParent->mutex, false);
-	else
-		WaitForSingleObject(m_pParent->mutex, INFINITE);
-
-	return bSuccess;
-}
-
-void EventImpl_Win32::Signal() {
-	EnterCriticalSection(&m_iNumWaitingLock);
-
-	if (m_iNumWaiting == 0) {
-		LeaveCriticalSection(&m_iNumWaitingLock);
-		return;
-	}
-
-	ReleaseSemaphore(m_WakeupSema, 1, nullptr);
-
-	LeaveCriticalSection(&m_iNumWaitingLock);
-
-	// The waiter will touch m_WaitersDone.
-	WaitForSingleObject(m_WaitersDone, INFINITE);
-}
-
-void EventImpl_Win32::Broadcast() {
-	EnterCriticalSection(&m_iNumWaitingLock);
-
-	if (m_iNumWaiting == 0) {
-		LeaveCriticalSection(&m_iNumWaitingLock);
-		return;
-	}
-
-	ReleaseSemaphore(m_WakeupSema, m_iNumWaiting, nullptr);
-
-	LeaveCriticalSection(&m_iNumWaitingLock);
-
-	/* The last waiter will touch m_WaitersDone, so we wait for all waiters
-	 * to wake up and start waiting for the mutex before returning. */
-	WaitForSingleObject(m_WaitersDone, INFINITE);
-}
-
-EventImpl *MakeEvent(MutexImpl *pMutex) {
-	MutexImpl_Win32 *pWin32Mutex = (MutexImpl_Win32 *)pMutex;
-
-	return new EventImpl_Win32(pWin32Mutex);
-}
-
-SemaImpl_Win32::SemaImpl_Win32(int iInitialValue) {
-	sem = CreateSemaphore(nullptr, iInitialValue, 999999999, nullptr);
-	m_iCounter = iInitialValue;
-}
-
-SemaImpl_Win32::~SemaImpl_Win32() {
-	CloseHandle(sem);
-}
-
-void SemaImpl_Win32::Post() {
-	++m_iCounter;
-	ReleaseSemaphore(sem, 1, nullptr);
-}
-
-bool SemaImpl_Win32::Wait() {
-	int len = 15000;
-	int tries = 5;
-
-	while (tries--) {
-		/* Wait for 15 seconds. If it takes longer than that, we're
-		 * probably deadlocked. */
-		if (SimpleWaitForSingleObject(sem, len)) {
-			--m_iCounter;
-			return true;
-		}
-
-		/* Timed out; probably deadlocked. Try again a few more times,
-		 * with a smaller timeout, just in case we're debugging and
-		 * happened to stop while waiting on the mutex. */
-		len = 1000;
-	}
-
-	return false;
-}
-
-bool SemaImpl_Win32::TryWait() {
-	if (!SimpleWaitForSingleObject(sem, 0))
-		return false;
-
-	--m_iCounter;
-	return true;
-}
-
-SemaImpl *MakeSemaphore(int iInitialValue) {
-	return new SemaImpl_Win32(iInitialValue);
 }
 
 /*

@@ -4,7 +4,8 @@ list(APPEND SMDATA_ARCH_HPP "arch/arch_default.h" "arch/RageDriver.h")
 
 source_group("Arch Specific" FILES ${SMDATA_ARCH_SRC} ${SMDATA_ARCH_HPP})
 
-list(APPEND SMDATA_ARCH_THREADS_HPP "arch/Threads/Threads.h")
+list(APPEND SMDATA_ARCH_THREADS_HPP "arch/Threads/Threads.h" "arch/Threads/Threads_Std.h")
+list(APPEND SMDATA_ARCH_THREADS_SRC "arch/Threads/Threads_Std.cpp")
 
 if(WIN32)
   list(APPEND SMDATA_ARCH_THREADS_HPP "arch/Threads/Threads_Win32.h")
