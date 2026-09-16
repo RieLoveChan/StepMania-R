@@ -3151,11 +3151,13 @@ compiled) — see item 18's batch 3 note.
 distinct orphaned pair — `ScreenPackages.cpp` (the online
 package-downloader UI) and `FileDownload.cpp` (its HTTP download
 helper) — is likewise absent from every `CMakeData-*.cmake` list and
-produces no object file. This is a different feature from the
-SMOnline/multiplayer cluster above (no shared files), so it's a
-separate wire-vs-delete question, but the same maintainer call applies.
-Left unedited (not even the free category/level tagging this time,
-since these two weren't already touched) pending that decision.
+produces no object file. Originally flagged here as its own separate
+wire-vs-delete question. **Resolved 2026-09-14, folded into item 29's
+decision above:** re-auditing item 29 found `ScreenPackages`/
+`FileDownload` actually share the SMOnline cluster's own
+`ezsockets.cpp`/`.h` dependency, making this "one connected orphan, not
+two separate ones" — both files were deleted together with the rest of
+item 29's 24-file set. No longer a pending decision.
 
 ---
 
