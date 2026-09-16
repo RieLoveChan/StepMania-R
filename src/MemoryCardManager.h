@@ -77,7 +77,7 @@ class MemoryCardManager {
 	UsbStorageDevice m_FinalDevice[NUM_PLAYERS]; // device in the memory card slot when we finalized, blank if none
 
 	MemoryCardState m_State[NUM_PLAYERS];
-	RString m_sError[NUM_PLAYERS]; // if MemoryCardState_Error
+	std::string m_sError[NUM_PLAYERS]; // if MemoryCardState_Error
 
 	RageSound m_soundReady;
 	RageSound m_soundError;
