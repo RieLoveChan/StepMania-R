@@ -67,7 +67,7 @@ class RageFileManager {
 	void Remount(RString sMountpoint, RString sPath);
 	bool IsMounted(RString MountPoint);
 	struct DriverLocation {
-		RString Type, Root, MountPoint;
+		std::string Type, Root, MountPoint;
 	};
 	void GetLoadedDrivers(std::vector<DriverLocation> &asMounts);
 
