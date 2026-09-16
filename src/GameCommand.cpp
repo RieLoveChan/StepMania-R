@@ -878,7 +878,7 @@ class LunaGameCommand : public Luna<GameCommand> {
 		return 1;
 	}
 	static int GetUrl(T *p, lua_State *L) {
-		lua_pushstring(L, p->m_sUrl);
+		lua_pushstring(L, p->m_sUrl.c_str());
 		return 1;
 	}
 	static int GetAnnouncer(T *p, lua_State *L) {
