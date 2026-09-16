@@ -1889,12 +1889,26 @@ unchanged, `ctest` 100%, Release rebuild, `--SelfTest` exit 0; pushed
 and awaiting the macOS CI jobs specifically to confirm the fix (local
 Windows verification cannot reproduce the original failure).
 
-### 11. Pre-C++11 threading / smart pointers
-`RageThreads` predates `std::thread`/`std::mutex`;
-`RageUtil_AutoPtr.h` ("TODO: replace with c++11 smart pointers");
-`RageUtil_WorkerThread`, `BackgroundLoader`.
-**Action:** after the safety net exists; `RageThreads` is load-bearing
-and cross-platform — a dedicated ADR-scoped effort, not a casual pass.
+### 11. Pre-C++11 threading / smart pointers — `RageThreads` internals DONE (ADR 0007), 2026-09-16
+`RageThreads`' `MutexImpl`/`EventImpl`/`SemaImpl` (mutex, condition
+variable, and semaphore primitives) are now one portable
+`std::mutex`/`std::condition_variable`-backed implementation
+(`src/arch/Threads/Threads_Std.{h,cpp}`), replacing the separate
+hand-rolled Win32 (`CreateMutex`/`CRITICAL_SECTION`/`CreateSemaphore`)
+and pthreads (`pthread_mutex_t`/`pthread_cond_t`) implementations —
+767 lines net removed. `RageThread`/`ThreadImpl` (creation, `Halt()`/
+`Resume()`, naming) stays per-platform on purpose: `std::thread` has no
+portable suspend, and `Halt()` backs a real crash-handler safety
+feature. Gated on (and satisfied by) a new concurrency stress test,
+`tests/test_RageThreadsConcurrency.cpp` — see ADR 0007 for the two bugs
+it caught along the way (a real, intermittent `SemaImpl_Win32` counter
+race, now fixed; and an invalid cross-thread unlock in an early draft
+of the test itself, not the implementation).
+**Still open, explicitly out of this pass's scope:** `RageUtil_AutoPtr.h`
+("TODO: replace with c++11 smart pointers"), `RageUtil_WorkerThread`,
+`BackgroundLoader` — all build on top of `RageThreads` rather than being
+part of its internals, and ADR 0007 deliberately excluded them. Each is
+its own future pass.
 
 ### 12. Mechanical modernize-* debt
 `modernize-use-nullptr`, `-use-override`, `-use-equals-default`,

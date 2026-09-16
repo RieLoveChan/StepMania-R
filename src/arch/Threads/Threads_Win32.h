@@ -26,60 +26,6 @@ class ThreadImpl_Win32 : public ThreadImpl {
 
 HANDLE Win32ThreadIdToHandle(std::uint64_t iID);
 
-class MutexImpl_Win32 : public MutexImpl {
-	friend class EventImpl_Win32;
-
- public:
-	MutexImpl_Win32(RageMutex *parent);
-	~MutexImpl_Win32();
-
-	bool Lock();
-	bool TryLock();
-	void Unlock();
-
- private:
-	HANDLE mutex;
-};
-
-class EventImpl_Win32 : public EventImpl {
- public:
-	EventImpl_Win32(MutexImpl_Win32 *pParent);
-	~EventImpl_Win32();
-
-	bool Wait(RageTimer *pTimeout);
-	void Signal();
-	void Broadcast();
-	bool WaitTimeoutSupported() const {
-		return true;
-	}
-
- private:
-	MutexImpl_Win32 *m_pParent;
-
-	int m_iNumWaiting;
-	CRITICAL_SECTION m_iNumWaitingLock;
-	HANDLE m_WakeupSema;
-	HANDLE m_WaitersDone;
-};
-
-class SemaImpl_Win32 : public SemaImpl {
- public:
-	SemaImpl_Win32(int iInitialValue);
-	~SemaImpl_Win32();
-	int GetValue() const {
-		return m_iCounter;
-	}
-	void Post();
-	bool Wait();
-	bool TryWait();
-
- private:
-	HANDLE sem;
-
-	// We have to track the count ourself, since Windows gives no way to query it.
-	int m_iCounter;
-};
-
 #endif
 
 /*

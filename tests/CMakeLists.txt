@@ -21,6 +21,7 @@ set(SM_TEST_SRC
     test_XmlFile.cpp
     test_LuaHelpers.cpp
     test_DateTime.cpp
+    test_RageThreadsConcurrency.cpp
     test_GameManager.cpp
     test_GameDataIO.cpp
     test_GameState.cpp
@@ -107,3 +108,10 @@ endif()
 # discovery (catch_discover_tests) needs Catch2's extras/Catch.cmake,
 # which is not vendored yet; the binary's own exit code is enough for CI.
 add_test(NAME sm_tests COMMAND sm_tests)
+
+# The suite runs in a couple of seconds locally; a generous ceiling here
+# turns a genuine hang (e.g. a lost wakeup in a real concurrency bug --
+# see test_RageThreadsConcurrency.cpp / ADR 0007) into a fast, visible
+# ctest failure instead of silently eating the whole CI job's timeout
+# budget.
+set_tests_properties(sm_tests PROPERTIES TIMEOUT 300)
