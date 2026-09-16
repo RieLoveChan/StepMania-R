@@ -426,9 +426,9 @@ RString ReportCallStack(const void *const *Backtrace) {
 
 struct CompleteCrashData {
 	CrashInfo m_CrashInfo;
-	RString m_sInfo;
-	RString m_sAdditionalLog;
-	RString m_sCrashedThread;
+	std::string m_sInfo;
+	std::string m_sAdditionalLog;
+	std::string m_sCrashedThread;
 	std::vector<RString> m_asRecent;
 	std::vector<RString> m_asCheckpoints;
 };
