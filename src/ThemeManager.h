@@ -68,9 +68,9 @@ class ThemeManager {
 	static void EvaluateString(RString &sText);
 
 	struct PathInfo {
-		RString sResolvedPath;
-		RString sMatchingMetricsGroup;
-		RString sMatchingElement;
+		std::string sResolvedPath;
+		std::string sMatchingMetricsGroup;
+		std::string sMatchingElement;
 	};
 
 	bool GetPathInfo(
