@@ -24,7 +24,7 @@ struct BackgroundDef {
 		return m_sFile1.empty() && m_sFile2.empty();
 	}
 	std::string m_sEffect; // "" == automatically choose
-	RString m_sFile1;      // must not be ""
+	std::string m_sFile1;  // must not be ""
 	std::string m_sFile2;  // may be ""
 	RString m_sColor1;     // "" == use default
 	RString m_sColor2;     // "" == use default
