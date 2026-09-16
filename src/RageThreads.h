@@ -60,7 +60,7 @@ class RageThread {
 
  private:
 	ThreadSlot *m_pSlot;
-	RString m_sName;
+	std::string m_sName;
 
 	static bool s_bSystemSupportsTLS;
 	static bool s_bIsShowingDialog;
@@ -118,7 +118,7 @@ class RageMutex {
 
  protected:
 	MutexImpl *m_pMutex;
-	RString m_sName;
+	std::string m_sName;
 
 	int m_UniqueID;
 
@@ -208,7 +208,7 @@ class RageSemaphore {
 
  private:
 	SemaImpl *m_pSema;
-	RString m_sName;
+	std::string m_sName;
 
 	// Swallow up warnings. If they must be used, define them.
 	RageSemaphore &operator=(const RageSemaphore &rhs);
