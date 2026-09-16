@@ -202,7 +202,7 @@ struct MenuRowDef {
 };
 
 struct MenuDef {
-	RString sClassName;
+	std::string sClassName;
 	std::vector<MenuRowDef> rows;
 
 	MenuDef(
