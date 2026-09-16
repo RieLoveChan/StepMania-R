@@ -62,18 +62,28 @@ void CompareStyle( const Style *a, const Style *b, const RString &sWhere )
 }
 }
 
-TEST_CASE( "GameDataIO round-trips the dance Game through export+load, field for field", "[GameDataIO]" )
+namespace {
+const char *const g_asAllGameNames[] = {
+   "dance", "pump", "techno", "lights", "kb7", "ez2", "para", "ds3ddx", "beat", "maniax", "popn", "kickbox",
+};
+}
+
+TEST_CASE( "GameDataIO round-trips every built-in Game through export+load, field for field", "[GameDataIO]" )
 {
 	EngineTestEnv::Require();
 
-	const Game *pOriginal = GAMEMAN->StringToGame( "dance" );
+	for( const char *szGameName : g_asAllGameNames )
+	{
+	CAPTURE( szGameName );
+
+	const Game *pOriginal = GAMEMAN->StringToGame( szGameName );
 	REQUIRE( pOriginal != nullptr );
 
-	const RString sBaseDir = "/@mem/games_test/";
+	const RString sBaseDir = RString("/@mem/games_test_") + szGameName + "/";
 	ExportGameToDisk( pOriginal, sBaseDir );
 
 	GameDataStore store;
-	const Game *pLoaded = LoadGameFromDisk( "dance", sBaseDir, &store );
+	const Game *pLoaded = LoadGameFromDisk( szGameName, sBaseDir, &store );
 	REQUIRE( pLoaded != nullptr );
 
 	// Top-level Game fields.
@@ -140,4 +150,5 @@ TEST_CASE( "GameDataIO round-trips the dance Game through export+load, field for
 	}
 	CHECK( *ppLoad == nullptr ); // same length on both sides
 	CHECK( iStyleCount > 0 );
+	} // for each game name
 }
