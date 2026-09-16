@@ -1916,7 +1916,7 @@ class LunaSong : public Luna<Song> {
 		return 1;
 	}
 	static int GetOrigin(T *p, lua_State *L) {
-		lua_pushstring(L, p->m_sOrigin);
+		lua_pushstring(L, p->m_sOrigin.c_str());
 		return 1;
 	}
 	static int GetAllSteps(T *p, lua_State *L) {
