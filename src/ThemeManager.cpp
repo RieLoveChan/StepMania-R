@@ -1282,9 +1282,9 @@ class LunaThemeManager : public Luna<ThemeManager> {
 	static int GetPathInfoB(T *p, lua_State *L) {
 		ThemeManager::PathInfo pi;
 		p->GetPathInfo(pi, EC_BGANIMATIONS, SArg(1), SArg(2));
-		lua_pushstring(L, pi.sResolvedPath);
-		lua_pushstring(L, pi.sMatchingMetricsGroup);
-		lua_pushstring(L, pi.sMatchingElement);
+		lua_pushstring(L, pi.sResolvedPath.c_str());
+		lua_pushstring(L, pi.sMatchingMetricsGroup.c_str());
+		lua_pushstring(L, pi.sMatchingElement.c_str());
 		return 3;
 	}
 	// GENERAL_GET_PATH uses lua_toboolean instead of BArg because that makes
