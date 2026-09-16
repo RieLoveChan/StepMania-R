@@ -1286,11 +1286,11 @@ class LunaCourse : public Luna<Course> {
 		return 1;
 	}
 	static int GetScripter(T *p, lua_State *L) {
-		lua_pushstring(L, p->m_sScripter);
+		lua_pushstring(L, p->m_sScripter.c_str());
 		return 1;
 	}
 	static int GetDescription(T *p, lua_State *L) {
-		lua_pushstring(L, p->m_sDescription);
+		lua_pushstring(L, p->m_sDescription.c_str());
 		return 1;
 	}
 	static int GetTotalSeconds(T *p, lua_State *L) {

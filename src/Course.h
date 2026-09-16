@@ -203,8 +203,8 @@ class Course {
 
 	RString m_sMainTitle, m_sMainTitleTranslit;
 	RString m_sSubTitle, m_sSubTitleTranslit;
-	RString m_sScripter;
-	RString m_sDescription;
+	std::string m_sScripter;
+	std::string m_sDescription;
 
 	std::string m_sBannerPath;
 	std::string m_sBackgroundPath;
