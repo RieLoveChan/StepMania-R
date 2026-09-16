@@ -69,7 +69,7 @@ struct glyph {
 
 /** @brief The settings used for the FontPage. */
 struct FontPageSettings {
-	RString m_sTexturePath;
+	std::string m_sTexturePath;
 
 	int m_iDrawExtraPixelsLeft, m_iDrawExtraPixelsRight, m_iAddToAllWidths, m_iLineSpacing, m_iTop, m_iBaseline,
 	   m_iDefaultWidth, m_iAdvanceExtraPixels;
@@ -118,7 +118,7 @@ class FontPage {
 	FontPageTextures m_FontPageTextures;
 
 	// XXX: remove?
-	RString m_sTexturePath;
+	std::string m_sTexturePath;
 
 	/** @brief All glyphs in this list will point to m_pTexture. */
 	std::vector<glyph> m_aGlyphs;
