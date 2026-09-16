@@ -24,7 +24,7 @@ class LoadingWindow_Win32 : public LoadingWindow {
  private:
 	AppInstance handle;
 	HWND hwnd;
-	RString text[3];
+	std::string text[3];
 	HICON m_hIcon;
 
 	static INT_PTR CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
