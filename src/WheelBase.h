@@ -115,7 +115,7 @@ class WheelBase : public ActorFrame {
 
 	bool m_bEmpty;
 	int m_iSelection; // index into m_CurWheelItemBaseData
-	RString m_sExpandedSectionName;
+	std::string m_sExpandedSectionName;
 
 	int m_iSwitchesLeftInSpinDown;
 	float m_fLockedWheelVelocity;
