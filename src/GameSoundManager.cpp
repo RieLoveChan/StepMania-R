@@ -578,7 +578,7 @@ void GameSoundManager::Update(float fDeltaTime) {
 		const float fSoundTimePassed = fSeconds - GAMESTATE->m_Position.m_fMusicSeconds;
 		const float fDiff = fExpectedTimePassed - fSoundTimePassed;
 
-		static RString sLastFile = "";
+		static std::string sLastFile = "";
 		const RString ThisFile = g_Playing->m_Music->GetLoadedFilePath();
 
 		/* If fSoundTimePassed < 0, the sound has probably looped. */
