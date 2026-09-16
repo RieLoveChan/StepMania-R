@@ -3173,6 +3173,18 @@ decision above:** re-auditing item 29 found `ScreenPackages`/
 two separate ones" — both files were deleted together with the rest of
 item 29's 24-file set. No longer a pending decision.
 
+### 30. `CsvFile` was dead code — DELETED 2026-09-16
+Found opportunistically while scouting item 10 RString pilot candidates:
+`src/CsvFile.h`/`.cpp` (a generic .csv reader/writer, 2001-2004
+copyright) was in every `CMakeData-file-types.cmake` build list but had
+**zero includes or references anywhere else in `src/` or `tests/`** —
+confirmed via `grep -rn "CsvFile"` and a direct `#include "CsvFile.h"`
+search finding only the file's own `.cpp`. Same category as item 19's
+`CreateZip`/item 23's `smpackage`. Deleted both files and their 2
+`CMakeData-file-types.cmake` entries. Verified: Release build clean,
+full `sm_tests` (235 cases, 17552 assertions, unchanged) passes,
+`--SelfTest` clean exit.
+
 ---
 
 ## Closed
