@@ -29,6 +29,8 @@ extern const RString SONGS_DIR;
 extern const RString COURSES_DIR;
 /** @brief The default noteskins directory. */
 extern const RString NOTESKINS_DIR;
+/** @brief The directory that contains data-driven game-type definitions. */
+extern const RString GAMES_DIR;
 
 extern const RString COINS_INI;
 
