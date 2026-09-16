@@ -23,11 +23,11 @@ struct BackgroundDef {
 	bool IsEmpty() const {
 		return m_sFile1.empty() && m_sFile2.empty();
 	}
-	RString m_sEffect; // "" == automatically choose
-	RString m_sFile1;  // must not be ""
-	RString m_sFile2;  // may be ""
-	RString m_sColor1; // "" == use default
-	RString m_sColor2; // "" == use default
+	std::string m_sEffect; // "" == automatically choose
+	RString m_sFile1;      // must not be ""
+	std::string m_sFile2;  // may be ""
+	RString m_sColor1;     // "" == use default
+	RString m_sColor2;     // "" == use default
 
 	XNode *CreateNode() const;
 
