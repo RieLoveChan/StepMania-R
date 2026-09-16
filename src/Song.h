@@ -178,7 +178,7 @@ class Song {
 	RString m_sGroupName;
 
 	/** @brief The base directory name that this Song is in. */
-	RString m_sSongName;
+	std::string m_sSongName;
 
 	/**
 	 * @brief the Profile this came from.

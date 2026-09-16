@@ -1756,7 +1756,7 @@ bool Song::Matches(RString sGroup, RString sSong) const {
 		return false;
 
 	// match on song dir or title (ala DWI)
-	if (!sSong.CompareNoCase(m_sSongName))
+	if (!sSong.CompareNoCase(m_sSongName.c_str()))
 		return true;
 	if (!sSong.CompareNoCase(this->GetTranslitFullTitle()))
 		return true;
