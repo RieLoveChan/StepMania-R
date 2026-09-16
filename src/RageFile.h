@@ -96,7 +96,7 @@ class RageFile : public RageFileBasic {
 
 	RageFileBasic *m_File;
 	RString m_Path;
-	RString m_sError;
+	std::string m_sError;
 	int m_Mode;
 
 	// Swallow up warnings. If they must be used, define them.
