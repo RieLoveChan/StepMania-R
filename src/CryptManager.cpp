@@ -21,9 +21,9 @@
 
 CryptManager *CRYPTMAN = nullptr; // global and accessible from anywhere in our program
 
-static const RString PRIVATE_KEY_PATH = "Data/private.rsa";
-static const RString PUBLIC_KEY_PATH = "Data/public.rsa";
-static const RString ALTERNATE_PUBLIC_KEY_DIR = "Data/keys/";
+static const std::string PRIVATE_KEY_PATH = "Data/private.rsa";
+static const std::string PUBLIC_KEY_PATH = "Data/public.rsa";
+static const std::string ALTERNATE_PUBLIC_KEY_DIR = "Data/keys/";
 
 static bool HashFile(RageFileBasic &f, unsigned char buf_hash[20], int iHash) {
 	hash_state hash;
