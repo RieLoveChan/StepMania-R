@@ -76,7 +76,7 @@ struct MusicWheelItemData : public WheelItemBaseData {
 	int m_iSectionCount;
 
 	// for TYPE_SORT
-	RString m_sLabel;
+	std::string m_sLabel;
 	HiddenPtr<GameCommand> m_pAction;
 };
 
