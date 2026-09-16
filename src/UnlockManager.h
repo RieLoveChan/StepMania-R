@@ -62,7 +62,7 @@ class UnlockEntry {
 	UnlockEntry()
 	    : m_Type(UnlockRewardType_Invalid), m_cmd(), m_Song(), m_dc(Difficulty_Invalid), m_Course(),
 	      m_StepsType(StepsType_Invalid), m_bRequirePassHardSteps(false), m_bRequirePassChallengeSteps(false),
-	      m_bRoulette(false), m_sEntryID(RString("")) {
+	      m_bRoulette(false), m_sEntryID("") {
 		ZERO(m_fRequirement);
 	}
 
@@ -82,7 +82,7 @@ class UnlockEntry {
 	/** @brief Must the challenge steps be passed to unlock a higher level? */
 	bool m_bRequirePassChallengeSteps;
 	bool m_bRoulette;
-	RString m_sEntryID;
+	std::string m_sEntryID;
 
 	bool IsValid() const;
 	bool IsLocked() const {
