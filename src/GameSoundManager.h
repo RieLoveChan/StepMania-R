@@ -28,7 +28,7 @@ class GameSoundManager {
 			bApplyMusicRate = false;
 		}
 
-		RString sFile;
+		std::string sFile;
 		const TimingData *pTiming;
 		bool bForceLoop;
 		float fStartSecond;
