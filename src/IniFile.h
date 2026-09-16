@@ -61,7 +61,7 @@ class IniFile : public XNode {
 	bool RenameKey(const RString &from, const RString &to);
 
  private:
-	RString m_sPath;
+	std::string m_sPath;
 
 	mutable RString m_sError;
 };
