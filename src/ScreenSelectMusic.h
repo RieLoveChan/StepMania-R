@@ -140,12 +140,12 @@ class ScreenSelectMusic : public ScreenWithMenuElements {
 	GameButton m_GameButtonCancelTwoPart1;
 	GameButton m_GameButtonCancelTwoPart2;
 
-	RString m_sSectionMusicPath;
-	RString m_sSortMusicPath;
-	RString m_sRouletteMusicPath;
-	RString m_sRandomMusicPath;
-	RString m_sCourseMusicPath;
-	RString m_sLoopMusicPath;
+	std::string m_sSectionMusicPath;
+	std::string m_sSortMusicPath;
+	std::string m_sRouletteMusicPath;
+	std::string m_sRandomMusicPath;
+	std::string m_sCourseMusicPath;
+	std::string m_sLoopMusicPath;
 	RString m_sFallbackCDTitlePath;
 
 	FadingBanner m_Banner;
