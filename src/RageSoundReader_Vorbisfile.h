@@ -28,7 +28,7 @@ class RageSoundReader_Vorbisfile : public RageSoundReader_FileReader {
 	OggVorbis_File *vf;
 	bool eof;
 	bool FillBuf();
-	RString filename;
+	std::string filename;
 	int read_offset;
 	unsigned channels;
 };
