@@ -167,7 +167,7 @@ class Steps {
 	using the notedata stored in game memory immediately after reading it than parsing it using lua. - Mina */
 	RString GenerateChartKey(NoteData &nd, TimingData *td);
 	RString GenerateChartKey();
-	RString ChartKey;
+	std::string ChartKey;
 	RString GetChartKey();
 	void SetChartKey(const RString &k) {
 		ChartKey = k;
