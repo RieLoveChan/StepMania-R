@@ -21,7 +21,7 @@ struct Attack {
 	/** @brief How long does this attack last? */
 	float fSecsRemaining;
 	/** @brief The modifiers used for this attack. */
-	RString sModifiers;
+	std::string sModifiers;
 	bool bOn;     // set and used by GAMESTATE
 	bool bGlobal; // true for song-wide course mods
 	bool bShowInAttackList;
