@@ -66,7 +66,7 @@ class ScreenWithMenuElements : public Screen {
 	ThemeMetric<bool> RESET_GAMESTATE;
 
  private:
-	RString m_sPathToMusic;
+	std::string m_sPathToMusic;
 };
 
 class ScreenWithMenuElementsSimple : public ScreenWithMenuElements {
