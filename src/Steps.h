@@ -314,7 +314,7 @@ class Steps {
 	/** @brief The name of the person who created the Steps. */
 	std::string m_sCredit;
 	/** @brief The name of the chart. */
-	RString chartName;
+	std::string chartName;
 	/** @brief How is the BPM displayed for this chart? */
 	DisplayBPM displayBPMType;
 	/** @brief What is the minimum specified BPM? */
