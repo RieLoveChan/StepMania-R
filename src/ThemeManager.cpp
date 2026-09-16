@@ -1082,7 +1082,7 @@ RString ThemeManager::GetNextTheme() {
 	GetThemeNames(as);
 	unsigned i;
 	for (i = 0; i < as.size(); i++)
-		if (as[i].CompareNoCase(m_sCurThemeName) == 0)
+		if (as[i].CompareNoCase(m_sCurThemeName.c_str()) == 0)
 			break;
 	int iNewIndex = (i + 1) % as.size();
 	return as[iNewIndex];
@@ -1093,7 +1093,7 @@ RString ThemeManager::GetNextSelectableTheme() {
 	GetSelectableThemeNames(as);
 	unsigned i;
 	for (i = 0; i < as.size(); i++)
-		if (as[i].CompareNoCase(m_sCurThemeName) == 0)
+		if (as[i].CompareNoCase(m_sCurThemeName.c_str()) == 0)
 			break;
 	int iNewIndex = (i + 1) % as.size();
 	return as[iNewIndex];

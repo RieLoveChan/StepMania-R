@@ -163,8 +163,8 @@ class ThemeManager {
 	GetOptionalLanguageIniPaths(std::vector<RString> &vsPathsOut, const RString &sThemeName, const RString &sLanguage);
 	RString GetDefaultLanguage();
 
-	RString m_sCurThemeName;
-	RString m_sCurLanguage;
+	std::string m_sCurThemeName;
+	std::string m_sCurLanguage;
 	bool m_bPseudoLocalize;
 };
 
