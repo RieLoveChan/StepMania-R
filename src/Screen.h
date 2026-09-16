@@ -127,8 +127,8 @@ class Screen : public ActorFrame {
 	 * @brief The next screen to go to once this screen is done.
 	 *
 	 * If this is blank, the NextScreen metric will be used. */
-	RString m_sNextScreen;
-	RString m_sPrevScreen;
+	std::string m_sNextScreen;
+	std::string m_sPrevScreen;
 	ScreenMessage m_smSendOnPop;
 
 	float m_fLockInputSecs;
