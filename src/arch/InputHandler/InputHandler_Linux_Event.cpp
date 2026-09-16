@@ -69,8 +69,8 @@ struct EventDevice {
 	}
 
 	int m_iFD;
-	RString m_sPath;
-	RString m_sName;
+	std::string m_sPath;
+	std::string m_sName;
 	InputDevice m_Dev;
 
 	int aiAbsMin[ABS_MAX];
