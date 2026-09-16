@@ -174,7 +174,7 @@ class ProfileManager {
 	// MemoryCardProfileImportSubdirs name, if the profile was imported.
 	RString m_sProfileDirImportedFrom[NUM_PLAYERS];
 
-	RString m_stats_prefix;
+	std::string m_stats_prefix;
 
 	bool m_bWasLoadedFromMemoryCard[NUM_PLAYERS];
 	bool m_bLastLoadWasTamperedOrCorrupt[NUM_PLAYERS]; // true if Stats.xml was present, but failed to load (probably
