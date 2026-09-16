@@ -42,7 +42,7 @@ class AnnouncerManager {
 	static RString GetAnnouncerDirFromName(RString sAnnouncerName);
 	RString GetPathTo(RString AnnouncerPath, RString sFolderName);
 	/** @brief the current announcer's name. */
-	RString m_sCurAnnouncerName;
+	std::string m_sCurAnnouncerName;
 };
 
 extern AnnouncerManager *ANNOUNCER; // global and accessible from anywhere in our program

@@ -155,7 +155,7 @@ void AnnouncerManager::NextAnnouncer() {
 	else {
 		unsigned i;
 		for (i = 0; i < as.size(); i++)
-			if (as[i].EqualsNoCase(m_sCurAnnouncerName))
+			if (as[i].EqualsNoCase(m_sCurAnnouncerName.c_str()))
 				break;
 		if (i == as.size() - 1)
 			SwitchAnnouncer("");
