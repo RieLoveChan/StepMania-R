@@ -270,7 +270,7 @@ class SongManager {
 	std::vector<Course *> m_pPopularCourses[NUM_CourseType];
 	std::vector<Course *> m_pShuffledCourses; // used by GetRandomCourse
 	struct CourseGroupInfo {
-		RString m_sBannerPath;
+		std::string m_sBannerPath;
 		// RString m_sBackgroundPath;
 	};
 	std::map<RString, CourseGroupInfo> m_mapCourseGroupToInfo;
