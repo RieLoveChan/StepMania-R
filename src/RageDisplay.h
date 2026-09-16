@@ -121,7 +121,7 @@ class VideoModeParams {
 	virtual ~VideoModeParams() = default;
 
 	bool windowed;
-	RString sDisplayId;
+	std::string sDisplayId;
 	int width;
 	int height;
 	int bpp;
@@ -132,8 +132,8 @@ class VideoModeParams {
 	bool bTrilinearFiltering;
 	bool bAnisotropicFiltering;
 	bool bWindowIsFullscreenBorderless;
-	RString sWindowTitle;
-	RString sIconFile;
+	std::string sWindowTitle;
+	std::string sIconFile;
 	bool PAL;
 	float fDisplayAspectRatio;
 };
