@@ -79,7 +79,7 @@ class MusicWheel : public WheelBase {
 	std::vector<MusicWheelItemData *> &getWheelItemsData(SortOrder so);
 	void readyWheelItemsData(SortOrder so);
 
-	RString m_sLastModeMenuItem;
+	std::string m_sLastModeMenuItem;
 	SortOrder m_SortOrder;
 	RageSound m_soundChangeSort;
 
