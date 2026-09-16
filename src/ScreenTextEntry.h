@@ -102,7 +102,7 @@ class ScreenTextEntry : public ScreenWithMenuElements {
 	virtual void Update(float fDelta);
 	virtual bool Input(const InputEventPlus &input);
 
-	static RString s_sLastAnswer;
+	static std::string s_sLastAnswer;
 	static bool s_bCancelledLast;
 
 	// Lua
