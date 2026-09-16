@@ -69,16 +69,16 @@ class GameCommand {
 	RString m_sName; // choice name
 	RString m_sText; // display text
 	bool m_bInvalid;
-	RString m_sInvalidReason;
+	std::string m_sInvalidReason;
 	int m_iIndex;
 	MultiPlayer m_MultiPlayer;
 	const Style *m_pStyle;
 	PlayMode m_pm;
 	Difficulty m_dc;
 	CourseDifficulty m_CourseDifficulty;
-	RString m_sAnnouncer;
-	RString m_sPreferredModifiers;
-	RString m_sStageModifiers;
+	std::string m_sAnnouncer;
+	std::string m_sPreferredModifiers;
+	std::string m_sStageModifiers;
 	RString m_sScreen;
 	LuaReference m_LuaFunction;
 	Song *m_pSong;
@@ -88,9 +88,9 @@ class GameCommand {
 	Character *m_pCharacter;
 	std::map<RString, RString> m_SetEnv;
 	std::map<RString, RString> m_SetPref;
-	RString m_sSongGroup;
+	std::string m_sSongGroup;
 	SortOrder m_SortOrder;
-	RString m_sSoundPath; // "" for no sound
+	std::string m_sSoundPath; // "" for no sound
 	std::vector<RString> m_vsScreensToPrepare;
 	/**
 	 * @brief What is the player's weight in pounds?
@@ -99,7 +99,7 @@ class GameCommand {
 	int m_iWeightPounds;
 	int m_iGoalCalories; // -1 == none specified
 	GoalType m_GoalType;
-	RString m_sProfileID;
+	std::string m_sProfileID;
 	std::string m_sUrl;
 	// sm-ssc adds:
 	bool m_bUrlExits; // for making stepmania not exit on url

@@ -835,7 +835,7 @@ class LunaGameCommand : public Luna<GameCommand> {
 		return 1;
 	}
 	static int GetProfileID(T *p, lua_State *L) {
-		lua_pushstring(L, p->m_sProfileID);
+		lua_pushstring(L, p->m_sProfileID.c_str());
 		return 1;
 	}
 	static int GetSong(T *p, lua_State *L) {
@@ -874,7 +874,7 @@ class LunaGameCommand : public Luna<GameCommand> {
 		return 1;
 	}
 	static int GetSongGroup(T *p, lua_State *L) {
-		lua_pushstring(L, p->m_sSongGroup);
+		lua_pushstring(L, p->m_sSongGroup.c_str());
 		return 1;
 	}
 	static int GetUrl(T *p, lua_State *L) {
@@ -882,15 +882,15 @@ class LunaGameCommand : public Luna<GameCommand> {
 		return 1;
 	}
 	static int GetAnnouncer(T *p, lua_State *L) {
-		lua_pushstring(L, p->m_sAnnouncer);
+		lua_pushstring(L, p->m_sAnnouncer.c_str());
 		return 1;
 	}
 	static int GetPreferredModifiers(T *p, lua_State *L) {
-		lua_pushstring(L, p->m_sPreferredModifiers);
+		lua_pushstring(L, p->m_sPreferredModifiers.c_str());
 		return 1;
 	}
 	static int GetStageModifiers(T *p, lua_State *L) {
-		lua_pushstring(L, p->m_sStageModifiers);
+		lua_pushstring(L, p->m_sStageModifiers.c_str());
 		return 1;
 	}
 
