@@ -49,7 +49,7 @@ struct OptionRowDefinition {
 	/** @brief the name of the option row. */
 	RString m_sName;
 	/** @brief an explanation of the row's purpose. */
-	RString m_sExplanationName;
+	std::string m_sExplanationName;
 	/** @brief Do all players have to share one option from the row? */
 	bool m_bOneChoiceForAllPlayers;
 	SelectType m_selectType;
