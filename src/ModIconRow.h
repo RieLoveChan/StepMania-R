@@ -28,7 +28,7 @@ class ModIconRow : public ActorFrame {
 	virtual void PushSelf(lua_State *L);
 
  protected:
-	RString m_sMetricsGroup;
+	std::string m_sMetricsGroup;
 	PlayerNumber m_pn;
 
 	ThemeMetric<float> SPACING_X;
