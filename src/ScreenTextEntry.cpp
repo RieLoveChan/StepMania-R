@@ -32,8 +32,8 @@ std::string ScreenTextEntry::s_sLastAnswer = "";
 
 // Settings:
 namespace {
-RString g_sQuestion;
-RString g_sInitialAnswer;
+std::string g_sQuestion;
+std::string g_sInitialAnswer;
 int g_iMaxInputLength;
 bool (*g_pValidate)(const RString &sAnswer, RString &sErrorOut);
 void (*g_pOnOK)(const RString &sAnswer);

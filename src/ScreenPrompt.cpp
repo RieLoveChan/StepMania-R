@@ -21,7 +21,7 @@ XToString(PromptAnswer);
 
 // Settings:
 namespace {
-RString g_sText;
+std::string g_sText;
 PromptType g_PromptType;
 PromptAnswer g_defaultAnswer;
 void (*g_pOnYes)(void *);
