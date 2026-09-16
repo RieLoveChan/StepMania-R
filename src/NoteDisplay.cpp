@@ -131,12 +131,12 @@ struct NoteSkinAndPath {
 	NoteSkinAndPath(const RString sNoteSkin_, const RString sPath_, const PlayerNumber pn_, const GameController gc_)
 	    : sNoteSkin(sNoteSkin_), sPath(sPath_), pn(pn_), gc(gc_) {
 	}
-	RString sNoteSkin;
-	RString sPath;
+	std::string sNoteSkin;
+	std::string sPath;
 	PlayerNumber pn;
 	GameController gc;
 	bool operator<(const NoteSkinAndPath &other) const {
-		int cmp = strcmp(sNoteSkin, other.sNoteSkin);
+		int cmp = strcmp(sNoteSkin.c_str(), other.sNoteSkin.c_str());
 
 		if (cmp < 0) {
 			return true;
