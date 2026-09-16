@@ -153,7 +153,7 @@ struct TapNote {
 	PlayerNumber pn;
 
 	// used only if Type == attack:
-	RString sAttackModifiers;
+	std::string sAttackModifiers;
 	float fAttackDurationSeconds;
 
 	// Index into Song's vector of keysound files if nonnegative:
