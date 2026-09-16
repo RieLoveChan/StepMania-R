@@ -43,7 +43,7 @@ class BackgroundLoader {
 	RString GetRequest();
 
 	RString GetCachePath(RString sPath) const;
-	RString m_sCachePathPrefix;
+	std::string m_sCachePathPrefix;
 
 	RageSemaphore m_StartSem;
 
