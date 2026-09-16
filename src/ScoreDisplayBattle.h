@@ -18,7 +18,7 @@ class ScoreDisplayBattle : public ScoreDisplay {
 	Sprite m_sprFrame;
 	Sprite m_ItemIcon[NUM_INVENTORY_SLOTS];
 
-	RString m_iLastSeenInventory[NUM_INVENTORY_SLOTS];
+	std::string m_iLastSeenInventory[NUM_INVENTORY_SLOTS];
 	RageTexturePreloader m_TexturePreload;
 };
 
