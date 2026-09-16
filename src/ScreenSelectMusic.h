@@ -158,7 +158,7 @@ class ScreenSelectMusic : public ScreenWithMenuElements {
 	SelectionState m_SelectionState;
 	bool m_bStepsChosen[NUM_PLAYERS]; // only used in SelectionState_SelectingSteps
 	bool m_bGoToOptions;
-	RString m_sSampleMusicToPlay;
+	std::string m_sSampleMusicToPlay;
 	TimingData *m_pSampleMusicTimingData;
 	float m_fSampleStartSeconds, m_fSampleLengthSeconds;
 	bool m_bAllowOptionsMenu, m_bAllowOptionsMenuRepeat;
