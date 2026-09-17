@@ -19,7 +19,7 @@
 #include "Steps.h"
 #include "ThemeManager.h"
 
-static const RString TEMP_FILE_NAME = "--temp--";
+static const std::string TEMP_FILE_NAME = "--temp--";
 
 #define EXPLANATION_TEXT(row) THEME->GetString(m_sName, "Explanation" + EditMenuRowToString(row))
 #define EDIT_MENU_TYPE THEME->GetMetric(m_sName, "EditMenuType")

@@ -20,7 +20,7 @@
 #define DIRECT_LINES THEME->GetMetric(m_sName, "DirectLines")
 #define TOP_MENUS THEME->GetMetric(m_sName, "TopMenus")
 
-static const RString RESET_ROW = "ResetOptions";
+static const std::string RESET_ROW = "ResetOptions";
 
 void OptionListRow::Load(OptionsList *pOptions, const RString &sType) {
 	m_pOptions = pOptions;

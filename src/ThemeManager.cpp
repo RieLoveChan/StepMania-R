@@ -34,7 +34,7 @@
 
 ThemeManager *THEME = nullptr; // global object accessible from anywhere in the program
 
-static const RString THEME_INFO_INI = "ThemeInfo.ini";
+static const std::string THEME_INFO_INI = "ThemeInfo.ini";
 
 static const char *ElementCategoryNames[] = {"BGAnimations", "Fonts", "Graphics", "Sounds", "Other"};
 XToString(ElementCategory);
