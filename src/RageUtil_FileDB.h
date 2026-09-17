@@ -139,7 +139,7 @@ class FilenameDB {
 	FileSet *GetFileSet(const RString &sDir, bool create = true);
 
 	/* Directories we have cached: */
-	std::map<RString, FileSet *> dirs;
+	std::map<std::string, FileSet *> dirs;
 
 	int ExpireSeconds;
 
@@ -152,7 +152,7 @@ class FilenameDB {
 	   std::vector<RString> &asOut,
 	   bool bOnlyDirs
 	);
-	void DelFileSet(std::map<RString, FileSet *>::iterator dir);
+	void DelFileSet(std::map<std::string, FileSet *>::iterator dir);
 
 	/* The given path wasn't cached.  Cache it. */
 	virtual void PopulateFileSet(FileSet & /* fs */, const RString & /* sPath */) {

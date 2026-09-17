@@ -285,7 +285,7 @@ FileSet *FilenameDB::GetFileSet(const RString &sDir_, bool bCreate) {
 
 	for (;;) {
 		/* Look for the directory. */
-		std::map<RString, FileSet *>::iterator i = dirs.find(sLower);
+		std::map<std::string, FileSet *>::iterator i = dirs.find(sLower);
 		if (!bCreate) {
 			if (i == dirs.end())
 				return nullptr;
@@ -420,7 +420,7 @@ void FilenameDB::AddFile(const RString &sPath_, int iSize, int iHash, void *pPri
 /* Remove the given FileSet, and all dirp pointers to it.  This means the cache has
  * expired, not that the directory is necessarily gone; don't actually delete the file
  * from the parent. */
-void FilenameDB::DelFileSet(std::map<RString, FileSet *>::iterator dir) {
+void FilenameDB::DelFileSet(std::map<std::string, FileSet *>::iterator dir) {
 	/* If this isn't locked, dir may not be valid. */
 	ASSERT(m_Mutex.IsLockedByThisThread());
 
@@ -430,7 +430,7 @@ void FilenameDB::DelFileSet(std::map<RString, FileSet *>::iterator dir) {
 	FileSet *fs = dir->second;
 
 	/* Remove any stale dirp pointers. */
-	for (std::map<RString, FileSet *>::iterator it = dirs.begin(); it != dirs.end(); ++it) {
+	for (std::map<std::string, FileSet *>::iterator it = dirs.begin(); it != dirs.end(); ++it) {
 		FileSet *Clean = it->second;
 		for (std::set<File>::iterator f = Clean->files.begin(); f != Clean->files.end(); ++f) {
 			File &ff = (File &)*f;
@@ -448,7 +448,7 @@ void FilenameDB::DelFile(const RString &sPath) {
 	RString lower = sPath;
 	lower.MakeLower();
 
-	std::map<RString, FileSet *>::iterator fsi = dirs.find(lower);
+	std::map<std::string, FileSet *>::iterator fsi = dirs.find(lower);
 	DelFileSet(fsi);
 
 	/* Delete sPath from its parent. */
