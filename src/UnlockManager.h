@@ -177,7 +177,7 @@ class UnlockManager {
 	// read unlocks
 	void Load();
 
-	std::set<RString> m_RouletteCodes; // "codes" which are available in roulette and which unlock if rouletted
+	std::set<std::string> m_RouletteCodes; // "codes" which are available in roulette and which unlock if rouletted
 };
 
 extern UnlockManager *UNLOCKMAN; // global and accessible from anywhere in program
