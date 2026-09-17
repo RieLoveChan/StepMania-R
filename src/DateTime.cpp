@@ -125,7 +125,7 @@ int StringToDayInYear(RString sDayInYear) {
 	return iDayInYear;
 }
 
-static const RString LAST_DAYS_NAME[NUM_LAST_DAYS] = {
+static const std::string LAST_DAYS_NAME[NUM_LAST_DAYS] = {
    "Today",
    "Yesterday",
    "Day2Ago",

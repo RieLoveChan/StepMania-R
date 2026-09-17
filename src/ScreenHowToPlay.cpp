@@ -39,7 +39,7 @@ enum Animation {
 	NUM_ANIMATIONS
 };
 
-static const RString anims[NUM_ANIMATIONS] = {
+static const std::string anims[NUM_ANIMATIONS] = {
    "DancePad.txt",
    "DancePads.txt",
    "BeginnerHelper_step-up.bones.txt",
