@@ -19,7 +19,7 @@
 #include <vector>
 
 // Actor registration
-static std::map<RString, CreateActorFn> *g_pmapRegistrees = nullptr;
+static std::map<std::string, CreateActorFn> *g_pmapRegistrees = nullptr;
 
 static bool IsRegistered(const RString &sClassName) {
 	return g_pmapRegistrees->find(sClassName) != g_pmapRegistrees->end();
@@ -27,9 +27,9 @@ static bool IsRegistered(const RString &sClassName) {
 
 void ActorUtil::Register(const RString &sClassName, CreateActorFn pfn) {
 	if (g_pmapRegistrees == nullptr)
-		g_pmapRegistrees = new std::map<RString, CreateActorFn>;
+		g_pmapRegistrees = new std::map<std::string, CreateActorFn>;
 
-	std::map<RString, CreateActorFn>::iterator iter = g_pmapRegistrees->find(sClassName);
+	std::map<std::string, CreateActorFn>::iterator iter = g_pmapRegistrees->find(sClassName);
 	ASSERT_M(iter == g_pmapRegistrees->end(), ssprintf("Actor class '%s' already registered.", sClassName.c_str()));
 
 	(*g_pmapRegistrees)[sClassName] = pfn;
@@ -177,7 +177,7 @@ Actor *ActorUtil::LoadFromNode(const XNode *_pNode, Actor *pParentActor) {
 	if (!bHasClass && bLegacy)
 		sClass = GetLegacyActorClass(&node);
 
-	std::map<RString, CreateActorFn>::iterator iter = g_pmapRegistrees->find(sClass);
+	std::map<std::string, CreateActorFn>::iterator iter = g_pmapRegistrees->find(sClass);
 	if (iter == g_pmapRegistrees->end()) {
 		RString sFile;
 		if (bLegacy && node.GetAttrValue("File", sFile) && !sFile.empty()) {
