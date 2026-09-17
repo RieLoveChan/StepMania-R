@@ -591,7 +591,7 @@ NetworkPostData::~NetworkPostData() {
 
 /** @brief Create a MIME multipart data block from the given set of fields. */
 void NetworkPostData::CreateMimeData(
-   const std::map<RString, RString> &mapNameToData, RString &sOut, RString &sMimeBoundaryOut
+   const std::map<std::string, std::string> &mapNameToData, RString &sOut, RString &sMimeBoundaryOut
 ) {
 	// Find a non-conflicting mime boundary.
 	while (true) {

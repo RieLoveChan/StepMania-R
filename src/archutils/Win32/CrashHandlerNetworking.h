@@ -32,7 +32,7 @@ class NetworkPostData {
 
  private:
 	static void
-	CreateMimeData(const std::map<RString, RString> &mapNameToData, RString &sOut, RString &sMimeBoundaryOut);
+	CreateMimeData(const std::map<std::string, std::string> &mapNameToData, RString &sOut, RString &sMimeBoundaryOut);
 	void SetProgress(float fProgress);
 
 	RageThread m_Thread;
@@ -47,7 +47,7 @@ class NetworkPostData {
 	float m_fProgress;
 
 	// When the thread exists, it owns the rest of the data, regardless of m_Mutex.
-	std::map<RString, RString> m_Data;
+	std::map<std::string, std::string> m_Data;
 
 	bool m_bFinished;
 	std::string m_sHost;
