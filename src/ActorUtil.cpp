@@ -429,7 +429,7 @@ void ActorUtil::LoadAllCommandsFromName(Actor &actor, const RString &sMetricsGro
 	THEME->GetMetricsThatBeginWith(sMetricsGroup, sName, vsValueNames);
 
 	for (RString const &sv : vsValueNames) {
-		static const RString sEnding = "Command";
+		static const std::string sEnding = "Command";
 		if (EndsWith(sv, sEnding)) {
 			RString sCommandName(sv.begin() + sName.size(), sv.end() - sEnding.size());
 			LoadCommandFromName(actor, sMetricsGroup, sCommandName, sName);
