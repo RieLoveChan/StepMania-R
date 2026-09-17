@@ -55,7 +55,7 @@ Preference<RString> MemoryCardManager::m_sEditorMemoryCardOsMountPoint(
    "EditorMemoryCardOsMountPoint", "", nullptr, PreferenceType::Immutable
 );
 
-const RString MEM_CARD_MOUNT_POINT[NUM_PLAYERS] = {
+const std::string MEM_CARD_MOUNT_POINT[NUM_PLAYERS] = {
    // @ is important; see RageFileManager LoadedDriver::GetPath
    "/@mc1/",
    "/@mc2/",
@@ -620,7 +620,7 @@ void MemoryCardManager::UnmountCard(PlayerNumber pn) {
 
 bool MemoryCardManager::PathIsMemCard(RString sDir) const {
 	FOREACH_PlayerNumber(p) if (!sDir.Left(static_cast<int>(MEM_CARD_MOUNT_POINT[p].size()))
-	                                .CompareNoCase(MEM_CARD_MOUNT_POINT[p])) return true;
+	                                .CompareNoCase(MEM_CARD_MOUNT_POINT[p].c_str())) return true;
 	return false;
 }
 

@@ -9,7 +9,7 @@
 
 #include <vector>
 
-extern const RString MEM_CARD_MOUNT_POINT[NUM_PLAYERS];
+extern const std::string MEM_CARD_MOUNT_POINT[NUM_PLAYERS];
 
 class MemoryCardManager {
  public:
