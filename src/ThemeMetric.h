@@ -245,7 +245,7 @@ typedef RString (*MetricNameMap)(RString s);
 
 template <class T> class ThemeMetricMap : public IThemeMetric {
 	typedef ThemeMetric<T> ThemeMetricT;
-	std::map<RString, ThemeMetricT> m_metric;
+	std::map<std::string, ThemeMetricT> m_metric;
 
  public:
 	ThemeMetricMap(
@@ -263,17 +263,17 @@ template <class T> class ThemeMetricMap : public IThemeMetric {
 	void Read() {
 		// HACK: GCC (3.4) takes this and pretty much nothing else.
 		// I don't know why.
-		for (typename std::map<RString, ThemeMetric<T>>::iterator m = m_metric.begin(); m != m_metric.end(); ++m)
+		for (typename std::map<std::string, ThemeMetric<T>>::iterator m = m_metric.begin(); m != m_metric.end(); ++m)
 			m->second.Read();
 	}
 	void Clear() {
-		for (typename std::map<RString, ThemeMetric<T>>::iterator m = m_metric.begin(); m != m_metric.end(); ++m)
+		for (typename std::map<std::string, ThemeMetric<T>>::iterator m = m_metric.begin(); m != m_metric.end(); ++m)
 			m->second.Clear();
 	}
 	const T &GetValue(RString s) const {
 		// HACK: GCC (3.4) takes this and pretty much nothing else.
 		// I don't know why.
-		typename std::map<RString, ThemeMetric<T>>::const_iterator iter = m_metric.find(s);
+		typename std::map<std::string, ThemeMetric<T>>::const_iterator iter = m_metric.find(s);
 		ASSERT(iter != m_metric.end());
 		return iter->second.GetValue();
 	}
