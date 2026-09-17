@@ -155,7 +155,7 @@ void BGAnimationLayer::LoadFromAniLayerFile(const RString &sPath) {
 		EFFECT_INVALID
 	};
 
-	const RString EFFECT_STRING[NUM_EFFECTS] = {
+	const std::string EFFECT_STRING[NUM_EFFECTS] = {
 	   "center",           "stretchstill",       "stretchscrollleft",  "stretchscrollright",
 	   "stretchscrollup",  "stretchscrolldown",  "stretchwater",       "stretchbubble",
 	   "stretchtwist",     "stretchspin",        "particlesspiralout", "particlesspiralin",
