@@ -461,7 +461,7 @@ XToString(FileType);
 LuaXType(FileType);
 
 // convenience so the for-loop lines can be shorter.
-typedef std::map<RString, FileType> etft_cont_t;
+typedef std::map<std::string, FileType> etft_cont_t;
 typedef std::map<FileType, std::vector<RString>> fttel_cont_t;
 etft_cont_t ExtensionToFileType;
 fttel_cont_t FileTypeToExtensionList;
