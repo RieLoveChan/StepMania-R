@@ -16,13 +16,13 @@
 
 RString StepsTypeToString(StepsType st);
 
-static std::vector<RString> GenerateRankingToFillInMarker() {
-	std::vector<RString> vRankings;
+static std::vector<std::string> GenerateRankingToFillInMarker() {
+	std::vector<std::string> vRankings;
 	FOREACH_ENUM(PlayerNumber, pn)
 	vRankings.push_back(ssprintf("#P%d#", pn + 1));
 	return vRankings;
 }
-extern const std::vector<RString> RANKING_TO_FILL_IN_MARKER(GenerateRankingToFillInMarker());
+extern const std::vector<std::string> RANKING_TO_FILL_IN_MARKER(GenerateRankingToFillInMarker());
 
 extern const RString GROUP_ALL = "---Group All---";
 
