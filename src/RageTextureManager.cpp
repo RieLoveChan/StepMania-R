@@ -94,12 +94,12 @@ void RageTextureManager::RegisterTextureForUpdating(RageTextureID id, RageTextur
 	m_textures_to_update[id] = tex;
 }
 
-static const RString g_sDefaultTextureName = "__blank__";
+static const std::string g_sDefaultTextureName = "__blank__";
 RageTextureID RageTextureManager::GetDefaultTextureID() {
 	return RageTextureID(g_sDefaultTextureName);
 }
 
-static const RString g_ScreenTextureName = "__screen__";
+static const std::string g_ScreenTextureName = "__screen__";
 RageTextureID RageTextureManager::GetScreenTextureID() {
 	return RageTextureID(g_ScreenTextureName);
 }
