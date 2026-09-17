@@ -68,7 +68,7 @@ void RageSoundReader_Chain::AddSound(int iIndex, float fOffsetSecs, float fPan) 
 int RageSoundReader_Chain::LoadSound(RString sPath) {
 	sPath.MakeLower();
 
-	std::map<RString, RageSoundReader *>::const_iterator it = m_apNamedSounds.find(sPath);
+	std::map<std::string, RageSoundReader *>::const_iterator it = m_apNamedSounds.find(sPath);
 	if (it != m_apNamedSounds.end()) {
 		const RageSoundReader *pReader = it->second;
 
