@@ -10,7 +10,7 @@ ModelManager *MODELMAN = nullptr; // global and accessible from anywhere in our 
 ModelManager::ModelManager() = default;
 
 ModelManager::~ModelManager() {
-	for (std::map<RString, RageModelGeometry *>::iterator i = m_mapFileToGeometry.begin();
+	for (std::map<std::string, RageModelGeometry *>::iterator i = m_mapFileToGeometry.begin();
 	     i != m_mapFileToGeometry.end();
 	     ++i) {
 		RageModelGeometry *pGeom = i->second;
@@ -21,7 +21,7 @@ ModelManager::~ModelManager() {
 }
 
 RageModelGeometry *ModelManager::LoadMilkshapeAscii(const RString &sFile, bool bNeedNormals) {
-	std::map<RString, RageModelGeometry *>::iterator p = m_mapFileToGeometry.find(sFile);
+	std::map<std::string, RageModelGeometry *>::iterator p = m_mapFileToGeometry.find(sFile);
 	if (p != m_mapFileToGeometry.end()) {
 		/* Found the geometry.  Just increase the refcount and return it. */
 		RageModelGeometry *pGeom = p->second;
@@ -43,7 +43,7 @@ void ModelManager::UnloadModel(RageModelGeometry *m) {
 	if (m->m_iRefCount)
 		return; /* Can't unload models that are still referenced. */
 
-	for (std::map<RString, RageModelGeometry *>::iterator i = m_mapFileToGeometry.begin();
+	for (std::map<std::string, RageModelGeometry *>::iterator i = m_mapFileToGeometry.begin();
 	     i != m_mapFileToGeometry.end();
 	     ++i) {
 		if (i->second == m) {

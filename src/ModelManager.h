@@ -42,7 +42,7 @@ class ModelManager {
 	}
 
  protected:
-	std::map<RString, RageModelGeometry *> m_mapFileToGeometry;
+	std::map<std::string, RageModelGeometry *> m_mapFileToGeometry;
 
 	ModelManagerPrefs m_Prefs;
 };
