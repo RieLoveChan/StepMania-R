@@ -114,8 +114,8 @@ Actor *g_pSharedBGA; // BGA object that's persistent between screens
 std::string m_sPreviousTopScreen;
 std::vector<LoadedScreen> g_ScreenStack; // bottommost to topmost
 std::vector<Screen *> g_OverlayScreens;
-std::set<RString> g_setGroupedScreens;
-std::set<RString> g_setPersistantScreens;
+std::set<std::string> g_setGroupedScreens;
+std::set<std::string> g_setPersistantScreens;
 
 std::vector<LoadedScreen> g_vPreparedScreens;
 std::vector<Actor *> g_vPreparedBackgrounds;
