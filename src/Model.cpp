@@ -20,7 +20,7 @@
 REGISTER_ACTOR_CLASS(Model);
 
 static const float FRAMES_PER_SECOND = 30;
-static const RString DEFAULT_ANIMATION_NAME = "default";
+static const std::string DEFAULT_ANIMATION_NAME = "default";
 
 Model::Model() {
 	m_bTextureWrapping = true;
