@@ -16,7 +16,7 @@
 
 #include <set>
 
-static const RString g_sClassName = PRODUCT_ID;
+static const std::string g_sClassName = PRODUCT_ID;
 
 static HWND g_hWndMain;
 static HDC g_HDC;
@@ -263,7 +263,8 @@ void GraphicsWindow::CreateGraphicsWindow(const VideoModeParams &p, bool bForceR
 		int iWindowStyle = GetWindowStyle(p.windowed, p.bWindowIsFullscreenBorderless);
 
 		AppInstance inst;
-		HWND hWnd = CreateWindow(g_sClassName, "app", iWindowStyle, 0, 0, 0, 0, nullptr, nullptr, inst, nullptr);
+		HWND hWnd =
+		   CreateWindow(g_sClassName.c_str(), "app", iWindowStyle, 0, 0, 0, 0, nullptr, nullptr, inst, nullptr);
 		if (hWnd == nullptr)
 			RageException::Throw("%s", werr_ssprintf(GetLastError(), "CreateWindow").c_str());
 
@@ -413,7 +414,7 @@ void GraphicsWindow::Initialize(bool bD3D) {
 		   LoadCursor(nullptr, IDC_ARROW), /* default cursor */
 		   nullptr,                        /* hbrBackground */
 		   nullptr,                        /* lpszMenuName */
-		   g_sClassName                    /* lpszClassName */
+		   g_sClassName.c_str()            /* lpszClassName */
 		};
 
 		m_bWideWindowClass = false;
@@ -434,7 +435,7 @@ void GraphicsWindow::Shutdown() {
 	ChangeDisplaySettings(nullptr, 0);
 
 	AppInstance inst;
-	UnregisterClass(g_sClassName, inst);
+	UnregisterClass(g_sClassName.c_str(), inst);
 }
 
 HDC GraphicsWindow::GetHDC() {
