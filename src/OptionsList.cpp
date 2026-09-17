@@ -280,7 +280,7 @@ OptionRowHandler *OptionsList::GetCurrentHandler() {
 }
 
 int OptionsList::GetOneSelection(RString sRow, bool bAllowFail) const {
-	std::map<RString, std::vector<bool>>::const_iterator it = m_bSelections.find(sRow);
+	std::map<std::string, std::vector<bool>>::const_iterator it = m_bSelections.find(sRow);
 	ASSERT_M(it != m_bSelections.end(), sRow);
 	const std::vector<bool> &bSelections = it->second;
 	for (unsigned i = 0; i < bSelections.size(); i++) {

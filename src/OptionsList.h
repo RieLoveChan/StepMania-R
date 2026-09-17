@@ -94,7 +94,7 @@ class OptionsList : public ActorFrame {
 
 	std::vector<RString> m_asLoadedRows;
 	std::map<RString, OptionRowHandler *> m_Rows;
-	std::map<RString, std::vector<bool>> m_bSelections;
+	std::map<std::string, std::vector<bool>> m_bSelections;
 	std::set<std::string> m_setDirectRows;
 	std::set<std::string> m_setTopMenus; // list of top-level menus, pointing to submenus
 
