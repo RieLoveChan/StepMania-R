@@ -627,8 +627,8 @@ XNode *LuaHelpers::GetLuaInformation() {
 	ASSERT(lua_istable(L, -1));
 
 	// const RString BuiltInPackages[] = { "_G", "coroutine", "debug", "math", "package", "string", "table" };
-	const RString BuiltInPackages[] = {"_G", "coroutine", "debug", "math", "package", "string", "table"};
-	const RString *const end = BuiltInPackages + ARRAYLEN(BuiltInPackages);
+	const std::string BuiltInPackages[] = {"_G", "coroutine", "debug", "math", "package", "string", "table"};
+	const std::string *const end = BuiltInPackages + ARRAYLEN(BuiltInPackages);
 	FOREACH_LUATABLE(L, -1) {
 		RString sNamespace;
 		LuaHelpers::Pop(L, sNamespace);
