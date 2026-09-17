@@ -1513,7 +1513,7 @@ RString Song::GetCacheFile(RString sType) {
 	}
 
 	// Create a map that contains all the filenames to search for.
-	std::map<RString, std::map<int, RString>> PreSets;
+	std::map<std::string, std::map<int, std::string>> PreSets;
 	PreSets["Banner"][1] = "bn";
 	PreSets["Banner"][2] = "banner";
 	PreSets["Background"][1] = "bg";
