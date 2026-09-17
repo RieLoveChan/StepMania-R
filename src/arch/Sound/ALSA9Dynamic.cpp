@@ -17,7 +17,7 @@ static void *Handle = nullptr;
 #include "ALSA9Functions.h"
 #undef FUNC
 
-static const RString lib = "libasound.so.2";
+static const std::string lib = "libasound.so.2";
 RString LoadALSA() {
 	/* If /proc/asound/ doesn't exist, chances are we're on an OSS system.  We shouldn't
 	 * touch ALSA at all, since many OSS systems have old, broken versions of ALSA lying
@@ -34,7 +34,7 @@ RString LoadALSA() {
 
 	ASSERT(Handle == nullptr);
 
-	Handle = dlopen(lib, RTLD_NOW);
+	Handle = dlopen(lib.c_str(), RTLD_NOW);
 	if (Handle == nullptr)
 		return ssprintf("dlopen(%s): %s", lib.c_str(), dlerror());
 
