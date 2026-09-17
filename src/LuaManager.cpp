@@ -544,7 +544,7 @@ XNode *LuaHelpers::GetLuaInformation() {
 	std::vector<RString> vFunctions;
 	std::map<RString, LClass> mClasses;
 	std::map<RString, std::vector<RString>> mNamespaces;
-	std::map<RString, RString> mSingletons;
+	std::map<std::string, std::string> mSingletons;
 	std::map<RString, float> mConstants;
 	std::map<RString, RString> mStringConstants;
 	std::map<RString, std::vector<RString>> mEnums;
