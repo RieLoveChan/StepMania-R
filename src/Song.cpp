@@ -1484,7 +1484,7 @@ std::vector<RString> Song::GetFGChanges1ToVectorString() const {
 // We want to return a filename, We use this function for that.
 RString Song::GetCacheFile(RString sType) {
 	// We put the Predefined images into a map.
-	std::map<RString, RString> PreDefs;
+	std::map<RString, std::string> PreDefs;
 	PreDefs["Banner"] = GetBannerPath();
 	PreDefs["Background"] = GetBackgroundPath();
 	PreDefs["CDTitle"] = GetCDTitlePath();
@@ -1493,7 +1493,7 @@ RString Song::GetCacheFile(RString sType) {
 	PreDefs["Disc"] = GetDiscPath();
 
 	// Check if Predefined images exist, And return function if they do.
-	if (PreDefs[sType.c_str()])
+	if (!PreDefs[sType.c_str()].empty())
 		return PreDefs[sType.c_str()];
 
 	// Get all image files and put them into a vector.
