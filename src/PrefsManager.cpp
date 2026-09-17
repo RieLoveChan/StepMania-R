@@ -368,7 +368,7 @@ void PrefsManager::ReadPrefsFromFile(const RString &sIni, const RString &sSectio
 	ReadPrefsFromIni(ini, sSection, bIsStatic);
 }
 
-static const RString GAME_SECTION_PREFIX = "Game-";
+static const std::string GAME_SECTION_PREFIX = "Game-";
 
 void PrefsManager::ReadPrefsFromIni(const IniFile &ini, const RString &sSection, bool bIsStatic) {
 	// Apply our fallback recursively (if any) before applying ourself.

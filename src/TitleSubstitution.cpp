@@ -9,8 +9,8 @@
 #include "XmlFile.h"
 #include "XmlFileUtil.h"
 
-static const RString TRANSLATIONS_PATH = "Data/Translations.xml";
-static const RString ERASE_MARKER = "-erase-";
+static const std::string TRANSLATIONS_PATH = "Data/Translations.xml";
+static const std::string ERASE_MARKER = "-erase-";
 
 struct TitleTrans {
 	Regex TitleFrom, SubFrom, ArtistFrom;

@@ -54,8 +54,8 @@ static void Parse(const RString &sDir, PlayAfterLaunchInfo &out) {
 		out.sTheme = vsDirParts[1];
 }
 
-static const RString TEMP_ZIP_MOUNT_POINT = "/@temp-zip/";
-const RString TEMP_OS_MOUNT_POINT = "/@temp-os/";
+static const std::string TEMP_ZIP_MOUNT_POINT = "/@temp-zip/";
+const std::string TEMP_OS_MOUNT_POINT = "/@temp-os/";
 
 static void InstallSmzip(const RString &sZipFile, PlayAfterLaunchInfo &out) {
 	if (!FILEMAN->Mount("zip", sZipFile, TEMP_ZIP_MOUNT_POINT))
