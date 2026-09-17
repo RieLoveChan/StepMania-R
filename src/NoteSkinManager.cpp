@@ -30,7 +30,7 @@ const RString GAME_BASE_NOTESKIN_NAME = "default";
 // might init this before SpecialFiles::NOTESKINS_DIR
 #define GLOBAL_BASE_DIR (SpecialFiles::NOTESKINS_DIR + GAME_COMMON_NOTESKIN_NAME + "/")
 
-static std::map<RString, RString> g_PathCache;
+static std::map<RString, std::string> g_PathCache;
 
 struct NoteSkinData {
 	std::string sName;
@@ -300,7 +300,7 @@ apActorCommands NoteSkinManager::GetMetricA(const RString &sButtonName, const RS
 
 RString NoteSkinManager::GetPath(const RString &sButtonName, const RString &sElement) {
 	const RString CacheString = m_sCurrentNoteSkin + "/" + sButtonName + "/" + sElement;
-	std::map<RString, RString>::iterator it = g_PathCache.find(CacheString);
+	std::map<RString, std::string>::iterator it = g_PathCache.find(CacheString);
 	if (it != g_PathCache.end())
 		return it->second;
 
