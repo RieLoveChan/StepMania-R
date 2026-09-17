@@ -319,7 +319,7 @@ void PrefsManager::RestoreGamePrefs() {
 
 	// load prefs
 	GamePrefs gp;
-	std::map<RString, GamePrefs>::const_iterator iter = m_mapGameNameToGamePrefs.find(m_sCurrentGame);
+	std::map<std::string, GamePrefs>::const_iterator iter = m_mapGameNameToGamePrefs.find(m_sCurrentGame);
 	if (iter != m_mapGameNameToGamePrefs.end())
 		gp = iter->second;
 

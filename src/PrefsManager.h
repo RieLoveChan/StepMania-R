@@ -145,7 +145,7 @@ class PrefsManager {
 		RString m_sTheme;
 		RString m_sDefaultModifiers;
 	};
-	std::map<RString, GamePrefs> m_mapGameNameToGamePrefs;
+	std::map<std::string, GamePrefs> m_mapGameNameToGamePrefs;
 
  public:
 	Preference<bool> m_bWindowed;
