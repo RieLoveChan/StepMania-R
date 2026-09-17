@@ -699,16 +699,16 @@ void GameCommand::ApplySelf(const std::vector<PlayerNumber> &vpns) const {
 	if (m_pCharacter)
 		for (PlayerNumber const &pn : vpns)
 			GAMESTATE->m_pCurCharacters[pn] = m_pCharacter;
-	for (std::map<RString, RString>::const_iterator i = m_SetEnv.begin(); i != m_SetEnv.end(); i++) {
+	for (std::map<std::string, std::string>::const_iterator i = m_SetEnv.begin(); i != m_SetEnv.end(); i++) {
 		Lua *L = LUA->Get();
 		GAMESTATE->m_Environment->PushSelf(L);
-		lua_pushstring(L, i->first);
-		lua_pushstring(L, i->second);
+		lua_pushstring(L, i->first.c_str());
+		lua_pushstring(L, i->second.c_str());
 		lua_settable(L, -3);
 		lua_pop(L, 1);
 		LUA->Release(L);
 	}
-	for (std::map<RString, RString>::const_iterator setting = m_SetPref.begin(); setting != m_SetPref.end(); ++setting) {
+	for (std::map<std::string, std::string>::const_iterator setting = m_SetPref.begin(); setting != m_SetPref.end(); ++setting) {
 		IPreference *pref = IPreference::GetPreferenceByName(setting->first);
 		if (pref != nullptr) {
 			pref->FromString(setting->second);

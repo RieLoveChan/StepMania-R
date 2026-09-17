@@ -86,8 +86,8 @@ class GameCommand {
 	Course *m_pCourse;
 	Trail *m_pTrail;
 	Character *m_pCharacter;
-	std::map<RString, RString> m_SetEnv;
-	std::map<RString, RString> m_SetPref;
+	std::map<std::string, std::string> m_SetEnv;
+	std::map<std::string, std::string> m_SetPref;
 	std::string m_sSongGroup;
 	SortOrder m_SortOrder;
 	std::string m_sSoundPath; // "" for no sound
