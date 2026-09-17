@@ -51,7 +51,7 @@ BackgroundLoader::~BackgroundLoader() {
 	m_LoadThread.Wait();
 
 	/* Delete all leftover cached files. */
-	std::map<RString, int>::iterator it;
+	std::map<std::string, int>::iterator it;
 	for (it = m_FinishedRequests.begin(); it != m_FinishedRequests.end(); ++it)
 		FILEMAN->Remove(GetCachePath(it->first));
 
@@ -92,7 +92,7 @@ void BackgroundLoader::LoadThread() {
 		{
 			/* If the file already exists, short circuit. */
 			LockMut(m_Mutex);
-			std::map<RString, int>::iterator it;
+			std::map<std::string, int>::iterator it;
 			it = m_FinishedRequests.find(sFile);
 			if (it != m_FinishedRequests.end()) {
 				++it->second;
@@ -177,7 +177,7 @@ bool BackgroundLoader::IsCacheFileFinished(const RString &sFile, RString &sActua
 		return true;
 	}
 
-	std::map<RString, int>::iterator it;
+	std::map<std::string, int>::iterator it;
 	it = m_FinishedRequests.find(sFile);
 	if (it == m_FinishedRequests.end())
 		return false;
@@ -198,7 +198,7 @@ void BackgroundLoader::FinishedWithCachedFile(RString sFile) {
 	if (sFile.empty())
 		return;
 
-	std::map<RString, int>::iterator it;
+	std::map<std::string, int>::iterator it;
 	it = m_FinishedRequests.find(sFile);
 	ASSERT_M(it != m_FinishedRequests.end(), sFile);
 
