@@ -257,7 +257,7 @@ void ScreenDebugOverlay::Init() {
 	this->AddChild(&m_textHeader);
 
 	auto start = m_asPages.begin();
-	for (std::vector<RString>::const_iterator s = m_asPages.begin(); s != m_asPages.end(); ++s) {
+	for (std::vector<std::string>::const_iterator s = m_asPages.begin(); s != m_asPages.end(); ++s) {
 		int iPage = static_cast<int>(s - start);
 
 		DeviceInput di;
@@ -346,7 +346,7 @@ void ScreenDebugOverlay::Update(float fDeltaTime) {
 
 void ScreenDebugOverlay::UpdateText() {
 	auto start = m_asPages.begin();
-	for (std::vector<RString>::const_iterator s = m_asPages.begin(); s != m_asPages.end(); ++s) {
+	for (std::vector<std::string>::const_iterator s = m_asPages.begin(); s != m_asPages.end(); ++s) {
 		int iPage = static_cast<int>(s - start);
 		m_vptextPages[iPage]->PlayCommand((iPage == m_iCurrentPage) ? "GainFocus" : "LoseFocus");
 	}
