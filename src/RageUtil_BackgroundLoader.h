@@ -54,7 +54,7 @@ class BackgroundLoader {
 	std::vector<std::string> m_CacheRequests;
 
 	/* Filename to number of completed requests */
-	std::map<RString, int> m_FinishedRequests;
+	std::map<std::string, int> m_FinishedRequests;
 
 	bool m_sThreadIsActive;
 	bool m_sThreadShouldAbort;
