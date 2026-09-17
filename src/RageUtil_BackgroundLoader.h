@@ -51,7 +51,7 @@ class BackgroundLoader {
 	 * while doing expensive operations, like reading files. */
 	RageMutex m_Mutex;
 
-	std::vector<RString> m_CacheRequests;
+	std::vector<std::string> m_CacheRequests;
 
 	/* Filename to number of completed requests */
 	std::map<RString, int> m_FinishedRequests;
