@@ -167,7 +167,7 @@ bool FilenameDB::ResolvePath(RString &sPath) {
 	RString ret = "";
 	const FileSet *fs = nullptr;
 
-	static const RString slash("/");
+	static const std::string slash("/");
 	for (;;) {
 		split(sPath, slash, iBegin, iSize, true);
 		if (iBegin == (int)sPath.size())
