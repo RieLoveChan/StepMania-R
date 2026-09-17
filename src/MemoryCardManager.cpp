@@ -61,7 +61,7 @@ const RString MEM_CARD_MOUNT_POINT[NUM_PLAYERS] = {
    "/@mc2/",
 };
 
-static const RString MEM_CARD_MOUNT_POINT_INTERNAL[NUM_PLAYERS] = {
+static const std::string MEM_CARD_MOUNT_POINT_INTERNAL[NUM_PLAYERS] = {
    // @ is important; see RageFileManager LoadedDriver::GetPath
    "/@mc1int/",
    "/@mc2int/",
