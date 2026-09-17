@@ -860,8 +860,8 @@ bool SongUtil::ValidateCurrentEditStepsDescription(const RString &sAnswer, RStri
 		return false;
 	}
 
-	static const RString sInvalidChars = "\\/:*?\"<>|";
-	if (strpbrk(sAnswer, sInvalidChars) != nullptr) {
+	static const std::string sInvalidChars = "\\/:*?\"<>|";
+	if (strpbrk(sAnswer, sInvalidChars.c_str()) != nullptr) {
 		sErrorOut = ssprintf(EDIT_NAME_CANNOT_CONTAIN.GetValue(), sInvalidChars.c_str());
 		return false;
 	}
@@ -905,8 +905,8 @@ bool SongUtil::ValidateCurrentStepsChartName(const RString &answer, RString &err
 	if (answer.empty())
 		return true;
 
-	static const RString sInvalidChars = "\\/:*?\"<>|";
-	if (strpbrk(answer, sInvalidChars) != nullptr) {
+	static const std::string sInvalidChars = "\\/:*?\"<>|";
+	if (strpbrk(answer, sInvalidChars.c_str()) != nullptr) {
 		error = ssprintf(CHART_NAME_CANNOT_CONTAIN.GetValue(), sInvalidChars.c_str());
 		return false;
 	}
@@ -938,8 +938,8 @@ bool SongUtil::ValidateCurrentStepsCredit(const RString &sAnswer, RString &sErro
 		return true;
 
 	// Borrow from EditDescription testing. Perhaps this should be abstracted? -Wolfman2000
-	static const RString sInvalidChars = "\\/:*?\"<>|";
-	if (strpbrk(sAnswer, sInvalidChars) != nullptr) {
+	static const std::string sInvalidChars = "\\/:*?\"<>|";
+	if (strpbrk(sAnswer, sInvalidChars.c_str()) != nullptr) {
 		sErrorOut = ssprintf(AUTHOR_NAME_CANNOT_CONTAIN.GetValue(), sInvalidChars.c_str());
 		return false;
 	}

@@ -371,8 +371,8 @@ bool EditCourseUtil::ValidateEditCourseName(const RString &sAnswer, RString &sEr
 		return false;
 	}
 
-	static const RString sInvalidChars = "\\/:*?\"<>|";
-	if (strpbrk(sAnswer, sInvalidChars) != nullptr) {
+	static const std::string sInvalidChars = "\\/:*?\"<>|";
+	if (strpbrk(sAnswer, sInvalidChars.c_str()) != nullptr) {
 		sErrorOut = ssprintf(EDIT_NAME_CANNOT_CONTAIN.GetValue(), sInvalidChars.c_str());
 		return false;
 	}
