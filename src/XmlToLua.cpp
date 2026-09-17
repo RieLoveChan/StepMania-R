@@ -97,7 +97,7 @@ typedef void (*arg_converter_t)(std::vector<RString> &args);
 std::map<RString, arg_converter_t> arg_converters;
 std::map<RString, std::size_t> tween_counters;
 std::set<RString> fields_that_are_strings;
-std::map<RString, RString> chunks_to_replace;
+std::map<std::string, std::string> chunks_to_replace;
 
 #define COMMON_ARG_VERIFY(count)                                                                                       \
 	if (!verify_arg_count(args[0], args, count))                                                                        \
@@ -212,9 +212,9 @@ void init_parser_helpers() {
 }
 
 void convert_lua_chunk(RString &chunk_text) {
-	for (std::map<RString, RString>::iterator chunk = chunks_to_replace.begin(); chunk != chunks_to_replace.end();
-	     ++chunk) {
-		chunk_text.Replace(chunk->first, chunk->second);
+	for (std::map<std::string, std::string>::iterator chunk = chunks_to_replace.begin();
+	     chunk != chunks_to_replace.end(); ++chunk) {
+		chunk_text.Replace(chunk->first.c_str(), chunk->second.c_str());
 	}
 }
 
