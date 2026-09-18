@@ -103,7 +103,7 @@ class OptionsList : public ActorFrame {
 	OptionListRow m_Row[2];
 	int m_iCurrentRow;
 
-	std::vector<RString> m_asMenuStack;
+	std::vector<std::string> m_asMenuStack;
 	int m_iMenuStackSelection;
 
  protected:
