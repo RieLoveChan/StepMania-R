@@ -1,6 +1,7 @@
 #ifndef MSDFILE_H
 #define MSDFILE_H
 
+#include <string>
 #include <vector>
 
 /** @brief The class that reads the various .SSC, .SM, .SMA, .DWI, and .MSD files. */
@@ -12,7 +13,7 @@ class MsdFile {
 	 * Note that &#35;param:param:param:param; is one whole value. */
 	struct value_t {
 		/** @brief The list of parameters. */
-		std::vector<RString> params;
+		std::vector<std::string> params;
 		/** @brief Set up the parameters with default values. */
 		value_t() : params() {
 		}
