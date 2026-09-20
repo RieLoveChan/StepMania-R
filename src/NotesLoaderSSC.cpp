@@ -444,9 +444,9 @@ void SetStepsDisplayBPM(StepsTagInfo &info) {
 	}
 }
 
-typedef std::map<RString, steps_tag_func_t> steps_handler_map_t;
-typedef std::map<RString, song_tag_func_t> song_handler_map_t;
-typedef std::map<RString, LoadNoteDataTagIDs> load_note_data_handler_map_t;
+typedef std::map<std::string, steps_tag_func_t> steps_handler_map_t;
+typedef std::map<std::string, song_tag_func_t> song_handler_map_t;
+typedef std::map<std::string, LoadNoteDataTagIDs> load_note_data_handler_map_t;
 
 struct ssc_parser_helper_t {
 	steps_handler_map_t steps_tag_handlers;
