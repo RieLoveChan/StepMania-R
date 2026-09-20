@@ -126,7 +126,7 @@ static const char *EditStateNames[] = {"Edit", "Record", "RecordPaused", "Playin
 XToString(EditState);
 LuaXType(EditState);
 
-std::map<RString, EditButton> name_to_edit_button;
+std::map<std::string, EditButton> name_to_edit_button;
 
 void ScreenEdit::InitEditMappings() {
 	// Created courtesy of query replace regex.
@@ -534,7 +534,7 @@ void ScreenEdit::LoadKeymapSectionIntoMappingsMember(XNode const *section, MapEd
 		return;
 	} // Not an error, sections are optional. -Kyz
 	FOREACH_CONST_Attr(section, attr) {
-		std::map<RString, EditButton>::iterator name_entry = name_to_edit_button.find(attr->first);
+		std::map<std::string, EditButton>::iterator name_entry = name_to_edit_button.find(attr->first);
 		if (name_entry != name_to_edit_button.end()) {
 			RString joined_names;
 			attr->second->GetValue(joined_names);
