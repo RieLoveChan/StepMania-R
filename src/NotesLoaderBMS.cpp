@@ -532,7 +532,7 @@ class BMSSong {
 
 	bool backgroundsPrecached;
 	void PrecacheBackgrounds(const RString &dir);
-	std::map<RString, RString> mapBackground;
+	std::map<std::string, std::string> mapBackground;
 
  public:
 	BMSSong(Song *song);
