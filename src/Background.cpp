@@ -95,7 +95,7 @@ class BackgroundImpl : public ActorFrame {
 	bool m_bInitted;
 	DancingCharacters *m_pDancingCharacters;
 	const Song *m_pSong;
-	std::map<RString, BackgroundTransition> m_mapNameToTransition;
+	std::map<std::string, BackgroundTransition> m_mapNameToTransition;
 	std::deque<BackgroundDef>
 	   m_RandomBGAnimations; // random background to choose from.  These may or may not be loaded into m_BGAnimations.
 
@@ -119,7 +119,7 @@ class BackgroundImpl : public ActorFrame {
 		   const Song *pSong,
 		   float fLastMusicSeconds,
 		   float fCurrentTime,
-		   const std::map<RString, BackgroundTransition> &mapNameToTransition
+		   const std::map<std::string, BackgroundTransition> &mapNameToTransition
 		);
 
 		std::map<BackgroundDef, Actor *> m_BGAnimations;
@@ -682,7 +682,7 @@ void BackgroundImpl::Layer::UpdateCurBGChange(
    const Song *pSong,
    float fLastMusicSeconds,
    float fCurrentTime,
-   const std::map<RString, BackgroundTransition> &mapNameToTransition
+   const std::map<std::string, BackgroundTransition> &mapNameToTransition
 ) {
 	ASSERT(fCurrentTime != GameState::MUSIC_SECONDS_INVALID);
 
@@ -737,7 +737,7 @@ void BackgroundImpl::Layer::UpdateCurBGChange(
 				m_pFadingBGA->PlayCommand("LoseFocus");
 
 				if (!change.m_sTransition.empty()) {
-					std::map<RString, BackgroundTransition>::const_iterator lIter =
+					std::map<std::string, BackgroundTransition>::const_iterator lIter =
 					   mapNameToTransition.find(change.m_sTransition);
 					if (lIter == mapNameToTransition.end()) {
 						LuaHelpers::ReportScriptErrorFmt(
