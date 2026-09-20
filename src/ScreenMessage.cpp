@@ -17,11 +17,11 @@ AutoScreenMessage(SM_Pause);
 AutoScreenMessage(SM_Success);
 AutoScreenMessage(SM_Failure);
 
-static std::map<RString, ScreenMessage> *m_pScreenMessages;
+static std::map<std::string, ScreenMessage> *m_pScreenMessages;
 
 ScreenMessage ScreenMessageHelpers::ToScreenMessage(const RString &sName) {
 	if (m_pScreenMessages == nullptr)
-		m_pScreenMessages = new std::map<RString, ScreenMessage>;
+		m_pScreenMessages = new std::map<std::string, ScreenMessage>;
 
 	if (m_pScreenMessages->find(sName) == m_pScreenMessages->end())
 		(*m_pScreenMessages)[sName] = (ScreenMessage)sName;
