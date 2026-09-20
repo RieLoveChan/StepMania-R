@@ -168,7 +168,7 @@ void SMSetAttacks(SMSongTagInfo &info) {
 	info.loader->ProcessAttacks(info.song->m_Attacks, (*info.params));
 }
 
-typedef std::map<RString, song_tag_func_t> song_handler_map_t;
+typedef std::map<std::string, song_tag_func_t> song_handler_map_t;
 
 struct sm_parser_helper_t {
 	song_handler_map_t song_tag_handlers;
