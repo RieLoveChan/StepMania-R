@@ -94,9 +94,9 @@ bool verify_arg_count(RString cmd, std::vector<RString> &args, std::size_t req) 
 
 typedef void (*arg_converter_t)(std::vector<RString> &args);
 
-std::map<RString, arg_converter_t> arg_converters;
-std::map<RString, std::size_t> tween_counters;
-std::set<RString> fields_that_are_strings;
+std::map<std::string, arg_converter_t> arg_converters;
+std::map<std::string, std::size_t> tween_counters;
+std::set<std::string> fields_that_are_strings;
 std::map<std::string, std::string> chunks_to_replace;
 
 #define COMMON_ARG_VERIFY(count)                                                                                       \
@@ -298,11 +298,11 @@ void actor_template_t::store_cmd(RString const &cmd_name, RString const &full_cm
 				}
 				*arg = arg->substr(first_nonspace, last_nonspace - first_nonspace);
 			}
-			std::map<RString, arg_converter_t>::iterator conv = arg_converters.find(args[0]);
+			std::map<std::string, arg_converter_t>::iterator conv = arg_converters.find(args[0]);
 			if (conv != arg_converters.end()) {
 				conv->second(args);
 			}
-			std::map<RString, std::size_t>::iterator counter = tween_counters.find(args[0]);
+			std::map<std::string, std::size_t>::iterator counter = tween_counters.find(args[0]);
 			if (counter != tween_counters.end()) {
 				queue_size += counter->second;
 			}
@@ -323,7 +323,7 @@ void actor_template_t::store_cmd(RString const &cmd_name, RString const &full_cm
 			std::vector<RString> args;
 			split(*cmd, ",", args, true);
 			if (!args.empty()) {
-				std::map<RString, std::size_t>::iterator counter = tween_counters.find(args[0]);
+				std::map<std::string, std::size_t>::iterator counter = tween_counters.find(args[0]);
 				if (counter != tween_counters.end()) {
 					states_in_curr += counter->second;
 					if (states_in_curr >= states_per - 1) {
@@ -606,7 +606,7 @@ void actor_template_t::output_to_file(RageFile *file, RString const &indent) {
 		file->Write(indent + "},\n");
 	}
 	for (field_cont_t::iterator field = fields.begin(); field != fields.end(); ++field) {
-		std::set<RString>::iterator is_string = fields_that_are_strings.find(RString(field->first));
+		std::set<std::string>::iterator is_string = fields_that_are_strings.find(RString(field->first));
 		if (is_string != fields_that_are_strings.end()) {
 			file->Write(subindent + RString(field->first) + "= \"" + RString(field->second) + "\",\n");
 		}
