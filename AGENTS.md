@@ -91,6 +91,15 @@ against upstream. It is about keeping the repo legible.
   subtrees — put subsystem knowledge in `DocsAgents/subsystems/`.
 - **Prefer separate commits for code vs knowledge-base changes** — good
   hygiene and keeps history readable, but no longer mandatory.
+- **Never put a bare `#` followed by digits in a commit title** (the first
+  line of the message). GitHub auto-links `#NNN` to an issue/PR with that
+  number in *this* repo — no `owner/repo` prefix needed to trigger it — so
+  a sequence label like "pilot #177" unintentionally tags whatever
+  issue/PR happens to be numbered 177 here. Use a form with no `#`+digit
+  adjacency instead, e.g. "pilot 177" or "pilot no. 177". This applies to
+  every repo, not just this one, and to referencing the original
+  `stepmania/stepmania` repo's issues/PRs in any form, anywhere in a
+  commit/PR — not just its title.
 - When you change code under `src/<area>/`, check whether the matching
   `DocsAgents/subsystems/*.md` concept needs an update (see §7.1).
 - **Diff size still matters — for review, not for merges.** A large
