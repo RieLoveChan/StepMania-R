@@ -17,7 +17,7 @@ XToLocalizedString(InputDeviceState);
 LuaXType(InputDevice);
 
 static std::map<DeviceButton, RString> g_mapNamesToString;
-static std::map<RString, DeviceButton> g_mapStringToNames;
+static std::map<std::string, DeviceButton> g_mapStringToNames;
 static void InitNames() {
 	if (!g_mapNamesToString.empty())
 		return;
@@ -185,7 +185,7 @@ DeviceButton StringToDeviceButton(const RString &s) {
 	if (sscanf(s, "Mouse %i", &i) == 1)
 		return enum_add2(MOUSE_LEFT, i);
 
-	std::map<RString, DeviceButton>::const_iterator it = g_mapStringToNames.find(s);
+	std::map<std::string, DeviceButton>::const_iterator it = g_mapStringToNames.find(s);
 	if (it != g_mapStringToNames.end())
 		return it->second;
 
