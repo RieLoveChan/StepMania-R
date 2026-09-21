@@ -273,7 +273,7 @@ class SongManager {
 		std::string m_sBannerPath;
 		// RString m_sBackgroundPath;
 	};
-	std::map<RString, CourseGroupInfo> m_mapCourseGroupToInfo;
+	std::map<std::string, CourseGroupInfo> m_mapCourseGroupToInfo;
 	typedef std::vector<Course *> CoursePointerVector;
 	std::vector<CoursePointerVector> m_vPreferredCourseSort;
 

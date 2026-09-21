@@ -669,7 +669,7 @@ RageColor SongManager::GetSongColor(const Song *pSong) const {
 }
 
 RString SongManager::GetCourseGroupBannerPath(const RString &sCourseGroup) const {
-	std::map<RString, CourseGroupInfo>::const_iterator iter = m_mapCourseGroupToInfo.find(sCourseGroup);
+	std::map<std::string, CourseGroupInfo>::const_iterator iter = m_mapCourseGroupToInfo.find(sCourseGroup);
 	if (iter == m_mapCourseGroupToInfo.end()) {
 		ASSERT_M(0, ssprintf("requested banner for course group '%s' that doesn't exist", sCourseGroup.c_str()));
 		return RString();
@@ -680,7 +680,7 @@ RString SongManager::GetCourseGroupBannerPath(const RString &sCourseGroup) const
 }
 
 void SongManager::GetCourseGroupNames(std::vector<RString> &AddTo) const {
-	for (std::pair<RString const, CourseGroupInfo> const &iter : m_mapCourseGroupToInfo)
+	for (std::pair<std::string const, CourseGroupInfo> const &iter : m_mapCourseGroupToInfo)
 		AddTo.push_back(iter.first);
 }
 
@@ -690,7 +690,7 @@ bool SongManager::DoesCourseGroupExist(const RString &sCourseGroup) const {
 
 RageColor SongManager::GetCourseGroupColor(const RString &sCourseGroup) const {
 	int iIndex = 0;
-	for (std::pair<RString const, CourseGroupInfo> const &iter : m_mapCourseGroupToInfo) {
+	for (std::pair<std::string const, CourseGroupInfo> const &iter : m_mapCourseGroupToInfo) {
 		if (iter.first == sCourseGroup)
 			return SONG_GROUP_COLOR.GetValue(iIndex % NUM_SONG_GROUP_COLORS);
 		iIndex++;
