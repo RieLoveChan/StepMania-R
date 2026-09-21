@@ -1144,7 +1144,7 @@ void ProfileManager::GetLocalProfileIDs(std::vector<RString> &vsProfileIDsOut) c
 	}
 }
 
-void ProfileManager::GetLocalProfileDisplayNames(std::vector<RString> &vsProfileDisplayNamesOut) const {
+void ProfileManager::GetLocalProfileDisplayNames(std::vector<std::string> &vsProfileDisplayNamesOut) const {
 	vsProfileDisplayNamesOut.clear();
 	for (DirAndProfile const &i : g_vLocalProfile)
 		vsProfileDisplayNamesOut.push_back(i.profile.m_sDisplayName);
@@ -1308,9 +1308,9 @@ class LunaProfileManager : public Luna<ProfileManager> {
 		return 1;
 	}
 	static int GetLocalProfileDisplayNames(T *p, lua_State *L) {
-		std::vector<RString> vsProfileNames;
+		std::vector<std::string> vsProfileNames;
 		p->GetLocalProfileDisplayNames(vsProfileNames);
-		LuaHelpers::CreateTableFromArray<RString>(vsProfileNames, L);
+		LuaHelpers::CreateTableFromArray<std::string>(vsProfileNames, L);
 		return 1;
 	}
 

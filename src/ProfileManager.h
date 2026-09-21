@@ -47,7 +47,7 @@ class ProfileManager {
 	bool RenameLocalProfile(RString sProfileID, RString sNewName);
 	bool DeleteLocalProfile(RString sProfileID);
 	void GetLocalProfileIDs(std::vector<RString> &vsProfileIDsOut) const;
-	void GetLocalProfileDisplayNames(std::vector<RString> &vsProfileDisplayNamesOut) const;
+	void GetLocalProfileDisplayNames(std::vector<std::string> &vsProfileDisplayNamesOut) const;
 	int GetLocalProfileIndexFromID(RString sProfileID) const;
 	int GetNumLocalProfiles() const;
 

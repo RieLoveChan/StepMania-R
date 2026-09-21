@@ -81,7 +81,7 @@ static bool ValidateLocalProfileName(const RString &sAnswer, RString &sErrorOut)
 	if (pProfile != nullptr && sAnswer == pProfile->m_sDisplayName)
 		return true; // unchanged
 
-	std::vector<RString> vsProfileNames;
+	std::vector<std::string> vsProfileNames;
 	PROFILEMAN->GetLocalProfileDisplayNames(vsProfileNames);
 	bool bAlreadyAProfileWithThisName =
 	   find(vsProfileNames.begin(), vsProfileNames.end(), sAnswer) != vsProfileNames.end();
@@ -366,7 +366,7 @@ void ScreenOptionsManageProfiles::ProcessMenuStart(const InputEventPlus &) {
 
 	if (SHOW_CREATE_NEW && iCurRow == 0) // "create new"
 	{
-		std::vector<RString> vsUsedNames;
+		std::vector<std::string> vsUsedNames;
 		PROFILEMAN->GetLocalProfileDisplayNames(vsUsedNames);
 
 		RString sPotentialName;
