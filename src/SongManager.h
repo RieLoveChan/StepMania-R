@@ -264,7 +264,7 @@ class SongManager {
 		}
 	};
 	typedef std::vector<Song *> SongPointerVector;
-	std::map<RString, SongPointerVector, Comp> m_mapSongGroupIndex;
+	std::map<std::string, SongPointerVector, Comp> m_mapSongGroupIndex;
 
 	std::vector<Course *> m_pCourses;
 	std::vector<Course *> m_pPopularCourses[NUM_CourseType];

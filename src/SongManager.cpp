@@ -744,7 +744,7 @@ const std::vector<Song *> &SongManager::GetSongs(const RString &sGroupName) cons
 
 	if (sGroupName == GROUP_ALL)
 		return m_pSongs;
-	std::map<RString, SongPointerVector, Comp>::const_iterator iter = m_mapSongGroupIndex.find(sGroupName);
+	std::map<std::string, SongPointerVector, Comp>::const_iterator iter = m_mapSongGroupIndex.find(sGroupName);
 	if (iter != m_mapSongGroupIndex.end())
 		return iter->second;
 	FOREACH_EnabledPlayer(pn) {
