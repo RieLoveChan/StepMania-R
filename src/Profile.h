@@ -298,7 +298,7 @@ class Profile {
 	DateTime GetCourseLastPlayedDateTime(const Course *pCourse) const;
 	void IncrementCoursePlayCount(const Course *pCourse, const Trail *pTrail);
 
-	void GetAllUsedHighScoreNames(std::set<RString> &names);
+	void GetAllUsedHighScoreNames(std::set<std::string> &names);
 
 	void MergeScoresFromOtherProfile(Profile *other, bool skip_totals, RString const &from_dir, RString const &to_dir);
 

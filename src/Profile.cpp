@@ -701,7 +701,7 @@ void Profile::IncrementCoursePlayCount(const Course *pCourse, const Trail *pTrai
 	GetCourseHighScoreList(pCourse, pTrail).IncrementPlayCount(now);
 }
 
-void Profile::GetAllUsedHighScoreNames(std::set<RString> &names) {
+void Profile::GetAllUsedHighScoreNames(std::set<std::string> &names) {
 #define GET_NAMES_FROM_MAP(main_member, main_key_type, main_value_type, sub_member, sub_key_type, sub_value_type)      \
 	for (std::map<main_key_type, main_value_type>::iterator main_entry = (main_member).begin();                         \
 	     main_entry != (main_member).end();                                                                             \
@@ -2458,11 +2458,11 @@ class LunaProfile : public Luna<Profile> {
 	}
 
 	static int GetAllUsedHighScoreNames(T *p, lua_State *L) {
-		std::set<RString> names;
+		std::set<std::string> names;
 		p->GetAllUsedHighScoreNames(names);
 		lua_createtable(L, static_cast<int>(names.size()), 0);
 		int next_name_index = 1;
-		for (std::set<RString>::iterator name = names.begin(); name != names.end(); ++name) {
+		for (std::set<std::string>::iterator name = names.begin(); name != names.end(); ++name) {
 			lua_pushstring(L, name->c_str());
 			lua_rawseti(L, -2, next_name_index);
 			++next_name_index;
