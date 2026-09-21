@@ -191,7 +191,7 @@ static const char *TapNoteScoreNames[] = {
    "CheckpointHit",
 };
 struct tns_conversion_helper {
-	std::map<RString, TapNoteScore> conversion_map;
+	std::map<std::string, TapNoteScore> conversion_map;
 	tns_conversion_helper() {
 		FOREACH_ENUM(TapNoteScore, tns) {
 			conversion_map[TapNoteScoreNames[tns]] = tns;
@@ -208,7 +208,7 @@ tns_conversion_helper tns_converter;
 XToString(TapNoteScore);
 LuaXType(TapNoteScore);
 TapNoteScore StringToTapNoteScore(const RString &s) {
-	std::map<RString, TapNoteScore>::iterator tns = tns_converter.conversion_map.find(s);
+	std::map<std::string, TapNoteScore>::iterator tns = tns_converter.conversion_map.find(s);
 	if (tns != tns_converter.conversion_map.end()) {
 		return tns->second;
 	}
