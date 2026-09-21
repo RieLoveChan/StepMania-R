@@ -213,7 +213,7 @@ void ScreenSelectCharacter::AfterValueChange(PlayerNumber pn) {
 		CHARMAN->GetCharacters(apCharacters);
 		Character *pChar = apCharacters[m_iSelectedCharacter[pnAffected]];
 		m_sprCard[pnAffected].UnloadTexture();
-		m_sprCard[pnAffected].Load(pChar->GetCardPath());
+		m_sprCard[pnAffected].Load(RString(pChar->GetCardPath()));
 
 		if (GAMESTATE->m_PlayMode == PLAY_MODE_BATTLE || GAMESTATE->m_PlayMode == PLAY_MODE_RAVE)
 			for (int i = 0; i < NUM_ATTACK_LEVELS; i++)

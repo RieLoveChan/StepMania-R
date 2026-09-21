@@ -141,7 +141,7 @@ void Banner::LoadCardFromCharacter(const Character *pCharacter) {
 	if (pCharacter == nullptr)
 		LoadFallback();
 	else if (!pCharacter->GetCardPath().empty())
-		Load(pCharacter->GetCardPath());
+		Load(RString(pCharacter->GetCardPath()));
 	else
 		LoadFallback();
 

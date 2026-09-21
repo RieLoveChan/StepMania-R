@@ -17,7 +17,7 @@ class Character {
 	bool Load(RString sCharDir); // return true if successful
 
 	RString GetTakingABreakPath() const;
-	RString GetCardPath() const {
+	std::string GetCardPath() const {
 		return m_sCardPath;
 	}
 	RString GetIconPath() const {

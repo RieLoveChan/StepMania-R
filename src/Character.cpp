@@ -206,7 +206,7 @@ void Character::UndemandGraphics() {
 class LunaCharacter : public Luna<Character> {
  public:
 	static int GetCardPath(T *p, lua_State *L) {
-		lua_pushstring(L, p->GetCardPath());
+		lua_pushstring(L, p->GetCardPath().c_str());
 		return 1;
 	}
 	static int GetIconPath(T *p, lua_State *L) {
