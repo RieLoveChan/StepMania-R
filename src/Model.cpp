@@ -732,7 +732,7 @@ class LunaModel : public Luna<Model> {
 		COMMON_RETURN_SELF;
 	}
 	static int GetDefaultAnimation(T *p, lua_State *L) {
-		lua_pushstring(L, p->GetDefaultAnimation());
+		lua_pushstring(L, p->GetDefaultAnimation().c_str());
 		return 1;
 	}
 	static int loop(T *p, lua_State *L) {

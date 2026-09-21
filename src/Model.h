@@ -54,7 +54,7 @@ class Model : public Actor {
 	virtual void RecalcAnimationLengthSeconds();
 	virtual void SetSecondsIntoAnimation(float fSeconds) override;
 
-	RString GetDefaultAnimation() const {
+	std::string GetDefaultAnimation() const {
 		return m_sDefaultAnimation;
 	};
 	void SetDefaultAnimation(RString sAnimation, float fPlayRate = 1);
