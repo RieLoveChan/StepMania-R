@@ -542,11 +542,11 @@ XNode *LuaHelpers::GetLuaInformation() {
 	XNode *pConstantsNode = pLuaNode->AppendChild("Constants");
 
 	std::vector<RString> vFunctions;
-	std::map<RString, LClass> mClasses;
+	std::map<std::string, LClass> mClasses;
 	std::map<std::string, std::vector<std::string>> mNamespaces;
 	std::map<std::string, std::string> mSingletons;
-	std::map<RString, float> mConstants;
-	std::map<RString, RString> mStringConstants;
+	std::map<std::string, float> mConstants;
+	std::map<std::string, RString> mStringConstants;
 	std::map<RString, std::vector<RString>> mEnums;
 
 	Lua *L = LUA->Get();
