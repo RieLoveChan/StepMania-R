@@ -93,7 +93,7 @@ std::vector<std::string> g_SoundsToPlayOnceFromAnnouncer;
 std::map<std::string, std::vector<int>> g_DirSoundOrder;
 
 struct MusicToPlay {
-	RString m_sFile, m_sTimingFile;
+	std::string m_sFile, m_sTimingFile;
 	bool HasTiming;
 	TimingData m_TimingData;
 	NoteData m_LightsData;
@@ -109,7 +109,7 @@ static GameSoundManager::PlayMusicParams g_FallbackMusicParams;
 
 static void StartMusic(MusicToPlay &ToPlay) {
 	LockMutex L(*g_Mutex);
-	if (g_Playing->m_Music->IsPlaying() && g_Playing->m_Music->GetLoadedFilePath().EqualsNoCase(ToPlay.m_sFile))
+	if (g_Playing->m_Music->IsPlaying() && g_Playing->m_Music->GetLoadedFilePath().EqualsNoCase(ToPlay.m_sFile.c_str()))
 		return;
 
 	/* We're changing or stopping the music.  If we were dimming, reset. */
