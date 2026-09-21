@@ -308,7 +308,7 @@ struct bmsCommandTree {
 	   -az
 	*/
 
-	void appendNodeElements(bmsNodeS *node, BMSHeaders &headersOut, std::vector<RString> &linesOut) {
+	void appendNodeElements(bmsNodeS *node, BMSHeaders &headersOut, std::vector<std::string> &linesOut) {
 		for (BMSHeaders::iterator i = node->Commands.begin(); i != node->Commands.end(); ++i) {
 			headersOut[i->first] = i->second;
 		}
@@ -318,7 +318,7 @@ struct bmsCommandTree {
 		}
 	}
 
-	bool triggerBranches(bmsNodeS *node, BMSHeaders &headersOut, std::vector<RString> &linesOut) {
+	bool triggerBranches(bmsNodeS *node, BMSHeaders &headersOut, std::vector<std::string> &linesOut) {
 		for (bmsNodeS *b : node->branches)
 			if (evaluateNode(b, headersOut, linesOut)) {
 				return true;
@@ -327,7 +327,7 @@ struct bmsCommandTree {
 		return false;
 	}
 
-	bool evaluateNode(bmsNodeS *node, BMSHeaders &headersOut, std::vector<RString> &linesOut) {
+	bool evaluateNode(bmsNodeS *node, BMSHeaders &headersOut, std::vector<std::string> &linesOut) {
 		switch (node->conditionType) {
 		case bmsNodeS::CT_CONDITIONALCHAIN:
 			triggerBranches(node, headersOut, linesOut);
@@ -356,7 +356,7 @@ struct bmsCommandTree {
 		return false;
 	}
 
-	void evaluateBMSTree(BMSHeaders &headersOut, std::vector<RString> &linesOut) {
+	void evaluateBMSTree(BMSHeaders &headersOut, std::vector<std::string> &linesOut) {
 		evaluateNode(&root, headersOut, linesOut);
 	}
 
@@ -486,10 +486,10 @@ bool BMSChart::Load(const RString &chartPath) {
 		Tree.doStatement(line, referencedTracks);
 	}
 
-	std::vector<RString> lines;
+	std::vector<std::string> lines;
 	Tree.evaluateBMSTree(headers, lines);
 
-	for (const RString &line : lines) {
+	for (const std::string &line : lines) {
 		RString data = line.substr(7);
 		int measure = atoi(line.substr(1, 3).c_str());
 		int channel = atoi(line.substr(4, 2).c_str());
