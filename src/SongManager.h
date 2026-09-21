@@ -152,7 +152,7 @@ class SongManager {
 		return m_mapPreferredSectionToSongs;
 	};
 	RString SongToPreferredSortSectionName(const Song *pSong) const;
-	std::vector<RString> GetPreferredSortSectionNames() const;
+	std::vector<std::string> GetPreferredSortSectionNames() const;
 	std::vector<Song *> GetPreferredSortSongsBySectionName(const RString &sSectionName) const;
 	void GetPreferredSortSongsBySectionName(const RString &sSectionName, std::vector<Song *> &AddTo) const;
 	std::vector<Song *> GetSongsByMeter(int iMeter) const;
