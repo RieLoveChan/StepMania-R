@@ -429,7 +429,7 @@ struct CompleteCrashData {
 	std::string m_sInfo;
 	std::string m_sAdditionalLog;
 	std::string m_sCrashedThread;
-	std::vector<RString> m_asRecent;
+	std::vector<std::string> m_asRecent;
 	std::vector<RString> m_asCheckpoints;
 };
 
