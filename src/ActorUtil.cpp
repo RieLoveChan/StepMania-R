@@ -521,7 +521,7 @@ std::vector<RString> const &ActorUtil::GetTypeExtensionList(FileType ft) {
 	return FileTypeToExtensionList[ft];
 }
 
-void ActorUtil::AddTypeExtensionsToList(FileType ft, std::vector<RString> &add_to) {
+void ActorUtil::AddTypeExtensionsToList(FileType ft, std::vector<std::string> &add_to) {
 	fttel_cont_t::iterator ext_list = FileTypeToExtensionList.find(ft);
 	if (ext_list != FileTypeToExtensionList.end()) {
 		add_to.reserve(add_to.size() + ext_list->second.size());

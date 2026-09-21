@@ -633,7 +633,7 @@ bool BMSSong::GetBackground(RString filename, RString path, RString &bgfile) {
 	}
 
 	if (!IsAFile(dir + normalizedFilename)) {
-		std::vector<RString> exts;
+		std::vector<std::string> exts;
 		ActorUtil::AddTypeExtensionsToList(FT_Movie, exts);
 		ActorUtil::AddTypeExtensionsToList(FT_Bitmap, exts);
 		for (std::size_t i = 0; i < exts.size(); ++i) {
@@ -662,10 +662,12 @@ void BMSSong::PrecacheBackgrounds(const RString &dir) {
 	backgroundsPrecached = true;
 	std::vector<RString> arrayPossibleFiles;
 
-	std::vector<RString> exts;
+	std::vector<std::string> exts;
 	ActorUtil::AddTypeExtensionsToList(FT_Movie, exts);
 	ActorUtil::AddTypeExtensionsToList(FT_Bitmap, exts);
-	FILEMAN->GetDirListingWithMultipleExtensions(dir + RString("*."), exts, arrayPossibleFiles);
+	FILEMAN->GetDirListingWithMultipleExtensions(
+	   dir + RString("*."), std::vector<RString>(exts.begin(), exts.end()), arrayPossibleFiles
+	);
 
 	for (unsigned i = 0; i < arrayPossibleFiles.size(); i++) {
 		for (unsigned j = 0; j < exts.size(); j++) {
