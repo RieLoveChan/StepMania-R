@@ -90,7 +90,7 @@ std::vector<std::string> g_SoundsToPlayOnce;
 std::vector<std::string> g_SoundsToPlayOnceFromDir;
 std::vector<std::string> g_SoundsToPlayOnceFromAnnouncer;
 // This should get updated to unordered_map when once C++11 is supported
-std::map<RString, std::vector<int>> g_DirSoundOrder;
+std::map<std::string, std::vector<int>> g_DirSoundOrder;
 
 struct MusicToPlay {
 	RString m_sFile, m_sTimingFile;
