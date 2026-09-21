@@ -376,7 +376,7 @@ void Font::SetDefaultGlyph(FontPage *pPage) {
 }
 
 // Given the INI for a font, find all of the texture pages for the font.
-void Font::GetFontPaths(const RString &sFontIniPath, std::vector<RString> &asTexturePathsOut) {
+void Font::GetFontPaths(const RString &sFontIniPath, std::vector<std::string> &asTexturePathsOut) {
 	RString sPrefix = SetExtension(sFontIniPath, "");
 	std::vector<RString> asFiles;
 	GetDirListing(sPrefix + "*", asFiles, false, true);
@@ -722,7 +722,7 @@ void Font::Load(const RString &sIniPath, RString sChars) {
 	m_sChars = sChars;
 
 	// Get the filenames associated with this font.
-	std::vector<RString> asTexturePaths;
+	std::vector<std::string> asTexturePaths;
 	GetFontPaths(sIniPath, asTexturePaths);
 
 	bool bCapitalsOnly = false;
@@ -779,7 +779,7 @@ void Font::Load(const RString &sIniPath, RString sChars) {
 
 	// Load each font page.
 	for (unsigned i = 0; i < asTexturePaths.size(); ++i) {
-		const RString &sTexturePath = asTexturePaths[i];
+		const std::string &sTexturePath = asTexturePaths[i];
 
 		// Grab the page name, eg "foo" from "Normal [foo].png".
 		RString sPagename = GetPageNameFromFileName(sTexturePath);
