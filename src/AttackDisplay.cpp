@@ -36,7 +36,7 @@ void AttackDisplay::Init(const PlayerState *pPlayerState) {
 	if (GAMESTATE->m_PlayMode != PLAY_MODE_BATTLE && GAMESTATE->m_PlayMode != PLAY_MODE_RAVE)
 		return;
 
-	std::set<RString> attacks;
+	std::set<std::string> attacks;
 	for (int al = 0; al < NUM_ATTACK_LEVELS; al++) {
 		const Character *ch = GAMESTATE->m_pCurCharacters[pn];
 		ASSERT(ch != nullptr);
@@ -45,7 +45,7 @@ void AttackDisplay::Init(const PlayerState *pPlayerState) {
 			attacks.insert(asAttacks[att]);
 	}
 
-	for (std::set<RString>::const_iterator it = attacks.begin(); it != attacks.end(); ++it) {
+	for (std::set<std::string>::const_iterator it = attacks.begin(); it != attacks.end(); ++it) {
 		const RString path = THEME->GetPathG("AttackDisplay", GetAttackPieceName(*it), true);
 		if (path.empty()) {
 			LOG_TRACE(Log::Actor, "Couldn't find \"%s\"", GetAttackPieceName(*it).c_str());
