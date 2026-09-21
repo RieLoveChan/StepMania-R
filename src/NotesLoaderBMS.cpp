@@ -527,7 +527,7 @@ void BMSChart::TidyUpData() {
 
 class BMSSong {
 
-	std::map<RString, int> mapKeysoundToIndex;
+	std::map<std::string, int> mapKeysoundToIndex;
 	Song *out;
 
 	bool backgroundsPrecached;
@@ -714,7 +714,7 @@ class BMSChartReader {
 
 	int GetKeysound(const BMSObject &obj);
 
-	std::map<RString, int> mapValueToKeysoundIndex;
+	std::map<std::string, int> mapValueToKeysoundIndex;
 
  public:
 	BMSChartReader(BMSChart *chart, Steps *steps, BMSSong *song);
@@ -946,7 +946,7 @@ StepsType BMSChartReader::DetermineStepsType() {
 }
 
 int BMSChartReader::GetKeysound(const BMSObject &obj) {
-	std::map<RString, int>::iterator it = mapValueToKeysoundIndex.find(obj.value);
+	std::map<std::string, int>::iterator it = mapValueToKeysoundIndex.find(obj.value);
 	if (it == mapValueToKeysoundIndex.end()) {
 		int index = -1;
 		BMSHeaders::iterator iu = in->headers.find("#wav" + obj.value);
