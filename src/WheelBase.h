@@ -81,7 +81,7 @@ class WheelBase : public ActorFrame {
 			return nullptr;
 		return m_WheelBaseItems[i];
 	}
-	RString GetExpandedSectionName() {
+	std::string GetExpandedSectionName() {
 		return m_sExpandedSectionName;
 	}
 	int GetCurrentIndex() {
