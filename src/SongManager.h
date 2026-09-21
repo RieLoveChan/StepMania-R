@@ -254,7 +254,7 @@ class SongManager {
 	std::map<RString, std::vector<Song *>> m_mapPreferredSectionToSongs;
 	std::vector<PreferredSortSection> m_vPreferredSongSort;
 	std::vector<std::string> m_sSongGroupNames;
-	std::vector<RString> m_sSongGroupBannerPaths; // each song group may have a banner associated with it
+	std::vector<std::string> m_sSongGroupBannerPaths; // each song group may have a banner associated with it
 	// vector<RString>		m_sSongGroupBackgroundPaths; // each song group may have a background associated with it
 	// (very rarely)
 
