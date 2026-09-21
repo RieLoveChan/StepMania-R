@@ -12,11 +12,11 @@ void RegisterTypes(lua_State *L) {
 		return;
 
 	/* Register base classes first. */
-	std::map<RString, LuaBinding *> mapToRegister;
+	std::map<std::string, LuaBinding *> mapToRegister;
 	for (LuaBinding *binding : *m_Subscribers.m_pSubscribers)
 		mapToRegister[binding->GetClassName()] = binding;
 
-	std::set<RString> setRegisteredAlready;
+	std::set<std::string> setRegisteredAlready;
 
 	while (!mapToRegister.empty()) {
 		/* Look at the first class.  If it has a base class that needs to be registered,
@@ -27,7 +27,7 @@ void RegisterTypes(lua_State *L) {
 				break;
 			}
 			RString sBase = pBinding->GetBaseClassName();
-			std::map<RString, LuaBinding *>::const_iterator it = mapToRegister.find(sBase);
+			std::map<std::string, LuaBinding *>::const_iterator it = mapToRegister.find(sBase);
 			if (it != mapToRegister.end()) {
 				pBinding = it->second;
 				continue;
