@@ -63,7 +63,7 @@ class ThemeManager {
 	void ReloadMetrics();
 	void ReloadSubscribers();
 	void ClearSubscribers();
-	void GetOptionNames(std::vector<RString> &AddTo);
+	void GetOptionNames(std::vector<std::string> &AddTo);
 
 	static void EvaluateString(RString &sText);
 

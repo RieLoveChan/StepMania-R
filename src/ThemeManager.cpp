@@ -1133,7 +1133,7 @@ void ThemeManager::GetOptionalLanguageIniPaths(
 	);
 }
 
-void ThemeManager::GetOptionNames(std::vector<RString> &AddTo) {
+void ThemeManager::GetOptionNames(std::vector<std::string> &AddTo) {
 	const XNode *cur = g_pLoadedThemeData->iniStrings.GetChild("OptionNames");
 	if (cur) {
 		FOREACH_CONST_Attr(cur, p) AddTo.push_back(p->first);
