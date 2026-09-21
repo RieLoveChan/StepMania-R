@@ -1382,7 +1382,7 @@ Song *SongManager::GetSongFromDir(RString dir) const {
 
 	dir.Replace('\\', '/');
 	dir.MakeLower();
-	std::map<RString, Song *>::const_iterator entry = m_SongsByDir.find(dir);
+	std::map<std::string, Song *>::const_iterator entry = m_SongsByDir.find(dir);
 	if (entry != m_SongsByDir.end()) {
 		return entry->second;
 	}
