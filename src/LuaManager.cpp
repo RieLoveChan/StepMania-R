@@ -543,7 +543,7 @@ XNode *LuaHelpers::GetLuaInformation() {
 
 	std::vector<RString> vFunctions;
 	std::map<RString, LClass> mClasses;
-	std::map<RString, std::vector<RString>> mNamespaces;
+	std::map<std::string, std::vector<std::string>> mNamespaces;
 	std::map<std::string, std::string> mSingletons;
 	std::map<RString, float> mConstants;
 	std::map<RString, RString> mStringConstants;
@@ -634,7 +634,7 @@ XNode *LuaHelpers::GetLuaInformation() {
 		LuaHelpers::Pop(L, sNamespace);
 		if (find(BuiltInPackages, end, sNamespace) != end)
 			continue;
-		std::vector<RString> &vNamespaceFunctions = mNamespaces[sNamespace];
+		std::vector<std::string> &vNamespaceFunctions = mNamespaces[sNamespace];
 		FOREACH_LUATABLE(L, -1) {
 			RString sFunction;
 			LuaHelpers::Pop(L, sFunction);
@@ -676,13 +676,13 @@ XNode *LuaHelpers::GetLuaInformation() {
 	}
 
 	/* Namespaces */
-	for (std::map<RString, std::vector<RString>>::const_iterator iter = mNamespaces.begin(); iter != mNamespaces.end();
-	     ++iter) {
+	for (std::map<std::string, std::vector<std::string>>::const_iterator iter = mNamespaces.begin();
+	     iter != mNamespaces.end(); ++iter) {
 		XNode *pNamespaceNode = pNamespacesNode->AppendChild("Namespace");
-		const std::vector<RString> &vNamespace = iter->second;
+		const std::vector<std::string> &vNamespace = iter->second;
 		pNamespaceNode->AppendAttr("name", iter->first);
 
-		for (RString const &func : vNamespace) {
+		for (std::string const &func : vNamespace) {
 			XNode *pFunctionNode = pNamespaceNode->AppendChild("Function");
 			pFunctionNode->AppendAttr("name", func);
 		}
