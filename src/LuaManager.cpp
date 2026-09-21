@@ -547,7 +547,7 @@ XNode *LuaHelpers::GetLuaInformation() {
 	std::map<std::string, std::string> mSingletons;
 	std::map<std::string, float> mConstants;
 	std::map<std::string, RString> mStringConstants;
-	std::map<RString, std::vector<RString>> mEnums;
+	std::map<std::string, std::vector<RString>> mEnums;
 
 	Lua *L = LUA->Get();
 	FOREACH_LUATABLE(L, LUA_GLOBALSINDEX) {
@@ -689,7 +689,7 @@ XNode *LuaHelpers::GetLuaInformation() {
 	}
 
 	/* Enums */
-	for (std::map<RString, std::vector<RString>>::const_iterator iter = mEnums.begin(); iter != mEnums.end(); ++iter) {
+	for (std::map<std::string, std::vector<RString>>::const_iterator iter = mEnums.begin(); iter != mEnums.end(); ++iter) {
 		XNode *pEnumNode = pEnumsNode->AppendChild("Enum");
 
 		const std::vector<RString> &vEnum = iter->second;
