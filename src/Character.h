@@ -20,7 +20,7 @@ class Character {
 	std::string GetCardPath() const {
 		return m_sCardPath;
 	}
-	RString GetIconPath() const {
+	std::string GetIconPath() const {
 		return m_sIconPath;
 	}
 
