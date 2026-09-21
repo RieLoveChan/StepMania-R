@@ -670,7 +670,7 @@ void MusicWheel::BuildWheelItemDatas(std::vector<MusicWheelItemData *> &arrayWhe
 			// If the sort order is Preferred handle it differently because we already know the sections
 			if (bUseSections) {
 				// Get mappping of section names to songs
-				std::map<RString, std::vector<Song *>> preferredSortSongsMap = SONGMAN->GetPreferredSortSongsMap();
+				std::map<std::string, std::vector<Song *>> preferredSortSongsMap = SONGMAN->GetPreferredSortSongsMap();
 				for (auto const &[sectionName, songs] : SONGMAN->GetPreferredSortSongsMap()) {
 					// todo: preferred sort section color handling? -aj
 					RageColor colorSection = SECTION_COLORS.GetValue(iSectionColorIndex);
