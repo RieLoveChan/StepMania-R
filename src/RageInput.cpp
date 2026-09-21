@@ -168,7 +168,7 @@ class LunaRageInput : public Luna<RageInput> {
 	static int GetDescriptions(T *p, lua_State *L) {
 		std::vector<InputDeviceInfo> vDevices;
 		p->GetDevicesAndDescriptions(vDevices);
-		std::vector<RString> vsDescriptions;
+		std::vector<std::string> vsDescriptions;
 		for (InputDeviceInfo const &idi : vDevices)
 			vsDescriptions.push_back(idi.sDesc);
 		LuaHelpers::CreateTableFromArray(vsDescriptions, L);
