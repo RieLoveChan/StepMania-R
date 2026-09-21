@@ -221,7 +221,7 @@ void ScreenDebugOverlay::Init() {
 		g_Mappings.pageButton[DeviceInput(DEVICE_KEYBOARD, KEY_F8)] = 3;
 	}
 
-	std::map<RString, int> iNextDebugButton;
+	std::map<std::string, int> iNextDebugButton;
 	int iNextGameplayButton = 0;
 	for (IDebugLine *p : *g_pvpSubscribers) {
 		RString sPageName = p->GetPageName();
