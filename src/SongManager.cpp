@@ -780,7 +780,7 @@ RString SongManager::SongToPreferredSortSectionName(const Song *pSong) const {
 
 void SongManager::GetPreferredSortSongsBySectionName(const RString &sSectionName, std::vector<Song *> &AddTo) const {
 	// Use m_mapPreferredSectionToSongs
-	std::map<RString, SongPointerVector>::const_iterator iter = m_mapPreferredSectionToSongs.find(sSectionName);
+	std::map<std::string, SongPointerVector>::const_iterator iter = m_mapPreferredSectionToSongs.find(sSectionName);
 	if (iter != m_mapPreferredSectionToSongs.end())
 		AddTo.insert(AddTo.end(), iter->second.begin(), iter->second.end());
 }
@@ -794,7 +794,7 @@ std::vector<Song *> SongManager::GetPreferredSortSongsBySectionName(const RStrin
 std::vector<RString> SongManager::GetPreferredSortSectionNames() const {
 	std::vector<RString> sectionNames;
 	// Use m_mapPreferredSectionToSongs
-	for (std::pair<RString const, SongPointerVector> const &iter : m_mapPreferredSectionToSongs)
+	for (std::pair<std::string const, SongPointerVector> const &iter : m_mapPreferredSectionToSongs)
 		sectionNames.push_back(iter.first);
 	return sectionNames;
 }
