@@ -101,7 +101,7 @@ class SongManager {
 
 	RString GetCourseGroupBannerPath(const RString &sCourseGroup) const;
 	// RString GetCourseGroupBackgroundPath( const RString &sCourseGroup ) const;
-	void GetCourseGroupNames(std::vector<RString> &AddTo) const;
+	void GetCourseGroupNames(std::vector<std::string> &AddTo) const;
 	bool DoesCourseGroupExist(const RString &sCourseGroup) const;
 	RageColor GetCourseGroupColor(const RString &sCourseGroupName) const;
 	RageColor GetCourseColor(const Course *pCourse) const;

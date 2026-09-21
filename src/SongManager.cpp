@@ -679,7 +679,7 @@ RString SongManager::GetCourseGroupBannerPath(const RString &sCourseGroup) const
 	}
 }
 
-void SongManager::GetCourseGroupNames(std::vector<RString> &AddTo) const {
+void SongManager::GetCourseGroupNames(std::vector<std::string> &AddTo) const {
 	for (std::pair<std::string const, CourseGroupInfo> const &iter : m_mapCourseGroupToInfo)
 		AddTo.push_back(iter.first);
 }
@@ -2133,9 +2133,9 @@ class LunaSongManager : public Luna<SongManager> {
 	DEFINE_METHOD(ShortenGroupName, ShortenGroupName(SArg(1)))
 
 	static int GetCourseGroupNames(T *p, lua_State *L) {
-		std::vector<RString> v;
+		std::vector<std::string> v;
 		p->GetCourseGroupNames(v);
-		LuaHelpers::CreateTableFromArray<RString>(v, L);
+		LuaHelpers::CreateTableFromArray<std::string>(v, L);
 		return 1;
 	}
 
