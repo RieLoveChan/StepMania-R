@@ -51,7 +51,7 @@ class ProfileManager {
 	int GetLocalProfileIndexFromID(RString sProfileID) const;
 	int GetNumLocalProfiles() const;
 
-	RString GetStatsPrefix() {
+	std::string GetStatsPrefix() {
 		return m_stats_prefix;
 	}
 	void SetStatsPrefix(RString const &prefix);
