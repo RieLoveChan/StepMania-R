@@ -86,9 +86,9 @@ static MusicPlaying *g_Playing;
 
 static RageThread MusicThread;
 
-std::vector<RString> g_SoundsToPlayOnce;
-std::vector<RString> g_SoundsToPlayOnceFromDir;
-std::vector<RString> g_SoundsToPlayOnceFromAnnouncer;
+std::vector<std::string> g_SoundsToPlayOnce;
+std::vector<std::string> g_SoundsToPlayOnceFromDir;
+std::vector<std::string> g_SoundsToPlayOnceFromAnnouncer;
 // This should get updated to unordered_map when once C++11 is supported
 std::map<RString, std::vector<int>> g_DirSoundOrder;
 
@@ -322,11 +322,11 @@ static bool SoundWaiting() {
 
 static void StartQueuedSounds() {
 	g_Mutex->Lock();
-	std::vector<RString> aSoundsToPlayOnce = g_SoundsToPlayOnce;
+	std::vector<std::string> aSoundsToPlayOnce = g_SoundsToPlayOnce;
 	g_SoundsToPlayOnce.clear();
-	std::vector<RString> aSoundsToPlayOnceFromDir = g_SoundsToPlayOnceFromDir;
+	std::vector<std::string> aSoundsToPlayOnceFromDir = g_SoundsToPlayOnceFromDir;
 	g_SoundsToPlayOnceFromDir.clear();
-	std::vector<RString> aSoundsToPlayOnceFromAnnouncer = g_SoundsToPlayOnceFromAnnouncer;
+	std::vector<std::string> aSoundsToPlayOnceFromAnnouncer = g_SoundsToPlayOnceFromAnnouncer;
 	g_SoundsToPlayOnceFromAnnouncer.clear();
 	std::vector<MusicToPlay> aMusicsToPlay = g_MusicsToPlay;
 	g_MusicsToPlay.clear();
