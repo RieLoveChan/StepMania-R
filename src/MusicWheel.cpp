@@ -1472,7 +1472,7 @@ void MusicWheel::SetOpenSection(RString group) {
 	RebuildWheelItems();
 }
 
-void MusicWheel::GetCurrentSections(std::vector<RString> &sections) {
+void MusicWheel::GetCurrentSections(std::vector<std::string> &sections) {
 	std::vector<MusicWheelItemData *> &wiWheelItems = getWheelItemsData(GAMESTATE->m_SortOrder);
 	for (unsigned i = 0; i < wiWheelItems.size(); i++) {
 		if (wiWheelItems[i]->m_Type == WheelItemDataType_Section && !wiWheelItems[i]->m_sText.empty())
@@ -1675,9 +1675,9 @@ class LunaMusicWheel : public Luna<MusicWheel> {
 	}
 	DEFINE_METHOD(GetSelectedSection, GetSelectedSection());
 	static int GetCurrentSections(T *p, lua_State *L) {
-		std::vector<RString> v;
+		std::vector<std::string> v;
 		p->GetCurrentSections(v);
-		LuaHelpers::CreateTableFromArray<RString>(v, L);
+		LuaHelpers::CreateTableFromArray<std::string>(v, L);
 		return 1;
 	}
 	static int IsRouletting(T *p, lua_State *L) {
