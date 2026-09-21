@@ -36,7 +36,7 @@ XToLocalizedString(SongSort);
 StringToX(SongSort);
 
 struct OldStyleStringToSongSortMapHolder {
-	std::map<RString, SongSort> conversion_map;
+	std::map<std::string, SongSort> conversion_map;
 
 	OldStyleStringToSongSortMapHolder() {
 		conversion_map["best"] = SongSort_MostPlays;
@@ -51,7 +51,7 @@ OldStyleStringToSongSortMapHolder OldStyleStringToSongSortMapHolder_converter;
 SongSort OldStyleStringToSongSort(const RString &ss) {
 	RString s2 = ss;
 	s2.MakeLower();
-	std::map<RString, SongSort>::iterator diff = OldStyleStringToSongSortMapHolder_converter.conversion_map.find(s2);
+	std::map<std::string, SongSort>::iterator diff = OldStyleStringToSongSortMapHolder_converter.conversion_map.find(s2);
 	if (diff != OldStyleStringToSongSortMapHolder_converter.conversion_map.end()) {
 		return diff->second;
 	}
