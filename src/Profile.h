@@ -193,7 +193,7 @@ class Profile {
 	static RString MakeGuid();
 
 	RString m_sGuid;
-	std::map<RString, RString> m_sDefaultModifiers;
+	std::map<std::string, RString> m_sDefaultModifiers;
 	SortOrder m_SortOrder;
 	std::vector<Song *> m_songs;
 	Difficulty m_LastDifficulty;

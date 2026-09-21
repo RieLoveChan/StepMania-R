@@ -494,7 +494,7 @@ int Profile::GetSongNumTimesPlayed(const SongID &songID) const {
  * is played, and from the profile every time thereafter.
  */
 bool Profile::GetDefaultModifiers(const Game *pGameType, RString &sModifiersOut) const {
-	std::map<RString, RString>::const_iterator it;
+	std::map<std::string, RString>::const_iterator it;
 	it = m_sDefaultModifiers.find(pGameType->m_szName);
 	if (it == m_sDefaultModifiers.end())
 		return false;
@@ -1015,7 +1015,7 @@ void Profile::HandleStatsPrefixChange(RString dir, bool require_signature) {
 	ProfileType type = m_Type;
 	int priority = m_ListPriority;
 	RString guid = m_sGuid;
-	std::map<RString, RString> default_mods = m_sDefaultModifiers;
+	std::map<std::string, RString> default_mods = m_sDefaultModifiers;
 	SortOrder sort_order = m_SortOrder;
 	Difficulty last_diff = m_LastDifficulty;
 	CourseDifficulty last_course_diff = m_LastCourseDifficulty;
@@ -1461,7 +1461,7 @@ XNode *Profile::SaveGeneralDataCreateNode() const {
 
 	{
 		XNode *pDefaultModifiers = pGeneralDataNode->AppendChild("DefaultModifiers");
-		for (std::pair<RString const &, RString> it : m_sDefaultModifiers)
+		for (std::pair<std::string const &, RString> it : m_sDefaultModifiers)
 			pDefaultModifiers->AppendChild(it.first, it.second);
 	}
 
