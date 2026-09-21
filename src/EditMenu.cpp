@@ -73,14 +73,14 @@ void EditMenu::GetSongsToShowForGroup(const RString &sGroup, std::vector<Song *>
 	SongUtil::SortSongPointerArrayByTitle(vpSongsOut);
 }
 
-void EditMenu::GetGroupsToShow(std::vector<RString> &vsGroupsOut) {
+void EditMenu::GetGroupsToShow(std::vector<std::string> &vsGroupsOut) {
 	vsGroupsOut.clear();
 	if (!SHOW_GROUPS.GetValue())
 		return;
 
 	SONGMAN->GetSongGroupNames(vsGroupsOut);
 	for (int i = static_cast<int>(vsGroupsOut.size()) - 1; i >= 0; i--) {
-		const RString &sGroup = vsGroupsOut[i];
+		const std::string &sGroup = vsGroupsOut[i];
 		std::vector<Song *> vpSongs;
 		GetSongsToShowForGroup(sGroup, vpSongs);
 		// strip groups that have no unlocked songs

@@ -94,7 +94,7 @@ class SongManager {
 
 	RString GetSongGroupBannerPath(RString sSongGroup) const;
 	// RString GetSongGroupBackgroundPath( RString sSongGroup ) const;
-	void GetSongGroupNames(std::vector<RString> &AddTo) const;
+	void GetSongGroupNames(std::vector<std::string> &AddTo) const;
 	bool DoesSongGroupExist(RString sSongGroup) const;
 	RageColor GetSongGroupColor(const RString &sSongGroupName) const;
 	RageColor GetSongColor(const Song *pSong) const;

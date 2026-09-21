@@ -577,7 +577,7 @@ RString SongManager::GetSongGroupBackgroundPath( RString sSongGroup ) const
    return RString();
 }
 */
-void SongManager::GetSongGroupNames(std::vector<RString> &AddTo) const {
+void SongManager::GetSongGroupNames(std::vector<std::string> &AddTo) const {
 	AddTo.insert(AddTo.end(), m_sSongGroupNames.begin(), m_sSongGroupNames.end());
 }
 
@@ -939,7 +939,7 @@ void SongManager::InitCoursesFromDisk(LoadingWindow *ld, bool onlyAdditions) {
 
 void SongManager::InitAutogenCourses() {
 	// Create group courses for Endless and Nonstop
-	std::vector<RString> saGroupNames;
+	std::vector<std::string> saGroupNames;
 	this->GetSongGroupNames(saGroupNames);
 	Course *pCourse;
 	for (unsigned g = 0; g < saGroupNames.size(); g++) // foreach Group
@@ -2111,9 +2111,9 @@ class LunaSongManager : public Luna<SongManager> {
 	*/
 
 	static int GetSongGroupNames(T *p, lua_State *L) {
-		std::vector<RString> v;
+		std::vector<std::string> v;
 		p->GetSongGroupNames(v);
-		LuaHelpers::CreateTableFromArray<RString>(v, L);
+		LuaHelpers::CreateTableFromArray<std::string>(v, L);
 		return 1;
 	}
 

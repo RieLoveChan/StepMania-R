@@ -695,7 +695,7 @@ class OptionRowHandlerListGroups : public OptionRowHandlerList {
 		m_Def.m_sName = "Group";
 		m_Default.m_sSongGroup = GROUP_ALL;
 
-		std::vector<RString> vSongGroups;
+		std::vector<std::string> vSongGroups;
 		SONGMAN->GetSongGroupNames(vSongGroups);
 		ASSERT(!vSongGroups.empty());
 
@@ -706,7 +706,7 @@ class OptionRowHandlerListGroups : public OptionRowHandlerList {
 			m_aListEntries.push_back(mc);
 		}
 
-		for (RString const &g : vSongGroups) {
+		for (std::string const &g : vSongGroups) {
 			m_Def.m_vsChoices.push_back(g);
 			GameCommand mc;
 			mc.m_sSongGroup = g;

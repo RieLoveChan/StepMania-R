@@ -122,9 +122,9 @@ void ScreenOptionsExportPackageSubPage::BeginScreen() {
 	}
 	else if (*s_packageType == "Songs") {
 		// Add song groups
-		std::vector<RString> asAllGroups;
+		std::vector<std::string> asAllGroups;
 		SONGMAN->GetSongGroupNames(asAllGroups);
-		for (RString const &s : asAllGroups) {
+		for (std::string const &s : asAllGroups) {
 			m_vsPossibleDirsToExport.push_back(s);
 		}
 	}
