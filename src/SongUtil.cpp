@@ -980,13 +980,13 @@ bool SongUtil::ValidateCurrentStepsMusic(const RString &answer, RString &error) 
 	return valid;
 }
 
-void SongUtil::GetAllSongGenres(std::vector<RString> &vsOut) {
-	std::set<RString> genres;
+void SongUtil::GetAllSongGenres(std::vector<std::string> &vsOut) {
+	std::set<std::string> genres;
 	for (Song const *song : SONGMAN->GetAllSongs()) {
 		if (!song->m_sGenre.empty())
 			genres.insert(song->m_sGenre);
 	}
-	for (RString const &genre : genres) {
+	for (std::string const &genre : genres) {
 		vsOut.push_back(genre);
 	}
 }
