@@ -121,8 +121,9 @@ class ThemeManager {
 	}
 	void FilterFileLanguages(std::vector<RString> &asElementPaths);
 
-	void
-	GetMetricsThatBeginWith(const RString &sMetricsGroup, const RString &sValueName, std::set<RString> &vsValueNamesOut);
+	void GetMetricsThatBeginWith(
+	   const RString &sMetricsGroup, const RString &sValueName, std::set<std::string> &vsValueNamesOut
+	);
 
 	RString GetMetricsGroupFallback(const RString &sMetricsGroup);
 
