@@ -91,17 +91,24 @@ against upstream. It is about keeping the repo legible.
   subtrees — put subsystem knowledge in `DocsAgents/subsystems/`.
 - **Prefer separate commits for code vs knowledge-base changes** — good
   hygiene and keeps history readable, but no longer mandatory.
+- **Self-reference only: this repository (StepMania-R) is the only repo
+  that may ever be referenced, linked, or tagged, anywhere** — commit
+  messages, PR descriptions, ADRs, code comments, docs. Never reference
+  `stepmania/stepmania` (the original upstream) or any other external
+  repository, in any form. This is the general rule ADR 0002's
+  independence stance implies; the `#`-digit rule below is a mechanical
+  corollary of it for GitHub's autolinker, not a separate exception that
+  makes same-repo tagging okay.
 - **Never put a bare `#` followed by digits anywhere in a commit message —
   title *or* body.** GitHub auto-links `#NNN` to an issue/PR with that
   number in *this* repo — no `owner/repo` prefix needed to trigger it, and
   it fires on every line, not just the first. A sequence label like
   "pilot #177" unintentionally tags whatever issue/PR happens to be
   numbered 177 here, whether it appears in the title or three paragraphs
-  into the body (e.g. "the same technique used in pilot #153"). Use a form
-  with no `#`+digit adjacency instead, e.g. "pilot 177" or "pilot no. 177",
-  everywhere in the message. This applies to every repo, not just this
-  one, and to referencing the original `stepmania/stepmania` repo's
-  issues/PRs in any form, anywhere in a commit/PR.
+  into the body (e.g. "the same technique used in pilot #153") — this
+  counts as an unwanted self-reference even though it stays inside this
+  same repo (see the bullet above). Use a form with no `#`+digit adjacency
+  instead, e.g. "pilot 177" or "pilot no. 177", everywhere in the message.
 - When you change code under `src/<area>/`, check whether the matching
   `DocsAgents/subsystems/*.md` concept needs an update (see §7.1).
 - **Diff size still matters — for review, not for merges.** A large
