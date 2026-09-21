@@ -45,7 +45,7 @@ CourseDifficulty GetNextShownCourseDifficulty(CourseDifficulty cd) {
 }
 
 struct OldStyleStringToDifficultyMapHolder {
-	std::map<RString, Difficulty> conversion_map;
+	std::map<std::string, Difficulty> conversion_map;
 	OldStyleStringToDifficultyMapHolder() {
 		conversion_map["beginner"] = Difficulty_Beginner;
 		conversion_map["easy"] = Difficulty_Easy;
@@ -71,7 +71,7 @@ OldStyleStringToDifficultyMapHolder OldStyleStringToDifficulty_converter;
 Difficulty OldStyleStringToDifficulty(const RString &sDC) {
 	RString s2 = sDC;
 	s2.MakeLower();
-	std::map<RString, Difficulty>::iterator diff = OldStyleStringToDifficulty_converter.conversion_map.find(s2);
+	std::map<std::string, Difficulty>::iterator diff = OldStyleStringToDifficulty_converter.conversion_map.find(s2);
 	if (diff != OldStyleStringToDifficulty_converter.conversion_map.end()) {
 		return diff->second;
 	}
