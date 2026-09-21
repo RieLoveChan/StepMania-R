@@ -288,7 +288,7 @@ static void Announcer(int &sel, bool ToSel, const ConfOption *pConfOption) {
 	if (ToSel) {
 		sel = 0;
 		for (unsigned i = 1; i < choices.size(); i++)
-			if (!strcasecmp(choices[i], ANNOUNCER->GetCurAnnouncerName()))
+			if (!strcasecmp(choices[i], ANNOUNCER->GetCurAnnouncerName().c_str()))
 				sel = i;
 	}
 	else {

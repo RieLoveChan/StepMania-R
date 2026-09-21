@@ -27,7 +27,7 @@ class AnnouncerManager {
 	/**
 	 * @brief Retrieve the current announcer's name.
 	 * @return the current announcer's name. */
-	RString GetCurAnnouncerName() const {
+	std::string GetCurAnnouncerName() const {
 		return m_sCurAnnouncerName;
 	};
 	void NextAnnouncer();
