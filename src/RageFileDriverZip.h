@@ -42,7 +42,7 @@ class RageFileDriverZip : public RageFileDriver {
 	};
 	const FileInfo *GetFileInfo(const RString &sPath) const;
 
-	RString GetGlobalComment() const {
+	std::string GetGlobalComment() const {
 		return m_sComment;
 	}
 
