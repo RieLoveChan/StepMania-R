@@ -192,7 +192,7 @@ void BitmapText::LoadFromNode(const XNode *node) {
 	Actor::LoadFromNode(node);
 }
 
-bool BitmapText::LoadFromFont(const RString &sFontFilePath) {
+bool BitmapText::LoadFromFont(const std::string &sFontFilePath) {
 	CHECKPOINT_M(ssprintf("BitmapText::LoadFromFont(%s)", sFontFilePath.c_str()));
 
 	if (m_pFont) {

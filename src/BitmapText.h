@@ -67,7 +67,7 @@ class BitmapText : public Actor {
 	virtual void StopTweening() override;
 	virtual void FinishTweening() override;
 
-	bool LoadFromFont(const RString &sFontName);
+	bool LoadFromFont(const std::string &sFontName);
 	bool LoadFromTextureAndChars(const RString &sTexturePath, const RString &sChars);
 	virtual void SetText(const RString &sText, const RString &sAlternateText = "", int iWrapWidthPixels = -1);
 	void SetVertSpacing(int iSpacing);
