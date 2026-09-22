@@ -473,7 +473,7 @@ void Model::SetDefaultAnimation(std::string sAnimation, float fPlayRate) {
 	m_fDefaultAnimationRate = fPlayRate;
 }
 
-void Model::PlayAnimation(const RString &sAniName, float fPlayRate) {
+void Model::PlayAnimation(const std::string &sAniName, float fPlayRate) {
 	if (m_mapNameToAnimation.find(sAniName) == m_mapNameToAnimation.end())
 		return;
 
