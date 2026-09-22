@@ -121,7 +121,7 @@ void Model::LoadFromNode(const XNode *pNode) {
 	RecalcAnimationLengthSeconds();
 }
 
-void Model::LoadMaterialsFromMilkshapeAscii(const RString &_sPath) {
+void Model::LoadMaterialsFromMilkshapeAscii(const std::string &_sPath) {
 	RString sPath = _sPath;
 
 	FixSlashesInPlace(sPath);
