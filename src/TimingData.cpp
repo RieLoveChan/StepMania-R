@@ -629,7 +629,7 @@ void TimingData::AddSegment(const TimingSegment *seg) {
 	}
 }
 
-bool TimingData::DoesLabelExist(const RString &sLabel) const {
+bool TimingData::DoesLabelExist(const std::string &sLabel) const {
 	const std::vector<TimingSegment *> &labels = GetTimingSegments(SEGMENT_LABEL);
 	for (unsigned i = 0; i < labels.size(); i++) {
 		if (ToLabel(labels[i])->GetLabel() == sLabel)

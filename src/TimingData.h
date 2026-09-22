@@ -315,19 +315,19 @@ class TimingData {
 		return GetMissComboAtRow(BeatToNoteRow(fBeat));
 	}
 
-	const RString &GetLabelAtRow(int iNoteRow) const {
+	const std::string &GetLabelAtRow(int iNoteRow) const {
 		return GetLabelSegmentAtRow(iNoteRow)->GetLabel();
 	}
-	const RString &GetLabelAtBeat(float fBeat) const {
+	const std::string &GetLabelAtBeat(float fBeat) const {
 		return GetLabelAtRow(BeatToNoteRow(fBeat));
 	}
-	void SetLabelAtRow(int iNoteRow, const RString &sLabel) {
+	void SetLabelAtRow(int iNoteRow, const std::string &sLabel) {
 		AddSegment(LabelSegment(iNoteRow, sLabel));
 	}
-	void SetLabelAtBeat(float fBeat, const RString sLabel) {
+	void SetLabelAtBeat(float fBeat, const std::string sLabel) {
 		SetLabelAtRow(BeatToNoteRow(fBeat), sLabel);
 	}
-	bool DoesLabelExist(const RString &sLabel) const;
+	bool DoesLabelExist(const std::string &sLabel) const;
 
 	float GetSpeedPercentAtRow(int iNoteRow) const {
 		return GetSpeedSegmentAtRow(iNoteRow)->GetRatio();

@@ -437,17 +437,17 @@ struct LabelSegment : public TimingSegment {
 		return new LabelSegment(*this);
 	}
 
-	LabelSegment(int iStartRow = ROW_INVALID, const RString &sLabel = RString())
+	LabelSegment(int iStartRow = ROW_INVALID, const std::string &sLabel = std::string())
 	    : TimingSegment(iStartRow), m_sLabel(sLabel) {
 	}
 
 	LabelSegment(const LabelSegment &other) : TimingSegment(other.GetRow()), m_sLabel(other.GetLabel()) {
 	}
 
-	const RString &GetLabel() const {
+	const std::string &GetLabel() const {
 		return m_sLabel;
 	}
-	void SetLabel(const RString &sLabel) {
+	void SetLabel(const std::string &sLabel) {
 		m_sLabel.assign(sLabel);
 	}
 
@@ -469,7 +469,7 @@ struct LabelSegment : public TimingSegment {
 
  private:
 	/** @brief The label/section name for this point. */
-	RString m_sLabel;
+	std::string m_sLabel;
 };
 
 /**
