@@ -184,7 +184,7 @@ struct MenuRowDef {
 		}
 	}
 
-	void SetOneUnthemedChoice(const RString &sChoice) {
+	void SetOneUnthemedChoice(const std::string &sChoice) {
 		choices.resize(1);
 		choices[0] = "|" + sChoice;
 	}
