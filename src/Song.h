@@ -72,7 +72,7 @@ class Song {
 	RString GetSongDir() {
 		return m_sSongDir;
 	}
-	RString GetPreCustomifyDir() {
+	std::string GetPreCustomifyDir() {
 		return m_pre_customify_song_dir;
 	}
 
