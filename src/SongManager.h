@@ -115,7 +115,7 @@ class SongManager {
 	 * @brief Retrieve all of the songs that belong to a particular group.
 	 * @param sGroupName the name of the group.
 	 * @return the songs that belong in the group. */
-	const std::vector<Song *> &GetSongs(const RString &sGroupName) const;
+	const std::vector<Song *> &GetSongs(const std::string &sGroupName) const;
 	/**
 	 * @brief Retrieve all of the songs in the game.
 	 * @return all of the songs. */

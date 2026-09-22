@@ -739,7 +739,7 @@ void SongManager::ResetGroupColors() {
 	COURSE_GROUP_COLOR.Load("SongManager", COURSE_GROUP_COLOR_NAME, NUM_COURSE_GROUP_COLORS);
 }
 
-const std::vector<Song *> &SongManager::GetSongs(const RString &sGroupName) const {
+const std::vector<Song *> &SongManager::GetSongs(const std::string &sGroupName) const {
 	static const std::vector<Song *> vEmpty;
 
 	if (sGroupName == GROUP_ALL)
