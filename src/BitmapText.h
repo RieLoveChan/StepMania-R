@@ -119,7 +119,7 @@ class BitmapText : public Actor {
 		return m_wTextLines;
 	}
 
-	RString GetText() const {
+	std::string GetText() const {
 		return m_sText;
 	}
 	// Return true if the string 's' will use an alternate string, if available.
