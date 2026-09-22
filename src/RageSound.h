@@ -121,7 +121,7 @@ class RageSound : public RageSoundBase {
 	void StartPlaying();
 	void StopPlaying();
 
-	RString GetError() const {
+	std::string GetError() const {
 		return m_sError;
 	}
 
