@@ -19,7 +19,7 @@ class Model : public Actor {
 	virtual Model *Copy() const override;
 
 	void Clear();
-	void Load(const RString &sFile);
+	void Load(const std::string &sFile);
 
 	void LoadPieces(const std::string &sMeshesPath, const std::string &sMaterialsPath, const std::string &sBomesPath);
 	void LoadMilkshapeAscii(const std::string &sFile);

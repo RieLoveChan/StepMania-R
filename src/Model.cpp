@@ -54,7 +54,7 @@ void Model::Clear() {
 		DISPLAY->DeleteCompiledGeometry(m_pTempGeometry);
 }
 
-void Model::Load(const RString &sFile) {
+void Model::Load(const std::string &sFile) {
 	if (sFile.empty())
 		return;
 
