@@ -468,7 +468,7 @@ void Model::DrawMesh(int i) const {
 		DISPLAY->PopMatrix();
 }
 
-void Model::SetDefaultAnimation(RString sAnimation, float fPlayRate) {
+void Model::SetDefaultAnimation(std::string sAnimation, float fPlayRate) {
 	m_sDefaultAnimation = sAnimation;
 	m_fDefaultAnimationRate = fPlayRate;
 }

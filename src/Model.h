@@ -57,7 +57,7 @@ class Model : public Actor {
 	std::string GetDefaultAnimation() const {
 		return m_sDefaultAnimation;
 	};
-	void SetDefaultAnimation(RString sAnimation, float fPlayRate = 1);
+	void SetDefaultAnimation(std::string sAnimation, float fPlayRate = 1);
 
 	bool MaterialsNeedNormals() const;
 
