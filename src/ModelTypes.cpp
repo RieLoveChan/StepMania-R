@@ -48,7 +48,7 @@ void AnimatedTexture::LoadBlank() {
 	vFrames.push_back(state);
 }
 
-void AnimatedTexture::Load(const RString &sTexOrIniPath) {
+void AnimatedTexture::Load(const std::string &sTexOrIniPath) {
 	ASSERT(vFrames.empty()); // don't load more than once
 
 	m_bSphereMapped = sTexOrIniPath.find("sphere") != RString::npos;

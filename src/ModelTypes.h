@@ -36,7 +36,7 @@ class AnimatedTexture {
 	RageVector3 RadianToDegree(RageVector3 radian);
 
 	void LoadBlank();
-	void Load(const RString &sTexOrIniFile);
+	void Load(const std::string &sTexOrIniFile);
 	void Unload();
 	void Update(float fDelta);
 
