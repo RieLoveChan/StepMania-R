@@ -71,7 +71,7 @@ struct RageTextureID {
 		Init();
 		SetFilename(fn);
 	}
-	void SetFilename(const RString &fn);
+	void SetFilename(const std::string &fn);
 };
 
 inline bool operator==(RageTextureID const &lhs, RageTextureID const &rhs) {
