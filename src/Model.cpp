@@ -68,7 +68,7 @@ void Model::Load(const RString &sFile) {
 #define THROW RageException::Throw("Parse error in \"%s\" at line %d: \"%s\".", sPath.c_str(), iLineNum, sLine.c_str())
 
 // TODO: Move MS3D loading into its own class. - Colby
-void Model::LoadMilkshapeAscii(const RString &sPath) {
+void Model::LoadMilkshapeAscii(const std::string &sPath) {
 	LoadPieces(sPath, sPath, sPath);
 }
 
