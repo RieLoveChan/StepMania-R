@@ -160,7 +160,7 @@ void ActorFrame::TransferChildren(ActorFrame *pTo) {
 	RemoveAllChildren();
 }
 
-Actor *ActorFrame::GetChild(const RString &sName) {
+Actor *ActorFrame::GetChild(const std::string &sName) {
 	for (Actor *a : m_SubActors) {
 		if (a->GetName() == sName)
 			return a;
@@ -366,7 +366,7 @@ void ActorFrame::PushChildrenTable(lua_State *L) {
 	}
 }
 
-void ActorFrame::PushChildTable(lua_State *L, const RString &sName) {
+void ActorFrame::PushChildTable(lua_State *L, const std::string &sName) {
 	int found = 0;
 	for (Actor *a : m_SubActors) {
 		if (a->GetName() == sName) {
@@ -389,13 +389,13 @@ void ActorFrame::PushChildTable(lua_State *L, const RString &sName) {
 	}
 }
 
-void ActorFrame::PlayCommandOnChildren(const RString &sCommandName, const LuaReference *pParamTable) {
+void ActorFrame::PlayCommandOnChildren(const std::string &sCommandName, const LuaReference *pParamTable) {
 	const apActorCommands *pCmd = GetCommand(sCommandName);
 	if (pCmd != nullptr)
 		RunCommandsOnChildren(*pCmd, pParamTable);
 }
 
-void ActorFrame::PlayCommandOnLeaves(const RString &sCommandName, const LuaReference *pParamTable) {
+void ActorFrame::PlayCommandOnLeaves(const std::string &sCommandName, const LuaReference *pParamTable) {
 	const apActorCommands *pCmd = GetCommand(sCommandName);
 	if (pCmd != nullptr)
 		RunCommandsOnLeaves(**pCmd, pParamTable);
