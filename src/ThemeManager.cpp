@@ -81,7 +81,8 @@ class LocalizedStringImplThemeMetric : public ILocalizedStringImpl, public Theme
 		if (IsLoaded()) {
 			return GetValue();
 		}
-		RString const &curLanguage = (THEME && THEME->IsThemeLoaded() ? THEME->GetCurLanguage() : RString("current"));
+		RString const &curLanguage =
+		   (THEME && THEME->IsThemeLoaded() ? RString(THEME->GetCurLanguage()) : RString("current"));
 		LOG_WARN(Log::Theme, "Missing translation for %s in the %s language.", m_sName.c_str(), curLanguage.c_str());
 		return m_sName;
 	}

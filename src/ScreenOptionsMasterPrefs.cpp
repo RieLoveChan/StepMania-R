@@ -205,7 +205,7 @@ static void Language(int &sel, bool ToSel, const ConfOption * /* pConfOption */)
 	if (ToSel) {
 		sel = -1;
 		for (unsigned i = 0; sel == -1 && i < vs.size(); ++i)
-			if (!strcasecmp(vs[i], THEME->GetCurLanguage()))
+			if (!strcasecmp(vs[i], THEME->GetCurLanguage().c_str()))
 				sel = i;
 
 		// If the current language doesn't exist, we'll show BASE_LANGUAGE, so select that.

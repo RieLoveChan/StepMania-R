@@ -46,13 +46,13 @@ class ThemeManager {
 	   const RString &sThemeName, const RString &sLanguage, bool bPseudoLocalize, bool bForceThemeReload = false
 	);
 	void UpdateLuaGlobals();
-	RString GetCurThemeName() const {
+	std::string GetCurThemeName() const {
 		return m_sCurThemeName;
 	};
 	bool IsThemeLoaded() const {
 		return !m_sCurThemeName.empty();
 	};
-	RString GetCurLanguage() const {
+	std::string GetCurLanguage() const {
 		return m_sCurLanguage;
 	};
 	RString GetCurThemeDir() const {
