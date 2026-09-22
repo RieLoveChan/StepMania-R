@@ -70,7 +70,7 @@ class Sprite : public Actor {
 		SetState(0);
 	}
 
-	RString GetTexturePath() const;
+	std::string GetTexturePath() const;
 
 	void SetCustomTextureRect(const RectF &new_texcoord_frect);
 	void SetCustomTextureCoords(float fTexCoords[8]);

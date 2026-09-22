@@ -818,9 +818,9 @@ void Sprite::SetSecondsIntoAnimation(float fSeconds) {
 	UpdateAnimationState();
 }
 
-RString Sprite::GetTexturePath() const {
+std::string Sprite::GetTexturePath() const {
 	if (m_pTexture == nullptr)
-		return RString();
+		return std::string();
 
 	return m_pTexture->GetID().filename;
 }
