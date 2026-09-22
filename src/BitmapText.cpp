@@ -209,7 +209,7 @@ bool BitmapText::LoadFromFont(const std::string &sFontFilePath) {
 	return true;
 }
 
-bool BitmapText::LoadFromTextureAndChars(const RString &sTexturePath, const RString &sChars) {
+bool BitmapText::LoadFromTextureAndChars(const std::string &sTexturePath, const std::string &sChars) {
 	CHECKPOINT_M(ssprintf("BitmapText::LoadFromTextureAndChars(\"%s\",\"%s\")", sTexturePath.c_str(), sChars.c_str()));
 
 	if (m_pFont) {
