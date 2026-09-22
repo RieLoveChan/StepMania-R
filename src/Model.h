@@ -21,7 +21,7 @@ class Model : public Actor {
 	void Clear();
 	void Load(const RString &sFile);
 
-	void LoadPieces(const RString &sMeshesPath, const RString &sMaterialsPath, const RString &sBomesPath);
+	void LoadPieces(const std::string &sMeshesPath, const std::string &sMaterialsPath, const std::string &sBomesPath);
 	void LoadMilkshapeAscii(const std::string &sFile);
 	void LoadMaterialsFromMilkshapeAscii(const std::string &sPath);
 	bool LoadMilkshapeAsciiBones(const std::string &sAniName, const std::string &sPath);

@@ -72,7 +72,7 @@ void Model::LoadMilkshapeAscii(const std::string &sPath) {
 	LoadPieces(sPath, sPath, sPath);
 }
 
-void Model::LoadPieces(const RString &sMeshesPath, const RString &sMaterialsPath, const RString &sBonesPath) {
+void Model::LoadPieces(const std::string &sMeshesPath, const std::string &sMaterialsPath, const std::string &sBonesPath) {
 	Clear();
 
 	// TRICKY: Load materials before geometry so we can figure out whether the materials require normals.
