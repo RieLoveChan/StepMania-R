@@ -15,7 +15,7 @@ class RageThread {
 	void SetName(const RString &n) {
 		m_sName = n;
 	}
-	RString GetName() const {
+	std::string GetName() const {
 		return m_sName;
 	}
 	void Create(int (*fn)(void *), void *data);
@@ -102,7 +102,7 @@ void GetLogs(char *pBuf, int iSize, const char *delim);
 class MutexImpl;
 class RageMutex {
  public:
-	RString GetName() const {
+	std::string GetName() const {
 		return m_sName;
 	}
 	void SetName(const RString &s) {
@@ -198,7 +198,7 @@ class RageSemaphore {
 	RageSemaphore(RString sName, int iInitialValue = 0);
 	~RageSemaphore();
 
-	RString GetName() const {
+	std::string GetName() const {
 		return m_sName;
 	}
 	int GetValue() const;
