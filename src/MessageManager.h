@@ -99,7 +99,7 @@ struct Message {
 	void SetName(const RString &sName) {
 		m_sName = sName;
 	}
-	RString GetName() const {
+	std::string GetName() const {
 		return m_sName;
 	}
 
