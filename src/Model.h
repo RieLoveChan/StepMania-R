@@ -24,7 +24,7 @@ class Model : public Actor {
 	void LoadPieces(const RString &sMeshesPath, const RString &sMaterialsPath, const RString &sBomesPath);
 	void LoadMilkshapeAscii(const RString &sFile);
 	void LoadMaterialsFromMilkshapeAscii(const RString &sPath);
-	bool LoadMilkshapeAsciiBones(const RString &sAniName, const RString &sPath);
+	bool LoadMilkshapeAsciiBones(const std::string &sAniName, const std::string &sPath);
 
 	void LoadFromNode(const XNode *pNode) override;
 

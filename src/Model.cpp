@@ -263,7 +263,7 @@ void Model::LoadMaterialsFromMilkshapeAscii(const RString &_sPath) {
 	}
 }
 
-bool Model::LoadMilkshapeAsciiBones(const RString &sAniName, const RString &sPath) {
+bool Model::LoadMilkshapeAsciiBones(const std::string &sAniName, const std::string &sPath) {
 	m_mapNameToAnimation[sAniName] = msAnimation();
 	msAnimation &Animation = m_mapNameToAnimation[sAniName];
 
