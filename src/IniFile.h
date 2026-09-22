@@ -15,7 +15,7 @@ class IniFile : public XNode {
 	/**
 	 * @brief Retrieve the filename of the last file loaded.
 	 * @return the filename. */
-	RString GetPath() const {
+	std::string GetPath() const {
 		return m_sPath;
 	}
 	/**
