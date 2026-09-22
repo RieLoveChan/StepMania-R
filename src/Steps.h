@@ -142,7 +142,7 @@ class Steps {
 	void SetFilename(RString fn) {
 		m_sFilename = fn;
 	}
-	RString GetFilename() const {
+	std::string GetFilename() const {
 		return m_sFilename;
 	}
 	void SetSavedToDisk(bool b) {
