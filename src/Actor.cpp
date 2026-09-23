@@ -1065,7 +1065,7 @@ void Actor::SetEffectPeriod(float time) {
 	RecalcEffectPeriod();
 }
 
-bool Actor::SetEffectTiming(float ramp_toh, float at_half, float ramp_tof, float at_full, float at_zero, RString &err) {
+bool Actor::SetEffectTiming(float ramp_toh, float at_half, float ramp_tof, float at_full, float at_zero, std::string &err) {
 	// No negative timings
 	if (ramp_toh < 0 || at_half < 0 || ramp_tof < 0 || at_full < 0 || at_zero < 0) {
 		err = ssprintf(
@@ -1087,7 +1087,7 @@ bool Actor::SetEffectTiming(float ramp_toh, float at_half, float ramp_tof, float
 	return true;
 }
 
-bool Actor::SetEffectHoldAtFull(float haf, RString &err) {
+bool Actor::SetEffectHoldAtFull(float haf, std::string &err) {
 	return SetEffectTiming(
 	   m_effect_ramp_to_half, m_effect_hold_at_half, m_effect_ramp_to_full, haf, m_effect_hold_at_zero, err
 	);
@@ -1938,14 +1938,14 @@ class LunaActor : public Luna<Actor> {
 		if (lua_isnumber(L, 5)) {
 			haf = FArg(5);
 		}
-		RString err;
+		std::string err;
 		if (!p->SetEffectTiming(rth, hah, rtf, haf, haz, err)) {
 			luaL_error(L, err.c_str());
 		}
 		COMMON_RETURN_SELF;
 	}
 	static int effect_hold_at_full(T *p, lua_State *L) {
-		RString err;
+		std::string err;
 		if (!p->SetEffectHoldAtFull(FArg(1), err)) {
 			luaL_error(L, err.c_str());
 		}

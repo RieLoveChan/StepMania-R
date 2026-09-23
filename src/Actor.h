@@ -779,8 +779,8 @@ class Actor : public MessageSubscriber {
 	float GetEffectPeriod() const {
 		return m_effect_period;
 	}
-	bool SetEffectTiming(float ramp_toh, float at_half, float ramp_tof, float at_zero, float at_full, RString &err);
-	bool SetEffectHoldAtFull(float haf, RString &err);
+	bool SetEffectTiming(float ramp_toh, float at_half, float ramp_tof, float at_zero, float at_full, std::string &err);
+	bool SetEffectHoldAtFull(float haf, std::string &err);
 	void SetEffectOffset(float fTime) {
 		m_fEffectOffset = fTime;
 	}
