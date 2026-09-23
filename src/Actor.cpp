@@ -1383,7 +1383,7 @@ void Actor::QueueMessage(const std::string &sMessageName) {
 	TI.m_sCommandName = "!" + sMessageName;
 }
 
-void Actor::AddCommand(const RString &sCmdName, apActorCommands apac, bool warn) {
+void Actor::AddCommand(const std::string &sCmdName, apActorCommands apac, bool warn) {
 	if (HasCommand(sCmdName) && warn) {
 		RString sWarning = GetLineage() + "'s command '" + sCmdName + "' defined twice";
 		LuaHelpers::ReportScriptError(sWarning, "COMMAND_DEFINED_TWICE");
@@ -1399,11 +1399,11 @@ void Actor::AddCommand(const RString &sCmdName, apActorCommands apac, bool warn)
 	}
 }
 
-bool Actor::HasCommand(const RString &sCmdName) const {
+bool Actor::HasCommand(const std::string &sCmdName) const {
 	return GetCommand(sCmdName) != nullptr;
 }
 
-const apActorCommands *Actor::GetCommand(const RString &sCommandName) const {
+const apActorCommands *Actor::GetCommand(const std::string &sCommandName) const {
 	std::map<std::string, apActorCommands>::const_iterator it = m_mapNameToCommands.find(sCommandName);
 	if (it == m_mapNameToCommands.end())
 		return nullptr;

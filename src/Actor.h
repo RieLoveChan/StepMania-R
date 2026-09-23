@@ -894,10 +894,10 @@ class Actor : public MessageSubscriber {
 	virtual void PushContext(lua_State *L);
 
 	// Named commands
-	void AddCommand(const RString &sCmdName, apActorCommands apac, bool warn = true);
-	bool HasCommand(const RString &sCmdName) const;
-	const apActorCommands *GetCommand(const RString &sCommandName) const;
-	void PlayCommand(const RString &sCommandName) {
+	void AddCommand(const std::string &sCmdName, apActorCommands apac, bool warn = true);
+	bool HasCommand(const std::string &sCmdName) const;
+	const apActorCommands *GetCommand(const std::string &sCommandName) const;
+	void PlayCommand(const std::string &sCommandName) {
 		HandleMessage(Message(sCommandName));
 	} // convenience
 	void PlayCommandNoRecurse(const Message &msg);
