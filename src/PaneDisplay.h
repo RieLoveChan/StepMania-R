@@ -36,7 +36,7 @@ class PaneDisplay : public ActorFrame {
  public:
 	virtual PaneDisplay *Copy() const;
 
-	void Load(const RString &sMetricsGroup, PlayerNumber pn);
+	void Load(const std::string &sMetricsGroup, PlayerNumber pn);
 	void SetFromGameState();
 
 	void LoadFromNode(const XNode *pNode);

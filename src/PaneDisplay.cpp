@@ -60,7 +60,7 @@ static const Content_t g_Contents[NUM_PaneCategory] = {
 
 REGISTER_ACTOR_CLASS(PaneDisplay);
 
-void PaneDisplay::Load(const RString &sMetricsGroup, PlayerNumber pn) {
+void PaneDisplay::Load(const std::string &sMetricsGroup, PlayerNumber pn) {
 	m_PlayerNumber = pn;
 
 	EMPTY_MACHINE_HIGH_SCORE_NAME.Load(sMetricsGroup, "EmptyMachineHighScoreName");
