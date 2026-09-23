@@ -10,7 +10,7 @@ class NoteData;
 class SoundEffectControl {
  public:
 	SoundEffectControl();
-	void Load(const RString &sType, PlayerState *pPlayerState, const NoteData *pNoteData);
+	void Load(const std::string &sType, PlayerState *pPlayerState, const NoteData *pNoteData);
 
 	void SetSoundReader(RageSoundReader *pPlayer);
 	void ReleaseSound() {
