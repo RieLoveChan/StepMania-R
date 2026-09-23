@@ -2174,7 +2174,7 @@ bool FileCopy(const RString &sSrcFile, const RString &sDstFile) {
 	return true;
 }
 
-bool FileCopy(RageFileBasic &in, RageFileBasic &out, RString &sError, bool *bReadError) {
+bool FileCopy(RageFileBasic &in, RageFileBasic &out, std::string &sError, bool *bReadError) {
 	for (;;) {
 		RString data;
 		if (in.Read(data, 1024 * 32) == -1) {

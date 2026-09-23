@@ -648,7 +648,7 @@ template <> inline RString ToString<RString>(const RString &value) {
 
 class RageFileBasic;
 bool FileCopy(const RString &sSrcFile, const RString &sDstFile);
-bool FileCopy(RageFileBasic &in, RageFileBasic &out, RString &sError, bool *bReadError = nullptr);
+bool FileCopy(RageFileBasic &in, RageFileBasic &out, std::string &sError, bool *bReadError = nullptr);
 
 template <class T> void GetAsNotInBs(const std::vector<T> &as, const std::vector<T> &bs, std::vector<T> &difference) {
 	std::vector<T> bsUnmatched = bs;
