@@ -9,7 +9,7 @@ class RollingNumbers : public BitmapText {
  public:
 	RollingNumbers();
 
-	void Load(const RString &sMetricsGroup);
+	void Load(const std::string &sMetricsGroup);
 	virtual RollingNumbers *Copy() const;
 
 	void DrawPart(RageColor const *diffuse, RageColor const &stroke, float crop_left, float crop_right);

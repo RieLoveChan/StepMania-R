@@ -18,7 +18,7 @@ RollingNumbers::RollingNumbers() {
 	m_metrics_loaded = false;
 }
 
-void RollingNumbers::Load(const RString &sMetricsGroup) {
+void RollingNumbers::Load(const std::string &sMetricsGroup) {
 	m_metrics_loaded = true;
 	TEXT_FORMAT.Load(sMetricsGroup, "TextFormat");
 	APPROACH_SECONDS.Load(sMetricsGroup, "ApproachSeconds");
