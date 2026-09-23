@@ -41,7 +41,7 @@ Font *FontManager::LoadFont(const std::string &sFontOrTextureFilePath, std::stri
 	}
 
 	Font *f = new Font;
-	f->Load(RString(sFontOrTextureFilePath), sChars);
+	f->Load(sFontOrTextureFilePath, sChars);
 	g_mapPathToFont[NewName] = f;
 	return f;
 }

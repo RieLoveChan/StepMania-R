@@ -695,7 +695,7 @@ static std::vector<RString> LoadStack;
  * However, if it doesn't, we don't know what it is and the font will receive
  * no default mapping.  A font isn't useful with no characters mapped.
  */
-void Font::Load(const RString &sIniPath, RString sChars) {
+void Font::Load(const std::string &sIniPath, std::string sChars) {
 	if (GetExtension(sIniPath).CompareNoCase("ini")) {
 		LuaHelpers::ReportScriptErrorFmt(
 		   "%s is not an ini file.  Fonts can only be loaded from ini files.", sIniPath.c_str()

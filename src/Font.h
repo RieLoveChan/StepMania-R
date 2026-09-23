@@ -157,7 +157,7 @@ class Font {
 	 * @param f the font whose pages we are stealing. */
 	void MergeFont(Font &f);
 
-	void Load(const RString &sFontOrTextureFilePath, RString sChars);
+	void Load(const std::string &sFontOrTextureFilePath, std::string sChars);
 	void Unload();
 	void Reload();
 
