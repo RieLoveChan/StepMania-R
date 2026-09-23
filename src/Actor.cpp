@@ -887,8 +887,8 @@ void Actor::UpdateInternal(float delta_time) {
 	this->UpdateTweening(delta_time);
 }
 
-RString Actor::GetLineage() const {
-	RString sPath;
+std::string Actor::GetLineage() const {
+	std::string sPath;
 
 	if (m_pParent)
 		sPath = m_pParent->GetLineage() + '/';

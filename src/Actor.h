@@ -336,7 +336,7 @@ class Actor : public MessageSubscriber {
 	/**
 	 * @brief Retrieve the Actor's lineage.
 	 * @return the Actor's lineage. */
-	RString GetLineage() const;
+	std::string GetLineage() const;
 
 	void SetFakeParent(Actor *mailman) {
 		m_FakeParent = mailman;
