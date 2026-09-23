@@ -1368,13 +1368,13 @@ void Actor::Sleep(float time) {
 	BeginTweening(0, TWEEN_LINEAR);
 }
 
-void Actor::QueueCommand(const RString &sCommandName) {
+void Actor::QueueCommand(const std::string &sCommandName) {
 	BeginTweening(0, TWEEN_LINEAR);
 	TweenInfo &TI = m_Tweens.back()->info;
 	TI.m_sCommandName = sCommandName;
 }
 
-void Actor::QueueMessage(const RString &sMessageName) {
+void Actor::QueueMessage(const std::string &sMessageName) {
 	// Hack: use "!" as a marker to broadcast a command, instead of playing a
 	// command, so we don't have to add yet another element to every tween
 	// state for this rarely-used command.

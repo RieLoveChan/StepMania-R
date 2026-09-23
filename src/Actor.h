@@ -693,8 +693,8 @@ class Actor : public MessageSubscriber {
 	virtual void BeginTweening(float time, TweenType tt = TWEEN_LINEAR);
 	virtual void StopTweening();
 	void Sleep(float time);
-	void QueueCommand(const RString &sCommandName);
-	void QueueMessage(const RString &sMessageName);
+	void QueueCommand(const std::string &sCommandName);
+	void QueueMessage(const std::string &sMessageName);
 	virtual void FinishTweening();
 	virtual void HurryTweening(float factor);
 	// Let ActorFrame and BGAnimation override
