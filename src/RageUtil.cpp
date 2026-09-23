@@ -1601,7 +1601,7 @@ bool utf8_is_valid(const RString &s) {
 
 /* Windows tends to drop garbage BOM characters at the start of UTF-8 text files.
  * Remove them. */
-void utf8_remove_bom(RString &sLine) {
+void utf8_remove_bom(std::string &sLine) {
 	if (!sLine.compare(0, 3, "\xef\xbb\xbf"))
 		sLine.erase(0, 3);
 }

@@ -371,7 +371,7 @@ bool utf8_to_wchar_ec(const RString &s, unsigned &start, wchar_t &ch);
 void wchar_to_utf8(wchar_t ch, RString &out);
 wchar_t utf8_get_char(const RString &s);
 bool utf8_is_valid(const RString &s);
-void utf8_remove_bom(RString &s);
+void utf8_remove_bom(std::string &s);
 void MakeUpper(char *p, std::size_t iLen);
 void MakeLower(char *p, std::size_t iLen);
 void MakeUpper(wchar_t *p, std::size_t iLen);
