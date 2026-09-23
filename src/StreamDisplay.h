@@ -23,7 +23,7 @@ class StreamDisplay : public ActorFrame {
 
 	virtual void Update(float fDeltaSecs);
 
-	void Load(const RString &sMetricsGroup);
+	void Load(const std::string &sMetricsGroup);
 
 	void SetPercent(float fPercent);
 	void SetPassingAlpha(float fPassingAlpha) {
