@@ -629,7 +629,7 @@ int GetFileSizeInBytes(const RString &sFilePath);
 
 // call FixSlashesInPlace on any path that came from the user
 void FixSlashesInPlace(std::string &sPath);
-void CollapsePath(RString &sPath, bool bRemoveLeadingDot = false);
+void CollapsePath(std::string &sPath, bool bRemoveLeadingDot = false);
 
 /** @brief Utilities for converting the RStrings. */
 namespace StringConversion {

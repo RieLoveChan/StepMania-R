@@ -2041,7 +2041,7 @@ void FixSlashesInPlace(std::string &sPath) {
  * ./// -> ./
  */
 
-void CollapsePath(RString &sPath, bool bRemoveLeadingDot) {
+void CollapsePath(std::string &sPath, bool bRemoveLeadingDot) {
 	RString sOut;
 	sOut.reserve(sPath.size());
 
