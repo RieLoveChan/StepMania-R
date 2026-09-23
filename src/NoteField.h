@@ -70,8 +70,8 @@ class NoteField : public ActorFrame {
 	void SetBeatBarsAlpha(float measure, float fourth, float eighth, float sixteenth);
 
  protected:
-	void CacheNoteSkin(const RString &sNoteSkin);
-	void UncacheNoteSkin(const RString &sNoteSkin);
+	void CacheNoteSkin(const std::string &sNoteSkin);
+	void UncacheNoteSkin(const std::string &sNoteSkin);
 
 	bool
 	IsOnScreen(float fBeat, int iCol, int iDrawDistanceAfterTargetsPixels, int iDrawDistanceBeforeTargetsPixels) const;

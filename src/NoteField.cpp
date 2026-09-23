@@ -112,7 +112,7 @@ void NoteField::SetBeatBarsAlpha(float measure, float fourth, float eighth, floa
 	m_fBar16thAlpha = sixteenth;
 }
 
-void NoteField::CacheNoteSkin(const RString &sNoteSkin_) {
+void NoteField::CacheNoteSkin(const std::string &sNoteSkin_) {
 	RString sNoteSkinLower = sNoteSkin_;
 	sNoteSkinLower.MakeLower();
 
@@ -133,7 +133,7 @@ void NoteField::CacheNoteSkin(const RString &sNoteSkin_) {
 	m_NoteDisplays[sNoteSkinLower] = nd;
 }
 
-void NoteField::UncacheNoteSkin(const RString &sNoteSkin_) {
+void NoteField::UncacheNoteSkin(const std::string &sNoteSkin_) {
 	RString sNoteSkinLower = sNoteSkin_;
 	sNoteSkinLower.MakeLower();
 
