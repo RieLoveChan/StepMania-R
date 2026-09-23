@@ -588,7 +588,7 @@ const Profile *ProfileManager::GetLocalProfile(const RString &sProfileID) const 
 	return nullptr;
 }
 
-bool ProfileManager::CreateLocalProfile(RString sName, RString &sProfileIDOut) {
+bool ProfileManager::CreateLocalProfile(std::string sName, std::string &sProfileIDOut) {
 	ASSERT(!sName.empty());
 
 	// Find a directory directory name that's a number greater than all

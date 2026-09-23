@@ -42,7 +42,7 @@ class ProfileManager {
 	Profile *GetLocalProfileFromIndex(int iIndex);
 	RString GetLocalProfileIDFromIndex(int iIndex);
 
-	bool CreateLocalProfile(RString sName, RString &sProfileIDOut);
+	bool CreateLocalProfile(std::string sName, std::string &sProfileIDOut);
 	void AddLocalProfileByID(Profile *pProfile, RString sProfileID); // transfers ownership of pProfile
 	bool RenameLocalProfile(RString sProfileID, RString sNewName);
 	bool DeleteLocalProfile(RString sProfileID);
