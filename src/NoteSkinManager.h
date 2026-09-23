@@ -26,7 +26,7 @@ class NoteSkinManager {
 	bool DoNoteSkinsExistForGame(const Game *pGame);
 	RString GetDefaultNoteSkinName(); // looks up current const Game* in GAMESTATE
 
-	void ValidateNoteSkinName(RString &name);
+	void ValidateNoteSkinName(std::string &name);
 
 	void SetCurrentNoteSkin(const RString &sNoteSkin) {
 		m_sCurrentNoteSkin = sNoteSkin;

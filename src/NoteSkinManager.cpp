@@ -232,7 +232,7 @@ RString NoteSkinManager::GetDefaultNoteSkinName() {
 	return name;
 }
 
-void NoteSkinManager::ValidateNoteSkinName(RString &name) {
+void NoteSkinManager::ValidateNoteSkinName(std::string &name) {
 	if (name.empty() || !DoesNoteSkinExist(name)) {
 		LuaHelpers::ReportScriptError("Someone set a noteskin that doesn't exist.  Good job.");
 		name = GetDefaultNoteSkinName();
