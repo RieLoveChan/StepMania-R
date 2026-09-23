@@ -29,8 +29,8 @@ static bool CompareLayerNames(const RString &s1, const RString &s2) {
 	return i1 < i2;
 }
 
-void BGAnimation::AddLayersFromAniDir(const RString &_sAniDir, const XNode *pNode) {
-	const RString &sAniDir = _sAniDir;
+void BGAnimation::AddLayersFromAniDir(const std::string &_sAniDir, const XNode *pNode) {
+	const std::string &sAniDir = _sAniDir;
 
 	{
 		std::vector<RString> vsLayerNames;
@@ -77,7 +77,7 @@ void BGAnimation::AddLayersFromAniDir(const RString &_sAniDir, const XNode *pNod
 	}
 }
 
-void BGAnimation::LoadFromAniDir(const RString &_sAniDir) {
+void BGAnimation::LoadFromAniDir(const std::string &_sAniDir) {
 	DeleteAllChildren();
 
 	if (_sAniDir.empty())
