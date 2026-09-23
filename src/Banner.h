@@ -33,7 +33,7 @@ class Banner : public Sprite {
 	 */
 	void LoadFromSong(Song *pSong);
 	void LoadMode();
-	void LoadFromSongGroup(RString sSongGroup);
+	void LoadFromSongGroup(std::string sSongGroup);
 	void LoadFromCourse(const Course *pCourse);
 	void LoadCardFromCharacter(const Character *pCharacter);
 	void LoadIconFromCharacter(const Character *pCharacter);

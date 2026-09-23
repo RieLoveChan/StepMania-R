@@ -169,7 +169,7 @@ void FadingBanner::LoadMode() {
 	m_Banner[m_iIndexLatest].LoadMode();
 }
 
-void FadingBanner::LoadFromSongGroup(RString sSongGroup) {
+void FadingBanner::LoadFromSongGroup(std::string sSongGroup) {
 	const RString sGroupBannerPath = SONGMAN->GetSongGroupBannerPath(sSongGroup);
 	LoadFromCachedBanner(sGroupBannerPath);
 }
@@ -226,7 +226,7 @@ void FadingBanner::LoadCourseFallback() {
 	m_Banner[m_iIndexLatest].LoadCourseFallback();
 }
 
-void FadingBanner::LoadCustom(RString sBanner) {
+void FadingBanner::LoadCustom(std::string sBanner) {
 	BeforeChange();
 	m_Banner[m_iIndexLatest].Load(THEME->GetPathG("Banner", sBanner));
 	m_Banner[m_iIndexLatest].PlayCommand(sBanner);

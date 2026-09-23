@@ -19,7 +19,7 @@ class FadingBanner : public ActorFrame {
 	void Load(RageTextureID ID, bool bLowResToHighRes = false);
 	void LoadFromSong(const Song *pSong); // nullptr means no song
 	void LoadMode();
-	void LoadFromSongGroup(RString sSongGroup);
+	void LoadFromSongGroup(std::string sSongGroup);
 	void LoadFromCourse(const Course *pCourse);
 	void LoadIconFromCharacter(Character *pCharacter);
 	void LoadBannerFromUnlockEntry(const UnlockEntry *pUE);
@@ -28,7 +28,7 @@ class FadingBanner : public ActorFrame {
 	void LoadFromSortOrder(SortOrder so);
 	void LoadFallback();
 	void LoadCourseFallback();
-	void LoadCustom(RString sBanner);
+	void LoadCustom(std::string sBanner);
 
 	bool LoadFromCachedBanner(const RString &path);
 
