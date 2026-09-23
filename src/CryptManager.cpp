@@ -150,7 +150,7 @@ static bool WriteFile(RString sFile, RString sBuf) {
 	return true;
 }
 
-void CryptManager::GenerateRSAKey(unsigned int keyLength, RString &sPrivKey, RString &sPubKey) {
+void CryptManager::GenerateRSAKey(unsigned int keyLength, std::string &sPrivKey, std::string &sPubKey) {
 	int iRet;
 
 	rsa_key key;
