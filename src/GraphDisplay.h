@@ -17,7 +17,7 @@ class GraphDisplay : public ActorFrame {
 	~GraphDisplay();
 	virtual GraphDisplay *Copy() const;
 
-	void Load(RString sMetricsGroup);
+	void Load(std::string sMetricsGroup);
 	void Set(const StageStats &ss, const PlayerStageStats &s);
 
 	// Lua
