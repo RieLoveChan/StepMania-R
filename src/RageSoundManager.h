@@ -44,8 +44,8 @@ class RageSoundManager {
 	float GetPlayLatency() const;
 	int GetDriverSampleRate() const;
 
-	RageSoundReader *GetLoadedSound(const RString &sPath);
-	void AddLoadedSound(const RString &sPath, RageSoundReader_Preload *pSound);
+	RageSoundReader *GetLoadedSound(const std::string &sPath);
+	void AddLoadedSound(const std::string &sPath, RageSoundReader_Preload *pSound);
 
 	void fix_bogus_sound_driver_pref(RString const &valid_setting);
 	void low_sample_count_workaround();

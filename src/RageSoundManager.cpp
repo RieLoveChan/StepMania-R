@@ -135,7 +135,7 @@ int RageSoundManager::GetDriverSampleRate() const {
 
 /* If the given path is loaded, return a copy; otherwise return nullptr.
  * It's the caller's responsibility to delete the result. */
-RageSoundReader *RageSoundManager::GetLoadedSound(const RString &sPath_) {
+RageSoundReader *RageSoundManager::GetLoadedSound(const std::string &sPath_) {
 	LockMut(g_SoundManMutex); /* lock for access to m_mapPreloadedSounds */
 
 	RString sPath(sPath_);
@@ -151,7 +151,7 @@ RageSoundReader *RageSoundManager::GetLoadedSound(const RString &sPath_) {
 /* Add the sound to the set of loaded sounds that can be copied for reuse.
  * The sound will be kept in memory as long as there are any other references
  * to it; once we hold the last one, we'll release it. */
-void RageSoundManager::AddLoadedSound(const RString &sPath_, RageSoundReader_Preload *pSound) {
+void RageSoundManager::AddLoadedSound(const std::string &sPath_, RageSoundReader_Preload *pSound) {
 	LockMut(g_SoundManMutex); /* lock for access to m_mapPreloadedSounds */
 
 	/* Don't AddLoadedSound a sound that's already registered.  It should have been
