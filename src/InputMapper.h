@@ -203,7 +203,7 @@ class InputMapper {
 
 	void AddDefaultMappingsForCurrentGameIfUnmapped();
 	void AutoMapJoysticksForCurrentGame();
-	bool CheckForChangedInputDevicesAndRemap(RString &sMessageOut);
+	bool CheckForChangedInputDevicesAndRemap(std::string &sMessageOut);
 
 	bool IsMapped(const DeviceInput &DeviceI) const;
 

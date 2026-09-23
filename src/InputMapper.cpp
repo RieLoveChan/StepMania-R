@@ -771,7 +771,7 @@ void InputMapper::SanityCheckMappings(std::vector<RString> &reason) {
 static LocalizedString CONNECTED("InputMapper", "Connected");
 static LocalizedString DISCONNECTED("InputMapper", "Disconnected");
 static LocalizedString AUTOMAPPING_ALL_JOYSTICKS("InputMapper", "Auto-mapping all joysticks.");
-bool InputMapper::CheckForChangedInputDevicesAndRemap(RString &sMessageOut) {
+bool InputMapper::CheckForChangedInputDevicesAndRemap(std::string &sMessageOut) {
 	// Only check for changes in joysticks since that's all we know how to remap.
 
 	// update last seen joysticks
