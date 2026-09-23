@@ -146,7 +146,7 @@ Actor *LoadFromNode(const XNode *pNode, Actor *pParentActor = nullptr);
 Actor *MakeActor(const RString &sPath, Actor *pParentActor = nullptr);
 RString GetSourcePath(const XNode *pNode);
 RString GetWhere(const XNode *pNode);
-bool GetAttrPath(const XNode *pNode, const RString &sName, RString &sOut, bool optional = false);
+bool GetAttrPath(const XNode *pNode, const std::string &sName, RString &sOut, bool optional = false);
 bool LoadTableFromStackShowErrors(Lua *L);
 
 bool ResolvePath(RString &sPath, const std::string &sName, bool optional = false);

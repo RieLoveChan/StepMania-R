@@ -367,7 +367,7 @@ RString ActorUtil::GetWhere(const XNode *pNode) {
 	return sPath;
 }
 
-bool ActorUtil::GetAttrPath(const XNode *pNode, const RString &sName, RString &sOut, bool optional) {
+bool ActorUtil::GetAttrPath(const XNode *pNode, const std::string &sName, RString &sOut, bool optional) {
 	if (!pNode->GetAttrValue(sName, sOut))
 		return false;
 
