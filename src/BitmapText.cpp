@@ -571,7 +571,7 @@ void BitmapText::UpdateBaseZoom() {
 #undef APPLY_DIMENSION_ZOOM
 }
 
-bool BitmapText::StringWillUseAlternate(const RString &sText, const RString &sAlternateText) const {
+bool BitmapText::StringWillUseAlternate(const std::string &sText, const std::string &sAlternateText) const {
 	ASSERT(m_pFont != nullptr);
 
 	// Can't use the alternate if there isn't one.

@@ -123,7 +123,7 @@ class BitmapText : public Actor {
 		return m_sText;
 	}
 	// Return true if the string 's' will use an alternate string, if available.
-	bool StringWillUseAlternate(const RString &sText, const RString &sAlternateText) const;
+	bool StringWillUseAlternate(const std::string &sText, const std::string &sAlternateText) const;
 
 	struct Attribute {
 		Attribute() : length(-1), glow() {
