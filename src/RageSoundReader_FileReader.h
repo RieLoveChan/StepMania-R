@@ -36,7 +36,7 @@ class RageSoundReader_FileReader : public RageSoundReader {
 	/* Open a file.  If pPrebuffer is non-nullptr, and the file is sufficiently small,
 	 * the (possibly compressed) data will be loaded entirely into memory, and pPrebuffer
 	 * will be set to true. */
-	static RageSoundReader_FileReader *OpenFile(RString filename, RString &error, bool *pPrebuffer = nullptr);
+	static RageSoundReader_FileReader *OpenFile(std::string filename, RString &error, bool *pPrebuffer = nullptr);
 
  protected:
 	void SetError(RString sError) const {
