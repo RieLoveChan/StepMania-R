@@ -19,13 +19,13 @@ class ActorFrameTexture : public ActorFrame {
 	 * be generated.  In that case, the only way to access the texture
 	 * is via GetTextureName.
 	 * @param sName the new name. */
-	void SetTextureName(const RString &sName) {
+	void SetTextureName(const std::string &sName) {
 		m_sTextureName = sName;
 	}
 	/**
 	 * @brief Retrieve the texture name.
 	 * @return the texture name. */
-	RString GetTextureName() const {
+	std::string GetTextureName() const {
 		return m_sTextureName;
 	}
 	RageTextureRenderTarget *GetTexture() {
