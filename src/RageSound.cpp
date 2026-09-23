@@ -158,13 +158,13 @@ class RageSoundReader_Silence : public RageSoundReader {
 	}
 };
 
-bool RageSound::Load(RString sSoundFilePath) {
+bool RageSound::Load(std::string sSoundFilePath) {
 	/* Automatically determine whether to precache */
 	/* TODO: Hook this up to a pref? */
 	return Load(sSoundFilePath, false);
 }
 
-bool RageSound::Load(RString sSoundFilePath, bool bPrecache, const RageSoundLoadParams *pParams) {
+bool RageSound::Load(std::string sSoundFilePath, bool bPrecache, const RageSoundLoadParams *pParams) {
 	LOG_TRACE(Log::Sound, "RageSound: Load \"%s\" (precache: %i)", sSoundFilePath.c_str(), bPrecache);
 
 	if (pParams == nullptr) {
