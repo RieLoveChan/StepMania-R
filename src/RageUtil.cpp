@@ -1158,7 +1158,7 @@ void FilterHighErrorPoints(
 	vCoordinates.resize(iOut);
 }
 
-void TrimLeft(RString &sStr, const char *s) {
+void TrimLeft(std::string &sStr, const char *s) {
 	int n = 0;
 	while (n < int(sStr.size()) && strchr(s, sStr[n]))
 		n++;
@@ -1166,7 +1166,7 @@ void TrimLeft(RString &sStr, const char *s) {
 	sStr.erase(sStr.begin(), sStr.begin() + n);
 }
 
-void TrimRight(RString &sStr, const char *s) {
+void TrimRight(std::string &sStr, const char *s) {
 	int n = static_cast<int>(sStr.size());
 	while (n > 0 && strchr(s, sStr[n - 1]))
 		n--;
@@ -1176,8 +1176,8 @@ void TrimRight(RString &sStr, const char *s) {
 	sStr.erase(sStr.begin() + n, sStr.end());
 }
 
-void Trim(RString &sStr, const char *s) {
-	RString::size_type b = 0, e = sStr.size();
+void Trim(std::string &sStr, const char *s) {
+	std::string::size_type b = 0, e = sStr.size();
 	while (b < e && strchr(s, sStr[b]))
 		++b;
 	while (b < e && strchr(s, sStr[e - 1]))
