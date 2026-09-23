@@ -79,7 +79,7 @@ std::string Commands::GetOriginalCommandString() const {
 	});
 }
 
-void ParseCommands(const RString &sCommands, Commands &vCommandsOut, bool bLegacy) {
+void ParseCommands(const std::string &sCommands, Commands &vCommandsOut, bool bLegacy) {
 	std::vector<RString> vsCommands;
 	if (bLegacy)
 		split(sCommands, ";", vsCommands, true);
@@ -93,7 +93,7 @@ void ParseCommands(const RString &sCommands, Commands &vCommandsOut, bool bLegac
 	}
 }
 
-Commands ParseCommands(const RString &sCommands) {
+Commands ParseCommands(const std::string &sCommands) {
 	Commands vCommands;
 	ParseCommands(sCommands, vCommands, false);
 	return vCommands;
