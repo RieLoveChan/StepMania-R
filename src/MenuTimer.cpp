@@ -30,7 +30,7 @@ MenuTimer::~MenuTimer() {
 	delete WARNING_COMMAND;
 }
 
-void MenuTimer::Load(RString sMetricsGroup) {
+void MenuTimer::Load(std::string sMetricsGroup) {
 	m_sprFrame.Load(THEME->GetPathG(sMetricsGroup, "Frame"));
 	m_sprFrame->SetName("Frame");
 	ActorUtil::LoadAllCommandsAndSetXY(m_sprFrame, sMetricsGroup);
