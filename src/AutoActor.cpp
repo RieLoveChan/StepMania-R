@@ -42,7 +42,7 @@ void AutoActor::Load(const std::string &sPath) {
 		m_pActor = new Actor;
 }
 
-void AutoActor::LoadB(const RString &sMetricsGroup, const RString &sElement) {
+void AutoActor::LoadB(const std::string &sMetricsGroup, const std::string &sElement) {
 	ThemeManager::PathInfo pi;
 	bool b = THEME->GetPathInfo(pi, EC_BGANIMATIONS, sMetricsGroup, sElement);
 	ASSERT(b);
