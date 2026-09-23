@@ -22,7 +22,7 @@ class StepsDisplay : public ActorFrame {
  public:
 	StepsDisplay();
 
-	void Load(const RString &sMetricsGroup, const PlayerState *pPlayerState);
+	void Load(const std::string &sMetricsGroup, const PlayerState *pPlayerState);
 
 	virtual StepsDisplay *Copy() const;
 

@@ -41,7 +41,7 @@ StepsDisplay::StepsDisplay() = default;
  * so I'm trying it first in only this object.
  */
 
-void StepsDisplay::Load(const RString &sMetricsGroup, const PlayerState *pPlayerState) {
+void StepsDisplay::Load(const std::string &sMetricsGroup, const PlayerState *pPlayerState) {
 	m_sMetricsGroup = sMetricsGroup;
 
 	/* We can't use global ThemeMetric<RString>s, because we can have multiple
