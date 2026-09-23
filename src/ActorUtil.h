@@ -149,7 +149,7 @@ RString GetWhere(const XNode *pNode);
 bool GetAttrPath(const XNode *pNode, const RString &sName, RString &sOut, bool optional = false);
 bool LoadTableFromStackShowErrors(Lua *L);
 
-bool ResolvePath(RString &sPath, const RString &sName, bool optional = false);
+bool ResolvePath(RString &sPath, const std::string &sName, bool optional = false);
 
 void SortByZPosition(std::vector<Actor *> &vActors);
 

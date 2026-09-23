@@ -38,7 +38,7 @@ void ActorUtil::Register(const RString &sClassName, CreateActorFn pfn) {
 /* Resolves actor paths a la LoadActor("..."), with autowildcarding and .redir
  * files.  Returns a path *within* the Rage filesystem, unlike the FILEMAN
  * function of the same name. */
-bool ActorUtil::ResolvePath(RString &sPath, const RString &sName, bool optional) {
+bool ActorUtil::ResolvePath(RString &sPath, const std::string &sName, bool optional) {
 	CollapsePath(sPath);
 
 	// If we know this is an exact match, don't bother with the GetDirListing,
