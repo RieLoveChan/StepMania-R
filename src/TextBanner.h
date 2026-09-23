@@ -14,7 +14,7 @@ class TextBanner : public ActorFrame {
 	virtual TextBanner *Copy() const;
 
 	void LoadFromNode(const XNode *pNode);
-	void Load(RString sMetricsGroup); // load metrics
+	void Load(std::string sMetricsGroup); // load metrics
 	void SetFromSong(const Song *pSong);
 	void SetFromString(
 	   const RString &sDisplayTitle,

@@ -13,7 +13,7 @@ void TextBanner::LoadFromNode(const XNode *pNode) {
 	ActorFrame::LoadFromNode(pNode);
 }
 
-void TextBanner::Load(RString sMetricsGroup) {
+void TextBanner::Load(std::string sMetricsGroup) {
 	m_bInitted = true;
 
 	m_textTitle.SetName("Title");
