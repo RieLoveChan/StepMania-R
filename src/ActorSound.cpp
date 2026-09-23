@@ -7,7 +7,7 @@
 
 REGISTER_ACTOR_CLASS_WITH_NAME(ActorSound, Sound);
 
-void ActorSound::Load(const RString &sPath) {
+void ActorSound::Load(const std::string &sPath) {
 	m_Sound.Load(sPath, true);
 }
 
