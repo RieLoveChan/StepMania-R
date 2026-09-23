@@ -8,7 +8,7 @@ DualScrollBar::DualScrollBar() {
 	m_fBarTime = 1;
 }
 
-void DualScrollBar::Load(const RString &sType) {
+void DualScrollBar::Load(const std::string &sType) {
 	FOREACH_PlayerNumber(pn) {
 		m_sprScrollThumbUnderHalf[pn].Load(THEME->GetPathG(sType, ssprintf("thumb p%i", pn + 1)));
 		m_sprScrollThumbUnderHalf[pn]->SetName(ssprintf("ThumbP%i", pn + 1));
