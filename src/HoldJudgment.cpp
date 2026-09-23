@@ -13,7 +13,7 @@ HoldJudgment::HoldJudgment() {
 	m_mpToTrack = MultiPlayer_Invalid;
 }
 
-void HoldJudgment::Load(const RString &sPath) {
+void HoldJudgment::Load(const std::string &sPath) {
 	m_sprJudgment.Load(sPath);
 	m_sprJudgment->StopAnimating();
 	m_sprJudgment->SetName("HoldJudgment");
