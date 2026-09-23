@@ -561,7 +561,7 @@ void NoteField::set_text_measure_number_for_draw(
 }
 
 void NoteField::draw_timing_segment_text(
-   const RString &text,
+   const std::string &text,
    const float beat,
    const float side_sign,
    float x_offset,
@@ -580,7 +580,7 @@ void NoteField::DrawAttackText(const float beat, const Attack &attack, const Rag
 	m_textMeasureNumber.Draw();
 }
 
-void NoteField::DrawBGChangeText(const float beat, const RString new_bg_name, const RageColor &glow) {
+void NoteField::DrawBGChangeText(const float beat, const std::string new_bg_name, const RageColor &glow) {
 	set_text_measure_number_for_draw(beat, 1, 0, align_left, RageColor(0, 1, 0, 1), glow);
 	m_textMeasureNumber.SetText(new_bg_name);
 	m_textMeasureNumber.Draw();

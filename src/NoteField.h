@@ -96,7 +96,7 @@ class NoteField : public ActorFrame {
 	   const RageColor &glow
 	);
 	void draw_timing_segment_text(
-	   const RString &text,
+	   const std::string &text,
 	   const float beat,
 	   const float side_sign,
 	   float x_offset,
@@ -105,7 +105,7 @@ class NoteField : public ActorFrame {
 	   const RageColor &glow
 	);
 	void DrawAttackText(const float beat, const Attack &attack, const RageColor &glow);
-	void DrawBGChangeText(const float beat, const RString new_bg_name, const RageColor &glow);
+	void DrawBGChangeText(const float beat, const std::string new_bg_name, const RageColor &glow);
 	float GetWidth() const;
 
 	const NoteData *m_pNoteData;
