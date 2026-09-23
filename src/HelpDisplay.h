@@ -10,7 +10,7 @@ struct lua_State;
 class HelpDisplay : public BitmapText {
  public:
 	HelpDisplay();
-	void Load(const RString &sType);
+	void Load(const std::string &sType);
 
 	virtual HelpDisplay *Copy() const;
 
