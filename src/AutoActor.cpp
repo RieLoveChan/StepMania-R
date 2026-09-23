@@ -33,7 +33,7 @@ void AutoActor::Load(Actor *pActor) {
 	m_pActor = pActor;
 }
 
-void AutoActor::Load(const RString &sPath) {
+void AutoActor::Load(const std::string &sPath) {
 	Unload();
 	m_pActor = ActorUtil::MakeActor(sPath);
 

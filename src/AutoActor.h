@@ -38,7 +38,7 @@ class AutoActor {
 		return m_pActor != nullptr;
 	}
 	void Load(Actor *pActor); // transfer pointer
-	void Load(const RString &sPath);
+	void Load(const std::string &sPath);
 	void LoadB(
 	   const RString &sMetricsGroup, const RString &sElement
 	); // load a background and set up LuaThreadVariables for recursive loading
