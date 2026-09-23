@@ -353,7 +353,7 @@ RString custom_songify_path(RString const &path);
 RString SetExtension(const RString &path, const RString &ext);
 RString GetExtension(const RString &sPath);
 RString GetFileNameWithoutExtension(const RString &sPath);
-void MakeValidFilename(RString &sName);
+void MakeValidFilename(std::string &sName);
 
 bool FindFirstFilenameContaining(
    const std::vector<RString> &filenames,

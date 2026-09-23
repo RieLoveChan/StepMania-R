@@ -908,7 +908,7 @@ RString GetFileNameWithoutExtension(const RString &sPath) {
 	return sFName;
 }
 
-void MakeValidFilename(RString &sName) {
+void MakeValidFilename(std::string &sName) {
 	std::wstring wsName = RStringToWstring(sName);
 	std::wstring wsInvalid = L"/\\:*?\"<>|";
 	for (unsigned i = 0; i < wsName.size(); ++i) {
