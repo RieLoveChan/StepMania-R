@@ -228,7 +228,7 @@ NoteColorActor::~NoteColorActor() {
 		DeleteNoteResource(m_p);
 }
 
-void NoteColorActor::Load(const RString &sButton, const RString &sElement, PlayerNumber pn, GameController gc) {
+void NoteColorActor::Load(const std::string &sButton, const std::string &sElement, PlayerNumber pn, GameController gc) {
 	m_p = MakeNoteResource(sButton, sElement, pn, gc, false);
 }
 
@@ -247,7 +247,7 @@ NoteColorSprite::~NoteColorSprite() {
 		DeleteNoteResource(m_p);
 }
 
-void NoteColorSprite::Load(const RString &sButton, const RString &sElement, PlayerNumber pn, GameController gc) {
+void NoteColorSprite::Load(const std::string &sButton, const std::string &sElement, PlayerNumber pn, GameController gc) {
 	m_p = MakeNoteResource(sButton, sElement, pn, gc, true);
 }
 

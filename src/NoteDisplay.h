@@ -48,7 +48,7 @@ struct NoteResource;
 struct NoteColorActor {
 	NoteColorActor();
 	~NoteColorActor();
-	void Load(const RString &sButton, const RString &sElement, PlayerNumber, GameController);
+	void Load(const std::string &sButton, const std::string &sElement, PlayerNumber, GameController);
 	Actor *Get();
 
  private:
@@ -58,7 +58,7 @@ struct NoteColorActor {
 struct NoteColorSprite {
 	NoteColorSprite();
 	~NoteColorSprite();
-	void Load(const RString &sButton, const RString &sElement, PlayerNumber, GameController);
+	void Load(const std::string &sButton, const std::string &sElement, PlayerNumber, GameController);
 	Sprite *Get();
 
  private:
