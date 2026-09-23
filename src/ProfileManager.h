@@ -59,7 +59,7 @@ class ProfileManager {
 	bool LoadFirstAvailableProfile(PlayerNumber pn, bool bLoadEdits = true); // memory card or local profile
 	bool LoadLocalProfileFromMachine(PlayerNumber pn);
 	bool LoadProfileFromMemoryCard(PlayerNumber pn, bool bLoadEdits = true);
-	bool FastLoadProfileNameFromMemoryCard(RString sRootDir, RString &sName) const;
+	bool FastLoadProfileNameFromMemoryCard(std::string sRootDir, std::string &sName) const;
 	bool SaveProfile(PlayerNumber pn) const;
 	bool SaveLocalProfile(RString sProfileID);
 	void UnloadProfile(PlayerNumber pn);

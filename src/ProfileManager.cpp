@@ -300,7 +300,7 @@ bool ProfileManager::LoadFirstAvailableProfile(PlayerNumber pn, bool bLoadEdits)
 	return false;
 }
 
-bool ProfileManager::FastLoadProfileNameFromMemoryCard(RString sRootDir, RString &sName) const {
+bool ProfileManager::FastLoadProfileNameFromMemoryCard(std::string sRootDir, std::string &sName) const {
 	std::vector<RString> asDirsToTry;
 	GetMemoryCardProfileDirectoriesToTry(asDirsToTry);
 
