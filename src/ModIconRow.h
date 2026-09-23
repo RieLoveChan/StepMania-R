@@ -17,7 +17,7 @@ class ModIconRow : public ActorFrame {
 	ModIconRow();
 	~ModIconRow();
 
-	void Load(const RString &sMetricsGroup, PlayerNumber pn);
+	void Load(const std::string &sMetricsGroup, PlayerNumber pn);
 
 	virtual ModIconRow *Copy() const;
 	void SetFromGameState();

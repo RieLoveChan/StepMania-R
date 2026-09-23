@@ -28,7 +28,7 @@ ModIconRow::~ModIconRow() {
 	this->RemoveAllChildren();
 }
 
-void ModIconRow::Load(const RString &sMetricsGroup, PlayerNumber pn) {
+void ModIconRow::Load(const std::string &sMetricsGroup, PlayerNumber pn) {
 	ASSERT_M(m_pn == PlayerNumber_Invalid, "Multiple calls to Load");
 
 	m_sMetricsGroup = sMetricsGroup;
