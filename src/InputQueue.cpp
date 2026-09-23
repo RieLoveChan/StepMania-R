@@ -154,7 +154,7 @@ bool InputQueueCode::EnteredCode(GameController controller) const {
 	return false;
 }
 
-bool InputQueueCode::Load(RString sButtonsNames) {
+bool InputQueueCode::Load(std::string sButtonsNames) {
 	m_aPresses.clear();
 
 	std::vector<RString> asPresses;
