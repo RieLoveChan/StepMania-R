@@ -144,7 +144,7 @@ class Profile {
 	float GetSongsPercentComplete(StepsType st, Difficulty dc) const;
 	float GetCoursesPercentComplete(StepsType st, CourseDifficulty cd) const;
 	float GetSongsAndCoursesPercentCompleteAllDifficulties(StepsType st) const;
-	bool GetDefaultModifiers(const Game *pGameType, RString &sModifiersOut) const;
+	bool GetDefaultModifiers(const Game *pGameType, std::string &sModifiersOut) const;
 	void SetDefaultModifiers(const Game *pGameType, const RString &sModifiers);
 	bool IsCodeUnlocked(RString sUnlockEntryID) const;
 	Song *GetMostPopularSong() const;

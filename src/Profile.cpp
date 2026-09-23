@@ -493,7 +493,7 @@ int Profile::GetSongNumTimesPlayed(const SongID &songID) const {
  * In practice, we get the default modifiers from the theme the first time a game
  * is played, and from the profile every time thereafter.
  */
-bool Profile::GetDefaultModifiers(const Game *pGameType, RString &sModifiersOut) const {
+bool Profile::GetDefaultModifiers(const Game *pGameType, std::string &sModifiersOut) const {
 	std::map<std::string, RString>::const_iterator it;
 	it = m_sDefaultModifiers.find(pGameType->m_szName);
 	if (it == m_sDefaultModifiers.end())
