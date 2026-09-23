@@ -2020,7 +2020,7 @@ unsigned char g_LowerCase[256] = {
    0xF7, 0xD8, 0xD9, 0xDA, 0xDB, 0xDC, 0xDD, 0xDE, 0xFF,
 };
 
-void FixSlashesInPlace(RString &sPath) {
+void FixSlashesInPlace(std::string &sPath) {
 	for (unsigned i = 0; i < sPath.size(); ++i)
 		if (sPath[i] == '\\')
 			sPath[i] = '/';

@@ -628,7 +628,7 @@ bool IsADirectory(const RString &sPath);
 int GetFileSizeInBytes(const RString &sFilePath);
 
 // call FixSlashesInPlace on any path that came from the user
-void FixSlashesInPlace(RString &sPath);
+void FixSlashesInPlace(std::string &sPath);
 void CollapsePath(RString &sPath, bool bRemoveLeadingDot = false);
 
 /** @brief Utilities for converting the RStrings. */
