@@ -13,7 +13,7 @@ class BitmapText;
 class ComboGraph : public ActorFrame {
  public:
 	ComboGraph();
-	void Load(RString sMetricsGroup);
+	void Load(std::string sMetricsGroup);
 	void Set(const StageStats &s, const PlayerStageStats &pss);
 	virtual ComboGraph *Copy() const;
 	virtual bool AutoLoadChildren() const {
