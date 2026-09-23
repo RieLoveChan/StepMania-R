@@ -23,7 +23,7 @@ Command::Arg Command::GetArg(unsigned index) const {
 	return a;
 }
 
-void Command::Load(const RString &sCommand) {
+void Command::Load(const std::string &sCommand) {
 	m_vsArgs.clear();
 	split(sCommand, ",", m_vsArgs, false); // don't ignore empty
 }

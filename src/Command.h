@@ -8,7 +8,7 @@
 
 class Command {
  public:
-	void Load(const RString &sCommand);
+	void Load(const std::string &sCommand);
 
 	std::string GetOriginalCommandString() const; // used when reporting an error in number of args
 	std::string GetName() const; // the first argument, Trim()'d (NOT lower-cased -- callers that need case-insensitive
