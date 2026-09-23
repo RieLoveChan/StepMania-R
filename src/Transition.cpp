@@ -6,7 +6,7 @@ Transition::Transition() {
 	m_State = waiting;
 }
 
-void Transition::Load(RString sBGAniDir) {
+void Transition::Load(std::string sBGAniDir) {
 	this->RemoveAllChildren();
 
 	m_sprTransition.Load(sBGAniDir);
