@@ -1185,7 +1185,7 @@ void Trim(RString &sStr, const char *s) {
 	sStr.assign(sStr.substr(b, e - b));
 }
 
-void StripCrnl(RString &s) {
+void StripCrnl(std::string &s) {
 	while (!s.empty() && (s[s.size() - 1] == '\r' || s[s.size() - 1] == '\n'))
 		s.erase(s.size() - 1);
 }
