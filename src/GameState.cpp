@@ -843,7 +843,7 @@ void GameState::SaveCurrentSettingsToProfile(PlayerNumber pn) {
 		pProfile->m_lastCourse.FromCourse(m_pPreferredCourse);
 }
 
-bool GameState::CanSafelyEnterGameplay(RString &reason) {
+bool GameState::CanSafelyEnterGameplay(std::string &reason) {
 	if (!IsCourseMode()) {
 		Song const *song = m_pCurSong;
 		if (song == nullptr) {

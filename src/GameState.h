@@ -88,7 +88,7 @@ class GameState {
 	void SaveCurrentSettingsToProfile(PlayerNumber pn);
 	Song *GetDefaultSong() const;
 
-	bool CanSafelyEnterGameplay(RString &reason);
+	bool CanSafelyEnterGameplay(std::string &reason);
 	void SetCompatibleStylesForPlayers();
 	void ForceSharedSidesMatch();
 	void ForceOtherPlayersToCompatibleSteps(PlayerNumber main);
