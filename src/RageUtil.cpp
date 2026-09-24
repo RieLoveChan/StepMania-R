@@ -1933,7 +1933,7 @@ RString WcharDisplayText(wchar_t c) {
  * a/b/c -> c
  * a/b/c/ -> c
  */
-RString Basename(const RString &sDir) {
+RString Basename(const std::string &sDir) {
 	std::size_t iEnd = sDir.find_last_not_of("/\\");
 	if (iEnd == sDir.npos)
 		return RString();
