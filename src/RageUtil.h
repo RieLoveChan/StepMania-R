@@ -532,14 +532,14 @@ bool GetFileContents(const std::string &sFile, std::vector<RString> &asOut);
 
 class Regex {
  public:
-	Regex(const RString &sPat = "");
+	Regex(const std::string &sPat = "");
 	Regex(const Regex &rhs);
 	Regex &operator=(const Regex &rhs);
 	~Regex();
 	bool IsSet() const {
 		return !m_sPattern.empty();
 	}
-	void Set(const RString &str);
+	void Set(const std::string &str);
 	bool Compare(const RString &sStr);
 	bool Compare(const RString &sStr, std::vector<RString> &asMatches);
 	bool Replace(const RString &sReplacement, const RString &sSubject, RString &sOut);

@@ -1329,7 +1329,7 @@ void Regex::Compile() {
 	ASSERT(m_iBackrefs < 128);
 }
 
-void Regex::Set(const RString &sStr) {
+void Regex::Set(const std::string &sStr) {
 	Release();
 	m_sPattern = sStr;
 	Compile();
@@ -1341,7 +1341,7 @@ void Regex::Release() {
 	m_sPattern = RString();
 }
 
-Regex::Regex(const RString &sStr) : m_pReg(nullptr), m_iBackrefs(0) {
+Regex::Regex(const std::string &sStr) : m_pReg(nullptr), m_iBackrefs(0) {
 	Set(sStr);
 }
 
