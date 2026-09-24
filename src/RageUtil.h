@@ -540,7 +540,7 @@ class Regex {
 		return !m_sPattern.empty();
 	}
 	void Set(const std::string &str);
-	bool Compare(const RString &sStr);
+	bool Compare(const std::string &sStr);
 	bool Compare(const RString &sStr, std::vector<RString> &asMatches);
 	bool Replace(const RString &sReplacement, const RString &sSubject, RString &sOut);
 

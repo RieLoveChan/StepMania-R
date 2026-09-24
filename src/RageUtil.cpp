@@ -1359,7 +1359,7 @@ Regex::~Regex() {
 	Release();
 }
 
-bool Regex::Compare(const RString &sStr) {
+bool Regex::Compare(const std::string &sStr) {
 	int iMat[128 * 3];
 	int iRet = pcre_exec((pcre *)m_pReg, nullptr, sStr.data(), static_cast<int>(sStr.size()), 0, 0, iMat, 128 * 3);
 
