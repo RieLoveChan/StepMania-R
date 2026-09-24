@@ -411,7 +411,7 @@ RString vssprintf(const char *szFormat, va_list argList) {
  * to "a b %I64 %-3I64u c d". This assumes a well-formed format string; invalid format strings
  * should not crash, but the results are undefined. */
 #if defined(WIN32)
-RString ConvertI64FormatString(const RString &sStr) {
+RString ConvertI64FormatString(const std::string &sStr) {
 	RString sRet;
 	sRet.reserve(sStr.size() + 16);
 
@@ -440,7 +440,7 @@ RString ConvertI64FormatString(const RString &sStr) {
 	return sRet;
 }
 #else
-RString ConvertI64FormatString(const RString &sStr) {
+RString ConvertI64FormatString(const std::string &sStr) {
 	return sStr;
 }
 #endif
