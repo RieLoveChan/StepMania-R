@@ -6,12 +6,12 @@
 /** @brief The different fields to potentially translate. */
 struct TitleFields {
 	void SaveToStrings(
-	   RString &sTitle,
-	   RString &sSubtitle,
-	   RString &sArtist,
-	   RString &sTitleTranslit,
-	   RString &sSubtitleTranslit,
-	   RString &sArtistTranslit
+	   std::string &sTitle,
+	   std::string &sSubtitle,
+	   std::string &sArtist,
+	   std::string &sTitleTranslit,
+	   std::string &sSubtitleTranslit,
+	   std::string &sArtistTranslit
 	) const {
 		sTitle = Title;
 		sSubtitle = Subtitle;
@@ -22,12 +22,12 @@ struct TitleFields {
 	}
 
 	void LoadFromStrings(
-	   RString sTitle,
-	   RString sSubtitle,
-	   RString sArtist,
-	   RString sTitleTranslit,
-	   RString sSubtitleTranslit,
-	   RString sArtistTranslit
+	   const std::string &sTitle,
+	   const std::string &sSubtitle,
+	   const std::string &sArtist,
+	   const std::string &sTitleTranslit,
+	   const std::string &sSubtitleTranslit,
+	   const std::string &sArtistTranslit
 	) {
 		Title = sTitle;
 		Subtitle = sSubtitle;
