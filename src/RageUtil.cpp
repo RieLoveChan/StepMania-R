@@ -1062,7 +1062,7 @@ unsigned int GetHashForString(const std::string &s) {
 }
 
 /* Return true if "dir" is empty or does not exist. */
-bool DirectoryIsEmpty(const RString &sDir) {
+bool DirectoryIsEmpty(const std::string &sDir) {
 	if (sDir.empty())
 		return true;
 	if (!DoesFileExist(sDir))

@@ -465,7 +465,7 @@ unsigned int GetHashForFile(const RString &sPath);
 unsigned int GetHashForDirectory(
    const RString &sDir
 ); // a hash value that remains the same as long as nothing in the directory has changed
-bool DirectoryIsEmpty(const RString &sPath);
+bool DirectoryIsEmpty(const std::string &sPath);
 
 bool CompareRStringsAsc(const RString &sStr1, const RString &sStr2);
 bool CompareRStringsDesc(const RString &sStr1, const RString &sStr2);
