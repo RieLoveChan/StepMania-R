@@ -189,7 +189,7 @@ bool HexToBinary(const RString &s, RString &sOut) {
 	return HexToBinary(s, (unsigned char *)sOut.data());
 }
 
-float HHMMSSToSeconds(const RString &sHHMMSS) {
+float HHMMSSToSeconds(const std::string &sHHMMSS) {
 	std::vector<RString> arrayBits;
 	split(sHHMMSS, ":", arrayBits, false);
 
