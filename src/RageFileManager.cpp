@@ -909,11 +909,11 @@ static bool SortBySecond(const std::pair<int, int> &a, const std::pair<int, int>
  * somewhere and not notice), and easier (don't have to pass flags down to IniFile::Write,
  * etc).
  */
-static bool PathUsesSlowFlush(const RString &sPath) {
+static bool PathUsesSlowFlush(const std::string &sPath) {
 	static const char *FlushPaths[] = {"/Save/", "Save/"};
 
 	for (unsigned i = 0; i < ARRAYLEN(FlushPaths); ++i)
-		if (!strncmp(sPath, FlushPaths[i], strlen(FlushPaths[i])))
+		if (!strncmp(sPath.c_str(), FlushPaths[i], strlen(FlushPaths[i])))
 			return true;
 	return false;
 }
