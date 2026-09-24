@@ -333,7 +333,7 @@ inline RString PrettyPercent(int fNumerator, int fDenominator) {
 	return PrettyPercent(float(fNumerator), float(fDenominator));
 }
 RString Commify(int iNum);
-RString Commify(const RString &num, const RString &sep = ",", const RString &dot = ".");
+RString Commify(const std::string &num, const std::string &sep = ",", const std::string &dot = ".");
 RString FormatNumberAndSuffix(int i);
 
 struct tm GetLocalTime();

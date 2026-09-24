@@ -258,7 +258,7 @@ RString Commify(int iNum) {
 	return Commify(sNum);
 }
 
-RString Commify(const RString &num, const RString &sep, const RString &dot) {
+RString Commify(const std::string &num, const std::string &sep, const std::string &dot) {
 	std::size_t num_start = 0;
 	std::size_t num_end = num.size();
 	std::size_t dot_pos = num.find(dot);
