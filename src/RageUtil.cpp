@@ -1394,7 +1394,7 @@ bool Regex::Compare(const RString &sStr, std::vector<RString> &asMatches) {
 
 // Arguments and behavior are the same are similar to
 // http://us3.php.net/manual/en/function.preg-replace.php
-bool Regex::Replace(const RString &sReplacement, const RString &sSubject, RString &sOut) {
+bool Regex::Replace(const std::string &sReplacement, const std::string &sSubject, RString &sOut) {
 	std::vector<RString> asMatches;
 	if (!Compare(sSubject, asMatches))
 		return false;

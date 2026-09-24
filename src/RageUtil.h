@@ -542,7 +542,7 @@ class Regex {
 	void Set(const std::string &str);
 	bool Compare(const std::string &sStr);
 	bool Compare(const RString &sStr, std::vector<RString> &asMatches);
-	bool Replace(const RString &sReplacement, const RString &sSubject, RString &sOut);
+	bool Replace(const std::string &sReplacement, const std::string &sSubject, RString &sOut);
 
  private:
 	void Compile();
