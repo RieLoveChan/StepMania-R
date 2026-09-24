@@ -1538,7 +1538,7 @@ bool utf8_to_wchar(const char *s, std::size_t iLength, unsigned &start, wchar_t 
 }
 
 // UTF-8 encode ch and append to out.
-void wchar_to_utf8(wchar_t ch, RString &out) {
+void wchar_to_utf8(wchar_t ch, std::string &out) {
 	if (ch < 0x80) {
 		out.append(1, (char)ch);
 		return;

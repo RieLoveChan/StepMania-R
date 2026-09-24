@@ -368,7 +368,7 @@ extern const wchar_t INVALID_CHAR;
 int utf8_get_char_len(char p);
 bool utf8_to_wchar(const char *s, std::size_t iLength, unsigned &start, wchar_t &ch);
 bool utf8_to_wchar_ec(const RString &s, unsigned &start, wchar_t &ch);
-void wchar_to_utf8(wchar_t ch, RString &out);
+void wchar_to_utf8(wchar_t ch, std::string &out);
 wchar_t utf8_get_char(const RString &s);
 bool utf8_is_valid(const RString &s);
 void utf8_remove_bom(std::string &s);
