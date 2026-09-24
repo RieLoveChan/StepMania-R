@@ -221,7 +221,7 @@ bool RageFileManager::Unzip(const std::string &zipPath, std::string targetPath, 
 	return success;
 }
 
-static void NormalizePath(RString &sPath) {
+static void NormalizePath(std::string &sPath) {
 	FixSlashesInPlace(sPath);
 	CollapsePath(sPath, true);
 	if (sPath.empty()) {
