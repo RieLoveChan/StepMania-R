@@ -108,17 +108,18 @@ void TitleSubst::Subst(TitleFields &tf) {
 		/* These are used when applying kanji to a field that doesn't have the
 		 * correct data.  Should be used sparingly. */
 		if (!tt->Replacement.TitleTranslit.empty()) {
-			tf.TitleTranslit = (tt->Replacement.TitleTranslit != ERASE_MARKER) ? tt->Replacement.TitleTranslit : RString();
+			tf.TitleTranslit =
+			   (tt->Replacement.TitleTranslit != ERASE_MARKER) ? tt->Replacement.TitleTranslit : std::string();
 			FontCharAliases::ReplaceMarkers(tf.TitleTranslit);
 		}
 		if (!tt->Replacement.SubtitleTranslit.empty()) {
 			tf.SubtitleTranslit =
-			   (tt->Replacement.SubtitleTranslit != ERASE_MARKER) ? tt->Replacement.SubtitleTranslit : RString();
+			   (tt->Replacement.SubtitleTranslit != ERASE_MARKER) ? tt->Replacement.SubtitleTranslit : std::string();
 			FontCharAliases::ReplaceMarkers(tf.SubtitleTranslit);
 		}
 		if (!tt->Replacement.ArtistTranslit.empty()) {
 			tf.ArtistTranslit =
-			   (tt->Replacement.ArtistTranslit != ERASE_MARKER) ? tt->Replacement.ArtistTranslit : RString();
+			   (tt->Replacement.ArtistTranslit != ERASE_MARKER) ? tt->Replacement.ArtistTranslit : std::string();
 			FontCharAliases::ReplaceMarkers(tf.ArtistTranslit);
 		}
 
