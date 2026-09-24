@@ -368,7 +368,7 @@ static void InitCharAliases() {
 }
 
 // Replace all &markers; and &#NNNN;s with UTF-8.
-void FontCharAliases::ReplaceMarkers(RString &sText) {
+void FontCharAliases::ReplaceMarkers(std::string &sText) {
 	InitCharAliases();
 	ReplaceEntityText(sText, CharAliasRepl);
 	Replace_Unicode_Markers(sText);

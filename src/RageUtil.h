@@ -553,9 +553,9 @@ class Regex {
 	std::string m_sPattern;
 };
 
-void ReplaceEntityText(RString &sText, const std::map<RString, RString> &m);
-void ReplaceEntityText(RString &sText, const std::map<char, RString> &m);
-void Replace_Unicode_Markers(RString &Text);
+void ReplaceEntityText(std::string &sText, const std::map<RString, RString> &m);
+void ReplaceEntityText(std::string &sText, const std::map<char, RString> &m);
+void Replace_Unicode_Markers(std::string &Text);
 RString WcharDisplayText(wchar_t c);
 
 RString Basename(const std::string &dir);

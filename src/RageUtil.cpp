@@ -1788,7 +1788,7 @@ RString WcharToUTF8(wchar_t c) {
 }
 
 // &a; -> a
-void ReplaceEntityText(RString &sText, const std::map<RString, RString> &m) {
+void ReplaceEntityText(std::string &sText, const std::map<RString, RString> &m) {
 	RString sRet;
 
 	std::size_t iOffset = 0;
@@ -1836,7 +1836,7 @@ void ReplaceEntityText(RString &sText, const std::map<RString, RString> &m) {
 }
 
 // abcd -> &a; &b; &c; &d;
-void ReplaceEntityText(RString &sText, const std::map<char, RString> &m) {
+void ReplaceEntityText(std::string &sText, const std::map<char, RString> &m) {
 	RString sFind;
 
 	for (const std::pair<const char, RString> &c : m)
@@ -1877,7 +1877,7 @@ void ReplaceEntityText(RString &sText, const std::map<char, RString> &m) {
 }
 
 // Replace &#nnnn; (decimal) and &xnnnn; (hex) with corresponding UTF-8 characters.
-void Replace_Unicode_Markers(RString &sText) {
+void Replace_Unicode_Markers(std::string &sText) {
 	unsigned iStart = 0;
 	while (iStart < sText.size()) {
 		// Look for &#digits;
