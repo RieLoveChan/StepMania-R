@@ -1270,7 +1270,7 @@ RString DerefRedir(const RString &_path) {
 	RageException::Throw("Circular redirect \"%s\".", sPath.c_str());
 }
 
-bool GetFileContents(const RString &sPath, RString &sOut, bool bOneLine) {
+bool GetFileContents(const std::string &sPath, RString &sOut, bool bOneLine) {
 	// Don't warn if the file doesn't exist, but do warn if it exists and fails to open.
 	if (!IsAFile(sPath))
 		return false;
@@ -1301,7 +1301,7 @@ bool GetFileContents(const RString &sPath, RString &sOut, bool bOneLine) {
 	return true;
 }
 
-bool GetFileContents(const RString &sFile, std::vector<RString> &asOut) {
+bool GetFileContents(const std::string &sFile, std::vector<RString> &asOut) {
 	RageFile file;
 	if (!file.Open(sFile)) {
 		LOG_ERROR(Log::File, "GetFileContents(%s): %s", sFile.c_str(), file.GetError().c_str());
