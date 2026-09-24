@@ -315,8 +315,8 @@ void fapproach(float &val, float other_val, float to_move);
 float fmodfp(float x, float y);
 
 int power_of_two(int input);
-bool IsAnInt(const RString &s);
-bool IsHexVal(const RString &s);
+bool IsAnInt(const std::string &s);
+bool IsHexVal(const std::string &s);
 RString BinaryToHex(const void *pData_, std::size_t iNumBytes);
 RString BinaryToHex(const RString &sString);
 bool HexToBinary(const RString &s, unsigned char *stringOut);

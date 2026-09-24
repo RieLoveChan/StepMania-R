@@ -131,7 +131,7 @@ int power_of_two(int input) {
 	return (input == value) ? value : (value << 1);
 }
 
-bool IsAnInt(const RString &s) {
+bool IsAnInt(const std::string &s) {
 	if (s.empty())
 		return false;
 
@@ -142,7 +142,7 @@ bool IsAnInt(const RString &s) {
 	return true;
 }
 
-bool IsHexVal(const RString &s) {
+bool IsHexVal(const std::string &s) {
 	if (s.empty())
 		return false;
 
