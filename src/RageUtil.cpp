@@ -27,7 +27,7 @@
 
 const RString CUSTOM_SONG_PATH = "/@mem/";
 
-bool HexToBinary(const RString &, RString &);
+bool HexToBinary(const std::string &, RString &);
 void utf8_sanitize(RString &);
 void UnicodeUpperLower(wchar_t *, std::size_t, const unsigned char *);
 
@@ -167,7 +167,7 @@ RString BinaryToHex(const std::string &sString) {
 	return BinaryToHex(sString.data(), sString.size());
 }
 
-bool HexToBinary(const RString &s, unsigned char *stringOut) {
+bool HexToBinary(const std::string &s, unsigned char *stringOut) {
 	if (!IsHexVal(s))
 		return false;
 
@@ -184,7 +184,7 @@ bool HexToBinary(const RString &s, unsigned char *stringOut) {
 	return true;
 }
 
-bool HexToBinary(const RString &s, RString &sOut) {
+bool HexToBinary(const std::string &s, RString &sOut) {
 	sOut.resize(s.size() / 2);
 	return HexToBinary(s, (unsigned char *)sOut.data());
 }
