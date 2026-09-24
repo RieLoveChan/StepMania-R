@@ -1202,7 +1202,7 @@ bool EndsWith(const std::string &sTestThis, const std::string &sEnding) {
 	return sTestThis.compare(sTestThis.length() - sEnding.length(), sEnding.length(), sEnding) == 0;
 }
 
-RString URLEncode(const RString &sStr) {
+RString URLEncode(const std::string &sStr) {
 	RString sOutput;
 	for (unsigned k = 0; k < sStr.size(); k++) {
 		char t = sStr[k];

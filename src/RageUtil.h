@@ -521,7 +521,7 @@ void Trim(std::string &sStr, const char *szTrim = "\r\n\t ");
 void StripCrnl(std::string &sStr);
 bool BeginsWith(const std::string &sTestThis, const std::string &sBeginning);
 bool EndsWith(const std::string &sTestThis, const std::string &sEnding);
-RString URLEncode(const RString &sStr);
+RString URLEncode(const std::string &sStr);
 
 void StripCvsAndSvn(std::vector<RString> &vs);        // Removes various versioning system metafolders.
 void StripMacResourceForks(std::vector<RString> &vs); // Removes files starting with "._"
