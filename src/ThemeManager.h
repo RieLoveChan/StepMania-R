@@ -65,7 +65,7 @@ class ThemeManager {
 	void ClearSubscribers();
 	void GetOptionNames(std::vector<std::string> &AddTo);
 
-	static void EvaluateString(RString &sText);
+	static void EvaluateString(std::string &sText);
 
 	struct PathInfo {
 		std::string sResolvedPath;

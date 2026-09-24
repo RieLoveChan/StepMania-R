@@ -1074,7 +1074,7 @@ apActorCommands ThemeManager::GetMetricA(const RString &sMetricsGroup, const RSt
 }
 #endif
 
-void ThemeManager::EvaluateString(RString &sText) {
+void ThemeManager::EvaluateString(std::string &sText) {
 	FontCharAliases::ReplaceMarkers(sText);
 }
 
