@@ -318,7 +318,7 @@ int power_of_two(int input);
 bool IsAnInt(const std::string &s);
 bool IsHexVal(const std::string &s);
 RString BinaryToHex(const void *pData_, std::size_t iNumBytes);
-RString BinaryToHex(const RString &sString);
+RString BinaryToHex(const std::string &sString);
 bool HexToBinary(const RString &s, unsigned char *stringOut);
 bool HexToBinary(const RString &s, RString *sOut);
 float HHMMSSToSeconds(const std::string &sHMS);

@@ -163,7 +163,7 @@ RString BinaryToHex(const void *pData_, std::size_t iNumBytes) {
 	return s;
 }
 
-RString BinaryToHex(const RString &sString) {
+RString BinaryToHex(const std::string &sString) {
 	return BinaryToHex(sString.data(), sString.size());
 }
 
