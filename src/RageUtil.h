@@ -559,7 +559,7 @@ void Replace_Unicode_Markers(RString &Text);
 RString WcharDisplayText(wchar_t c);
 
 RString Basename(const std::string &dir);
-RString Dirname(const RString &dir);
+RString Dirname(const std::string &dir);
 RString Capitalize(const RString &s);
 
 #if defined(HAVE_UNISTD_H)

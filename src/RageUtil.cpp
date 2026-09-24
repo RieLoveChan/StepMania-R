@@ -1955,7 +1955,7 @@ RString Basename(const std::string &sDir) {
  * /foo -> /
  * / -> /
  */
-RString Dirname(const RString &dir) {
+RString Dirname(const std::string &dir) {
 	// Special case: "/" -> "/".
 	if (dir.size() == 1 && dir[0] == '/')
 		return "/";
