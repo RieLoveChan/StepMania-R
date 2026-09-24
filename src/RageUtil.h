@@ -467,8 +467,8 @@ unsigned int GetHashForDirectory(
 ); // a hash value that remains the same as long as nothing in the directory has changed
 bool DirectoryIsEmpty(const std::string &sPath);
 
-bool CompareRStringsAsc(const RString &sStr1, const RString &sStr2);
-bool CompareRStringsDesc(const RString &sStr1, const RString &sStr2);
+bool CompareRStringsAsc(const std::string &sStr1, const std::string &sStr2);
+bool CompareRStringsDesc(const std::string &sStr1, const std::string &sStr2);
 void SortRStringArray(std::vector<RString> &asAddTo, const bool bSortAscending = true);
 
 /* Find the mean and standard deviation of all numbers in [start,end). */

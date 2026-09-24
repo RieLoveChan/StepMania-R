@@ -1073,12 +1073,12 @@ bool DirectoryIsEmpty(const std::string &sDir) {
 	return asFileNames.empty();
 }
 
-bool CompareRStringsAsc(const RString &sStr1, const RString &sStr2) {
-	return sStr1.CompareNoCase(sStr2) < 0;
+bool CompareRStringsAsc(const std::string &sStr1, const std::string &sStr2) {
+	return StdString::ssicmp(sStr1.c_str(), sStr2.c_str()) < 0;
 }
 
-bool CompareRStringsDesc(const RString &sStr1, const RString &sStr2) {
-	return sStr1.CompareNoCase(sStr2) > 0;
+bool CompareRStringsDesc(const std::string &sStr1, const std::string &sStr2) {
+	return StdString::ssicmp(sStr1.c_str(), sStr2.c_str()) > 0;
 }
 
 void SortRStringArray(std::vector<RString> &arrayRStrings, const bool bSortAscending) {
