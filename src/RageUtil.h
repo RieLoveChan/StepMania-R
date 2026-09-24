@@ -560,7 +560,7 @@ RString WcharDisplayText(wchar_t c);
 
 RString Basename(const std::string &dir);
 RString Dirname(const std::string &dir);
-RString Capitalize(const RString &s);
+RString Capitalize(const std::string &s);
 
 #if defined(HAVE_UNISTD_H)
 #include <unistd.h> /* correct place with correct definitions */

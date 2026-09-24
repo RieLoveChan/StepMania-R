@@ -1975,7 +1975,7 @@ RString Dirname(const std::string &dir) {
 	return dir.substr(0, pos + 1);
 }
 
-RString Capitalize(const RString &s) {
+RString Capitalize(const std::string &s) {
 	if (s.empty())
 		return RString();
 
