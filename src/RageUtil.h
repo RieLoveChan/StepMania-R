@@ -347,7 +347,7 @@ RString ConvertI64FormatString(const std::string &sStr);
  * If Path is a directory (eg. c:\games\stepmania"), append a slash so the last
  * element will end up in Dir, not FName: "c:\games\stepmania\".
  * */
-void splitpath(const RString &Path, RString &Dir, RString &Filename, RString &Ext);
+void splitpath(const std::string &Path, RString &Dir, RString &Filename, RString &Ext);
 RString custom_songify_path(RString const &path);
 
 RString SetExtension(const RString &path, const RString &ext);
