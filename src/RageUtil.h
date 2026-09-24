@@ -460,7 +460,7 @@ extern int g_argc;
 extern char **g_argv;
 
 void CRC32(unsigned int &iCRC, const void *pBuffer, std::size_t iSize);
-unsigned int GetHashForString(const RString &s);
+unsigned int GetHashForString(const std::string &s);
 unsigned int GetHashForFile(const RString &sPath);
 unsigned int GetHashForDirectory(
    const RString &sDir

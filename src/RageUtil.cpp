@@ -1055,7 +1055,7 @@ void CRC32(unsigned int &iCRC, const void *pVoidBuffer, std::size_t iSize) {
 	iCRC ^= 0xFFFFFFFF;
 }
 
-unsigned int GetHashForString(const RString &s) {
+unsigned int GetHashForString(const std::string &s) {
 	unsigned crc = 0;
 	CRC32(crc, s.data(), s.size());
 	return crc;
