@@ -1190,12 +1190,12 @@ void StripCrnl(std::string &s) {
 		s.erase(s.size() - 1);
 }
 
-bool BeginsWith(const RString &sTestThis, const RString &sBeginning) {
+bool BeginsWith(const std::string &sTestThis, const std::string &sBeginning) {
 	ASSERT(!sBeginning.empty());
 	return sTestThis.compare(0, sBeginning.length(), sBeginning) == 0;
 }
 
-bool EndsWith(const RString &sTestThis, const RString &sEnding) {
+bool EndsWith(const std::string &sTestThis, const std::string &sEnding) {
 	ASSERT(!sEnding.empty());
 	if (sTestThis.size() < sEnding.size())
 		return false;

@@ -519,8 +519,8 @@ void TrimLeft(std::string &sStr, const char *szTrim = "\r\n\t ");
 void TrimRight(std::string &sStr, const char *szTrim = "\r\n\t ");
 void Trim(std::string &sStr, const char *szTrim = "\r\n\t ");
 void StripCrnl(std::string &sStr);
-bool BeginsWith(const RString &sTestThis, const RString &sBeginning);
-bool EndsWith(const RString &sTestThis, const RString &sEnding);
+bool BeginsWith(const std::string &sTestThis, const std::string &sBeginning);
+bool EndsWith(const std::string &sTestThis, const std::string &sEnding);
 RString URLEncode(const RString &sStr);
 
 void StripCvsAndSvn(std::vector<RString> &vs);        // Removes various versioning system metafolders.
