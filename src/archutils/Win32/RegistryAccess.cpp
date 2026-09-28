@@ -10,7 +10,7 @@
 
 /* Given "HKEY_LOCAL_MACHINE\hardware\foo", return "hardware\foo", and place
  * the HKEY_LOCAL_MACHINE constant in key. */
-static bool GetRegKeyType(const RString &sIn, RString &sOut, HKEY &key) {
+static bool GetRegKeyType(const RString &sIn, std::string &sOut, HKEY &key) {
 	std::size_t iBackslash = sIn.find('\\');
 	if (iBackslash == sIn.npos) {
 		LOG->Warn("Invalid registry key: \"%s\" ", sIn.c_str());
