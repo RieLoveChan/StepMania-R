@@ -465,7 +465,7 @@ void SongUtil::SortSongPointerArrayByLength(std::vector<Song *> &vpSongsInOut) {
 	sort(vpSongsInOut.begin(), vpSongsInOut.end(), CompareSongPointersByLength);
 }
 
-void AppendOctal(int n, int digits, RString &out) {
+void AppendOctal(int n, int digits, std::string &out) {
 	for (int p = digits - 1; p >= 0; --p) {
 		const int shift = p * 3;
 		int n2 = (n >> shift) & 0x7;
