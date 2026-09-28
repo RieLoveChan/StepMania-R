@@ -11,7 +11,7 @@
  * handler -- heap allocation (RString) is safe here. Still don't use
  * RegistryAccess, since it depends on engine state this minimal child
  * process doesn't set up. */
-static LONG GetRegKey(HKEY key, RString subkey, RString &out) {
+static LONG GetRegKey(HKEY key, RString subkey, std::string &out) {
 	HKEY hKey;
 	LONG iRet = RegOpenKeyEx(key, subkey, 0, KEY_QUERY_VALUE, &hKey);
 
