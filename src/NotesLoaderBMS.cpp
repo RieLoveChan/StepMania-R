@@ -538,7 +538,7 @@ class BMSSong {
 
  public:
 	BMSSong(Song *song);
-	int AllocateKeysound(RString filename, RString path);
+	int AllocateKeysound(std::string filename, std::string path);
 	bool GetBackground(RString filename, RString path, RString &bgfile);
 	Song *GetSong();
 };
@@ -557,7 +557,7 @@ Song *BMSSong::GetSong() {
 	return out;
 }
 
-int BMSSong::AllocateKeysound(RString filename, RString path) {
+int BMSSong::AllocateKeysound(std::string filename, std::string path) {
 	if (mapKeysoundToIndex.find(filename) != mapKeysoundToIndex.end()) {
 		return mapKeysoundToIndex[filename];
 	}
@@ -573,8 +573,8 @@ int BMSSong::AllocateKeysound(RString filename, RString path) {
 	 * on files in the BMS for files that actually have some other extension.
 	 * Do a search. Don't do a wildcard search; if sData is "song.wav",
 	 * we might also have "song.png", which we shouldn't match. */
-	RString normalizedFilename = filename;
-	RString dir = out->GetSongDir();
+	std::string normalizedFilename = filename;
+	std::string dir = out->GetSongDir();
 
 	if (dir.empty())
 		dir = Dirname(path);
