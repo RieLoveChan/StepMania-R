@@ -11,7 +11,7 @@
 
 #include <vector>
 
-void ForceToAscii(RString &str) {
+void ForceToAscii(std::string &str) {
 	for (unsigned i = 0; i < str.size(); ++i)
 		if (str[i] < 0x20 || str[i] > 0x7E)
 			str[i] = '?';

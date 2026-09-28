@@ -5,7 +5,7 @@
 #include "arch/RageDriver.h"
 #include <map>
 
-void ForceToAscii(RString &str);
+void ForceToAscii(std::string &str);
 
 class RageMovieTexture : public RageTexture {
  public:
