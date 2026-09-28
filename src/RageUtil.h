@@ -527,7 +527,7 @@ void StripCvsAndSvn(std::vector<RString> &vs);        // Removes various version
 void StripMacResourceForks(std::vector<RString> &vs); // Removes files starting with "._"
 
 RString DerefRedir(const RString &sPath);
-bool GetFileContents(const std::string &sPath, RString &sOut, bool bOneLine = false);
+bool GetFileContents(const std::string &sPath, std::string &sOut, bool bOneLine = false);
 bool GetFileContents(const std::string &sFile, std::vector<RString> &asOut);
 
 class Regex {
