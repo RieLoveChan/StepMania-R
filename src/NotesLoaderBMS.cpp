@@ -129,7 +129,7 @@ struct BMSObject {
 	int measure;
 	float position;
 	bool flag;
-	RString value;
+	std::string value;
 };
 
 inline bool operator<(BMSObject const &lhs, BMSObject const &rhs) {
@@ -1223,7 +1223,7 @@ bool BMSChartReader::ReadNoteData() {
 		if (channel == 3) // bpm change
 		{
 			unsigned int bpm;
-			if (sscanf(obj.value, "%x", &bpm) == 1) {
+			if (sscanf(obj.value.c_str(), "%x", &bpm) == 1) {
 				if (bpm > 0)
 					td.SetBPMAtRow(row, measureAdjust * (currentBPM = static_cast<float>(bpm)));
 			}
