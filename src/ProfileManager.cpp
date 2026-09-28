@@ -600,9 +600,9 @@ bool ProfileManager::CreateLocalProfile(std::string sName, std::string &sProfile
 	// handled. -Kyz
 	int max_profile_number = -1;
 	int first_free_number = 0;
-	std::vector<RString> profile_ids;
+	std::vector<std::string> profile_ids;
 	GetLocalProfileIDs(profile_ids);
-	for (std::vector<RString>::const_iterator id = profile_ids.begin(); id != profile_ids.end(); ++id) {
+	for (std::vector<std::string>::const_iterator id = profile_ids.begin(); id != profile_ids.end(); ++id) {
 		int tmp = 0;
 		if ((*id) >> tmp) {
 			// The profile ids are already in order, so we don't have to handle the
@@ -1136,7 +1136,7 @@ bool ProfileManager::IsPersistentProfile(ProfileSlot slot) const {
 	}
 }
 
-void ProfileManager::GetLocalProfileIDs(std::vector<RString> &vsProfileIDsOut) const {
+void ProfileManager::GetLocalProfileIDs(std::vector<std::string> &vsProfileIDsOut) const {
 	vsProfileIDsOut.clear();
 	for (DirAndProfile const &i : g_vLocalProfile) {
 		RString sID = LocalProfileDirToID(RString(i.sDir));
@@ -1302,9 +1302,9 @@ class LunaProfileManager : public Luna<ProfileManager> {
 		return 1;
 	}
 	static int GetLocalProfileIDs(T *p, lua_State *L) {
-		std::vector<RString> vsProfileIDs;
+		std::vector<std::string> vsProfileIDs;
 		p->GetLocalProfileIDs(vsProfileIDs);
-		LuaHelpers::CreateTableFromArray<RString>(vsProfileIDs, L);
+		LuaHelpers::CreateTableFromArray<std::string>(vsProfileIDs, L);
 		return 1;
 	}
 	static int GetLocalProfileDisplayNames(T *p, lua_State *L) {

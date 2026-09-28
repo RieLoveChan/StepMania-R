@@ -124,7 +124,7 @@ void ScreenOptionsManageProfiles::BeginScreen() {
 
 	PROFILEMAN->GetLocalProfileIDs(m_vsLocalProfileID);
 
-	for (RString const &s : m_vsLocalProfileID) {
+	for (std::string const &s : m_vsLocalProfileID) {
 		Profile *pProfile = PROFILEMAN->GetLocalProfile(s);
 		ASSERT(pProfile != nullptr);
 
@@ -157,7 +157,7 @@ void ScreenOptionsManageProfiles::BeginScreen() {
 
 	// select the last chosen profile
 	if (!sEditLocalProfileID.empty()) {
-		std::vector<RString>::const_iterator iter =
+		std::vector<std::string>::const_iterator iter =
 		   find(m_vsLocalProfileID.begin(), m_vsLocalProfileID.end(), sEditLocalProfileID);
 		if (iter != m_vsLocalProfileID.end()) {
 			int iIndex = static_cast<int>(iter - m_vsLocalProfileID.begin());
@@ -238,7 +238,7 @@ void ScreenOptionsManageProfiles::HandleScreenMessage(const ScreenMessage SM) {
 		if (ScreenPrompt::s_LastAnswer == ANSWER_YES) {
 			// Select the profile nearest to the one that was just deleted.
 			int iIndex = -1;
-			std::vector<RString>::const_iterator iter =
+			std::vector<std::string>::const_iterator iter =
 			   find(m_vsLocalProfileID.begin(), m_vsLocalProfileID.end(), GAMESTATE->m_sEditLocalProfileID.Get());
 			if (iter != m_vsLocalProfileID.end())
 				iIndex = static_cast<int>(iter - m_vsLocalProfileID.begin());

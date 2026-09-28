@@ -25,7 +25,7 @@ class ScreenOptionsManageProfiles : public ScreenOptions {
 	int GetLocalProfileIndexWithFocus() const;
 	RString GetLocalProfileIDWithFocus() const;
 
-	std::vector<RString> m_vsLocalProfileID;
+	std::vector<std::string> m_vsLocalProfileID;
 };
 
 #endif
