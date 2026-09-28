@@ -151,12 +151,13 @@ void NoteField::CacheAllUsedNoteSkins() {
 
 	/* Cache all note skins that we might need for the whole song, course or battle
 	 * play, so we don't have to load them later (such as between course songs). */
-	std::vector<RString> asSkinsLower;
+	std::vector<std::string> asSkinsLower;
 	GAMESTATE->GetAllUsedNoteSkins(asSkinsLower);
 	asSkinsLower.push_back(m_pPlayerState->m_PlayerOptions.GetStage().m_sNoteSkin);
-	for (RString &s : asSkinsLower) {
+	for (std::string &s : asSkinsLower) {
 		NOTESKIN->ValidateNoteSkinName(s);
-		s.MakeLower();
+		if (!s.empty())
+			MakeLower(&s[0], s.size()); // equivalent to CStdStr::MakeLower()
 	}
 
 	for (unsigned i = 0; i < asSkinsLower.size(); ++i)
