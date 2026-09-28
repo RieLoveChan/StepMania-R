@@ -1547,7 +1547,7 @@ void SongManager::SetPreferredSongs(RString sPreferredSongs, bool bIsAbsolute) {
 
 	m_vPreferredSongSort.clear();
 	m_mapPreferredSectionToSongs.clear();
-	std::vector<RString> asLines;
+	std::vector<std::string> asLines;
 	RString sFile = sPreferredSongs;
 	if (!bIsAbsolute)
 		sFile = THEME->GetPathO("SongManager", sPreferredSongs);
@@ -1558,7 +1558,7 @@ void SongManager::SetPreferredSongs(RString sPreferredSongs, bool bIsAbsolute) {
 	PreferredSortSection section;
 	std::map<Song *, float> mapSongToPri;
 
-	for (RString sLine : asLines) {
+	for (std::string sLine : asLines) {
 		bool bSectionDivider = BeginsWith(sLine, "---");
 		if (bSectionDivider) {
 			if (!section.vpSongs.empty()) {
@@ -1567,7 +1567,8 @@ void SongManager::SetPreferredSongs(RString sPreferredSongs, bool bIsAbsolute) {
 				section = PreferredSortSection();
 			}
 
-			section.sName = sLine.Right(static_cast<int>(sLine.length() - RString("---").length()));
+			// Right(len - 3) == everything after the leading "---" already matched above.
+			section.sName = sLine.substr(3);
 			TrimLeft(section.sName);
 			TrimRight(section.sName);
 		}
@@ -1575,7 +1576,8 @@ void SongManager::SetPreferredSongs(RString sPreferredSongs, bool bIsAbsolute) {
 			/* if the line ends in slash-star, check if the section exists,
 			 * and if it does, add all the songs in that group to the list. */
 			if (EndsWith(sLine, "/*")) {
-				RString group = sLine.Left(static_cast<int>(sLine.length() - RString("/*").length()));
+				// Left(len - 2) == everything before the trailing "/*" just matched above.
+				RString group = sLine.substr(0, sLine.length() - 2);
 				if (DoesSongGroupExist(group)) {
 					// add all songs in group
 					const std::vector<Song *> &vSongs = GetSongs(group);
@@ -1652,7 +1654,7 @@ void SongManager::SetPreferredCourses(RString sPreferredCourses, bool bIsAbsolut
 
 	m_vPreferredCourseSort.clear();
 
-	std::vector<RString> asLines;
+	std::vector<std::string> asLines;
 	RString sFile = sPreferredCourses;
 	if (!bIsAbsolute)
 		sFile = THEME->GetPathO("SongManager", sPreferredCourses);
@@ -1661,7 +1663,7 @@ void SongManager::SetPreferredCourses(RString sPreferredCourses, bool bIsAbsolut
 
 	std::vector<Course *> vpCourses;
 
-	for (RString sLine : asLines) {
+	for (std::string sLine : asLines) {
 		bool bSectionDivider = BeginsWith(sLine, "---");
 		if (bSectionDivider) {
 			if (!vpCourses.empty()) {

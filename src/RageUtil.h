@@ -528,7 +528,7 @@ void StripMacResourceForks(std::vector<RString> &vs); // Removes files starting 
 
 RString DerefRedir(const RString &sPath);
 bool GetFileContents(const std::string &sPath, std::string &sOut, bool bOneLine = false);
-bool GetFileContents(const std::string &sFile, std::vector<RString> &asOut);
+bool GetFileContents(const std::string &sFile, std::vector<std::string> &asOut);
 
 class Regex {
  public:

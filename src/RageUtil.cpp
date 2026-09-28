@@ -1301,7 +1301,7 @@ bool GetFileContents(const std::string &sPath, std::string &sOut, bool bOneLine)
 	return true;
 }
 
-bool GetFileContents(const std::string &sFile, std::vector<RString> &asOut) {
+bool GetFileContents(const std::string &sFile, std::vector<std::string> &asOut) {
 	RageFile file;
 	if (!file.Open(sFile)) {
 		LOG_ERROR(Log::File, "GetFileContents(%s): %s", sFile.c_str(), file.GetError().c_str());
