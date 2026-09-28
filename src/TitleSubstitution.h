@@ -36,7 +36,7 @@ struct TitleFields {
 		SubtitleTranslit = sSubtitleTranslit;
 		ArtistTranslit = sArtistTranslit;
 	}
-	RString Title, Subtitle, Artist;
+	std::string Title, Subtitle, Artist;
 	std::string TitleTranslit, SubtitleTranslit, ArtistTranslit;
 };
 struct TitleTrans;

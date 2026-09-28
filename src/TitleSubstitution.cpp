@@ -89,19 +89,19 @@ void TitleSubst::Subst(TitleFields &tf) {
 		if (!tt->Replacement.Title.empty() && tf.Title != tt->Replacement.Title) {
 			if (tt->translit)
 				tf.TitleTranslit = tf.Title;
-			tf.Title = (tt->Replacement.Title != ERASE_MARKER) ? to.Title : RString();
+			tf.Title = (tt->Replacement.Title != ERASE_MARKER) ? to.Title : std::string();
 			FontCharAliases::ReplaceMarkers(tf.Title);
 		}
 		if (!tt->Replacement.Subtitle.empty() && tf.Subtitle != tt->Replacement.Subtitle) {
 			if (tt->translit)
 				tf.SubtitleTranslit = tf.Subtitle;
-			tf.Subtitle = (tt->Replacement.Subtitle != ERASE_MARKER) ? to.Subtitle : RString();
+			tf.Subtitle = (tt->Replacement.Subtitle != ERASE_MARKER) ? to.Subtitle : std::string();
 			FontCharAliases::ReplaceMarkers(tf.Subtitle);
 		}
 		if (!tt->Replacement.Artist.empty() && tf.Artist != tt->Replacement.Artist) {
 			if (tt->translit)
 				tf.ArtistTranslit = tf.Artist;
-			tf.Artist = (tt->Replacement.Artist != ERASE_MARKER) ? to.Artist : RString();
+			tf.Artist = (tt->Replacement.Artist != ERASE_MARKER) ? to.Artist : std::string();
 			FontCharAliases::ReplaceMarkers(tf.Artist);
 		}
 

@@ -1394,7 +1394,7 @@ bool Regex::Compare(const RString &sStr, std::vector<RString> &asMatches) {
 
 // Arguments and behavior are the same are similar to
 // http://us3.php.net/manual/en/function.preg-replace.php
-bool Regex::Replace(const std::string &sReplacement, const std::string &sSubject, RString &sOut) {
+bool Regex::Replace(const std::string &sReplacement, const std::string &sSubject, std::string &sOut) {
 	std::vector<RString> asMatches;
 	if (!Compare(sSubject, asMatches))
 		return false;
@@ -1403,9 +1403,20 @@ bool Regex::Replace(const std::string &sReplacement, const std::string &sSubject
 
 	// TODO: optimize me by iterating only once over the string
 	for (unsigned i = 0; i < asMatches.size(); i++) {
-		RString sFrom = ssprintf("\\${%d}", i);
-		RString sTo = asMatches[i];
-		sOut.Replace(sFrom, sTo);
+		std::string sFrom = ssprintf("\\${%d}", i);
+		std::string sTo = asMatches[i];
+
+		// Equivalent to CStdStr::Replace(PCMYSTR, PCMYSTR), which isn't
+		// available on plain std::string: replace every occurrence of sFrom
+		// in sOut with sTo, advancing past each replacement.
+		std::string::size_type nOldLen = sFrom.length();
+		if (nOldLen == 0)
+			continue;
+		std::string::size_type nIdx = 0;
+		while ((nIdx = sOut.find(sFrom, nIdx)) != std::string::npos) {
+			sOut.replace(nIdx, nOldLen, sTo);
+			nIdx += sTo.length();
+		}
 	}
 
 	return true;
