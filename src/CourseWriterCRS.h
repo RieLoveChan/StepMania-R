@@ -30,7 +30,7 @@ bool Write(const Course &course, const RString &sPath, bool bSavingCache);
  * @param pCourse the course file.
  * @param sOut the path to the file.
  */
-void GetEditFileContents(const Course *pCourse, RString &sOut);
+void GetEditFileContents(const Course *pCourse, std::string &sOut);
 /**
  * @brief Write the custom course to the machine's hard drive.
  * @param pCourse the course file.

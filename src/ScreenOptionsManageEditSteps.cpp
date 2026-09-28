@@ -148,7 +148,7 @@ void ScreenOptionsManageEditSteps::HandleScreenMessage(const ScreenMessage SM) {
 			RString sOldDescription = pSteps->GetDescription();
 			pSteps->SetDescription(ScreenTextEntry::s_sLastAnswer);
 
-			RString sError;
+			std::string sError;
 			if (!NotesWriterSM::WriteEditFileToMachine(pSong, pSteps, sError)) {
 				ScreenPrompt::Prompt(SM_None, sError);
 				return;

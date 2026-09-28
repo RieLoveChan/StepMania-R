@@ -4366,7 +4366,7 @@ void ScreenEdit::PerformSave(bool autosave) {
 	case EditMode_Home: {
 		ASSERT(m_pSteps->IsAnEdit());
 
-		RString sError;
+		std::string sError;
 		m_pSteps->CalculateRadarValues(m_pSong->m_fMusicLengthSeconds);
 		if (!NotesWriterSM::WriteEditFileToMachine(m_pSong, m_pSteps, sError)) {
 			ScreenPrompt::Prompt(SM_None, sError);

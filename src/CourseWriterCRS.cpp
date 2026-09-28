@@ -31,7 +31,7 @@ bool CourseWriterCRS::Write(const Course &course, const RString &sPath, bool bSa
 	return CourseWriterCRS::Write(course, f, bSavingCache);
 }
 
-void CourseWriterCRS::GetEditFileContents(const Course *pCourse, RString &sOut) {
+void CourseWriterCRS::GetEditFileContents(const Course *pCourse, std::string &sOut) {
 	RageFileObjMem mem;
 	CourseWriterCRS::Write(*pCourse, mem, true);
 	sOut = mem.GetString();

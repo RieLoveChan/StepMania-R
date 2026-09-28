@@ -21,7 +21,7 @@ bool Write(RString sPath, Song &out, const std::vector<Steps *> &vpStepsToSave);
  * @param pSteps the Steps in question.
  * @param sOut the start of the file contents.
  */
-void GetEditFileContents(const Song *pSong, const Steps *pSteps, RString &sOut);
+void GetEditFileContents(const Song *pSong, const Steps *pSteps, std::string &sOut);
 /**
  * @brief Get the name of the edit file to use.
  * @param pSong the Song in question.
@@ -34,7 +34,7 @@ RString GetEditFileName(const Song *pSong, const Steps *pSteps);
  * @param pSteps the Steps in question.
  * @param sErrorOut any error messages that may have occurred.
  * @return its success or failure. */
-bool WriteEditFileToMachine(const Song *pSong, Steps *pSteps, RString &sErrorOut);
+bool WriteEditFileToMachine(const Song *pSong, Steps *pSteps, std::string &sErrorOut);
 } // namespace NotesWriterSM
 
 #endif

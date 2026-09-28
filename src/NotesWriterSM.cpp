@@ -261,7 +261,7 @@ bool NotesWriterSM::Write(RageFileBasic &f, Song &out, const std::vector<Steps *
 	return true;
 }
 
-void NotesWriterSM::GetEditFileContents(const Song *pSong, const Steps *pSteps, RString &sOut) {
+void NotesWriterSM::GetEditFileContents(const Song *pSong, const Steps *pSteps, std::string &sOut) {
 	sOut = "";
 	RString sDir = pSong->GetSongDir();
 
@@ -293,7 +293,7 @@ RString NotesWriterSM::GetEditFileName(const Song *pSong, const Steps *pSteps) {
 static LocalizedString
    DESTINATION_ALREADY_EXISTS("NotesWriterSM", "Error renaming file.  Destination file '%s' already exists.");
 static LocalizedString ERROR_WRITING_FILE("NotesWriterSM", "Error writing file '%s'.");
-bool NotesWriterSM::WriteEditFileToMachine(const Song *pSong, Steps *pSteps, RString &sErrorOut) {
+bool NotesWriterSM::WriteEditFileToMachine(const Song *pSong, Steps *pSteps, std::string &sErrorOut) {
 	RString sDir = PROFILEMAN->GetProfileDir(ProfileSlot_Machine) + EDIT_STEPS_SUBDIR;
 
 	RString sPath = sDir + GetEditFileName(pSong, pSteps);
@@ -311,7 +311,7 @@ bool NotesWriterSM::WriteEditFileToMachine(const Song *pSong, Steps *pSteps, RSt
 		return false;
 	}
 
-	RString sTag;
+	std::string sTag;
 	GetEditFileContents(pSong, pSteps, sTag);
 	if (f.PutLine(sTag) == -1 || f.Flush() == -1) {
 		sErrorOut = ssprintf(ERROR_WRITING_FILE.GetValue(), sPath.c_str());
