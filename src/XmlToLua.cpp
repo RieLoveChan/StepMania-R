@@ -211,10 +211,19 @@ void init_parser_helpers() {
 	chunks_to_replace["IsPlayerEnabled(1)"] = "IsPlayerEnabled(PLAYER_2)";
 }
 
-void convert_lua_chunk(RString &chunk_text) {
+void convert_lua_chunk(std::string &chunk_text) {
 	for (std::map<std::string, std::string>::iterator chunk = chunks_to_replace.begin();
 	     chunk != chunks_to_replace.end(); ++chunk) {
-		chunk_text.Replace(chunk->first.c_str(), chunk->second.c_str());
+		const std::string &sOld = chunk->first;
+		const std::string &sNew = chunk->second;
+		if (sOld.empty()) {
+			continue;
+		}
+		std::size_t nIdx = 0;
+		while ((nIdx = chunk_text.find(sOld, nIdx)) != std::string::npos) {
+			chunk_text.replace(nIdx, sOld.size(), sNew);
+			nIdx += sNew.size();
+		}
 	}
 }
 
