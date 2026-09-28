@@ -491,7 +491,7 @@ bool BMSChart::Load(const std::string &chartPath) {
 	Tree.evaluateBMSTree(headers, lines);
 
 	for (const std::string &line : lines) {
-		RString data = line.substr(7);
+		std::string data = line.substr(7);
 		int measure = atoi(line.substr(1, 3).c_str());
 		int channel = atoi(line.substr(4, 2).c_str());
 		bool flag = false;
@@ -507,9 +507,10 @@ bool BMSChart::Load(const std::string &chartPath) {
 			}
 			int count = static_cast<int>(data.size() / 2);
 			for (int i = 0; i < count; i++) {
-				RString value = data.substr(2 * i, 2);
+				std::string value = data.substr(2 * i, 2);
 				if (value != "00") {
-					value.MakeLower();
+					if (!value.empty())
+						MakeLower(&value[0], value.size());
 					BMSObject o = {channel, measure, (float)i / count, flag, value};
 					objects.push_back(o);
 				}
