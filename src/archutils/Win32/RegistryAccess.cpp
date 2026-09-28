@@ -152,7 +152,7 @@ bool RegistryAccess::GetRegSubKeys(
 	return !bError;
 }
 
-bool RegistryAccess::SetRegValue(const std::string &sKey, const std::string &sName, const RString &sVal) {
+bool RegistryAccess::SetRegValue(const std::string &sKey, const std::string &sName, const std::string &sVal) {
 	HKEY hKey = OpenRegKey(sKey, WRITE);
 	if (hKey == nullptr)
 		return false;
