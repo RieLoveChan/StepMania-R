@@ -8,7 +8,7 @@
 
 #include <vector>
 
-bool JsonUtil::LoadFromString(Json::Value &root, RString sData, RString & /* sErrorOut */) {
+bool JsonUtil::LoadFromString(Json::Value &root, RString sData, std::string & /* sErrorOut */) {
 	Json::Reader reader;
 	bool parsingSuccessful = reader.parse(sData, root);
 	if (!parsingSuccessful) {
