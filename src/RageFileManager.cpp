@@ -625,15 +625,15 @@ void RageFileManager::CreateDir(const RString &sDir) {
 	Remove(sTempFile);
 }
 
-static void AdjustMountpoint(RString &sMountPoint) {
+static void AdjustMountpoint(std::string &sMountPoint) {
 	FixSlashesInPlace(sMountPoint);
 
-	ASSERT_M(sMountPoint.Left(1) == "/", "Mountpoints must be absolute: " + sMountPoint);
+	ASSERT_M(sMountPoint.substr(0, 1) == "/", ("Mountpoints must be absolute: " + sMountPoint).c_str());
 
-	if (!sMountPoint.empty() && sMountPoint.Right(1) != "/")
+	if (!sMountPoint.empty() && sMountPoint.substr(sMountPoint.size() - 1) != "/")
 		sMountPoint += '/';
 
-	if (sMountPoint.Left(1) != "/")
+	if (sMountPoint.substr(0, 1) != "/")
 		sMountPoint = "/" + sMountPoint;
 }
 
