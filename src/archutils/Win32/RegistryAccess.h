@@ -6,9 +6,9 @@
 #include <vector>
 
 namespace RegistryAccess {
-bool GetRegValue(const RString &sKey, const RString &sName, RString &val);
-bool GetRegValue(const RString &sKey, const RString &sName, int &val, bool bWarnOnError = true);
-bool GetRegValue(const RString &sKey, const RString &sName, bool &val);
+bool GetRegValue(const std::string &sKey, const std::string &sName, RString &val);
+bool GetRegValue(const std::string &sKey, const std::string &sName, int &val, bool bWarnOnError = true);
+bool GetRegValue(const std::string &sKey, const std::string &sName, bool &val);
 
 bool GetRegSubKeys(
    const RString &sKey, std::vector<RString> &asList, const RString &sRegex = ".*", bool bReturnPathToo = true
