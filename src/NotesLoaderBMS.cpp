@@ -171,7 +171,7 @@ class BMSChart {
  public:
 	BMSChart();
 	bool Load(const RString &path);
-	bool GetHeader(const RString &header, RString &out);
+	bool GetHeader(const std::string &header, std::string &out);
 	RString path;
 
 	BMSObjects objects;
@@ -184,7 +184,7 @@ class BMSChart {
 
 BMSChart::BMSChart() = default;
 
-bool BMSChart::GetHeader(const RString &header, RString &out) {
+bool BMSChart::GetHeader(const std::string &header, std::string &out) {
 	if (headers.find(header) == headers.end())
 		return false;
 	out = headers[header];
