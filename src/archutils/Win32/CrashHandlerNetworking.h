@@ -32,7 +32,7 @@ class NetworkPostData {
 
  private:
 	static void
-	CreateMimeData(const std::map<std::string, std::string> &mapNameToData, RString &sOut, RString &sMimeBoundaryOut);
+	CreateMimeData(const std::map<std::string, std::string> &mapNameToData, std::string &sOut, std::string &sMimeBoundaryOut);
 	void SetProgress(float fProgress);
 
 	RageThread m_Thread;
