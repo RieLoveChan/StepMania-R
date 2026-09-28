@@ -152,7 +152,7 @@ bool RegistryAccess::GetRegSubKeys(
 	return !bError;
 }
 
-bool RegistryAccess::SetRegValue(const RString &sKey, const RString &sName, const RString &sVal) {
+bool RegistryAccess::SetRegValue(const std::string &sKey, const std::string &sName, const RString &sVal) {
 	HKEY hKey = OpenRegKey(sKey, WRITE);
 	if (hKey == nullptr)
 		return false;
@@ -165,7 +165,7 @@ bool RegistryAccess::SetRegValue(const RString &sKey, const RString &sName, cons
 
 	strcpy(sz, sVal.c_str());
 
-	LONG lResult = ::RegSetValueEx(hKey, LPCTSTR(sName), 0, REG_SZ, (LPBYTE)sz, static_cast<DWORD>(strlen(sz) + 1));
+	LONG lResult = ::RegSetValueEx(hKey, sName.c_str(), 0, REG_SZ, (LPBYTE)sz, static_cast<DWORD>(strlen(sz) + 1));
 	if (lResult != ERROR_SUCCESS)
 		bSuccess = false;
 
@@ -173,14 +173,14 @@ bool RegistryAccess::SetRegValue(const RString &sKey, const RString &sName, cons
 	return bSuccess;
 }
 
-bool RegistryAccess::SetRegValue(const RString &sKey, const RString &sName, bool bVal) {
+bool RegistryAccess::SetRegValue(const std::string &sKey, const std::string &sName, bool bVal) {
 	HKEY hKey = OpenRegKey(sKey, WRITE);
 	if (hKey == nullptr)
 		return false;
 
 	bool bSuccess = true;
 
-	if (::RegSetValueEx(hKey, LPCTSTR(sName), 0, REG_BINARY, (LPBYTE)&bVal, sizeof(bVal)) != ERROR_SUCCESS)
+	if (::RegSetValueEx(hKey, sName.c_str(), 0, REG_BINARY, (LPBYTE)&bVal, sizeof(bVal)) != ERROR_SUCCESS)
 		bSuccess = false;
 
 	::RegCloseKey(hKey);

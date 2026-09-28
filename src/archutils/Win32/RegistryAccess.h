@@ -14,9 +14,9 @@ bool GetRegSubKeys(
    const RString &sKey, std::vector<RString> &asList, const RString &sRegex = ".*", bool bReturnPathToo = true
 );
 
-bool SetRegValue(const RString &sKey, const RString &sName, const RString &val);
-bool SetRegValue(const RString &sKey, const RString &sName, int val);
-bool SetRegValue(const RString &sKey, const RString &sName, bool val);
+bool SetRegValue(const std::string &sKey, const std::string &sName, const RString &val);
+bool SetRegValue(const std::string &sKey, const std::string &sName, int val);
+bool SetRegValue(const std::string &sKey, const std::string &sName, bool val);
 
 bool CreateKey(const std::string &sKey);
 } // namespace RegistryAccess
