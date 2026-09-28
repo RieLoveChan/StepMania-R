@@ -433,7 +433,7 @@ struct CompleteCrashData {
 	std::vector<RString> m_asCheckpoints;
 };
 
-static void MakeCrashReport(const CompleteCrashData &Data, RString &sOut) {
+static void MakeCrashReport(const CompleteCrashData &Data, std::string &sOut) {
 	sOut += ssprintf(
 	   "%s crash report (build %s, %s @ %s)\n"
 	   "--------------------------------------\n\n",
