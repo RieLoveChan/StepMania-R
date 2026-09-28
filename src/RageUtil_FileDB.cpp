@@ -100,13 +100,13 @@ int FileSet::GetFileHash(const RString &sPath) const {
  * Given "foo/bar/baz/" or "foo/bar/baz", return "foo/bar/" and "baz".
  * "foo" -> "", "foo"
  */
-static void SplitPath(RString sPath, RString &sDir, RString &sName) {
+static void SplitPath(std::string sPath, std::string &sDir, std::string &sName) {
 	CollapsePath(sPath);
-	if (sPath.Right(1) == "/")
+	if (!sPath.empty() && sPath[sPath.size() - 1] == '/')
 		sPath.erase(sPath.size() - 1);
 
 	std::size_t iSep = sPath.find_last_of('/');
-	if (iSep == RString::npos) {
+	if (iSep == std::string::npos) {
 		sDir = "";
 		sName = sPath;
 	}
