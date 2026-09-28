@@ -172,7 +172,7 @@ class BMSChart {
 	BMSChart();
 	bool Load(const std::string &path);
 	bool GetHeader(const std::string &header, std::string &out);
-	RString path;
+	std::string path;
 
 	BMSObjects objects;
 	BMSHeaders headers;
