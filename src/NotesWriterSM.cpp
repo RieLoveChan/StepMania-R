@@ -263,7 +263,7 @@ bool NotesWriterSM::Write(RageFileBasic &f, Song &out, const std::vector<Steps *
 
 void NotesWriterSM::GetEditFileContents(const Song *pSong, const Steps *pSteps, std::string &sOut) {
 	sOut = "";
-	RString sDir = pSong->GetSongDir();
+	std::string sDir = pSong->GetSongDir();
 
 	// "Songs/foo/bar"; strip off "Songs/".
 	std::vector<RString> asParts;

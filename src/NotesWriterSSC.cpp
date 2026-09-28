@@ -447,7 +447,7 @@ bool NotesWriterSSC::Write(
 
 void NotesWriterSSC::GetEditFileContents(const Song *pSong, const Steps *pSteps, std::string &sOut) {
 	sOut = "";
-	RString sDir = pSong->GetSongDir();
+	std::string sDir = pSong->GetSongDir();
 
 	// "Songs/foo/bar"; strip off "Songs/".
 	std::vector<RString> asParts;
