@@ -294,7 +294,7 @@ void NoteDataUtil::InsertHoldTails(NoteData &inout) {
 	}
 }
 
-void NoteDataUtil::GetSMNoteDataString(const NoteData &in, RString &sRet) {
+void NoteDataUtil::GetSMNoteDataString(const NoteData &in, std::string &sRet) {
 	// Get note data
 	std::vector<NoteData> parts;
 	float fLastBeat = -1.0f;
