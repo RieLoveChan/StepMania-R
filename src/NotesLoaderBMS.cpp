@@ -539,7 +539,7 @@ class BMSSong {
  public:
 	BMSSong(Song *song);
 	int AllocateKeysound(std::string filename, std::string path);
-	bool GetBackground(RString filename, RString path, RString &bgfile);
+	bool GetBackground(std::string filename, std::string path, RString &bgfile);
 	Song *GetSong();
 };
 
@@ -608,7 +608,7 @@ int BMSSong::AllocateKeysound(std::string filename, std::string path) {
 	return index;
 }
 
-bool BMSSong::GetBackground(RString filename, RString path, RString &bgfile) {
+bool BMSSong::GetBackground(std::string filename, std::string path, RString &bgfile) {
 	// Check for already tried backgrounds
 	if (mapBackground.find(filename) != mapBackground.end()) {
 		RString bg = mapBackground[filename];
@@ -624,8 +624,8 @@ bool BMSSong::GetBackground(RString filename, RString path, RString &bgfile) {
 	if (!utf8_is_valid(filename))
 		return false;
 
-	RString normalizedFilename = filename;
-	RString dir = out->GetSongDir();
+	std::string normalizedFilename = filename;
+	std::string dir = out->GetSongDir();
 
 	if (dir.empty())
 		dir = Dirname(path);
