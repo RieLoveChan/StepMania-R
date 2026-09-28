@@ -119,7 +119,7 @@ class FilenameDB {
 	/* Search for "path" case-insensitively and replace it with the correct
 	 * case.  If only a portion of the path exists, resolve as much as possible.
 	 * Return true if the entire path was matched. */
-	bool ResolvePath(RString &sPath);
+	bool ResolvePath(std::string &sPath);
 
 	RageFileManager::FileType GetFileType(const RString &sPath);
 	int GetFileSize(const RString &sPath);

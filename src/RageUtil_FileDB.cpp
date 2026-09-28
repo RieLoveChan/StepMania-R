@@ -156,7 +156,7 @@ int FilenameDB::GetFileHash(const RString &sPath) {
 }
 
 /* path should be fully collapsed, so we can operate in-place: no . or .. */
-bool FilenameDB::ResolvePath(RString &sPath) {
+bool FilenameDB::ResolvePath(std::string &sPath) {
 	if (sPath == "/" || sPath.empty())
 		return true;
 
@@ -179,8 +179,8 @@ bool FilenameDB::ResolvePath(RString &sPath) {
 			m_Mutex.Lock(); /* for access to fs */
 
 		RString p = sPath.substr(iBegin, iSize);
-		ASSERT_M(p.size() != 1 || p[0] != '.', sPath);                // no .
-		ASSERT_M(p.size() != 2 || p[0] != '.' || p[1] != '.', sPath); // no ..
+		ASSERT_M(p.size() != 1 || p[0] != '.', sPath.c_str());                // no .
+		ASSERT_M(p.size() != 2 || p[0] != '.' || p[1] != '.', sPath.c_str()); // no ..
 		std::set<File>::const_iterator it = fs->files.find(File(p));
 
 		/* If there were no matches, the path isn't found. */
