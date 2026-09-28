@@ -539,7 +539,7 @@ class BMSSong {
  public:
 	BMSSong(Song *song);
 	int AllocateKeysound(std::string filename, std::string path);
-	bool GetBackground(std::string filename, std::string path, RString &bgfile);
+	bool GetBackground(std::string filename, std::string path, std::string &bgfile);
 	Song *GetSong();
 };
 
@@ -608,7 +608,7 @@ int BMSSong::AllocateKeysound(std::string filename, std::string path) {
 	return index;
 }
 
-bool BMSSong::GetBackground(std::string filename, std::string path, RString &bgfile) {
+bool BMSSong::GetBackground(std::string filename, std::string path, std::string &bgfile) {
 	// Check for already tried backgrounds
 	if (mapBackground.find(filename) != mapBackground.end()) {
 		RString bg = mapBackground[filename];
@@ -1249,7 +1249,7 @@ bool BMSChartReader::ReadNoteData() {
 
 				if (it != in->headers.end()) // To elaborate, this means this is an unknown key.
 				{
-					RString bg;
+					std::string bg;
 					if (song->GetBackground(it->second, in->path, bg)) {
 						info.backgroundChanges[row] = bg;
 					}
