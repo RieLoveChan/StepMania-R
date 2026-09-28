@@ -27,16 +27,16 @@ static LONG GetRegKey(HKEY key, RString subkey, std::string &out) {
 	return ERROR_SUCCESS;
 }
 
-bool GotoURL(RString sUrl) {
+bool GotoURL(std::string sUrl) {
 	// First try ShellExecute()
-	std::intptr_t iRet =
-	   reinterpret_cast<std::intptr_t>(ShellExecute(nullptr, "open", sUrl, nullptr, nullptr, SW_SHOWDEFAULT));
+	std::intptr_t iRet = reinterpret_cast<std::intptr_t>(
+	   ShellExecute(nullptr, "open", sUrl.c_str(), nullptr, nullptr, SW_SHOWDEFAULT));
 
 	// If it failed, get the .htm regkey and lookup the program
 	if (iRet > 32)
 		return true;
 
-	RString sKey;
+	std::string sKey;
 	if (GetRegKey(HKEY_CLASSES_ROOT, ".htm", sKey) != ERROR_SUCCESS)
 		return false;
 
@@ -49,17 +49,18 @@ bool GotoURL(RString sUrl) {
 	// sUrl can be appended in its place below. sUrl is caller-supplied and,
 	// via the crash handler's update checker (CrashHandlerChild.cpp),
 	// network-supplied -- this used to be a fixed-buffer strcat with no
-	// bound on sUrl's length; an RString has no fixed capacity to overflow.
+	// bound on sUrl's length; a std::string has no fixed capacity to
+	// overflow.
 	std::size_t iPos = sKey.find("\"%1\"");
-	if (iPos == RString::npos)
+	if (iPos == std::string::npos)
 		iPos = sKey.find("%1");
-	if (iPos != RString::npos)
+	if (iPos != std::string::npos)
 		sKey.erase(iPos);
 
 	sKey += " ";
 	sKey += sUrl;
 
-	return WinExec(sKey, SW_SHOWDEFAULT) > 32;
+	return WinExec(sKey.c_str(), SW_SHOWDEFAULT) > 32;
 }
 
 /*
