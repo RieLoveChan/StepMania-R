@@ -12,7 +12,7 @@
 #include <vector>
 
 void NotesLoader::GetMainAndSubTitlesFromFullTitle(
-   const RString &sFullTitle, RString &sMainTitleOut, RString &sSubTitleOut
+   const RString &sFullTitle, std::string &sMainTitleOut, std::string &sSubTitleOut
 ) {
 	const std::string sLeftSeps[] = {"\t", " -", " ~", " (", " ["};
 

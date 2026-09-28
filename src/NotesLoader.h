@@ -12,7 +12,7 @@ namespace NotesLoader {
  * @param sFullTitle the full title.
  * @param sMainTitleOut the eventual main title.
  * @param sSubTitleOut the ventual sub title. */
-void GetMainAndSubTitlesFromFullTitle(const RString &sFullTitle, RString &sMainTitleOut, RString &sSubTitleOut);
+void GetMainAndSubTitlesFromFullTitle(const RString &sFullTitle, std::string &sMainTitleOut, std::string &sSubTitleOut);
 /**
  * @brief Attempt to load a Song from the given directory.
  * @param sPath the path to the file.
