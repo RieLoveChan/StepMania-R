@@ -6258,8 +6258,13 @@ static bool IsMapped(EditButton eb, const MapEditToDI &editmap) {
 	return false;
 }
 
-static void ProcessKeyName(RString &s) {
-	s.Replace("Key_", "");
+static void ProcessKeyName(std::string &s) {
+	// Equivalent to CStdStr::Replace(PCMYSTR, PCMYSTR): repeatedly find and
+	// erase every "Key_" occurrence (replacement is empty, so the scan
+	// index doesn't advance past the removed text).
+	std::string::size_type idx = 0;
+	while ((idx = s.find("Key_", idx)) != std::string::npos)
+		s.replace(idx, 4, "");
 }
 
 static void ProcessKeyNames(std::vector<RString> &vs, bool doSort) {
