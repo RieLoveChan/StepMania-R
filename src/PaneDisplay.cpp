@@ -120,7 +120,7 @@ void PaneDisplay::LoadFromNode(const XNode *pNode) {
 	ActorFrame::LoadFromNode(pNode);
 }
 
-void PaneDisplay::GetPaneTextAndLevel(PaneCategory c, RString &sTextOut, float &fLevelOut) {
+void PaneDisplay::GetPaneTextAndLevel(PaneCategory c, std::string &sTextOut, float &fLevelOut) {
 	const Song *pSong = GAMESTATE->m_pCurSong;
 	const Steps *pSteps = GAMESTATE->m_pCurSteps[m_PlayerNumber];
 	const Course *pCourse = GAMESTATE->m_pCurCourse;
