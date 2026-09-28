@@ -128,7 +128,7 @@ class PlayerOptions {
 	void GetLocalizedMods(std::vector<RString> &AddTo) const;
 	void FromString(const RString &sMultipleMods);
 	bool FromOneModString(
-	   const RString &sOneMod, RString &sErrorDetailOut
+	   const RString &sOneMod, std::string &sErrorDetailOut
 	); // On error, return false and optionally set sErrorDetailOut
 	void ChooseRandomModifiers();
 	bool ContainsTransformOrTurn() const;

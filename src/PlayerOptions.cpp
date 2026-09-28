@@ -658,7 +658,7 @@ void PlayerOptions::FromString(const RString &sMultipleMods) {
 	}
 }
 
-bool PlayerOptions::FromOneModString(const RString &sOneMod, RString &sErrorOut) {
+bool PlayerOptions::FromOneModString(const RString &sOneMod, std::string &sErrorOut) {
 	ASSERT_M(NOTESKIN != nullptr, "The Noteskin Manager must be loaded in order to process mods.");
 
 	RString sBit = sOneMod;
