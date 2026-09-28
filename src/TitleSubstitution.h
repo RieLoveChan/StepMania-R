@@ -47,10 +47,10 @@ class TitleSubst {
 	void AddTrans(const TitleTrans &tr);
 
  public:
-	TitleSubst(const RString &section);
+	TitleSubst(const std::string &section);
 	~TitleSubst();
 
-	void Load(const RString &filename, const RString &section);
+	void Load(const std::string &filename, const std::string &section);
 
 	void Subst(TitleFields &tf);
 };

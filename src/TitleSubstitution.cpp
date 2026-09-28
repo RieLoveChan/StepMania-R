@@ -128,11 +128,11 @@ void TitleSubst::Subst(TitleFields &tf) {
 	}
 }
 
-TitleSubst::TitleSubst(const RString &section) {
+TitleSubst::TitleSubst(const std::string &section) {
 	Load(TRANSLATIONS_PATH, section);
 }
 
-void TitleSubst::Load(const RString &filename, const RString &section) {
+void TitleSubst::Load(const std::string &filename, const std::string &section) {
 	XNode xml;
 	if (!XmlFileUtil::LoadFromFileShowErrors(xml, filename)) {
 		// LoadFromFile will show its own error
