@@ -11,7 +11,7 @@
 
 #pragma comment(lib, "version.lib")
 
-bool GetFileVersion(RString sFile, RString &sOut) {
+bool GetFileVersion(RString sFile, std::string &sOut) {
 	do {
 		// Cast away const to work around header bug in VC6.
 		DWORD ignore;
