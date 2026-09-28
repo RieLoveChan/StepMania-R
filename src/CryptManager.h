@@ -15,7 +15,7 @@ class CryptManager {
 	static void GenerateRSAKey(unsigned int keyLength, std::string &sPrivKey, std::string &sPubKey);
 	static void GenerateRSAKeyToFile(unsigned int keyLength, RString privFilename, RString pubFilename);
 	static void SignFileToFile(RString sPath, RString sSignatureFile = "");
-	static bool Sign(RString sPath, RString &sSignatureOut, RString sPrivateKey);
+	static bool Sign(RString sPath, std::string &sSignatureOut, RString sPrivateKey);
 	static bool VerifyFileWithFile(RString sPath, RString sSignatureFile = "");
 	static bool VerifyFileWithFile(RString sPath, RString sSignatureFile, RString sPublicKeyFile);
 	static bool Verify(RageFileBasic &file, RString sSignature, RString sPublicKey);

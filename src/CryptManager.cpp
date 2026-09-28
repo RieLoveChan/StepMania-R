@@ -209,7 +209,7 @@ void CryptManager::SignFileToFile(RString sPath, RString sSignatureFile) {
 	WriteFile(sSignatureFile, sSignature);
 }
 
-bool CryptManager::Sign(RString sPath, RString &sSignatureOut, RString sPrivKey) {
+bool CryptManager::Sign(RString sPath, std::string &sSignatureOut, RString sPrivKey) {
 	if (!IsAFile(sPath)) {
 		LOG_TRACE(Log::General, "SignFileToFile: \"%s\" doesn't exist", sPath.c_str());
 		return false;
