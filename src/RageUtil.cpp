@@ -933,7 +933,7 @@ void MakeValidFilename(std::string &sName) {
 
 bool FindFirstFilenameContaining(
    const std::vector<RString> &filenames,
-   RString &out,
+   std::string &out,
    const std::vector<RString> &starts_with,
    const std::vector<RString> &contains,
    const std::vector<RString> &ends_with
