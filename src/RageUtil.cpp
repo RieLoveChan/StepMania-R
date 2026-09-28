@@ -844,7 +844,7 @@ void split(const std::wstring &Source, const std::wstring &Delimitor, int &begin
  * c:\foo\bar.txt    -> "c:\foo\", "bar", ".txt"
  * \\foo\fum         -> "\\foo\", "fum", ""
  */
-void splitpath(const std::string &sPath, RString &sDir, RString &sFilename, RString &sExt) {
+void splitpath(const std::string &sPath, std::string &sDir, std::string &sFilename, std::string &sExt) {
 	sDir = sFilename = sExt = "";
 
 	std::vector<RString> asMatches;
