@@ -375,12 +375,13 @@ struct bmsCommandTree {
 		statement = statement.substr(hash);
 
 		std::size_t space = statement.find(' ');
-		RString name = statement.substr(0, space);
-		RString value = "";
+		std::string name = statement.substr(0, space);
+		std::string value = "";
 
 		if (space != statement.npos)
 			value = statement.substr(space + 1);
-		name.MakeLower();
+		if (!name.empty())
+			MakeLower(&name[0], name.size());
 
 		if (name == "#if") {
 			if (randomStack.size() < currentNode->branchHeight + 1) {
