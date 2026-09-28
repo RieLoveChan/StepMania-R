@@ -691,7 +691,7 @@ struct BMSChartInfo {
 	std::string musicFile;
 	std::string previewFile;
 
-	std::map<int, RString> backgroundChanges;
+	std::map<int, std::string> backgroundChanges;
 	float previewStart;
 	BMSChartInfo() {
 		previewStart = 0;
@@ -1530,7 +1530,7 @@ void BMSSongLoader::AddToSong() {
 			break;
 		}
 
-		std::map<int, RString>::const_iterator it = main.info.backgroundChanges.begin();
+		std::map<int, std::string>::const_iterator it = main.info.backgroundChanges.begin();
 
 		for (; it != main.info.backgroundChanges.end(); it++) {
 			out->AddBackgroundChange(
