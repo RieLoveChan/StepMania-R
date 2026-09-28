@@ -1579,7 +1579,7 @@ void wchar_to_utf8(wchar_t ch, std::string &out) {
 	}
 }
 
-wchar_t utf8_get_char(const RString &s) {
+wchar_t utf8_get_char(const std::string &s) {
 	unsigned start = 0;
 	wchar_t ret;
 	if (!utf8_to_wchar_ec(s, start, ret))
@@ -1601,7 +1601,7 @@ void utf8_sanitize(std::string &s) {
 	s = ret;
 }
 
-bool utf8_is_valid(const RString &s) {
+bool utf8_is_valid(const std::string &s) {
 	for (unsigned start = 0; start < s.size();) {
 		wchar_t ch;
 		if (!utf8_to_wchar_ec(s, start, ch))
