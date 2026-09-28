@@ -178,7 +178,7 @@ bool FilenameDB::ResolvePath(std::string &sPath) {
 		else
 			m_Mutex.Lock(); /* for access to fs */
 
-		RString p = sPath.substr(iBegin, iSize);
+		std::string p = sPath.substr(iBegin, iSize);
 		ASSERT_M(p.size() != 1 || p[0] != '.', sPath.c_str());                // no .
 		ASSERT_M(p.size() != 2 || p[0] != '.' || p[1] != '.', sPath.c_str()); // no ..
 		std::set<File>::const_iterator it = fs->files.find(File(p));
