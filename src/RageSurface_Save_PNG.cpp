@@ -134,7 +134,7 @@ static bool RageSurface_Save_PNG(RageFile &f, char szErrorbuf[1024], RageSurface
 	return true;
 }
 
-bool RageSurfaceUtils::SavePNG(RageSurface *pImg, RageFile &f, RString &sError) {
+bool RageSurfaceUtils::SavePNG(RageSurface *pImg, RageFile &f, std::string &sError) {
 	char szErrorBuf[1024];
 	if (!RageSurface_Save_PNG(f, szErrorBuf, pImg)) {
 		sError = szErrorBuf;
