@@ -28,7 +28,7 @@
 const RString CUSTOM_SONG_PATH = "/@mem/";
 
 bool HexToBinary(const std::string &, std::string &);
-void utf8_sanitize(RString &);
+void utf8_sanitize(std::string &);
 void UnicodeUpperLower(wchar_t *, std::size_t, const unsigned char *);
 
 RandomGen g_RandomNumberGenerator;
@@ -1588,7 +1588,7 @@ wchar_t utf8_get_char(const RString &s) {
 }
 
 // Replace invalid sequences in s.
-void utf8_sanitize(RString &s) {
+void utf8_sanitize(std::string &s) {
 	RString ret;
 	for (unsigned start = 0; start < s.size();) {
 		wchar_t ch;
