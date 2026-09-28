@@ -711,7 +711,7 @@ class BMSChartReader {
 	StepsType DetermineStepsType();
 
 	int lntype;
-	RString lnobj;
+	std::string lnobj;
 
 	int nonEmptyTracksCount;
 	std::map<int, bool> nonEmptyTracks;
@@ -786,7 +786,8 @@ void BMSChartReader::ReadHeaders() {
 		}
 		else if (it->first == "#lnobj") {
 			lnobj = it->second;
-			lnobj.MakeLower();
+			if (!lnobj.empty())
+				MakeLower(&lnobj[0], lnobj.size());
 		}
 		else if (it->first == "#playlevel") {
 			out->SetMeter(StringToInt(it->second));
