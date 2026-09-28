@@ -405,7 +405,7 @@ struct WavReaderADPCM : public WavReader {
 	}
 };
 
-RString ReadString(RageFileBasic &f, int iSize, RString &sError) {
+RString ReadString(RageFileBasic &f, int iSize, std::string &sError) {
 	if (!sError.empty())
 		return RString();
 
