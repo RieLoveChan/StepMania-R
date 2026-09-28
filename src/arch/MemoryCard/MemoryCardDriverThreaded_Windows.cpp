@@ -16,7 +16,7 @@ MemoryCardDriverThreaded_Windows::MemoryCardDriverThreaded_Windows() {
 
 MemoryCardDriverThreaded_Windows::~MemoryCardDriverThreaded_Windows() = default;
 
-static bool TestReady(const RString &sDrive, RString &sVolumeLabelOut) {
+static bool TestReady(const RString &sDrive, std::string &sVolumeLabelOut) {
 	TCHAR szVolumeNameBuffer[MAX_PATH];
 	DWORD dwVolumeSerialNumber;
 	DWORD dwMaximumComponentLength;
