@@ -189,7 +189,7 @@ int RageFile::Seek(int offset, int whence) {
 	return m_File->Seek(offset, whence);
 }
 
-void FileReading::ReadBytes(RageFileBasic &f, void *buf, int size, RString &sError) {
+void FileReading::ReadBytes(RageFileBasic &f, void *buf, int size, std::string &sError) {
 	if (!sError.empty())
 		return;
 
@@ -200,7 +200,7 @@ void FileReading::ReadBytes(RageFileBasic &f, void *buf, int size, RString &sErr
 		sError = "Unexpected end of file";
 }
 
-RString FileReading::ReadString(RageFileBasic &f, int size, RString &sError) {
+RString FileReading::ReadString(RageFileBasic &f, int size, std::string &sError) {
 	if (!sError.empty())
 		return RString();
 
@@ -213,7 +213,7 @@ RString FileReading::ReadString(RageFileBasic &f, int size, RString &sError) {
 	return sBuf;
 }
 
-void FileReading::SkipBytes(RageFileBasic &f, int iBytes, RString &sError) {
+void FileReading::SkipBytes(RageFileBasic &f, int iBytes, std::string &sError) {
 	if (!sError.empty())
 		return;
 
@@ -221,7 +221,7 @@ void FileReading::SkipBytes(RageFileBasic &f, int iBytes, RString &sError) {
 	FileReading::Seek(f, iBytes, sError);
 }
 
-void FileReading::Seek(RageFileBasic &f, int iOffset, RString &sError) {
+void FileReading::Seek(RageFileBasic &f, int iOffset, std::string &sError) {
 	if (!sError.empty())
 		return;
 
@@ -234,7 +234,7 @@ void FileReading::Seek(RageFileBasic &f, int iOffset, RString &sError) {
 		sError = "Unexpected end of file";
 }
 
-std::uint8_t FileReading::read_8(RageFileBasic &f, RString &sError) {
+std::uint8_t FileReading::read_8(RageFileBasic &f, std::string &sError) {
 	std::uint8_t val;
 	ReadBytes(f, &val, sizeof(std::uint8_t), sError);
 	if (sError.empty())
@@ -243,7 +243,7 @@ std::uint8_t FileReading::read_8(RageFileBasic &f, RString &sError) {
 		return 0;
 }
 
-std::uint16_t FileReading::read_u16_le(RageFileBasic &f, RString &sError) {
+std::uint16_t FileReading::read_u16_le(RageFileBasic &f, std::string &sError) {
 	std::uint16_t val;
 	ReadBytes(f, &val, sizeof(std::uint16_t), sError);
 	if (sError.empty())
@@ -252,7 +252,7 @@ std::uint16_t FileReading::read_u16_le(RageFileBasic &f, RString &sError) {
 		return 0;
 }
 
-std::int16_t FileReading::read_16_le(RageFileBasic &f, RString &sError) {
+std::int16_t FileReading::read_16_le(RageFileBasic &f, std::string &sError) {
 	std::int16_t val;
 	ReadBytes(f, &val, sizeof(std::int16_t), sError);
 	if (sError.empty())
@@ -261,7 +261,7 @@ std::int16_t FileReading::read_16_le(RageFileBasic &f, RString &sError) {
 		return 0;
 }
 
-std::uint32_t FileReading::read_u32_le(RageFileBasic &f, RString &sError) {
+std::uint32_t FileReading::read_u32_le(RageFileBasic &f, std::string &sError) {
 	std::uint32_t val;
 	ReadBytes(f, &val, sizeof(std::uint32_t), sError);
 	if (sError.empty())
@@ -270,7 +270,7 @@ std::uint32_t FileReading::read_u32_le(RageFileBasic &f, RString &sError) {
 		return 0;
 }
 
-std::int32_t FileReading::read_32_le(RageFileBasic &f, RString &sError) {
+std::int32_t FileReading::read_32_le(RageFileBasic &f, std::string &sError) {
 	std::int32_t val;
 	ReadBytes(f, &val, sizeof(std::int32_t), sError);
 	if (sError.empty())

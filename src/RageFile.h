@@ -107,15 +107,15 @@ class RageFile : public RageFileBasic {
 namespace FileReading {
 /* On error, these set sError to the error message.  If sError is already
  * non-empty, nothing happens. */
-void ReadBytes(RageFileBasic &f, void *buf, int size, RString &sError);
-void SkipBytes(RageFileBasic &f, int size, RString &sError);
-void Seek(RageFileBasic &f, int iOffset, RString &sError);
-RString ReadString(RageFileBasic &f, int size, RString &sError);
-std::uint8_t read_8(RageFileBasic &f, RString &sError);
-std::int16_t read_16_le(RageFileBasic &f, RString &sError);
-std::uint16_t read_u16_le(RageFileBasic &f, RString &sError);
-std::int32_t read_32_le(RageFileBasic &f, RString &sError);
-std::uint32_t read_u32_le(RageFileBasic &f, RString &sError);
+void ReadBytes(RageFileBasic &f, void *buf, int size, std::string &sError);
+void SkipBytes(RageFileBasic &f, int size, std::string &sError);
+void Seek(RageFileBasic &f, int iOffset, std::string &sError);
+RString ReadString(RageFileBasic &f, int size, std::string &sError);
+std::uint8_t read_8(RageFileBasic &f, std::string &sError);
+std::int16_t read_16_le(RageFileBasic &f, std::string &sError);
+std::uint16_t read_u16_le(RageFileBasic &f, std::string &sError);
+std::int32_t read_32_le(RageFileBasic &f, std::string &sError);
+std::uint32_t read_u32_le(RageFileBasic &f, std::string &sError);
 }; // namespace FileReading
 
 #endif
