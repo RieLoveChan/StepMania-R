@@ -187,7 +187,7 @@ bool RegistryAccess::SetRegValue(const RString &sKey, const RString &sName, bool
 	return bSuccess;
 }
 
-bool RegistryAccess::CreateKey(const RString &sKey) {
+bool RegistryAccess::CreateKey(const std::string &sKey) {
 	RString sSubkey;
 	HKEY hType;
 	if (!GetRegKeyType(sKey, sSubkey, hType))

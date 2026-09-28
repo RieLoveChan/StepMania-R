@@ -18,7 +18,7 @@ bool SetRegValue(const RString &sKey, const RString &sName, const RString &val);
 bool SetRegValue(const RString &sKey, const RString &sName, int val);
 bool SetRegValue(const RString &sKey, const RString &sName, bool val);
 
-bool CreateKey(const RString &sKey);
+bool CreateKey(const std::string &sKey);
 } // namespace RegistryAccess
 
 #endif
