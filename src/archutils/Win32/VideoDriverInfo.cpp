@@ -59,7 +59,7 @@ RString GetPrimaryVideoDriverName() {
 /* Get info for the given card number.  Return false if that card doesn't exist. */
 bool GetVideoDriverInfo(int iCardno, VideoDriverInfo &info) {
 	static bool bInitialized = false;
-	static std::vector<RString> lst;
+	static std::vector<std::string> lst;
 	if (!bInitialized) {
 		bInitialized = true;
 

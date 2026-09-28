@@ -88,7 +88,7 @@ static void GetDriveDebugInfo() {
 	 *		     Identifier  "WDC WD1200JB-75CRA0"
 	 *			 Type        "DiskPeripheral"
 	 */
-	std::vector<RString> Ports;
+	std::vector<std::string> Ports;
 	if (!RegistryAccess::GetRegSubKeys("HKEY_LOCAL_MACHINE\\HARDWARE\\DEVICEMAP\\Scsi", Ports))
 		return;
 
@@ -99,17 +99,17 @@ static void GetDriveDebugInfo() {
 		RString Driver;
 		RegistryAccess::GetRegValue(Ports[i], "Driver", Driver);
 
-		std::vector<RString> Busses;
+		std::vector<std::string> Busses;
 		if (!RegistryAccess::GetRegSubKeys(Ports[i], Busses, "Scsi Bus .*"))
 			continue;
 
 		for (unsigned bus = 0; bus < Busses.size(); ++bus) {
-			std::vector<RString> TargetIDs;
+			std::vector<std::string> TargetIDs;
 			if (!RegistryAccess::GetRegSubKeys(Busses[bus], TargetIDs, "Target Id .*"))
 				continue;
 
 			for (unsigned tid = 0; tid < TargetIDs.size(); ++tid) {
-				std::vector<RString> LUIDs;
+				std::vector<std::string> LUIDs;
 				if (!RegistryAccess::GetRegSubKeys(TargetIDs[tid], LUIDs, "Logical Unit Id .*"))
 					continue;
 

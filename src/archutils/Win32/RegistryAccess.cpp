@@ -62,7 +62,7 @@ static HKEY OpenRegKey(const RString &sKey, RegKeyMode mode, bool bWarnOnError =
 	return hRetKey;
 }
 
-bool RegistryAccess::GetRegValue(const std::string &sKey, const std::string &sName, RString &sVal) {
+bool RegistryAccess::GetRegValue(const std::string &sKey, const std::string &sName, std::string &sVal) {
 	HKEY hKey = OpenRegKey(sKey, READ);
 	if (hKey == nullptr)
 		return false;
@@ -115,7 +115,7 @@ bool RegistryAccess::GetRegValue(const std::string &sKey, const std::string &sNa
 }
 
 bool RegistryAccess::GetRegSubKeys(
-   const std::string &sKey, std::vector<RString> &lst, const std::string &regex, bool bReturnPathToo
+   const std::string &sKey, std::vector<std::string> &lst, const std::string &regex, bool bReturnPathToo
 ) {
 	HKEY hKey = OpenRegKey(sKey, READ);
 	if (hKey == nullptr)
