@@ -210,7 +210,7 @@ struct bmsCommandTree {
 		};
 
 		BMSHeaders Commands;
-		std::vector<RString> ChannelCommands;
+		std::vector<std::string> ChannelCommands;
 		std::vector<bmsNodeS *> branches;
 		bmsNodeS *parent;
 
@@ -232,7 +232,7 @@ struct bmsCommandTree {
 	std::vector<unsigned int> randomStack;
 
 	int line;
-	RString path;
+	std::string path;
 
 	bmsCommandTree() {
 		line = 0;
@@ -313,7 +313,7 @@ struct bmsCommandTree {
 			headersOut[i->first] = i->second;
 		}
 
-		for (std::vector<RString>::iterator i = node->ChannelCommands.begin(); i != node->ChannelCommands.end(); ++i) {
+		for (std::vector<std::string>::iterator i = node->ChannelCommands.begin(); i != node->ChannelCommands.end(); ++i) {
 			linesOut.push_back(*i);
 		}
 	}
