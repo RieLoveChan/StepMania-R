@@ -134,7 +134,7 @@ void SongOptions::FromString(const RString &sMultipleMods) {
 	}
 }
 
-bool SongOptions::FromOneModString(const RString &sOneMod, RString & /* sErrorOut */) {
+bool SongOptions::FromOneModString(const RString &sOneMod, std::string & /* sErrorOut */) {
 	RString sBit = sOneMod;
 	sBit.MakeLower();
 	Trim(sBit);
