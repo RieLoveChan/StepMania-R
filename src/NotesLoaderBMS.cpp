@@ -360,7 +360,7 @@ struct bmsCommandTree {
 		evaluateNode(&root, headersOut, linesOut);
 	}
 
-	void doStatement(RString statement, std::map<int, bool> &referencedTracks) {
+	void doStatement(std::string statement, std::map<int, bool> &referencedTracks) {
 		line++;
 
 		if (statement.length() == 0) // Skip.
@@ -369,7 +369,7 @@ struct bmsCommandTree {
 		// LTrim the statement to allow indentation
 		std::size_t hash = statement.find('#');
 
-		if (hash == RString::npos)
+		if (hash == std::string::npos)
 			return;
 
 		statement = statement.substr(hash);
