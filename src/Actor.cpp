@@ -128,7 +128,7 @@ void Actor::InitState() {
 	m_CullMode = CULL_NONE;
 }
 
-static bool GetMessageNameFromCommandName(const RString &sCommandName, RString &sMessageNameOut) {
+static bool GetMessageNameFromCommandName(const RString &sCommandName, std::string &sMessageNameOut) {
 	if (sCommandName.Right(7) == "Message") {
 		sMessageNameOut = sCommandName.Left(static_cast<int>(sCommandName.size()) - 7);
 		return true;
