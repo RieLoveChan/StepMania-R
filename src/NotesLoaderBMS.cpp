@@ -170,7 +170,7 @@ class BMSChart {
 
  public:
 	BMSChart();
-	bool Load(const RString &path);
+	bool Load(const std::string &path);
 	bool GetHeader(const std::string &header, std::string &out);
 	RString path;
 
@@ -463,7 +463,7 @@ struct bmsCommandTree {
 	}
 };
 
-bool BMSChart::Load(const RString &chartPath) {
+bool BMSChart::Load(const std::string &chartPath) {
 	bmsCommandTree Tree;
 	Tree.path = chartPath;
 	path = chartPath;
