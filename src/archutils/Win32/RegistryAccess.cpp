@@ -115,7 +115,7 @@ bool RegistryAccess::GetRegValue(const std::string &sKey, const std::string &sNa
 }
 
 bool RegistryAccess::GetRegSubKeys(
-   const RString &sKey, std::vector<RString> &lst, const RString &regex, bool bReturnPathToo
+   const std::string &sKey, std::vector<RString> &lst, const std::string &regex, bool bReturnPathToo
 ) {
 	HKEY hKey = OpenRegKey(sKey, READ);
 	if (hKey == nullptr)

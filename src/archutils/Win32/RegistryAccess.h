@@ -11,7 +11,7 @@ bool GetRegValue(const std::string &sKey, const std::string &sName, int &val, bo
 bool GetRegValue(const std::string &sKey, const std::string &sName, bool &val);
 
 bool GetRegSubKeys(
-   const RString &sKey, std::vector<RString> &asList, const RString &sRegex = ".*", bool bReturnPathToo = true
+   const std::string &sKey, std::vector<RString> &asList, const std::string &sRegex = ".*", bool bReturnPathToo = true
 );
 
 bool SetRegValue(const std::string &sKey, const std::string &sName, const std::string &val);
