@@ -17,7 +17,7 @@
 		return nullptr;                                                                                                  \
 	}
 
-RageSurface *RageSurface_Load_XPM(char *const *xpm, RString &error) {
+RageSurface *RageSurface_Load_XPM(char *const *xpm, std::string &error) {
 	int line = 0;
 
 	int width, height, num_colors, color_length;

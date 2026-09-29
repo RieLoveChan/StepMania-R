@@ -7,7 +7,7 @@
 
 #include <cstdint>
 
-static void WriteBytes(RageFile &f, RString &sError, const void *buf, int size) {
+static void WriteBytes(RageFile &f, std::string &sError, const void *buf, int size) {
 	if (!sError.empty())
 		return;
 
@@ -16,12 +16,12 @@ static void WriteBytes(RageFile &f, RString &sError, const void *buf, int size) 
 		sError = f.GetError();
 }
 
-static void write_le16(RageFile &f, RString &sError, std::uint16_t val) {
+static void write_le16(RageFile &f, std::string &sError, std::uint16_t val) {
 	val = Swap16LE(val);
 	WriteBytes(f, sError, &val, sizeof(std::uint16_t));
 }
 
-static void write_le32(RageFile &f, RString &sError, std::uint32_t val) {
+static void write_le32(RageFile &f, std::string &sError, std::uint32_t val) {
 	val = Swap32LE(val);
 	WriteBytes(f, sError, &val, sizeof(std::uint32_t));
 }

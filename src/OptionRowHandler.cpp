@@ -788,7 +788,7 @@ class OptionRowHandlerLua : public OptionRowHandler {
 		m_pLuaTable->Unset();
 	}
 
-	bool SanityCheckTable(lua_State *L, RString &RowName) {
+	bool SanityCheckTable(lua_State *L, std::string &RowName) {
 		if (m_pLuaTable->GetLuaType() != LUA_TTABLE) {
 			LuaHelpers::ReportScriptErrorFmt("LUA_ERROR:  Result of \"%s\" is not a table.", RowName.c_str());
 			return false;

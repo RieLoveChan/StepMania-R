@@ -26,7 +26,7 @@ enum {
 		return RageSurfaceUtils::OPEN_FATAL_ERROR;                                                                       \
 	}
 
-static RageSurfaceUtils::OpenResult LoadBMP(RageFile &f, RageSurface *&img, RString &sError) {
+static RageSurfaceUtils::OpenResult LoadBMP(RageFile &f, RageSurface *&img, std::string &sError) {
 	char magic[2];
 	ReadBytes(f, magic, 2, sError);
 	if (magic[0] != 'B' || magic[1] != 'M') {

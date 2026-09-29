@@ -837,7 +837,7 @@ class LunaScreenManager : public Luna<ScreenManager> {
 	// Note: PrepareScreen binding is not allowed; loading data inside
 	// Lua causes the Lua lock to be held for the duration of the load,
 	// which blocks concurrent rendering
-	static void ValidateScreenName(lua_State *L, RString &name) {
+	static void ValidateScreenName(lua_State *L, std::string &name) {
 		if (name.empty()) {
 			RString errstr = "Screen name is empty.";
 			SCREENMAN->SystemMessage(errstr);
