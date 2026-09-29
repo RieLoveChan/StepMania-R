@@ -68,7 +68,7 @@
  * in player options menus, but it should in the options menu.
  */
 
-static RString OPTION_EXPLANATION(RString s) {
+static std::string OPTION_EXPLANATION(RString s) {
 	return THEME->GetString("OptionExplanations", s);
 }
 

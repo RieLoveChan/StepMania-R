@@ -125,7 +125,7 @@ FileNameToMetricsGroupAndElement(const RString &sFileName, RString &sMetricsGrou
 	}
 }
 
-static RString MetricsGroupAndElementToFileName(const RString &sMetricsGroup, const RString &sElement) {
+static std::string MetricsGroupAndElementToFileName(const RString &sMetricsGroup, const RString &sElement) {
 	if (sMetricsGroup.empty())
 		return sElement;
 	else

@@ -128,7 +128,7 @@ static LocalizedString NO_VSYNC("StepMania", "NoVsync");
 static LocalizedString SMOOTH_LINES("StepMania", "SmoothLines");
 static LocalizedString NO_SMOOTH_LINES("StepMania", "NoSmoothLines");
 
-static RString GetActualGraphicOptionsString() {
+static std::string GetActualGraphicOptionsString() {
 	const VideoModeParams &params = DISPLAY->GetActualVideoModeParams();
 	RString sFormat = "%s %s %dx%d %d " + COLOR.GetValue() + " %d " + TEXTURE.GetValue() + " %dHz %s %s";
 	RString sLog = ssprintf(
@@ -475,7 +475,7 @@ struct VideoCardDefaults {
    ),
 };
 
-static RString GetVideoDriverName() {
+static std::string GetVideoDriverName() {
 #if defined(_WIN32)
 	return GetPrimaryVideoDriverName();
 #else

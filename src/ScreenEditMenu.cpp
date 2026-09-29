@@ -144,7 +144,7 @@ bool ScreenEditMenu::MenuRight(const InputEventPlus &) {
 	return true;
 }
 
-static RString GetCopyDescription(const Steps *pSourceSteps) {
+static std::string GetCopyDescription(const Steps *pSourceSteps) {
 	RString s = pSourceSteps->GetDescription();
 	return s;
 }

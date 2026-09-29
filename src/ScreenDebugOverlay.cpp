@@ -145,7 +145,7 @@ static MapDebugToDI g_Mappings;
 
 static LocalizedString IN_GAMEPLAY("ScreenDebugOverlay", "%s in gameplay");
 static LocalizedString OR("ScreenDebugOverlay", "or");
-static RString GetDebugButtonName(const IDebugLine *pLine) {
+static std::string GetDebugButtonName(const IDebugLine *pLine) {
 	RString s = INPUTMAN->GetDeviceSpecificInputString(pLine->m_Button);
 	IDebugLine::Type type = pLine->GetType();
 	switch (type) {
