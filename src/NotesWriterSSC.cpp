@@ -327,7 +327,7 @@ static void WriteGlobalTags(RageFile &f, const Song &out) {
  * @param in the Steps in question.
  * @param bSavingCache a flag to see if we're saving certain cache data.
  * @return the NoteData in RString form. */
-static RString GetSSCNoteData(const Song &song, const Steps &in, bool bSavingCache) {
+static std::string GetSSCNoteData(const Song &song, const Steps &in, bool bSavingCache) {
 	std::vector<RString> lines;
 
 	lines.push_back("");

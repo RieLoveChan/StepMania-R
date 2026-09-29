@@ -17,7 +17,7 @@ extern const char *g_CRSDifficultyNames[]; // in CourseLoaderCRS
  * @param iVal the course difficulty.
  * @return the string.
  */
-static RString DifficultyToCRSString(CourseDifficulty iVal) {
+static std::string DifficultyToCRSString(CourseDifficulty iVal) {
 	return g_CRSDifficultyNames[iVal];
 }
 

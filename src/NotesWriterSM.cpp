@@ -198,7 +198,7 @@ static RString JoinLineList(std::vector<RString> &lines) {
  * @param song the Song in question.
  * @param in the Steps in question.
  * @return the #NOTES tag. */
-static RString GetSMNotesTag(const Song &song, const Steps &in) {
+static std::string GetSMNotesTag(const Song &song, const Steps &in) {
 	std::vector<RString> lines;
 
 	lines.push_back("");
