@@ -307,7 +307,7 @@ static RString ReadlinkRecursive(RString sPath) {
 }
 #endif
 
-static RString GetDirOfExecutable([[maybe_unused]] RString argv0) {
+static std::string GetDirOfExecutable([[maybe_unused]] RString argv0) {
 	// argv[0] can be wrong in most OS's; try to avoid using it.
 
 	RString sPath;

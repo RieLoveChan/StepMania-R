@@ -59,7 +59,7 @@
  */
 
 // Find the largest common substring at the start of both strings.
-static RString FindLargestInitialSubstring(const RString &string1, const RString &string2) {
+static std::string FindLargestInitialSubstring(const std::string &string1, const std::string &string2) {
 	// First see if the whole first string matches an appropriately-sized
 	// substring of the second, then keep chopping off the last character of
 	// each until they match.

@@ -1416,7 +1416,7 @@ static bool EnabledIfSet2GlobalMovieSongGroupAndGenre() {
 	   !g_BackgroundChange.rows[ScreenEdit::file2_global_movie_song_group_and_genre].choices.empty();
 }
 
-static RString GetOneBakedRandomFile(Song *pSong, bool bTryGenre = true) {
+static std::string GetOneBakedRandomFile(Song *pSong, bool bTryGenre = true) {
 	std::vector<RString> vsPaths;
 	std::vector<RString> vsNames;
 	BackgroundUtil::GetGlobalRandomMovies(pSong, "", vsPaths, vsNames, bTryGenre);
@@ -6277,7 +6277,7 @@ static void ProcessKeyNames(std::vector<RString> &vs, bool doSort) {
 	vs.erase(toDelete, vs.end());
 }
 
-static RString GetDeviceButtonsLocalized(const std::vector<EditButton> &veb, const MapEditToDI &editmap) {
+static std::string GetDeviceButtonsLocalized(const std::vector<EditButton> &veb, const MapEditToDI &editmap) {
 	std::vector<RString> vsPress;
 	std::vector<RString> vsHold;
 	for (EditButton const &eb : veb) {

@@ -112,7 +112,7 @@ RString OptimizeDWIString(RString holds, RString taps) {
  * @brief Turn the Notes into a DWI string without angle brackets whenever possible.
  * @param tnCols the columns of TapNotes in question.
  * @return the DWI'ed string. */
-static RString NotesToDWIString(const TapNote tnCols[6]) {
+static std::string NotesToDWIString(const TapNote tnCols[6]) {
 	const char dirs[] = {'4', 'C', '2', '8', 'D', '6'};
 	RString taps, holds, ret;
 	for (int col = 0; col < 6; ++col) {
@@ -146,7 +146,7 @@ static RString NotesToDWIString(const TapNote tnCols[6]) {
  * @param tnCol5 the fifth column.
  * @param tnCol6 the sisth column.
  * @return the DWI'ed string. */
-static RString
+static std::string
 NotesToDWIString(TapNote tnCol1, TapNote tnCol2, TapNote tnCol3, TapNote tnCol4, TapNote tnCol5, TapNote tnCol6) {
 	TapNote tnCols[6];
 	tnCols[0] = tnCol1;
@@ -165,7 +165,7 @@ NotesToDWIString(TapNote tnCol1, TapNote tnCol2, TapNote tnCol3, TapNote tnCol4,
  * @param tnCol3 the third column.
  * @param tnCol4 the fourth column.
  * @return the DWI'ed string. */
-static RString NotesToDWIString(TapNote tnCol1, TapNote tnCol2, TapNote tnCol3, TapNote tnCol4) {
+static std::string NotesToDWIString(TapNote tnCol1, TapNote tnCol2, TapNote tnCol3, TapNote tnCol4) {
 	return NotesToDWIString(tnCol1, TAP_EMPTY, tnCol2, tnCol3, TAP_EMPTY, tnCol4);
 }
 
