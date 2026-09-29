@@ -14,7 +14,7 @@ extern "C" {
 
 #include <vector>
 
-static RString GetUSBDevicePath(int iNum) {
+static std::string GetUSBDevicePath(int iNum) {
 	GUID guid;
 	HidD_GetHidGuid(&guid);
 

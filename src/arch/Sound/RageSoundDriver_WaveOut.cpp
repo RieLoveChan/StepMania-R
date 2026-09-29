@@ -28,7 +28,7 @@ const int CHUNKSIZE_FRAMES = BUFFERSIZE_FRAMES / NUM_CHUNKS; // in frames
 const int CHUNKSIZE = CHUNKSIZE_FRAMES * BYTES_PER_FRAME;    // in bytes
 } // namespace
 
-static RString wo_ssprintf(MMRESULT err, const char *szFmt, ...) {
+static std::string wo_ssprintf(MMRESULT err, const char *szFmt, ...) {
 	char szBuf[MAXERRORLENGTH];
 	waveOutGetErrorText(err, szBuf, MAXERRORLENGTH);
 
@@ -75,7 +75,7 @@ bool RageSoundDriver_WaveOut::GetData() {
 	if (ret != MMSYSERR_NOERROR) {
 		Init();
 		if (b_InitSuccess == false) {
-			FAIL_M(wo_ssprintf(ret, "waveOutWrite failed"));
+			FAIL_M(wo_ssprintf(ret, "waveOutWrite failed").c_str());
 		}
 	}
 
@@ -95,7 +95,7 @@ std::int64_t RageSoundDriver_WaveOut::GetPosition() const {
 	tm.wType = TIME_SAMPLES;
 	MMRESULT ret = waveOutGetPosition(m_hWaveOut, &tm, sizeof(tm));
 	if (ret != MMSYSERR_NOERROR)
-		FAIL_M(wo_ssprintf(ret, "waveOutGetPosition failed"));
+		FAIL_M(wo_ssprintf(ret, "waveOutGetPosition failed").c_str());
 
 	return tm.u.sample;
 }

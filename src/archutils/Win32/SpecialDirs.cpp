@@ -2,7 +2,7 @@
 #include "SpecialDirs.h"
 #include <shlobj.h>
 
-static RString GetSpecialFolderPath(int csidl) {
+static std::string GetSpecialFolderPath(int csidl) {
 	RString sDir;
 	TCHAR szDir[MAX_PATH] = "";
 	HRESULT hResult = SHGetFolderPath(nullptr, csidl, nullptr, SHGFP_TYPE_CURRENT, szDir);

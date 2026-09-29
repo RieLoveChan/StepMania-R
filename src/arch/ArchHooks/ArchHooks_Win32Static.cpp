@@ -39,7 +39,7 @@ std::int64_t ArchHooks::GetMicrosecondsSinceStart(bool bAccurate) {
 	return ret;
 }
 
-static RString GetMountDir(const RString &sDirOfExecutable) {
+static std::string GetMountDir(const RString &sDirOfExecutable) {
 	/* All Windows data goes in the directory one level above the executable. */
 	CHECKPOINT_M(ssprintf("DOE \"%s\"", sDirOfExecutable.c_str()));
 	std::vector<RString> asParts;
@@ -108,7 +108,7 @@ void ArchHooks::MountUserFilesystems(const RString & /* sDirOfExecutable */) {
 	FILEMAN->Mount("dir", sAppDataDir + "/Themes", "/Themes");
 }
 
-static RString LangIdToString(LANGID l) {
+static std::string LangIdToString(LANGID l) {
 	switch (PRIMARYLANGID(l)) {
 	case LANG_ARABIC:
 		return "ar";
