@@ -35,7 +35,7 @@ static long OggRageFile_tell_func(void *datasource) {
 	return f->Tell();
 }
 
-static RString ov_ssprintf(int err, const char *fmt, ...) {
+static std::string ov_ssprintf(int err, const char *fmt, ...) {
 	va_list va;
 	va_start(va, fmt);
 	RString s = vssprintf(fmt, va);

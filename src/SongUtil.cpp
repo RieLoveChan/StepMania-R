@@ -322,7 +322,7 @@ void SongUtil::AdjustDuplicateSteps(Song *pSong) {
  * @param s the string to left trim.
  * @return the trimmed string.
  */
-static RString RemoveInitialWhitespace(RString s) {
+static std::string RemoveInitialWhitespace(std::string s) {
 	std::size_t i = s.find_first_not_of(" \t\r\n");
 	if (i != s.npos)
 		s.erase(0, i);

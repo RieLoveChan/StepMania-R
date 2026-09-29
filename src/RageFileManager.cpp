@@ -276,7 +276,7 @@ class RageFileDriverMountpoints : public RageFileDriver {
 };
 static RageFileDriverMountpoints *g_Mountpoints = nullptr;
 
-static RString ExtractDirectory(RString sPath) {
+static std::string ExtractDirectory(std::string sPath) {
 	// return the directory containing sPath
 	std::size_t n = sPath.find_last_of("/");
 	if (n != sPath.npos)

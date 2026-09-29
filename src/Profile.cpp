@@ -226,7 +226,7 @@ void Profile::SetCharacter(const RString sCharacterID) {
 		m_sCharacterID = sCharacterID;
 }
 
-static RString FormatCalories(float fCals) {
+static std::string FormatCalories(float fCals) {
 	return Commify((int)fCals) + " Cal";
 }
 
