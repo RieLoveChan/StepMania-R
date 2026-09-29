@@ -239,7 +239,7 @@ RageFileObjDirect::RageFileObjDirect(const RString &sPath, int iFD, int iMode) {
 
 namespace {
 #if !defined(_WIN32)
-bool FlushDir(RString sPath, RString &sError) {
+bool FlushDir(RString sPath, std::string &sError) {
 	/* Wait for the directory to be flushed. */
 	int dirfd = open(sPath, O_RDONLY);
 	if (dirfd == -1) {
@@ -257,7 +257,7 @@ bool FlushDir(RString sPath, RString &sError) {
 	return true;
 }
 #else
-bool FlushDir(RString /* sPath */, RString & /* sError */) {
+bool FlushDir(RString /* sPath */, std::string & /* sError */) {
 	return true;
 }
 #endif

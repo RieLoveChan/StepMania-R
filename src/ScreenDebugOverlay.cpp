@@ -86,7 +86,7 @@ class IDebugLine {
 		return false;
 	}
 	virtual bool IsEnabled() = 0;
-	virtual void DoAndLog(RString &sMessageOut) {
+	virtual void DoAndLog(std::string &sMessageOut) {
 		RString s1 = GetDisplayTitle();
 		RString s2 = GetDisplayValue();
 		if (!s2.empty())
@@ -589,7 +589,7 @@ class DebugLineAutoplay : public IDebugLine {
 	bool IsEnabled() override {
 		return GamePreferences::m_AutoPlay.Get() != PC_HUMAN;
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		ASSERT(GAMESTATE->GetMasterPlayerNumber() != PLAYER_INVALID);
 		PlayerController pc = GAMESTATE->m_pPlayerState[GAMESTATE->GetMasterPlayerNumber()]->m_PlayerController;
 		bool bHoldingShift = INPUTFILTER->IsBeingPressed(DeviceInput(DEVICE_KEYBOARD, KEY_LSHIFT)) ||
@@ -625,7 +625,7 @@ class DebugLineAssist : public IDebugLine {
 	bool IsEnabled() override {
 		return GAMESTATE->m_SongOptions.GetSong().m_bAssistClap || GAMESTATE->m_SongOptions.GetSong().m_bAssistMetronome;
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		ASSERT(GAMESTATE->GetMasterPlayerNumber() != PLAYER_INVALID);
 		bool bHoldingShift = INPUTFILTER->IsBeingPressed(DeviceInput(DEVICE_KEYBOARD, KEY_LSHIFT));
 		bool b;
@@ -671,7 +671,7 @@ class DebugLineAutosync : public IDebugLine {
 	bool IsEnabled() override {
 		return GAMESTATE->m_SongOptions.GetSong().m_AutosyncType != AutosyncType_Off;
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		int as = GAMESTATE->m_SongOptions.GetSong().m_AutosyncType + 1;
 		bool bAllowSongAutosync = !GAMESTATE->IsCourseMode();
 		if (!bAllowSongAutosync && (as == AutosyncType_Song || as == AutosyncType_Tempo))
@@ -693,7 +693,7 @@ class DebugLineCoinMode : public IDebugLine {
 	bool IsEnabled() override {
 		return true;
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		if (GAMESTATE->GetCoinMode() == CoinMode_Home)
 			GamePreferences::m_CoinMode.Set(CoinMode_Free);
 		else if (GAMESTATE->GetCoinMode() == CoinMode_Free && !GAMESTATE->IsEventMode())
@@ -712,7 +712,7 @@ class DebugLineSlow : public IDebugLine {
 	bool IsEnabled() override {
 		return g_bIsSlow;
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		g_bIsSlow = !g_bIsSlow;
 		SetSpeed();
 		IDebugLine::DoAndLog(sMessageOut);
@@ -726,7 +726,7 @@ class DebugLineHalt : public IDebugLine {
 	bool IsEnabled() override {
 		return g_bIsHalt;
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		g_bIsHalt = !g_bIsHalt;
 		g_HaltTimer.Touch();
 		SetSpeed();
@@ -741,7 +741,7 @@ class DebugLineLightsDebug : public IDebugLine {
 	bool IsEnabled() override {
 		return PREFSMAN->m_bDebugLights.Get();
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		PREFSMAN->m_bDebugLights.Set(!PREFSMAN->m_bDebugLights);
 		IDebugLine::DoAndLog(sMessageOut);
 	}
@@ -754,7 +754,7 @@ class DebugLineMonkeyInput : public IDebugLine {
 	bool IsEnabled() override {
 		return PREFSMAN->m_bMonkeyInput.Get();
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		PREFSMAN->m_bMonkeyInput.Set(!PREFSMAN->m_bMonkeyInput);
 		IDebugLine::DoAndLog(sMessageOut);
 	}
@@ -767,7 +767,7 @@ class DebugLineStats : public IDebugLine {
 	bool IsEnabled() override {
 		return PREFSMAN->m_bShowStats.Get();
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		PREFSMAN->m_bShowStats.Set(!PREFSMAN->m_bShowStats);
 		IDebugLine::DoAndLog(sMessageOut);
 	}
@@ -780,7 +780,7 @@ class DebugLineVsync : public IDebugLine {
 	bool IsEnabled() override {
 		return PREFSMAN->m_bVsync.Get();
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		PREFSMAN->m_bVsync.Set(!PREFSMAN->m_bVsync);
 		StepMania::ApplyGraphicOptions();
 		IDebugLine::DoAndLog(sMessageOut);
@@ -794,7 +794,7 @@ class DebugLineAllowMultitexture : public IDebugLine {
 	bool IsEnabled() override {
 		return PREFSMAN->m_bAllowMultitexture.Get();
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		PREFSMAN->m_bAllowMultitexture.Set(!PREFSMAN->m_bAllowMultitexture);
 		IDebugLine::DoAndLog(sMessageOut);
 	}
@@ -810,7 +810,7 @@ class DebugLineShowMasks : public IDebugLine {
 	RString GetPageName() const override {
 		return "Theme";
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		GetPref()->Set(!GetPref()->Get());
 		IDebugLine::DoAndLog(sMessageOut);
 	}
@@ -849,7 +849,7 @@ class DebugLineProfileSlot : public IDebugLine {
 	RString GetPageName() const override {
 		return "Profiles";
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		enum_add(g_ProfileSlot, +1);
 		if (g_ProfileSlot == NUM_ProfileSlot)
 			g_ProfileSlot = ProfileSlot_Player1;
@@ -871,7 +871,7 @@ class DebugLineClearProfileStats : public IDebugLine {
 	RString GetPageName() const override {
 		return "Profiles";
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		Profile *pProfile = PROFILEMAN->GetProfile(g_ProfileSlot);
 		pProfile->ClearStats();
 		IDebugLine::DoAndLog(sMessageOut);
@@ -965,7 +965,7 @@ class DebugLineFillProfileStats : public IDebugLine {
 	RString GetPageName() const override {
 		return "Profiles";
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		Profile *pProfile = PROFILEMAN->GetProfile(g_ProfileSlot);
 		FillProfileStats(pProfile);
 		IDebugLine::DoAndLog(sMessageOut);
@@ -982,7 +982,7 @@ class DebugLineSendNotesEnded : public IDebugLine {
 	bool IsEnabled() override {
 		return true;
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		SCREENMAN->PostMessageToTopScreen(SM_NotesEnded, 0);
 		IDebugLine::DoAndLog(sMessageOut);
 	}
@@ -998,7 +998,7 @@ class DebugLineResetKeyMapping : public IDebugLine {
 	bool IsEnabled() override {
 		return true;
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		INPUTMAPPER->ResetMappingsToDefault();
 		INPUTMAPPER->SaveMappingsToDisk();
 		IDebugLine::DoAndLog(sMessageOut);
@@ -1015,7 +1015,7 @@ class DebugLineMuteActions : public IDebugLine {
 	bool IsEnabled() override {
 		return PREFSMAN->m_MuteActions;
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		PREFSMAN->m_MuteActions.Set(!PREFSMAN->m_MuteActions);
 		SCREENMAN->SystemMessage(PREFSMAN->m_MuteActions ? MUTE_ACTIONS_ON.GetValue() : MUTE_ACTIONS_OFF.GetValue());
 		IDebugLine::DoAndLog(sMessageOut);
@@ -1035,7 +1035,7 @@ class DebugLineReloadCurrentScreen : public IDebugLine {
 	RString GetPageName() const override {
 		return "Theme";
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		RString sScreenName = SCREENMAN->GetScreen(0)->GetName();
 		SCREENMAN->PopAllScreens();
 
@@ -1064,7 +1064,7 @@ class DebugLineRestartCurrentScreen : public IDebugLine {
 	RString GetPageName() const override {
 		return "Theme";
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		SCREENMAN->GetTopScreen()->BeginScreen();
 		IDebugLine::DoAndLog(sMessageOut);
 		sMessageOut = "";
@@ -1087,7 +1087,7 @@ class DebugLineCurrentScreenOn : public IDebugLine {
 	RString GetPageName() const override {
 		return "Theme";
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		SCREENMAN->GetTopScreen()->PlayCommand("On");
 		IDebugLine::DoAndLog(sMessageOut);
 		sMessageOut = "";
@@ -1110,7 +1110,7 @@ class DebugLineCurrentScreenOff : public IDebugLine {
 	RString GetPageName() const override {
 		return "Theme";
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		SCREENMAN->GetTopScreen()->PlayCommand("Off");
 		IDebugLine::DoAndLog(sMessageOut);
 		sMessageOut = "";
@@ -1130,7 +1130,7 @@ class DebugLineReloadTheme : public IDebugLine {
 	RString GetPageName() const override {
 		return "Theme";
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		THEME->ReloadMetrics();
 		TEXTUREMAN->ReloadAll();
 		NOTESKIN->RefreshNoteSkinData(GAMESTATE->m_pCurGame);
@@ -1154,7 +1154,7 @@ class DebugLineReloadOverlayScreens : public IDebugLine {
 	RString GetPageName() const override {
 		return "Theme";
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		SCREENMAN->ReloadOverlayScreensAfterInputFinishes();
 		IDebugLine::DoAndLog(sMessageOut);
 	}
@@ -1173,7 +1173,7 @@ class DebugLineToggleErrors : public IDebugLine {
 	RString GetPageName() const override {
 		return "Theme";
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		PREFSMAN->m_show_theme_errors.Set(!PREFSMAN->m_show_theme_errors);
 		IDebugLine::DoAndLog(sMessageOut);
 	}
@@ -1192,7 +1192,7 @@ class DebugLineShowRecentErrors : public IDebugLine {
 	RString GetPageName() const override {
 		return "Theme";
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		Message msg("ToggleScriptError");
 		MESSAGEMAN->Broadcast(msg);
 		IDebugLine::DoAndLog(sMessageOut);
@@ -1212,7 +1212,7 @@ class DebugLineClearErrors : public IDebugLine {
 	RString GetPageName() const override {
 		return "Theme";
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		Message msg("ClearScriptError");
 		MESSAGEMAN->Broadcast(msg);
 		IDebugLine::DoAndLog(sMessageOut);
@@ -1232,7 +1232,7 @@ class DebugLineConvertXML : public IDebugLine {
 	RString GetPageName() const override {
 		return "Theme";
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		Song *cur_song = GAMESTATE->m_pCurSong;
 		if (cur_song) {
 			convert_xmls_in_dir(cur_song->GetSongDir() + "/");
@@ -1254,7 +1254,7 @@ class DebugLineWriteProfiles : public IDebugLine {
 	RString GetPageName() const override {
 		return "Profiles";
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		// Also save bookkeeping and profile info for debugging
 		// so we don't have to play through a whole song to get new output.
 		if (g_ProfileSlot == ProfileSlot_Machine)
@@ -1278,7 +1278,7 @@ class DebugLineWritePreferences : public IDebugLine {
 	bool IsEnabled() override {
 		return true;
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		PREFSMAN->SavePrefsToDisk();
 		IDebugLine::DoAndLog(sMessageOut);
 	}
@@ -1297,7 +1297,7 @@ class DebugLineReloadPreferences : public IDebugLine {
 	RString GetPageName() const override {
 		return "Profiles";
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		PREFSMAN->ReadPrefsFromDisk();
 		IDebugLine::DoAndLog(sMessageOut);
 	}
@@ -1313,7 +1313,7 @@ class DebugLineMenuTimer : public IDebugLine {
 	bool IsEnabled() override {
 		return PREFSMAN->m_bMenuTimer.Get();
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		PREFSMAN->m_bMenuTimer.Set(!PREFSMAN->m_bMenuTimer);
 		IDebugLine::DoAndLog(sMessageOut);
 	}
@@ -1329,7 +1329,7 @@ class DebugLineFlushLog : public IDebugLine {
 	bool IsEnabled() override {
 		return true;
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		LOG->Flush();
 		IDebugLine::DoAndLog(sMessageOut);
 	}
@@ -1345,7 +1345,7 @@ class DebugLinePullBackCamera : public IDebugLine {
 	bool IsEnabled() override {
 		return g_fImageScaleDestination != 1;
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		if (g_fImageScaleDestination == 1)
 			g_fImageScaleDestination = 0.5f;
 		else
@@ -1364,7 +1364,7 @@ class DebugLineVolumeUp : public IDebugLine {
 	bool IsEnabled() override {
 		return true;
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		ChangeVolume(+0.1f);
 		IDebugLine::DoAndLog(sMessageOut);
 	}
@@ -1383,7 +1383,7 @@ class DebugLineVolumeDown : public IDebugLine {
 	bool IsEnabled() override {
 		return true;
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		ChangeVolume(-0.1f);
 		IDebugLine::DoAndLog(sMessageOut);
 		sMessageOut += " - " + ssprintf("%.0f%%", GetPref()->Get() * 100);
@@ -1403,7 +1403,7 @@ class DebugLineVisualDelayUp : public IDebugLine {
 	bool IsEnabled() override {
 		return true;
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		ChangeVisualDelay(+0.001f);
 		IDebugLine::DoAndLog(sMessageOut);
 	}
@@ -1422,7 +1422,7 @@ class DebugLineVisualDelayDown : public IDebugLine {
 	bool IsEnabled() override {
 		return true;
 	}
-	void DoAndLog(RString &sMessageOut) override {
+	void DoAndLog(std::string &sMessageOut) override {
 		ChangeVisualDelay(-0.001f);
 		IDebugLine::DoAndLog(sMessageOut);
 		sMessageOut += " - " + ssprintf("%.03f", GetPref()->Get());
@@ -1442,7 +1442,7 @@ class DebugLineForceCrash : public IDebugLine {
 	bool IsEnabled() override {
 		return false;
 	}
-	void DoAndLog(RString & /* sMessageOut */) override {
+	void DoAndLog(std::string & /* sMessageOut */) override {
 		FAIL_M("DebugLineCrash");
 	}
 };
@@ -1457,7 +1457,7 @@ class DebugLineUptime : public IDebugLine {
 	bool IsEnabled() override {
 		return false;
 	}
-	void DoAndLog(RString & /* sMessageOut */) override {
+	void DoAndLog(std::string & /* sMessageOut */) override {
 	}
 };
 

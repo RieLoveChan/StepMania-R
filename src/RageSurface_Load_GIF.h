@@ -5,7 +5,7 @@
 
 #include "RageSurface_Load.h"
 RageSurfaceUtils::OpenResult
-RageSurface_Load_GIF(const RString &sPath, RageSurface *&ret, bool bHeaderOnly, RString &error);
+RageSurface_Load_GIF(const RString &sPath, RageSurface *&ret, bool bHeaderOnly, std::string &error);
 
 #endif
 

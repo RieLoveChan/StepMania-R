@@ -4855,7 +4855,7 @@ static LocalizedString NOT_A_TRACK("ScreenEdit", "'%s' is not a track id.");
 static LocalizedString OUT_OF_RANGE_ID("ScreenEdit", "Entry %d, '%d', is out of range 1 to %d.");
 static LocalizedString CONFIRM_CLEAR("ScreenEdit", "Are you sure you want to clear %d notes?");
 
-static bool ConvertMappingInputToMapping(RString const &mapstr, int *mapping, RString &error) {
+static bool ConvertMappingInputToMapping(RString const &mapstr, int *mapping, std::string &error) {
 	std::vector<RString> mapping_input;
 	split(mapstr, ",", mapping_input);
 	std::size_t tracks_for_type = GAMEMAN->GetStepsTypeInfo(GAMESTATE->m_pCurSteps[0]->m_StepsType).iNumTracks;

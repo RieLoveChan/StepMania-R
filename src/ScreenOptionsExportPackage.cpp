@@ -168,7 +168,7 @@ static RString ReplaceInvalidFileNameChars(RString sOldFileName) {
 	return sNewFileName;
 }
 
-static bool ExportPackage(RString /* sPackageName */, RString /* sDirToExport */, RString &sErrorOut) {
+static bool ExportPackage(RString /* sPackageName */, RString /* sDirToExport */, std::string &sErrorOut) {
 	// Package (.smzip) export is not implemented. The old body used a
 	// long-gone RageFileObjZip API and had been #if 0'd out for years
 	// ("XXX: totally doesn't work. -aj"); the CreateZip fork it might
