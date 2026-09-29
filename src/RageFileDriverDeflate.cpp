@@ -282,7 +282,7 @@ int RageFileObjDeflate::FlushInternal() {
  * Parse a .gz file, check the header CRC16 if present, and return the data
  * CRC32 and a decompressor.  pFile will be deleted.
  */
-RageFileObjInflate *GunzipFile(RageFileBasic *pFile_, RString &sError, std::uint32_t *iCRC32) {
+RageFileObjInflate *GunzipFile(RageFileBasic *pFile_, std::string &sError, std::uint32_t *iCRC32) {
 	std::unique_ptr<RageFileBasic> pFile(pFile_);
 
 	sError = "";

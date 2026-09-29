@@ -161,7 +161,7 @@ class Steps {
 	void SetDifficultyAndDescription(Difficulty dc, RString sDescription);
 	void SetCredit(RString sCredit);
 	void SetChartStyle(RString sChartStyle);
-	static bool MakeValidEditDescription(RString &sPreferredDescription); // return true if was modified
+	static bool MakeValidEditDescription(std::string &sPreferredDescription); // return true if was modified
 
 	/* This is a reimplementation of the lua version of the script to generate chart keys, except this time
 	using the notedata stored in game memory immediately after reading it than parsing it using lua. - Mina */
@@ -187,7 +187,7 @@ class Steps {
 	NoteData GetNoteData() const;
 	void SetNoteData(const NoteData &noteDataNew);
 	void SetSMNoteData(const RString &notes_comp);
-	void GetSMNoteData(RString &notes_comp_out) const;
+	void GetSMNoteData(std::string &notes_comp_out) const;
 
 	/**
 	 * @brief Retrieve the NoteData from the original source.

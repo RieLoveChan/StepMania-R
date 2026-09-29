@@ -190,7 +190,7 @@ void Steps::SetSMNoteData(const RString &notes_comp_) {
 }
 
 /* XXX: this function should pull data from m_sFilename, like Decompress() */
-void Steps::GetSMNoteData(RString &notes_comp_out) const {
+void Steps::GetSMNoteData(std::string &notes_comp_out) const {
 	if (m_sNoteDataCompressed.empty()) {
 		if (!m_bNoteDataIsFilled) {
 			/* no data is no data */
@@ -509,9 +509,9 @@ void Steps::SetChartStyle(RString sChartStyle) {
 	m_sChartStyle = sChartStyle;
 }
 
-bool Steps::MakeValidEditDescription(RString &sPreferredDescription) {
+bool Steps::MakeValidEditDescription(std::string &sPreferredDescription) {
 	if (int(sPreferredDescription.size()) > MAX_STEPS_DESCRIPTION_LENGTH) {
-		sPreferredDescription = sPreferredDescription.Left(MAX_STEPS_DESCRIPTION_LENGTH);
+		sPreferredDescription = sPreferredDescription.substr(0, MAX_STEPS_DESCRIPTION_LENGTH);
 		return true;
 	}
 	return false;
