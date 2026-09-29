@@ -411,7 +411,7 @@ bool MovieDecoder_FFMpeg::GetFrame(RageSurface *pSurface) {
 	return false;
 }
 
-static RString averr_ssprintf(int err, const char *fmt, ...) {
+static std::string averr_ssprintf(int err, const char *fmt, ...) {
 	ASSERT(err < 0);
 
 	va_list va;

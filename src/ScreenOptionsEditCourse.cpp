@@ -143,7 +143,7 @@ static LocalizedString SONG("ScreenOptionsEditCourse", "Song");
 static LocalizedString STEPS("ScreenOptionsEditCourse", "Steps");
 static LocalizedString MINUTES("ScreenOptionsEditCourse", "minutes");
 
-static RString MakeMinutesString(int mins) {
+static std::string MakeMinutesString(int mins) {
 	if (mins == 0)
 		return "No Cut-off";
 	return ssprintf("%d", mins) + " " + MINUTES.GetValue();

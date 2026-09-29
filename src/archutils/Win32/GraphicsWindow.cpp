@@ -33,7 +33,7 @@ static bool g_bRecreatingVideoMode = false;
 
 static UINT g_iQueryCancelAutoPlayMessage = 0;
 
-static RString GetNewWindow() {
+static std::string GetNewWindow() {
 	HWND h = GetForegroundWindow();
 	if (h == nullptr)
 		return "(NULL)";
