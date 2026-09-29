@@ -278,7 +278,7 @@ void LowLevelWindow_Win32::EndConcurrentRendering() {
 }
 
 static LocalizedString OPENGL_NOT_AVAILABLE("LowLevelWindow_Win32", "OpenGL hardware acceleration is not available.");
-bool LowLevelWindow_Win32::IsSoftwareRenderer(RString &sError) {
+bool LowLevelWindow_Win32::IsSoftwareRenderer(std::string &sError) {
 	RString sVendor = (const char *)glGetString(GL_VENDOR);
 	RString sRenderer = (const char *)glGetString(GL_RENDERER);
 

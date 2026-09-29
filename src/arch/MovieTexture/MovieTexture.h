@@ -29,7 +29,7 @@ class RageMovieTexture : public RageTexture {
 		return true;
 	}
 
-	static bool GetFourCC(RString fn, RString &handler, RString &type);
+	static bool GetFourCC(RString fn, std::string &handler, std::string &type);
 };
 
 class RageMovieTextureDriver : public RageDriver {

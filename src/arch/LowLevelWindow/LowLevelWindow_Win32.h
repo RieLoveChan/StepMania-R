@@ -10,7 +10,7 @@ class LowLevelWindow_Win32 : public LowLevelWindow {
 	void *GetProcAddress(RString s);
 	RString TryVideoMode(const VideoModeParams &p, bool &bNewDeviceOut);
 	void GetDisplaySpecs(DisplaySpecs &out) const;
-	bool IsSoftwareRenderer(RString &sError);
+	bool IsSoftwareRenderer(std::string &sError);
 	void SwapBuffers();
 	void Update();
 	bool SupportsThreadedRendering();

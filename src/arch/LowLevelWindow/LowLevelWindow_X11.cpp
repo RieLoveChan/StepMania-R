@@ -625,7 +625,7 @@ void LowLevelWindow_X11::LogDebugInformation() const {
 	LOG->Info("Direct rendering: %s", glXIsDirect(Dpy, glXGetCurrentContext()) ? "yes" : "no");
 }
 
-bool LowLevelWindow_X11::IsSoftwareRenderer(RString &sError) {
+bool LowLevelWindow_X11::IsSoftwareRenderer(std::string &sError) {
 	if (glXIsDirect(Dpy, glXGetCurrentContext()))
 		return false;
 

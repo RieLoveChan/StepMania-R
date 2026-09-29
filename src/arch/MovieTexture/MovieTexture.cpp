@@ -17,7 +17,7 @@ void ForceToAscii(std::string &str) {
 			str[i] = '?';
 }
 
-bool RageMovieTexture::GetFourCC(RString fn, RString &handler, RString &type) {
+bool RageMovieTexture::GetFourCC(RString fn, std::string &handler, std::string &type) {
 	RString ignore, ext;
 	splitpath(fn, ignore, ignore, ext);
 	if (

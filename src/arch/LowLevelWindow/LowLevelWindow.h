@@ -27,7 +27,7 @@ class LowLevelWindow {
 
 	virtual void LogDebugInformation() const {
 	}
-	virtual bool IsSoftwareRenderer(RString & /* sError */) {
+	virtual bool IsSoftwareRenderer(std::string & /* sError */) {
 		return false;
 	}
 

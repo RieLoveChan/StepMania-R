@@ -14,7 +14,7 @@ class LowLevelWindow_X11 : public LowLevelWindow {
 	void *GetProcAddress(RString s);
 	RString TryVideoMode(const VideoModeParams &p, bool &bNewDeviceOut);
 	void LogDebugInformation() const;
-	bool IsSoftwareRenderer(RString &sError);
+	bool IsSoftwareRenderer(std::string &sError);
 	void SwapBuffers();
 
 	const ActualVideoModeParams GetActualVideoModeParams() const {

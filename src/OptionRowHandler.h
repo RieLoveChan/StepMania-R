@@ -216,7 +216,7 @@ class OptionRowHandler {
 	ExportOption(const std::vector<PlayerNumber> &, const std::vector<bool> /* vbSelected */[NUM_PLAYERS]) const {
 		return 0;
 	}
-	virtual void GetIconTextAndGameCommand(int iFirstSelection, RString &sIconTextOut, GameCommand &gcOut) const;
+	virtual void GetIconTextAndGameCommand(int iFirstSelection, std::string &sIconTextOut, GameCommand &gcOut) const;
 	virtual RString GetScreen(int /* iChoice */) const {
 		return RString();
 	}

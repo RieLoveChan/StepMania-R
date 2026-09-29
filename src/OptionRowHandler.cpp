@@ -86,7 +86,7 @@ RString OptionRowHandler::GetThemedItemText(int iChoice) const {
 }
 
 void OptionRowHandler::GetIconTextAndGameCommand(
-   int /* iFirstSelection */, RString &sIconTextOut, GameCommand &gcOut
+   int /* iFirstSelection */, std::string &sIconTextOut, GameCommand &gcOut
 ) const {
 	sIconTextOut = "";
 	gcOut.Init();
@@ -318,7 +318,7 @@ class OptionRowHandlerList : public OptionRowHandler {
 		return m_Def.m_iDefault;
 	}
 
-	void GetIconTextAndGameCommand(int iFirstSelection, RString &sIconTextOut, GameCommand &gcOut) const override {
+	void GetIconTextAndGameCommand(int iFirstSelection, std::string &sIconTextOut, GameCommand &gcOut) const override {
 		sIconTextOut = m_bUseModNameForIcon ? m_aListEntries[iFirstSelection].m_sPreferredModifiers
 		                                    : m_Def.m_vsChoices[iFirstSelection];
 
@@ -1444,7 +1444,7 @@ class OptionRowHandlerGameCommand : public OptionRowHandler {
 			m_gc.ApplyToAllPlayers();
 		return 0;
 	}
-	void GetIconTextAndGameCommand(int /* iFirstSelection */, RString &sIconTextOut, GameCommand &gcOut) const override {
+	void GetIconTextAndGameCommand(int /* iFirstSelection */, std::string &sIconTextOut, GameCommand &gcOut) const override {
 		sIconTextOut = "";
 		gcOut = m_gc;
 	}

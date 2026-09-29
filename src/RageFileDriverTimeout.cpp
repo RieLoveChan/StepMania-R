@@ -81,11 +81,11 @@ class ThreadedFileWorker : public RageWorkerThread {
 	void Close(RageFileBasic *pFile);
 	int GetFileSize(RageFileBasic *&pFile);
 	int GetFD(RageFileBasic *&pFile);
-	int Seek(RageFileBasic *&pFile, int iPos, RString &sError);
-	int Read(RageFileBasic *&pFile, void *pBuf, int iSize, RString &sError);
-	int Write(RageFileBasic *&pFile, const void *pBuf, int iSize, RString &sError);
-	int Flush(RageFileBasic *&pFile, RString &sError);
-	RageFileBasic *Copy(RageFileBasic *&pFile, RString &sError);
+	int Seek(RageFileBasic *&pFile, int iPos, std::string &sError);
+	int Read(RageFileBasic *&pFile, void *pBuf, int iSize, std::string &sError);
+	int Write(RageFileBasic *&pFile, const void *pBuf, int iSize, std::string &sError);
+	int Flush(RageFileBasic *&pFile, std::string &sError);
+	RageFileBasic *Copy(RageFileBasic *&pFile, std::string &sError);
 
 	bool FlushDirCache(const RString &sPath);
 	int Move(const RString &sOldPath, const RString &sNewPath);
@@ -384,7 +384,7 @@ int ThreadedFileWorker::GetFD(RageFileBasic *&pFile) {
 	return m_iResultRequest;
 }
 
-int ThreadedFileWorker::Seek(RageFileBasic *&pFile, int iPos, RString &sError) {
+int ThreadedFileWorker::Seek(RageFileBasic *&pFile, int iPos, std::string &sError) {
 	ASSERT(m_pChildDriver != nullptr); /* how did you get a file to begin with? */
 
 	/* If we're currently in a timed-out state, fail. */
@@ -415,7 +415,7 @@ int ThreadedFileWorker::Seek(RageFileBasic *&pFile, int iPos, RString &sError) {
 	return m_iResultRequest;
 }
 
-int ThreadedFileWorker::Read(RageFileBasic *&pFile, void *pBuf, int iSize, RString &sError) {
+int ThreadedFileWorker::Read(RageFileBasic *&pFile, void *pBuf, int iSize, std::string &sError) {
 	ASSERT(m_pChildDriver != nullptr); /* how did you get a file to begin with? */
 
 	/* If we're currently in a timed-out state, fail. */
@@ -453,7 +453,7 @@ int ThreadedFileWorker::Read(RageFileBasic *&pFile, void *pBuf, int iSize, RStri
 	return iGot;
 }
 
-int ThreadedFileWorker::Write(RageFileBasic *&pFile, const void *pBuf, int iSize, RString &sError) {
+int ThreadedFileWorker::Write(RageFileBasic *&pFile, const void *pBuf, int iSize, std::string &sError) {
 	ASSERT(m_pChildDriver != nullptr); /* how did you get a file to begin with? */
 
 	/* If we're currently in a timed-out state, fail. */
@@ -490,7 +490,7 @@ int ThreadedFileWorker::Write(RageFileBasic *&pFile, const void *pBuf, int iSize
 	return iGot;
 }
 
-int ThreadedFileWorker::Flush(RageFileBasic *&pFile, RString &sError) {
+int ThreadedFileWorker::Flush(RageFileBasic *&pFile, std::string &sError) {
 	ASSERT(m_pChildDriver != nullptr); /* how did you get a file to begin with? */
 
 	/* If we're currently in a timed-out state, fail. */
@@ -521,7 +521,7 @@ int ThreadedFileWorker::Flush(RageFileBasic *&pFile, RString &sError) {
 	return m_iResultRequest;
 }
 
-RageFileBasic *ThreadedFileWorker::Copy(RageFileBasic *&pFile, RString &sError) {
+RageFileBasic *ThreadedFileWorker::Copy(RageFileBasic *&pFile, std::string &sError) {
 	ASSERT(m_pChildDriver != nullptr); /* how did you get a file to begin with? */
 
 	/* If we're currently in a timed-out state, fail. */
