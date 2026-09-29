@@ -90,7 +90,7 @@ class LineReader {
 	// false (line undefined) if there is an error or EOF condition,
 	// true (line = next line from stream) if a whole line is available,
 	// true (line = "") if no error but still waiting for next line.
-	bool ReadLine(RString &line) {
+	bool ReadLine(std::string &line) {
 		bool afterFirst = false;
 		std::size_t len;
 
@@ -174,7 +174,7 @@ class InputHandler_SextetStream::Impl {
 		return 0;
 	}
 
-	inline void GetNewState(std::uint8_t *buffer, RString &line) {
+	inline void GetNewState(std::uint8_t *buffer, std::string &line) {
 		std::size_t lineLen = line.length();
 		std::size_t i, cursor;
 		cursor = 0;

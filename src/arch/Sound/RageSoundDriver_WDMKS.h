@@ -24,7 +24,7 @@ class RageSoundDriver_WDMKS : public RageSoundDriver {
  private:
 	static int MixerThread_start(void *p);
 	void MixerThread();
-	bool Fill(int iPacket, RString &sError);
+	bool Fill(int iPacket, std::string &sError);
 	void Read(void *pData, int iFrames, int iLastCursorPos, int iCurrentFrame);
 
 	RageThread MixingThread;

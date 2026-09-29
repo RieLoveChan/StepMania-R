@@ -17,7 +17,7 @@ static HMIDIIN g_device;
 static void CALLBACK
 midiCallback(HMIDIIN g_device, UINT status, DWORD_PTR instancePtr, DWORD_PTR data, DWORD_PTR timestamp);
 
-static RString GetMidiError(MMRESULT result) {
+static std::string GetMidiError(MMRESULT result) {
 	char szError[256];
 	midiOutGetErrorText(result, szError, 256);
 	return szError;

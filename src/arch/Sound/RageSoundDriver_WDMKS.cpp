@@ -51,10 +51,10 @@ struct WinWdmPin {
 		Close();
 	}
 
-	bool Instantiate(const WAVEFORMATEX *pFormat, RString &sError);
+	bool Instantiate(const WAVEFORMATEX *pFormat, std::string &sError);
 	void Close();
 
-	bool SetState(KSSTATE state, RString &sError);
+	bool SetState(KSSTATE state, std::string &sError);
 	KSPIN_CONNECT *MakeFormat(const WAVEFORMATEX *pFormat) const;
 	bool IsFormatSupported(const WAVEFORMATEX *pFormat) const;
 
@@ -91,7 +91,7 @@ static int GetBytesPerSample(DeviceSampleFormat sf) {
  * A filter has a number of pins and a "friendly name" */
 struct WinWdmFilter {
 	/* Filter management functions */
-	static WinWdmFilter *Create(const RString &sFilterName, const RString &sFriendlyName, RString &sError);
+	static WinWdmFilter *Create(const RString &sFilterName, const RString &sFriendlyName, std::string &sError);
 
 	WinWdmFilter() {
 		m_hHandle = nullptr;
@@ -104,15 +104,15 @@ struct WinWdmFilter {
 			CloseHandle(m_hHandle);
 	}
 
-	std::unique_ptr<WinWdmPin> CreatePin(unsigned long iPinId, RString &sError);
+	std::unique_ptr<WinWdmPin> CreatePin(unsigned long iPinId, std::string &sError);
 	WinWdmPin *InstantiateRenderPin(
 	   DeviceSampleFormat &PreferredOutputSampleFormat,
 	   int &iPreferredOutputChannels,
 	   int &iPreferredSampleRate,
-	   RString &sError
+	   std::string &sError
 	);
-	WinWdmPin *InstantiateRenderPin(const WAVEFORMATEX *wfex, RString &sError);
-	bool Use(RString &sError);
+	WinWdmPin *InstantiateRenderPin(const WAVEFORMATEX *wfex, std::string &sError);
+	bool Use(std::string &sError);
 	void Release();
 
 	HANDLE m_hHandle;
@@ -134,7 +134,7 @@ static bool WdmSyncIoctl(
    void *pOut,
    unsigned long iOutSize,
    unsigned long *pBytesReturned,
-   RString &sError
+   std::string &sError
 ) {
 	unsigned long iDummyBytesReturned;
 	if (pBytesReturned == nullptr)
@@ -188,7 +188,7 @@ static bool WdmGetPropertySimple(
    unsigned long iValueSize,
    void *pInstance,
    unsigned long iInstanceSize,
-   RString &sError
+   std::string &sError
 ) {
 	unsigned long iPropertySize = sizeof(KSPROPERTY) + iInstanceSize;
 	std::vector<char> buf;
@@ -214,7 +214,7 @@ static bool WdmSetPropertySimple(
    unsigned long iValueSize,
    void *instance,
    unsigned long iInstanceSize,
-   RString &sError
+   std::string &sError
 ) {
 	std::vector<char> buf;
 	unsigned long iPropertySize = sizeof(KSPROPERTY) + iInstanceSize;
@@ -239,7 +239,7 @@ static bool WdmGetPinPropertySimple(
    unsigned long iProperty,
    void *pValue,
    unsigned long iInstanceSize,
-   RString &sError
+   std::string &sError
 ) {
 	KSP_PIN ksPProp;
 	ksPProp.Property.Set = *pGuidPropertySet;
@@ -257,7 +257,7 @@ static bool WdmGetPinPropertyMulti(
    const GUID *pGuidPropertySet,
    unsigned long iProperty,
    KSMULTIPLE_ITEM **ksMultipleItem,
-   RString &sError
+   std::string &sError
 ) {
 	KSP_PIN ksPProp;
 
@@ -298,7 +298,7 @@ static bool WdmGetPinPropertyMulti(
  * The pin object holds all the configuration information about the pin
  * before it is opened, and then the handle of the pin after is opened
  */
-std::unique_ptr<WinWdmPin> WinWdmFilter::CreatePin(unsigned long iPinId, RString &sError) {
+std::unique_ptr<WinWdmPin> WinWdmFilter::CreatePin(unsigned long iPinId, std::string &sError) {
 	{
 		/* Get the COMMUNICATION property */
 		KSPIN_COMMUNICATION communication;
@@ -462,14 +462,14 @@ void WinWdmPin::Close() {
 }
 
 /* Set the state of this (instantiated) pin */
-bool WinWdmPin::SetState(KSSTATE state, RString &sError) {
+bool WinWdmPin::SetState(KSSTATE state, std::string &sError) {
 	ASSERT(m_hHandle != nullptr);
 	return WdmSetPropertySimple(
 	   m_hHandle, &KSPROPSETID_Connection, KSPROPERTY_CONNECTION_STATE, &state, sizeof(state), nullptr, 0, sError
 	);
 }
 
-bool WinWdmPin::Instantiate(const WAVEFORMATEX *pFormat, RString &sError) {
+bool WinWdmPin::Instantiate(const WAVEFORMATEX *pFormat, std::string &sError) {
 	if (!IsFormatSupported(pFormat)) {
 		sError = "format not supported";
 		return false;
@@ -560,7 +560,7 @@ bool WinWdmPin::IsFormatSupported(const WAVEFORMATEX *pFormat) const {
 }
 
 /* Create a new filter object. */
-WinWdmFilter *WinWdmFilter::Create(const RString &sFilterName, const RString &sFriendlyName, RString &sError) {
+WinWdmFilter *WinWdmFilter::Create(const RString &sFilterName, const RString &sFriendlyName, std::string &sError) {
 	/* Allocate the new filter object */
 	WinWdmFilter *pFilter = new WinWdmFilter;
 
@@ -606,7 +606,7 @@ error:
 /*
  * Reopen the filter handle if necessary so it can be used
  */
-bool WinWdmFilter::Use(RString &sError) {
+bool WinWdmFilter::Use(std::string &sError) {
 	if (m_hHandle == nullptr) {
 		/* Open the filter */
 		m_hHandle = CreateFile(
@@ -647,7 +647,7 @@ void WinWdmFilter::Release() {
 /*
  * Create a render (playback) Pin using the supplied format
  */
-WinWdmPin *WinWdmFilter::InstantiateRenderPin(const WAVEFORMATEX *wfex, RString &sError) {
+WinWdmPin *WinWdmFilter::InstantiateRenderPin(const WAVEFORMATEX *wfex, std::string &sError) {
 	for (const auto &pPin : m_apPins) {
 		if (pPin->Instantiate(wfex, sError)) {
 			sError = "";
@@ -718,7 +718,7 @@ WinWdmPin *WinWdmFilter::InstantiateRenderPin(
    DeviceSampleFormat &PreferredOutputSampleFormat,
    int &iPreferredOutputChannels,
    int &iPreferredSampleRate,
-   RString &sError
+   std::string &sError
 ) {
 	/*
 	 * All Preferred settings are hints, and can be ignored if needed.
@@ -824,7 +824,7 @@ WinWdmPin *WinWdmFilter::InstantiateRenderPin(
 	return nullptr;
 }
 
-static bool GetDevicePath(HANDLE hHandle, SP_DEVICE_INTERFACE_DATA *pInterfaceData, RString &sPath) {
+static bool GetDevicePath(HANDLE hHandle, SP_DEVICE_INTERFACE_DATA *pInterfaceData, std::string &sPath) {
 	unsigned char interfaceDetailsArray[sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA) + (MAX_PATH * sizeof(WCHAR))];
 	const int sizeInterface = sizeof(interfaceDetailsArray);
 	SP_DEVICE_INTERFACE_DETAIL_DATA *devInterfaceDetails = (SP_DEVICE_INTERFACE_DETAIL_DATA *)interfaceDetailsArray;
@@ -843,7 +843,7 @@ static bool GetDevicePath(HANDLE hHandle, SP_DEVICE_INTERFACE_DATA *pInterfaceDa
 }
 
 /* Build a list of available filters. */
-static bool BuildFilterList(std::vector<WinWdmFilter *> &aFilters, RString &sError) {
+static bool BuildFilterList(std::vector<WinWdmFilter *> &aFilters, std::string &sError) {
 	const GUID *pCategoryGuid = (GUID *)&KSCATEGORY_RENDER;
 
 	/* Open a handle to search for devices (filters) */
@@ -898,7 +898,7 @@ static bool BuildFilterList(std::vector<WinWdmFilter *> &aFilters, RString &sErr
 	return true;
 }
 
-static bool PaWinWdm_Initialize(RString &sError) {
+static bool PaWinWdm_Initialize(std::string &sError) {
 	if (DllKsUser == nullptr) {
 		DllKsUser = LoadLibrary("ksuser.dll");
 		if (DllKsUser == nullptr) {
@@ -939,7 +939,7 @@ struct WinWdmStream {
 	   DeviceSampleFormat PreferredOutputSampleFormat,
 	   int iPreferredOutputChannels,
 	   int iSampleRate,
-	   RString &sError
+	   std::string &sError
 	);
 	void Close() {
 		if (m_pPlaybackPin)
@@ -951,7 +951,7 @@ struct WinWdmStream {
 		}
 	}
 
-	bool SubmitPacket(int iPacket, RString &sError);
+	bool SubmitPacket(int iPacket, std::string &sError);
 
 	WinWdmPin *m_pPlaybackPin;
 	KSSTREAM_HEADER m_Packets[MAX_CHUNKS];
@@ -971,7 +971,7 @@ bool WinWdmStream::Open(
    DeviceSampleFormat PreferredOutputSampleFormat,
    int iPreferredOutputChannels,
    int iPreferredSampleRate,
-   RString &sError
+   std::string &sError
 ) {
 	/* Instantiate the output pin. */
 	m_pPlaybackPin = pFilter->InstantiateRenderPin(
@@ -1064,7 +1064,7 @@ bool WinWdmStream::Open(
 	return true;
 }
 
-bool WinWdmStream::SubmitPacket(int iPacket, RString &sError) {
+bool WinWdmStream::SubmitPacket(int iPacket, std::string &sError) {
 	KSSTREAM_HEADER *p = &m_Packets[iPacket];
 	int iRet = DeviceIoControl(
 	   m_pPlaybackPin->m_hHandle, IOCTL_KS_WRITE_STREAM, nullptr, 0, p, p->Size, nullptr, &m_Signal[iPacket]
@@ -1191,7 +1191,7 @@ void RageSoundDriver_WDMKS::Read(void *pData, int iFrames, int iLastCursorPos, i
 	memcpy(pData, pBuf, iFrames * m_pStream->m_iDeviceOutputChannels * m_pStream->m_iBytesPerOutputSample);
 }
 
-bool RageSoundDriver_WDMKS::Fill(int iPacket, RString &sError) {
+bool RageSoundDriver_WDMKS::Fill(int iPacket, std::string &sError) {
 	std::uint64_t iCurrentFrame = GetPosition();
 	//	if( iCurrentFrame == m_iLastCursorPos )
 	//		LOG->Trace( "underrun" );

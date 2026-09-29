@@ -78,7 +78,7 @@ class MovieTexture_DShow : public RageMovieTexture {
 
 class RageMovieTextureDriver_DShow : public RageMovieTextureDriver {
  public:
-	virtual RageMovieTexture *Create(RageTextureID ID, RString &sError);
+	virtual RageMovieTexture *Create(RageTextureID ID, std::string &sError);
 };
 
 #endif

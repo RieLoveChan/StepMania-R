@@ -565,7 +565,7 @@ RageSurface *MovieDecoder_FFMpeg::CreateCompatibleSurface(
 MovieTexture_FFMpeg::MovieTexture_FFMpeg(RageTextureID ID) : MovieTexture_Generic(ID, new MovieDecoder_FFMpeg) {
 }
 
-RageMovieTexture *RageMovieTextureDriver_FFMpeg::Create(RageTextureID ID, RString &sError) {
+RageMovieTexture *RageMovieTextureDriver_FFMpeg::Create(RageTextureID ID, std::string &sError) {
 	MovieTexture_FFMpeg *pRet = new MovieTexture_FFMpeg(ID);
 	sError = pRet->Init();
 	if (!sError.empty())

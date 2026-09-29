@@ -36,7 +36,7 @@ class RageMovieTextureDriver : public RageDriver {
  public:
 	virtual ~RageMovieTextureDriver() {
 	}
-	virtual RageMovieTexture *Create(RageTextureID ID, RString &sError) = 0;
+	virtual RageMovieTexture *Create(RageTextureID ID, std::string &sError) = 0;
 	static DriverList m_pDriverList;
 };
 

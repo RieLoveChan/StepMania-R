@@ -73,7 +73,7 @@ class MovieTexture_FFMpeg : public MovieTexture_Generic {
 
 class RageMovieTextureDriver_FFMpeg : public RageMovieTextureDriver {
  public:
-	virtual RageMovieTexture *Create(RageTextureID ID, RString &sError);
+	virtual RageMovieTexture *Create(RageTextureID ID, std::string &sError);
 	static RageSurface *AVCodecCreateCompatibleSurface(
 	   int iTextureWidth, int iTextureHeight, bool bPreferHighColor, int &iAVTexfmt, MovieDecoderPixelFormatYCbCr &fmtout
 	);

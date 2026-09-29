@@ -85,7 +85,7 @@ static HWND GetHwnd() {
 
 #if !defined(SMPACKAGE)
 static LocalizedString ERROR_WINDOW_TITLE("Dialog-Prompt", "Error");
-static RString GetWindowTitle() {
+static std::string GetWindowTitle() {
 	RString s = ERROR_WINDOW_TITLE.GetValue();
 	return s;
 }
@@ -111,7 +111,7 @@ Dialog::Result DialogDriver_Win32::OKCancel(RString sMessage, RString sID) {
 
 #if !defined(SMPACKAGE)
 	// DialogBox( handle.Get(), MAKEINTRESOURCE(IDD_OK), ::GetHwnd(), OKWndProc );
-	int result = ::MessageBox(nullptr, sMessage, GetWindowTitle(), MB_OKCANCEL);
+	int result = ::MessageBox(nullptr, sMessage, GetWindowTitle().c_str(), MB_OKCANCEL);
 #else
 	int result = ::AfxMessageBox(ConvertUTF8ToACP(sMessage).c_str(), MB_OKCANCEL, 0);
 #endif

@@ -29,7 +29,7 @@
 #pragma comment(lib, "vfw32.lib")
 #endif
 
-RageMovieTexture *RageMovieTextureDriver_DShow::Create(RageTextureID ID, RString &sError) {
+RageMovieTexture *RageMovieTextureDriver_DShow::Create(RageTextureID ID, std::string &sError) {
 	MovieTexture_DShow *pRet = new MovieTexture_DShow(ID);
 	sError = pRet->Init();
 	if (!sError.empty())
