@@ -73,7 +73,7 @@ std::string BackgroundChange::GetTextDescription() const {
 	return s;
 }
 
-RString BackgroundChange::ToString() const {
+std::string BackgroundChange::ToString() const {
 	/* TODO:  Technically we need to double-escape the filename
 	 * (because it might contain '=') and then unescape the value
 	 * returned by the MsdFile. */

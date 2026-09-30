@@ -393,7 +393,7 @@ struct DeviceInput {
 	    : device(d), button(b), level(0), z(zVal), bDown(false), ts(t) {
 	}
 
-	RString ToString() const;
+	std::string ToString() const;
 	bool FromString(const RString &s);
 
 	bool IsValid() const {

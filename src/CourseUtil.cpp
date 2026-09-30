@@ -524,7 +524,7 @@ void CourseID::LoadFromNode(const XNode *pNode) {
 		sPath.replace(0, 18, "Courses/");
 }
 
-RString CourseID::ToString() const {
+std::string CourseID::ToString() const {
 	if (!sPath.empty())
 		return sPath;
 	if (!sFullTitle.empty())

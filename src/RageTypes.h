@@ -402,7 +402,7 @@ struct RageColor {
 		return false;
 	}
 
-	RString ToString() const;
+	std::string ToString() const;
 	static std::string NormalizeColorString(RString sColor);
 
 	void PushTable(lua_State *L) const;

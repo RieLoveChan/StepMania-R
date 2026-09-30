@@ -48,7 +48,7 @@ void RageColor::FromStackCompat(lua_State *L, int iPos) {
 	}
 }
 
-RString RageColor::ToString() const {
+std::string RageColor::ToString() const {
 	int iR = std::clamp(static_cast<int>(std::lrint(r * 255)), 0, 255);
 	int iG = std::clamp(static_cast<int>(std::lrint(g * 255)), 0, 255);
 	int iB = std::clamp(static_cast<int>(std::lrint(b * 255)), 0, 255);

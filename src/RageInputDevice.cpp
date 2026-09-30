@@ -203,7 +203,7 @@ StringToX(InputDevice);
 
 /* Return a reversible representation of a DeviceInput. This is not affected by
  * InputDrivers, localization or the keyboard language. */
-RString DeviceInput::ToString() const {
+std::string DeviceInput::ToString() const {
 	if (device == InputDevice_Invalid)
 		return RString();
 

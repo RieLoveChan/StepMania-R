@@ -65,7 +65,7 @@ struct BackgroundChange {
 	/**
 	 * @brief Get the string representation of the change.
 	 * @return the string representation. */
-	RString ToString() const;
+	std::string ToString() const;
 };
 /** @brief Shared background-related routines. */
 namespace BackgroundUtil {

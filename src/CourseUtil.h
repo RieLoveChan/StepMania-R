@@ -94,7 +94,7 @@ class CourseID {
 	void FromPath(RString _sPath) {
 		sPath = _sPath;
 	}
-	RString ToString() const;
+	std::string ToString() const;
 	bool IsValid() const;
 
  private:
