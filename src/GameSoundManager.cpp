@@ -662,7 +662,7 @@ void GameSoundManager::Update(float fDeltaTime) {
 	}
 }
 
-RString GameSoundManager::GetMusicPath() const {
+std::string GameSoundManager::GetMusicPath() const {
 	LockMut(*g_Mutex);
 	return g_Playing->m_Music->GetLoadedFilePath();
 }

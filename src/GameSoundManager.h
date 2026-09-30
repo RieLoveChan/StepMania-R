@@ -54,7 +54,7 @@ class GameSoundManager {
 		PlayMusic("");
 	}
 	void DimMusic(float fVolume, float fDurationSeconds);
-	RString GetMusicPath() const;
+	std::string GetMusicPath() const;
 	void Flush();
 
 	void PlayOnce(RString sPath);

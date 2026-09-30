@@ -111,8 +111,8 @@ class PlayerOptions {
 	};
 	void Init();
 	void Approach(const PlayerOptions &other, float fDeltaSeconds);
-	RString GetString(bool bForceNoteSkin = false) const;
-	RString GetSavedPrefsString() const; // only the basic options that players would want for every song
+	std::string GetString(bool bForceNoteSkin = false) const;
+	std::string GetSavedPrefsString() const; // only the basic options that players would want for every song
 	enum ResetPrefsType {
 		saved_prefs,
 		saved_prefs_invalid_for_course

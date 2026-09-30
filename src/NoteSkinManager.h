@@ -24,7 +24,7 @@ class NoteSkinManager {
 	bool NoteSkinNameInList(const RString name, std::vector<RString> name_list);
 	bool DoesNoteSkinExist(const RString &sNoteSkin); // looks up current const Game* in GAMESTATE
 	bool DoNoteSkinsExistForGame(const Game *pGame);
-	RString GetDefaultNoteSkinName(); // looks up current const Game* in GAMESTATE
+	std::string GetDefaultNoteSkinName(); // looks up current const Game* in GAMESTATE
 
 	void ValidateNoteSkinName(std::string &name);
 
@@ -40,12 +40,12 @@ class NoteSkinManager {
 	void SetGameController(GameController gc) {
 		m_GameController = gc;
 	}
-	RString GetPath(const RString &sButtonName, const RString &sElement);
+	std::string GetPath(const RString &sButtonName, const RString &sElement);
 	bool PushActorTemplate(Lua *L, const RString &sButton, const RString &sElement, bool bSpriteOnly);
 	Actor *
 	LoadActor(const RString &sButton, const RString &sElement, Actor *pParent = nullptr, bool bSpriteOnly = false);
 
-	RString GetMetric(const RString &sButtonName, const RString &sValue);
+	std::string GetMetric(const RString &sButtonName, const RString &sValue);
 	int GetMetricI(const RString &sButtonName, const RString &sValueName);
 	float GetMetricF(const RString &sButtonName, const RString &sValueName);
 	bool GetMetricB(const RString &sButtonName, const RString &sValueName);
@@ -55,7 +55,7 @@ class NoteSkinManager {
 	void PushSelf(lua_State *L);
 
  protected:
-	RString GetPathFromDirAndFile(const RString &sDir, const RString &sFileName);
+	std::string GetPathFromDirAndFile(const RString &sDir, const RString &sFileName);
 	void GetAllNoteSkinNamesForGame(const Game *pGame, std::vector<RString> &AddTo);
 
 	bool LoadNoteSkinData(const RString &sNoteSkinName, NoteSkinData &data_out);

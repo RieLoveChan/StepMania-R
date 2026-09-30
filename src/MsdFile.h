@@ -90,7 +90,7 @@ class MsdFile {
 	 * @param par the current parameter index.
 	 * @return the parameter in question.
 	 */
-	RString GetParam(unsigned val, unsigned par) const;
+	std::string GetParam(unsigned val, unsigned par) const;
 
  private:
 	/**

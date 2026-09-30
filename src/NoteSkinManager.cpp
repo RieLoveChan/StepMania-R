@@ -216,7 +216,7 @@ bool NoteSkinManager::DoNoteSkinsExistForGame(const Game *pGame) {
 	return !asSkinNames.empty();
 }
 
-RString NoteSkinManager::GetDefaultNoteSkinName() {
+std::string NoteSkinManager::GetDefaultNoteSkinName() {
 	RString name = THEME->GetMetric("Common", "DefaultNoteSkinName");
 	std::vector<RString> all_names;
 	GetAllNoteSkinNamesForGame(GAMESTATE->m_pCurGame, all_names);
@@ -256,7 +256,7 @@ void NoteSkinManager::GetAllNoteSkinNamesForGame(const Game *pGame, std::vector<
 	}
 }
 
-RString NoteSkinManager::GetMetric(const RString &sButtonName, const RString &sValue) {
+std::string NoteSkinManager::GetMetric(const RString &sButtonName, const RString &sValue) {
 	if (m_sCurrentNoteSkin.empty()) {
 		LuaHelpers::ReportScriptError("NOTESKIN:GetMetric: No noteskin currently set.", "NOTESKIN_ERROR");
 		return "";
@@ -298,7 +298,7 @@ apActorCommands NoteSkinManager::GetMetricA(const RString &sButtonName, const RS
 	return ActorUtil::ParseActorCommands(GetMetric(sButtonName, sValueName));
 }
 
-RString NoteSkinManager::GetPath(const RString &sButtonName, const RString &sElement) {
+std::string NoteSkinManager::GetPath(const RString &sButtonName, const RString &sElement) {
 	const RString CacheString = m_sCurrentNoteSkin + "/" + sButtonName + "/" + sElement;
 	std::map<std::string, std::string>::iterator it = g_PathCache.find(CacheString);
 	if (it != g_PathCache.end())
@@ -475,7 +475,7 @@ Actor *NoteSkinManager::LoadActor(const RString &sButton, const RString &sElemen
 	return pRet;
 }
 
-RString NoteSkinManager::GetPathFromDirAndFile(const RString &sDir, const RString &sFileName) {
+std::string NoteSkinManager::GetPathFromDirAndFile(const RString &sDir, const RString &sFileName) {
 	std::vector<RString> matches; // fill this with the possible files
 
 	GetDirListing(sDir + sFileName + "*", matches, false, true);

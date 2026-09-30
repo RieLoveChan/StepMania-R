@@ -171,7 +171,7 @@ void MsdFile::ReadFromString(const RString &sString, bool bUnescape) {
 	ReadBuf(sString.c_str(), static_cast<int>(sString.size()), bUnescape);
 }
 
-RString MsdFile::GetParam(unsigned val, unsigned par) const {
+std::string MsdFile::GetParam(unsigned val, unsigned par) const {
 	if (val >= GetNumValues() || par >= GetNumParams(val))
 		return RString();
 

@@ -235,7 +235,7 @@ static void AddPart(std::vector<RString> &AddTo, float level, RString name) {
 	AddTo.push_back(LevelStr + name);
 }
 
-RString PlayerOptions::GetString(bool bForceNoteSkin) const {
+std::string PlayerOptions::GetString(bool bForceNoteSkin) const {
 	std::vector<RString> v;
 	GetMods(v, bForceNoteSkin);
 	return join(", ", v);
@@ -1899,7 +1899,7 @@ bool PlayerOptions::ContainsTransformOrTurn() const {
 	return false;
 }
 
-RString PlayerOptions::GetSavedPrefsString() const {
+std::string PlayerOptions::GetSavedPrefsString() const {
 	PlayerOptions po_prefs;
 #define SAVE(x) po_prefs.x = this->x;
 	SAVE(m_fTimeSpacing);
