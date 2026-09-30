@@ -58,7 +58,7 @@ void RadarValues::LoadFromNode(const XNode *pNode) {
 
 /* iMaxValues is only used for writing compatibility fields in non-cache
  * SM files; they're never actually read. */
-RString RadarValues::ToString(int iMaxValues) const {
+std::string RadarValues::ToString(int iMaxValues) const {
 	if (iMaxValues == -1)
 		iMaxValues = NUM_RadarCategory;
 	iMaxValues = std::min(iMaxValues, (int)NUM_RadarCategory);

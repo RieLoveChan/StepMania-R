@@ -68,7 +68,7 @@ struct RadarValues {
 	XNode *CreateNode(bool bIncludeSimpleValues, bool bIncludeComplexValues) const;
 	void LoadFromNode(const XNode *pNode);
 
-	RString ToString(int iMaxValues = -1) const; // default = all
+	std::string ToString(int iMaxValues = -1) const; // default = all
 	void FromString(RString sValues);
 
 	static ThemeMetric<bool> WRITE_SIMPLE_VALIES;

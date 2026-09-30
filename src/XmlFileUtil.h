@@ -16,7 +16,7 @@ bool LoadFromFileShowErrors(XNode &xml, RageFileBasic &f);
 // Load/Save XML
 void Load(XNode *pNode, const RString &sXml, RString &sErrorOut);
 bool GetXML(const XNode *pNode, RageFileBasic &f, bool bWriteTabs = true);
-RString GetXML(const XNode *pNode);
+std::string GetXML(const XNode *pNode);
 bool SaveToFile(const XNode *pNode, const RString &sFile, const RString &sStylesheet = "", bool bWriteTabs = true);
 bool SaveToFile(const XNode *pNode, RageFileBasic &f, const RString &sStylesheet = "", bool bWriteTabs = true);
 

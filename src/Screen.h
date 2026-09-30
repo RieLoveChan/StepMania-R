@@ -137,8 +137,8 @@ class Screen : public ActorFrame {
 	bool m_bRunning;
 
  public:
-	RString GetNextScreenName() const;
-	RString GetPrevScreen() const;
+	std::string GetNextScreenName() const;
+	std::string GetPrevScreen() const;
 	void SetNextScreenName(RString const &name);
 	void SetPrevScreenName(RString const &name);
 

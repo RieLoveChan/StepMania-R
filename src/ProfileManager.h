@@ -106,7 +106,7 @@ class ProfileManager {
 	}
 
 	const RString &GetProfileDir(ProfileSlot slot) const;
-	RString GetProfileDirImportedFrom(ProfileSlot slot) const;
+	std::string GetProfileDirImportedFrom(ProfileSlot slot) const;
 
 	Profile *GetMachineProfile() {
 		return m_pMachineProfile;

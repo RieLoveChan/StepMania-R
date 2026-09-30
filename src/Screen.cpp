@@ -254,7 +254,7 @@ void Screen::HandleScreenMessage(const ScreenMessage SM) {
 	}
 }
 
-RString Screen::GetNextScreenName() const {
+std::string Screen::GetNextScreenName() const {
 	if (!m_sNextScreen.empty())
 		return m_sNextScreen;
 	return NEXT_SCREEN;
@@ -268,7 +268,7 @@ void Screen::SetPrevScreenName(RString const &name) {
 	m_sPrevScreen = name;
 }
 
-RString Screen::GetPrevScreen() const {
+std::string Screen::GetPrevScreen() const {
 	if (!m_sPrevScreen.empty())
 		return m_sPrevScreen;
 	return PREV_SCREEN;
@@ -388,7 +388,7 @@ void Screen::InternalRemoveCallback(callback_key_t key) {
 class LunaScreen : public Luna<Screen> {
  public:
 	static int GetNextScreenName(T *p, lua_State *L) {
-		lua_pushstring(L, p->GetNextScreenName());
+		lua_pushstring(L, p->GetNextScreenName().c_str());
 		return 1;
 	}
 	static int SetNextScreenName(T *p, lua_State *L) {
@@ -396,7 +396,7 @@ class LunaScreen : public Luna<Screen> {
 		COMMON_RETURN_SELF;
 	}
 	static int GetPrevScreenName(T *p, lua_State *L) {
-		lua_pushstring(L, p->GetPrevScreen());
+		lua_pushstring(L, p->GetPrevScreen().c_str());
 		return 1;
 	}
 	static int SetPrevScreenName(T *p, lua_State *L) {

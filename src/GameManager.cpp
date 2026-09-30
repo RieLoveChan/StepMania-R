@@ -331,7 +331,7 @@ StepsType GameManager::StringToStepsType(RString sStepsType) {
 	return StepsType_Invalid;
 }
 
-RString GameManager::StyleToLocalizedString(const Style *style) {
+std::string GameManager::StyleToLocalizedString(const Style *style) {
 	RString s = style->m_szName;
 	s = Capitalize(s);
 	if (THEME->HasString("Style", s))

@@ -56,7 +56,7 @@ class GameManager {
 	StepsType StringToStepsType(RString sStepsType);
 	const Game *StringToGame(RString sGame);
 	const Style *GameAndStringToStyle(const Game *pGame, RString sStyle);
-	RString StyleToLocalizedString(const Style *s);
+	std::string StyleToLocalizedString(const Style *s);
 
 	// Lua
 	void PushSelf(lua_State *L);
