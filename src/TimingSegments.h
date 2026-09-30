@@ -97,7 +97,7 @@ struct TimingSegment {
 		SetRow(BeatToNoteRow(fBeat));
 	}
 
-	virtual RString ToString(int /* dec */) const {
+	virtual std::string ToString(int /* dec */) const {
 		return std::to_string(GetBeat());
 	}
 
@@ -183,7 +183,7 @@ struct FakeSegment : public TimingSegment {
 
 	void Scale(int start, int length, int newLength);
 
-	RString ToString(int dec) const;
+	std::string ToString(int dec) const;
 	std::vector<float> GetValues() const {
 		return std::vector<float>(1, GetLength());
 	}
@@ -258,7 +258,7 @@ struct WarpSegment : public TimingSegment {
 	}
 
 	void Scale(int start, int length, int newLength);
-	RString ToString(int dec) const;
+	std::string ToString(int dec) const;
 	std::vector<float> GetValues() const {
 		return std::vector<float>(1, GetLength());
 	}
@@ -323,7 +323,7 @@ struct TickcountSegment : public TimingSegment {
 		m_iTicksPerBeat = iTicks;
 	}
 
-	RString ToString(int dec) const;
+	std::string ToString(int dec) const;
 	std::vector<float> GetValues() const {
 		return std::vector<float>(1, GetTicks() * 1.f);
 	}
@@ -390,7 +390,7 @@ struct ComboSegment : public TimingSegment {
 		m_iMissCombo = iCombo;
 	}
 
-	RString ToString(int dec) const;
+	std::string ToString(int dec) const;
 	std::vector<float> GetValues() const;
 
 	bool operator==(const ComboSegment &other) const {
@@ -451,7 +451,7 @@ struct LabelSegment : public TimingSegment {
 		m_sLabel.assign(sLabel);
 	}
 
-	RString ToString(int dec) const;
+	std::string ToString(int dec) const;
 	// Use the default definition for GetValues because the value for a LabelSegment is not a float or set of floats.
 	// TimingSegmentSetToLuaTable in TimingData.cpp has a special case for labels to handle this.
 
@@ -514,7 +514,7 @@ struct BPMSegment : public TimingSegment {
 		m_fBPS = fBPM / 60.0f;
 	}
 
-	RString ToString(int dec) const;
+	std::string ToString(int dec) const;
 	std::vector<float> GetValues() const {
 		return std::vector<float>(1, GetBPM());
 	}
@@ -587,7 +587,7 @@ struct TimeSignatureSegment : public TimingSegment {
 		m_iDenominator = den;
 	}
 
-	RString ToString(int dec) const;
+	std::string ToString(int dec) const;
 	std::vector<float> GetValues() const;
 
 	/**
@@ -686,7 +686,7 @@ struct SpeedSegment : public TimingSegment {
 
 	void Scale(int start, int length, int newLength);
 
-	RString ToString(int dec) const;
+	std::string ToString(int dec) const;
 	std::vector<float> GetValues() const;
 
 	bool operator==(const SpeedSegment &other) const {
@@ -754,7 +754,7 @@ struct ScrollSegment : public TimingSegment {
 		m_fRatio = fRatio;
 	}
 
-	RString ToString(int dec) const;
+	std::string ToString(int dec) const;
 	std::vector<float> GetValues() const {
 		return std::vector<float>(1, GetRatio());
 	}
@@ -809,7 +809,7 @@ struct StopSegment : public TimingSegment {
 		m_fSeconds = fSeconds;
 	}
 
-	RString ToString(int dec) const;
+	std::string ToString(int dec) const;
 	std::vector<float> GetValues() const {
 		return std::vector<float>(1, GetPause());
 	}
@@ -864,7 +864,7 @@ struct DelaySegment : public TimingSegment {
 		m_fSeconds = fSeconds;
 	}
 
-	RString ToString(int dec) const;
+	std::string ToString(int dec) const;
 	std::vector<float> GetValues() const {
 		return std::vector<float>(1, GetPause());
 	}
