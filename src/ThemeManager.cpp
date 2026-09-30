@@ -1141,7 +1141,7 @@ void ThemeManager::GetOptionNames(std::vector<std::string> &AddTo) {
 	}
 }
 
-static RString PseudoLocalize(RString s) {
+static std::string PseudoLocalize(RString s) {
 	s.Replace("a", "\xc3\xa0\xc3\xa1"); // àá
 	s.Replace("A", "\xc3\x80\xc3\x80"); // ÀÀ
 	s.Replace("e", "\xc3\xa9\xc3\xa9"); // éé
