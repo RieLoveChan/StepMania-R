@@ -60,7 +60,7 @@ struct BackgroundChange {
 	float m_fRate;
 	std::string m_sTransition;
 
-	RString GetTextDescription() const;
+	std::string GetTextDescription() const;
 
 	/**
 	 * @brief Get the string representation of the change.

@@ -187,7 +187,7 @@ bool HighScore::IsEmpty() const {
 	return true;
 }
 
-RString HighScore::GetName() const {
+std::string HighScore::GetName() const {
 	return m_Impl->sName;
 }
 Grade HighScore::GetGrade() const {
@@ -516,7 +516,7 @@ void Screenshot::LoadFromNode(const XNode *pNode) {
 class LunaHighScore : public Luna<HighScore> {
  public:
 	static int GetName(T *p, lua_State *L) {
-		lua_pushstring(L, p->GetName());
+		lua_pushstring(L, p->GetName().c_str());
 		return 1;
 	}
 	static int GetScore(T *p, lua_State *L) {

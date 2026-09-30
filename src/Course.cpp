@@ -70,7 +70,7 @@ const int MAX_BOTTOM_RANGE = 10;
 
 // #define INCLUDE_BEGINNER_STEPS	THEME->GetMetricB( "Course","IncludeBeginnerSteps" );
 
-RString CourseEntry::GetTextDescription() const {
+std::string CourseEntry::GetTextDescription() const {
 	std::vector<RString> vsEntryDescription;
 	Song *pSong = songID.ToSong();
 	if (pSong)

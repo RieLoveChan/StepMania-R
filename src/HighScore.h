@@ -22,7 +22,7 @@ struct HighScore {
 	/**
 	 * @brief Retrieve the name of the player that set the high score.
 	 * @return the name of the player. */
-	RString GetName() const;
+	std::string GetName() const;
 	/**
 	 * @brief Retrieve the grade earned from this score.
 	 * @return the grade.

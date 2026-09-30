@@ -49,7 +49,7 @@ XNode *BackgroundDef::CreateNode() const {
 	return pNode;
 }
 
-RString BackgroundChange::GetTextDescription() const {
+std::string BackgroundChange::GetTextDescription() const {
 	std::vector<RString> vsParts;
 	if (!m_def.m_sFile1.empty())
 		vsParts.push_back(m_def.m_sFile1);

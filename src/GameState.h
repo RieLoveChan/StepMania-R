@@ -278,7 +278,7 @@ class GameState {
 	bool IsExtraStage2() const;
 	Stage GetCurrentStage() const;
 	int GetCourseSongIndex() const;
-	RString GetPlayerDisplayName(PlayerNumber pn) const;
+	std::string GetPlayerDisplayName(PlayerNumber pn) const;
 
 	bool m_bLoadingNextSong;
 	int GetLoadingCourseSongIndex() const;

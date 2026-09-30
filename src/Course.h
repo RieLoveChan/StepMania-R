@@ -81,7 +81,7 @@ class CourseEntry {
 		return songID.IsValid();
 	}
 
-	RString GetTextDescription() const;
+	std::string GetTextDescription() const;
 	int GetNumModChanges() const;
 
 	// Lua

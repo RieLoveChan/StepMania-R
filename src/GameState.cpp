@@ -1361,7 +1361,7 @@ int GameState::prepare_song_for_gameplay() {
 static LocalizedString PLAYER1("GameState", "Player 1");
 static LocalizedString PLAYER2("GameState", "Player 2");
 static LocalizedString CPU("GameState", "CPU");
-RString GameState::GetPlayerDisplayName(PlayerNumber pn) const {
+std::string GameState::GetPlayerDisplayName(PlayerNumber pn) const {
 	ASSERT(IsPlayerEnabled(pn));
 	const LocalizedString *pDefaultNames[] = {&PLAYER1, &PLAYER2};
 	if (IsHumanPlayer(pn)) {
