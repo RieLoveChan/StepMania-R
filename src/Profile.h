@@ -126,11 +126,11 @@ class Profile {
 	void ClearSongs();
 
 	// smart accessors
-	RString GetDisplayNameOrHighScoreName() const;
+	std::string GetDisplayNameOrHighScoreName() const;
 	Character *GetCharacter() const;
 	void SetCharacter(const RString sCharacterID);
-	RString GetDisplayTotalCaloriesBurned() const;      // remove me and use Lua instead
-	RString GetDisplayTotalCaloriesBurnedToday() const; // remove me and use Lua instead
+	std::string GetDisplayTotalCaloriesBurned() const;      // remove me and use Lua instead
+	std::string GetDisplayTotalCaloriesBurnedToday() const; // remove me and use Lua instead
 	int GetCalculatedWeightPounds() const;              // returns a default value if m_iWeightPounds isn't set
 	int GetAge() const;                                 // returns a default value if m_Age isn't set
 	float GetCaloriesBurnedToday() const;

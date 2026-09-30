@@ -563,11 +563,11 @@ void Steps::SetCachedRadarValues(const RadarValues v[NUM_PLAYERS]) {
 	m_bAreCachedRadarValuesJustLoaded = true;
 }
 
-RString Steps::GenerateChartKey() {
+std::string Steps::GenerateChartKey() {
 	ChartKey = this->GenerateChartKey(*m_pNoteData, this->GetTimingData());
 	return ChartKey;
 }
-RString Steps::GetChartKey() {
+std::string Steps::GetChartKey() {
 	if (ChartKey.empty()) {
 		this->Decompress();
 		ChartKey = this->GenerateChartKey(*m_pNoteData, this->GetTimingData());
@@ -575,7 +575,7 @@ RString Steps::GetChartKey() {
 	}
 	return ChartKey;
 }
-RString Steps::GenerateChartKey(NoteData &nd, TimingData *td) {
+std::string Steps::GenerateChartKey(NoteData &nd, TimingData *td) {
 	RString k = "";
 	RString o = "";
 	float bpm;

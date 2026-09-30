@@ -202,7 +202,7 @@ void Profile::InitCalorieData() {
 	m_mapDayToCaloriesBurned.clear();
 }
 
-RString Profile::GetDisplayNameOrHighScoreName() const {
+std::string Profile::GetDisplayNameOrHighScoreName() const {
 	if (!m_sDisplayName.empty())
 		return m_sDisplayName;
 	else if (!m_sLastUsedHighScoreName.empty())
@@ -244,11 +244,11 @@ int Profile::GetAge() const {
 	return (GetLocalTime().tm_year + 1900) - m_BirthYear;
 }
 
-RString Profile::GetDisplayTotalCaloriesBurned() const {
+std::string Profile::GetDisplayTotalCaloriesBurned() const {
 	return FormatCalories(m_fTotalCaloriesBurned);
 }
 
-RString Profile::GetDisplayTotalCaloriesBurnedToday() const {
+std::string Profile::GetDisplayTotalCaloriesBurnedToday() const {
 	float fCals = GetCaloriesBurnedToday();
 	return FormatCalories(fCals);
 }
@@ -2615,7 +2615,7 @@ class LunaProfile : public Luna<Profile> {
 		return 1;
 	}
 	static int GetDisplayTotalCaloriesBurned(T *p, lua_State *L) {
-		lua_pushstring(L, p->GetDisplayTotalCaloriesBurned());
+		lua_pushstring(L, p->GetDisplayTotalCaloriesBurned().c_str());
 		return 1;
 	}
 	static int GetMostPopularSong(T *p, lua_State *L) {

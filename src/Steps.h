@@ -165,10 +165,10 @@ class Steps {
 
 	/* This is a reimplementation of the lua version of the script to generate chart keys, except this time
 	using the notedata stored in game memory immediately after reading it than parsing it using lua. - Mina */
-	RString GenerateChartKey(NoteData &nd, TimingData *td);
-	RString GenerateChartKey();
+	std::string GenerateChartKey(NoteData &nd, TimingData *td);
+	std::string GenerateChartKey();
 	std::string ChartKey;
-	RString GetChartKey();
+	std::string GetChartKey();
 	void SetChartKey(const RString &k) {
 		ChartKey = k;
 	}

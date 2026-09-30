@@ -385,7 +385,7 @@ const Profile *ProfileManager::GetProfile(PlayerNumber pn) const {
 
 std::string ProfileManager::GetPlayerName(PlayerNumber pn) const {
 	const Profile *prof = GetProfile(pn);
-	return prof ? prof->GetDisplayNameOrHighScoreName() : RString();
+	return prof ? prof->GetDisplayNameOrHighScoreName() : std::string();
 }
 
 void ProfileManager::UnloadAllLocalProfiles() {

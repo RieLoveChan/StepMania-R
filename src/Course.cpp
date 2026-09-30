@@ -190,7 +190,7 @@ void Course::RevertFromDisk() {
 	CourseLoaderCRS::LoadFromCRSFile(m_sPath, *this);
 }
 
-RString Course::GetCacheFilePath() const {
+std::string Course::GetCacheFilePath() const {
 	return SongCacheIndex::GetCacheFilePath("Courses", m_sPath);
 }
 

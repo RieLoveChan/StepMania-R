@@ -165,7 +165,7 @@ class Course {
 	void Invalidate(const Song *pStaleSong);
 
 	void GetAllCachedTrails(std::vector<Trail *> &out);
-	RString GetCacheFilePath() const;
+	std::string GetCacheFilePath() const;
 
 	const CourseEntry *FindFixedSong(const Song *pSong) const;
 
