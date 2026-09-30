@@ -30,7 +30,7 @@ class CryptManager {
 	static RString GetSHA256ForString(RString sData); // in binary
 	static RString GetSHA256ForFile(RString fn);      // in binary
 
-	static RString GetPublicKeyFileName();
+	static std::string GetPublicKeyFileName();
 
 	// Lua
 	void PushSelf(lua_State *L);

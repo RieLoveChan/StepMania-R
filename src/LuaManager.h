@@ -175,7 +175,7 @@ class LuaThreadVariable {
 	void SetFromStack(lua_State *L);
 	int AdjustCount(lua_State *L, int iAdd);
 	static bool PushThreadTable(lua_State *L, bool bCreate);
-	static RString GetCurrentThreadIDString();
+	static std::string GetCurrentThreadIDString();
 
 	LuaReference *m_Name;
 	LuaReference *m_pOldValue;

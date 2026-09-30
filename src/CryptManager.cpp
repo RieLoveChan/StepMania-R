@@ -434,7 +434,7 @@ RString CryptManager::GetSHA256ForFile(RString fn) {
 	return RString((const char *)digest, sizeof(digest));
 }
 
-RString CryptManager::GetPublicKeyFileName() {
+std::string CryptManager::GetPublicKeyFileName() {
 	return PUBLIC_KEY_PATH;
 }
 

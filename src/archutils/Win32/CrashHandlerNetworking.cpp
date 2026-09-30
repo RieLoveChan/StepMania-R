@@ -136,7 +136,7 @@ class NetworkStream_Win32 : public NetworkStream {
  private:
 	int WaitForCompletionOrCancellation(int iEvent);
 	void SetError(const RString &sError);
-	static RString WinSockErrorToString(int iError);
+	static std::string WinSockErrorToString(int iError);
 
 	SOCKET m_Socket;
 	HANDLE m_hResolve;
@@ -217,7 +217,7 @@ int NetworkStream_Win32::WaitForCompletionOrCancellation(int iEvent) {
 	}
 }
 
-RString NetworkStream_Win32::WinSockErrorToString(int iError) {
+std::string NetworkStream_Win32::WinSockErrorToString(int iError) {
 	/* If iError is -1, we were cancelled and WaitForCompletionOrCancellation
 	 * returned it. We won't use the error string. */
 	if (iError == -1)

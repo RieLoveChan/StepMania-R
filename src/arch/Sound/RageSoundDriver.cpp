@@ -60,7 +60,7 @@ RageSoundDriver *RageSoundDriver::Create(const RString &drivers) {
 	return nullptr;
 }
 
-RString RageSoundDriver::GetDefaultSoundDriverList() {
+std::string RageSoundDriver::GetDefaultSoundDriverList() {
 	return DEFAULT_SOUND_DRIVER_LIST;
 }
 
