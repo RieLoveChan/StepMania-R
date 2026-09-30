@@ -223,7 +223,7 @@ class SongID {
 	void FromString(RString _sDir) {
 		sDir = _sDir;
 	}
-	RString ToString() const;
+	std::string ToString() const;
 	bool IsValid() const;
 };
 

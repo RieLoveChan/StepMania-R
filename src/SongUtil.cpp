@@ -1193,7 +1193,7 @@ void SongID::LoadFromNode(const XNode *pNode) {
 		sDir.replace(0, 16, "Songs/");
 }
 
-RString SongID::ToString() const {
+std::string SongID::ToString() const {
 	return sDir;
 }
 

@@ -65,7 +65,7 @@ void TrailID::LoadFromNode(const XNode *pNode) {
 	cd = StringToDifficulty(sTemp);
 }
 
-RString TrailID::ToString() const {
+std::string TrailID::ToString() const {
 	RString s = GAMEMAN->GetStepsTypeInfo(st).szName;
 	s += " " + DifficultyToString(cd);
 	return s;

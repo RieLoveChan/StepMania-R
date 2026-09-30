@@ -329,7 +329,7 @@ void StepsID::LoadFromNode(const XNode *pNode) {
 	}
 }
 
-RString StepsID::ToString() const {
+std::string StepsID::ToString() const {
 	RString s = GAMEMAN->GetStepsTypeInfo(st).szName;
 	s += " " + DifficultyToString(dc);
 	if (dc == Difficulty_Edit) {

@@ -40,7 +40,7 @@ class IPreference {
 	virtual void LoadDefault() = 0;
 	virtual void SetDefaultFromString(const RString &s) = 0;
 
-	virtual RString ToString() const = 0;
+	virtual std::string ToString() const = 0;
 	virtual void FromString(const RString &s) = 0;
 
 	virtual void SetFromStack(lua_State *L);
@@ -84,7 +84,7 @@ template <class T> class Preference : public IPreference {
 		LoadDefault();
 	}
 
-	RString ToString() const {
+	std::string ToString() const {
 		return StringConversion::ToString<T>(m_currentValue);
 	}
 	void FromString(const RString &s) {

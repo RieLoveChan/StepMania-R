@@ -219,7 +219,7 @@ struct GameInput {
 		button = GameButton_Invalid;
 	};
 
-	RString ToString(const InputScheme *pInputs) const;
+	std::string ToString(const InputScheme *pInputs) const;
 	bool FromString(const InputScheme *pInputs, const RString &s);
 };
 
