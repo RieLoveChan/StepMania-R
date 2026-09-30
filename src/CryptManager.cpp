@@ -57,12 +57,12 @@ CryptManager::~CryptManager() {
 }
 void CryptManager::GenerateRSAKey(unsigned int keyLength, RString privFilename, RString pubFilename) {
 }
-void CryptManager::SignFileToFile(RString sPath, RString sSignatureFile) {
+void CryptManager::SignFileToFile(std::string sPath, std::string sSignatureFile) {
 }
-bool CryptManager::VerifyFileWithFile(RString sPath, RString sSignatureFile, RString sPublicKeyFile) {
+bool CryptManager::VerifyFileWithFile(std::string sPath, std::string sSignatureFile, std::string sPublicKeyFile) {
 	return true;
 }
-bool CryptManager::VerifyFileWithFile(RString sPath, RString sSignatureFile) {
+bool CryptManager::VerifyFileWithFile(std::string sPath, std::string sSignatureFile) {
 	return true;
 }
 
@@ -133,7 +133,7 @@ CryptManager::~CryptManager() {
 	LUA->UnsetGlobal("CRYPTMAN");
 }
 
-static bool WriteFile(RString sFile, RString sBuf) {
+static bool WriteFile(std::string sFile, std::string sBuf) {
 	RageFile output;
 	if (!output.Open(sFile, RageFile::WRITE)) {
 		LOG_ERROR(Log::General, "WriteFile: opening %s failed: %s", sFile.c_str(), output.GetError().c_str());
@@ -193,7 +193,7 @@ void CryptManager::GenerateRSAKeyToFile(unsigned int keyLength, RString privFile
 	}
 }
 
-void CryptManager::SignFileToFile(RString sPath, RString sSignatureFile) {
+void CryptManager::SignFileToFile(std::string sPath, std::string sSignatureFile) {
 	RString sPrivFilename = PRIVATE_KEY_PATH;
 	if (sSignatureFile.empty())
 		sSignatureFile = sPath + SIGNATURE_APPEND;
@@ -209,7 +209,7 @@ void CryptManager::SignFileToFile(RString sPath, RString sSignatureFile) {
 	WriteFile(sSignatureFile, sSignature);
 }
 
-bool CryptManager::Sign(RString sPath, std::string &sSignatureOut, RString sPrivKey) {
+bool CryptManager::Sign(std::string sPath, std::string &sSignatureOut, std::string sPrivKey) {
 	if (!IsAFile(sPath)) {
 		LOG_TRACE(Log::General, "SignFileToFile: \"%s\" doesn't exist", sPath.c_str());
 		return false;
@@ -259,7 +259,7 @@ bool CryptManager::Sign(RString sPath, std::string &sSignatureOut, RString sPriv
 	return true;
 }
 
-bool CryptManager::VerifyFileWithFile(RString sPath, RString sSignatureFile) {
+bool CryptManager::VerifyFileWithFile(std::string sPath, std::string sSignatureFile) {
 	if (VerifyFileWithFile(sPath, sSignatureFile, PUBLIC_KEY_PATH))
 		return true;
 
@@ -276,7 +276,7 @@ bool CryptManager::VerifyFileWithFile(RString sPath, RString sSignatureFile) {
 	return false;
 }
 
-bool CryptManager::VerifyFileWithFile(RString sPath, RString sSignatureFile, RString sPublicKeyFile) {
+bool CryptManager::VerifyFileWithFile(std::string sPath, std::string sSignatureFile, std::string sPublicKeyFile) {
 	if (sSignatureFile.empty())
 		sSignatureFile = sPath + SIGNATURE_APPEND;
 
@@ -301,7 +301,7 @@ bool CryptManager::VerifyFileWithFile(RString sPath, RString sSignatureFile, RSt
 	return Verify(file, sSignature, sPublicKey);
 }
 
-bool CryptManager::Verify(RageFileBasic &file, RString sSignature, RString sPublicKey) {
+bool CryptManager::Verify(RageFileBasic &file, std::string sSignature, std::string sPublicKey) {
 	RSAKeyWrapper key;
 	RString sError;
 	if (!key.Load(sPublicKey, sError)) {

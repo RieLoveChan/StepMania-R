@@ -127,7 +127,7 @@ class ThemeManager {
 
 	RString GetMetricsGroupFallback(const RString &sMetricsGroup);
 
-	static RString GetBlankGraphicPath();
+	static std::string GetBlankGraphicPath();
 
 	// needs to be public for its binding to work
 	void RunLuaScripts(const RString &sMask, bool bUseThemeDir = false);
@@ -155,11 +155,11 @@ class ThemeManager {
 	   const RString &sMetricsGroup,
 	   const RString &sFile
 	);
-	static RString GetThemeDirFromName(const RString &sThemeName);
+	static std::string GetThemeDirFromName(const RString &sThemeName);
 	RString GetElementDir(const RString &sThemeName);
-	static RString GetMetricsIniPath(const RString &sThemeName);
+	static std::string GetMetricsIniPath(const RString &sThemeName);
 	static void GetLanguagesForTheme(const RString &sThemeName, std::vector<RString> &asLanguagesOut);
-	static RString GetLanguageIniPath(const RString &sThemeName, const RString &sLanguage);
+	static std::string GetLanguageIniPath(const RString &sThemeName, const RString &sLanguage);
 	void
 	GetOptionalLanguageIniPaths(std::vector<RString> &vsPathsOut, const RString &sThemeName, const RString &sLanguage);
 	RString GetDefaultLanguage();

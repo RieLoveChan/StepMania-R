@@ -32,7 +32,7 @@ class AnnouncerManager {
 	};
 	void NextAnnouncer();
 
-	RString GetPathTo(RString sFolderName);
+	std::string GetPathTo(RString sFolderName);
 	bool HasSoundsFor(RString sFolderName);
 
 	// Lua
@@ -40,7 +40,7 @@ class AnnouncerManager {
 
  protected:
 	static std::string GetAnnouncerDirFromName(RString sAnnouncerName);
-	RString GetPathTo(RString AnnouncerPath, RString sFolderName);
+	std::string GetPathTo(RString AnnouncerPath, RString sFolderName);
 	/** @brief the current announcer's name. */
 	std::string m_sCurAnnouncerName;
 };

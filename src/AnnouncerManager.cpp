@@ -103,7 +103,7 @@ static const char *aliases[][2] = {
  * then all aliases above.  Ignore directories that are empty, since we might
  * have "select difficulty intro" with sounds and an empty "ScreenSelectDifficulty
  * intro". */
-RString AnnouncerManager::GetPathTo(RString sAnnouncerName, RString sFolderName) {
+std::string AnnouncerManager::GetPathTo(RString sAnnouncerName, RString sFolderName) {
 	if (sAnnouncerName.empty())
 		return RString(); /* announcer disabled */
 
@@ -136,7 +136,7 @@ RString AnnouncerManager::GetPathTo(RString sAnnouncerName, RString sFolderName)
 	return RString();
 }
 
-RString AnnouncerManager::GetPathTo(RString sFolderName) {
+std::string AnnouncerManager::GetPathTo(RString sFolderName) {
 	return GetPathTo(m_sCurAnnouncerName, sFolderName);
 }
 

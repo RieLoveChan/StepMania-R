@@ -14,11 +14,11 @@ class CryptManager {
 	static void GenerateGlobalKeys();
 	static void GenerateRSAKey(unsigned int keyLength, std::string &sPrivKey, std::string &sPubKey);
 	static void GenerateRSAKeyToFile(unsigned int keyLength, RString privFilename, RString pubFilename);
-	static void SignFileToFile(RString sPath, RString sSignatureFile = "");
-	static bool Sign(RString sPath, std::string &sSignatureOut, RString sPrivateKey);
-	static bool VerifyFileWithFile(RString sPath, RString sSignatureFile = "");
-	static bool VerifyFileWithFile(RString sPath, RString sSignatureFile, RString sPublicKeyFile);
-	static bool Verify(RageFileBasic &file, RString sSignature, RString sPublicKey);
+	static void SignFileToFile(std::string sPath, std::string sSignatureFile = "");
+	static bool Sign(std::string sPath, std::string &sSignatureOut, std::string sPrivateKey);
+	static bool VerifyFileWithFile(std::string sPath, std::string sSignatureFile = "");
+	static bool VerifyFileWithFile(std::string sPath, std::string sSignatureFile, std::string sPublicKeyFile);
+	static bool Verify(RageFileBasic &file, std::string sSignature, std::string sPublicKey);
 
 	static void GetRandomBytes(void *pData, int iBytes);
 	static std::string GenerateRandomUUID();

@@ -466,7 +466,7 @@ void ThemeManager::RunLuaScripts(const RString &sMask, bool bUseThemeDir) {
 		 * scripts call GetThemeName(), it'll return the theme the script is in. */
 
 		m_sCurThemeName = iter->sThemeName;
-		const RString &sScriptDir = bUseThemeDir ? GetThemeDirFromName(m_sCurThemeName) : RString("/");
+		const RString &sScriptDir = bUseThemeDir ? GetThemeDirFromName(m_sCurThemeName) : std::string("/");
 
 		std::vector<RString> asElementPaths;
 		// get files from directories
@@ -517,7 +517,7 @@ void ThemeManager::UpdateLuaGlobals() {
 #endif
 }
 
-RString ThemeManager::GetThemeDirFromName(const RString &sThemeName) {
+std::string ThemeManager::GetThemeDirFromName(const RString &sThemeName) {
 	return SpecialFiles::THEMES_DIR + sThemeName + "/";
 }
 
@@ -858,7 +858,7 @@ ThemeManager::GetPath(ElementCategory category, const RString &sMetricsGroup, co
 	return pi.sResolvedPath;
 }
 
-RString ThemeManager::GetMetricsIniPath(const RString &sThemeName) {
+std::string ThemeManager::GetMetricsIniPath(const RString &sThemeName) {
 	return GetThemeDirFromName(sThemeName) + SpecialFiles::METRICS_FILE;
 }
 
@@ -1121,7 +1121,7 @@ void ThemeManager::GetLanguagesForTheme(const RString &sThemeName, std::vector<R
 	}
 }
 
-RString ThemeManager::GetLanguageIniPath(const RString &sThemeName, const RString &sLanguage) {
+std::string ThemeManager::GetLanguageIniPath(const RString &sThemeName, const RString &sLanguage) {
 	return GetThemeDirFromName(sThemeName) + SpecialFiles::LANGUAGES_SUBDIR + sLanguage + ".ini";
 }
 
@@ -1238,7 +1238,7 @@ void ThemeManager::GetMetricsThatBeginWith(
 	}
 }
 
-RString ThemeManager::GetBlankGraphicPath() {
+std::string ThemeManager::GetBlankGraphicPath() {
 	return SpecialFiles::THEMES_DIR + SpecialFiles::BASE_THEME_NAME + "/" + ElementCategoryToString(EC_GRAPHICS) +
 	   "/_blank.png";
 }
