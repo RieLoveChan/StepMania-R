@@ -21,14 +21,14 @@ class CryptManager {
 	static bool Verify(RageFileBasic &file, RString sSignature, RString sPublicKey);
 
 	static void GetRandomBytes(void *pData, int iBytes);
-	static RString GenerateRandomUUID();
+	static std::string GenerateRandomUUID();
 
-	static RString GetMD5ForFile(RString fn);         // in binary
-	static RString GetMD5ForString(RString sData);    // in binary
-	static RString GetSHA1ForString(RString sData);   // in binary
-	static RString GetSHA1ForFile(RString fn);        // in binary
-	static RString GetSHA256ForString(RString sData); // in binary
-	static RString GetSHA256ForFile(RString fn);      // in binary
+	static std::string GetMD5ForFile(RString fn);         // in binary
+	static std::string GetMD5ForString(RString sData);    // in binary
+	static std::string GetSHA1ForString(RString sData);   // in binary
+	static std::string GetSHA1ForFile(RString fn);        // in binary
+	static std::string GetSHA256ForString(RString sData); // in binary
+	static std::string GetSHA256ForFile(RString fn);      // in binary
 
 	static std::string GetPublicKeyFileName();
 

@@ -108,7 +108,7 @@ class SongManager {
 
 	void ResetGroupColors();
 
-	static RString ShortenGroupName(RString sLongGroupName);
+	static std::string ShortenGroupName(RString sLongGroupName);
 
 	// Lookup
 	/**

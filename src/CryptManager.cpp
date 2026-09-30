@@ -350,7 +350,7 @@ void CryptManager::GetRandomBytes(void *pData, int iBytes) {
 }
 #endif
 
-RString CryptManager::GetMD5ForFile(RString fn) {
+std::string CryptManager::GetMD5ForFile(RString fn) {
 	RageFile file;
 	if (!file.Open(fn, RageFile::READ)) {
 		LOG_ERROR(Log::General, "GetMD5: Failed to open file '%s'", fn.c_str());
@@ -365,7 +365,7 @@ RString CryptManager::GetMD5ForFile(RString fn) {
 	return RString((const char *)digest, sizeof(digest));
 }
 
-RString CryptManager::GetMD5ForString(RString sData) {
+std::string CryptManager::GetMD5ForString(RString sData) {
 	unsigned char digest[16];
 
 	int iHash = register_hash(&md5_desc);
@@ -378,7 +378,7 @@ RString CryptManager::GetMD5ForString(RString sData) {
 	return RString((const char *)digest, sizeof(digest));
 }
 
-RString CryptManager::GetSHA1ForString(RString sData) {
+std::string CryptManager::GetSHA1ForString(RString sData) {
 	unsigned char digest[20];
 
 	int iHash = register_hash(&sha1_desc);
@@ -391,7 +391,7 @@ RString CryptManager::GetSHA1ForString(RString sData) {
 	return RString((const char *)digest, sizeof(digest));
 }
 
-RString CryptManager::GetSHA1ForFile(RString fn) {
+std::string CryptManager::GetSHA1ForFile(RString fn) {
 	RageFile file;
 	if (!file.Open(fn, RageFile::READ)) {
 		LOG_ERROR(Log::General, "GetSHA1: Failed to open file '%s'", fn.c_str());
@@ -406,7 +406,7 @@ RString CryptManager::GetSHA1ForFile(RString fn) {
 	return RString((const char *)digest, sizeof(digest));
 }
 
-RString CryptManager::GetSHA256ForString(RString sData) {
+std::string CryptManager::GetSHA256ForString(RString sData) {
 	unsigned char digest[32];
 
 	int iHash = register_hash(&sha256_desc);
@@ -419,7 +419,7 @@ RString CryptManager::GetSHA256ForString(RString sData) {
 	return RString((const char *)digest, sizeof(digest));
 }
 
-RString CryptManager::GetSHA256ForFile(RString fn) {
+std::string CryptManager::GetSHA256ForFile(RString fn) {
 	RageFile file;
 	if (!file.Open(fn, RageFile::READ)) {
 		LOG_ERROR(Log::General, "GetSHA256: Failed to open file '%s'", fn.c_str());
@@ -439,7 +439,7 @@ std::string CryptManager::GetPublicKeyFileName() {
 }
 
 /* Generate a version 4 random UUID. */
-RString CryptManager::GenerateRandomUUID() {
+std::string CryptManager::GenerateRandomUUID() {
 	std::uint32_t buf[4];
 	CryptManager::GetRandomBytes(buf, sizeof(buf));
 

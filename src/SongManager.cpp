@@ -857,7 +857,7 @@ int SongManager::GetNumCourseGroups() const {
 	return static_cast<int>(m_mapCourseGroupToInfo.size());
 }
 
-RString SongManager::ShortenGroupName(RString sLongGroupName) {
+std::string SongManager::ShortenGroupName(RString sLongGroupName) {
 	static TitleSubst tsub("Groups");
 
 	TitleFields title;

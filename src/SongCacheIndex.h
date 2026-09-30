@@ -5,13 +5,13 @@
 
 class SongCacheIndex {
 	IniFile CacheIndex;
-	static RString MangleName(const RString &Name);
+	static std::string MangleName(const RString &Name);
 
  public:
 	SongCacheIndex();
 	~SongCacheIndex();
 	void ReadFromDisk();
-	static RString GetCacheFilePath(const RString &sGroup, const RString &sPath);
+	static std::string GetCacheFilePath(const RString &sGroup, const RString &sPath);
 
 	void ReadCacheIndex();
 	void SaveCacheIndex();
