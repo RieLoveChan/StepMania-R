@@ -73,7 +73,7 @@ class OptionsList : public ActorFrame {
 	void PositionCursor();
 	void SelectionsChanged(const RString &sRowName);
 	void UpdateMenuFromSelections();
-	RString GetCurrentRow() const;
+	std::string GetCurrentRow() const;
 	OptionRowHandler *GetCurrentHandler();
 	int GetOneSelection(RString sRow, bool bAllowFail = false) const;
 	void SwitchToCurrentRow();

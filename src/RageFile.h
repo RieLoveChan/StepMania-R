@@ -47,7 +47,7 @@ class RageFile : public RageFileBasic {
 	const RString &GetRealPath() const {
 		return m_Path;
 	}
-	RString GetPath() const;
+	std::string GetPath() const;
 
 	bool Open(const RString &path, int mode = READ);
 	void Close();

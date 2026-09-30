@@ -383,7 +383,7 @@ const Profile *ProfileManager::GetProfile(PlayerNumber pn) const {
 	}
 }
 
-RString ProfileManager::GetPlayerName(PlayerNumber pn) const {
+std::string ProfileManager::GetPlayerName(PlayerNumber pn) const {
 	const Profile *prof = GetProfile(pn);
 	return prof ? prof->GetDisplayNameOrHighScoreName() : RString();
 }
@@ -1276,7 +1276,7 @@ class LunaProfileManager : public Luna<ProfileManager> {
 	}
 	static int GetPlayerName(T *p, lua_State *L) {
 		PlayerNumber pn = Enum::Check<PlayerNumber>(L, 1);
-		lua_pushstring(L, p->GetPlayerName(pn));
+		lua_pushstring(L, p->GetPlayerName(pn).c_str());
 		return 1;
 	}
 

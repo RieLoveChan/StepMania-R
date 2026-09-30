@@ -373,7 +373,7 @@ UnlockEntryStatus UnlockEntry::GetUnlockEntryStatus() const {
 	return UnlockEntryStatus_RequrementsNotMet;
 }
 
-RString UnlockEntry::GetDescription() const {
+std::string UnlockEntry::GetDescription() const {
 	Song *pSong = m_Song.ToSong();
 	switch (m_Type) {
 	default:
@@ -398,7 +398,7 @@ RString UnlockEntry::GetDescription() const {
 	}
 }
 
-RString UnlockEntry::GetBannerFile() const {
+std::string UnlockEntry::GetBannerFile() const {
 	Song *pSong = m_Song.ToSong();
 	switch (m_Type) {
 	default:
@@ -414,7 +414,7 @@ RString UnlockEntry::GetBannerFile() const {
 	}
 }
 
-RString UnlockEntry::GetBackgroundFile() const {
+std::string UnlockEntry::GetBackgroundFile() const {
 	Song *pSong = m_Song.ToSong();
 	switch (m_Type) {
 	default:
@@ -718,7 +718,7 @@ class LunaUnlockEntry : public Luna<UnlockEntry> {
 		return 1;
 	}
 	static int GetDescription(T *p, lua_State *L) {
-		lua_pushstring(L, p->GetDescription());
+		lua_pushstring(L, p->GetDescription().c_str());
 		return 1;
 	}
 	static int GetUnlockRewardType(T *p, lua_State *L) {

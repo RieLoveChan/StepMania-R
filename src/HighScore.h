@@ -48,7 +48,7 @@ struct HighScore {
 	/**
 	 * @brief Get the modifiers used for this run.
 	 * @return the modifiers. */
-	RString GetModifiers() const;
+	std::string GetModifiers() const;
 	DateTime GetDateTime() const;
 	std::string GetPlayerGuid() const;
 	std::string GetMachineGuid() const;
@@ -101,7 +101,7 @@ struct HighScore {
 	XNode *CreateNode() const;
 	void LoadFromNode(const XNode *pNode);
 
-	RString GetDisplayName() const;
+	std::string GetDisplayName() const;
 
 	// Lua
 	void PushSelf(lua_State *L);

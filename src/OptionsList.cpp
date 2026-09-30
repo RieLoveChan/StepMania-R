@@ -268,7 +268,7 @@ void OptionsList::Close() {
 	this->PlayCommand("TweenOff");
 }
 
-RString OptionsList::GetCurrentRow() const {
+std::string OptionsList::GetCurrentRow() const {
 	ASSERT(!m_asMenuStack.empty()); // called while the menu was closed
 	return m_asMenuStack.back();
 }

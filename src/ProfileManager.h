@@ -112,7 +112,7 @@ class ProfileManager {
 		return m_pMachineProfile;
 	}
 
-	RString GetPlayerName(PlayerNumber pn) const;
+	std::string GetPlayerName(PlayerNumber pn) const;
 	bool ProfileWasLoadedFromMemoryCard(PlayerNumber pn) const;
 	bool ProfileFromMemoryCardIsNew(PlayerNumber pn) const;
 	bool LastLoadWasTamperedOrCorrupt(PlayerNumber pn) const;

@@ -92,9 +92,9 @@ class UnlockEntry {
 	RString GetModifier() const {
 		return m_cmd.GetArg(1).s;
 	}
-	RString GetDescription() const;
-	RString GetBannerFile() const;
-	RString GetBackgroundFile() const;
+	std::string GetDescription() const;
+	std::string GetBannerFile() const;
+	std::string GetBackgroundFile() const;
 
 	// Lua
 	void PushSelf(lua_State *L);

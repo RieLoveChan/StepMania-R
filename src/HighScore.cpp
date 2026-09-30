@@ -214,7 +214,7 @@ float HighScore::GetSurviveSeconds() const {
 float HighScore::GetSurvivalSeconds() const {
 	return GetSurviveSeconds() + GetLifeRemainingSeconds();
 }
-RString HighScore::GetModifiers() const {
+std::string HighScore::GetModifiers() const {
 	return m_Impl->sModifiers;
 }
 DateTime HighScore::GetDateTime() const {
@@ -350,9 +350,9 @@ void HighScore::LoadFromNode(const XNode *pNode) {
 	m_Impl->LoadFromNode(pNode);
 }
 
-RString HighScore::GetDisplayName() const {
+std::string HighScore::GetDisplayName() const {
 	if (GetName().empty())
-		return EMPTY_NAME;
+		return EMPTY_NAME.GetValue();
 	else
 		return GetName();
 }
@@ -546,7 +546,7 @@ class LunaHighScore : public Luna<HighScore> {
 		return 1;
 	}
 	static int GetModifiers(T *p, lua_State *L) {
-		lua_pushstring(L, p->GetModifiers());
+		lua_pushstring(L, p->GetModifiers().c_str());
 		return 1;
 	}
 	static int GetTapNoteScore(T *p, lua_State *L) {

@@ -30,7 +30,7 @@ RageFile *RageFile::Copy() const {
 	return new RageFile(*this);
 }
 
-RString RageFile::GetPath() const {
+std::string RageFile::GetPath() const {
 	if (!IsOpen())
 		return RString();
 
