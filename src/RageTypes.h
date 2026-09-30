@@ -403,7 +403,7 @@ struct RageColor {
 	}
 
 	RString ToString() const;
-	static RString NormalizeColorString(RString sColor);
+	static std::string NormalizeColorString(RString sColor);
 
 	void PushTable(lua_State *L) const;
 	void FromStack(lua_State *L, int iPos);

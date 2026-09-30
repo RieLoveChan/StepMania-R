@@ -54,7 +54,7 @@ ImageCache *IMAGECACHE; // global and accessible from anywhere in our program
 static std::map<std::string, RageSurface *> g_ImagePathToImage;
 static int g_iDemandRefcount = 0;
 
-RString ImageCache::GetImageCachePath(RString sImageDir, RString sImagePath) {
+std::string ImageCache::GetImageCachePath(RString sImageDir, RString sImagePath) {
 	return SongCacheIndex::GetCacheFilePath(sImageDir, sImagePath);
 }
 

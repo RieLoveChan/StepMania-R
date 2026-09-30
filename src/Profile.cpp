@@ -124,7 +124,7 @@ void Profile::ClearStats() {
 	m_sGuid = sGuid;
 }
 
-RString Profile::MakeGuid() {
+std::string Profile::MakeGuid() {
 	RString s;
 	s.reserve(GUID_SIZE_BYTES * 2);
 	unsigned char buf[GUID_SIZE_BYTES];
@@ -2334,7 +2334,7 @@ void Profile::MoveBackupToDir(RString sFromDir, RString sToDir) {
 		FILEMAN->Move(sFromDir + DONT_SHARE_SIG, sToDir + DONT_SHARE_SIG);
 }
 
-RString Profile::MakeUniqueFileNameNoExtension(RString sDir, RString sFileNameBeginning) {
+std::string Profile::MakeUniqueFileNameNoExtension(RString sDir, RString sFileNameBeginning) {
 	FILEMAN->FlushDirCache(sDir);
 	// Find a file name for the screenshot
 	std::vector<RString> files;
@@ -2357,7 +2357,7 @@ RString Profile::MakeUniqueFileNameNoExtension(RString sDir, RString sFileNameBe
 	return MakeFileNameNoExtension(sFileNameBeginning, iIndex);
 }
 
-RString Profile::MakeFileNameNoExtension(RString sFileNameBeginning, int iIndex) {
+std::string Profile::MakeFileNameNoExtension(RString sFileNameBeginning, int iIndex) {
 	return sFileNameBeginning + ssprintf("%05d", iIndex);
 }
 

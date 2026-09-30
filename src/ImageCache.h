@@ -26,7 +26,7 @@ class ImageCache {
 	bool delay_save_cache;
 
  private:
-	static RString GetImageCachePath(RString sImageDir, RString sImagePath);
+	static std::string GetImageCachePath(RString sImageDir, RString sImagePath);
 	void UnloadAllImages();
 	void CacheImageInternal(RString sImageDir, RString sImagePath);
 

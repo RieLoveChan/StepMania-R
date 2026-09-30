@@ -52,7 +52,7 @@ bool AnnouncerManager::DoesAnnouncerExist(RString sAnnouncerName) {
 	return false;
 }
 
-RString AnnouncerManager::GetAnnouncerDirFromName(RString sAnnouncerName) {
+std::string AnnouncerManager::GetAnnouncerDirFromName(RString sAnnouncerName) {
 	return ANNOUNCERS_DIR + sAnnouncerName + "/";
 }
 

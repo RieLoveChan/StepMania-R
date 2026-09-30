@@ -39,7 +39,7 @@ class AnnouncerManager {
 	void PushSelf(lua_State *L);
 
  protected:
-	static RString GetAnnouncerDirFromName(RString sAnnouncerName);
+	static std::string GetAnnouncerDirFromName(RString sAnnouncerName);
 	RString GetPathTo(RString AnnouncerPath, RString sFolderName);
 	/** @brief the current announcer's name. */
 	std::string m_sCurAnnouncerName;

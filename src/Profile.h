@@ -190,7 +190,7 @@ class Profile {
 	// RString m_sProfileImageName;	// todo: add a default image -aj
 
 	// General data
-	static RString MakeGuid();
+	static std::string MakeGuid();
 
 	RString m_sGuid;
 	std::map<std::string, RString> m_sDefaultModifiers;
@@ -423,8 +423,8 @@ class Profile {
 	void SaveMachinePublicKeyToDir(RString sDir) const;
 
 	static void MoveBackupToDir(RString sFromDir, RString sToDir);
-	static RString MakeUniqueFileNameNoExtension(RString sDir, RString sFileNameBeginning);
-	static RString MakeFileNameNoExtension(RString sFileNameBeginning, int iIndex);
+	static std::string MakeUniqueFileNameNoExtension(RString sDir, RString sFileNameBeginning);
+	static std::string MakeFileNameNoExtension(RString sFileNameBeginning, int iIndex);
 
 	// Lua
 	void PushSelf(lua_State *L);
