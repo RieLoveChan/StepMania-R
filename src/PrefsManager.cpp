@@ -468,7 +468,7 @@ void PrefsManager::SavePrefsToIni(IniFile &ini) {
 	}
 }
 
-RString PrefsManager::GetPreferencesSection() const {
+std::string PrefsManager::GetPreferencesSection() const {
 	RString sSection = "Options";
 
 	// OK if this fails

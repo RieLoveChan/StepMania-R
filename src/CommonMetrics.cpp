@@ -133,7 +133,7 @@ const std::vector<StepsType> &ThemeMetricStepsTypesToShow::GetValue() const {
 	return m_v;
 }
 
-RString CommonMetrics::LocalizeOptionItem(const RString &s, bool bOptional) {
+std::string CommonMetrics::LocalizeOptionItem(const RString &s, bool bOptional) {
 	if (bOptional && !THEME->HasString("OptionNames", s))
 		return s;
 	return THEME->GetString("OptionNames", s);

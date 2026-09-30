@@ -350,7 +350,7 @@ class PrefsManager {
 
 	void ResetToFactoryDefaults();
 
-	RString GetPreferencesSection() const;
+	std::string GetPreferencesSection() const;
 
 	// Lua
 	void PushSelf(lua_State *L);

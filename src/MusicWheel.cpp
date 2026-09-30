@@ -1481,7 +1481,7 @@ void MusicWheel::GetCurrentSections(std::vector<std::string> &sections) {
 }
 
 // sm-ssc additions: jump to group
-RString MusicWheel::JumpToNextGroup() {
+std::string MusicWheel::JumpToNextGroup() {
 	// Thanks to Juanelote for this logic:
 	if (HIDE_INACTIVE_SECTIONS) {
 		// todo: make it work with other sort types
@@ -1519,7 +1519,7 @@ RString MusicWheel::JumpToNextGroup() {
 	return "";
 }
 
-RString MusicWheel::JumpToPrevGroup() {
+std::string MusicWheel::JumpToPrevGroup() {
 	if (HIDE_INACTIVE_SECTIONS) {
 		unsigned iNumGroups = SONGMAN->GetNumSongGroups();
 

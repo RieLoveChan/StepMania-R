@@ -55,8 +55,8 @@ class MusicWheel : public WheelBase {
 	void FinishChangingSorts();
 	void PlayerJoined();
 	// sm-ssc additions
-	RString JumpToNextGroup();
-	RString JumpToPrevGroup();
+	std::string JumpToNextGroup();
+	std::string JumpToPrevGroup();
 	const MusicWheelItemData *GetCurWheelItemData(int i) {
 		return (const MusicWheelItemData *)m_CurWheelItemData[i];
 	}

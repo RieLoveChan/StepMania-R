@@ -378,7 +378,7 @@ float InputFilter::GetLevel(const DeviceInput &di, const DeviceInputList *pButto
 	return pDI->level;
 }
 
-RString InputFilter::GetButtonComment(const DeviceInput &di) const {
+std::string InputFilter::GetButtonComment(const DeviceInput &di) const {
 	LockMut(*queuemutex);
 	return GetButtonState(di).m_sComment;
 }

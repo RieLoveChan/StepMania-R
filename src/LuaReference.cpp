@@ -115,7 +115,7 @@ bool LuaReference::SetFromExpression(const RString &sExpression) {
 	return bSuccess;
 }
 
-RString LuaReference::Serialize() const {
+std::string LuaReference::Serialize() const {
 	/* Call Serialize(t), where t is our referenced object. */
 	Lua *L = LUA->Get();
 	lua_getglobal(L, "Serialize");
