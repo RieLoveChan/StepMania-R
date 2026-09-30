@@ -21,7 +21,7 @@ struct StepsTypeInfo {
 	bool bAllowAutogen;
 	/** @brief The most basic StyleType that this StpesTypeInfo is used with. */
 	StepsTypeCategory m_StepsTypeCategory;
-	RString GetLocalizedString() const;
+	std::string GetLocalizedString() const;
 };
 
 class GameManager {

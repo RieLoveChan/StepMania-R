@@ -784,7 +784,7 @@ void SongUtil::SortByMostRecentlyPlayedForMachine(std::vector<Song *> &vpSongsIn
 
 	for (Song const *s : vpSongsInOut) {
 		int iNumTimesPlayed = pProfile->GetSongNumTimesPlayed(s);
-		RString val = iNumTimesPlayed ? pProfile->GetSongLastPlayedDateTime(s).GetString() : RString("0");
+		RString val = iNumTimesPlayed ? pProfile->GetSongLastPlayedDateTime(s).GetString() : std::string("0");
 		g_mapSongSortVal[s] = val;
 	}
 

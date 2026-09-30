@@ -40,7 +40,7 @@ class ProfileManager {
 		return (Profile *)((const ProfileManager *)this)->GetLocalProfile(sProfileID);
 	}
 	Profile *GetLocalProfileFromIndex(int iIndex);
-	RString GetLocalProfileIDFromIndex(int iIndex);
+	std::string GetLocalProfileIDFromIndex(int iIndex);
 
 	bool CreateLocalProfile(std::string sName, std::string &sProfileIDOut);
 	void AddLocalProfileByID(Profile *pProfile, RString sProfileID); // transfers ownership of pProfile

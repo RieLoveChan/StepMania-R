@@ -18,7 +18,7 @@ extern const ScreenMessage SM_Failure;
 /** @brief Helpers for the ScreenMessages. */
 namespace ScreenMessageHelpers {
 ScreenMessage ToScreenMessage(const RString &Name);
-RString ScreenMessageToString(ScreenMessage SM);
+std::string ScreenMessageToString(ScreenMessage SM);
 }; // namespace ScreenMessageHelpers
 
 /** @brief Automatically generate a unique ScreenMessage value */

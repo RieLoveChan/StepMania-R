@@ -41,7 +41,7 @@ enum {
 	// 16 tracks needed for beat-double7 and techno-double8
 };
 
-RString StepsTypeInfo::GetLocalizedString() const {
+std::string StepsTypeInfo::GetLocalizedString() const {
 	if (THEME->HasString("StepsType", szName))
 		return THEME->GetString("StepsType", szName);
 	return szName;
@@ -365,7 +365,7 @@ const Style *GameManager::GameAndStringToStyle(const Game *game, RString sStyle)
 class LunaGameManager : public Luna<GameManager> {
  public:
 	static int StepsTypeToLocalizedString(T *p, lua_State *L) {
-		lua_pushstring(L, p->GetStepsTypeInfo(Enum::Check<StepsType>(L, 1)).GetLocalizedString());
+		lua_pushstring(L, p->GetStepsTypeInfo(Enum::Check<StepsType>(L, 1)).GetLocalizedString().c_str());
 		return 1;
 	}
 	static int GetFirstStepsTypeForGame(T *p, lua_State *L) {

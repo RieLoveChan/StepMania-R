@@ -48,7 +48,7 @@ class MemoryCardManager {
 	bool PathIsMemCard(RString sDir) const;
 
 	bool IsNameAvailable(PlayerNumber pn) const;
-	RString GetName(PlayerNumber pn) const;
+	std::string GetName(PlayerNumber pn) const;
 
 	const std::vector<UsbStorageDevice> &GetStorageDevices() {
 		return m_vStorageDevices;

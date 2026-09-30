@@ -1161,7 +1161,7 @@ int ProfileManager::GetLocalProfileIndexFromID(RString sProfileID) const {
 	return -1;
 }
 
-RString ProfileManager::GetLocalProfileIDFromIndex(int iIndex) {
+std::string ProfileManager::GetLocalProfileIDFromIndex(int iIndex) {
 	RString sID = LocalProfileDirToID(RString(g_vLocalProfile[iIndex].sDir));
 	return sID;
 }
@@ -1247,7 +1247,7 @@ class LunaProfileManager : public Luna<ProfileManager> {
 		if (index >= p->GetNumLocalProfiles()) {
 			luaL_error(L, "Profile index %d out of range.", index);
 		}
-		lua_pushstring(L, p->GetLocalProfileIDFromIndex(index));
+		lua_pushstring(L, p->GetLocalProfileIDFromIndex(index).c_str());
 		return 1;
 	}
 	static int GetLocalProfileIndexFromID(T *p, lua_State *L) {

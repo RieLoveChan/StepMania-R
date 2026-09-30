@@ -86,7 +86,7 @@ void DateTime::StripTime() {
 }
 
 // Common SQL/XML format: "YYYY-MM-DD HH:MM:SS"
-RString DateTime::GetString() const {
+std::string DateTime::GetString() const {
 	RString s = ssprintf("%d-%02d-%02d", tm_year + 1900, tm_mon + 1, tm_mday);
 
 	if (tm_hour != 0 || tm_min != 0 || tm_sec != 0) {

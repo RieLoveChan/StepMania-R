@@ -143,7 +143,7 @@ struct DateTime {
 	 *
 	 * This returns a common SQL/XML format: "YYYY-MM-DD HH:MM:SS".
 	 * @return the string representation of the date and time. */
-	RString GetString() const;
+	std::string GetString() const;
 	/**
 	 * @brief Attempt to turn a string into a DateTime.
 	 *

@@ -29,12 +29,12 @@ ScreenMessage ScreenMessageHelpers::ToScreenMessage(const RString &sName) {
 	return (*m_pScreenMessages)[sName];
 }
 
-RString ScreenMessageHelpers::ScreenMessageToString(ScreenMessage SM) {
+std::string ScreenMessageHelpers::ScreenMessageToString(ScreenMessage SM) {
 	for (auto const &it : *m_pScreenMessages)
 		if (SM == it.second)
 			return it.first;
 
-	return RString();
+	return std::string();
 }
 
 /*
