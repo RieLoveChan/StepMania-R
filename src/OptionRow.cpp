@@ -18,7 +18,7 @@
 const RString NEXT_ROW_NAME = "NextRow";
 const RString EXIT_NAME = "Exit";
 
-RString OptionRow::GetThemedItemText(int iChoice) const {
+std::string OptionRow::GetThemedItemText(int iChoice) const {
 	RString s = m_pHand->GetThemedItemText(iChoice);
 
 	// HACK: Always theme the NEXT_ROW and EXIT items.
@@ -179,7 +179,7 @@ void OptionRow::ChoicesChanged(RowType type, bool reset_focus) {
 	m_textTitle->SetText(GetRowTitle());
 }
 
-RString OptionRow::GetRowTitle() const {
+std::string OptionRow::GetRowTitle() const {
 	RString sTitle = m_pHand->OptionTitle();
 
 	// HACK: tack the BPM onto the name of the speed line

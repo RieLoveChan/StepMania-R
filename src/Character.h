@@ -16,7 +16,7 @@ class Character {
 
 	bool Load(RString sCharDir); // return true if successful
 
-	RString GetTakingABreakPath() const;
+	std::string GetTakingABreakPath() const;
 	std::string GetCardPath() const {
 		return m_sCardPath;
 	}
@@ -24,12 +24,12 @@ class Character {
 		return m_sIconPath;
 	}
 
-	RString GetModelPath() const;
-	RString GetRestAnimationPath() const;
-	RString GetWarmUpAnimationPath() const;
-	RString GetDanceAnimationPath() const;
-	RString GetSongSelectIconPath() const;
-	RString GetStageIconPath() const;
+	std::string GetModelPath() const;
+	std::string GetRestAnimationPath() const;
+	std::string GetWarmUpAnimationPath() const;
+	std::string GetDanceAnimationPath() const;
+	std::string GetSongSelectIconPath() const;
+	std::string GetStageIconPath() const;
 	bool Has2DElems();
 
 	bool IsDefaultCharacter() const {

@@ -75,7 +75,7 @@ class OptionRow : public ActorFrame {
 	void InitText(RowType type);
 	void AfterImportOptions(PlayerNumber pn);
 
-	RString GetRowTitle() const;
+	std::string GetRowTitle() const;
 
 	void ChoicesChanged(RowType type, bool reset_focus = true);
 	void PositionUnderlines(PlayerNumber pn);
@@ -125,7 +125,7 @@ class OptionRow : public ActorFrame {
 	}
 	bool GoToFirstOnStart();
 
-	RString GetThemedItemText(int iChoice) const;
+	std::string GetThemedItemText(int iChoice) const;
 
 	void SetExitText(RString sExitText);
 

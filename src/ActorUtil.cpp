@@ -349,7 +349,7 @@ Actor *ActorUtil::MakeActor(const RString &sPath_, Actor *pParentActor) {
 	}
 }
 
-RString ActorUtil::GetSourcePath(const XNode *pNode) {
+std::string ActorUtil::GetSourcePath(const XNode *pNode) {
 	RString sRet;
 	pNode->GetAttrValue("_Source", sRet);
 	if (sRet.substr(0, 1) == "@")
@@ -358,7 +358,7 @@ RString ActorUtil::GetSourcePath(const XNode *pNode) {
 	return sRet;
 }
 
-RString ActorUtil::GetWhere(const XNode *pNode) {
+std::string ActorUtil::GetWhere(const XNode *pNode) {
 	RString sPath = GetSourcePath(pNode);
 
 	int iLine;

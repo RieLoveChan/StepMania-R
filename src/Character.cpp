@@ -82,7 +82,7 @@ RString GetRandomFileInDir(RString sDir) {
 		return asFiles[RandomInt(static_cast<int>(asFiles.size()))];
 }
 
-RString Character::GetModelPath() const {
+std::string Character::GetModelPath() const {
 	RString s = m_sCharDir + "model.txt";
 	if (DoesFileExist(s))
 		return s;
@@ -90,16 +90,16 @@ RString Character::GetModelPath() const {
 		return RString();
 }
 
-RString Character::GetRestAnimationPath() const {
+std::string Character::GetRestAnimationPath() const {
 	return DerefRedir(GetRandomFileInDir(m_sCharDir + "Rest/"));
 }
-RString Character::GetWarmUpAnimationPath() const {
+std::string Character::GetWarmUpAnimationPath() const {
 	return DerefRedir(GetRandomFileInDir(m_sCharDir + "WarmUp/"));
 }
-RString Character::GetDanceAnimationPath() const {
+std::string Character::GetDanceAnimationPath() const {
 	return DerefRedir(GetRandomFileInDir(m_sCharDir + "Dance/"));
 }
-RString Character::GetTakingABreakPath() const {
+std::string Character::GetTakingABreakPath() const {
 	std::vector<RString> as;
 	GetDirListing(m_sCharDir + "break.png", as, false, true);
 	GetDirListing(m_sCharDir + "break.jpg", as, false, true);
@@ -112,7 +112,7 @@ RString Character::GetTakingABreakPath() const {
 		return as[0];
 }
 
-RString Character::GetSongSelectIconPath() const {
+std::string Character::GetSongSelectIconPath() const {
 	std::vector<RString> as;
 	// first try and find an icon specific to the select music screen
 	// so you can have different icons for music select / char select
@@ -138,7 +138,7 @@ RString Character::GetSongSelectIconPath() const {
 		return as[0];
 }
 
-RString Character::GetStageIconPath() const {
+std::string Character::GetStageIconPath() const {
 	std::vector<RString> as;
 	// first try and find an icon specific to the select music screen
 	// so you can have different icons for music select / char select
@@ -214,27 +214,27 @@ class LunaCharacter : public Luna<Character> {
 		return 1;
 	}
 	static int GetSongSelectIconPath(T *p, lua_State *L) {
-		lua_pushstring(L, p->GetSongSelectIconPath());
+		lua_pushstring(L, p->GetSongSelectIconPath().c_str());
 		return 1;
 	}
 	static int GetStageIconPath(T *p, lua_State *L) {
-		lua_pushstring(L, p->GetStageIconPath());
+		lua_pushstring(L, p->GetStageIconPath().c_str());
 		return 1;
 	}
 	static int GetModelPath(T *p, lua_State *L) {
-		lua_pushstring(L, p->GetModelPath());
+		lua_pushstring(L, p->GetModelPath().c_str());
 		return 1;
 	}
 	static int GetRestAnimationPath(T *p, lua_State *L) {
-		lua_pushstring(L, p->GetRestAnimationPath());
+		lua_pushstring(L, p->GetRestAnimationPath().c_str());
 		return 1;
 	}
 	static int GetWarmUpAnimationPath(T *p, lua_State *L) {
-		lua_pushstring(L, p->GetWarmUpAnimationPath());
+		lua_pushstring(L, p->GetWarmUpAnimationPath().c_str());
 		return 1;
 	}
 	static int GetDanceAnimationPath(T *p, lua_State *L) {
-		lua_pushstring(L, p->GetDanceAnimationPath());
+		lua_pushstring(L, p->GetDanceAnimationPath().c_str());
 		return 1;
 	}
 	static int GetCharacterDir(T *p, lua_State *L) {

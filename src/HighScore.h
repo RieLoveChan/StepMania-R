@@ -50,8 +50,8 @@ struct HighScore {
 	 * @return the modifiers. */
 	RString GetModifiers() const;
 	DateTime GetDateTime() const;
-	RString GetPlayerGuid() const;
-	RString GetMachineGuid() const;
+	std::string GetPlayerGuid() const;
+	std::string GetMachineGuid() const;
 	int GetProductID() const;
 	int GetTapNoteScore(TapNoteScore tns) const;
 	int GetHoldNoteScore(HoldNoteScore tns) const;

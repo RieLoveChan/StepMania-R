@@ -220,10 +220,10 @@ RString HighScore::GetModifiers() const {
 DateTime HighScore::GetDateTime() const {
 	return m_Impl->dateTime;
 }
-RString HighScore::GetPlayerGuid() const {
+std::string HighScore::GetPlayerGuid() const {
 	return m_Impl->sPlayerGuid;
 }
-RString HighScore::GetMachineGuid() const {
+std::string HighScore::GetMachineGuid() const {
 	return m_Impl->sMachineGuid;
 }
 int HighScore::GetProductID() const {
