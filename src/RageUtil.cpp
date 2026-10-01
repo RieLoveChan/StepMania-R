@@ -25,7 +25,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-const RString CUSTOM_SONG_PATH = "/@mem/";
+const std::string CUSTOM_SONG_PATH = "/@mem/";
 
 bool HexToBinary(const std::string &, std::string &);
 void utf8_sanitize(std::string &);
@@ -595,9 +595,9 @@ void GetLanguageInfos(std::vector<const LanguageInfo *> &vAddTo) {
 		vAddTo.push_back(&g_langs[i]);
 }
 
-const LanguageInfo *GetLanguageInfo(const RString &sIsoCode) {
+const LanguageInfo *GetLanguageInfo(const std::string &sIsoCode) {
 	for (unsigned i = 0; i < ARRAYLEN(g_langs); ++i) {
-		if (sIsoCode.EqualsNoCase(g_langs[i].szIsoCode))
+		if (StdString::ssicmp(sIsoCode.c_str(), g_langs[i].szIsoCode) == 0)
 			return &g_langs[i];
 	}
 
@@ -986,14 +986,14 @@ void GetCommandLineArguments(int &argc, char **&argv) {
  * common, general use, so having short options isn't currently needed.)
  * If argument is non-nullptr, accept an argument. */
 bool GetCommandlineArgument(const std::string &option, RString *argument, int iIndex) {
-	const RString optstr = "--" + option;
+	const std::string optstr = "--" + option;
 
 	for (int arg = 1; arg < g_argc; ++arg) {
-		const RString CurArgument = g_argv[arg];
+		const std::string CurArgument = g_argv[arg];
 
 		const std::size_t i = CurArgument.find("=");
-		RString CurOption = CurArgument.substr(0, i);
-		if (CurOption.CompareNoCase(optstr))
+		std::string CurOption = CurArgument.substr(0, i);
+		if (StdString::ssicmp(CurOption.c_str(), optstr.c_str()))
 			continue; // no match
 
 		// Found it.
@@ -2162,8 +2162,8 @@ template <> RString ToString<bool>(const bool &value) {
 }
 } // namespace StringConversion
 
-bool FileCopy(const RString &sSrcFile, const RString &sDstFile) {
-	if (!sSrcFile.CompareNoCase(sDstFile)) {
+bool FileCopy(const std::string &sSrcFile, const std::string &sDstFile) {
+	if (StdString::ssicmp(sSrcFile.c_str(), sDstFile.c_str()) == 0) {
 		LOG_WARN(Log::File, "Tried to copy \"%s\" over itself", sSrcFile.c_str());
 		return false;
 	}

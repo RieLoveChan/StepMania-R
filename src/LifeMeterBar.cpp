@@ -34,7 +34,7 @@ LifeMeterBar::LifeMeterBar() {
 
 	m_pPlayerState = nullptr;
 
-	const RString sType = "LifeMeterBar";
+	const std::string sType = "LifeMeterBar";
 
 	m_fPassingAlpha = 0;
 	m_fHotAlpha = 0;
@@ -50,7 +50,7 @@ LifeMeterBar::LifeMeterBar() {
 	m_iComboToRegainLife = 0;
 
 	bool bExtra = GAMESTATE->IsAnExtraStage();
-	RString sExtra = bExtra ? "extra " : "";
+	std::string sExtra = bExtra ? "extra " : "";
 
 	m_sprUnder.Load(THEME->GetPathG(sType, sExtra + "Under"));
 	m_sprUnder->SetName("Under");

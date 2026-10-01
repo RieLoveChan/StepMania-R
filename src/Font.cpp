@@ -622,8 +622,8 @@ void Font::LoadFontPageSettings(
 		cfg.CharToGlyphNo[0x00A0] = cfg.CharToGlyphNo[' '];
 }
 
-std::string FontPageSettings::MapRange(RString sMapping, int iMapOffset, int iGlyphNo, int iCount) {
-	if (!sMapping.CompareNoCase("Unicode")) {
+std::string FontPageSettings::MapRange(std::string sMapping, int iMapOffset, int iGlyphNo, int iCount) {
+	if (StdString::ssicmp(sMapping.c_str(), "Unicode") == 0) {
 		// Special case.
 		if (iCount == -1)
 			return "Can't map all of Unicode to one font page"; // don't do that

@@ -6,7 +6,7 @@
 #include <cmath>
 
 ScrollBar::ScrollBar() {
-	RString sMetricsGroup = "ScrollBar";
+	std::string sMetricsGroup = "ScrollBar";
 
 	m_sprMiddle.Load(THEME->GetPathG(sMetricsGroup, "middle"));
 	this->AddChild(m_sprMiddle);

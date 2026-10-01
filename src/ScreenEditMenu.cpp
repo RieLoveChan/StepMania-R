@@ -145,7 +145,7 @@ bool ScreenEditMenu::MenuRight(const InputEventPlus &) {
 }
 
 static std::string GetCopyDescription(const Steps *pSourceSteps) {
-	RString s = pSourceSteps->GetDescription();
+	std::string s = pSourceSteps->GetDescription();
 	return s;
 }
 
@@ -207,8 +207,8 @@ bool ScreenEditMenu::MenuStart(const InputEventPlus &) {
 
 	switch (m_Selector.EDIT_MODE) {
 	case EditMode_Full: {
-		RString sDir = pSong->GetSongDir();
-		RString sTempFile = sDir + TEMP_FILE_NAME;
+		std::string sDir = pSong->GetSongDir();
+		std::string sTempFile = sDir + TEMP_FILE_NAME;
 		RageFile file;
 		if (!file.Open(sTempFile, RageFile::WRITE)) {
 			ScreenPrompt::Prompt(SM_None, SONG_DIR_READ_ONLY);
@@ -348,7 +348,7 @@ void ScreenEditMenu::RefreshExplanationText() {
 }
 
 void ScreenEditMenu::RefreshNumStepsLoadedFromProfile() {
-	RString s = ssprintf("edits used: %d", SONGMAN->GetNumStepsLoadedFromProfile());
+	std::string s = ssprintf("edits used: %d", SONGMAN->GetNumStepsLoadedFromProfile());
 	m_textNumStepsLoadedFromProfile.SetText(s);
 }
 

@@ -5,15 +5,16 @@
 #include "ActorUtil.h"
 #include "Character.h"
 #include "RageLog.h"
+#include <algorithm>
 #include <set>
 #include "PlayerState.h"
 
-RString GetAttackPieceName(const RString &sAttack) {
-	RString ret = ssprintf("attack %s", sAttack.c_str());
+std::string GetAttackPieceName(const std::string &sAttack) {
+	std::string ret = ssprintf("attack %s", sAttack.c_str());
 
 	/* 1.5x -> 1_5x.  If we pass a period to THEME->GetPathTo, it'll think
 	 * we're looking for a specific file and not search. */
-	ret.Replace(".", "_");
+	std::replace(ret.begin(), ret.end(), '.', '_');
 
 	return ret;
 }
@@ -46,7 +47,7 @@ void AttackDisplay::Init(const PlayerState *pPlayerState) {
 	}
 
 	for (std::set<std::string>::const_iterator it = attacks.begin(); it != attacks.end(); ++it) {
-		const RString path = THEME->GetPathG("AttackDisplay", GetAttackPieceName(*it), true);
+		const std::string path = THEME->GetPathG("AttackDisplay", GetAttackPieceName(*it), true);
 		if (path.empty()) {
 			LOG_TRACE(Log::Actor, "Couldn't find \"%s\"", GetAttackPieceName(*it).c_str());
 			continue;
@@ -83,8 +84,8 @@ void AttackDisplay::Update(float fDelta) {
 	}
 }
 
-void AttackDisplay::SetAttack(const RString &sText) {
-	const RString path = THEME->GetPathG("AttackDisplay", GetAttackPieceName(sText), true);
+void AttackDisplay::SetAttack(const std::string &sText) {
+	const std::string path =THEME->GetPathG("AttackDisplay", GetAttackPieceName(sText), true);
 	if (path.empty())
 		return;
 
@@ -94,7 +95,7 @@ void AttackDisplay::SetAttack(const RString &sText) {
 	// TODO: Remove use of PlayerNumber.
 	PlayerNumber pn = m_pPlayerState->m_PlayerNumber;
 
-	const RString sName = ssprintf("%sP%i", sText.c_str(), pn + 1);
+	const std::string sName = ssprintf("%sP%i", sText.c_str(), pn + 1);
 	m_sprAttack.RunCommands(THEME->GetMetricA("AttackDisplay", sName + "OnCommand"));
 }
 

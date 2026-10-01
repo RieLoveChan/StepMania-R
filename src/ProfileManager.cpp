@@ -43,10 +43,10 @@ Preference<bool> ProfileManager::m_bProfileStepEdits("ProfileStepEdits", true);
 Preference<bool> ProfileManager::m_bProfileCourseEdits("ProfileCourseEdits", true);
 Preference1D<RString> ProfileManager::m_sDefaultLocalProfileID(DefaultLocalProfileIDInit, NUM_PLAYERS);
 
-const RString NEW_MEM_CARD_NAME = "";
-const RString USER_PROFILES_DIR = "/Save/LocalProfiles/";
-const RString MACHINE_PROFILE_DIR = "/Save/MachineProfile/";
-const RString LAST_GOOD_SUBDIR = "LastGood/";
+const std::string NEW_MEM_CARD_NAME = "";
+const std::string USER_PROFILES_DIR = "/Save/LocalProfiles/";
+const RString MACHINE_PROFILE_DIR ="/Save/MachineProfile/";
+const std::string LAST_GOOD_SUBDIR = "LastGood/";
 
 // Directories to search for a profile if m_sMemoryCardProfileSubdir doesn't
 // exist, separated by ";":

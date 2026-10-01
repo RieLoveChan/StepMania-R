@@ -698,7 +698,7 @@ const InputScheme *InputMapper::GetInputScheme() const {
 	return m_pInputScheme;
 }
 
-const RString DEVICE_INPUT_SEPARATOR = ":"; // this isn't used in any key names
+const std::string DEVICE_INPUT_SEPARATOR = ":"; // this isn't used in any key names
 
 void InputMapper::ReadMappingsFromDisk() {
 	m_mappings.ReadMappings(m_pInputScheme, SpecialFiles::KEYMAPS_PATH, false);

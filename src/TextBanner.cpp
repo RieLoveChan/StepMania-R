@@ -97,12 +97,12 @@ class LunaTextBanner : public Luna<TextBanner> {
 		COMMON_RETURN_SELF;
 	}
 	static int SetFromString(T *p, lua_State *L) {
-		RString sDisplayTitle = SArg(1);
-		RString sTranslitTitle = SArg(2);
-		RString sDisplaySubTitle = SArg(3);
-		RString sTranslitSubTitle = SArg(4);
-		RString sDisplayArtist = SArg(5);
-		RString sTranslitArtist = SArg(6);
+		std::string sDisplayTitle = SArg(1);
+		std::string sTranslitTitle = SArg(2);
+		std::string sDisplaySubTitle = SArg(3);
+		std::string sTranslitSubTitle = SArg(4);
+		std::string sDisplayArtist = SArg(5);
+		std::string sTranslitArtist = SArg(6);
 		p->SetFromString(
 		   sDisplayTitle, sTranslitTitle, sDisplaySubTitle, sTranslitSubTitle, sDisplayArtist, sTranslitArtist
 		);

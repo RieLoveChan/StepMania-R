@@ -168,7 +168,7 @@ class UnlockManager {
 	const UnlockEntry *FindSteps(const Song *pSong, const Steps *pSteps) const;
 	const UnlockEntry *FindStepsType(const Song *pSong, const Steps *pSteps, const StepsType *pSType) const;
 	const UnlockEntry *FindCourse(const Course *pCourse) const;
-	const UnlockEntry *FindModifier(const RString &sOneMod) const;
+	const UnlockEntry *FindModifier(const std::string &sOneMod) const;
 
 	// Lua
 	void PushSelf(lua_State *L);

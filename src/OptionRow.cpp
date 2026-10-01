@@ -15,8 +15,8 @@
 #include <cstddef>
 #include <vector>
 
-const RString NEXT_ROW_NAME = "NextRow";
-const RString EXIT_NAME = "Exit";
+const std::string NEXT_ROW_NAME = "NextRow";
+const std::string EXIT_NAME = "Exit";
 
 std::string OptionRow::GetThemedItemText(int iChoice) const {
 	RString s = m_pHand->GetThemedItemText(iChoice);

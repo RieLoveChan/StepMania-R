@@ -23,8 +23,8 @@
 /** @brief Have the NoteSkinManager available throughout the program. */
 NoteSkinManager *NOTESKIN = nullptr; // global and accessible from anywhere in our program
 
-const RString GAME_COMMON_NOTESKIN_NAME = "common";
-const RString GAME_BASE_NOTESKIN_NAME = "default";
+const std::string GAME_COMMON_NOTESKIN_NAME = "common";
+const std::string GAME_BASE_NOTESKIN_NAME = "default";
 
 // this isn't a global because of nondeterministic global actor ordering
 // might init this before SpecialFiles::NOTESKINS_DIR
@@ -136,9 +136,9 @@ bool NoteSkinManager::LoadNoteSkinDataRecursive(const std::string &sNoteSkinName
 		IniFile ini;
 		ini.ReadFile(sDir + "metrics.ini");
 
-		if (!sNoteSkinName.CompareNoCase(GAME_BASE_NOTESKIN_NAME))
+		if (!sNoteSkinName.CompareNoCase(GAME_BASE_NOTESKIN_NAME.c_str()))
 			bLoadedBase = true;
-		if (!sNoteSkinName.CompareNoCase(GAME_COMMON_NOTESKIN_NAME))
+		if (!sNoteSkinName.CompareNoCase(GAME_COMMON_NOTESKIN_NAME.c_str()))
 			bLoadedCommon = true;
 
 		RString sFallback;

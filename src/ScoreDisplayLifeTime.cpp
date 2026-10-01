@@ -16,7 +16,7 @@ ScoreDisplayLifeTime::ScoreDisplayLifeTime() {
 void ScoreDisplayLifeTime::Init(const PlayerState *pPlayerState, const PlayerStageStats *pPlayerStageStats) {
 	ScoreDisplay::Init(pPlayerState, pPlayerStageStats);
 
-	const RString sType = "ScoreDisplayLifeTime";
+	const std::string sType = "ScoreDisplayLifeTime";
 
 	m_sprFrame.Load(THEME->GetPathG(sType, "frame"));
 	m_sprFrame->SetName("Frame");

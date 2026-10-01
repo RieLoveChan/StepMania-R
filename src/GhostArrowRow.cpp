@@ -23,7 +23,7 @@ void GhostArrowRow::Load(const PlayerState *pPlayerState, float fYReverseOffset)
 
 	// init arrows
 	for (int c = 0; c < pStyle->m_iColsPerPlayer; c++) {
-		RString sButton = GAMESTATE->GetCurrentStyle(pn)->ColToButtonName(c);
+		std::string sButton = GAMESTATE->GetCurrentStyle(pn)->ColToButtonName(c);
 
 		std::vector<GameInput> GameI;
 		GAMESTATE->GetCurrentStyle(pn)->StyleInputToGameInput(c, pn, GameI);
@@ -108,7 +108,7 @@ void GhostArrowRow::DidTapNote(int iCol, TapNoteScore tns, bool bBright) {
 		m_Ghost[iCol]->PlayCommand("Bright");
 	else
 		m_Ghost[iCol]->PlayCommand("Dim");
-	RString sJudge = TapNoteScoreToString(tns);
+	std::string sJudge = TapNoteScoreToString(tns);
 	m_Ghost[iCol]->PlayCommand(Capitalize(sJudge));
 }
 
@@ -126,7 +126,7 @@ void GhostArrowRow::DidHoldNote(int iCol, HoldNoteScore hns, bool bBright) {
 		m_Ghost[iCol]->PlayCommand("Bright");
 	else
 		m_Ghost[iCol]->PlayCommand("Dim");
-	RString sJudge = HoldNoteScoreToString(hns);
+	std::string sJudge = HoldNoteScoreToString(hns);
 	m_Ghost[iCol]->PlayCommand(Capitalize(sJudge));
 }
 

@@ -212,9 +212,9 @@ const UnlockEntry *UnlockManager::FindCourse(const Course *pCourse) const {
 	return nullptr;
 }
 
-const UnlockEntry *UnlockManager::FindModifier(const RString &sOneMod) const {
+const UnlockEntry *UnlockManager::FindModifier(const std::string &sOneMod) const {
 	for (UnlockEntry const &e : m_UnlockEntries)
-		if (e.GetModifier().CompareNoCase(sOneMod) == 0)
+		if (StdString::ssicmp(e.GetModifier().c_str(), sOneMod.c_str()) == 0)
 			return &e;
 	return nullptr;
 }

@@ -309,7 +309,7 @@ XNode *StepsID::CreateNode() const {
 void StepsID::LoadFromNode(const XNode *pNode) {
 	ASSERT(pNode->GetName() == "Steps");
 
-	RString sTemp;
+	std::string sTemp;
 
 	pNode->GetAttrValue("StepsType", sTemp);
 	st = GAMEMAN->StringToStepsType(sTemp);
@@ -318,7 +318,7 @@ void StepsID::LoadFromNode(const XNode *pNode) {
 	dc = StringToDifficulty(sTemp);
 
 	if (dc == Difficulty_Edit) {
-		RString sDescriptionTmp;
+		std::string sDescriptionTmp;
 		pNode->GetAttrValue("Description", sDescriptionTmp);
 		sDescription = sDescriptionTmp;
 		pNode->GetAttrValue("Hash", uHash);
@@ -330,7 +330,7 @@ void StepsID::LoadFromNode(const XNode *pNode) {
 }
 
 std::string StepsID::ToString() const {
-	RString s = GAMEMAN->GetStepsTypeInfo(st).szName;
+	std::string s = GAMEMAN->GetStepsTypeInfo(st).szName;
 	s += " " + DifficultyToString(dc);
 	if (dc == Difficulty_Edit) {
 		s += " " + sDescription;

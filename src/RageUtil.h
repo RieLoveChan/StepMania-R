@@ -40,7 +40,7 @@ class RageFileDriver;
 /** @brief Get the length of the array. */
 #define ARRAYLEN(a) (sizeof(a) / sizeof((a)[0]))
 
-extern const RString CUSTOM_SONG_PATH;
+extern const std::string CUSTOM_SONG_PATH;
 
 /**
  * @brief Scales x so that l1 corresponds to l2 and h1 corresponds to h2.
@@ -400,7 +400,7 @@ struct LanguageInfo {
 	const char *szEnglishName;
 };
 void GetLanguageInfos(std::vector<const LanguageInfo *> &vAddTo);
-const LanguageInfo *GetLanguageInfo(const RString &sIsoCode);
+const LanguageInfo *GetLanguageInfo(const std::string &sIsoCode);
 RString GetLanguageNameFromISO639Code(RString sName);
 
 // Splits a RString into an std::vector<RString> according the Delimitor.
@@ -647,7 +647,7 @@ template <> inline RString ToString<RString>(const RString &value) {
 } // namespace StringConversion
 
 class RageFileBasic;
-bool FileCopy(const RString &sSrcFile, const RString &sDstFile);
+bool FileCopy(const std::string &sSrcFile, const std::string &sDstFile);
 bool FileCopy(RageFileBasic &in, RageFileBasic &out, std::string &sError, bool *bReadError = nullptr);
 
 template <class T> void GetAsNotInBs(const std::vector<T> &as, const std::vector<T> &bs, std::vector<T> &difference) {

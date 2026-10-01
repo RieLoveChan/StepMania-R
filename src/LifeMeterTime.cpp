@@ -58,7 +58,7 @@ LifeMeterTime::~LifeMeterTime() {
 void LifeMeterTime::Load(const PlayerState *pPlayerState, PlayerStageStats *pPlayerStageStats) {
 	LifeMeter::Load(pPlayerState, pPlayerStageStats);
 
-	const RString sType = "LifeMeterTime";
+	const std::string sType = "LifeMeterTime";
 
 	m_sprBackground.Load(THEME->GetPathG(sType, "background"));
 	m_sprBackground->SetName("Background");
@@ -78,7 +78,7 @@ void LifeMeterTime::Load(const PlayerState *pPlayerState, PlayerStageStats *pPla
 	m_pStream->Load(bExtra ? "StreamDisplayExtra" : "StreamDisplay");
 	this->AddChild(m_pStream);
 
-	RString sExtra = bExtra ? "extra " : "";
+	std::string sExtra = bExtra ? "extra " : "";
 	m_sprFrame.Load(THEME->GetPathG(sType, sExtra + "frame"));
 	m_sprFrame->SetName("Frame");
 	this->AddChild(m_sprFrame);

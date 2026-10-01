@@ -236,10 +236,11 @@ static void Init() {
 	charmaps["numbers"] = map_numbers;
 }
 
-const wchar_t *FontCharmaps::get_char_map(RString name) {
+const wchar_t *FontCharmaps::get_char_map(std::string name) {
 	Init();
 
-	name.MakeLower();
+	if (!name.empty())
+		MakeLower(&name[0], name.size());
 
 	std::map<std::string, const wchar_t *>::const_iterator i = charmaps.find(name);
 	if (i == charmaps.end())
