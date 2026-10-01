@@ -15,7 +15,7 @@ http://en.wikipedia.org/wiki/INI_file
 IniFile::IniFile() : XNode("IniFile") {
 }
 
-bool IniFile::ReadFile(const RString &sPath) {
+bool IniFile::ReadFile(const std::string &sPath) {
 	m_sPath = sPath;
 	CHECKPOINT_M(ssprintf("Reading '%s'", m_sPath.c_str()));
 
@@ -104,7 +104,7 @@ bool IniFile::ReadFile(RageFileBasic &f) {
 	}
 }
 
-bool IniFile::WriteFile(const RString &sPath) const {
+bool IniFile::WriteFile(const std::string &sPath) const {
 	RageFile f;
 	if (!f.Open(sPath, RageFile::WRITE)) {
 		LOG_ERROR(Log::File, "Writing '%s' failed: %s", sPath.c_str(), f.GetError().c_str());

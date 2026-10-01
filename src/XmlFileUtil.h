@@ -10,14 +10,14 @@ struct lua_State;
  *
  * This is designed to help work with XML files. */
 namespace XmlFileUtil {
-bool LoadFromFileShowErrors(XNode &xml, const RString &sFile);
+bool LoadFromFileShowErrors(XNode &xml, const std::string &sFile);
 bool LoadFromFileShowErrors(XNode &xml, RageFileBasic &f);
 
 // Load/Save XML
 void Load(XNode *pNode, const RString &sXml, RString &sErrorOut);
 bool GetXML(const XNode *pNode, RageFileBasic &f, bool bWriteTabs = true);
 std::string GetXML(const XNode *pNode);
-bool SaveToFile(const XNode *pNode, const RString &sFile, const RString &sStylesheet = "", bool bWriteTabs = true);
+bool SaveToFile(const XNode *pNode, const std::string &sFile, const RString &sStylesheet = "", bool bWriteTabs = true);
 bool SaveToFile(const XNode *pNode, RageFileBasic &f, const RString &sStylesheet = "", bool bWriteTabs = true);
 
 void AnnotateXNodeTree(XNode *pNode, const RString &sFile);

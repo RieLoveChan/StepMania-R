@@ -884,13 +884,13 @@ RString custom_songify_path(RString const &path) {
 /* "foo.bar", "baz" -> "foo.baz"
  * "foo", "baz" -> "foo.baz"
  * "foo.bar", "" -> "foo" */
-RString SetExtension(const RString &sPath, const RString &sExt) {
+RString SetExtension(const std::string &sPath, const std::string &sExt) {
 	RString sDir, sFileName, sOldExt;
 	splitpath(sPath, sDir, sFileName, sOldExt);
 	return sDir + sFileName + (!sExt.empty() ? "." : "") + sExt;
 }
 
-RString GetExtension(const RString &sPath) {
+RString GetExtension(const std::string &sPath) {
 	std::size_t pos = sPath.rfind('.');
 	if (pos == sPath.npos)
 		return RString();
@@ -902,7 +902,7 @@ RString GetExtension(const RString &sPath) {
 	return sPath.substr(pos + 1, sPath.size() - pos + 1);
 }
 
-RString GetFileNameWithoutExtension(const RString &sPath) {
+RString GetFileNameWithoutExtension(const std::string &sPath) {
 	RString sThrowAway, sFName;
 	splitpath(sPath, sThrowAway, sFName, sThrowAway);
 	return sFName;
@@ -1232,7 +1232,7 @@ void StripMacResourceForks(std::vector<RString> &vs) {
 }
 
 // path is a .redir pathname. Read it and return the real one.
-RString DerefRedir(const RString &_path) {
+RString DerefRedir(const std::string &_path) {
 	RString sPath = _path;
 
 	for (int i = 0; i < 100; i++) {
@@ -1448,7 +1448,7 @@ static inline bool is_utf8_continuation_byte(char c) {
 
 /* Decode one codepoint at start; advance start and place the result in ch.
  * If the encoded string is invalid, false is returned. */
-bool utf8_to_wchar_ec(const RString &s, unsigned &start, wchar_t &ch) {
+bool utf8_to_wchar_ec(const std::string &s, unsigned &start, wchar_t &ch) {
 	if (start >= s.size())
 		return false;
 
@@ -1762,7 +1762,7 @@ long long StringToLLong(const std::string &str, std::size_t *pos, int base, long
 
 const wchar_t INVALID_CHAR = 0xFFFD; /* U+FFFD REPLACEMENT CHARACTER */
 
-std::wstring RStringToWstring(const RString &s) {
+std::wstring RStringToWstring(const std::string &s) {
 	std::wstring ret;
 	ret.reserve(s.size());
 	for (unsigned start = 0; start < s.size();) {

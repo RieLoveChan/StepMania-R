@@ -25,9 +25,9 @@ class IniFile : public XNode {
 		return m_sError;
 	}
 
-	bool ReadFile(const RString &sPath);
+	bool ReadFile(const std::string &sPath);
 	bool ReadFile(RageFileBasic &sFile);
-	bool WriteFile(const RString &sPath) const;
+	bool WriteFile(const std::string &sPath) const;
 	bool WriteFile(RageFileBasic &sFile) const;
 
 	template <typename T> bool GetValue(const RString &sKey, const RString &sValueName, T &value) const {

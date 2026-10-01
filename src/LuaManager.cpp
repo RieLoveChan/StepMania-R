@@ -55,24 +55,24 @@ template <> bool FromStack<RString>(Lua *L, RString &Object, int iOffset);
 bool InReportScriptError = false;
 } // namespace LuaHelpers
 
-void LuaManager::SetGlobal(const RString &sName, int val) {
+void LuaManager::SetGlobal(const std::string &sName, int val) {
 	Lua *L = Get();
 	LuaHelpers::Push(L, val);
-	lua_setglobal(L, sName);
+	lua_setglobal(L, sName.c_str());
 	Release(L);
 }
 
-void LuaManager::SetGlobal(const RString &sName, const RString &val) {
+void LuaManager::SetGlobal(const std::string &sName, const RString &val) {
 	Lua *L = Get();
 	LuaHelpers::Push(L, val);
-	lua_setglobal(L, sName);
+	lua_setglobal(L, sName.c_str());
 	Release(L);
 }
 
-void LuaManager::UnsetGlobal(const RString &sName) {
+void LuaManager::UnsetGlobal(const std::string &sName) {
 	Lua *L = Get();
 	lua_pushnil(L);
-	lua_setglobal(L, sName);
+	lua_setglobal(L, sName.c_str());
 	Release(L);
 }
 

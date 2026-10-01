@@ -26,7 +26,7 @@ bool XmlFileUtil::LoadFromFileShowErrors(XNode &xml, RageFileBasic &f) {
 	return false;
 }
 
-bool XmlFileUtil::LoadFromFileShowErrors(XNode &xml, const RString &sFile) {
+bool XmlFileUtil::LoadFromFileShowErrors(XNode &xml, const std::string &sFile) {
 	RageFile f;
 	if (!f.Open(sFile, RageFile::READ)) {
 		LuaHelpers::ReportScriptErrorFmt("Couldn't open %s for reading: %s", sFile.c_str(), f.GetError().c_str());
@@ -489,7 +489,7 @@ bool XmlFileUtil::SaveToFile(const XNode *pNode, RageFileBasic &f, const RString
 	return true;
 }
 
-bool XmlFileUtil::SaveToFile(const XNode *pNode, const RString &sFile, const RString &sStylesheet, bool bWriteTabs) {
+bool XmlFileUtil::SaveToFile(const XNode *pNode, const std::string &sFile, const RString &sStylesheet, bool bWriteTabs) {
 	RageFile f;
 	if (!f.Open(sFile, RageFile::WRITE)) {
 		LuaHelpers::ReportScriptErrorFmt("Couldn't open %s for writing: %s", sFile.c_str(), f.GetError().c_str());

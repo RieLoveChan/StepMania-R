@@ -43,9 +43,9 @@ class LuaManager {
 	// There's no harm in registering when already registered.
 	void RegisterTypes();
 
-	void SetGlobal(const RString &sName, int val);
-	void SetGlobal(const RString &sName, const RString &val);
-	void UnsetGlobal(const RString &sName);
+	void SetGlobal(const std::string &sName, int val);
+	void SetGlobal(const std::string &sName, const RString &val);
+	void UnsetGlobal(const std::string &sName);
 
  private:
 	lua_State *m_pLuaMain;

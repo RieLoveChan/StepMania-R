@@ -20,7 +20,7 @@ ModelManager::~ModelManager() {
 	}
 }
 
-RageModelGeometry *ModelManager::LoadMilkshapeAscii(const RString &sFile, bool bNeedNormals) {
+RageModelGeometry *ModelManager::LoadMilkshapeAscii(const std::string &sFile, bool bNeedNormals) {
 	std::map<std::string, RageModelGeometry *>::iterator p = m_mapFileToGeometry.find(sFile);
 	if (p != m_mapFileToGeometry.end()) {
 		/* Found the geometry.  Just increase the refcount and return it. */

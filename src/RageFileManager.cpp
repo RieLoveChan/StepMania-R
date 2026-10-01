@@ -530,7 +530,7 @@ void RageFileManager::GetDirListingWithMultipleExtensions(
 }
 
 /* Files may only be moved within the same file driver. */
-bool RageFileManager::Move(const RString &fromPath_, const RString &toPath_) {
+bool RageFileManager::Move(const std::string &fromPath_, const std::string &toPath_) {
 	RString fromPath = fromPath_;
 	RString toPath = toPath_;
 
@@ -585,7 +585,7 @@ bool RageFileManager::Copy(const std::string &fromPath, const std::string &toPat
 	return true;
 }
 
-bool RageFileManager::Remove(const RString &sPath_) {
+bool RageFileManager::Remove(const std::string &sPath_) {
 	RString sPath = sPath_;
 
 	std::vector<LoadedDriver *> apDriverList;
@@ -616,7 +616,7 @@ bool RageFileManager::DeleteRecursive(const RString &sPath) {
 	return ::DeleteRecursive(sPath);
 }
 
-void RageFileManager::CreateDir(const RString &sDir) {
+void RageFileManager::CreateDir(const std::string &sDir) {
 	RString sTempFile = sDir + "newdir.temp.newdir";
 	RageFile f;
 	f.Open(sTempFile, RageFile::WRITE);
@@ -644,7 +644,7 @@ static void AddFilesystemDriver(LoadedDriver *pLoadedDriver) {
 	g_Mutex->Unlock();
 }
 
-bool RageFileManager::Mount(const RString &sType, const RString &sRoot_, const RString &sMountPoint_) {
+bool RageFileManager::Mount(const std::string &sType, const std::string &sRoot_, const std::string &sMountPoint_) {
 	RString sRoot = sRoot_;
 	RString sMountPoint = sMountPoint_;
 
@@ -684,7 +684,7 @@ bool RageFileManager::Mount(const RString &sType, const RString &sRoot_, const R
 	return true;
 }
 
-void RageFileManager::Unmount(const RString &sType, const RString &sRoot_, const RString &sMountPoint_) {
+void RageFileManager::Unmount(const std::string &sType, const std::string &sRoot_, const std::string &sMountPoint_) {
 	RString sRoot = sRoot_;
 	RString sMountPoint = sMountPoint_;
 
@@ -775,7 +775,7 @@ void RageFileManager::GetLoadedDrivers(std::vector<DriverLocation> &asMounts) {
 	}
 }
 
-void RageFileManager::FlushDirCache(const RString &sPath_) {
+void RageFileManager::FlushDirCache(const std::string &sPath_) {
 	RString sPath = sPath_;
 
 	LockMut(*g_Mutex);
@@ -796,7 +796,7 @@ void RageFileManager::FlushDirCache(const RString &sPath_) {
 	}
 }
 
-RageFileManager::FileType RageFileManager::GetFileType(const RString &sPath_) {
+RageFileManager::FileType RageFileManager::GetFileType(const std::string &sPath_) {
 	RString sPath = sPath_;
 
 	NormalizePath(sPath);
@@ -819,7 +819,7 @@ RageFileManager::FileType RageFileManager::GetFileType(const RString &sPath_) {
 	return ret;
 }
 
-int RageFileManager::GetFileSizeInBytes(const RString &sPath_) {
+int RageFileManager::GetFileSizeInBytes(const std::string &sPath_) {
 	RString sPath = sPath_;
 
 	NormalizePath(sPath);
@@ -841,7 +841,7 @@ int RageFileManager::GetFileSizeInBytes(const RString &sPath_) {
 	return iRet;
 }
 
-int RageFileManager::GetFileHash(const RString &sPath_) {
+int RageFileManager::GetFileHash(const std::string &sPath_) {
 	RString sPath = sPath_;
 
 	NormalizePath(sPath);
@@ -863,7 +863,7 @@ int RageFileManager::GetFileHash(const RString &sPath_) {
 	return iRet;
 }
 
-RString RageFileManager::ResolvePath(const RString &path) {
+RString RageFileManager::ResolvePath(const std::string &path) {
 	RString tmpPath = path;
 	NormalizePath(tmpPath);
 
@@ -919,7 +919,7 @@ static bool PathUsesSlowFlush(const std::string &sPath) {
 }
 
 /* Used only by RageFile: */
-RageFileBasic *RageFileManager::Open(const RString &sPath_, int mode, int &err) {
+RageFileBasic *RageFileManager::Open(const std::string &sPath_, int mode, int &err) {
 	RString sPath = sPath_;
 
 	err = ENOENT;
@@ -937,7 +937,7 @@ RageFileBasic *RageFileManager::Open(const RString &sPath_, int mode, int &err) 
 		return OpenForReading(sPath, mode, err);
 }
 
-void RageFileManager::CacheFile(const RageFileBasic *fb, const RString &sPath_) {
+void RageFileManager::CacheFile(const RageFileBasic *fb, const std::string &sPath_) {
 	std::map<const RageFileBasic *, LoadedDriver *>::iterator it = g_mFileDriverMap.find(fb);
 
 	ASSERT_M(it != g_mFileDriverMap.end(), ssprintf("No recorded driver for file: %s", sPath_.c_str()));
@@ -1052,29 +1052,29 @@ RageFileBasic *RageFileManager::OpenForWriting(const RString &sPath, int mode, i
 	return nullptr;
 }
 
-bool RageFileManager::IsAFile(const RString &sPath) {
+bool RageFileManager::IsAFile(const std::string &sPath) {
 	return GetFileType(sPath) == TYPE_FILE;
 }
-bool RageFileManager::IsADirectory(const RString &sPath) {
+bool RageFileManager::IsADirectory(const std::string &sPath) {
 	return GetFileType(sPath) == TYPE_DIR;
 }
-bool RageFileManager::DoesFileExist(const RString &sPath) {
+bool RageFileManager::DoesFileExist(const std::string &sPath) {
 	return GetFileType(sPath) != TYPE_NONE;
 }
 
-bool DoesFileExist(const RString &sPath) {
+bool DoesFileExist(const std::string &sPath) {
 	return FILEMAN->DoesFileExist(sPath);
 }
 
-bool IsAFile(const RString &sPath) {
+bool IsAFile(const std::string &sPath) {
 	return FILEMAN->IsAFile(sPath);
 }
 
-bool IsADirectory(const RString &sPath) {
+bool IsADirectory(const std::string &sPath) {
 	return FILEMAN->IsADirectory(sPath);
 }
 
-int GetFileSizeInBytes(const RString &sPath) {
+int GetFileSizeInBytes(const std::string &sPath) {
 	return FILEMAN->GetFileSizeInBytes(sPath);
 }
 
@@ -1150,7 +1150,7 @@ bool DeleteRecursive(const RString &sDir) {
 	return FILEMAN->Remove(sDir);
 }
 
-unsigned int GetHashForFile(const RString &sPath) {
+unsigned int GetHashForFile(const std::string &sPath) {
 	return FILEMAN->GetFileHash(sPath);
 }
 

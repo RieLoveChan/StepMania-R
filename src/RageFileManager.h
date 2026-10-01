@@ -32,34 +32,34 @@ class RageFileManager {
 	   bool bOnlyDirs = false,
 	   bool bReturnPathToo = false
 	);
-	bool Move(const RString &fromPath, const RString &toPath);
+	bool Move(const std::string &fromPath, const std::string &toPath);
 	bool Copy(const std::string &fromPath, const std::string &toPath);
-	bool Remove(const RString &sPath);
+	bool Remove(const std::string &sPath);
 	bool DeleteRecursive(const RString &sPath);
-	void CreateDir(const RString &sDir);
+	void CreateDir(const std::string &sDir);
 
 	enum FileType {
 		TYPE_FILE,
 		TYPE_DIR,
 		TYPE_NONE
 	};
-	FileType GetFileType(const RString &sPath);
+	FileType GetFileType(const std::string &sPath);
 
-	bool IsAFile(const RString &sPath);
-	bool IsADirectory(const RString &sPath);
-	bool DoesFileExist(const RString &sPath);
+	bool IsAFile(const std::string &sPath);
+	bool IsADirectory(const std::string &sPath);
+	bool DoesFileExist(const std::string &sPath);
 
-	int GetFileSizeInBytes(const RString &sPath);
-	int GetFileHash(const RString &sPath);
+	int GetFileSizeInBytes(const std::string &sPath);
+	int GetFileHash(const std::string &sPath);
 
 	/**
 	 * @brief Get the absolte path from the VPS.
 	 * @param path the VPS path.
 	 * @return the absolute path. */
-	RString ResolvePath(const RString &path);
+	RString ResolvePath(const std::string &path);
 
-	bool Mount(const RString &sType, const RString &sRealPath, const RString &sMountPoint);
-	void Unmount(const RString &sType, const RString &sRoot, const RString &sMountPoint);
+	bool Mount(const std::string &sType, const std::string &sRealPath, const std::string &sMountPoint);
+	void Unmount(const std::string &sType, const std::string &sRoot, const std::string &sMountPoint);
 
 	/* Change the root of a filesystem.  Only a couple drivers support this; it's
 	 * used to change memory card mountpoints without having to actually unmount
@@ -71,11 +71,11 @@ class RageFileManager {
 	};
 	void GetLoadedDrivers(std::vector<DriverLocation> &asMounts);
 
-	void FlushDirCache(const RString &sPath = RString());
+	void FlushDirCache(const std::string &sPath = std::string());
 
 	/* Used only by RageFile: */
-	RageFileBasic *Open(const RString &sPath, int iMode, int &iError);
-	void CacheFile(const RageFileBasic *fb, const RString &sPath);
+	RageFileBasic *Open(const std::string &sPath, int iMode, int &iError);
+	void CacheFile(const RageFileBasic *fb, const std::string &sPath);
 
 	/* Retrieve or release a reference to the low-level driver for a mountpoint. */
 	RageFileDriver *GetFileDriver(RString sMountpoint);

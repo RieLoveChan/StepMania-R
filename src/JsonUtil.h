@@ -10,10 +10,10 @@ class RageFileBasic;
 namespace JsonUtil {
 bool LoadFromString(Json::Value &root, std::string sData, std::string &sErrorOut);
 bool LoadFromStringShowErrors(Json::Value &root, const std::string sData);
-bool LoadFromFileShowErrors(Json::Value &root, const RString &sFile);
+bool LoadFromFileShowErrors(Json::Value &root, const std::string &sFile);
 bool LoadFromFileShowErrors(Json::Value &root, RageFileBasic &f);
 
-bool WriteFile(const Json::Value &root, const RString &sFile, bool bMinified);
+bool WriteFile(const Json::Value &root, const std::string &sFile, bool bMinified);
 
 std::vector<RString> DeserializeArrayStrings(const Json::Value &array);
 

@@ -49,7 +49,7 @@ class RageFile : public RageFileBasic {
 	}
 	std::string GetPath() const;
 
-	bool Open(const RString &path, int mode = READ);
+	bool Open(const std::string &path, int mode = READ);
 	void Close();
 	bool IsOpen() const {
 		return m_File != nullptr;

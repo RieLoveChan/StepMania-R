@@ -350,9 +350,9 @@ RString ConvertI64FormatString(const std::string &sStr);
 void splitpath(const std::string &Path, std::string &Dir, std::string &Filename, std::string &Ext);
 RString custom_songify_path(RString const &path);
 
-RString SetExtension(const RString &path, const RString &ext);
-RString GetExtension(const RString &sPath);
-RString GetFileNameWithoutExtension(const RString &sPath);
+RString SetExtension(const std::string &path, const std::string &ext);
+RString GetExtension(const std::string &sPath);
+RString GetFileNameWithoutExtension(const std::string &sPath);
 void MakeValidFilename(std::string &sName);
 
 bool FindFirstFilenameContaining(
@@ -367,7 +367,7 @@ extern const wchar_t INVALID_CHAR;
 
 int utf8_get_char_len(char p);
 bool utf8_to_wchar(const char *s, std::size_t iLength, unsigned &start, wchar_t &ch);
-bool utf8_to_wchar_ec(const RString &s, unsigned &start, wchar_t &ch);
+bool utf8_to_wchar_ec(const std::string &s, unsigned &start, wchar_t &ch);
 void wchar_to_utf8(wchar_t ch, std::string &out);
 wchar_t utf8_get_char(const std::string &s);
 bool utf8_is_valid(const std::string &s);
@@ -393,7 +393,7 @@ long long StringToLLong(const std::string &str, std::size_t *pos = 0, int base =
 
 RString WStringToRString(const std::wstring &sString);
 RString WcharToUTF8(wchar_t c);
-std::wstring RStringToWstring(const RString &sString);
+std::wstring RStringToWstring(const std::string &sString);
 
 struct LanguageInfo {
 	const char *szIsoCode;
@@ -461,7 +461,7 @@ extern char **g_argv;
 
 void CRC32(unsigned int &iCRC, const void *pBuffer, std::size_t iSize);
 unsigned int GetHashForString(const std::string &s);
-unsigned int GetHashForFile(const RString &sPath);
+unsigned int GetHashForFile(const std::string &sPath);
 unsigned int GetHashForDirectory(
    const RString &sDir
 ); // a hash value that remains the same as long as nothing in the directory has changed
@@ -526,7 +526,7 @@ RString URLEncode(const std::string &sStr);
 void StripCvsAndSvn(std::vector<RString> &vs);        // Removes various versioning system metafolders.
 void StripMacResourceForks(std::vector<RString> &vs); // Removes files starting with "._"
 
-RString DerefRedir(const RString &sPath);
+RString DerefRedir(const std::string &sPath);
 bool GetFileContents(const std::string &sPath, std::string &sOut, bool bOneLine = false);
 bool GetFileContents(const std::string &sFile, std::vector<std::string> &asOut);
 
@@ -622,10 +622,10 @@ void GetDirListingRecursive(
 );                                                               /* returns path too */
 bool DeleteRecursive(const RString &sDir);                       /* delete the dir and all files/subdirs inside it */
 bool DeleteRecursive(RageFileDriver *prfd, const RString &sDir); /* delete the dir and all files/subdirs inside it */
-bool DoesFileExist(const RString &sPath);
-bool IsAFile(const RString &sPath);
-bool IsADirectory(const RString &sPath);
-int GetFileSizeInBytes(const RString &sFilePath);
+bool DoesFileExist(const std::string &sPath);
+bool IsAFile(const std::string &sPath);
+bool IsADirectory(const std::string &sPath);
+int GetFileSizeInBytes(const std::string &sFilePath);
 
 // call FixSlashesInPlace on any path that came from the user
 void FixSlashesInPlace(std::string &sPath);

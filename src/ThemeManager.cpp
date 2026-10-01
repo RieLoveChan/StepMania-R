@@ -181,7 +181,8 @@ int ThemeManager::GetNumSelectableThemes() {
 	return static_cast<int>(vs.size());
 }
 
-bool ThemeManager::DoesThemeExist(const RString &sThemeName) {
+bool ThemeManager::DoesThemeExist(const std::string &sThemeName_) {
+	const RString sThemeName = sThemeName_;
 	std::vector<RString> asThemeNames;
 	GetThemeNames(asThemeNames);
 	for (unsigned i = 0; i < asThemeNames.size(); i++) {
@@ -191,15 +192,16 @@ bool ThemeManager::DoesThemeExist(const RString &sThemeName) {
 	return false;
 }
 
-bool ThemeManager::IsThemeSelectable(RString const &name) {
+bool ThemeManager::IsThemeSelectable(const std::string &name) {
 	return IsThemeNameValid(name) && DoesThemeExist(name);
 }
 
-bool ThemeManager::IsThemeNameValid(RString const &name) {
+bool ThemeManager::IsThemeNameValid(const std::string &name_) {
+	const RString name = name_;
 	return name.Left(1) != "_";
 }
 
-RString ThemeManager::GetThemeDisplayName(const RString &sThemeName) {
+RString ThemeManager::GetThemeDisplayName(const std::string &sThemeName) {
 	RString sDir = GetThemeDirFromName(sThemeName);
 	IniFile ini;
 	ini.ReadFile(sDir + THEME_INFO_INI);
@@ -211,7 +213,7 @@ RString ThemeManager::GetThemeDisplayName(const RString &sThemeName) {
 	return sThemeName;
 }
 
-RString ThemeManager::GetThemeAuthor(const RString &sThemeName) {
+RString ThemeManager::GetThemeAuthor(const std::string &sThemeName) {
 	RString sDir = GetThemeDirFromName(sThemeName);
 	IniFile ini;
 	ini.ReadFile(sDir + THEME_INFO_INI);
@@ -238,7 +240,8 @@ void ThemeManager::GetLanguages(std::vector<RString> &AddTo) {
 	AddTo.erase(it, AddTo.end());
 }
 
-bool ThemeManager::DoesLanguageExist(const RString &sLanguage) {
+bool ThemeManager::DoesLanguageExist(const std::string &sLanguage_) {
+	const RString sLanguage = sLanguage_;
 	std::vector<RString> asLanguages;
 	GetLanguages(asLanguages);
 
@@ -517,7 +520,7 @@ void ThemeManager::UpdateLuaGlobals() {
 #endif
 }
 
-std::string ThemeManager::GetThemeDirFromName(const RString &sThemeName) {
+std::string ThemeManager::GetThemeDirFromName(const std::string &sThemeName) {
 	return SpecialFiles::THEMES_DIR + sThemeName + "/";
 }
 
@@ -858,7 +861,7 @@ ThemeManager::GetPath(ElementCategory category, const RString &sMetricsGroup, co
 	return pi.sResolvedPath;
 }
 
-std::string ThemeManager::GetMetricsIniPath(const RString &sThemeName) {
+std::string ThemeManager::GetMetricsIniPath(const std::string &sThemeName) {
 	return GetThemeDirFromName(sThemeName) + SpecialFiles::METRICS_FILE;
 }
 
@@ -1100,7 +1103,7 @@ RString ThemeManager::GetNextSelectableTheme() {
 	return as[iNewIndex];
 }
 
-void ThemeManager::GetLanguagesForTheme(const RString &sThemeName, std::vector<RString> &asLanguagesOut) {
+void ThemeManager::GetLanguagesForTheme(const std::string &sThemeName, std::vector<RString> &asLanguagesOut) {
 	RString sLanguageDir = GetThemeDirFromName(sThemeName) + SpecialFiles::LANGUAGES_SUBDIR;
 	std::vector<RString> as;
 	GetDirListing(sLanguageDir + "*.ini", as);
@@ -1121,12 +1124,12 @@ void ThemeManager::GetLanguagesForTheme(const RString &sThemeName, std::vector<R
 	}
 }
 
-std::string ThemeManager::GetLanguageIniPath(const RString &sThemeName, const RString &sLanguage) {
+std::string ThemeManager::GetLanguageIniPath(const std::string &sThemeName, const std::string &sLanguage) {
 	return GetThemeDirFromName(sThemeName) + SpecialFiles::LANGUAGES_SUBDIR + sLanguage + ".ini";
 }
 
 void ThemeManager::GetOptionalLanguageIniPaths(
-   std::vector<RString> &vsPathsOut, const RString &sThemeName, const RString &sLanguage
+   std::vector<RString> &vsPathsOut, const std::string &sThemeName, const std::string &sLanguage
 ) {
 	// optional ini names look like: "en PackageName.ini"
 	GetDirListing(

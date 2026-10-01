@@ -28,7 +28,7 @@ class ModelManager {
 	ModelManager();
 	~ModelManager();
 
-	RageModelGeometry *LoadMilkshapeAscii(const RString &sFile, bool bNeedNormals);
+	RageModelGeometry *LoadMilkshapeAscii(const std::string &sFile, bool bNeedNormals);
 	void UnloadModel(RageModelGeometry *m);
 	//	void ReloadAll();
 

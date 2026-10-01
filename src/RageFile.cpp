@@ -41,7 +41,7 @@ std::string RageFile::GetPath() const {
 	return GetRealPath();
 }
 
-bool RageFile::Open(const RString &path, int mode) {
+bool RageFile::Open(const std::string &path, int mode) {
 	ASSERT(FILEMAN != nullptr);
 	Close();
 
