@@ -103,7 +103,7 @@ void FadingBanner::BeforeChange(bool bLowResToHighRes) {
 
 /* If this returns true, a low-resolution banner was loaded, and the full-res
  * banner should be loaded later. */
-bool FadingBanner::LoadFromCachedBanner(const RString &path) {
+bool FadingBanner::LoadFromCachedBanner(const std::string &path) {
 	// If we're already on the given banner, don't fade again.
 	if (!path.empty() && m_Banner[m_iIndexLatest].GetTexturePath() == path)
 		return false;

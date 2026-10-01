@@ -125,7 +125,7 @@ FileNameToMetricsGroupAndElement(const RString &sFileName, RString &sMetricsGrou
 	}
 }
 
-static std::string MetricsGroupAndElementToFileName(const RString &sMetricsGroup, const RString &sElement) {
+static std::string MetricsGroupAndElementToFileName(const std::string &sMetricsGroup, const std::string &sElement) {
 	if (sMetricsGroup.empty())
 		return sElement;
 	else
@@ -570,8 +570,8 @@ bool ThemeManager::GetPathInfoToRaw(
    PathInfo &out,
    const RString &sThemeName_,
    ElementCategory category,
-   const RString &sMetricsGroup_,
-   const RString &sElement_
+   const std::string &sMetricsGroup_,
+   const std::string &sElement_
 ) {
 	/* Ugly: the parameters to this function may be a reference into g_vThemes,
 	 * or something else that might suddenly go away when we call ReloadMetrics,
@@ -730,7 +730,7 @@ bool ThemeManager::GetPathInfoToRaw(
 }
 
 bool ThemeManager::GetPathInfoToAndFallback(
-   PathInfo &out, ElementCategory category, const RString &sMetricsGroup_, const RString &sElement
+   PathInfo &out, ElementCategory category, const std::string &sMetricsGroup_, const std::string &sElement
 ) {
 	RString sMetricsGroup(sMetricsGroup_);
 
@@ -759,7 +759,11 @@ bool ThemeManager::GetPathInfoToAndFallback(
 }
 
 bool ThemeManager::GetPathInfo(
-   PathInfo &out, ElementCategory category, const RString &sMetricsGroup_, const RString &sElement_, bool bOptional
+   PathInfo &out,
+   ElementCategory category,
+   const std::string &sMetricsGroup_,
+   const std::string &sElement_,
+   bool bOptional
 ) {
 	/* Ugly: the parameters to this function may be a reference into g_vThemes,
 	 * or something else that might suddenly go away when we call ReloadMetrics. */
@@ -845,8 +849,9 @@ try_element_again:
 	}
 }
 
-RString
-ThemeManager::GetPath(ElementCategory category, const RString &sMetricsGroup, const RString &sElement, bool bOptional) {
+RString ThemeManager::GetPath(
+   ElementCategory category, const std::string &sMetricsGroup, const std::string &sElement, bool bOptional
+) {
 	PathInfo pi;
 	GetPathInfo(pi, category, sMetricsGroup, sElement, bOptional);
 	if (!bOptional && pi.sResolvedPath.empty()) {
@@ -865,7 +870,7 @@ std::string ThemeManager::GetMetricsIniPath(const std::string &sThemeName) {
 	return GetThemeDirFromName(sThemeName) + SpecialFiles::METRICS_FILE;
 }
 
-bool ThemeManager::HasMetric(const RString &sMetricsGroup, const RString &sValueName) {
+bool ThemeManager::HasMetric(const std::string &sMetricsGroup, const std::string &sValueName) {
 	RString sThrowAway;
 	if (sMetricsGroup.empty() || sValueName.empty()) {
 		return false;
@@ -873,7 +878,7 @@ bool ThemeManager::HasMetric(const RString &sMetricsGroup, const RString &sValue
 	return GetMetricRawRecursive(g_pLoadedThemeData->iniMetrics, sMetricsGroup, sValueName, sThrowAway);
 }
 
-bool ThemeManager::HasString(const RString &sMetricsGroup, const RString &sValueName) {
+bool ThemeManager::HasString(const std::string &sMetricsGroup, const std::string &sValueName) {
 	RString sThrowAway;
 	if (sMetricsGroup.empty() || sValueName.empty()) {
 		return false;
@@ -896,7 +901,7 @@ void ThemeManager::ReloadMetrics() {
 	ClearThemePathCache();
 }
 
-std::string ThemeManager::GetMetricsGroupFallback(const RString &sMetricsGroup) {
+std::string ThemeManager::GetMetricsGroupFallback(const std::string &sMetricsGroup) {
 	ASSERT(g_pLoadedThemeData != nullptr);
 
 	// always look in iniMetrics for "Fallback"
@@ -914,7 +919,7 @@ std::string ThemeManager::GetMetricsGroupFallback(const RString &sMetricsGroup) 
 }
 
 bool ThemeManager::GetMetricRawRecursive(
-   const IniFile &ini, const RString &sMetricsGroup_, const RString &sValueName, RString &sOut
+   const IniFile &ini, const std::string &sMetricsGroup_, const std::string &sValueName, RString &sOut
 ) {
 	ASSERT(!sValueName.empty());
 	RString sMetricsGroup(sMetricsGroup_);
@@ -938,7 +943,8 @@ bool ThemeManager::GetMetricRawRecursive(
 	return false;
 }
 
-RString ThemeManager::GetMetricRaw(const IniFile &ini, const RString &sMetricsGroup_, const RString &sValueName_) {
+RString
+ThemeManager::GetMetricRaw(const IniFile &ini, const std::string &sMetricsGroup_, const std::string &sValueName_) {
 	/* Ugly: the parameters to this function may be a reference into g_vThemes, or something
 	 * else that might suddenly go away when we call ReloadMetrics. */
 	const RString sMetricsGroup = sMetricsGroup_;
@@ -992,7 +998,8 @@ RString ThemeManager::GetMetricRaw(const IniFile &ini, const RString &sMetricsGr
 	}
 }
 
-template <typename T> void GetAndConvertMetric(const RString &sMetricsGroup, const RString &sValueName, T &out) {
+template <typename T>
+void GetAndConvertMetric(const std::string &sMetricsGroup, const std::string &sValueName, T &out) {
 	Lua *L = LUA->Get();
 
 	THEME->PushMetric(L, sMetricsGroup, sValueName);
@@ -1003,43 +1010,43 @@ template <typename T> void GetAndConvertMetric(const RString &sMetricsGroup, con
 }
 
 /* Get a string metric. */
-RString ThemeManager::GetMetric(const RString &sMetricsGroup, const RString &sValueName) {
+RString ThemeManager::GetMetric(const std::string &sMetricsGroup, const std::string &sValueName) {
 	RString sRet;
 	GetAndConvertMetric(sMetricsGroup, sValueName, sRet);
 	return sRet;
 }
 
-int ThemeManager::GetMetricI(const RString &sMetricsGroup, const RString &sValueName) {
+int ThemeManager::GetMetricI(const std::string &sMetricsGroup, const std::string &sValueName) {
 	int iRet = 0;
 	GetAndConvertMetric(sMetricsGroup, sValueName, iRet);
 	return iRet;
 }
 
-float ThemeManager::GetMetricF(const RString &sMetricsGroup, const RString &sValueName) {
+float ThemeManager::GetMetricF(const std::string &sMetricsGroup, const std::string &sValueName) {
 	float fRet = 0;
 	GetAndConvertMetric(sMetricsGroup, sValueName, fRet);
 	return fRet;
 }
 
-bool ThemeManager::GetMetricB(const RString &sMetricsGroup, const RString &sValueName) {
+bool ThemeManager::GetMetricB(const std::string &sMetricsGroup, const std::string &sValueName) {
 	bool bRet = false;
 	GetAndConvertMetric(sMetricsGroup, sValueName, bRet);
 	return bRet;
 }
 
-RageColor ThemeManager::GetMetricC(const RString &sMetricsGroup, const RString &sValueName) {
+RageColor ThemeManager::GetMetricC(const std::string &sMetricsGroup, const std::string &sValueName) {
 	RageColor ret;
 	GetAndConvertMetric(sMetricsGroup, sValueName, ret);
 	return ret;
 }
 
-LuaReference ThemeManager::GetMetricR(const RString &sMetricsGroup, const RString &sValueName) {
+LuaReference ThemeManager::GetMetricR(const std::string &sMetricsGroup, const std::string &sValueName) {
 	LuaReference ref;
 	GetMetric(sMetricsGroup, sValueName, ref);
 	return ref;
 }
 
-void ThemeManager::PushMetric(Lua *L, const RString &sMetricsGroup, const RString &sValueName) {
+void ThemeManager::PushMetric(Lua *L, const std::string &sMetricsGroup, const std::string &sValueName) {
 	if (sMetricsGroup.empty() || sValueName.empty()) {
 		LuaHelpers::ReportScriptError(
 		   "PushMetric:  Attempted to fetch metric with empty group name or empty value name."
@@ -1062,7 +1069,7 @@ void ThemeManager::PushMetric(Lua *L, const RString &sMetricsGroup, const RStrin
 	}
 }
 
-void ThemeManager::GetMetric(const RString &sMetricsGroup, const RString &sValueName, LuaReference &valueOut) {
+void ThemeManager::GetMetric(const std::string &sMetricsGroup, const std::string &sValueName, LuaReference &valueOut) {
 	Lua *L = LUA->Get();
 	PushMetric(L, sMetricsGroup, sValueName);
 	valueOut.SetFromStack(L);
@@ -1070,7 +1077,7 @@ void ThemeManager::GetMetric(const RString &sMetricsGroup, const RString &sValue
 }
 
 #if !defined(SMPACKAGE)
-apActorCommands ThemeManager::GetMetricA(const RString &sMetricsGroup, const RString &sValueName) {
+apActorCommands ThemeManager::GetMetricA(const std::string &sMetricsGroup, const std::string &sValueName) {
 	LuaReference *pRef = new LuaReference;
 	GetMetric(sMetricsGroup, sValueName, *pRef);
 	return apActorCommands(pRef);
@@ -1167,7 +1174,7 @@ static std::string PseudoLocalize(RString s) {
 	return s;
 }
 
-RString ThemeManager::GetString(const RString &sMetricsGroup, const RString &sValueName_) {
+RString ThemeManager::GetString(const std::string &sMetricsGroup, const std::string &sValueName_) {
 	RString sValueName = sValueName_;
 	if (sMetricsGroup.empty() || sValueName.empty()) {
 		LuaHelpers::ReportScriptError(
@@ -1220,7 +1227,7 @@ RString ThemeManager::GetString(const RString &sMetricsGroup, const RString &sVa
 }
 
 void ThemeManager::GetMetricsThatBeginWith(
-   const RString &sMetricsGroup_, const RString &sValueName, std::set<std::string> &vsValueNamesOut
+   const std::string &sMetricsGroup_, const std::string &sValueName, std::set<std::string> &vsValueNamesOut
 ) {
 	RString sMetricsGroup(sMetricsGroup_);
 	while (!sMetricsGroup.empty()) {

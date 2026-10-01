@@ -55,7 +55,7 @@ AutoScreenMessage(SM_ConfirmDeleteSong);
 static std::string g_sCDTitlePath;
 static bool g_bWantFallbackCdTitle;
 static bool g_bCDTitleWaiting = false;
-static RString g_sBannerPath;
+static std::string g_sBannerPath;
 static bool g_bBannerWaiting = false;
 static bool g_bSampleMusicWaiting = false;
 static RageTimer g_StartedLoadingAt(RageZeroTimer);

@@ -18,7 +18,7 @@ DifficultyIcon::DifficultyIcon() {
 	m_PlayerNumber = PLAYER_1;
 }
 
-bool DifficultyIcon::Load(RString sPath) {
+bool DifficultyIcon::Load(std::string sPath) {
 	Sprite::Load(sPath);
 	int iStates = GetNumStates();
 	bool bWarn = iStates != NUM_Difficulty && iStates != NUM_Difficulty * 2;

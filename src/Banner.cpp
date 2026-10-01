@@ -44,7 +44,7 @@ void Banner::Load(RageTextureID ID, bool bIsBanner) {
 	TEXTUREMAN->EnableOddDimensionWarning();
 };
 
-void Banner::LoadFromCachedBanner(const RString &sPath) {
+void Banner::LoadFromCachedBanner(const std::string &sPath) {
 	if (sPath.empty()) {
 		LoadFallback();
 		return;

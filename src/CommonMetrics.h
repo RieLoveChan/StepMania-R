@@ -80,7 +80,7 @@ extern ThemeMetric<int> PERCENT_SCORE_DECIMAL_PLACES;
 
 extern ThemeMetric<RString> IMAGES_TO_CACHE;
 
-std::string LocalizeOptionItem(const RString &s, bool bOptional);
+std::string LocalizeOptionItem(const std::string &s, bool bOptional);
 }; // namespace CommonMetrics
 
 #endif

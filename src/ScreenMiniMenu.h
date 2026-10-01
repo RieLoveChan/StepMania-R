@@ -27,7 +27,7 @@ struct MenuRowDef {
 	}
 	MenuRowDef(
 	   int r,
-	   RString n,
+	   std::string n,
 	   MenuRowUpdateEnabled pe,
 	   EditMode s,
 	   bool bTT,
@@ -96,7 +96,7 @@ struct MenuRowDef {
 #undef PUSH
 	}
 
-	MenuRowDef(int r, RString n, bool e, EditMode s, bool bTT, bool bTI, int d, std::vector<RString> options)
+	MenuRowDef(int r, std::string n, bool e, EditMode s, bool bTT, bool bTI, int d, std::vector<RString> options)
 	    : iRowCode(r), sName(n), bEnabled(e), pfnEnabled(nullptr), emShowIn(s), iDefaultChoice(d), choices(),
 	      bThemeTitle(bTT), bThemeItems(bTI) {
 		for (RString &str : options) {
@@ -107,7 +107,7 @@ struct MenuRowDef {
 
 	MenuRowDef(
 	   int r,
-	   RString n,
+	   std::string n,
 	   bool e,
 	   EditMode s,
 	   bool bTT,
@@ -176,7 +176,7 @@ struct MenuRowDef {
 #undef PUSH
 	}
 
-	MenuRowDef(int r, RString n, bool e, EditMode s, bool bTT, bool bTI, int d, int low, int high)
+	MenuRowDef(int r, std::string n, bool e, EditMode s, bool bTT, bool bTI, int d, int low, int high)
 	    : iRowCode(r), sName(n), bEnabled(e), pfnEnabled(nullptr), emShowIn(s), iDefaultChoice(d), choices(),
 	      bThemeTitle(bTT), bThemeItems(bTI) {
 		for (int i = low; i <= high; i++) {

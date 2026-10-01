@@ -103,7 +103,7 @@ BGAnimationLayer::~BGAnimationLayer() {
 	ActorFrame::DeleteAllChildren();
 }
 
-void BGAnimationLayer::LoadFromAniLayerFile(const RString &sPath) {
+void BGAnimationLayer::LoadFromAniLayerFile(const std::string &sPath) {
 	/* Generic BGAs are new.  Animation directories with no INI are old and obsolete.
 	 * Don't combine them. */
 	RString lcPath = sPath;

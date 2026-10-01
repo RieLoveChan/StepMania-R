@@ -17,7 +17,7 @@ class DifficultyIcon : public Sprite {
 		return m_bBlank || Sprite::EarlyAbortDraw();
 	}
 
-	bool Load(RString sFilePath);
+	bool Load(std::string sFilePath);
 	virtual void Load(RageTextureID ID) {
 		Load(ID.filename);
 	}

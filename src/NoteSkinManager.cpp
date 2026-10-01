@@ -256,7 +256,7 @@ void NoteSkinManager::GetAllNoteSkinNamesForGame(const Game *pGame, std::vector<
 	}
 }
 
-std::string NoteSkinManager::GetMetric(const RString &sButtonName, const RString &sValue) {
+std::string NoteSkinManager::GetMetric(const std::string &sButtonName, const std::string &sValue) {
 	if (m_sCurrentNoteSkin.empty()) {
 		LuaHelpers::ReportScriptError("NOTESKIN:GetMetric: No noteskin currently set.", "NOTESKIN_ERROR");
 		return "";
@@ -281,25 +281,25 @@ std::string NoteSkinManager::GetMetric(const RString &sButtonName, const RString
 	return sReturn;
 }
 
-int NoteSkinManager::GetMetricI(const RString &sButtonName, const RString &sValueName) {
+int NoteSkinManager::GetMetricI(const std::string &sButtonName, const std::string &sValueName) {
 	return StringToInt(GetMetric(sButtonName, sValueName));
 }
 
-float NoteSkinManager::GetMetricF(const RString &sButtonName, const RString &sValueName) {
+float NoteSkinManager::GetMetricF(const std::string &sButtonName, const std::string &sValueName) {
 	return StringToFloat(GetMetric(sButtonName, sValueName));
 }
 
-bool NoteSkinManager::GetMetricB(const RString &sButtonName, const RString &sValueName) {
+bool NoteSkinManager::GetMetricB(const std::string &sButtonName, const std::string &sValueName) {
 	// Could also call GetMetricI here...hmm.
 	return StringToInt(GetMetric(sButtonName, sValueName)) != 0;
 }
 
-apActorCommands NoteSkinManager::GetMetricA(const RString &sButtonName, const RString &sValueName) {
+apActorCommands NoteSkinManager::GetMetricA(const std::string &sButtonName, const std::string &sValueName) {
 	return ActorUtil::ParseActorCommands(GetMetric(sButtonName, sValueName));
 }
 
-std::string NoteSkinManager::GetPath(const RString &sButtonName, const RString &sElement) {
-	const RString CacheString = m_sCurrentNoteSkin + "/" + sButtonName + "/" + sElement;
+std::string NoteSkinManager::GetPath(const std::string &sButtonName, const std::string &sElement) {
+	const std::string CacheString = m_sCurrentNoteSkin + "/" + sButtonName + "/" + sElement;
 	std::map<std::string, std::string>::iterator it = g_PathCache.find(CacheString);
 	if (it != g_PathCache.end())
 		return it->second;
@@ -475,7 +475,7 @@ Actor *NoteSkinManager::LoadActor(const RString &sButton, const RString &sElemen
 	return pRet;
 }
 
-std::string NoteSkinManager::GetPathFromDirAndFile(const RString &sDir, const RString &sFileName) {
+std::string NoteSkinManager::GetPathFromDirAndFile(const std::string &sDir, const std::string &sFileName) {
 	std::vector<RString> matches; // fill this with the possible files
 
 	GetDirListing(sDir + sFileName + "*", matches, false, true);

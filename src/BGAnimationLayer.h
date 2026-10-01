@@ -15,7 +15,7 @@ class BGAnimationLayer : public ActorFrame {
 	BGAnimationLayer();
 	~BGAnimationLayer();
 
-	void LoadFromAniLayerFile(const RString &sPath);
+	void LoadFromAniLayerFile(const std::string &sPath);
 	void LoadFromNode(const XNode *pNode);
 
 	void UpdateInternal(float fDeltaTime);

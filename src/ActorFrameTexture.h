@@ -60,7 +60,7 @@ class ActorFrameTexture : public ActorFrame {
 	bool m_bFloat;
 	bool m_bPreserveTexture;
 	/** @brief the name of this ActorFrameTexture. */
-	RString m_sTextureName;
+	std::string m_sTextureName;
 };
 
 class ActorFrameTextureAutoDeleteChildren : public ActorFrameTexture {

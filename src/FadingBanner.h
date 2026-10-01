@@ -30,7 +30,7 @@ class FadingBanner : public ActorFrame {
 	void LoadCourseFallback();
 	void LoadCustom(std::string sBanner);
 
-	bool LoadFromCachedBanner(const RString &path);
+	bool LoadFromCachedBanner(const std::string &path);
 
 	void SetMovingFast(bool fast) {
 		m_bMovingFast = fast;

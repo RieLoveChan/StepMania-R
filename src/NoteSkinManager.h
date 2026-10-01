@@ -40,22 +40,22 @@ class NoteSkinManager {
 	void SetGameController(GameController gc) {
 		m_GameController = gc;
 	}
-	std::string GetPath(const RString &sButtonName, const RString &sElement);
+	std::string GetPath(const std::string &sButtonName, const std::string &sElement);
 	bool PushActorTemplate(Lua *L, const RString &sButton, const RString &sElement, bool bSpriteOnly);
 	Actor *
 	LoadActor(const RString &sButton, const RString &sElement, Actor *pParent = nullptr, bool bSpriteOnly = false);
 
-	std::string GetMetric(const RString &sButtonName, const RString &sValue);
-	int GetMetricI(const RString &sButtonName, const RString &sValueName);
-	float GetMetricF(const RString &sButtonName, const RString &sValueName);
-	bool GetMetricB(const RString &sButtonName, const RString &sValueName);
-	apActorCommands GetMetricA(const RString &sButtonName, const RString &sValueName);
+	std::string GetMetric(const std::string &sButtonName, const std::string &sValue);
+	int GetMetricI(const std::string &sButtonName, const std::string &sValueName);
+	float GetMetricF(const std::string &sButtonName, const std::string &sValueName);
+	bool GetMetricB(const std::string &sButtonName, const std::string &sValueName);
+	apActorCommands GetMetricA(const std::string &sButtonName, const std::string &sValueName);
 
 	// Lua
 	void PushSelf(lua_State *L);
 
  protected:
-	std::string GetPathFromDirAndFile(const RString &sDir, const RString &sFileName);
+	std::string GetPathFromDirAndFile(const std::string &sDir, const std::string &sFileName);
 	void GetAllNoteSkinNamesForGame(const Game *pGame, std::vector<RString> &AddTo);
 
 	bool LoadNoteSkinData(const RString &sNoteSkinName, NoteSkinData &data_out);

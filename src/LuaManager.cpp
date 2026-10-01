@@ -166,7 +166,7 @@ void CreateTableFromXNodeRecursive(Lua *L, const XNode *pNode) {
 
 	FOREACH_CONST_Child(pNode, c) {
 		const XNode *pChild = c;
-		lua_pushstring(L, pChild->m_sName); // push key
+		lua_pushstring(L, pChild->m_sName.c_str()); // push key
 
 		// push value (more correctly, build this child's table and leave it there)
 		CreateTableFromXNodeRecursive(L, pChild);

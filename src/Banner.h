@@ -23,7 +23,7 @@ class Banner : public Sprite {
 	virtual void Load(RageTextureID ID) {
 		Load(ID, true);
 	}
-	void LoadFromCachedBanner(const RString &sPath);
+	void LoadFromCachedBanner(const std::string &sPath);
 
 	virtual void Update(float fDeltaTime);
 

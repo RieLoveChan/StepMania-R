@@ -1240,7 +1240,7 @@ ProfileLoadResult Profile::LoadStatsXmlFromNode(const XNode *xml, bool bIgnoreEd
 		return ProfileLoadResult_FailedNoProfile;
 
 	if (xml->GetName() != "Stats") {
-		WARN_M(xml->GetName());
+		WARN_M(xml->GetName().c_str());
 		return ProfileLoadResult_FailedTampered;
 	}
 
@@ -2115,7 +2115,7 @@ void Profile::LoadScreenshotDataFromNode(const XNode *pScreenshotData) {
 	ASSERT(pScreenshotData->GetName() == "ScreenshotData");
 	FOREACH_CONST_Child(pScreenshotData, pScreenshot) {
 		if (pScreenshot->GetName() != "Screenshot")
-			WARN_AND_CONTINUE_M(pScreenshot->GetName());
+			WARN_AND_CONTINUE_M(pScreenshot->GetName().c_str());
 
 		Screenshot ss;
 		ss.LoadFromNode(pScreenshot);
@@ -2145,7 +2145,7 @@ void Profile::LoadCalorieDataFromNode(const XNode *pCalorieData) {
 	ASSERT(pCalorieData->GetName() == "CalorieData");
 	FOREACH_CONST_Child(pCalorieData, pCaloriesBurned) {
 		if (pCaloriesBurned->GetName() != "CaloriesBurned")
-			WARN_AND_CONTINUE_M(pCaloriesBurned->GetName());
+			WARN_AND_CONTINUE_M(pCaloriesBurned->GetName().c_str());
 
 		RString sDate;
 		if (!pCaloriesBurned->GetAttrValue("Date", sDate))

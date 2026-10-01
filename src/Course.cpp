@@ -1042,7 +1042,7 @@ bool Course::CourseHasBestOrWorst() const {
 	return false;
 }
 
-RString Course::GetBannerPath() const {
+std::string Course::GetBannerPath() const {
 	if (m_sBannerPath.empty())
 		return RString();
 	if (m_sBannerPath[0] == '/')
@@ -1050,7 +1050,7 @@ RString Course::GetBannerPath() const {
 	return Dirname(m_sPath) + m_sBannerPath;
 }
 
-RString Course::GetBackgroundPath() const {
+std::string Course::GetBackgroundPath() const {
 	if (m_sBackgroundPath.empty())
 		return RString();
 	if (m_sBackgroundPath[0] == '/')

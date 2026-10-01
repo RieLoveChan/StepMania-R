@@ -1752,7 +1752,7 @@ void SongManager::RefreshCourseGroupInfo() {
 	}
 }
 
-void SongManager::LoadStepEditsFromProfileDir(const RString &sProfileDir, ProfileSlot slot) {
+void SongManager::LoadStepEditsFromProfileDir(const std::string &sProfileDir, ProfileSlot slot) {
 	// Load all edit steps
 	RString sDir = sProfileDir + EDIT_STEPS_SUBDIR;
 	SSCLoader loaderSSC;
@@ -1829,7 +1829,7 @@ void SongManager::LoadStepEditsFromProfileDir(const RString &sProfileDir, Profil
 	}
 }
 
-void SongManager::LoadCourseEditsFromProfileDir(const RString &sProfileDir, ProfileSlot slot) {
+void SongManager::LoadCourseEditsFromProfileDir(const std::string &sProfileDir, ProfileSlot slot) {
 	// Load all edit courses
 	RString sDir = sProfileDir + EDIT_COURSES_SUBDIR;
 

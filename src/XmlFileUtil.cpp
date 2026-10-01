@@ -513,14 +513,14 @@ class XNodeLuaValue : public XNodeValue {
 		return val;
 	}
 
-	void GetValue(RString &out) const override;
+	void GetValue(std::string &out) const override;
 	void GetValue(int &out) const override;
 	void GetValue(float &out) const override;
 	void GetValue(bool &out) const override;
 	void GetValue(unsigned &out) const override;
 	void PushValue(lua_State *L) const override;
 
-	void SetValue(const RString &v) override;
+	void SetValue(const std::string &v) override;
 	void SetValue(int v) override;
 	void SetValue(float v) override;
 	void SetValue(unsigned v) override;
@@ -531,10 +531,12 @@ void XNodeLuaValue::PushValue(lua_State *L) const {
 	m_Value.PushSelf(L);
 }
 
-void XNodeLuaValue::GetValue(RString &out) const {
+void XNodeLuaValue::GetValue(std::string &out) const {
 	Lua *L = LUA->Get();
 	PushValue(L);
-	LuaHelpers::Pop(L, out);
+	RString sPopped; // Pop<std::string> has no FromStack specialization
+	LuaHelpers::Pop(L, sPopped);
+	out = sPopped;
 	LUA->Release(L);
 }
 void XNodeLuaValue::GetValue(int &out) const {
@@ -568,7 +570,7 @@ void XNodeLuaValue::SetValueFromStack(lua_State *L) {
 	m_Value.SetFromStack(L);
 }
 
-void XNodeLuaValue::SetValue(const RString &v) {
+void XNodeLuaValue::SetValue(const std::string &v) {
 	Lua *L = LUA->Get();
 	LuaHelpers::Push(L, v);
 	SetValueFromStack(L);

@@ -76,56 +76,57 @@ class ThemeManager {
 	bool GetPathInfo(
 	   PathInfo &out,
 	   ElementCategory category,
-	   const RString &sMetricsGroup,
-	   const RString &sElement,
+	   const std::string &sMetricsGroup,
+	   const std::string &sElement,
 	   bool bOptional = false
 	);
-	RString
-	GetPath(ElementCategory category, const RString &sMetricsGroup, const RString &sElement, bool bOptional = false);
-	RString GetPathB(const RString &sMetricsGroup, const RString &sElement, bool bOptional = false) {
+	RString GetPath(
+	   ElementCategory category, const std::string &sMetricsGroup, const std::string &sElement, bool bOptional = false
+	);
+	RString GetPathB(const std::string &sMetricsGroup, const std::string &sElement, bool bOptional = false) {
 		return GetPath(EC_BGANIMATIONS, sMetricsGroup, sElement, bOptional);
 	};
-	RString GetPathF(const RString &sMetricsGroup, const RString &sElement, bool bOptional = false) {
+	RString GetPathF(const std::string &sMetricsGroup, const std::string &sElement, bool bOptional = false) {
 		return GetPath(EC_FONTS, sMetricsGroup, sElement, bOptional);
 	};
-	RString GetPathG(const RString &sMetricsGroup, const RString &sElement, bool bOptional = false) {
+	RString GetPathG(const std::string &sMetricsGroup, const std::string &sElement, bool bOptional = false) {
 		return GetPath(EC_GRAPHICS, sMetricsGroup, sElement, bOptional);
 	};
-	RString GetPathS(const RString &sMetricsGroup, const RString &sElement, bool bOptional = false) {
+	RString GetPathS(const std::string &sMetricsGroup, const std::string &sElement, bool bOptional = false) {
 		return GetPath(EC_SOUNDS, sMetricsGroup, sElement, bOptional);
 	};
-	RString GetPathO(const RString &sMetricsGroup, const RString &sElement, bool bOptional = false) {
+	RString GetPathO(const std::string &sMetricsGroup, const std::string &sElement, bool bOptional = false) {
 		return GetPath(EC_OTHER, sMetricsGroup, sElement, bOptional);
 	};
 	void ClearThemePathCache();
 
-	bool HasMetric(const RString &sMetricsGroup, const RString &sValueName);
-	void PushMetric(Lua *L, const RString &sMetricsGroup, const RString &sValueName);
-	RString GetMetric(const RString &sMetricsGroup, const RString &sValueName);
-	int GetMetricI(const RString &sMetricsGroup, const RString &sValueName);
-	float GetMetricF(const RString &sMetricsGroup, const RString &sValueName);
-	bool GetMetricB(const RString &sMetricsGroup, const RString &sValueName);
-	RageColor GetMetricC(const RString &sMetricsGroup, const RString &sValueName);
-	LuaReference GetMetricR(const RString &sMetricsGroup, const RString &sValueName);
+	bool HasMetric(const std::string &sMetricsGroup, const std::string &sValueName);
+	void PushMetric(Lua *L, const std::string &sMetricsGroup, const std::string &sValueName);
+	RString GetMetric(const std::string &sMetricsGroup, const std::string &sValueName);
+	int GetMetricI(const std::string &sMetricsGroup, const std::string &sValueName);
+	float GetMetricF(const std::string &sMetricsGroup, const std::string &sValueName);
+	bool GetMetricB(const std::string &sMetricsGroup, const std::string &sValueName);
+	RageColor GetMetricC(const std::string &sMetricsGroup, const std::string &sValueName);
+	LuaReference GetMetricR(const std::string &sMetricsGroup, const std::string &sValueName);
 #if !defined(SMPACKAGE)
-	apActorCommands GetMetricA(const RString &sMetricsGroup, const RString &sValueName);
+	apActorCommands GetMetricA(const std::string &sMetricsGroup, const std::string &sValueName);
 #endif
 
-	void GetMetric(const RString &sMetricsGroup, const RString &sValueName, LuaReference &valueOut);
+	void GetMetric(const std::string &sMetricsGroup, const std::string &sValueName, LuaReference &valueOut);
 
 	// Languages
-	bool HasString(const RString &sMetricsGroup, const RString &sValueName);
-	RString GetString(const RString &sMetricsGroup, const RString &sValueName);
-	void GetString(const RString &sMetricsGroup, const RString &sValueName, RString &valueOut) {
+	bool HasString(const std::string &sMetricsGroup, const std::string &sValueName);
+	RString GetString(const std::string &sMetricsGroup, const std::string &sValueName);
+	void GetString(const std::string &sMetricsGroup, const std::string &sValueName, RString &valueOut) {
 		valueOut = GetString(sMetricsGroup, sValueName);
 	}
 	void FilterFileLanguages(std::vector<RString> &asElementPaths);
 
 	void GetMetricsThatBeginWith(
-	   const RString &sMetricsGroup, const RString &sValueName, std::set<std::string> &vsValueNamesOut
+	   const std::string &sMetricsGroup, const std::string &sValueName, std::set<std::string> &vsValueNamesOut
 	);
 
-	std::string GetMetricsGroupFallback(const RString &sMetricsGroup);
+	std::string GetMetricsGroupFallback(const std::string &sMetricsGroup);
 
 	static std::string GetBlankGraphicPath();
 
@@ -141,19 +142,20 @@ class ThemeManager {
 
  protected:
 	void LoadThemeMetrics(const RString &sThemeName, const RString &sLanguage_);
-	RString GetMetricRaw(const IniFile &ini, const RString &sMetricsGroup, const RString &sValueName);
-	bool
-	GetMetricRawRecursive(const IniFile &ini, const RString &sMetricsGroup, const RString &sValueName, RString &sRet);
+	RString GetMetricRaw(const IniFile &ini, const std::string &sMetricsGroup, const std::string &sValueName);
+	bool GetMetricRawRecursive(
+	   const IniFile &ini, const std::string &sMetricsGroup, const std::string &sValueName, RString &sRet
+	);
 
 	bool GetPathInfoToAndFallback(
-	   PathInfo &out, ElementCategory category, const RString &sMetricsGroup, const RString &sFile
+	   PathInfo &out, ElementCategory category, const std::string &sMetricsGroup, const std::string &sFile
 	);
 	bool GetPathInfoToRaw(
 	   PathInfo &out,
 	   const RString &sThemeName,
 	   ElementCategory category,
-	   const RString &sMetricsGroup,
-	   const RString &sFile
+	   const std::string &sMetricsGroup,
+	   const std::string &sFile
 	);
 	static std::string GetThemeDirFromName(const std::string &sThemeName);
 	RString GetElementDir(const RString &sThemeName);

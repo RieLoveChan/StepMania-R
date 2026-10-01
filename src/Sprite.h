@@ -88,7 +88,7 @@ class Sprite : public Actor {
 		m_EffectMode = em;
 	}
 
-	void LoadFromCached(const RString &sDir, const RString &sPath);
+	void LoadFromCached(const RString &sDir, const std::string &sPath);
 
 	void SetTexCoordVelocity(float fVelX, float fVelY);
 	/**

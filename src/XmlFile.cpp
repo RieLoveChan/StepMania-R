@@ -38,7 +38,7 @@ void XNode::Free() {
 	m_attrs.clear();
 }
 
-void XNodeStringValue::GetValue(RString &out) const {
+void XNodeStringValue::GetValue(std::string &out) const {
 	out = m_sValue;
 }
 void XNodeStringValue::GetValue(int &out) const {
@@ -57,7 +57,7 @@ void XNodeStringValue::PushValue(lua_State *L) const {
 	LuaHelpers::Push(L, m_sValue);
 }
 
-void XNodeStringValue::SetValue(const RString &v) {
+void XNodeStringValue::SetValue(const std::string &v) {
 	m_sValue = v;
 }
 void XNodeStringValue::SetValue(int v) {

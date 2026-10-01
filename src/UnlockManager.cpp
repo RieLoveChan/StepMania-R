@@ -408,7 +408,7 @@ std::string UnlockEntry::GetBannerFile() const {
 	case UnlockRewardType_Steps_Type:
 		return pSong ? pSong->GetBannerPath() : RString("");
 	case UnlockRewardType_Course:
-		return m_Course.ToCourse() ? m_Course.ToCourse()->GetBannerPath() : RString("");
+		return m_Course.ToCourse() ? m_Course.ToCourse()->GetBannerPath() : std::string("");
 	case UnlockRewardType_Modifier:
 		return "";
 	}

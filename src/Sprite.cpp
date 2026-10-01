@@ -359,7 +359,7 @@ void Sprite::LoadFromTexture(RageTextureID ID) {
 	SetTexture(pTexture);
 }
 
-void Sprite::LoadFromCached(const RString &sDir, const RString &sPath) {
+void Sprite::LoadFromCached(const RString &sDir, const std::string &sPath) {
 	if (sPath.empty()) {
 		Load(THEME->GetPathG("Common", "fallback %s", sDir));
 		return;

@@ -93,8 +93,8 @@ class Course {
  public:
 	Course();
 
-	RString GetBannerPath() const;
-	RString GetBackgroundPath() const;
+	std::string GetBannerPath() const;
+	std::string GetBackgroundPath() const;
 	bool HasBanner() const;
 	bool HasBackground() const;
 

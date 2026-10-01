@@ -16,7 +16,7 @@ class XNodeValue {
 	}
 	virtual XNodeValue *Copy() const = 0;
 
-	virtual void GetValue(RString &out) const = 0;
+	virtual void GetValue(std::string &out) const = 0;
 	virtual void GetValue(int &out) const = 0;
 	virtual void GetValue(float &out) const = 0;
 	virtual void GetValue(bool &out) const = 0;
@@ -29,7 +29,7 @@ class XNodeValue {
 		return val;
 	}
 
-	virtual void SetValue(const RString &v) = 0;
+	virtual void SetValue(const std::string &v) = 0;
 	virtual void SetValue(int v) = 0;
 	virtual void SetValue(float v) = 0;
 	virtual void SetValue(unsigned v) = 0;
@@ -44,14 +44,14 @@ class XNodeStringValue : public XNodeValue {
 		return new XNodeStringValue(*this);
 	}
 
-	void GetValue(RString &out) const;
+	void GetValue(std::string &out) const;
 	void GetValue(int &out) const;
 	void GetValue(float &out) const;
 	void GetValue(bool &out) const;
 	void GetValue(unsigned &out) const;
 	void PushValue(lua_State *L) const;
 
-	void SetValue(const RString &v);
+	void SetValue(const std::string &v);
 	void SetValue(int v);
 	void SetValue(float v);
 	void SetValue(unsigned v);
@@ -86,13 +86,13 @@ class XNode {
 	std::multimap<std::string, XNode *> m_children_by_name;
 
  public:
-	RString m_sName;
+	std::string m_sName;
 	XAttrs m_attrs; // attributes
 
-	void SetName(const RString &sName) {
+	void SetName(const std::string &sName) {
 		m_sName = sName;
 	}
-	const RString &GetName() const {
+	const std::string &GetName() const {
 		return m_sName;
 	}
 

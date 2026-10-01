@@ -55,8 +55,8 @@ class SongManager {
 	void SaveEnabledSongsToPref();
 	void LoadEnabledSongsFromPref();
 
-	void LoadStepEditsFromProfileDir(const RString &sProfileDir, ProfileSlot slot);
-	void LoadCourseEditsFromProfileDir(const RString &sProfileDir, ProfileSlot slot);
+	void LoadStepEditsFromProfileDir(const std::string &sProfileDir, ProfileSlot slot);
+	void LoadCourseEditsFromProfileDir(const std::string &sProfileDir, ProfileSlot slot);
 	int GetNumStepsLoadedFromProfile();
 	void FreeAllLoadedFromProfile(ProfileSlot slot = ProfileSlot_Invalid);
 
