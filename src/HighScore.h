@@ -65,7 +65,7 @@ struct HighScore {
 	/**
 	 * @brief Set the name of the Player that earned the score.
 	 * @param sName the name of the Player. */
-	void SetName(const RString &sName);
+	void SetName(const std::string &sName);
 	void SetGrade(Grade g);
 	void SetScore(unsigned int iScore);
 	void SetPercentDP(float f);

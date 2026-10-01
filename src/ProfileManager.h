@@ -54,7 +54,7 @@ class ProfileManager {
 	std::string GetStatsPrefix() {
 		return m_stats_prefix;
 	}
-	void SetStatsPrefix(RString const &prefix);
+	void SetStatsPrefix(std::string const &prefix);
 
 	bool LoadFirstAvailableProfile(PlayerNumber pn, bool bLoadEdits = true); // memory card or local profile
 	bool LoadLocalProfileFromMachine(PlayerNumber pn);
@@ -64,8 +64,8 @@ class ProfileManager {
 	bool SaveLocalProfile(std::string sProfileID);
 	void UnloadProfile(PlayerNumber pn);
 
-	void MergeLocalProfiles(RString const &from_id, RString const &to_id);
-	void MergeLocalProfileIntoMachine(RString const &from_id, bool skip_totals);
+	void MergeLocalProfiles(std::string const &from_id, std::string const &to_id);
+	void MergeLocalProfileIntoMachine(std::string const &from_id, bool skip_totals);
 	void ChangeProfileType(int index, ProfileType new_type);
 	void MoveProfilePriority(int index, bool up);
 	void MoveProfileTopBottom(int index, bool top);

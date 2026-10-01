@@ -553,7 +553,7 @@ void SongManager::UnlistSong(Song *song) {
 	}
 }
 
-bool SongManager::IsGroupNeverCached(const RString &group) const {
+bool SongManager::IsGroupNeverCached(const std::string &group) const {
 	return m_GroupsToNeverCache.find(group) != m_GroupsToNeverCache.end();
 }
 
@@ -585,7 +585,7 @@ bool SongManager::DoesSongGroupExist(std::string sSongGroup) const {
 	return find(m_sSongGroupNames.begin(), m_sSongGroupNames.end(), sSongGroup) != m_sSongGroupNames.end();
 }
 
-RageColor SongManager::GetSongGroupColor(const RString &sSongGroup) const {
+RageColor SongManager::GetSongGroupColor(const std::string &sSongGroup) const {
 	for (unsigned i = 0; i < m_sSongGroupNames.size(); i++) {
 		if (m_sSongGroupNames[i] == sSongGroup) {
 			return SONG_GROUP_COLOR.GetValue(i % NUM_SONG_GROUP_COLORS);
@@ -668,7 +668,7 @@ RageColor SongManager::GetSongColor(const Song *pSong) const {
 	}
 }
 
-RString SongManager::GetCourseGroupBannerPath(const RString &sCourseGroup) const {
+RString SongManager::GetCourseGroupBannerPath(const std::string &sCourseGroup) const {
 	std::map<std::string, CourseGroupInfo>::const_iterator iter = m_mapCourseGroupToInfo.find(sCourseGroup);
 	if (iter == m_mapCourseGroupToInfo.end()) {
 		ASSERT_M(0, ssprintf("requested banner for course group '%s' that doesn't exist", sCourseGroup.c_str()));
@@ -684,11 +684,11 @@ void SongManager::GetCourseGroupNames(std::vector<std::string> &AddTo) const {
 		AddTo.push_back(iter.first);
 }
 
-bool SongManager::DoesCourseGroupExist(const RString &sCourseGroup) const {
+bool SongManager::DoesCourseGroupExist(const std::string &sCourseGroup) const {
 	return m_mapCourseGroupToInfo.find(sCourseGroup) != m_mapCourseGroupToInfo.end();
 }
 
-RageColor SongManager::GetCourseGroupColor(const RString &sCourseGroup) const {
+RageColor SongManager::GetCourseGroupColor(const std::string &sCourseGroup) const {
 	int iIndex = 0;
 	for (std::pair<std::string const, CourseGroupInfo> const &iter : m_mapCourseGroupToInfo) {
 		if (iter.first == sCourseGroup)
@@ -778,14 +778,14 @@ std::string SongManager::SongToPreferredSortSectionName(const Song *pSong) const
 	return RString();
 }
 
-void SongManager::GetPreferredSortSongsBySectionName(const RString &sSectionName, std::vector<Song *> &AddTo) const {
+void SongManager::GetPreferredSortSongsBySectionName(const std::string &sSectionName, std::vector<Song *> &AddTo) const {
 	// Use m_mapPreferredSectionToSongs
 	std::map<std::string, SongPointerVector>::const_iterator iter = m_mapPreferredSectionToSongs.find(sSectionName);
 	if (iter != m_mapPreferredSectionToSongs.end())
 		AddTo.insert(AddTo.end(), iter->second.begin(), iter->second.end());
 }
 
-std::vector<Song *> SongManager::GetPreferredSortSongsBySectionName(const RString &sSectionName) const {
+std::vector<Song *> SongManager::GetPreferredSortSongsBySectionName(const std::string &sSectionName) const {
 	std::vector<Song *> AddTo;
 	GetPreferredSortSongsBySectionName(sSectionName, AddTo);
 	return AddTo;
@@ -1202,7 +1202,7 @@ void SongManager::GetCourses(CourseType ct, std::vector<Course *> &AddTo, bool b
 }
 
 void SongManager::GetCoursesInGroup(
-   std::vector<Course *> &AddTo, const RString &sCourseGroup, bool bIncludeAutogen
+   std::vector<Course *> &AddTo, const std::string &sCourseGroup, bool bIncludeAutogen
 ) const {
 	for (unsigned i = 0; i < m_pCourses.size(); i++)
 		if (m_pCourses[i]->m_sGroupName == sCourseGroup)

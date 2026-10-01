@@ -128,7 +128,7 @@ class Profile {
 	// smart accessors
 	std::string GetDisplayNameOrHighScoreName() const;
 	Character *GetCharacter() const;
-	void SetCharacter(const RString sCharacterID);
+	void SetCharacter(const std::string sCharacterID);
 	std::string GetDisplayTotalCaloriesBurned() const;      // remove me and use Lua instead
 	std::string GetDisplayTotalCaloriesBurnedToday() const; // remove me and use Lua instead
 	int GetCalculatedWeightPounds() const;              // returns a default value if m_iWeightPounds isn't set
@@ -145,7 +145,7 @@ class Profile {
 	float GetCoursesPercentComplete(StepsType st, CourseDifficulty cd) const;
 	float GetSongsAndCoursesPercentCompleteAllDifficulties(StepsType st) const;
 	bool GetDefaultModifiers(const Game *pGameType, std::string &sModifiersOut) const;
-	void SetDefaultModifiers(const Game *pGameType, const RString &sModifiers);
+	void SetDefaultModifiers(const Game *pGameType, const std::string &sModifiers);
 	bool IsCodeUnlocked(RString sUnlockEntryID) const;
 	Song *GetMostPopularSong() const;
 	Course *GetMostPopularCourse() const;
@@ -300,7 +300,7 @@ class Profile {
 
 	void GetAllUsedHighScoreNames(std::set<std::string> &names);
 
-	void MergeScoresFromOtherProfile(Profile *other, bool skip_totals, RString const &from_dir, RString const &to_dir);
+	void MergeScoresFromOtherProfile(Profile *other, bool skip_totals, std::string const &from_dir, std::string const &to_dir);
 
 	// Category high scores
 	HighScoreList m_CategoryHighScores[NUM_StepsType][NUM_RankingCategory];
@@ -392,9 +392,9 @@ class Profile {
 	void HandleStatsPrefixChange(RString dir, bool require_signature);
 	ProfileLoadResult LoadAllFromDir(RString sDir, bool bRequireSignature);
 	ProfileLoadResult LoadStatsFromDir(RString dir, bool require_signature);
-	void LoadSongsFromDir(RString const &dir, ProfileSlot prof_slot);
-	void LoadTypeFromDir(RString dir);
-	void LoadCustomFunction(RString sDir, PlayerNumber pn);
+	void LoadSongsFromDir(std::string const &dir, ProfileSlot prof_slot);
+	void LoadTypeFromDir(std::string dir);
+	void LoadCustomFunction(std::string sDir, PlayerNumber pn);
 	bool SaveAllToDir(RString sDir, bool bSignData) const;
 
 	ProfileLoadResult LoadEditableDataFromDir(RString sDir);
@@ -406,8 +406,8 @@ class Profile {
 	void LoadScreenshotDataFromNode(const XNode *pNode);
 	void LoadCalorieDataFromNode(const XNode *pNode);
 
-	void SaveTypeToDir(RString dir) const;
-	void SaveEditableDataToDir(RString sDir) const;
+	void SaveTypeToDir(std::string dir) const;
+	void SaveEditableDataToDir(std::string sDir) const;
 	bool SaveStatsXmlToDir(RString sDir, bool bSignData) const;
 	XNode *SaveStatsXmlCreateNode() const;
 	XNode *SaveGeneralDataCreateNode() const;
@@ -419,12 +419,12 @@ class Profile {
 
 	XNode *SaveCoinDataCreateNode() const;
 
-	void SaveStatsWebPageToDir(RString sDir) const;
-	void SaveMachinePublicKeyToDir(RString sDir) const;
+	void SaveStatsWebPageToDir(std::string sDir) const;
+	void SaveMachinePublicKeyToDir(std::string sDir) const;
 
-	static void MoveBackupToDir(RString sFromDir, RString sToDir);
-	static std::string MakeUniqueFileNameNoExtension(RString sDir, RString sFileNameBeginning);
-	static std::string MakeFileNameNoExtension(RString sFileNameBeginning, int iIndex);
+	static void MoveBackupToDir(std::string sFromDir, std::string sToDir);
+	static std::string MakeUniqueFileNameNoExtension(std::string sDir, std::string sFileNameBeginning);
+	static std::string MakeFileNameNoExtension(std::string sFileNameBeginning, int iIndex);
 
 	// Lua
 	void PushSelf(lua_State *L);

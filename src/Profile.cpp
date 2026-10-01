@@ -221,7 +221,7 @@ Character *Profile::GetCharacter() const {
 	return CHARMAN->GetDefaultCharacter();
 }
 
-void Profile::SetCharacter(const RString sCharacterID) {
+void Profile::SetCharacter(const std::string sCharacterID) {
 	if (CHARMAN->GetCharacterFromID(sCharacterID))
 		m_sCharacterID = sCharacterID;
 }
@@ -502,7 +502,7 @@ bool Profile::GetDefaultModifiers(const Game *pGameType, std::string &sModifiers
 	return true;
 }
 
-void Profile::SetDefaultModifiers(const Game *pGameType, const RString &sModifiers) {
+void Profile::SetDefaultModifiers(const Game *pGameType, const std::string &sModifiers) {
 	if (sModifiers.empty())
 		m_sDefaultModifiers.erase(pGameType->m_szName);
 	else
@@ -735,7 +735,7 @@ void Profile::GetAllUsedHighScoreNames(std::set<std::string> &names) {
 //   skipped.  This is why the skip_totals arg exists.
 // -Kyz
 void Profile::MergeScoresFromOtherProfile(
-   Profile *other, bool skip_totals, RString const &from_dir, RString const &to_dir
+   Profile *other, bool skip_totals, std::string const &from_dir, std::string const &to_dir
 ) {
 	if (!skip_totals) {
 #define MERGE_FIELD(field_name) field_name += other->field_name;
@@ -973,7 +973,7 @@ void Profile::IncrementCategoryPlayCount(StepsType st, RankingCategory rc) {
 			Load##X##FromNode(X);                                                                                         \
 	}
 
-void Profile::LoadCustomFunction(RString sDir, PlayerNumber pn) {
+void Profile::LoadCustomFunction(std::string sDir, PlayerNumber pn) {
 	/* Get the theme's custom load function:
 	 *   [Profile]
 	 *   CustomLoadFunction=function(profile, profileDir) ... end
@@ -1086,7 +1086,7 @@ ProfileLoadResult Profile::LoadAllFromDir(RString sDir, bool bRequireSignature) 
 // entire song list to remove custom songs when unloading the profile is
 // wasteful. -Kyz
 
-void Profile::LoadSongsFromDir(RString const &dir, ProfileSlot prof_slot) {
+void Profile::LoadSongsFromDir(std::string const &dir, ProfileSlot prof_slot) {
 	if (!PREFSMAN->m_custom_songs_enable) {
 		return;
 	}
@@ -1207,7 +1207,7 @@ ProfileLoadResult Profile::LoadStatsFromDir(RString dir, bool require_signature)
 	return LoadStatsXmlFromNode(&xml);
 }
 
-void Profile::LoadTypeFromDir(RString dir) {
+void Profile::LoadTypeFromDir(std::string dir) {
 	m_Type = ProfileType_Normal;
 	m_ListPriority = 0;
 	RString fn = dir + TYPE_INI;
@@ -1385,7 +1385,7 @@ bool Profile::SaveStatsXmlToDir(RString sDir, bool bSignData) const {
 	return true;
 }
 
-void Profile::SaveTypeToDir(RString dir) const {
+void Profile::SaveTypeToDir(std::string dir) const {
 	IniFile ini;
 	ini.SetValue("ListPosition", "Type", ProfileTypeToString(m_Type));
 	ini.SetValue("ListPosition", "Priority", m_ListPriority);
@@ -1393,7 +1393,7 @@ void Profile::SaveTypeToDir(RString dir) const {
 	ini.WriteFile(dir + TYPE_INI);
 }
 
-void Profile::SaveEditableDataToDir(RString sDir) const {
+void Profile::SaveEditableDataToDir(std::string sDir) const {
 	IniFile ini;
 
 	ini.SetValue("Editable", "DisplayName", m_sDisplayName);
@@ -2096,11 +2096,11 @@ void Profile::LoadCategoryScoresFromNode(const XNode *pCategoryScores) {
 	}
 }
 
-void Profile::SaveStatsWebPageToDir(RString) const {
+void Profile::SaveStatsWebPageToDir(std::string) const {
 	ASSERT(PROFILEMAN != nullptr);
 }
 
-void Profile::SaveMachinePublicKeyToDir(RString sDir) const {
+void Profile::SaveMachinePublicKeyToDir(std::string sDir) const {
 	if (PREFSMAN->m_bSignProfileData && IsAFile(CRYPTMAN->GetPublicKeyFileName()))
 		FileCopy(CRYPTMAN->GetPublicKeyFileName(), sDir + PUBLIC_KEY_FILE);
 }
@@ -2318,7 +2318,7 @@ XNode *Profile::SaveCoinDataCreateNode() const {
 	return pNode;
 }
 
-void Profile::MoveBackupToDir(RString sFromDir, RString sToDir) {
+void Profile::MoveBackupToDir(std::string sFromDir, std::string sToDir) {
 	if (FILEMAN->IsAFile(sFromDir + STATS_XML) && FILEMAN->IsAFile(sFromDir + STATS_XML + SIGNATURE_APPEND)) {
 		FILEMAN->Move(sFromDir + STATS_XML, sToDir + STATS_XML);
 		FILEMAN->Move(sFromDir + STATS_XML + SIGNATURE_APPEND, sToDir + STATS_XML + SIGNATURE_APPEND);
@@ -2334,7 +2334,7 @@ void Profile::MoveBackupToDir(RString sFromDir, RString sToDir) {
 		FILEMAN->Move(sFromDir + DONT_SHARE_SIG, sToDir + DONT_SHARE_SIG);
 }
 
-std::string Profile::MakeUniqueFileNameNoExtension(RString sDir, RString sFileNameBeginning) {
+std::string Profile::MakeUniqueFileNameNoExtension(std::string sDir, std::string sFileNameBeginning) {
 	FILEMAN->FlushDirCache(sDir);
 	// Find a file name for the screenshot
 	std::vector<RString> files;
@@ -2357,7 +2357,7 @@ std::string Profile::MakeUniqueFileNameNoExtension(RString sDir, RString sFileNa
 	return MakeFileNameNoExtension(sFileNameBeginning, iIndex);
 }
 
-std::string Profile::MakeFileNameNoExtension(RString sFileNameBeginning, int iIndex) {
+std::string Profile::MakeFileNameNoExtension(std::string sFileNameBeginning, int iIndex) {
 	return sFileNameBeginning + ssprintf("%05d", iIndex);
 }
 

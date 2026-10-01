@@ -14,7 +14,7 @@ class GameStateAttractData {
 	int m_iNumTimesThroughAttract;
 
 	bool IsTimeToPlayAttractSounds() const;
-	void VisitAttractScreen(const RString sScreenName);
+	void VisitAttractScreen(const std::string sScreenName);
 };
 
 #endif

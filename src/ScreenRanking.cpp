@@ -246,7 +246,7 @@ float ScreenRanking::SetPage(const PageToShow &pts) {
 				   GAMESTATE->m_vpsNamesThatWereFilled.end();
 			}
 			else {
-				hs.SetName(NO_SCORE_NAME);
+				hs.SetName(NO_SCORE_NAME.GetValue());
 			}
 
 			m_textNames[l].SetText(hs.GetDisplayName());
@@ -282,7 +282,7 @@ float ScreenRanking::SetPage(const PageToShow &pts) {
 				   GAMESTATE->m_vpsNamesThatWereFilled.end();
 			}
 			else {
-				hs.SetName(NO_SCORE_NAME);
+				hs.SetName(NO_SCORE_NAME.GetValue());
 			}
 
 			m_textNames[l].SetText(hs.GetDisplayName());

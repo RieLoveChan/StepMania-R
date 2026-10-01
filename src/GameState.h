@@ -439,7 +439,7 @@ class GameState {
 	bool IsTimeToPlayAttractSounds() const {
 		return m_AttractData.IsTimeToPlayAttractSounds();
 	}
-	void VisitAttractScreen(const RString sScreenName) {
+	void VisitAttractScreen(const std::string sScreenName) {
 		m_AttractData.VisitAttractScreen(sScreenName);
 	}
 

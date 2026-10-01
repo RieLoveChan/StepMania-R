@@ -189,7 +189,7 @@ struct MenuRowDef {
 		choices[0] = "|" + sChoice;
 	}
 
-	bool SetDefaultChoiceIfPresent(RString sChoice) {
+	bool SetDefaultChoiceIfPresent(std::string sChoice) {
 		iDefaultChoice = 0;
 		for (unsigned i = 0; i < choices.size(); ++i) {
 			if (choices[i] == sChoice) {

@@ -150,7 +150,7 @@ class InputScheme {
 	GameButtonInfo m_GameButtonInfo[NUM_GameButton];
 	const AutoMappings *m_pAutoMappings;
 
-	GameButton ButtonNameToIndex(const RString &sButtonName) const;
+	GameButton ButtonNameToIndex(const std::string &sButtonName) const;
 	GameButton GameButtonToMenuButton(GameButton gb) const;
 	void MenuButtonToGameInputs(GameButton MenuI, PlayerNumber pn, std::vector<GameInput> &GameIout) const;
 	void MenuButtonToGameButtons(GameButton MenuI, std::vector<GameButton> &aGameButtons) const;

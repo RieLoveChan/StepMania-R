@@ -32,7 +32,7 @@
 
 SongCacheIndex *SONGINDEX; // global and accessible from anywhere in our program
 
-std::string SongCacheIndex::GetCacheFilePath(const RString &sGroup, const RString &sPath) {
+std::string SongCacheIndex::GetCacheFilePath(const std::string &sGroup, const std::string &sPath) {
 	/* Don't use GetHashForFile, since we don't want to spend time
 	 * checking the file size and date. */
 	RString s;
@@ -107,7 +107,7 @@ void SongCacheIndex::SaveCacheIndex() {
 	CacheIndex.WriteFile(CACHE_INDEX);
 }
 
-void SongCacheIndex::AddCacheIndex(const RString &path, unsigned hash) {
+void SongCacheIndex::AddCacheIndex(const std::string &path, unsigned hash) {
 	if (hash == 0)
 		++hash; /* no 0 hash values */
 	CacheIndex.SetValue("Cache", "CacheVersion", FILE_CACHE_VERSION);
@@ -117,7 +117,7 @@ void SongCacheIndex::AddCacheIndex(const RString &path, unsigned hash) {
 	}
 }
 
-unsigned SongCacheIndex::GetCacheHash(const RString &path) const {
+unsigned SongCacheIndex::GetCacheHash(const std::string &path) const {
 	unsigned iDirHash = 0;
 	if (!CacheIndex.GetValue("Cache", MangleName(path), iDirHash))
 		return 0;
@@ -126,7 +126,7 @@ unsigned SongCacheIndex::GetCacheHash(const RString &path) const {
 	return iDirHash;
 }
 
-std::string SongCacheIndex::MangleName(const RString &Name) {
+std::string SongCacheIndex::MangleName(const std::string &Name) {
 	/* We store paths in an INI.  We can't store '='. */
 	RString ret = Name;
 	ret.Replace("=", "");

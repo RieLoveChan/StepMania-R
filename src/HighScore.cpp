@@ -245,7 +245,7 @@ bool HighScore::GetDisqualified() const {
 	return m_Impl->bDisqualified;
 }
 
-void HighScore::SetName(const RString &sName) {
+void HighScore::SetName(const std::string &sName) {
 	m_Impl->sName = sName;
 }
 void HighScore::SetGrade(Grade g) {

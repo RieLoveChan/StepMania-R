@@ -199,7 +199,7 @@ void MusicWheel::BeginScreen() {
 			ASSERT(!vTemp.empty());
 			GAMESTATE->m_pCurSong.Set(vTemp[0]);
 		};
-		SetOpenSection(GAMESTATE->m_sPreferredSongGroup);
+		SetOpenSection(GAMESTATE->m_sPreferredSongGroup.Get());
 		SelectSongOrCourse();
 	}
 	else if (!SelectSongOrCourse()) {
@@ -1385,7 +1385,7 @@ void MusicWheel::StartRandom() {
 	RebuildWheelItems();
 }
 
-void MusicWheel::SetOpenSection(RString group) {
+void MusicWheel::SetOpenSection(std::string group) {
 	// LOG->Trace( "SetOpenSection %s", group.c_str() );
 	m_sExpandedSectionName = group;
 	GAMESTATE->sExpandedSectionName = group;

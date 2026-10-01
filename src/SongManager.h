@@ -90,20 +90,20 @@ class SongManager {
 	void LoadAdditions(LoadingWindow *ld = nullptr);
 	void PreloadSongImages();
 
-	bool IsGroupNeverCached(const RString &group) const;
+	bool IsGroupNeverCached(const std::string &group) const;
 
 	RString GetSongGroupBannerPath(std::string sSongGroup) const;
 	// RString GetSongGroupBackgroundPath( RString sSongGroup ) const;
 	void GetSongGroupNames(std::vector<std::string> &AddTo) const;
 	bool DoesSongGroupExist(std::string sSongGroup) const;
-	RageColor GetSongGroupColor(const RString &sSongGroupName) const;
+	RageColor GetSongGroupColor(const std::string &sSongGroupName) const;
 	RageColor GetSongColor(const Song *pSong) const;
 
-	RString GetCourseGroupBannerPath(const RString &sCourseGroup) const;
+	RString GetCourseGroupBannerPath(const std::string &sCourseGroup) const;
 	// RString GetCourseGroupBackgroundPath( const RString &sCourseGroup ) const;
 	void GetCourseGroupNames(std::vector<std::string> &AddTo) const;
-	bool DoesCourseGroupExist(const RString &sCourseGroup) const;
-	RageColor GetCourseGroupColor(const RString &sCourseGroupName) const;
+	bool DoesCourseGroupExist(const std::string &sCourseGroup) const;
+	RageColor GetCourseGroupColor(const std::string &sCourseGroupName) const;
 	RageColor GetCourseColor(const Course *pCourse) const;
 
 	void ResetGroupColors();
@@ -153,8 +153,8 @@ class SongManager {
 	};
 	std::string SongToPreferredSortSectionName(const Song *pSong) const;
 	std::vector<std::string> GetPreferredSortSectionNames() const;
-	std::vector<Song *> GetPreferredSortSongsBySectionName(const RString &sSectionName) const;
-	void GetPreferredSortSongsBySectionName(const RString &sSectionName, std::vector<Song *> &AddTo) const;
+	std::vector<Song *> GetPreferredSortSongsBySectionName(const std::string &sSectionName) const;
+	void GetPreferredSortSongsBySectionName(const std::string &sSectionName, std::vector<Song *> &AddTo) const;
 	std::vector<Song *> GetSongsByMeter(int iMeter) const;
 	const std::vector<Course *> &GetPopularCourses(CourseType ct) const {
 		return m_pPopularCourses[ct];
@@ -189,7 +189,7 @@ class SongManager {
 
 	void GetAllCourses(std::vector<Course *> &AddTo, bool bIncludeAutogen) const;
 	void GetCourses(CourseType ct, std::vector<Course *> &AddTo, bool bIncludeAutogen) const;
-	void GetCoursesInGroup(std::vector<Course *> &AddTo, const RString &sCourseGroup, bool bIncludeAutogen) const;
+	void GetCoursesInGroup(std::vector<Course *> &AddTo, const std::string &sCourseGroup, bool bIncludeAutogen) const;
 	void GetPreferredSortCourses(CourseType ct, std::vector<Course *> &AddTo, bool bIncludeAutogen) const;
 
 	void GetExtraStageInfo(bool bExtra2, const Style *s, Song *&pSongOut, Steps *&pStepsOut);

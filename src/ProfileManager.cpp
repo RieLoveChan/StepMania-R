@@ -821,7 +821,7 @@ const Profile *ProfileManager::GetProfile(ProfileSlot slot) const {
 	}
 }
 
-void ProfileManager::MergeLocalProfiles(RString const &from_id, RString const &to_id) {
+void ProfileManager::MergeLocalProfiles(std::string const &from_id, std::string const &to_id) {
 	Profile *from = GetLocalProfile(from_id);
 	Profile *to = GetLocalProfile(to_id);
 	if (from == nullptr || to == nullptr) {
@@ -830,7 +830,7 @@ void ProfileManager::MergeLocalProfiles(RString const &from_id, RString const &t
 	to->MergeScoresFromOtherProfile(from, false, LocalProfileIDToDir(from_id), LocalProfileIDToDir(to_id));
 }
 
-void ProfileManager::MergeLocalProfileIntoMachine(RString const &from_id, bool skip_totals) {
+void ProfileManager::MergeLocalProfileIntoMachine(std::string const &from_id, bool skip_totals) {
 	Profile *from = GetLocalProfile(from_id);
 	if (from == nullptr) {
 		return;
@@ -1174,7 +1174,7 @@ int ProfileManager::GetNumLocalProfiles() const {
 	return static_cast<int>(g_vLocalProfile.size());
 }
 
-void ProfileManager::SetStatsPrefix(RString const &prefix) {
+void ProfileManager::SetStatsPrefix(std::string const &prefix) {
 	m_stats_prefix = prefix;
 	for (std::size_t i = 0; i < g_vLocalProfile.size(); ++i) {
 		g_vLocalProfile[i].profile.HandleStatsPrefixChange(g_vLocalProfile[i].sDir, PREFSMAN->m_bSignProfileData);
