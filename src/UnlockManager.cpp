@@ -641,7 +641,7 @@ void UnlockManager::LockEntryIndex(int entryIndex) {
 	LockEntryID(entryID);
 }
 
-void UnlockManager::PreferUnlockEntryID(RString sUnlockEntryID) {
+void UnlockManager::PreferUnlockEntryID(std::string sUnlockEntryID) {
 	for (unsigned i = 0; i < m_UnlockEntries.size(); ++i) {
 		UnlockEntry &pEntry = m_UnlockEntries[i];
 		if (pEntry.m_sEntryID != sUnlockEntryID)
@@ -684,7 +684,7 @@ void UnlockManager::GetUnlocksByType(UnlockRewardType t, std::vector<UnlockEntry
 			apEntries.push_back(&entry);
 }
 
-void UnlockManager::GetSongsUnlockedByEntryID(std::vector<Song *> &apSongsOut, RString sUnlockEntryID) {
+void UnlockManager::GetSongsUnlockedByEntryID(std::vector<Song *> &apSongsOut, std::string sUnlockEntryID) {
 	std::vector<UnlockEntry *> apEntries;
 	GetUnlocksByType(UnlockRewardType_Song, apEntries);
 
@@ -694,7 +694,7 @@ void UnlockManager::GetSongsUnlockedByEntryID(std::vector<Song *> &apSongsOut, R
 }
 
 void UnlockManager::GetStepsUnlockedByEntryID(
-   std::vector<Song *> &apSongsOut, std::vector<Difficulty> &apDifficultyOut, RString sUnlockEntryID
+   std::vector<Song *> &apSongsOut, std::vector<Difficulty> &apDifficultyOut, std::string sUnlockEntryID
 ) {
 	std::vector<UnlockEntry *> apEntries;
 	GetUnlocksByType(UnlockRewardType_Steps, apEntries);

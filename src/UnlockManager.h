@@ -148,7 +148,7 @@ class UnlockManager {
 	 * If a code is associated with at least one song or course, set the preferred song
 	 * and/or course in GAMESTATE to them.
 	 */
-	void PreferUnlockEntryID(RString sEntryID);
+	void PreferUnlockEntryID(std::string sEntryID);
 
 	// Unlocks a song.
 	void UnlockSong(const Song *pSong);
@@ -160,9 +160,9 @@ class UnlockManager {
 	std::vector<UnlockEntry> m_UnlockEntries;
 
 	void GetUnlocksByType(UnlockRewardType t, std::vector<UnlockEntry *> &apEntries);
-	void GetSongsUnlockedByEntryID(std::vector<Song *> &apSongsOut, RString sEntryID);
+	void GetSongsUnlockedByEntryID(std::vector<Song *> &apSongsOut, std::string sEntryID);
 	void
-	GetStepsUnlockedByEntryID(std::vector<Song *> &apSongsOut, std::vector<Difficulty> &apStepsOut, RString sEntryID);
+	GetStepsUnlockedByEntryID(std::vector<Song *> &apSongsOut, std::vector<Difficulty> &apStepsOut, std::string sEntryID);
 
 	const UnlockEntry *FindSong(const Song *pSong) const;
 	const UnlockEntry *FindSteps(const Song *pSong, const Steps *pSteps) const;

@@ -8,8 +8,8 @@ class RageFileBasic;
 #include <vector>
 
 namespace JsonUtil {
-bool LoadFromString(Json::Value &root, RString sData, std::string &sErrorOut);
-bool LoadFromStringShowErrors(Json::Value &root, const RString sData);
+bool LoadFromString(Json::Value &root, std::string sData, std::string &sErrorOut);
+bool LoadFromStringShowErrors(Json::Value &root, const std::string sData);
 bool LoadFromFileShowErrors(Json::Value &root, const RString &sFile);
 bool LoadFromFileShowErrors(Json::Value &root, RageFileBasic &f);
 

@@ -57,9 +57,9 @@ class GameSoundManager {
 	std::string GetMusicPath() const;
 	void Flush();
 
-	void PlayOnce(RString sPath);
-	void PlayOnceFromDir(RString sDir);
-	void PlayOnceFromAnnouncer(RString sFolderName);
+	void PlayOnce(std::string sPath);
+	void PlayOnceFromDir(std::string sDir);
+	void PlayOnceFromAnnouncer(std::string sFolderName);
 
 	void HandleSongTimer(bool on = true);
 	float GetFrameTimingAdjustment(float fDeltaTime);

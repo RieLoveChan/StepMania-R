@@ -269,16 +269,16 @@ void HighScore::SetPercentDP(float f) {
 void HighScore::SetAliveSeconds(float f) {
 	m_Impl->fSurviveSeconds = f;
 }
-void HighScore::SetModifiers(RString s) {
+void HighScore::SetModifiers(std::string s) {
 	m_Impl->sModifiers = s;
 }
 void HighScore::SetDateTime(DateTime d) {
 	m_Impl->dateTime = d;
 }
-void HighScore::SetPlayerGuid(RString s) {
+void HighScore::SetPlayerGuid(std::string s) {
 	m_Impl->sPlayerGuid = s;
 }
-void HighScore::SetMachineGuid(RString s) {
+void HighScore::SetMachineGuid(std::string s) {
 	m_Impl->sMachineGuid = s;
 }
 void HighScore::SetProductID(int i) {

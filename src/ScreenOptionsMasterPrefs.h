@@ -23,7 +23,7 @@ OptEffect StringToOptEffect(const std::string &e);
 LuaDeclareType(OptEffect);
 
 struct ConfOption {
-	static ConfOption *Find(RString name);
+	static ConfOption *Find(std::string name);
 
 	// Name of this option.
 	std::string name;

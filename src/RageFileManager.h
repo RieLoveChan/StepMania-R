@@ -64,8 +64,8 @@ class RageFileManager {
 	/* Change the root of a filesystem.  Only a couple drivers support this; it's
 	 * used to change memory card mountpoints without having to actually unmount
 	 * the driver. */
-	void Remount(RString sMountpoint, RString sPath);
-	bool IsMounted(RString MountPoint);
+	void Remount(std::string sMountpoint, std::string sPath);
+	bool IsMounted(std::string MountPoint);
 	struct DriverLocation {
 		std::string Type, Root, MountPoint;
 	};

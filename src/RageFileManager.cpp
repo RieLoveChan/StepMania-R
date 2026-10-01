@@ -732,7 +732,7 @@ void RageFileManager::Unmount(const RString &sType, const RString &sRoot_, const
 	}
 }
 
-void RageFileManager::Remount(RString sMountpoint, RString sPath) {
+void RageFileManager::Remount(std::string sMountpoint, std::string sPath) {
 	RageFileDriver *pDriver = GetFileDriver(sMountpoint);
 	if (pDriver == nullptr) {
 		if (LOG)
@@ -753,7 +753,7 @@ void RageFileManager::Remount(RString sMountpoint, RString sPath) {
 	ReleaseFileDriver(pDriver);
 }
 
-bool RageFileManager::IsMounted(RString MountPoint) {
+bool RageFileManager::IsMounted(std::string MountPoint) {
 	LockMut(*g_Mutex);
 
 	for (unsigned i = 0; i < g_pDrivers.size(); ++i)

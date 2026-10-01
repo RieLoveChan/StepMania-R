@@ -267,7 +267,7 @@ static void StartMusic(MusicToPlay &ToPlay) {
 	g_Playing = NewMusic;
 }
 
-static void DoPlayOnce(RString sPath) {
+static void DoPlayOnce(std::string sPath) {
 	/* We want this to start quickly, so don't try to prebuffer it. */
 	RageSound *pSound = new RageSound;
 	pSound->Load(sPath, false);
@@ -742,7 +742,7 @@ void GameSoundManager::HandleSongTimer(bool on) {
 	g_UpdatingTimer = on;
 }
 
-void GameSoundManager::PlayOnce(RString sPath) {
+void GameSoundManager::PlayOnce(std::string sPath) {
 	/* Add the sound to the g_SoundsToPlayOnce queue. */
 	g_Mutex->Lock();
 	g_SoundsToPlayOnce.push_back(sPath);
@@ -750,7 +750,7 @@ void GameSoundManager::PlayOnce(RString sPath) {
 	g_Mutex->Unlock();
 }
 
-void GameSoundManager::PlayOnceFromDir(RString sPath) {
+void GameSoundManager::PlayOnceFromDir(std::string sPath) {
 	/* Add the path to the g_SoundsToPlayOnceFromDir queue. */
 	g_Mutex->Lock();
 	g_SoundsToPlayOnceFromDir.push_back(sPath);
@@ -758,7 +758,7 @@ void GameSoundManager::PlayOnceFromDir(RString sPath) {
 	g_Mutex->Unlock();
 }
 
-void GameSoundManager::PlayOnceFromAnnouncer(RString sPath) {
+void GameSoundManager::PlayOnceFromAnnouncer(std::string sPath) {
 	/* Add the path to the g_SoundsToPlayOnceFromAnnouncer queue. */
 	g_Mutex->Lock();
 	g_SoundsToPlayOnceFromAnnouncer.push_back(sPath);

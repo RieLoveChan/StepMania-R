@@ -118,9 +118,9 @@ RString DayInYearToString(int iDayInYear) {
 	return ssprintf("DayInYear%03d", iDayInYear);
 }
 
-int StringToDayInYear(RString sDayInYear) {
+int StringToDayInYear(std::string sDayInYear) {
 	int iDayInYear;
-	if (sscanf(sDayInYear, "DayInYear%d", &iDayInYear) != 1)
+	if (sscanf(sDayInYear.c_str(), "DayInYear%d", &iDayInYear) != 1)
 		return -1;
 	return iDayInYear;
 }

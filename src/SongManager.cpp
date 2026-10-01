@@ -557,7 +557,7 @@ bool SongManager::IsGroupNeverCached(const RString &group) const {
 	return m_GroupsToNeverCache.find(group) != m_GroupsToNeverCache.end();
 }
 
-RString SongManager::GetSongGroupBannerPath(RString sSongGroup) const {
+RString SongManager::GetSongGroupBannerPath(std::string sSongGroup) const {
 	for (unsigned i = 0; i < m_sSongGroupNames.size(); ++i) {
 		if (sSongGroup == m_sSongGroupNames[i])
 			return m_sSongGroupBannerPaths[i];
@@ -581,7 +581,7 @@ void SongManager::GetSongGroupNames(std::vector<std::string> &AddTo) const {
 	AddTo.insert(AddTo.end(), m_sSongGroupNames.begin(), m_sSongGroupNames.end());
 }
 
-bool SongManager::DoesSongGroupExist(RString sSongGroup) const {
+bool SongManager::DoesSongGroupExist(std::string sSongGroup) const {
 	return find(m_sSongGroupNames.begin(), m_sSongGroupNames.end(), sSongGroup) != m_sSongGroupNames.end();
 }
 
@@ -857,7 +857,7 @@ int SongManager::GetNumCourseGroups() const {
 	return static_cast<int>(m_mapCourseGroupToInfo.size());
 }
 
-std::string SongManager::ShortenGroupName(RString sLongGroupName) {
+std::string SongManager::ShortenGroupName(std::string sLongGroupName) {
 	static TitleSubst tsub("Groups");
 
 	TitleFields title;

@@ -40,23 +40,23 @@ void AnnouncerManager::GetAnnouncerNames(std::vector<RString> &AddTo) {
 			AddTo.erase(AddTo.begin() + i, AddTo.begin() + i + 1);
 }
 
-bool AnnouncerManager::DoesAnnouncerExist(RString sAnnouncerName) {
+bool AnnouncerManager::DoesAnnouncerExist(std::string sAnnouncerName) {
 	if (sAnnouncerName.empty())
 		return true;
 
 	std::vector<RString> asAnnouncerNames;
 	GetAnnouncerNames(asAnnouncerNames);
 	for (unsigned i = 0; i < asAnnouncerNames.size(); i++)
-		if (0 == strcasecmp(sAnnouncerName, asAnnouncerNames[i]))
+		if (0 == strcasecmp(sAnnouncerName.c_str(), asAnnouncerNames[i]))
 			return true;
 	return false;
 }
 
-std::string AnnouncerManager::GetAnnouncerDirFromName(RString sAnnouncerName) {
+std::string AnnouncerManager::GetAnnouncerDirFromName(std::string sAnnouncerName) {
 	return ANNOUNCERS_DIR + sAnnouncerName + "/";
 }
 
-void AnnouncerManager::SwitchAnnouncer(RString sNewAnnouncerName) {
+void AnnouncerManager::SwitchAnnouncer(std::string sNewAnnouncerName) {
 	if (!DoesAnnouncerExist(sNewAnnouncerName))
 		m_sCurAnnouncerName = "";
 	else
@@ -103,7 +103,7 @@ static const char *aliases[][2] = {
  * then all aliases above.  Ignore directories that are empty, since we might
  * have "select difficulty intro" with sounds and an empty "ScreenSelectDifficulty
  * intro". */
-std::string AnnouncerManager::GetPathTo(RString sAnnouncerName, RString sFolderName) {
+std::string AnnouncerManager::GetPathTo(std::string sAnnouncerName, RString sFolderName) {
 	if (sAnnouncerName.empty())
 		return RString(); /* announcer disabled */
 

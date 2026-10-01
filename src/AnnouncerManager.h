@@ -19,11 +19,11 @@ class AnnouncerManager {
 	 * @brief Determine if the specified announcer exists.
 	 * @param sAnnouncerName the announcer we're checking for.
 	 * @return true if it exists, false otherwise. */
-	bool DoesAnnouncerExist(RString sAnnouncerName);
+	bool DoesAnnouncerExist(std::string sAnnouncerName);
 	/**
 	 * @brief Switch to a new specified announcer.
 	 * @param sNewAnnouncerName the new announcer the Player will be listening to. */
-	void SwitchAnnouncer(RString sNewAnnouncerName);
+	void SwitchAnnouncer(std::string sNewAnnouncerName);
 	/**
 	 * @brief Retrieve the current announcer's name.
 	 * @return the current announcer's name. */
@@ -39,8 +39,8 @@ class AnnouncerManager {
 	void PushSelf(lua_State *L);
 
  protected:
-	static std::string GetAnnouncerDirFromName(RString sAnnouncerName);
-	std::string GetPathTo(RString AnnouncerPath, RString sFolderName);
+	static std::string GetAnnouncerDirFromName(std::string sAnnouncerName);
+	std::string GetPathTo(std::string AnnouncerPath, RString sFolderName);
 	/** @brief the current announcer's name. */
 	std::string m_sCurAnnouncerName;
 };

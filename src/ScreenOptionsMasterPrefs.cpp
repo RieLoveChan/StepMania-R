@@ -1108,12 +1108,12 @@ int ConfOption::GetEffects() const {
 	return m_iEffects | OPT_SAVE_PREFERENCES;
 }
 
-ConfOption *ConfOption::Find(RString name) {
+ConfOption *ConfOption::Find(std::string name) {
 	InitializeConfOptions();
 	for (unsigned i = 0; i < g_ConfOptions.size(); ++i) {
 		ConfOption *opt = &g_ConfOptions[i];
 		RString match(opt->name);
-		if (match.CompareNoCase(name))
+		if (match.CompareNoCase(name.c_str()))
 			continue;
 		return opt;
 	}

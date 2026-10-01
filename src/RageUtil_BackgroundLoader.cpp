@@ -75,7 +75,7 @@ std::string BackgroundLoader::GetRequest() {
 	return ret;
 }
 
-RString BackgroundLoader::GetCachePath(RString sPath) const {
+RString BackgroundLoader::GetCachePath(std::string sPath) const {
 	return m_sCachePathPrefix + sPath;
 }
 
