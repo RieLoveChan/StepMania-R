@@ -54,14 +54,14 @@ ImageCache *IMAGECACHE; // global and accessible from anywhere in our program
 static std::map<std::string, RageSurface *> g_ImagePathToImage;
 static int g_iDemandRefcount = 0;
 
-std::string ImageCache::GetImageCachePath(RString sImageDir, RString sImagePath) {
+std::string ImageCache::GetImageCachePath(std::string sImageDir, std::string sImagePath) {
 	return SongCacheIndex::GetCacheFilePath(sImageDir, sImagePath);
 }
 
 /* If in on-demand mode, load all cached images.  This must be fast, so
  * cache files will not be created if they don't exist; that should be done
  * by CacheImage or LoadImage on startup. */
-void ImageCache::Demand(RString sImageDir) {
+void ImageCache::Demand(std::string sImageDir) {
 	++g_iDemandRefcount;
 	if (g_iDemandRefcount > 1)
 		return;
@@ -86,7 +86,7 @@ void ImageCache::Demand(RString sImageDir) {
 }
 
 /* Release images loaded on demand. */
-void ImageCache::Undemand(RString /* sImageDir */) {
+void ImageCache::Undemand(std::string /* sImageDir */) {
 	--g_iDemandRefcount;
 	if (g_iDemandRefcount != 0)
 		return;
@@ -101,7 +101,7 @@ void ImageCache::Undemand(RString /* sImageDir */) {
  * the cache file if necessary.  Unlike CacheImage(), the original file will
  * not be examined unless the cached image doesn't exist, so the image will
  * not be updated if the original file changes, for efficiency. */
-void ImageCache::LoadImage(RString sImageDir, RString sImagePath) {
+void ImageCache::LoadImage(std::string sImageDir, std::string sImagePath) {
 	if (sImagePath.empty())
 		return; // nothing to do
 	if (PREFSMAN->m_ImageCache != IMGCACHE_LOW_RES_PRELOAD && PREFSMAN->m_ImageCache != IMGCACHE_LOW_RES_LOAD_ON_DEMAND)
@@ -244,7 +244,7 @@ struct ImageTexture : public RageTexture {
 };
 
 /* If a image is cached, get its ID for use. */
-RageTextureID ImageCache::LoadCachedImage(RString sImageDir, RString sImagePath) {
+RageTextureID ImageCache::LoadCachedImage(std::string sImageDir, std::string sImagePath) {
 	RageTextureID ID(GetImageCachePath(sImageDir, sImagePath));
 
 	std::size_t Found = sImagePath.find("_blank");
@@ -304,11 +304,11 @@ static inline int closest(int num, int n1, int n2) {
 
 /* Create or update the image cache file as necessary.  If in preload mode,
  * load the cache file, too.  (This is done at startup.) */
-void ImageCache::CacheImage(RString sImageDir, RString sImagePath) {
+void ImageCache::CacheImage(std::string sImageDir, std::string sImagePath) {
 	if (PREFSMAN->m_ImageCache != IMGCACHE_LOW_RES_PRELOAD && PREFSMAN->m_ImageCache != IMGCACHE_LOW_RES_LOAD_ON_DEMAND)
 		return;
 
-	CHECKPOINT_M(sImagePath);
+	CHECKPOINT_M(sImagePath.c_str());
 	if (!DoesFileExist(sImagePath))
 		return;
 
@@ -338,7 +338,7 @@ void ImageCache::CacheImage(RString sImageDir, RString sImagePath) {
 	CacheImageInternal(sImageDir, sImagePath);
 }
 
-void ImageCache::CacheImageInternal(RString sImageDir, RString sImagePath) {
+void ImageCache::CacheImageInternal(std::string sImageDir, std::string sImagePath) {
 	RString sError;
 	RageSurface *pImage = RageSurfaceUtils::LoadFile(sImagePath, sError);
 	if (pImage == nullptr) {

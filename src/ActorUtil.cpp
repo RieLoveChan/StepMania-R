@@ -21,11 +21,11 @@
 // Actor registration
 static std::map<std::string, CreateActorFn> *g_pmapRegistrees = nullptr;
 
-static bool IsRegistered(const RString &sClassName) {
+static bool IsRegistered(const std::string &sClassName) {
 	return g_pmapRegistrees->find(sClassName) != g_pmapRegistrees->end();
 }
 
-void ActorUtil::Register(const RString &sClassName, CreateActorFn pfn) {
+void ActorUtil::Register(const std::string &sClassName, CreateActorFn pfn) {
 	if (g_pmapRegistrees == nullptr)
 		g_pmapRegistrees = new std::map<std::string, CreateActorFn>;
 
@@ -531,7 +531,7 @@ void ActorUtil::AddTypeExtensionsToList(FileType ft, std::vector<std::string> &a
 	}
 }
 
-FileType ActorUtil::GetFileType(const RString &sPath) {
+FileType ActorUtil::GetFileType(const std::string &sPath) {
 	RString sExt = GetExtension(sPath);
 	sExt.MakeLower();
 

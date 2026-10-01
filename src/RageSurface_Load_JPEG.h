@@ -5,7 +5,7 @@
 
 #include "RageSurface_Load.h"
 RageSurfaceUtils::OpenResult
-RageSurface_Load_JPEG(const RString &sPath, RageSurface *&ret, bool bHeaderOnly, std::string &error);
+RageSurface_Load_JPEG(const std::string &sPath, RageSurface *&ret, bool bHeaderOnly, std::string &error);
 
 #endif
 

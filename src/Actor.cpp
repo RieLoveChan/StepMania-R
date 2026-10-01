@@ -320,13 +320,13 @@ void Actor::LoadFromNode(const XNode *pNode) {
 	Lua *L = LUA->Get();
 	FOREACH_CONST_Attr(pNode, pAttr) {
 		// Load Name, if any.
-		const RString &sKeyName = pAttr->first;
+		const std::string &sKeyName = pAttr->first;
 		const XNodeValue *pValue = pAttr->second;
 		if (EndsWith(sKeyName, "Command")) {
 			LuaReference *pRef = new LuaReference;
 			pValue->PushValue(L);
 			pRef->SetFromStack(L);
-			RString sCmdName = sKeyName.Left(static_cast<int>(sKeyName.size()) - 7);
+			RString sCmdName = sKeyName.substr(0, sKeyName.size() - 7);
 			AddCommand(sCmdName, apActorCommands(pRef));
 		}
 		else if (sKeyName == "Name")

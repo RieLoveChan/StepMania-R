@@ -30,24 +30,24 @@ class IniFile : public XNode {
 	bool WriteFile(const std::string &sPath) const;
 	bool WriteFile(RageFileBasic &sFile) const;
 
-	template <typename T> bool GetValue(const RString &sKey, const RString &sValueName, T &value) const {
+	template <typename T> bool GetValue(const std::string &sKey, const std::string &sValueName, T &value) const {
 		const XNode *pNode = GetChild(sKey);
 		if (pNode == nullptr)
 			return false;
 		return pNode->GetAttrValue<T>(sValueName, value);
 	}
-	template <typename T> void SetValue(const RString &sKey, const RString &sValueName, const T &value) {
+	template <typename T> void SetValue(const std::string &sKey, const std::string &sValueName, const T &value) {
 		XNode *pNode = GetChild(sKey);
 		if (pNode == nullptr)
 			pNode = AppendChild(sKey);
 		pNode->AppendAttr<T>(sValueName, value);
 	}
-	template <typename T> void SetKeyValue(XNode *keynode, const RString &sValueName, const T &value) {
+	template <typename T> void SetKeyValue(XNode *keynode, const std::string &sValueName, const T &value) {
 		keynode->AppendAttr<T>(sValueName, value);
 	}
 
-	bool DeleteKey(const RString &keyname);
-	bool DeleteValue(const RString &keyname, const RString &valuename);
+	bool DeleteKey(const std::string &keyname);
+	bool DeleteValue(const std::string &keyname, const std::string &valuename);
 
 	/**
 	 * @brief Rename a key.
@@ -58,7 +58,7 @@ class IniFile : public XNode {
 	 * @param from the key to rename.
 	 * @param to the new key name.
 	 * @return its success or failure. */
-	bool RenameKey(const RString &from, const RString &to);
+	bool RenameKey(const std::string &from, const std::string &to);
 
  private:
 	std::string m_sPath;

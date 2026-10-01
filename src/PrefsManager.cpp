@@ -360,7 +360,7 @@ void PrefsManager::ResetToFactoryDefaults() {
 	SavePrefsToDisk();
 }
 
-void PrefsManager::ReadPrefsFromFile(const RString &sIni, const RString &sSection, bool bIsStatic) {
+void PrefsManager::ReadPrefsFromFile(const std::string &sIni, const std::string &sSection, bool bIsStatic) {
 	IniFile ini;
 	if (!ini.ReadFile(sIni))
 		return;
@@ -370,7 +370,7 @@ void PrefsManager::ReadPrefsFromFile(const RString &sIni, const RString &sSectio
 
 static const std::string GAME_SECTION_PREFIX = "Game-";
 
-void PrefsManager::ReadPrefsFromIni(const IniFile &ini, const RString &sSection, bool bIsStatic) {
+void PrefsManager::ReadPrefsFromIni(const IniFile &ini, const std::string &sSection, bool bIsStatic) {
 	// Apply our fallback recursively (if any) before applying ourself.
 	static int s_iDepth = 0;
 	s_iDepth++;
@@ -396,7 +396,7 @@ void PrefsManager::ReadPrefsFromIni(const IniFile &ini, const RString &sSection,
 		IPreference::ReadAllPrefsFromNode(pChild, bIsStatic);
 }
 
-void PrefsManager::ReadGamePrefsFromIni(const RString &sIni) {
+void PrefsManager::ReadGamePrefsFromIni(const std::string &sIni) {
 	IniFile ini;
 	if (!ini.ReadFile(sIni))
 		return;
@@ -416,7 +416,7 @@ void PrefsManager::ReadGamePrefsFromIni(const RString &sIni) {
 	}
 }
 
-void PrefsManager::ReadDefaultsFromFile(const RString &sIni, const RString &sSection) {
+void PrefsManager::ReadDefaultsFromFile(const std::string &sIni, const std::string &sSection) {
 	IniFile ini;
 	if (!ini.ReadFile(sIni))
 		return;
@@ -424,7 +424,7 @@ void PrefsManager::ReadDefaultsFromFile(const RString &sIni, const RString &sSec
 	ReadDefaultsFromIni(ini, sSection);
 }
 
-void PrefsManager::ReadDefaultsFromIni(const IniFile &ini, const RString &sSection) {
+void PrefsManager::ReadDefaultsFromIni(const IniFile &ini, const std::string &sSection) {
 	// Apply our fallback recursively (if any) before applying ourself.
 	// TODO: detect circular?
 	RString sFallback;

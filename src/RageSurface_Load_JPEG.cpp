@@ -185,7 +185,7 @@ static RageSurface *RageSurface_Load_JPEG(RageFile *f, const char * /* fn */, ch
 }
 
 RageSurfaceUtils::OpenResult
-RageSurface_Load_JPEG(const RString &sPath, RageSurface *&ret, bool /* bHeaderOnly */, std::string &error) {
+RageSurface_Load_JPEG(const std::string &sPath, RageSurface *&ret, bool /* bHeaderOnly */, std::string &error) {
 	RageFile f;
 	if (!f.Open(sPath)) {
 		error = f.GetError();
@@ -193,7 +193,7 @@ RageSurface_Load_JPEG(const RString &sPath, RageSurface *&ret, bool /* bHeaderOn
 	}
 
 	char errorbuf[1024];
-	ret = RageSurface_Load_JPEG(&f, sPath, errorbuf);
+	ret = RageSurface_Load_JPEG(&f, sPath.c_str(), errorbuf);
 	if (ret == nullptr) {
 		error = errorbuf;
 		return RageSurfaceUtils::OPEN_UNKNOWN_FILE_FORMAT; // XXX

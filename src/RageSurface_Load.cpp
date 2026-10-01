@@ -12,7 +12,7 @@
 #include <set>
 #include <vector>
 
-static RageSurface *TryOpenFile(RString sPath, bool bHeaderOnly, RString &error, RString format, bool &bKeepTrying) {
+static RageSurface *TryOpenFile(std::string sPath, bool bHeaderOnly, RString &error, RString format, bool &bKeepTrying) {
 	RageSurface *ret = nullptr;
 	RageSurfaceUtils::OpenResult result;
 	if (!format.CompareNoCase("png"))
@@ -72,7 +72,7 @@ static RageSurface *TryOpenFile(RString sPath, bool bHeaderOnly, RString &error,
 	return nullptr;
 }
 
-RageSurface *RageSurfaceUtils::LoadFile(const RString &sPath, RString &error, bool bHeaderOnly) {
+RageSurface *RageSurfaceUtils::LoadFile(const std::string &sPath, RString &error, bool bHeaderOnly) {
 	{
 		RageFile TestOpen;
 		if (!TestOpen.Open(sPath)) {

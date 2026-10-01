@@ -17,7 +17,7 @@ const RString XNode::TEXT_ATTRIBUTE = "__TEXT__";
 
 XNode::XNode() = default;
 
-XNode::XNode(const RString &sName) {
+XNode::XNode(const std::string &sName) {
 	m_sName = sName;
 }
 
@@ -73,14 +73,14 @@ void XNodeStringValue::SetValueFromStack(lua_State *L) {
 	LuaHelpers::Pop(L, m_sValue);
 }
 
-const XNodeValue *XNode::GetAttr(const RString &attrname) const {
+const XNodeValue *XNode::GetAttr(const std::string &attrname) const {
 	XAttrs::const_iterator it = m_attrs.find(attrname);
 	if (it != m_attrs.end())
 		return it->second;
 	return nullptr;
 }
 
-bool XNode::PushAttrValue(lua_State *L, const RString &sName) const {
+bool XNode::PushAttrValue(lua_State *L, const std::string &sName) const {
 	const XNodeValue *pAttr = GetAttr(sName);
 	if (pAttr == nullptr) {
 		lua_pushnil(L);
@@ -90,22 +90,22 @@ bool XNode::PushAttrValue(lua_State *L, const RString &sName) const {
 	return true;
 }
 
-XNodeValue *XNode::GetAttr(const RString &attrname) {
+XNodeValue *XNode::GetAttr(const std::string &attrname) {
 	XAttrs::iterator it = m_attrs.find(attrname);
 	if (it != m_attrs.end())
 		return it->second;
 	return nullptr;
 }
 
-XNode *XNode::GetChild(const RString &sName) {
-	std::multimap<RString, XNode *>::iterator by_name = m_children_by_name.lower_bound(sName);
+XNode *XNode::GetChild(const std::string &sName) {
+	std::multimap<std::string, XNode *>::iterator by_name = m_children_by_name.lower_bound(sName);
 	if (by_name != m_children_by_name.end() && sName == by_name->second->GetName()) {
 		return by_name->second;
 	}
 	return nullptr;
 }
 
-bool XNode::PushChildValue(lua_State *L, const RString &sName) const {
+bool XNode::PushChildValue(lua_State *L, const std::string &sName) const {
 	const XNode *pChild = GetChild(sName);
 	if (pChild == nullptr) {
 		lua_pushnil(L);
@@ -115,8 +115,8 @@ bool XNode::PushChildValue(lua_State *L, const RString &sName) const {
 	return true;
 }
 
-const XNode *XNode::GetChild(const RString &sName) const {
-	std::multimap<RString, XNode *>::const_iterator by_name = m_children_by_name.lower_bound(sName);
+const XNode *XNode::GetChild(const std::string &sName) const {
+	std::multimap<std::string, XNode *>::const_iterator by_name = m_children_by_name.lower_bound(sName);
 	if (by_name != m_children_by_name.end() && sName == by_name->second->GetName()) {
 		return by_name->second;
 	}
@@ -144,7 +144,7 @@ bool XNode::RemoveChild(XNode *node, bool bDelete) {
 }
 
 void XNode::RemoveChildFromByName(XNode *node) {
-	std::multimap<RString, XNode *>::iterator by_name = m_children_by_name.lower_bound(node->m_sName);
+	std::multimap<std::string, XNode *>::iterator by_name = m_children_by_name.lower_bound(node->m_sName);
 	if (by_name != m_children_by_name.end() && node->GetName() == by_name->second->GetName()) {
 		for (; by_name != m_children_by_name.end(); ++by_name) {
 			if (by_name->second == node) {
@@ -161,7 +161,7 @@ void XNode::RenameChildInByName(XNode *node) {
 }
 
 // detach attribute
-bool XNode::RemoveAttr(const RString &sName) {
+bool XNode::RemoveAttr(const std::string &sName) {
 	XAttrs::iterator it = m_attrs.find(sName);
 	if (it == m_attrs.end())
 		return false;
@@ -173,7 +173,7 @@ bool XNode::RemoveAttr(const RString &sName) {
 
 /* If bOverwrite is true and a node already exists with that name, the old value will be deleted.
  * If bOverwrite is false and a node already exists with that name, the new value will be deleted. */
-XNodeValue *XNode::AppendAttrFrom(const RString &sName, XNodeValue *pValue, bool bOverwrite) {
+XNodeValue *XNode::AppendAttrFrom(const std::string &sName, XNodeValue *pValue, bool bOverwrite) {
 	DEBUG_ASSERT(!sName.empty());
 	std::pair<XAttrs::iterator, bool> ret = m_attrs.insert(make_pair(sName, (XNodeValue *)nullptr));
 	if (!ret.second) // already existed
@@ -192,7 +192,7 @@ XNodeValue *XNode::AppendAttrFrom(const RString &sName, XNodeValue *pValue, bool
 	return ret.first->second;
 };
 
-XNodeValue *XNode::AppendAttr(const RString &sName) {
+XNodeValue *XNode::AppendAttr(const std::string &sName) {
 	DEBUG_ASSERT(!sName.empty());
 	std::pair<XAttrs::iterator, bool> ret = m_attrs.insert(make_pair(sName, (XNodeValue *)nullptr));
 	if (ret.second)

@@ -57,7 +57,7 @@ std::vector<RString> const &GetTypeExtensionList(FileType ft);
 void AddTypeExtensionsToList(FileType ft, std::vector<std::string> &add_to);
 
 // Every screen should register its class at program initialization.
-void Register(const RString &sClassName, CreateActorFn pfn);
+void Register(const std::string &sClassName, CreateActorFn pfn);
 
 apActorCommands ParseActorCommands(const RString &sCommands, const RString &sName = "");
 void SetXY(Actor &actor, const RString &sMetricsGroup);
@@ -153,7 +153,7 @@ bool ResolvePath(std::string &sPath, const std::string &sName, bool optional = f
 
 void SortByZPosition(std::vector<Actor *> &vActors);
 
-FileType GetFileType(const RString &sPath);
+FileType GetFileType(const std::string &sPath);
 }; // namespace ActorUtil
 
 #define SET_XY(actor) ActorUtil::SetXY(actor, m_sName)

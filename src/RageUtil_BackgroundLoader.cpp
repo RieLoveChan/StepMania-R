@@ -152,7 +152,7 @@ void BackgroundLoader::LoadThread() {
 	}
 }
 
-void BackgroundLoader::CacheFile(const RString &sFile) {
+void BackgroundLoader::CacheFile(const std::string &sFile) {
 	if (!g_bEnableBackgroundLoading)
 		return;
 
@@ -164,7 +164,7 @@ void BackgroundLoader::CacheFile(const RString &sFile) {
 	m_StartSem.Post();
 }
 
-bool BackgroundLoader::IsCacheFileFinished(const RString &sFile, RString &sActualPath) {
+bool BackgroundLoader::IsCacheFileFinished(const std::string &sFile, RString &sActualPath) {
 	if (!g_bEnableBackgroundLoading) {
 		sActualPath = sFile;
 		return true;

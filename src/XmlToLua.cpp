@@ -406,14 +406,15 @@ void actor_template_t::load_frames_from_file(RString const &fname, RString const
 		FOREACH_CONST_Attr(sprite_node, attr) {
 			// Frame and Delay fields have names of the form "Frame0000" where the
 			// "0000" part is the id of the frame.
-			RString field_type = attr->first.Left(5);
+			const RString attr_name = attr->first;
+			RString field_type = attr_name.Left(5);
 			if (field_type == "Frame") {
-				int id = StringToInt(attr->first.Right(static_cast<int>(attr->first.size()) - 5));
+				int id = StringToInt(attr_name.Right(static_cast<int>(attr_name.size()) - 5));
 				make_space_for_frame(id);
 				attr->second->GetValue(frames[id].frame);
 			}
 			else if (field_type == "Delay") {
-				int id = StringToInt(attr->first.Right(static_cast<int>(attr->first.size()) - 5));
+				int id = StringToInt(attr_name.Right(static_cast<int>(attr_name.size()) - 5));
 				make_space_for_frame(id);
 				attr->second->GetValue(frames[id].delay);
 			}

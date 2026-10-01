@@ -157,7 +157,7 @@ void CreateTableFromXNodeRecursive(Lua *L, const XNode *pNode) {
 	lua_newtable(L);
 
 	FOREACH_CONST_Attr(pNode, pAttr) {
-		lua_pushstring(L, pAttr->first);       // push key
+		lua_pushstring(L, pAttr->first.c_str()); // push key
 		pNode->PushAttrValue(L, pAttr->first); // push value
 
 		// add key-value pair to our table

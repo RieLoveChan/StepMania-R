@@ -357,7 +357,7 @@ class RageDisplay {
 		SAVE_LOSSY_LOW_QUAL,    // jpg
 		SAVE_LOSSY_HIGH_QUAL    // jpg
 	};
-	bool SaveScreenshot(RString sPath, GraphicsFileFormat format);
+	bool SaveScreenshot(std::string sPath, GraphicsFileFormat format);
 
 	virtual RString GetTextureDiagnostics(std::uintptr_t /* id */) const {
 		return RString();

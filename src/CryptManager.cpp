@@ -350,7 +350,7 @@ void CryptManager::GetRandomBytes(void *pData, int iBytes) {
 }
 #endif
 
-std::string CryptManager::GetMD5ForFile(RString fn) {
+std::string CryptManager::GetMD5ForFile(std::string fn) {
 	RageFile file;
 	if (!file.Open(fn, RageFile::READ)) {
 		LOG_ERROR(Log::General, "GetMD5: Failed to open file '%s'", fn.c_str());
@@ -391,7 +391,7 @@ std::string CryptManager::GetSHA1ForString(std::string sData) {
 	return RString((const char *)digest, sizeof(digest));
 }
 
-std::string CryptManager::GetSHA1ForFile(RString fn) {
+std::string CryptManager::GetSHA1ForFile(std::string fn) {
 	RageFile file;
 	if (!file.Open(fn, RageFile::READ)) {
 		LOG_ERROR(Log::General, "GetSHA1: Failed to open file '%s'", fn.c_str());
@@ -419,7 +419,7 @@ std::string CryptManager::GetSHA256ForString(std::string sData) {
 	return RString((const char *)digest, sizeof(digest));
 }
 
-std::string CryptManager::GetSHA256ForFile(RString fn) {
+std::string CryptManager::GetSHA256ForFile(std::string fn) {
 	RageFile file;
 	if (!file.Open(fn, RageFile::READ)) {
 		LOG_ERROR(Log::General, "GetSHA256: Failed to open file '%s'", fn.c_str());

@@ -23,12 +23,12 @@ class CryptManager {
 	static void GetRandomBytes(void *pData, int iBytes);
 	static std::string GenerateRandomUUID();
 
-	static std::string GetMD5ForFile(RString fn);         // in binary
+	static std::string GetMD5ForFile(std::string fn);     // in binary
 	static std::string GetMD5ForString(std::string sData);  // in binary
 	static std::string GetSHA1ForString(std::string sData); // in binary
-	static std::string GetSHA1ForFile(RString fn);        // in binary
+	static std::string GetSHA1ForFile(std::string fn);    // in binary
 	static std::string GetSHA256ForString(std::string sData); // in binary
-	static std::string GetSHA256ForFile(RString fn);      // in binary
+	static std::string GetSHA256ForFile(std::string fn);  // in binary
 
 	static std::string GetPublicKeyFileName();
 

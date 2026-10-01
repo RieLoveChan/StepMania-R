@@ -346,7 +346,7 @@ void RageLog::Time(const char *fmt, ...) {
 	Write(WRITE_TO_TIME, LogLevel_Info, Log::General, sBuff);
 }
 
-void RageLog::UserLog(const RString &sType, const RString &sElement, const char *fmt, ...) {
+void RageLog::UserLog(const std::string &sType, const std::string &sElement, const char *fmt, ...) {
 	va_list va;
 	va_start(va, fmt);
 	RString sBuf = vssprintf(fmt, va);

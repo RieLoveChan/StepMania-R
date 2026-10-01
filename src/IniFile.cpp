@@ -127,7 +127,7 @@ bool IniFile::WriteFile(RageFileBasic &f) const {
 		}
 
 		FOREACH_CONST_Attr(pKey, pAttr) {
-			const RString &sName = pAttr->first;
+			const std::string &sName = pAttr->first;
 			const RString &sValue = pAttr->second->GetValue<RString>();
 
 			// TODO: Are there escape rules for these?
@@ -151,7 +151,7 @@ bool IniFile::WriteFile(RageFileBasic &f) const {
 	return true;
 }
 
-bool IniFile::DeleteValue(const RString &keyname, const RString &valuename) {
+bool IniFile::DeleteValue(const std::string &keyname, const std::string &valuename) {
 	XNode *pNode = GetChild(keyname);
 	if (pNode == nullptr) {
 		LOG_WARN(Log::File, "Key '%s' not found when attempting to delete a value.", keyname.c_str());
@@ -164,7 +164,7 @@ bool IniFile::DeleteValue(const RString &keyname, const RString &valuename) {
 	return result;
 }
 
-bool IniFile::DeleteKey(const RString &keyname) {
+bool IniFile::DeleteKey(const std::string &keyname) {
 	XNode *pNode = GetChild(keyname);
 	if (pNode == nullptr) {
 		LOG_WARN(Log::File, "Key '%s' not found when attempting to delete a key.", keyname.c_str());
@@ -177,7 +177,7 @@ bool IniFile::DeleteKey(const RString &keyname) {
 	return result;
 }
 
-bool IniFile::RenameKey(const RString &from, const RString &to) {
+bool IniFile::RenameKey(const std::string &from, const std::string &to) {
 	// If to already exists, do nothing.
 	if (GetChild(to) != nullptr)
 		return false;

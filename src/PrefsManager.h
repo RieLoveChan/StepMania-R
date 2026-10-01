@@ -340,9 +340,9 @@ class PrefsManager {
 	Preference<bool> m_bPseudoLocalize;
 	Preference<bool> m_show_theme_errors;
 
-	void ReadPrefsFromIni(const IniFile &ini, const RString &sSection, bool bIsStatic);
-	void ReadGamePrefsFromIni(const RString &sIni);
-	void ReadDefaultsFromIni(const IniFile &ini, const RString &sSection);
+	void ReadPrefsFromIni(const IniFile &ini, const std::string &sSection, bool bIsStatic);
+	void ReadGamePrefsFromIni(const std::string &sIni);
+	void ReadDefaultsFromIni(const IniFile &ini, const std::string &sSection);
 	void SavePrefsToIni(IniFile &ini);
 
 	void ReadPrefsFromDisk();
@@ -356,8 +356,8 @@ class PrefsManager {
 	void PushSelf(lua_State *L);
 
  protected:
-	void ReadPrefsFromFile(const RString &sIni, const RString &sSection, bool bIsStatic);
-	void ReadDefaultsFromFile(const RString &sIni, const RString &sSection);
+	void ReadPrefsFromFile(const std::string &sIni, const std::string &sSection, bool bIsStatic);
+	void ReadDefaultsFromFile(const std::string &sIni, const std::string &sSection);
 	void TranslateDeprecatedFlags();
 
 	Preference<RString> m_sAdditionalSongFolders;   // deprecated

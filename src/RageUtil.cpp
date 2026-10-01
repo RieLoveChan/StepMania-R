@@ -985,7 +985,7 @@ void GetCommandLineArguments(int &argc, char **&argv) {
  * short arguments (-x) are not supported.  (These are not intended for
  * common, general use, so having short options isn't currently needed.)
  * If argument is non-nullptr, accept an argument. */
-bool GetCommandlineArgument(const RString &option, RString *argument, int iIndex) {
+bool GetCommandlineArgument(const std::string &option, RString *argument, int iIndex) {
 	const RString optstr = "--" + option;
 
 	for (int arg = 1; arg < g_argc; ++arg) {

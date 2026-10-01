@@ -19,11 +19,11 @@ class BackgroundLoader {
 	~BackgroundLoader();
 
 	/* Read the file in a background thread.  Files will be read in the order requested. */
-	void CacheFile(const RString &file);
+	void CacheFile(const std::string &file);
 
 	/* Return true if the requested CacheFile request has finished.  If true is returned,
 	 * the cached file can be read using the path returned in sActualPath. */
-	bool IsCacheFileFinished(const RString &sFile, RString &sActualPath);
+	bool IsCacheFileFinished(const std::string &sFile, RString &sActualPath);
 
 	/* Call this when finished with a cached file, to release any resources. */
 	void FinishedWithCachedFile(std::string sFile);
