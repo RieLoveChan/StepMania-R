@@ -96,7 +96,7 @@ void ScreenMapControllers::Init() {
 		m_Line.push_back(new ActorFrame);
 		m_ListHeaderCenter.LoadFromFont(THEME->GetPathF(m_sName, "title"));
 		m_ListHeaderCenter.SetName("ListHeaderCenter");
-		m_ListHeaderCenter.SetText(KEYNAME);
+		m_ListHeaderCenter.SetText(KEYNAME.GetValue());
 		ActorUtil::LoadAllCommands(m_ListHeaderCenter, m_sName);
 		m_Line.back()->AddChild(&m_ListHeaderCenter);
 		FOREACH_ENUM(GameController, c) {
@@ -104,7 +104,7 @@ void ScreenMapControllers::Init() {
 				BitmapText &text = m_ListHeaderLabels[c][s];
 				text.LoadFromFont(THEME->GetPathF(m_sName, "title"));
 				text.SetName("ListHeader");
-				text.SetText(SLOT_NAMES[s]);
+				text.SetText(SLOT_NAMES[s].GetValue());
 				text.RunCommands(THEME->GetMetricA(m_sName, ssprintf("ListHeaderP%iS%iCommand", c + 1, s + 1)));
 				ActorUtil::LoadAllCommands(text, m_sName);
 				m_Line.back()->AddChild(&text);

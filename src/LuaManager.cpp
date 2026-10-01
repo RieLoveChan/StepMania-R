@@ -373,7 +373,7 @@ void LuaManager::RegisterTypes() {
 	Release(L);
 }
 
-LuaThreadVariable::LuaThreadVariable(const RString &sName, const RString &sValue) {
+LuaThreadVariable::LuaThreadVariable(const std::string &sName, const std::string &sValue) {
 	m_Name = new LuaReference;
 	m_pOldValue = new LuaReference;
 
@@ -385,7 +385,7 @@ LuaThreadVariable::LuaThreadVariable(const RString &sName, const RString &sValue
 	LUA->Release(L);
 }
 
-LuaThreadVariable::LuaThreadVariable(const RString &sName, const LuaReference &Value) {
+LuaThreadVariable::LuaThreadVariable(const std::string &sName, const LuaReference &Value) {
 	m_Name = new LuaReference;
 	m_pOldValue = new LuaReference;
 
@@ -721,7 +721,7 @@ XNode *LuaHelpers::GetLuaInformation() {
 	return pLuaNode;
 }
 
-bool LuaHelpers::RunScriptFile(const RString &sFile) {
+bool LuaHelpers::RunScriptFile(const std::string &sFile) {
 	RString sScript;
 	if (!GetFileContents(sFile, sScript))
 		return false;
@@ -740,9 +740,9 @@ bool LuaHelpers::RunScriptFile(const RString &sFile) {
 	return true;
 }
 
-bool LuaHelpers::LoadScript(Lua *L, const RString &sScript, const RString &sName, RString &sError) {
+bool LuaHelpers::LoadScript(Lua *L, const std::string &sScript, const std::string &sName, RString &sError) {
 	// load string
-	int ret = luaL_loadbuffer(L, sScript.data(), sScript.size(), sName);
+	int ret = luaL_loadbuffer(L, sScript.data(), sScript.size(), sName.c_str());
 	if (ret) {
 		LuaHelpers::Pop(L, sError);
 		return false;
@@ -812,7 +812,7 @@ bool LuaHelpers::RunScriptOnStack(Lua *L, RString &Error, int Args, int ReturnVa
 }
 
 bool LuaHelpers::RunScript(
-   Lua *L, const RString &Script, const RString &Name, RString &Error, int Args, int ReturnValues, bool ReportError
+   Lua *L, const std::string &Script, const std::string &Name, RString &Error, int Args, int ReturnValues, bool ReportError
 ) {
 	RString lerror;
 	if (!LoadScript(L, Script, Name, lerror)) {
@@ -832,10 +832,10 @@ bool LuaHelpers::RunScript(
 	return LuaHelpers::RunScriptOnStack(L, Error, Args, ReturnValues, ReportError);
 }
 
-bool LuaHelpers::RunExpression(Lua *L, const RString &sExpression, const RString &sName) {
+bool LuaHelpers::RunExpression(Lua *L, const std::string &sExpression, const std::string &sName) {
 	RString sError =
 	   ssprintf("Lua runtime error parsing \"%s\": ", !sName.empty() ? sName.c_str() : sExpression.c_str());
-	if (!LuaHelpers::RunScript(L, "return " + sExpression, sName.empty() ? RString("in") : sName, sError, 0, 1, true)) {
+	if (!LuaHelpers::RunScript(L, "return " + sExpression, sName.empty() ? std::string("in") : sName, sError, 0, 1, true)) {
 		return false;
 	}
 	return true;

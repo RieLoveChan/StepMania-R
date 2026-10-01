@@ -36,7 +36,7 @@ LuaDeclareType(WheelState);
 class WheelBase : public ActorFrame {
  public:
 	virtual ~WheelBase();
-	virtual void Load(RString sType);
+	virtual void Load(std::string sType);
 	void BeginScreen();
 
 	virtual void Update(float fDeltaTime);

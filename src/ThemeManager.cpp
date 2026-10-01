@@ -251,7 +251,7 @@ bool ThemeManager::DoesLanguageExist(const std::string &sLanguage_) {
 	return false;
 }
 
-void ThemeManager::LoadThemeMetrics(const RString &sThemeName_, const RString &sLanguage_) {
+void ThemeManager::LoadThemeMetrics(const std::string &sThemeName_, const std::string &sLanguage_) {
 	if (g_pLoadedThemeData == nullptr)
 		g_pLoadedThemeData = new LoadedThemeData;
 
@@ -342,7 +342,7 @@ std::string ThemeManager::GetDefaultLanguage() {
 }
 
 void ThemeManager::SwitchThemeAndLanguage(
-   const RString &sThemeName_, const RString &sLanguage_, bool bPseudoLocalize, bool bForceThemeReload
+   const std::string &sThemeName_, const std::string &sLanguage_, bool bPseudoLocalize, bool bForceThemeReload
 ) {
 	RString sThemeName = sThemeName_;
 	RString sLanguage = sLanguage_;
@@ -453,7 +453,7 @@ void ThemeManager::ClearSubscribers() {
 	}
 }
 
-void ThemeManager::RunLuaScripts(const RString &sMask, bool bUseThemeDir) {
+void ThemeManager::RunLuaScripts(const std::string &sMask, bool bUseThemeDir) {
 	/* Run all script files with the given mask in Lua for all themes.  Start
 	 * from the deepest fallback theme and work outwards. */
 

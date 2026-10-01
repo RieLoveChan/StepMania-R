@@ -164,7 +164,7 @@ void ScreenSelectMusic::Init() {
 	IMAGECACHE->Demand("Banner");
 
 	m_MusicWheel.SetName("MusicWheel");
-	m_MusicWheel.Load(MUSIC_WHEEL_TYPE);
+	m_MusicWheel.Load(MUSIC_WHEEL_TYPE.GetValue());
 	LOAD_ALL_COMMANDS_AND_SET_XY(m_MusicWheel);
 	this->AddChild(&m_MusicWheel);
 
@@ -1097,7 +1097,7 @@ void ScreenSelectMusic::HandleScreenMessage(const ScreenMessage SM) {
 		this->PlayCommand("SortChange");
 	}
 	else if (SM == SM_GainFocus) {
-		CodeDetector::RefreshCacheItems(CODES);
+		CodeDetector::RefreshCacheItems(CODES.GetValue());
 	}
 	else if (SM == SM_LoseFocus) {
 		CodeDetector::RefreshCacheItems(); // reset for other screens
@@ -1471,7 +1471,7 @@ void ScreenSelectMusic::AfterStepsOrTrailChange(const std::vector<PlayerNumber> 
 		}
 		else {
 			// The numbers shouldn't stay if the current selection is nullptr.
-			m_textHighScore[pn].SetText(NULL_SCORE_STRING);
+			m_textHighScore[pn].SetText(NULL_SCORE_STRING.GetValue());
 		}
 	}
 }

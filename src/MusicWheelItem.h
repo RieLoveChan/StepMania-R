@@ -34,7 +34,7 @@ const RString &MusicWheelItemTypeToString(MusicWheelItemType i);
 /** @brief An item on the MusicWheel. */
 class MusicWheelItem : public WheelItemBase {
  public:
-	MusicWheelItem(RString sType = "MusicWheelItem");
+	MusicWheelItem(std::string sType = "MusicWheelItem");
 	MusicWheelItem(const MusicWheelItem &cpy);
 	virtual ~MusicWheelItem();
 	virtual MusicWheelItem *Copy() const {

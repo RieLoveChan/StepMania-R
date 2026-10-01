@@ -23,8 +23,8 @@
 using namespace StringConversion;
 
 static void GetPrefsDefaultModifiers(PlayerOptions &po, SongOptions &so) {
-	po.FromString(PREFSMAN->m_sDefaultModifiers);
-	so.FromString(PREFSMAN->m_sDefaultModifiers);
+	po.FromString(PREFSMAN->m_sDefaultModifiers.Get());
+	so.FromString(PREFSMAN->m_sDefaultModifiers.Get());
 }
 
 static void SetPrefsDefaultModifiers(const PlayerOptions &po, const SongOptions &so) {
@@ -229,7 +229,7 @@ static void Language(int &sel, bool ToSel, const ConfOption * /* pConfOption */)
 
 		PREFSMAN->m_sLanguage.Set(sNewLanguage);
 		if (THEME->GetCurLanguage() != sNewLanguage)
-			THEME->SwitchThemeAndLanguage(THEME->GetCurThemeName(), PREFSMAN->m_sLanguage, PREFSMAN->m_bPseudoLocalize);
+			THEME->SwitchThemeAndLanguage(THEME->GetCurThemeName(), PREFSMAN->m_sLanguage.Get(), PREFSMAN->m_bPseudoLocalize);
 	}
 }
 
@@ -308,7 +308,7 @@ static void DefaultNoteSkin(int &sel, bool ToSel, const ConfOption *pConfOption)
 
 	if (ToSel) {
 		PlayerOptions po;
-		po.FromString(PREFSMAN->m_sDefaultModifiers);
+		po.FromString(PREFSMAN->m_sDefaultModifiers.Get());
 		sel = 0;
 		for (unsigned i = 0; i < choices.size(); i++)
 			if (!strcasecmp(choices[i], po.m_sNoteSkin))
@@ -333,7 +333,7 @@ static void DefaultFailChoices(std::vector<RString> &out) {
 static void DefaultFailType(int &sel, bool to_sel, const ConfOption * /* conf_option */) {
 	if (to_sel) {
 		PlayerOptions po;
-		po.FromString(PREFSMAN->m_sDefaultModifiers);
+		po.FromString(PREFSMAN->m_sDefaultModifiers.Get());
 		sel = po.m_FailType;
 	}
 	else {

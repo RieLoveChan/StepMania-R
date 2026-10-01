@@ -58,9 +58,9 @@ class SongOptions {
 	void GetLocalizedMods(std::vector<RString> &AddTo) const;
 	RString GetString() const;
 	RString GetLocalizedString() const;
-	void FromString(const RString &sOptions);
+	void FromString(const std::string &sOptions);
 	bool FromOneModString(
-	   const RString &sOneMod, std::string &sErrorDetailOut
+	   const std::string &sOneMod, std::string &sErrorDetailOut
 	); // On error, return false and optionally set sErrorDetailOut
 
 	bool operator==(const SongOptions &other) const;

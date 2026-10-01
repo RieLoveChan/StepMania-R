@@ -1687,16 +1687,16 @@ StageResult GameState::GetStageResult(PlayerNumber pn) const {
 
 void GameState::GetDefaultPlayerOptions(PlayerOptions &po) {
 	po.Init();
-	po.FromString(PREFSMAN->m_sDefaultModifiers);
-	po.FromString(CommonMetrics::DEFAULT_MODIFIERS);
+	po.FromString(PREFSMAN->m_sDefaultModifiers.Get());
+	po.FromString(CommonMetrics::DEFAULT_MODIFIERS.GetValue());
 	if (po.m_sNoteSkin.empty())
 		po.m_sNoteSkin = CommonMetrics::DEFAULT_NOTESKIN_NAME;
 }
 
 void GameState::GetDefaultSongOptions(SongOptions &so) {
 	so.Init();
-	so.FromString(PREFSMAN->m_sDefaultModifiers);
-	so.FromString(CommonMetrics::DEFAULT_MODIFIERS);
+	so.FromString(PREFSMAN->m_sDefaultModifiers.Get());
+	so.FromString(CommonMetrics::DEFAULT_MODIFIERS.GetValue());
 }
 
 void GameState::ResetToDefaultSongOptions(ModsLevel l) {
@@ -1705,12 +1705,12 @@ void GameState::ResetToDefaultSongOptions(ModsLevel l) {
 	m_SongOptions.Assign(l, so);
 }
 
-void GameState::ApplyPreferredModifiers(PlayerNumber pn, RString sModifiers) {
+void GameState::ApplyPreferredModifiers(PlayerNumber pn, std::string sModifiers) {
 	m_pPlayerState[pn]->m_PlayerOptions.FromString(ModsLevel_Preferred, sModifiers);
 	m_SongOptions.FromString(ModsLevel_Preferred, sModifiers);
 }
 
-void GameState::ApplyStageModifiers(PlayerNumber pn, RString sModifiers) {
+void GameState::ApplyStageModifiers(PlayerNumber pn, std::string sModifiers) {
 	m_pPlayerState[pn]->m_PlayerOptions.FromString(ModsLevel_Stage, sModifiers);
 	m_SongOptions.FromString(ModsLevel_Stage, sModifiers);
 }
@@ -2326,7 +2326,7 @@ Premium GameState::GetPremium() const {
 	return DISABLE_PREMIUM_IN_EVENT_MODE ? Premium_Off : g_Premium;
 }
 
-bool GameState::PlayerIsUsingModifier(PlayerNumber pn, const RString &sModifier) {
+bool GameState::PlayerIsUsingModifier(PlayerNumber pn, const std::string &sModifier) {
 	PlayerOptions po = m_pPlayerState[pn]->m_PlayerOptions.GetCurrent();
 	SongOptions so = m_SongOptions.GetCurrent();
 	po.FromString(sModifier);

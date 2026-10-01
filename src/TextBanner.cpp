@@ -49,12 +49,12 @@ TextBanner::TextBanner(const TextBanner &cpy)
 }
 
 void TextBanner::SetFromString(
-   const RString &sDisplayTitle,
-   const RString &sTranslitTitle,
-   const RString &sDisplaySubTitle,
-   const RString &sTranslitSubTitle,
-   const RString &sDisplayArtist,
-   const RString &sTranslitArtist
+   const std::string &sDisplayTitle,
+   const std::string &sTranslitTitle,
+   const std::string &sDisplaySubTitle,
+   const std::string &sTranslitSubTitle,
+   const std::string &sDisplayArtist,
+   const std::string &sTranslitArtist
 ) {
 	ASSERT(m_bInitted);
 

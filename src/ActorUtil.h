@@ -60,7 +60,7 @@ void AddTypeExtensionsToList(FileType ft, std::vector<std::string> &add_to);
 void Register(const std::string &sClassName, CreateActorFn pfn);
 
 apActorCommands ParseActorCommands(const RString &sCommands, const RString &sName = "");
-void SetXY(Actor &actor, const RString &sMetricsGroup);
+void SetXY(Actor &actor, const std::string &sMetricsGroup);
 inline void PlayCommand(Actor &actor, const RString &sCommandName) {
 	actor.PlayCommand(sCommandName);
 }
@@ -79,31 +79,33 @@ inline void OffCommand(Actor &actor) {
 	actor.PlayCommand("Off");
 }
 
-void LoadCommand(Actor &actor, const RString &sMetricsGroup, const RString &sCommandName);
-void LoadCommandFromName(Actor &actor, const RString &sMetricsGroup, const RString &sCommandName, const RString &sName);
-void LoadAllCommands(Actor &actor, const RString &sMetricsGroup);
-void LoadAllCommandsFromName(Actor &actor, const RString &sMetricsGroup, const RString &sName);
+void LoadCommand(Actor &actor, const std::string &sMetricsGroup, const std::string &sCommandName);
+void LoadCommandFromName(
+   Actor &actor, const std::string &sMetricsGroup, const std::string &sCommandName, const std::string &sName
+);
+void LoadAllCommands(Actor &actor, const std::string &sMetricsGroup);
+void LoadAllCommandsFromName(Actor &actor, const std::string &sMetricsGroup, const std::string &sName);
 
-inline void LoadAllCommandsAndSetXY(Actor &actor, const RString &sMetricsGroup) {
+inline void LoadAllCommandsAndSetXY(Actor &actor, const std::string &sMetricsGroup) {
 	LoadAllCommands(actor, sMetricsGroup);
 	SetXY(actor, sMetricsGroup);
 }
-inline void LoadAllCommandsAndOnCommand(Actor &actor, const RString &sMetricsGroup) {
+inline void LoadAllCommandsAndOnCommand(Actor &actor, const std::string &sMetricsGroup) {
 	LoadAllCommands(actor, sMetricsGroup);
 	OnCommand(actor);
 }
-inline void SetXYAndOnCommand(Actor &actor, const RString &sMetricsGroup) {
+inline void SetXYAndOnCommand(Actor &actor, const std::string &sMetricsGroup) {
 	SetXY(actor, sMetricsGroup);
 	OnCommand(actor);
 }
-inline void LoadAllCommandsAndSetXYAndOnCommand(Actor &actor, const RString &sMetricsGroup) {
+inline void LoadAllCommandsAndSetXYAndOnCommand(Actor &actor, const std::string &sMetricsGroup) {
 	LoadAllCommands(actor, sMetricsGroup);
 	SetXY(actor, sMetricsGroup);
 	OnCommand(actor);
 }
 
 /* convenience */
-inline void SetXY(Actor *pActor, const RString &sMetricsGroup) {
+inline void SetXY(Actor *pActor, const std::string &sMetricsGroup) {
 	SetXY(*pActor, sMetricsGroup);
 }
 inline void PlayCommand(Actor *pActor, const RString &sCommandName) {
@@ -119,31 +121,31 @@ inline void OffCommand(Actor *pActor) {
 		ActorUtil::OffCommand(*pActor);
 }
 
-inline void LoadAllCommands(Actor *pActor, const RString &sMetricsGroup) {
+inline void LoadAllCommands(Actor *pActor, const std::string &sMetricsGroup) {
 	if (pActor)
 		LoadAllCommands(*pActor, sMetricsGroup);
 }
 
-inline void LoadAllCommandsAndSetXY(Actor *pActor, const RString &sMetricsGroup) {
+inline void LoadAllCommandsAndSetXY(Actor *pActor, const std::string &sMetricsGroup) {
 	if (pActor)
 		LoadAllCommandsAndSetXY(*pActor, sMetricsGroup);
 }
-inline void LoadAllCommandsAndOnCommand(Actor *pActor, const RString &sMetricsGroup) {
+inline void LoadAllCommandsAndOnCommand(Actor *pActor, const std::string &sMetricsGroup) {
 	if (pActor)
 		LoadAllCommandsAndOnCommand(*pActor, sMetricsGroup);
 }
-inline void SetXYAndOnCommand(Actor *pActor, const RString &sMetricsGroup) {
+inline void SetXYAndOnCommand(Actor *pActor, const std::string &sMetricsGroup) {
 	if (pActor)
 		SetXYAndOnCommand(*pActor, sMetricsGroup);
 }
-inline void LoadAllCommandsAndSetXYAndOnCommand(Actor *pActor, const RString &sMetricsGroup) {
+inline void LoadAllCommandsAndSetXYAndOnCommand(Actor *pActor, const std::string &sMetricsGroup) {
 	if (pActor)
 		LoadAllCommandsAndSetXYAndOnCommand(*pActor, sMetricsGroup);
 }
 
 // Return a Sprite, BitmapText, or Model depending on the file type
 Actor *LoadFromNode(const XNode *pNode, Actor *pParentActor = nullptr);
-Actor *MakeActor(const RString &sPath, Actor *pParentActor = nullptr);
+Actor *MakeActor(const std::string &sPath, Actor *pParentActor = nullptr);
 std::string GetSourcePath(const XNode *pNode);
 std::string GetWhere(const XNode *pNode);
 bool GetAttrPath(const XNode *pNode, const std::string &sName, RString &sOut, bool optional = false);

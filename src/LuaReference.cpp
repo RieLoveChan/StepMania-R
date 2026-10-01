@@ -105,7 +105,7 @@ void LuaReference::Unregister() {
 	m_iReference = LUA_NOREF;
 }
 
-bool LuaReference::SetFromExpression(const RString &sExpression) {
+bool LuaReference::SetFromExpression(const std::string &sExpression) {
 	Lua *L = LUA->Get();
 
 	bool bSuccess = LuaHelpers::RunExpression(L, sExpression);

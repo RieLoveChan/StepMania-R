@@ -64,7 +64,7 @@ bool CodeDetector::EnteredCode(GameController controller, Code code) {
 	return g_CodeItems[code].EnteredCode(controller);
 }
 
-void CodeDetector::RefreshCacheItems(RString sClass) {
+void CodeDetector::RefreshCacheItems(std::string sClass) {
 	if (sClass.empty())
 		sClass = "CodeDetector";
 	FOREACH_ENUM(Code, c) {

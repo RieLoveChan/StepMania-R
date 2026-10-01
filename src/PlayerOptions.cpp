@@ -646,7 +646,7 @@ void PlayerOptions::GetMods(std::vector<RString> &AddTo, bool bForceNoteSkin) co
 
 /* Options are added to the current settings; call Init() beforehand if
  * you don't want this. */
-void PlayerOptions::FromString(const RString &sMultipleMods) {
+void PlayerOptions::FromString(const std::string &sMultipleMods) {
 	RString sTemp = sMultipleMods;
 	std::vector<RString> vs;
 	split(sTemp, ",", vs, true);
@@ -658,7 +658,7 @@ void PlayerOptions::FromString(const RString &sMultipleMods) {
 	}
 }
 
-bool PlayerOptions::FromOneModString(const RString &sOneMod, std::string &sErrorOut) {
+bool PlayerOptions::FromOneModString(const std::string &sOneMod, std::string &sErrorOut) {
 	ASSERT_M(NOTESKIN != nullptr, "The Noteskin Manager must be loaded in order to process mods.");
 
 	RString sBit = sOneMod;

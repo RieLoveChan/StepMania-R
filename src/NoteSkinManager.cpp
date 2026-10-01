@@ -95,7 +95,7 @@ void NoteSkinManager::RefreshNoteSkinData(const Game *pGame) {
 	}
 }
 
-bool NoteSkinManager::LoadNoteSkinData(const RString &sNoteSkinName, NoteSkinData &data_out) {
+bool NoteSkinManager::LoadNoteSkinData(const std::string &sNoteSkinName, NoteSkinData &data_out) {
 	data_out.sName = sNoteSkinName;
 	data_out.metrics.Clear();
 	data_out.vsDirSearchOrder.clear();
@@ -104,7 +104,7 @@ bool NoteSkinManager::LoadNoteSkinData(const RString &sNoteSkinName, NoteSkinDat
 	return LoadNoteSkinDataRecursive(sNoteSkinName, data_out);
 }
 
-bool NoteSkinManager::LoadNoteSkinDataRecursive(const RString &sNoteSkinName_, NoteSkinData &data_out) {
+bool NoteSkinManager::LoadNoteSkinDataRecursive(const std::string &sNoteSkinName_, NoteSkinData &data_out) {
 	RString sNoteSkinName(sNoteSkinName_);
 
 	int iDepth = 0;
@@ -415,7 +415,7 @@ std::string NoteSkinManager::GetPath(const std::string &sButtonName, const std::
 	return sPath;
 }
 
-bool NoteSkinManager::PushActorTemplate(Lua *L, const RString &sButton, const RString &sElement, bool bSpriteOnly) {
+bool NoteSkinManager::PushActorTemplate(Lua *L, const std::string &sButton, const std::string &sElement, bool bSpriteOnly) {
 	std::map<std::string, NoteSkinData>::const_iterator iter = g_mapNameToData.find(m_sCurrentNoteSkin);
 	if (iter == g_mapNameToData.end()) {
 		LuaHelpers::ReportScriptError("No current noteskin set!", "NOTESKIN_ERROR");
@@ -440,7 +440,7 @@ bool NoteSkinManager::PushActorTemplate(Lua *L, const RString &sButton, const RS
 	return ActorUtil::LoadTableFromStackShowErrors(L);
 }
 
-Actor *NoteSkinManager::LoadActor(const RString &sButton, const RString &sElement, Actor *pParent, bool bSpriteOnly) {
+Actor *NoteSkinManager::LoadActor(const std::string &sButton, const std::string &sElement, Actor *pParent, bool bSpriteOnly) {
 	Lua *L = LUA->Get();
 
 	if (!PushActorTemplate(L, sButton, sElement, bSpriteOnly)) {

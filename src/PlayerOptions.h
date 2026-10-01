@@ -126,9 +126,9 @@ class PlayerOptions {
 	}
 	void GetMods(std::vector<RString> &AddTo, bool bForceNoteSkin = false) const;
 	void GetLocalizedMods(std::vector<RString> &AddTo) const;
-	void FromString(const RString &sMultipleMods);
+	void FromString(const std::string &sMultipleMods);
 	bool FromOneModString(
-	   const RString &sOneMod, std::string &sErrorDetailOut
+	   const std::string &sOneMod, std::string &sErrorDetailOut
 	); // On error, return false and optionally set sErrorDetailOut
 	void ChooseRandomModifiers();
 	bool ContainsTransformOrTurn() const;

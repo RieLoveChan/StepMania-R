@@ -206,7 +206,7 @@ void ScreenBookkeeping::UpdateView() {
 		}
 	} break;
 	case BookkeepingView_DayOfWeek: {
-		m_textTitle.SetText(DAY_OF_WEEK);
+		m_textTitle.SetText(DAY_OF_WEEK.GetValue());
 
 		int coins[DAYS_IN_WEEK];
 		BOOKKEEPER->GetCoinsByDayOfWeek(coins);
@@ -225,7 +225,7 @@ void ScreenBookkeeping::UpdateView() {
 		m_textData[3].SetText(sData);
 	} break;
 	case BookkeepingView_HourOfDay: {
-		m_textTitle.SetText(HOUR_OF_DAY);
+		m_textTitle.SetText(HOUR_OF_DAY.GetValue());
 
 		int coins[HOURS_IN_DAY];
 		BOOKKEEPER->GetCoinsByHour(coins);

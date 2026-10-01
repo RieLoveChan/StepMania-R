@@ -84,7 +84,7 @@ MusicWheelItem *MusicWheel::MakeItem() {
 	return new MusicWheelItem;
 }
 
-void MusicWheel::Load(RString sType) {
+void MusicWheel::Load(std::string sType) {
 	ROULETTE_SWITCH_SECONDS.Load(sType, "RouletteSwitchSeconds");
 	ROULETTE_SLOW_DOWN_SWITCHES.Load(sType, "RouletteSlowDownSwitches");
 	NUM_SECTION_COLORS.Load(sType, "NumSectionColors");

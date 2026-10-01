@@ -1619,9 +1619,9 @@ void ScreenEdit::Init() {
 		   GAMESTATE->m_pPlayerState[PLAYER_1]->m_PlayerOptions.GetStage().m_sNoteSkin
 		);
 	}
-	m_PlayerStateEdit.m_PlayerOptions.FromString(ModsLevel_Stage, EDIT_MODIFIERS);
+	m_PlayerStateEdit.m_PlayerOptions.FromString(ModsLevel_Stage, EDIT_MODIFIERS.GetValue());
 
-	this->originalPlayerOptions.FromString(ModsLevel_Stage, EDIT_MODIFIERS);
+	this->originalPlayerOptions.FromString(ModsLevel_Stage, EDIT_MODIFIERS.GetValue());
 
 	m_pSteps->GetNoteData(m_NoteDataEdit);
 	m_NoteFieldEdit.SetXY(EDIT_X, EDIT_Y);

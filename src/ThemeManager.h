@@ -43,7 +43,7 @@ class ThemeManager {
 	void GetLanguages(std::vector<RString> &AddTo);
 	bool DoesLanguageExist(const std::string &sLanguage);
 	void SwitchThemeAndLanguage(
-	   const RString &sThemeName, const RString &sLanguage, bool bPseudoLocalize, bool bForceThemeReload = false
+	   const std::string &sThemeName, const std::string &sLanguage, bool bPseudoLocalize, bool bForceThemeReload = false
 	);
 	void UpdateLuaGlobals();
 	std::string GetCurThemeName() const {
@@ -131,7 +131,7 @@ class ThemeManager {
 	static std::string GetBlankGraphicPath();
 
 	// needs to be public for its binding to work
-	void RunLuaScripts(const RString &sMask, bool bUseThemeDir = false);
+	void RunLuaScripts(const std::string &sMask, bool bUseThemeDir = false);
 
 	// For self-registering metrics
 	static void Subscribe(IThemeMetric *p);
@@ -141,7 +141,7 @@ class ThemeManager {
 	void PushSelf(lua_State *L);
 
  protected:
-	void LoadThemeMetrics(const RString &sThemeName, const RString &sLanguage_);
+	void LoadThemeMetrics(const std::string &sThemeName, const std::string &sLanguage_);
 	RString GetMetricRaw(const IniFile &ini, const std::string &sMetricsGroup, const std::string &sValueName);
 	bool GetMetricRawRecursive(
 	   const IniFile &ini, const std::string &sMetricsGroup, const std::string &sValueName, RString &sRet

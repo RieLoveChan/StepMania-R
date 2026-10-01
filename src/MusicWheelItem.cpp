@@ -40,7 +40,7 @@ MusicWheelItemData::MusicWheelItemData(
       m_sLabel("") {
 }
 
-MusicWheelItem::MusicWheelItem(RString sType) : WheelItemBase(sType) {
+MusicWheelItem::MusicWheelItem(std::string sType) : WheelItemBase(sType) {
 	GRADES_SHOW_MACHINE.Load(sType, "GradesShowMachine");
 
 	FOREACH_ENUM(MusicWheelItemType, i) {

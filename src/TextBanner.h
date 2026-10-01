@@ -17,12 +17,12 @@ class TextBanner : public ActorFrame {
 	void Load(std::string sMetricsGroup); // load metrics
 	void SetFromSong(const Song *pSong);
 	void SetFromString(
-	   const RString &sDisplayTitle,
-	   const RString &sTranslitTitle,
-	   const RString &sDisplaySubTitle,
-	   const RString &sTranslitSubTitle,
-	   const RString &sDisplayArtist,
-	   const RString &sTranslitArtist
+	   const std::string &sDisplayTitle,
+	   const std::string &sTranslitTitle,
+	   const std::string &sDisplaySubTitle,
+	   const std::string &sTranslitSubTitle,
+	   const std::string &sDisplayArtist,
+	   const std::string &sTranslitArtist
 	);
 
 	// Lua

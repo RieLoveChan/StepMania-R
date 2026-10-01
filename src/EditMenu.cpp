@@ -95,7 +95,7 @@ EditMenu::~EditMenu() {
 	IMAGECACHE->Undemand("Banner");
 }
 
-void EditMenu::Load(const RString &sType) {
+void EditMenu::Load(const std::string &sType) {
 	LOG_TRACE(Log::Screen, "EditMenu::Load");
 
 	SHOW_GROUPS.Load(sType, "ShowGroups");

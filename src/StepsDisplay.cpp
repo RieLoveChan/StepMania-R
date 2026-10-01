@@ -226,7 +226,7 @@ void StepsDisplay::SetInternal(const SetParams &params) {
 	if (m_bShowMeter) {
 		if (params.iMeter == 0) // Unset calls with this
 		{
-			m_textMeter.SetText(m_sZeroMeterString);
+			m_textMeter.SetText(m_sZeroMeterString.GetValue());
 		}
 		else {
 			const RString sMeter = ssprintf(m_sMeterFormatString.GetValue().c_str(), params.iMeter);

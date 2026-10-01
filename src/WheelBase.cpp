@@ -42,7 +42,7 @@ WheelBase::~WheelBase() {
 	m_LastSelection = nullptr;
 }
 
-void WheelBase::Load(RString sType) {
+void WheelBase::Load(std::string sType) {
 	LOG_TRACE(Log::Actor, "WheelBase::Load('%s')", sType.c_str());
 	ASSERT(this->GetNumChildren() == 0); // only load once
 

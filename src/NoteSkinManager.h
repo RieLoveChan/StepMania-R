@@ -41,9 +41,9 @@ class NoteSkinManager {
 		m_GameController = gc;
 	}
 	std::string GetPath(const std::string &sButtonName, const std::string &sElement);
-	bool PushActorTemplate(Lua *L, const RString &sButton, const RString &sElement, bool bSpriteOnly);
+	bool PushActorTemplate(Lua *L, const std::string &sButton, const std::string &sElement, bool bSpriteOnly);
 	Actor *
-	LoadActor(const RString &sButton, const RString &sElement, Actor *pParent = nullptr, bool bSpriteOnly = false);
+	LoadActor(const std::string &sButton, const std::string &sElement, Actor *pParent = nullptr, bool bSpriteOnly = false);
 
 	std::string GetMetric(const std::string &sButtonName, const std::string &sValue);
 	int GetMetricI(const std::string &sButtonName, const std::string &sValueName);
@@ -58,8 +58,8 @@ class NoteSkinManager {
 	std::string GetPathFromDirAndFile(const std::string &sDir, const std::string &sFileName);
 	void GetAllNoteSkinNamesForGame(const Game *pGame, std::vector<RString> &AddTo);
 
-	bool LoadNoteSkinData(const RString &sNoteSkinName, NoteSkinData &data_out);
-	bool LoadNoteSkinDataRecursive(const RString &sNoteSkinName, NoteSkinData &data_out);
+	bool LoadNoteSkinData(const std::string &sNoteSkinName, NoteSkinData &data_out);
+	bool LoadNoteSkinDataRecursive(const std::string &sNoteSkinName, NoteSkinData &data_out);
 	RString m_sCurrentNoteSkin;
 	const Game *m_pCurGame;
 

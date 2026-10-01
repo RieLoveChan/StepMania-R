@@ -23,7 +23,7 @@ RString MOD_ICON_X_NAME(std::size_t p);
 
 class OptionRowType {
  public:
-	void Load(const RString &sMetricsGroup, Actor *pParent);
+	void Load(const std::string &sMetricsGroup, Actor *pParent);
 
  private:
 	std::string m_sMetricsGroup;
@@ -127,7 +127,7 @@ class OptionRow : public ActorFrame {
 
 	std::string GetThemedItemText(int iChoice) const;
 
-	void SetExitText(RString sExitText);
+	void SetExitText(std::string sExitText);
 
 	void Reload();
 

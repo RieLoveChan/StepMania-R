@@ -74,7 +74,7 @@ void OptionRow::Clear() {
 	ZERO(m_iChoiceInRowWithFocus);
 }
 
-void OptionRowType::Load(const RString &sMetricsGroup, Actor *pParent) {
+void OptionRowType::Load(const std::string &sMetricsGroup, Actor *pParent) {
 	m_sMetricsGroup = sMetricsGroup;
 
 	ITEMS_START_X.Load(sMetricsGroup, "ItemsStartX");
@@ -746,7 +746,7 @@ bool OptionRow::GoToFirstOnStart() {
 	return m_pHand->GoToFirstOnStart();
 }
 
-void OptionRow::SetExitText(RString sExitText) {
+void OptionRow::SetExitText(std::string sExitText) {
 	BitmapText *bt = m_textItems.back();
 	bt->SetText(sExitText);
 }

@@ -61,7 +61,7 @@ namespace LuaHelpers {
 /* Load the given script with the given name. On success, the resulting
  * chunk will be on the stack. On error, the error is stored in sError
  * and the stack is unchanged. */
-bool LoadScript(Lua *L, const RString &sScript, const RString &sName, RString &sError);
+bool LoadScript(Lua *L, const std::string &sScript, const std::string &sName, RString &sError);
 
 /* Report the error three ways:  Broadcast message, Warn, and Dialog. */
 /* If UseAbort is true, reports the error through Dialog::AbortRetryIgnore
@@ -88,8 +88,8 @@ bool RunScriptOnStack(Lua *L, RString &Error, int Args = 0, int ReturnValues = 0
  * iArgs arguments are at the top of the stack. */
 bool RunScript(
    Lua *L,
-   const RString &Script,
-   const RString &Name,
+   const std::string &Script,
+   const std::string &Name,
    RString &Error,
    int Args = 0,
    int ReturnValues = 0,
@@ -98,9 +98,9 @@ bool RunScript(
 
 /* Run the given expression, returning a single value, and leave the return
  * value on the stack.  On error, push nil. */
-bool RunExpression(Lua *L, const RString &sExpression, const RString &sName = "");
+bool RunExpression(Lua *L, const std::string &sExpression, const std::string &sName = "");
 
-bool RunScriptFile(const RString &sFile);
+bool RunScriptFile(const std::string &sFile);
 
 /* Create a Lua array (a table with indices starting at 1) of the given vector,
  * and push it on the stack. */
@@ -163,8 +163,8 @@ inline int AbsIndex(Lua *L, int i) {
 
 class LuaThreadVariable {
  public:
-	LuaThreadVariable(const RString &sName, const RString &sValue);
-	LuaThreadVariable(const RString &sName, const LuaReference &Value);
+	LuaThreadVariable(const std::string &sName, const std::string &sValue);
+	LuaThreadVariable(const std::string &sName, const LuaReference &Value);
 	LuaThreadVariable(lua_State *L); // name and value are on stack
 	~LuaThreadVariable();
 	static void GetThreadVariable(lua_State *L);

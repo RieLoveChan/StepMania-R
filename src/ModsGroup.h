@@ -75,7 +75,7 @@ template <class T> class ModsGroup {
 			(m_[level].*fun)();
 	}
 
-	void FromString(ModsLevel level, const RString &str) {
+	void FromString(ModsLevel level, const std::string &str) {
 		if (level != ModsLevel_Song)
 			m_[ModsLevel_Current].FromString(str);
 		for (; level < ModsLevel_Current; enum_add(level, 1))

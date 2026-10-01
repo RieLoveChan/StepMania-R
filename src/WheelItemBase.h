@@ -27,7 +27,7 @@ LuaDeclareType(WheelItemDataType);
 struct WheelItemBaseData {
 	WheelItemBaseData() {
 	}
-	WheelItemBaseData(WheelItemDataType type, RString sText, RageColor color);
+	WheelItemBaseData(WheelItemDataType type, std::string sText, RageColor color);
 	virtual ~WheelItemBaseData() {
 	}
 	WheelItemDataType m_Type;
@@ -37,14 +37,14 @@ struct WheelItemBaseData {
 /** @brief An item on the wheel. */
 class WheelItemBase : public ActorFrame {
  public:
-	WheelItemBase(RString sType);
+	WheelItemBase(std::string sType);
 	WheelItemBase(const WheelItemBase &cpy);
 	virtual void DrawPrimitives();
 	virtual WheelItemBase *Copy() const {
 		return new WheelItemBase(*this);
 	}
 
-	void Load(RString sType);
+	void Load(std::string sType);
 	void DrawGrayBar(Actor &bar);
 	void SetExpanded(bool bExpanded) {
 		m_bExpanded = bExpanded;

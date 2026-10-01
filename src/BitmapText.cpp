@@ -425,7 +425,7 @@ void BitmapText::DrawChars(bool bUseStrokeTexture) {
 /* sText is UTF-8. If not all of the characters in sText are available in the
  * font, sAlternateText will be used instead. If there are unavailable characters
  * in sAlternateText, too, just use sText. */
-void BitmapText::SetText(const RString &_sText, const RString &_sAlternateText, int iWrapWidthPixels) {
+void BitmapText::SetText(const std::string &_sText, const std::string &_sAlternateText, int iWrapWidthPixels) {
 	ASSERT(m_pFont != nullptr);
 
 	RString sNewText = StringWillUseAlternate(_sText, _sAlternateText) ? _sAlternateText : _sText;

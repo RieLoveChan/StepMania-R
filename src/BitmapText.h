@@ -69,7 +69,7 @@ class BitmapText : public Actor {
 
 	bool LoadFromFont(const std::string &sFontName);
 	bool LoadFromTextureAndChars(const std::string &sTexturePath, const std::string &sChars);
-	virtual void SetText(const RString &sText, const RString &sAlternateText = "", int iWrapWidthPixels = -1);
+	virtual void SetText(const std::string &sText, const std::string &sAlternateText = "", int iWrapWidthPixels = -1);
 	void SetVertSpacing(int iSpacing);
 	void SetMaxWidth(float fMaxWidth);
 	void SetMaxHeight(float fMaxHeight);

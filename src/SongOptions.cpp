@@ -124,7 +124,7 @@ RString SongOptions::GetLocalizedString() const {
 
 /* Options are added to the current settings; call Init() beforehand if
  * you don't want this. */
-void SongOptions::FromString(const RString &sMultipleMods) {
+void SongOptions::FromString(const std::string &sMultipleMods) {
 	RString sTemp = sMultipleMods;
 	std::vector<RString> vs;
 	split(sTemp, ",", vs, true);
@@ -134,7 +134,7 @@ void SongOptions::FromString(const RString &sMultipleMods) {
 	}
 }
 
-bool SongOptions::FromOneModString(const RString &sOneMod, std::string & /* sErrorOut */) {
+bool SongOptions::FromOneModString(const std::string &sOneMod, std::string & /* sErrorOut */) {
 	RString sBit = sOneMod;
 	sBit.MakeLower();
 	Trim(sBit);

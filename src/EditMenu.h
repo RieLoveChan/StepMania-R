@@ -72,7 +72,7 @@ class EditMenu : public ActorFrame {
 	EditMenu();
 	/** @brief Destroy the EditMenu. */
 	~EditMenu();
-	void Load(const RString &sType);
+	void Load(const std::string &sType);
 
 	/** @brief Determine if we can move up.
 	 * @return true if we can, false otherwise. */

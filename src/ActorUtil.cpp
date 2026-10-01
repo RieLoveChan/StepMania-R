@@ -270,7 +270,7 @@ bool ActorUtil::LoadTableFromStackShowErrors(Lua *L) {
 
 // NOTE: This function can return nullptr if the actor should not be displayed.
 // Callers should be aware of this and handle it appropriately.
-Actor *ActorUtil::MakeActor(const RString &sPath_, Actor *pParentActor) {
+Actor *ActorUtil::MakeActor(const std::string &sPath_, Actor *pParentActor) {
 	RString sPath(sPath_);
 
 	FileType ft = GetFileType(sPath);
@@ -396,7 +396,7 @@ apActorCommands ActorUtil::ParseActorCommands(const RString &sCommands, const RS
 	return apActorCommands(pRet);
 }
 
-void ActorUtil::SetXY(Actor &actor, const RString &sMetricsGroup) {
+void ActorUtil::SetXY(Actor &actor, const std::string &sMetricsGroup) {
 	ASSERT(!actor.GetName().empty());
 
 	/*
@@ -410,21 +410,21 @@ void ActorUtil::SetXY(Actor &actor, const RString &sMetricsGroup) {
 		actor.SetXY(fX, fY);
 }
 
-void ActorUtil::LoadCommand(Actor &actor, const RString &sMetricsGroup, const RString &sCommandName) {
+void ActorUtil::LoadCommand(Actor &actor, const std::string &sMetricsGroup, const std::string &sCommandName) {
 	ActorUtil::LoadCommandFromName(actor, sMetricsGroup, sCommandName, actor.GetName());
 }
 
 void ActorUtil::LoadCommandFromName(
-   Actor &actor, const RString &sMetricsGroup, const RString &sCommandName, const RString &sName
+   Actor &actor, const std::string &sMetricsGroup, const std::string &sCommandName, const std::string &sName
 ) {
 	actor.AddCommand(sCommandName, THEME->GetMetricA(sMetricsGroup, sName + sCommandName + "Command"));
 }
 
-void ActorUtil::LoadAllCommands(Actor &actor, const RString &sMetricsGroup) {
+void ActorUtil::LoadAllCommands(Actor &actor, const std::string &sMetricsGroup) {
 	LoadAllCommandsFromName(actor, sMetricsGroup, actor.GetName());
 }
 
-void ActorUtil::LoadAllCommandsFromName(Actor &actor, const RString &sMetricsGroup, const RString &sName) {
+void ActorUtil::LoadAllCommandsFromName(Actor &actor, const std::string &sMetricsGroup, const std::string &sName) {
 	std::set<std::string> vsValueNames;
 	THEME->GetMetricsThatBeginWith(sMetricsGroup, sName, vsValueNames);
 

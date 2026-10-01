@@ -21,7 +21,7 @@ class MusicWheel : public WheelBase {
 
  public:
 	virtual ~MusicWheel();
-	virtual void Load(RString sType);
+	virtual void Load(std::string sType);
 	void BeginScreen();
 
 	bool ChangeSort(SortOrder new_so, bool allowSameSort = false); // return true if change successful
