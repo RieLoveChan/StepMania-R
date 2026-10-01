@@ -40,7 +40,7 @@ void AttackDisplay::Init(const PlayerState *pPlayerState) {
 	for (int al = 0; al < NUM_ATTACK_LEVELS; al++) {
 		const Character *ch = GAMESTATE->m_pCurCharacters[pn];
 		ASSERT(ch != nullptr);
-		const RString *asAttacks = ch->m_sAttacks[al];
+		const std::string *asAttacks = ch->m_sAttacks[al];
 		for (int att = 0; att < NUM_ATTACKS_PER_LEVEL; ++att)
 			attacks.insert(asAttacks[att]);
 	}

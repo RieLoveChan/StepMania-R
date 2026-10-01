@@ -31,21 +31,21 @@
 #include <cstdint>
 #include <vector>
 
-const RString STATS_XML = "Stats.xml";
-const RString STATS_XML_GZ = "Stats.xml.gz";
+const std::string STATS_XML = "Stats.xml";
+const std::string STATS_XML_GZ = "Stats.xml.gz";
 /** @brief The filename for where one can edit their personal profile information. */
-const RString EDITABLE_INI = "Editable.ini";
+const std::string EDITABLE_INI = "Editable.ini";
 /** @brief A tiny file containing the type and list priority. */
-const RString TYPE_INI = "Type.ini";
+const std::string TYPE_INI = "Type.ini";
 /** @brief The filename containing the signature for STATS_XML's signature. */
-const RString DONT_SHARE_SIG = "DontShare.sig";
-const RString PUBLIC_KEY_FILE = "public.key";
-const RString SCREENSHOTS_SUBDIR = "Screenshots/";
-const RString EDIT_STEPS_SUBDIR = "Edits/";
-const RString EDIT_COURSES_SUBDIR = "EditCourses/";
+const std::string DONT_SHARE_SIG = "DontShare.sig";
+const std::string PUBLIC_KEY_FILE = "public.key";
+const std::string SCREENSHOTS_SUBDIR = "Screenshots/";
+const std::string EDIT_STEPS_SUBDIR = "Edits/";
+const std::string EDIT_COURSES_SUBDIR = "EditCourses/";
 // const RString UPLOAD_SUBDIR         = "Upload/";
-const RString RIVAL_SUBDIR = "Rivals/";
-const RString SONGS_SUBDIR = "Songs/";
+const std::string RIVAL_SUBDIR = "Rivals/";
+const std::string SONGS_SUBDIR = "Songs/";
 
 ThemeMetric<bool> SHOW_COIN_DATA("Profile", "ShowCoinData");
 static Preference<bool> g_bProfileDataCompress("ProfileDataCompress", false);
@@ -215,7 +215,7 @@ Character *Profile::GetCharacter() const {
 	std::vector<Character *> vpCharacters;
 	CHARMAN->GetCharacters(vpCharacters);
 	for (Character *c : vpCharacters) {
-		if (c->m_sCharacterID.CompareNoCase(m_sCharacterID) == 0)
+		if (StdString::ssicmp(c->m_sCharacterID.c_str(), m_sCharacterID.c_str()) == 0)
 			return c;
 	}
 	return CHARMAN->GetDefaultCharacter();

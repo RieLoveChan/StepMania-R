@@ -131,7 +131,7 @@ void PushLoadedScreen(const LoadedScreen &ls) {
 
 	// Set the name of the loading screen.
 	{
-		LuaThreadVariable var1("PreviousScreen", RString(m_sPreviousTopScreen));
+		LuaThreadVariable var1("PreviousScreen", m_sPreviousTopScreen);
 		LuaThreadVariable var2("LoadingScreen", ls.m_pScreen->GetName());
 		ls.m_pScreen->BeginScreen();
 	}

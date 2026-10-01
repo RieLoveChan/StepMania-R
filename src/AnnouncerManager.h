@@ -32,15 +32,15 @@ class AnnouncerManager {
 	};
 	void NextAnnouncer();
 
-	std::string GetPathTo(RString sFolderName);
-	bool HasSoundsFor(RString sFolderName);
+	std::string GetPathTo(std::string sFolderName);
+	bool HasSoundsFor(std::string sFolderName);
 
 	// Lua
 	void PushSelf(lua_State *L);
 
  protected:
 	static std::string GetAnnouncerDirFromName(std::string sAnnouncerName);
-	std::string GetPathTo(std::string AnnouncerPath, RString sFolderName);
+	std::string GetPathTo(std::string AnnouncerPath, std::string sFolderName);
 	/** @brief the current announcer's name. */
 	std::string m_sCurAnnouncerName;
 };

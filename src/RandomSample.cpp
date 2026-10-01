@@ -15,7 +15,7 @@ RandomSample::~RandomSample() {
 }
 
 bool RandomSample::Load(std::string sFilePath, int iMaxToLoad) {
-	if (GetExtension(RString(sFilePath)).empty())
+	if (GetExtension(sFilePath).empty())
 		return LoadSoundDir(sFilePath, iMaxToLoad);
 	else
 		return LoadSound(sFilePath);
@@ -46,10 +46,10 @@ bool RandomSample::LoadSoundDir(std::string sDir, int iMaxToLoad) {
 #endif
 
 	std::vector<RString> arraySoundFiles;
-	GetDirListing(RString(sDir + "*.mp3"), arraySoundFiles);
-	GetDirListing(RString(sDir + "*.oga"), arraySoundFiles);
-	GetDirListing(RString(sDir + "*.ogg"), arraySoundFiles);
-	GetDirListing(RString(sDir + "*.wav"), arraySoundFiles);
+	GetDirListing(sDir + "*.mp3", arraySoundFiles);
+	GetDirListing(sDir + "*.oga", arraySoundFiles);
+	GetDirListing(sDir + "*.ogg", arraySoundFiles);
+	GetDirListing(sDir + "*.wav", arraySoundFiles);
 
 	std::shuffle(arraySoundFiles.begin(), arraySoundFiles.end(), g_RandomNumberGenerator);
 	const unsigned int newSize =

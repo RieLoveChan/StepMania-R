@@ -1760,7 +1760,7 @@ void GameState::GetAllUsedNoteSkins(std::vector<std::string> &out) const {
 
 			for (TrailEntry const &e : pTrail->m_vEntries) {
 				PlayerOptions po;
-				po.FromString(RString(e.Modifiers));
+				po.FromString(e.Modifiers);
 				if (!po.m_sNoteSkin.empty())
 					out.push_back(po.m_sNoteSkin);
 			}

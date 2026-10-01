@@ -7,16 +7,16 @@
 
 #include <vector>
 
-RString GetRandomFileInDir(RString sDir);
+std::string GetRandomFileInDir(std::string sDir);
 
 Character::Character()
     : m_sCharDir(""), m_sCharacterID(""), m_sDisplayName(""), m_sCardPath(""), m_sIconPath(""), m_bUsableInRave(false),
       m_iPreloadRefcount(0) {
 }
 
-bool Character::Load(RString sCharDir) {
+bool Character::Load(std::string sCharDir) {
 	// Save character directory
-	if (sCharDir.Right(1) != "/")
+	if (sCharDir.empty() || sCharDir.back() != '/')
 		sCharDir += "/";
 	m_sCharDir = sCharDir;
 
@@ -73,21 +73,21 @@ bool Character::Load(RString sCharDir) {
 	return true;
 }
 
-RString GetRandomFileInDir(RString sDir) {
+std::string GetRandomFileInDir(std::string sDir) {
 	std::vector<RString> asFiles;
 	GetDirListing(sDir, asFiles, false, true);
 	if (asFiles.empty())
-		return RString();
+		return std::string();
 	else
 		return asFiles[RandomInt(static_cast<int>(asFiles.size()))];
 }
 
 std::string Character::GetModelPath() const {
-	RString s = m_sCharDir + "model.txt";
+	std::string s = m_sCharDir + "model.txt";
 	if (DoesFileExist(s))
 		return s;
 	else
-		return RString();
+		return std::string();
 }
 
 std::string Character::GetRestAnimationPath() const {
@@ -187,7 +187,7 @@ bool Character::Has2DElems() {
 void Character::DemandGraphics() {
 	++m_iPreloadRefcount;
 	if (m_iPreloadRefcount == 1) {
-		RString s = GetIconPath();
+		std::string s = GetIconPath();
 		if (!s.empty())
 			m_Preload.Load(s);
 	}
@@ -242,11 +242,11 @@ class LunaCharacter : public Luna<Character> {
 		return 1;
 	}
 	static int GetCharacterID(T *p, lua_State *L) {
-		lua_pushstring(L, p->m_sCharacterID);
+		lua_pushstring(L, p->m_sCharacterID.c_str());
 		return 1;
 	}
 	static int GetDisplayName(T *p, lua_State *L) {
-		lua_pushstring(L, p->GetDisplayName());
+		lua_pushstring(L, p->GetDisplayName().c_str());
 		return 1;
 	}
 

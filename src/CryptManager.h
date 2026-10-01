@@ -4,7 +4,7 @@
 class RageFileBasic;
 struct lua_State;
 
-const RString SIGNATURE_APPEND = ".sig";
+const std::string SIGNATURE_APPEND = ".sig";
 
 class CryptManager {
  public:

@@ -22,10 +22,10 @@ struct HighScoreImpl {
 	unsigned int iMaxCombo;        // maximum combo obtained [SM5 alpha 1a+]
 	StageAward stageAward;         // stage award [SM5 alpha 1a+]
 	PeakComboAward peakComboAward; // peak combo award [SM5 alpha 1a+]
-	RString sModifiers;
-	DateTime dateTime;    // return value of time() when screenshot was taken
-	RString sPlayerGuid;  // who made this high score
-	RString sMachineGuid; // where this high score was made
+	std::string sModifiers;
+	DateTime dateTime;        // return value of time() when screenshot was taken
+	std::string sPlayerGuid;  // who made this high score
+	std::string sMachineGuid; // where this high score was made
 	int iProductID;
 	int iTapNoteScores[NUM_TapNoteScore];
 	int iHoldNoteScores[NUM_HoldNoteScore];

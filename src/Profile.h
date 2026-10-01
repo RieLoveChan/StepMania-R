@@ -23,7 +23,7 @@ struct lua_State;
 class Character;
 
 // Current file versions
-extern const RString STATS_XML;
+extern const std::string STATS_XML;
 
 /**
  * @brief The filename where one can edit their personal profile data.
@@ -32,7 +32,7 @@ extern const RString STATS_XML;
  * systems will open the ini file in an editor.  The default association for
  * XML will open in IE.  Users have a much better chance of discovering how to
  * edit this data if they don't have to fight against the file associations. */
-extern const RString EDITABLE_INI;
+extern const std::string EDITABLE_INI;
 
 /**
  * @brief The filename containing the signature for STATS_XML's signature.
@@ -44,13 +44,13 @@ extern const RString EDITABLE_INI;
  * to their own profile for use in the game unless they also have the "don't
  * share" file.  DontShare contains a piece of information that we can
  * construct using STATS_XML but the user can't construct using STATS_XML. */
-extern const RString DONT_SHARE_SIG;
+extern const std::string DONT_SHARE_SIG;
 
-extern const RString PUBLIC_KEY_FILE;
-extern const RString SCREENSHOTS_SUBDIR;
-extern const RString EDIT_STEPS_SUBDIR;
-extern const RString EDIT_COURSES_SUBDIR;
-extern const RString LASTGOOD_SUBDIR;
+extern const std::string PUBLIC_KEY_FILE;
+extern const std::string SCREENSHOTS_SUBDIR;
+extern const std::string EDIT_STEPS_SUBDIR;
+extern const std::string EDIT_COURSES_SUBDIR;
+extern const std::string LASTGOOD_SUBDIR;
 // extern const RString RIVAL_SUBDIR;
 
 /** @brief The max number of characters that can be used in a profile. */

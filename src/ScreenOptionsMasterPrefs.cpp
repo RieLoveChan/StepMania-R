@@ -210,7 +210,7 @@ static void Language(int &sel, bool ToSel, const ConfOption * /* pConfOption */)
 
 		// If the current language doesn't exist, we'll show BASE_LANGUAGE, so select that.
 		for (unsigned i = 0; sel == -1 && i < vs.size(); ++i)
-			if (!strcasecmp(vs[i], SpecialFiles::BASE_LANGUAGE))
+			if (!strcasecmp(vs[i], SpecialFiles::BASE_LANGUAGE.c_str()))
 				sel = i;
 
 		if (sel == -1) {

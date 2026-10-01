@@ -135,7 +135,7 @@ void DoChangeTheme() {
 
 	// We always need to force the theme to reload because we cleared the lua
 	// state by calling RegisterTypes so the scripts in Scripts/ need to run.
-	THEME->SwitchThemeAndLanguage(RString(g_NewTheme), THEME->GetCurLanguage(), PREFSMAN->m_bPseudoLocalize, true);
+	THEME->SwitchThemeAndLanguage(g_NewTheme, THEME->GetCurLanguage(), PREFSMAN->m_bPseudoLocalize, true);
 	PREFSMAN->m_sTheme.Set(RString(g_NewTheme));
 
 	// Apply the new window title, icon and aspect ratio.
@@ -171,7 +171,7 @@ void DoChangeGame() {
 	if (g_NewTheme.empty()) {
 		g_NewTheme = PREFSMAN->m_sTheme.Get();
 	}
-	if (g_NewTheme != THEME->GetCurThemeName() && THEME->IsThemeSelectable(RString(g_NewTheme))) {
+	if (g_NewTheme != THEME->GetCurThemeName() && THEME->IsThemeSelectable(g_NewTheme)) {
 		theme_changing = true;
 	}
 
@@ -179,7 +179,7 @@ void DoChangeGame() {
 		SAFE_DELETE(SCREENMAN);
 		TEXTUREMAN->DoDelayedDelete();
 		LUA->RegisterTypes();
-		THEME->SwitchThemeAndLanguage(RString(g_NewTheme), THEME->GetCurLanguage(), PREFSMAN->m_bPseudoLocalize);
+		THEME->SwitchThemeAndLanguage(g_NewTheme, THEME->GetCurLanguage(), PREFSMAN->m_bPseudoLocalize);
 		PREFSMAN->m_sTheme.Set(RString(g_NewTheme));
 		StepMania::ApplyGraphicOptions();
 		SCREENMAN = new ScreenManager();

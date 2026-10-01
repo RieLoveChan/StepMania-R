@@ -1139,7 +1139,7 @@ bool ProfileManager::IsPersistentProfile(ProfileSlot slot) const {
 void ProfileManager::GetLocalProfileIDs(std::vector<std::string> &vsProfileIDsOut) const {
 	vsProfileIDsOut.clear();
 	for (DirAndProfile const &i : g_vLocalProfile) {
-		RString sID = LocalProfileDirToID(RString(i.sDir));
+		RString sID = LocalProfileDirToID(i.sDir);
 		vsProfileIDsOut.push_back(sID);
 	}
 }
@@ -1162,7 +1162,7 @@ int ProfileManager::GetLocalProfileIndexFromID(std::string sProfileID) const {
 }
 
 std::string ProfileManager::GetLocalProfileIDFromIndex(int iIndex) {
-	RString sID = LocalProfileDirToID(RString(g_vLocalProfile[iIndex].sDir));
+	RString sID = LocalProfileDirToID(g_vLocalProfile[iIndex].sDir);
 	return sID;
 }
 

@@ -141,7 +141,7 @@ void Banner::LoadCardFromCharacter(const Character *pCharacter) {
 	if (pCharacter == nullptr)
 		LoadFallback();
 	else if (!pCharacter->GetCardPath().empty())
-		Load(RString(pCharacter->GetCardPath()));
+		Load(pCharacter->GetCardPath());
 	else
 		LoadFallback();
 
@@ -152,7 +152,7 @@ void Banner::LoadIconFromCharacter(const Character *pCharacter) {
 	if (pCharacter == nullptr)
 		LoadFallbackCharacterIcon();
 	else if (!pCharacter->GetIconPath().empty())
-		Load(RString(pCharacter->GetIconPath()), false);
+		Load(pCharacter->GetIconPath(), false);
 	else
 		LoadFallbackCharacterIcon();
 
@@ -198,7 +198,7 @@ void Banner::LoadCourseFallback() {
 void Banner::LoadFallbackCharacterIcon() {
 	Character *pCharacter = CHARMAN->GetDefaultCharacter();
 	if (pCharacter && !pCharacter->GetIconPath().empty())
-		Load(RString(pCharacter->GetIconPath()), false);
+		Load(pCharacter->GetIconPath(), false);
 	else
 		LoadFallback();
 }

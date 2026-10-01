@@ -213,7 +213,7 @@ void ScoreKeeperRave::AddSuperMeterDelta(float fUnscaledPercentChange) {
 void ScoreKeeperRave::LaunchAttack(AttackLevel al) {
 	PlayerNumber pn = m_pPlayerState->m_PlayerNumber;
 
-	RString *asAttacks = GAMESTATE->m_pCurCharacters[pn]->m_sAttacks[al]; // [NUM_ATTACKS_PER_LEVEL]
+	std::string *asAttacks = GAMESTATE->m_pCurCharacters[pn]->m_sAttacks[al]; // [NUM_ATTACKS_PER_LEVEL]
 	RString sAttackToGive;
 
 	if (GAMESTATE->m_pCurCharacters[pn] != nullptr)

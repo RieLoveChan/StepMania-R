@@ -232,7 +232,7 @@ void ThemeManager::GetLanguages(std::vector<RString> &AddTo) {
 	AddTo.clear();
 
 	for (unsigned i = 0; i < g_vThemes.size(); ++i)
-		GetLanguagesForTheme(RString(g_vThemes[i].sThemeName), AddTo);
+		GetLanguagesForTheme(g_vThemes[i].sThemeName, AddTo);
 
 	// remove dupes
 	sort(AddTo.begin(), AddTo.end());
@@ -286,10 +286,10 @@ void ThemeManager::LoadThemeMetrics(const std::string &sThemeName_, const std::s
 				iniStrings.ReadFile(s);
 		}
 		iniStrings.ReadFile(GetLanguageIniPath(sThemeName, SpecialFiles::BASE_LANGUAGE));
-		if (sLanguage.CompareNoCase(SpecialFiles::BASE_LANGUAGE)) {
+		if (sLanguage.CompareNoCase(SpecialFiles::BASE_LANGUAGE.c_str())) {
 			iniStrings.ReadFile(GetLanguageIniPath(sThemeName, sLanguage));
 		}
-		bool bIsBaseTheme = !sThemeName.CompareNoCase(SpecialFiles::BASE_THEME_NAME);
+		bool bIsBaseTheme = !sThemeName.CompareNoCase(SpecialFiles::BASE_THEME_NAME.c_str());
 		iniMetrics.GetValue("Global", "IsBaseTheme", bIsBaseTheme);
 		if (bIsBaseTheme) {
 			bLoadedBase = true;
@@ -300,7 +300,7 @@ void ThemeManager::LoadThemeMetrics(const std::string &sThemeName_, const std::s
 		 * "FallbackTheme=". */
 		RString sFallback;
 		if (!iniMetrics.GetValue("Global", "FallbackTheme", sFallback)) {
-			if (sThemeName.CompareNoCase(SpecialFiles::BASE_THEME_NAME) && !bLoadedBase) {
+			if (sThemeName.CompareNoCase(SpecialFiles::BASE_THEME_NAME.c_str()) && !bLoadedBase) {
 				sFallback = SpecialFiles::BASE_THEME_NAME;
 			}
 		}
@@ -738,7 +738,7 @@ bool ThemeManager::GetPathInfoToAndFallback(
 	while (n--) {
 		for (Theme const &theme : g_vThemes) {
 			// search with requested name
-			if (GetPathInfoToRaw(out, RString(theme.sThemeName), category, sMetricsGroup, sElement))
+			if (GetPathInfoToRaw(out, theme.sThemeName, category, sMetricsGroup, sElement))
 				return true;
 		}
 
@@ -1117,7 +1117,7 @@ void ThemeManager::GetLanguagesForTheme(const std::string &sThemeName, std::vect
 
 	for (RString const &s : as) {
 		// ignore metrics.ini
-		if (s.CompareNoCase(SpecialFiles::METRICS_FILE) == 0)
+		if (s.CompareNoCase(SpecialFiles::METRICS_FILE.c_str()) == 0)
 			continue;
 
 		// Ignore filenames with a space.  These are optional language inis that probably came from a mounted package.

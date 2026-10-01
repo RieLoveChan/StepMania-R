@@ -30,17 +30,17 @@ enum Month {
 	Month_Invalid   /**< There should be no month at this point. */
 };
 
-RString DayInYearToString(int iDayInYearIndex);
-RString LastDayToString(int iLastDayIndex);
-RString LastDayToLocalizedString(int iLastDayIndex);
-RString DayOfWeekToString(int iDayOfWeekIndex);
-RString DayOfWeekToLocalizedString(int iDayOfWeekIndex);
-RString HourInDayToString(int iHourIndex);
-RString HourInDayToLocalizedString(int iHourIndex);
+std::string DayInYearToString(int iDayInYearIndex);
+std::string LastDayToString(int iLastDayIndex);
+std::string LastDayToLocalizedString(int iLastDayIndex);
+std::string DayOfWeekToString(int iDayOfWeekIndex);
+std::string DayOfWeekToLocalizedString(int iDayOfWeekIndex);
+std::string HourInDayToString(int iHourIndex);
+std::string HourInDayToLocalizedString(int iHourIndex);
 const RString &MonthToString(Month month);
 const RString &MonthToLocalizedString(Month month);
-RString LastWeekToString(int iLastWeekIndex);
-RString LastWeekToLocalizedString(int iLastWeekIndex);
+std::string LastWeekToString(int iLastWeekIndex);
+std::string LastWeekToLocalizedString(int iLastWeekIndex);
 LuaDeclareType(Month);
 
 tm AddDays(tm start, int iDaysToMove);
@@ -149,7 +149,7 @@ struct DateTime {
 	 *
 	 * @param sDateTime the string to attempt to convert.
 	 * @return true if the conversion worked, or false otherwise. */
-	bool FromString(const RString sDateTime);
+	bool FromString(const std::string sDateTime);
 };
 
 #endif

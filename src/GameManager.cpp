@@ -147,7 +147,7 @@ void GameManager::LoadGames() {
 			);
 		}
 	}
-	ASSERT_M(!g_Games.empty(), "GameManager::LoadGames: no games could be loaded from " + SpecialFiles::GAMES_DIR);
+	ASSERT_M(!g_Games.empty(), ("GameManager::LoadGames: no games could be loaded from " + SpecialFiles::GAMES_DIR).c_str());
 }
 
 GameManager::~GameManager() {

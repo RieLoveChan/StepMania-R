@@ -29,7 +29,7 @@ BackgroundLoader::BackgroundLoader() : m_StartSem("BackgroundLoaderSem"), m_Mute
 	m_LoadThread.Create(LoadThread_Start, this);
 }
 
-static void DeleteEmptyDirectories(RString sDir) {
+static void DeleteEmptyDirectories(std::string sDir) {
 	std::vector<RString> asNewDirs;
 	GetDirListing(sDir + "/*", asNewDirs, false, true);
 	for (unsigned i = 0; i < asNewDirs.size(); ++i) {
@@ -63,19 +63,19 @@ BackgroundLoader::~BackgroundLoader() {
 /* Pull a request out of m_CacheRequests. */
 std::string BackgroundLoader::GetRequest() {
 	if (!g_bEnableBackgroundLoading)
-		return RString();
+		return std::string();
 
 	LockMut(m_Mutex);
 	if (m_CacheRequests.empty())
-		return RString();
+		return std::string();
 
-	RString ret;
+	std::string ret;
 	ret = m_CacheRequests.front();
 	m_CacheRequests.erase(m_CacheRequests.begin(), m_CacheRequests.begin() + 1);
 	return ret;
 }
 
-RString BackgroundLoader::GetCachePath(std::string sPath) const {
+std::string BackgroundLoader::GetCachePath(std::string sPath) const {
 	return m_sCachePathPrefix + sPath;
 }
 
@@ -85,7 +85,7 @@ void BackgroundLoader::LoadThread() {
 		 * fail on timeout. */
 		m_StartSem.Wait(false);
 
-		RString sFile = GetRequest();
+		std::string sFile = GetRequest();
 		if (sFile.empty())
 			continue;
 
@@ -110,7 +110,7 @@ void BackgroundLoader::LoadThread() {
 
 		LOG_TRACE(Log::File, "XXX: reading %s", sFile.c_str());
 
-		RString sCachePath = GetCachePath(sFile);
+		std::string sCachePath = GetCachePath(sFile);
 
 		/* Open the file and read it. */
 		RageFile src;

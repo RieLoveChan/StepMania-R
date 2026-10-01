@@ -14,7 +14,7 @@ class Character {
 	~Character() {
 	}
 
-	bool Load(RString sCharDir); // return true if successful
+	bool Load(std::string sCharDir); // return true if successful
 
 	std::string GetTakingABreakPath() const;
 	std::string GetCardPath() const {
@@ -33,7 +33,7 @@ class Character {
 	bool Has2DElems();
 
 	bool IsDefaultCharacter() const {
-		return m_sCharacterID.CompareNoCase("default") == 0;
+		return StdString::ssicmp(m_sCharacterID.c_str(), "default") == 0;
 	}
 
 	void DemandGraphics();
@@ -43,15 +43,15 @@ class Character {
 	void PushSelf(Lua *L);
 
 	// smart accessor
-	const RString &GetDisplayName() const {
+	const std::string &GetDisplayName() const {
 		return !m_sDisplayName.empty() ? m_sDisplayName : m_sCharacterID;
 	}
 
 	std::string m_sCharDir;
-	RString m_sCharacterID;
+	std::string m_sCharacterID;
 
  private:
-	RString m_sDisplayName;
+	std::string m_sDisplayName;
 	std::string m_sCardPath;
 	std::string m_sIconPath;
 
@@ -64,7 +64,7 @@ class Character {
 	 * All of the variables listed below here will be filled in if true. */
 	bool m_bUsableInRave;
 
-	RString m_sAttacks[NUM_ATTACK_LEVELS][NUM_ATTACKS_PER_LEVEL];
+	std::string m_sAttacks[NUM_ATTACK_LEVELS][NUM_ATTACKS_PER_LEVEL];
 	RageTexturePreloader m_Preload;
 	int m_iPreloadRefcount;
 };
