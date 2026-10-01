@@ -29,7 +29,7 @@ class RageSoundReader_FileReader : public RageSoundReader {
 	float GetStreamToSourceRatio() const override {
 		return 1.0f;
 	}
-	RString GetError() const override {
+	std::string GetError() const override {
 		return m_sError;
 	}
 

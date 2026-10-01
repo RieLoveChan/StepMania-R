@@ -45,7 +45,7 @@ class RageSoundReader {
 	virtual int GetNextSourceFrame() const = 0;
 	virtual float GetStreamToSourceRatio() const = 0;
 
-	virtual RString GetError() const = 0;
+	virtual std::string GetError() const = 0;
 	int RetriedRead(float *pBuffer, int iFrames, int *iSourceFrame = nullptr, float *fRate = nullptr);
 };
 

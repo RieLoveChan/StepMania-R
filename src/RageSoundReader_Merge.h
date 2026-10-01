@@ -32,7 +32,7 @@ class RageSoundReader_Merge : public RageSoundReader {
 	float GetStreamToSourceRatio() const override {
 		return m_fCurrentStreamToSourceRatio;
 	}
-	RString GetError() const override {
+	std::string GetError() const override {
 		return "";
 	}
 

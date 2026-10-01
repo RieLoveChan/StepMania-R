@@ -22,7 +22,7 @@ class RageFileDriverReadAhead : public RageFileObj {
 		m_bFileOwned = true;
 	}
 
-	RString GetError() const override {
+	std::string GetError() const override {
 		return m_pFile->GetError();
 	}
 	void ClearError() override {

@@ -16,7 +16,7 @@ class RageFileBasic {
 	virtual ~RageFileBasic() {
 	}
 
-	virtual RString GetError() const = 0;
+	virtual std::string GetError() const = 0;
 	virtual void ClearError() = 0;
 	virtual bool AtEOF() const = 0;
 
@@ -73,7 +73,7 @@ class RageFileObj : public RageFileBasic {
 	RageFileObj(const RageFileObj &cpy);
 	~RageFileObj() override;
 
-	RString GetError() const override {
+	std::string GetError() const override {
 		return m_sError;
 	}
 	void ClearError() override {

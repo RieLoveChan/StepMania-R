@@ -26,7 +26,7 @@ class RageSoundReader_Split : public RageSoundReader {
 	bool SetProperty(const RString &sProperty, float fValue) override;
 	int GetNextSourceFrame() const override;
 	float GetStreamToSourceRatio() const override;
-	RString GetError() const override;
+	std::string GetError() const override;
 
 	void AddSourceChannelToSound(int iFromChannel, int iToChannel);
 

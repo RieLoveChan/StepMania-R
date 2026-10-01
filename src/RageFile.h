@@ -59,7 +59,7 @@ class RageFile : public RageFileBasic {
 	}
 
 	bool AtEOF() const override;
-	RString GetError() const override;
+	std::string GetError() const override;
 	void ClearError() override;
 
 	int Tell() const override;

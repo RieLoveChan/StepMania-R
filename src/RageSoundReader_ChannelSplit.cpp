@@ -96,7 +96,7 @@ int RageSoundReader_Split::GetNextSourceFrame() const {
 float RageSoundReader_Split::GetStreamToSourceRatio() const {
 	return 1.0f;
 }
-RString RageSoundReader_Split::GetError() const {
+std::string RageSoundReader_Split::GetError() const {
 	return m_pImpl->m_pSource->GetError();
 }
 

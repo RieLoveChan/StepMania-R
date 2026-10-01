@@ -26,7 +26,7 @@ class RageSoundReader_Preload : public RageSoundReader {
 	float GetStreamToSourceRatio() const override {
 		return m_fRate;
 	}
-	RString GetError() const override {
+	std::string GetError() const override {
 		return "";
 	}
 

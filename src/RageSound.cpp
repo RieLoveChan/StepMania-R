@@ -153,7 +153,7 @@ class RageSoundReader_Silence : public RageSoundReader {
 	float GetStreamToSourceRatio() const override {
 		return 1.0f;
 	}
-	RString GetError() const override {
+	std::string GetError() const override {
 		return "";
 	}
 };

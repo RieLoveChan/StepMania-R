@@ -40,7 +40,7 @@ class RageSoundReader_Filter : public RageSoundReader {
 	RageSoundReader *GetSource() override {
 		return &*m_pSource;
 	}
-	RString GetError() const override {
+	std::string GetError() const override {
 		return m_pSource->GetError();
 	}
 
