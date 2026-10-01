@@ -12,7 +12,7 @@ GameStateEditData::GameStateEditData()
 Profile *GameStateEditData::GetEditLocalProfile() {
 	if (m_sEditLocalProfileID.Get().empty())
 		return nullptr;
-	return PROFILEMAN->GetLocalProfile(m_sEditLocalProfileID);
+	return PROFILEMAN->GetLocalProfile(m_sEditLocalProfileID.Get());
 }
 
 /*

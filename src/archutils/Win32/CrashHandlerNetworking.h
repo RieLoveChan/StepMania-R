@@ -25,7 +25,7 @@ class NetworkPostData {
 
 	RString GetStatus() const;
 	float GetProgress() const;
-	RString GetError() const;
+	std::string GetError() const;
 	RString GetResult() const {
 		return m_sResult;
 	}

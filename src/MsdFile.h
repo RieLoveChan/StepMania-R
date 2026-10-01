@@ -55,7 +55,7 @@ class MsdFile {
 	/**
 	 * @brief Should an error take place, have an easy place to get it.
 	 * @return the current error. */
-	RString GetError() const {
+	std::string GetError() const {
 		return error;
 	}
 

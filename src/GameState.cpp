@@ -2081,7 +2081,7 @@ bool GameState::AnyPlayerHasRankingFeats() const {
 	return false;
 }
 
-void GameState::StoreRankingName(PlayerNumber pn, RString sName) {
+void GameState::StoreRankingName(PlayerNumber pn, std::string sName) {
 	// The theme can upper it if desired. -Kyz
 	// sName.MakeUpper();
 

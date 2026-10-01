@@ -75,15 +75,15 @@ class OptionsList : public ActorFrame {
 	void UpdateMenuFromSelections();
 	std::string GetCurrentRow() const;
 	OptionRowHandler *GetCurrentHandler();
-	int GetOneSelection(RString sRow, bool bAllowFail = false) const;
+	int GetOneSelection(std::string sRow, bool bAllowFail = false) const;
 	void SwitchToCurrentRow();
 	void TweenOnCurrentRow(bool bForward);
 	void SetDefaultCurrentRow();
-	void Push(RString sDest);
+	void Push(std::string sDest);
 	void Pop();
-	void ImportRow(RString sRow);
-	void ExportRow(RString sRow);
-	static int FindScreenInHandler(const OptionRowHandler *pHandler, RString sScreen);
+	void ImportRow(std::string sRow);
+	void ExportRow(std::string sRow);
+	static int FindScreenInHandler(const OptionRowHandler *pHandler, std::string sScreen);
 
 	InputQueueCodeSet m_Codes;
 

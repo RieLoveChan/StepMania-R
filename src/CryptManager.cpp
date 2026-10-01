@@ -365,7 +365,7 @@ std::string CryptManager::GetMD5ForFile(RString fn) {
 	return RString((const char *)digest, sizeof(digest));
 }
 
-std::string CryptManager::GetMD5ForString(RString sData) {
+std::string CryptManager::GetMD5ForString(std::string sData) {
 	unsigned char digest[16];
 
 	int iHash = register_hash(&md5_desc);
@@ -378,7 +378,7 @@ std::string CryptManager::GetMD5ForString(RString sData) {
 	return RString((const char *)digest, sizeof(digest));
 }
 
-std::string CryptManager::GetSHA1ForString(RString sData) {
+std::string CryptManager::GetSHA1ForString(std::string sData) {
 	unsigned char digest[20];
 
 	int iHash = register_hash(&sha1_desc);
@@ -406,7 +406,7 @@ std::string CryptManager::GetSHA1ForFile(RString fn) {
 	return RString((const char *)digest, sizeof(digest));
 }
 
-std::string CryptManager::GetSHA256ForString(RString sData) {
+std::string CryptManager::GetSHA256ForString(std::string sData) {
 	unsigned char digest[32];
 
 	int iHash = register_hash(&sha256_desc);

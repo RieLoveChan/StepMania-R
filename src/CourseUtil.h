@@ -58,7 +58,7 @@ bool RemoveAndDeleteFile(Course *pCourse);
 bool ValidateEditCourseName(const RString &sAnswer, RString &sErrorOut);
 void GetAllEditCourses(std::vector<Course *> &vpCoursesOut);
 bool Save(Course *pCourse);
-bool RenameAndSave(Course *pCourse, RString sName);
+bool RenameAndSave(Course *pCourse, std::string sName);
 
 bool ValidateEditCourseNametName(const RString &sAnswer, RString &sErrorOut);
 

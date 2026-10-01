@@ -82,7 +82,7 @@ struct WavReader {
 	virtual bool Init() = 0;
 	virtual int SetPosition(int iFrame) = 0;
 	virtual int GetNextSourceFrame() const = 0;
-	RString GetError() const {
+	std::string GetError() const {
 		return m_sError;
 	}
 

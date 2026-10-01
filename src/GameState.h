@@ -422,7 +422,7 @@ class GameState {
 
 	void GetRankingFeats(PlayerNumber pn, std::vector<RankingFeat> &vFeatsOut) const;
 	bool AnyPlayerHasRankingFeats() const;
-	void StoreRankingName(PlayerNumber pn, RString name); // Called by name entry screens
+	void StoreRankingName(PlayerNumber pn, std::string name); // Called by name entry screens
 	std::vector<RString *> m_vpsNamesThatWereFilled;      // filled on StoreRankingName,
 	std::set<PlayerNumber> m_sPlayersThatWereFilled;      // filled on StoreRankingName,
 

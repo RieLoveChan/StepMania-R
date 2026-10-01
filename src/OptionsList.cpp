@@ -251,7 +251,7 @@ void OptionsList::Open() {
 
 	/* Push the initial menu. */
 	ASSERT(m_asMenuStack.empty());
-	Push(TOP_MENU);
+	Push(TOP_MENU.GetValue());
 
 	this->FinishTweening();
 	m_Row[!m_iCurrentRow].SetFromHandler(nullptr);
@@ -279,9 +279,9 @@ OptionRowHandler *OptionsList::GetCurrentHandler() {
 	return m_Rows[sCurrentRow];
 }
 
-int OptionsList::GetOneSelection(RString sRow, bool bAllowFail) const {
+int OptionsList::GetOneSelection(std::string sRow, bool bAllowFail) const {
 	std::map<std::string, std::vector<bool>>::const_iterator it = m_bSelections.find(sRow);
-	ASSERT_M(it != m_bSelections.end(), sRow);
+	ASSERT_M(it != m_bSelections.end(), sRow.c_str());
 	const std::vector<bool> &bSelections = it->second;
 	for (unsigned i = 0; i < bSelections.size(); i++) {
 		if (bSelections[i])
@@ -482,7 +482,7 @@ void OptionsList::TweenOnCurrentRow(bool bForward) {
 		NewRow.PlayCommand("TweenInBackward");
 }
 
-void OptionsList::ImportRow(RString sRow) {
+void OptionsList::ImportRow(std::string sRow) {
 	std::vector<bool> aSelections[NUM_PLAYERS];
 	std::vector<PlayerNumber> vpns;
 	vpns.push_back(m_pn);
@@ -495,7 +495,7 @@ void OptionsList::ImportRow(RString sRow) {
 		fill(m_bSelections[sRow].begin(), m_bSelections[sRow].end(), false);
 }
 
-void OptionsList::ExportRow(RString sRow) {
+void OptionsList::ExportRow(std::string sRow) {
 	if (m_setTopMenus.find(sRow) != m_setTopMenus.end())
 		return;
 
@@ -522,7 +522,7 @@ void OptionsList::SetDefaultCurrentRow() {
 	}
 }
 
-int OptionsList::FindScreenInHandler(const OptionRowHandler *pHandler, RString sScreen) {
+int OptionsList::FindScreenInHandler(const OptionRowHandler *pHandler, std::string sScreen) {
 	for (std::size_t i = 0; i < pHandler->m_Def.m_vsChoices.size(); ++i) {
 		if (pHandler->GetScreen(static_cast<int>(i)) == sScreen)
 			return static_cast<int>(i);
@@ -553,7 +553,7 @@ void OptionsList::Pop() {
 	TweenOnCurrentRow(false);
 }
 
-void OptionsList::Push(RString sDest) {
+void OptionsList::Push(std::string sDest) {
 	m_asMenuStack.push_back(sDest);
 	SetDefaultCurrentRow();
 	SwitchToCurrentRow();

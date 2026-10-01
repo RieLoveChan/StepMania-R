@@ -322,7 +322,7 @@ bool EditCourseUtil::Save(Course *pCourse) {
 	return EditCourseUtil::RenameAndSave(pCourse, pCourse->GetDisplayFullTitle());
 }
 
-bool EditCourseUtil::RenameAndSave(Course *pCourse, RString sNewName) {
+bool EditCourseUtil::RenameAndSave(Course *pCourse, std::string sNewName) {
 	ASSERT(!sNewName.empty());
 
 	EditCourseUtil::s_bNewCourseNeedsName = false;

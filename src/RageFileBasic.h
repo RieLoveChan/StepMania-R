@@ -132,7 +132,7 @@ class RageFileObj : public RageFileBasic {
 	void EnableReadBuffering();
 	void EnableWriteBuffering(int iBytes = 1024 * 64);
 
-	void SetError(const RString &sError) {
+	void SetError(const std::string &sError) {
 		m_sError = sError;
 	}
 	RString m_sError;

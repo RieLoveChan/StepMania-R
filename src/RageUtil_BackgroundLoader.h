@@ -26,7 +26,7 @@ class BackgroundLoader {
 	bool IsCacheFileFinished(const RString &sFile, RString &sActualPath);
 
 	/* Call this when finished with a cached file, to release any resources. */
-	void FinishedWithCachedFile(RString sFile);
+	void FinishedWithCachedFile(std::string sFile);
 
 	/* Abort all loads. */
 	void Abort();

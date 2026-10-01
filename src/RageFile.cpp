@@ -124,7 +124,7 @@ std::string RageFile::GetError() const {
 	return m_sError;
 }
 
-void RageFile::SetError(const RString &err) {
+void RageFile::SetError(const std::string &err) {
 	if (m_File != nullptr)
 		m_File->ClearError();
 	m_sError = err;

@@ -111,7 +111,7 @@ class NetworkStream {
 	State GetState() const {
 		return m_State;
 	}
-	RString GetError() const {
+	std::string GetError() const {
 		return m_sError;
 	}
 
@@ -135,7 +135,7 @@ class NetworkStream_Win32 : public NetworkStream {
 
  private:
 	int WaitForCompletionOrCancellation(int iEvent);
-	void SetError(const RString &sError);
+	void SetError(const std::string &sError);
 	static std::string WinSockErrorToString(int iError);
 
 	SOCKET m_Socket;
@@ -329,7 +329,7 @@ std::string NetworkStream_Win32::WinSockErrorToString(int iError) {
 	}
 }
 
-void NetworkStream_Win32::SetError(const RString &sError) {
+void NetworkStream_Win32::SetError(const std::string &sError) {
 	m_Mutex.Lock();
 	if (m_State != STATE_CANCELLED) {
 		m_sError = sError;
@@ -723,7 +723,7 @@ float NetworkPostData::GetProgress() const {
 	return m_fProgress;
 }
 
-RString NetworkPostData::GetError() const {
+std::string NetworkPostData::GetError() const {
 	return m_pStream->GetError();
 }
 

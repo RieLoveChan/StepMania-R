@@ -191,7 +191,7 @@ bool BackgroundLoader::IsCacheFileFinished(const RString &sFile, RString &sActua
 	return true;
 }
 
-void BackgroundLoader::FinishedWithCachedFile(RString sFile) {
+void BackgroundLoader::FinishedWithCachedFile(std::string sFile) {
 	if (!g_bEnableBackgroundLoading)
 		return;
 
@@ -200,7 +200,7 @@ void BackgroundLoader::FinishedWithCachedFile(RString sFile) {
 
 	std::map<std::string, int>::iterator it;
 	it = m_FinishedRequests.find(sFile);
-	ASSERT_M(it != m_FinishedRequests.end(), sFile);
+	ASSERT_M(it != m_FinishedRequests.end(), sFile.c_str());
 
 	--it->second;
 	ASSERT_M(it->second >= 0, ssprintf("%i", it->second));

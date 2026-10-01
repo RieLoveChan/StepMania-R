@@ -92,7 +92,7 @@ class RageFile : public RageFileBasic {
 	virtual void PushSelf(lua_State *L);
 
  private:
-	void SetError(const RString &err);
+	void SetError(const std::string &err);
 
 	RageFileBasic *m_File;
 	RString m_Path;

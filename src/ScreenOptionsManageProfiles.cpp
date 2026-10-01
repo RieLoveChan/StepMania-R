@@ -77,7 +77,7 @@ static bool ValidateLocalProfileName(const RString &sAnswer, RString &sErrorOut)
 		return false;
 	}
 
-	Profile *pProfile = PROFILEMAN->GetLocalProfile(GAMESTATE->m_sEditLocalProfileID);
+	Profile *pProfile = PROFILEMAN->GetLocalProfile(GAMESTATE->m_sEditLocalProfileID.Get());
 	if (pProfile != nullptr && sAnswer == pProfile->m_sDisplayName)
 		return true; // unchanged
 
@@ -227,7 +227,7 @@ void ScreenOptionsManageProfiles::HandleScreenMessage(const ScreenMessage SM) {
 			ASSERT(!ScreenTextEntry::s_sLastAnswer.empty()); // validate should have assured this
 
 			RString sNewName = ScreenTextEntry::s_sLastAnswer;
-			PROFILEMAN->RenameLocalProfile(GAMESTATE->m_sEditLocalProfileID, sNewName);
+			PROFILEMAN->RenameLocalProfile(GAMESTATE->m_sEditLocalProfileID.Get(), sNewName);
 			if (PREFSMAN->m_ProfileSortOrder == ProfileSortOrder_Alphabetical) {
 				PROFILEMAN->MoveProfileSorted(GetLocalProfileIndexWithFocus(), PREFSMAN->m_bProfileSortOrderAscending);
 			}
@@ -259,7 +259,7 @@ void ScreenOptionsManageProfiles::HandleScreenMessage(const ScreenMessage SM) {
 	}
 	else if (SM == SM_BackFromContextMenu) {
 		if (!ScreenMiniMenu::s_bCancelled) {
-			Profile *pProfile = PROFILEMAN->GetLocalProfile(GAMESTATE->m_sEditLocalProfileID);
+			Profile *pProfile = PROFILEMAN->GetLocalProfile(GAMESTATE->m_sEditLocalProfileID.Get());
 			ASSERT(pProfile != nullptr);
 
 			switch (ScreenMiniMenu::s_iLastRowCode) {

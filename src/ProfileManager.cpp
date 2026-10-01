@@ -53,10 +53,10 @@ const RString LAST_GOOD_SUBDIR = "LastGood/";
 static Preference<RString>
    g_sMemoryCardProfileImportSubdirs("MemoryCardProfileImportSubdirs", "StepMania 5.1;StepMania 5;In The Groove 2");
 
-static std::string LocalProfileIDToDir(const RString &sProfileID) {
+static std::string LocalProfileIDToDir(const std::string &sProfileID) {
 	return USER_PROFILES_DIR + sProfileID + "/";
 }
-static std::string LocalProfileDirToID(const RString &sDir) {
+static std::string LocalProfileDirToID(const std::string &sDir) {
 	return Basename(sDir);
 }
 
@@ -343,7 +343,7 @@ bool ProfileManager::SaveProfile(PlayerNumber pn) const {
 	return b;
 }
 
-bool ProfileManager::SaveLocalProfile(RString sProfileID) {
+bool ProfileManager::SaveLocalProfile(std::string sProfileID) {
 	const Profile *pProfile = GetLocalProfile(sProfileID);
 	ASSERT(pProfile != nullptr);
 	RString sDir = LocalProfileIDToDir(sProfileID);
@@ -577,7 +577,7 @@ void ProfileManager::LoadLocalProfilesByRecent() {
 	}
 }
 
-const Profile *ProfileManager::GetLocalProfile(const RString &sProfileID) const {
+const Profile *ProfileManager::GetLocalProfile(const std::string &sProfileID) const {
 	RString sDir = LocalProfileIDToDir(sProfileID);
 	for (DirAndProfile const &dap : g_vLocalProfile) {
 		const std::string &sOther = dap.sDir;
@@ -684,7 +684,7 @@ static void InsertProfileIntoList(DirAndProfile &derp) {
 	}
 }
 
-void ProfileManager::AddLocalProfileByID(Profile *pProfile, RString sProfileID) {
+void ProfileManager::AddLocalProfileByID(Profile *pProfile, std::string sProfileID) {
 	// make sure this id doesn't already exist
 	ASSERT_M(
 	   GetLocalProfile(sProfileID) == nullptr,
@@ -697,7 +697,7 @@ void ProfileManager::AddLocalProfileByID(Profile *pProfile, RString sProfileID) 
 	InsertProfileIntoList(derp);
 }
 
-bool ProfileManager::RenameLocalProfile(RString sProfileID, RString sNewName) {
+bool ProfileManager::RenameLocalProfile(std::string sProfileID, std::string sNewName) {
 	ASSERT(!sProfileID.empty());
 
 	Profile *pProfile = ProfileManager::GetLocalProfile(sProfileID);
@@ -708,7 +708,7 @@ bool ProfileManager::RenameLocalProfile(RString sProfileID, RString sNewName) {
 	return pProfile->SaveAllToDir(sProfileDir, PREFSMAN->m_bSignProfileData);
 }
 
-bool ProfileManager::DeleteLocalProfile(RString sProfileID) {
+bool ProfileManager::DeleteLocalProfile(std::string sProfileID) {
 	Profile *pProfile = ProfileManager::GetLocalProfile(sProfileID);
 	ASSERT(pProfile != nullptr);
 	RString sProfileDir = LocalProfileIDToDir(sProfileID);
@@ -1150,7 +1150,7 @@ void ProfileManager::GetLocalProfileDisplayNames(std::vector<std::string> &vsPro
 		vsProfileDisplayNamesOut.push_back(i.profile.m_sDisplayName);
 }
 
-int ProfileManager::GetLocalProfileIndexFromID(RString sProfileID) const {
+int ProfileManager::GetLocalProfileIndexFromID(std::string sProfileID) const {
 	RString sDir = LocalProfileIDToDir(sProfileID);
 	int j = 0;
 	for (DirAndProfile const &i : g_vLocalProfile) {

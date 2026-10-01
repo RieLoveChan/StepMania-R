@@ -35,20 +35,20 @@ class ProfileManager {
 	void LoadLocalProfilesByRecent();
 	void LoadLocalProfilesByName();
 
-	const Profile *GetLocalProfile(const RString &sProfileID) const;
-	Profile *GetLocalProfile(const RString &sProfileID) {
+	const Profile *GetLocalProfile(const std::string &sProfileID) const;
+	Profile *GetLocalProfile(const std::string &sProfileID) {
 		return (Profile *)((const ProfileManager *)this)->GetLocalProfile(sProfileID);
 	}
 	Profile *GetLocalProfileFromIndex(int iIndex);
 	std::string GetLocalProfileIDFromIndex(int iIndex);
 
 	bool CreateLocalProfile(std::string sName, std::string &sProfileIDOut);
-	void AddLocalProfileByID(Profile *pProfile, RString sProfileID); // transfers ownership of pProfile
-	bool RenameLocalProfile(RString sProfileID, RString sNewName);
-	bool DeleteLocalProfile(RString sProfileID);
+	void AddLocalProfileByID(Profile *pProfile, std::string sProfileID); // transfers ownership of pProfile
+	bool RenameLocalProfile(std::string sProfileID, std::string sNewName);
+	bool DeleteLocalProfile(std::string sProfileID);
 	void GetLocalProfileIDs(std::vector<std::string> &vsProfileIDsOut) const;
 	void GetLocalProfileDisplayNames(std::vector<std::string> &vsProfileDisplayNamesOut) const;
-	int GetLocalProfileIndexFromID(RString sProfileID) const;
+	int GetLocalProfileIndexFromID(std::string sProfileID) const;
 	int GetNumLocalProfiles() const;
 
 	std::string GetStatsPrefix() {
@@ -61,7 +61,7 @@ class ProfileManager {
 	bool LoadProfileFromMemoryCard(PlayerNumber pn, bool bLoadEdits = true);
 	bool FastLoadProfileNameFromMemoryCard(std::string sRootDir, std::string &sName) const;
 	bool SaveProfile(PlayerNumber pn) const;
-	bool SaveLocalProfile(RString sProfileID);
+	bool SaveLocalProfile(std::string sProfileID);
 	void UnloadProfile(PlayerNumber pn);
 
 	void MergeLocalProfiles(RString const &from_id, RString const &to_id);
