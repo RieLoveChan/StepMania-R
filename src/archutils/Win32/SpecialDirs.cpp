@@ -12,23 +12,23 @@ static std::string GetSpecialFolderPath(int csidl) {
 	return sDir;
 }
 
-RString SpecialDirs::GetAppDataDir() {
+std::string SpecialDirs::GetAppDataDir() {
 	return GetSpecialFolderPath(CSIDL_APPDATA);
 }
 
-RString SpecialDirs::GetLocalAppDataDir() {
+std::string SpecialDirs::GetLocalAppDataDir() {
 	return GetSpecialFolderPath(CSIDL_LOCAL_APPDATA);
 }
 
-RString SpecialDirs::GetCommonAppDataDir() {
+std::string SpecialDirs::GetCommonAppDataDir() {
 	return GetSpecialFolderPath(CSIDL_COMMON_APPDATA);
 }
 
-RString SpecialDirs::GetPicturesDir() {
+std::string SpecialDirs::GetPicturesDir() {
 	return GetSpecialFolderPath(CSIDL_MYPICTURES);
 }
 
-RString SpecialDirs::GetDesktopDir() {
+std::string SpecialDirs::GetDesktopDir() {
 	return GetSpecialFolderPath(CSIDL_DESKTOP);
 }
 

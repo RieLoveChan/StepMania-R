@@ -163,7 +163,7 @@ bool IsEditDescriptionUnique(
    const Song *pSong, StepsType st, const RString &sPreferredDescription, const Steps *pExclude
 );
 bool IsChartNameUnique(const Song *pSong, StepsType st, const RString &name, const Steps *pExclude);
-RString MakeUniqueEditDescription(const Song *pSong, StepsType st, const RString &sPreferredDescription);
+std::string MakeUniqueEditDescription(const Song *pSong, StepsType st, const RString &sPreferredDescription);
 bool ValidateCurrentEditStepsDescription(const RString &sAnswer, RString &sErrorOut);
 bool ValidateCurrentStepsDescription(const RString &sAnswer, RString &sErrorOut);
 bool ValidateCurrentStepsCredit(const RString &sAnswer, RString &sErrorOut);

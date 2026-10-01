@@ -767,7 +767,7 @@ void SongManager::GetPreferredSortSongs(std::vector<Song *> &AddTo) const {
 		AddTo.insert(AddTo.end(), v.vpSongs.begin(), v.vpSongs.end());
 }
 
-RString SongManager::SongToPreferredSortSectionName(const Song *pSong) const {
+std::string SongManager::SongToPreferredSortSectionName(const Song *pSong) const {
 	for (PreferredSortSection const &v : m_vPreferredSongSort) {
 		if (std::any_of(v.vpSongs.begin(), v.vpSongs.end(), [&](Song const *s) {
 			    return s == pSong;
@@ -2159,7 +2159,7 @@ class LunaSongManager : public Luna<SongManager> {
 	}
 	static int SongToPreferredSortSectionName(T *p, lua_State *L) {
 		const Song *pSong = Luna<Song>::check(L, 1);
-		lua_pushstring(L, p->SongToPreferredSortSectionName(pSong));
+		lua_pushstring(L, p->SongToPreferredSortSectionName(pSong).c_str());
 		return 1;
 	}
 	static int GetPreferredSortSongsBySectionName(T *p, lua_State *L) {

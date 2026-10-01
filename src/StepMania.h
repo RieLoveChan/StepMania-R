@@ -12,8 +12,8 @@ namespace StepMania {
 void ApplyGraphicOptions();
 void ResetPreferences();
 void ResetGame();
-RString GetInitialScreen();
-RString GetSelectMusicScreen();
+std::string GetInitialScreen();
+std::string GetSelectMusicScreen();
 void InitializeCurrentGame(const Game *g);
 
 // If successful, return filename of screenshot in sDir, else return ""

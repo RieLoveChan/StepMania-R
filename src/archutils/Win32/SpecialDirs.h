@@ -2,11 +2,11 @@
 #define SpecialDirs_H
 
 namespace SpecialDirs {
-RString GetAppDataDir();
-RString GetLocalAppDataDir();
-RString GetCommonAppDataDir();
-RString GetPicturesDir();
-RString GetDesktopDir();
+std::string GetAppDataDir();
+std::string GetLocalAppDataDir();
+std::string GetCommonAppDataDir();
+std::string GetPicturesDir();
+std::string GetDesktopDir();
 }; // namespace SpecialDirs
 
 #endif

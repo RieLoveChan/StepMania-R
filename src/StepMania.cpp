@@ -344,9 +344,9 @@ void StepMania::ResetGame() {
 }
 
 ThemeMetric<RString> INITIAL_SCREEN("Common", "InitialScreen");
-RString StepMania::GetInitialScreen() {
+std::string StepMania::GetInitialScreen() {
 	if (!PREFSMAN->m_sTestInitialScreen.Get().empty() && SCREENMAN->IsScreenNameValid(PREFSMAN->m_sTestInitialScreen)) {
-		return PREFSMAN->m_sTestInitialScreen;
+		return PREFSMAN->m_sTestInitialScreen.Get();
 	}
 	RString screen_name = INITIAL_SCREEN.GetValue();
 	if (!SCREENMAN->IsScreenNameValid(screen_name)) {
@@ -355,7 +355,7 @@ RString StepMania::GetInitialScreen() {
 	return screen_name;
 }
 ThemeMetric<RString> SELECT_MUSIC_SCREEN("Common", "SelectMusicScreen");
-RString StepMania::GetSelectMusicScreen() {
+std::string StepMania::GetSelectMusicScreen() {
 	return SELECT_MUSIC_SCREEN.GetValue();
 }
 

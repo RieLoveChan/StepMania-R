@@ -893,7 +893,7 @@ void ThemeManager::ReloadMetrics() {
 	ClearThemePathCache();
 }
 
-RString ThemeManager::GetMetricsGroupFallback(const RString &sMetricsGroup) {
+std::string ThemeManager::GetMetricsGroupFallback(const RString &sMetricsGroup) {
 	ASSERT(g_pLoadedThemeData != nullptr);
 
 	// always look in iniMetrics for "Fallback"

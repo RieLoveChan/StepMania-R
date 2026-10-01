@@ -125,7 +125,7 @@ class ThemeManager {
 	   const RString &sMetricsGroup, const RString &sValueName, std::set<std::string> &vsValueNamesOut
 	);
 
-	RString GetMetricsGroupFallback(const RString &sMetricsGroup);
+	std::string GetMetricsGroupFallback(const RString &sMetricsGroup);
 
 	static std::string GetBlankGraphicPath();
 

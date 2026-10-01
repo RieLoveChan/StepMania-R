@@ -151,7 +151,7 @@ class SongManager {
 	std::map<std::string, std::vector<Song *>> GetPreferredSortSongsMap() const {
 		return m_mapPreferredSectionToSongs;
 	};
-	RString SongToPreferredSortSectionName(const Song *pSong) const;
+	std::string SongToPreferredSortSectionName(const Song *pSong) const;
 	std::vector<std::string> GetPreferredSortSectionNames() const;
 	std::vector<Song *> GetPreferredSortSongsBySectionName(const RString &sSectionName) const;
 	void GetPreferredSortSongsBySectionName(const RString &sSectionName, std::vector<Song *> &AddTo) const;

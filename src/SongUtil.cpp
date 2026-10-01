@@ -820,7 +820,7 @@ bool SongUtil::IsChartNameUnique(const Song *pSong, StepsType st, const RString 
 	return true;
 }
 
-RString SongUtil::MakeUniqueEditDescription(const Song *pSong, StepsType st, const RString &sPreferredDescription) {
+std::string SongUtil::MakeUniqueEditDescription(const Song *pSong, StepsType st, const RString &sPreferredDescription) {
 	if (IsEditDescriptionUnique(pSong, st, sPreferredDescription, nullptr))
 		return sPreferredDescription;
 
