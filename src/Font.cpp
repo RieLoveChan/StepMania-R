@@ -622,7 +622,7 @@ void Font::LoadFontPageSettings(
 		cfg.CharToGlyphNo[0x00A0] = cfg.CharToGlyphNo[' '];
 }
 
-RString FontPageSettings::MapRange(RString sMapping, int iMapOffset, int iGlyphNo, int iCount) {
+std::string FontPageSettings::MapRange(RString sMapping, int iMapOffset, int iGlyphNo, int iCount) {
 	if (!sMapping.CompareNoCase("Unicode")) {
 		// Special case.
 		if (iCount == -1)

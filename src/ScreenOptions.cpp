@@ -909,7 +909,7 @@ bool ScreenOptions::FocusedItemEndsScreen(PlayerNumber pn) const {
 	return !sScreen.empty();
 }
 
-RString ScreenOptions::GetNextScreenForFocusedItem(PlayerNumber pn) const {
+std::string ScreenOptions::GetNextScreenForFocusedItem(PlayerNumber pn) const {
 	int iCurRow = this->GetCurrentRow(pn);
 
 	if (iCurRow == -1)

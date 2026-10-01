@@ -49,7 +49,7 @@ XToString(LayoutType);
 StringToX(LayoutType);
 LuaXType(LayoutType);
 
-RString OptionRowHandler::OptionTitle() const {
+std::string OptionRowHandler::OptionTitle() const {
 	bool bTheme = false;
 
 	// HACK: Always theme the NEXT_ROW and EXIT items, even if metrics says not to theme.

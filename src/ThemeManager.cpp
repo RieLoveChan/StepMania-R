@@ -333,7 +333,7 @@ void ThemeManager::LoadThemeMetrics(const RString &sThemeName_, const RString &s
 	LOG->MapLog("language", "Language: %s", m_sCurLanguage.c_str());
 }
 
-RString ThemeManager::GetDefaultLanguage() {
+std::string ThemeManager::GetDefaultLanguage() {
 	RString sLangCode = HOOKS->GetPreferredLanguage();
 	return sLangCode;
 }

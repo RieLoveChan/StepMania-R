@@ -65,7 +65,7 @@ class ScreenOptions : public ScreenWithMenuElements {
 
 	void BeginFadingOut();
 	virtual bool FocusedItemEndsScreen(PlayerNumber pn) const;
-	RString GetNextScreenForFocusedItem(PlayerNumber pn) const;
+	std::string GetNextScreenForFocusedItem(PlayerNumber pn) const;
 
 	void ChangeValueInRowRelative(int iRow, PlayerNumber pn, int iDelta, bool bRepeat);
 	void ChangeValueInRowAbsolute(int iRow, PlayerNumber pn, int iChoiceIndex, bool bRepeat);

@@ -94,7 +94,7 @@ struct FontPageSettings {
 	 * @param iGlyphOffset the number of glyphs to offset.
 	 * @param iCount the range to map. If -1, the range is the entire map.
 	 * @return the empty string on success, or an error message on failure. */
-	RString MapRange(RString sMapping, int iMapOffset, int iGlyphOffset, int iCount);
+	std::string MapRange(RString sMapping, int iMapOffset, int iGlyphOffset, int iCount);
 };
 
 class FontPage {

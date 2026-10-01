@@ -395,7 +395,7 @@ class RageDisplay {
 	int GetCumFPS() const; // average FPS since last reset
 	virtual void ResetStats();
 	virtual void ProcessStatsOnFlip();
-	virtual RString GetStats() const;
+	virtual std::string GetStats() const;
 	void StatsAddVerts(int iNumVertsRendered);
 
 	// World matrix stack functions.

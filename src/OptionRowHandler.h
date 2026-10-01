@@ -184,7 +184,7 @@ class OptionRowHandler {
 		Init();
 		return this->LoadInternal(cmds);
 	}
-	RString OptionTitle() const;
+	std::string OptionTitle() const;
 	RString GetThemedItemText(int iChoice) const;
 
 	virtual bool LoadInternal(const Commands &) {

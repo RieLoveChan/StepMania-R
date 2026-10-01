@@ -154,7 +154,7 @@ void RageDisplay::ResetStats() {
 	g_LastCheckTimer.GetDeltaTime();
 }
 
-RString RageDisplay::GetStats() const {
+std::string RageDisplay::GetStats() const {
 	RString s;
 	// If FPS == 0, we don't have stats yet.
 	if (!GetFPS())
