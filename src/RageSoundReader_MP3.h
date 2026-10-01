@@ -32,7 +32,7 @@ class RageSoundReader_MP3 : public RageSoundReader_FileReader {
 		return SampleRate;
 	}
 	int GetNextSourceFrame() const override;
-	bool SetProperty(const RString &sProperty, float fValue) override;
+	bool SetProperty(const std::string &sProperty, float fValue) override;
 
 	RageSoundReader_MP3();
 	~RageSoundReader_MP3() override;

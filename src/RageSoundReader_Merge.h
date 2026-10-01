@@ -25,7 +25,7 @@ class RageSoundReader_Merge : public RageSoundReader {
 	unsigned GetNumChannels() const override {
 		return m_iChannels;
 	}
-	bool SetProperty(const RString &sProperty, float fValue) override;
+	bool SetProperty(const std::string &sProperty, float fValue) override;
 	int GetNextSourceFrame() const override {
 		return m_iNextSourceFrame;
 	}

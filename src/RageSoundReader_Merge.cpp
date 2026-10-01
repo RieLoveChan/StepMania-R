@@ -112,7 +112,7 @@ int RageSoundReader_Merge::SetPosition(int iFrame) {
 	return iRet;
 }
 
-bool RageSoundReader_Merge::SetProperty(const RString &sProperty, float fValue) {
+bool RageSoundReader_Merge::SetProperty(const std::string &sProperty, float fValue) {
 	bool bRet = false;
 	for (unsigned i = 0; i < m_aSounds.size(); ++i) {
 		if (m_aSounds[i]->SetProperty(sProperty, fValue))

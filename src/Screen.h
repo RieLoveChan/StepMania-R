@@ -139,8 +139,8 @@ class Screen : public ActorFrame {
  public:
 	std::string GetNextScreenName() const;
 	std::string GetPrevScreen() const;
-	void SetNextScreenName(RString const &name);
-	void SetPrevScreenName(RString const &name);
+	void SetNextScreenName(std::string const &name);
+	void SetPrevScreenName(std::string const &name);
 
 	bool PassInputToLua(const InputEventPlus &input);
 	void AddInputCallbackFromStack(lua_State *L);

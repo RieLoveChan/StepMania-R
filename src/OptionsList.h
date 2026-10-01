@@ -67,11 +67,11 @@ class OptionsList : public ActorFrame {
  private:
 	ThemeMetric<RString> TOP_MENU;
 
-	void SelectItem(const RString &sRowName, int iMenuItem);
-	void MoveItem(const RString &sRowName, int iMove);
+	void SelectItem(const std::string &sRowName, int iMenuItem);
+	void MoveItem(const std::string &sRowName, int iMove);
 	void SwitchMenu(int iDir);
 	void PositionCursor();
-	void SelectionsChanged(const RString &sRowName);
+	void SelectionsChanged(const std::string &sRowName);
 	void UpdateMenuFromSelections();
 	std::string GetCurrentRow() const;
 	OptionRowHandler *GetCurrentHandler();

@@ -46,7 +46,7 @@ class RageSoundReader_Chain : public RageSoundReader {
 	unsigned GetNumChannels() const override {
 		return m_iChannels;
 	}
-	bool SetProperty(const RString &sProperty, float fValue) override;
+	bool SetProperty(const std::string &sProperty, float fValue) override;
 	int GetNextSourceFrame() const override;
 	float GetStreamToSourceRatio() const override;
 	std::string GetError() const override {

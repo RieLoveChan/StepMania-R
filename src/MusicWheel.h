@@ -46,7 +46,7 @@ class MusicWheel : public WheelBase {
 
 	bool SelectSong(const Song *p);
 	bool SelectCourse(const Course *p);
-	bool SelectSection(const RString &SectionName);
+	bool SelectSection(const std::string &SectionName);
 	void SetOpenSection(std::string group);
 	SortOrder GetSortOrder() const {
 		return m_SortOrder;

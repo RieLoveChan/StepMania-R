@@ -50,7 +50,7 @@ struct ButtonState;
 class InputFilter {
  public:
 	void ButtonPressed(const DeviceInput &di);
-	void SetButtonComment(const DeviceInput &di, const RString &sComment = "");
+	void SetButtonComment(const DeviceInput &di, const std::string &sComment = "");
 	void ResetDevice(InputDevice dev);
 
 	InputFilter();

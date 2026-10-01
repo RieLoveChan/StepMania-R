@@ -13,7 +13,7 @@ class RageSoundReader_PostBuffering : public RageSoundReader_Filter {
 	}
 	static void SetMasterVolume(float fVolume);
 	int Read(float *pBuf, int iFrames) override;
-	bool SetProperty(const RString &sProperty, float fValue) override;
+	bool SetProperty(const std::string &sProperty, float fValue) override;
 
  private:
 	float m_fVolume;

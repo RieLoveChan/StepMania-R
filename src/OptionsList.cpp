@@ -339,7 +339,7 @@ void OptionsList::SwitchMenu(int iDir) {
 	TweenOnCurrentRow(iDir > 0);
 }
 
-void OptionsList::MoveItem(const RString & /* sRowName */, int /* iMove */) {
+void OptionsList::MoveItem(const std::string & /* sRowName */, int /* iMove */) {
 }
 
 bool OptionsList::Input(const InputEventPlus &input) {
@@ -559,7 +559,7 @@ void OptionsList::Push(std::string sDest) {
 	SwitchToCurrentRow();
 }
 
-void OptionsList::SelectItem(const RString &sRowName, int iMenuItem) {
+void OptionsList::SelectItem(const std::string &sRowName, int iMenuItem) {
 	const OptionRowHandler *pHandler = m_Rows[sRowName];
 	std::vector<bool> &bSelections = m_bSelections[sRowName];
 
@@ -582,7 +582,7 @@ void OptionsList::SelectItem(const RString &sRowName, int iMenuItem) {
 	UpdateMenuFromSelections();
 }
 
-void OptionsList::SelectionsChanged(const RString &sRowName) {
+void OptionsList::SelectionsChanged(const std::string &sRowName) {
 	const OptionRowHandler *pHandler = m_Rows[sRowName];
 	std::vector<bool> &bSelections = m_bSelections[sRowName];
 

@@ -153,7 +153,7 @@ void ScreenOptionsMemoryCard::ExportOptions(int iRow, const std::vector<PlayerNu
 	}
 }
 
-void ScreenOptionsMemoryCard::SelectRowWithMemoryCard(const RString &sOsMountPoint) {
+void ScreenOptionsMemoryCard::SelectRowWithMemoryCard(const std::string &sOsMountPoint) {
 	if (sOsMountPoint.empty())
 		return;
 

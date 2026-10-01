@@ -30,7 +30,7 @@ class RageSoundReader_ThreadedBuffer : public RageSoundReader_Filter {
 	unsigned GetNumChannels() const override {
 		return m_iChannels;
 	}
-	bool SetProperty(const RString &sProperty, float fValue) override;
+	bool SetProperty(const std::string &sProperty, float fValue) override;
 	float GetStreamToSourceRatio() const override;
 	RageSoundReader *GetSource() override {
 		return nullptr;

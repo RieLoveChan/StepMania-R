@@ -656,7 +656,7 @@ void OptionRow::SetOneSharedSelection(int iChoice) {
 	FOREACH_PlayerNumber(pn) SetOneSelection(pn, iChoice);
 }
 
-void OptionRow::SetOneSharedSelectionIfPresent(const RString &sChoice) {
+void OptionRow::SetOneSharedSelectionIfPresent(const std::string &sChoice) {
 	for (unsigned i = 0; i < m_pHand->m_Def.m_vsChoices.size(); i++) {
 		if (sChoice == m_pHand->m_Def.m_vsChoices[i]) {
 			SetOneSharedSelection(i);

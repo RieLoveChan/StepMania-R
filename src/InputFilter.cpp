@@ -193,7 +193,7 @@ void InputFilter::ButtonPressed(const DeviceInput &di) {
 	CheckButtonChange(bs, di, now);
 }
 
-void InputFilter::SetButtonComment(const DeviceInput &di, const RString &sComment) {
+void InputFilter::SetButtonComment(const DeviceInput &di, const std::string &sComment) {
 	LockMut(*queuemutex);
 	ButtonState &bs = GetButtonState(di);
 	bs.m_sComment = sComment;

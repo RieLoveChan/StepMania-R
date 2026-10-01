@@ -134,7 +134,7 @@ int RageSoundReader_Split::SetPosition(int iFrame) {
 	return 1;
 }
 
-bool RageSoundReader_Split::SetProperty(const RString &sProperty, float fValue) {
+bool RageSoundReader_Split::SetProperty(const std::string &sProperty, float fValue) {
 	return m_pImpl->m_pSource->SetProperty(sProperty, fValue);
 }
 

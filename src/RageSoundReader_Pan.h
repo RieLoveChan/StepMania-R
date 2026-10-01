@@ -13,7 +13,7 @@ class RageSoundReader_Pan : public RageSoundReader_Filter {
 	}
 	unsigned GetNumChannels() const override;
 	int Read(float *pBuf, int iFrames) override;
-	bool SetProperty(const RString &sProperty, float fValue) override;
+	bool SetProperty(const std::string &sProperty, float fValue) override;
 
  private:
 	float m_fPan;

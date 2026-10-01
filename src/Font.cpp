@@ -387,7 +387,7 @@ void Font::GetFontPaths(const RString &sFontIniPath, std::vector<std::string> &a
 	}
 }
 
-std::string Font::GetPageNameFromFileName(const RString &sFilename) {
+std::string Font::GetPageNameFromFileName(const std::string &sFilename) {
 	std::size_t begin = sFilename.find_first_of('[');
 	if (begin == std::string::npos)
 		return "main";

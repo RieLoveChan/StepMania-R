@@ -23,7 +23,7 @@ class RageSoundReader_Split : public RageSoundReader {
 	int Read(float *pBuf, int iFrames) override;
 	int GetSampleRate() const override;
 	unsigned GetNumChannels() const override;
-	bool SetProperty(const RString &sProperty, float fValue) override;
+	bool SetProperty(const std::string &sProperty, float fValue) override;
 	int GetNextSourceFrame() const override;
 	float GetStreamToSourceRatio() const override;
 	std::string GetError() const override;

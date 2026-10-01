@@ -67,7 +67,7 @@ struct Attack {
 	 * @return true if the two Attacks are equal, or false otherwise. */
 	bool operator==(const Attack &rhs) const;
 	bool ContainsTransformOrTurn() const;
-	static Attack FromGlobalCourseModifier(const RString &sModifiers);
+	static Attack FromGlobalCourseModifier(const std::string &sModifiers);
 	std::string GetTextDescription() const;
 
 	int GetNumAttacks() const;

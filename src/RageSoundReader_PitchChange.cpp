@@ -90,7 +90,7 @@ int RageSoundReader_PitchChange::Read(float *pBuf, int iFrames) {
 	return RageSoundReader_Filter::Read(pBuf, iFrames);
 }
 
-bool RageSoundReader_PitchChange::SetProperty(const RString &sProperty, float fValue) {
+bool RageSoundReader_PitchChange::SetProperty(const std::string &sProperty, float fValue) {
 	if (sProperty == "Rate") {
 		/* Don't propagate this.  m_pResample will take it, but it's under
 		 * our control. */

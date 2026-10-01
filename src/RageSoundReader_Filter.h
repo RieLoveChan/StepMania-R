@@ -28,7 +28,7 @@ class RageSoundReader_Filter : public RageSoundReader {
 	unsigned GetNumChannels() const override {
 		return m_pSource->GetNumChannels();
 	}
-	bool SetProperty(const RString &sProperty, float fValue) override {
+	bool SetProperty(const std::string &sProperty, float fValue) override {
 		return m_pSource->SetProperty(sProperty, fValue);
 	}
 	int GetNextSourceFrame() const override {

@@ -564,7 +564,7 @@ void RageSound::ApplyParams() {
 	}
 }
 
-bool RageSound::SetProperty(const RString &sProperty, float fValue) {
+bool RageSound::SetProperty(const std::string &sProperty, float fValue) {
 	return m_pSource->SetProperty(sProperty, fValue);
 }
 
@@ -578,7 +578,7 @@ RageSoundParams::StopMode_t RageSound::GetStopMode() const {
 		return RageSoundParams::M_STOP;
 }
 
-void RageSound::SetStopModeFromString(const RString &sStopMode) {
+void RageSound::SetStopModeFromString(const std::string &sStopMode) {
 	if (sStopMode.find("stop") != std::string::npos) {
 		m_Param.StopMode = RageSoundParams::M_STOP;
 	}

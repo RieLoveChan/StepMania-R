@@ -91,7 +91,7 @@ class OptionRow : public ActorFrame {
 	int GetOneSharedSelection(bool bAllowFail = false) const;
 	void SetOneSelection(PlayerNumber pn, int iChoice);
 	void SetOneSharedSelection(int iChoice);
-	void SetOneSharedSelectionIfPresent(const RString &sChoice);
+	void SetOneSharedSelectionIfPresent(const std::string &sChoice);
 
 	int GetChoiceInRowWithFocus(PlayerNumber pn) const;
 	int GetChoiceInRowWithFocusShared() const;

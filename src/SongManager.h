@@ -60,7 +60,7 @@ class SongManager {
 	int GetNumStepsLoadedFromProfile();
 	void FreeAllLoadedFromProfile(ProfileSlot slot = ProfileSlot_Invalid);
 
-	void LoadGroupSymLinks(RString sDir, RString sGroupFolder);
+	void LoadGroupSymLinks(std::string sDir, std::string sGroupFolder);
 
 	/**
 	 * @brief Initialize all courses from disk
@@ -225,8 +225,8 @@ class SongManager {
 	bool GetExtraStageInfoFromCourse(
 	   bool bExtra2, RString sPreferredGroup, Song *&pSongOut, Steps *&pStepsOut, StepsType stype
 	);
-	void SanityCheckGroupDir(RString sDir) const;
-	void AddGroup(RString sDir, RString sGroupDirName);
+	void SanityCheckGroupDir(std::string sDir) const;
+	void AddGroup(std::string sDir, std::string sGroupDirName);
 	int GetNumEditsLoadedFromProfile(ProfileSlot slot) const;
 
 	void AddSongToList(Song *new_song);

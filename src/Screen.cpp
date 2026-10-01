@@ -260,11 +260,11 @@ std::string Screen::GetNextScreenName() const {
 	return NEXT_SCREEN;
 }
 
-void Screen::SetNextScreenName(RString const &name) {
+void Screen::SetNextScreenName(std::string const &name) {
 	m_sNextScreen = name;
 }
 
-void Screen::SetPrevScreenName(RString const &name) {
+void Screen::SetPrevScreenName(std::string const &name) {
 	m_sPrevScreen = name;
 }
 

@@ -59,7 +59,7 @@ bool Attack::ContainsTransformOrTurn() const {
 	return po.ContainsTransformOrTurn();
 }
 
-Attack Attack::FromGlobalCourseModifier(const RString &sModifiers) {
+Attack Attack::FromGlobalCourseModifier(const std::string &sModifiers) {
 	Attack a;
 	a.fStartSecond = 0;
 	a.fSecsRemaining = 10000; /* whole song */

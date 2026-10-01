@@ -16,7 +16,7 @@ class RageSoundReader_SpeedChange : public RageSoundReader_Filter {
 	RageSoundReader_SpeedChange *Copy() const override {
 		return new RageSoundReader_SpeedChange(*this);
 	}
-	bool SetProperty(const RString &sProperty, float fValue) override;
+	bool SetProperty(const std::string &sProperty, float fValue) override;
 	int GetNextSourceFrame() const override;
 	float GetStreamToSourceRatio() const override;
 

@@ -27,7 +27,7 @@ enum Category {
 	Cache,
 	NUM_Category
 };
-Category CategoryFromString(const RString &s); // unknown -> General
+Category CategoryFromString(const std::string &s); // unknown -> General
 const char *CategoryToString(Category c);
 } // namespace Log
 
@@ -52,7 +52,7 @@ class RageLog {
 	};
 	/* Parse a level name ("trace".."error", "off"; case-insensitive); an
 	 * unrecognised string returns LogLevel_Trace. */
-	static LogLevel LogLevelFromString(const RString &s);
+	static LogLevel LogLevelFromString(const std::string &s);
 	static const char *LogLevelToString(LogLevel l);
 	void SetLogLevel(LogLevel l); // global minimum; drop lines below it
 
@@ -85,8 +85,8 @@ class RageLog {
 	void UserLog(const RString &sType, const RString &sElement, const char *fmt, ...) PRINTF(4, 5);
 	void Flush();
 
-	void MapLog(const RString &key, const char *fmt, ...) PRINTF(3, 4);
-	void UnmapLog(const RString &key);
+	void MapLog(const std::string &key, const char *fmt, ...) PRINTF(3, 4);
+	void UnmapLog(const std::string &key);
 
 	static const char *GetAdditionalLog();
 	static const char *GetInfo();

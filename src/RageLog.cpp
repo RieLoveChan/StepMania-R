@@ -221,7 +221,7 @@ void RageLog::SetLogLevelSpec(const RString &spec) {
 
 static const char *g_LogLevelNames[RageLog::NUM_LogLevel] = {"trace", "debug", "info", "warn", "error", "off"};
 
-RageLog::LogLevel RageLog::LogLevelFromString(const RString &s) {
+RageLog::LogLevel RageLog::LogLevelFromString(const std::string &s) {
 	RString t = s;
 	t.MakeLower();
 	Trim(t);
@@ -256,7 +256,7 @@ static const char *g_CategoryNames[Log::NUM_Category] = {
    "cache"
 };
 
-Log::Category Log::CategoryFromString(const RString &s) {
+Log::Category Log::CategoryFromString(const std::string &s) {
 	RString t = s;
 	t.MakeLower();
 	Trim(t);
@@ -576,7 +576,7 @@ const char *RageLog::GetAdditionalLog() {
 	return g_AdditionalLogStr;
 }
 
-void RageLog::MapLog(const RString &key, const char *fmt, ...) {
+void RageLog::MapLog(const std::string &key, const char *fmt, ...) {
 	RString s;
 
 	va_list va;
@@ -588,7 +588,7 @@ void RageLog::MapLog(const RString &key, const char *fmt, ...) {
 	UpdateMappedLog();
 }
 
-void RageLog::UnmapLog(const RString &key) {
+void RageLog::UnmapLog(const std::string &key) {
 	LogMaps.erase(key);
 	UpdateMappedLog();
 }

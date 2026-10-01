@@ -98,11 +98,11 @@ static void CheckInputDevices() {
 // On the next update, change themes, and load sNewScreen.
 static std::string g_NewTheme;
 static std::string g_NewGame;
-void GameLoop::ChangeTheme(const RString &sNewTheme) {
+void GameLoop::ChangeTheme(const std::string &sNewTheme) {
 	g_NewTheme = sNewTheme;
 }
 
-void GameLoop::ChangeGame(const RString &new_game, const RString &new_theme) {
+void GameLoop::ChangeGame(const std::string &new_game, const std::string &new_theme) {
 	g_NewGame = new_game;
 	g_NewTheme = new_theme;
 }

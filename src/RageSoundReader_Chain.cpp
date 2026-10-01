@@ -228,7 +228,7 @@ void RageSoundReader_Chain::ReleaseSound(Sound *s) {
 	m_apActiveSounds.erase(it);
 }
 
-bool RageSoundReader_Chain::SetProperty(const RString &sProperty, float fValue) {
+bool RageSoundReader_Chain::SetProperty(const std::string &sProperty, float fValue) {
 	bool bRet = false;
 	for (unsigned i = 0; i < m_apActiveSounds.size(); ++i) {
 		if (m_apActiveSounds[i]->pSound->SetProperty(sProperty, fValue))

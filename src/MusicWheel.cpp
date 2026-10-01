@@ -301,7 +301,7 @@ bool MusicWheel::SelectSongOrCourse() {
 	return false;
 }
 
-bool MusicWheel::SelectSection(const RString &SectionName) {
+bool MusicWheel::SelectSection(const std::string &SectionName) {
 	for (unsigned int i = 0; i < m_CurWheelItemData.size(); ++i) {
 		if (m_CurWheelItemData[i]->m_sText == SectionName) {
 			m_iSelection = i; // select it

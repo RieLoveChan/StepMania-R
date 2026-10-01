@@ -237,7 +237,7 @@ static LocalizedString FOLDER_CONTAINS_MUSIC_FILES(
    "The folder \"%s\" appears to be a song folder.  All song folders must reside in a group folder.  For example, "
 	"\"Songs/Originals/My Song\"."
 );
-void SongManager::SanityCheckGroupDir(RString sDir) const {
+void SongManager::SanityCheckGroupDir(std::string sDir) const {
 	// Check to see if they put a song directly inside the group folder.
 	std::vector<RString> arrayFiles;
 	GetDirListing(sDir + "/*", arrayFiles);
@@ -252,7 +252,7 @@ void SongManager::SanityCheckGroupDir(RString sDir) const {
 	}
 }
 
-void SongManager::AddGroup(RString sDir, RString sGroupDirName) {
+void SongManager::AddGroup(std::string sDir, std::string sGroupDirName) {
 	unsigned j;
 	for (j = 0; j < m_sSongGroupNames.size(); ++j)
 		if (sGroupDirName == m_sSongGroupNames[j])
@@ -451,7 +451,7 @@ void SongManager::LoadSongDir(RString sDir, LoadingWindow *ld, bool onlyAddition
 }
 
 // Instead of "symlinks", songs should have membership in multiple groups. -Chris
-void SongManager::LoadGroupSymLinks(RString sDir, RString sGroupFolder) {
+void SongManager::LoadGroupSymLinks(std::string sDir, std::string sGroupFolder) {
 	// Find all symlink files in this folder
 	std::vector<RString> arraySymLinks;
 	GetDirListing(sDir + sGroupFolder + "/*.include", arraySymLinks, false);

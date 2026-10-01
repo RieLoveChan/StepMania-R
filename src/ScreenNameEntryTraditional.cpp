@@ -194,7 +194,7 @@ bool ScreenNameEntryTraditional::EnterKey(PlayerNumber pn, wchar_t sLetter) {
 	return true;
 }
 
-void ScreenNameEntryTraditional::SelectChar(PlayerNumber pn, const RString &sKey) {
+void ScreenNameEntryTraditional::SelectChar(PlayerNumber pn, const std::string &sKey) {
 	Message msg("SelectKey");
 	msg.SetParam("PlayerNumber", pn);
 	msg.SetParam("Key", sKey);

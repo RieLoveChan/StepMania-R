@@ -12,7 +12,7 @@ class RageThread {
 	RageThread(const RageThread &cpy);
 	~RageThread();
 
-	void SetName(const RString &n) {
+	void SetName(const std::string &n) {
 		m_sName = n;
 	}
 	std::string GetName() const {
@@ -76,7 +76,7 @@ class RageThread {
  * and allocates a slot for checkpoints. */
 class RageThreadRegister {
  public:
-	RageThreadRegister(const RString &sName);
+	RageThreadRegister(const std::string &sName);
 	~RageThreadRegister();
 
  private:
@@ -105,7 +105,7 @@ class RageMutex {
 	std::string GetName() const {
 		return m_sName;
 	}
-	void SetName(const RString &s) {
+	void SetName(const std::string &s) {
 		m_sName = s;
 	}
 	virtual void Lock();
