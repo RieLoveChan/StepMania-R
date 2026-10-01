@@ -300,7 +300,7 @@ void ScreenSelectMaster::Init() {
 	m_bDoubleChoiceNoSound = false;
 }
 
-RString ScreenSelectMaster::GetDefaultChoice() {
+std::string ScreenSelectMaster::GetDefaultChoice() {
 	return DEFAULT_CHOICE.GetValue();
 }
 

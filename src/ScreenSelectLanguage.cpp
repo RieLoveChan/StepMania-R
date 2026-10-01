@@ -33,7 +33,7 @@ void ScreenSelectLanguage::Init() {
 	ScreenSelectMaster::Init();
 }
 
-RString ScreenSelectLanguage::GetDefaultChoice() {
+std::string ScreenSelectLanguage::GetDefaultChoice() {
 	return HOOKS->GetPreferredLanguage();
 }
 

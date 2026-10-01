@@ -132,7 +132,7 @@ Steps *GetClosestNotes(const Song *pSong, StepsType st, Difficulty dc, bool bIgn
 void AdjustDuplicateSteps(Song *pSong); // part of TidyUpData
 void DeleteDuplicateSteps(Song *pSong, std::vector<Steps *> &vSteps);
 
-RString MakeSortString(RString s);
+std::string MakeSortString(RString s);
 void SortSongPointerArrayByTitle(std::vector<Song *> &vpSongsInOut);
 void SortSongPointerArrayByBPM(std::vector<Song *> &vpSongsInOut);
 void SortSongPointerArrayByGrades(std::vector<Song *> &vpSongsInOut, bool bDescending);
@@ -144,7 +144,7 @@ void SortSongPointerArrayByGroupAndTitle(std::vector<Song *> &vpSongsInOut);
 void SortSongPointerArrayByNumPlays(std::vector<Song *> &vpSongsInOut, ProfileSlot slot, bool bDescending);
 void SortSongPointerArrayByNumPlays(std::vector<Song *> &vpSongsInOut, const Profile *pProfile, bool bDescending);
 void SortSongPointerArrayByStepsTypeAndMeter(std::vector<Song *> &vpSongsInOut, StepsType st, Difficulty dc);
-RString GetSectionNameFromSongAndSort(const Song *pSong, SortOrder so);
+std::string GetSectionNameFromSongAndSort(const Song *pSong, SortOrder so);
 void SortSongPointerArrayBySectionName(std::vector<Song *> &vpSongsInOut, SortOrder so);
 void SortByMostRecentlyPlayedForMachine(std::vector<Song *> &vpSongsInOut);
 void SortSongPointerArrayByLength(std::vector<Song *> &vpSongsInOut);

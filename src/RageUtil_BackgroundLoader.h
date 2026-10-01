@@ -40,7 +40,7 @@ class BackgroundLoader {
 		return 0;
 	}
 
-	RString GetRequest();
+	std::string GetRequest();
 
 	RString GetCachePath(RString sPath) const;
 	std::string m_sCachePathPrefix;

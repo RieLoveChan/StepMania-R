@@ -266,7 +266,7 @@ struct actor_template_t {
 	   RString const &suf = ""
 	);
 	void rename_field(RString const &old_name, RString const &new_name);
-	RString get_field(RString const &field_name);
+	std::string get_field(RString const &field_name);
 	void load_frames_from_file(RString const &fname, RString const &rel_path);
 	void load_model_from_file(RString const &fname, RString const &rel_path);
 	void load_node(XNode const &node, RString const &dirname, condition_set_t &conditions);
@@ -387,7 +387,7 @@ void actor_template_t::rename_field(RString const &old_name, RString const &new_
 	fields.erase(old_field);
 }
 
-RString actor_template_t::get_field(RString const &field_name) {
+std::string actor_template_t::get_field(RString const &field_name) {
 	field_cont_t::iterator field = fields.find(field_name);
 	if (field == fields.end()) {
 		return "";

@@ -61,7 +61,7 @@ BackgroundLoader::~BackgroundLoader() {
 }
 
 /* Pull a request out of m_CacheRequests. */
-RString BackgroundLoader::GetRequest() {
+std::string BackgroundLoader::GetRequest() {
 	if (!g_bEnableBackgroundLoading)
 		return RString();
 

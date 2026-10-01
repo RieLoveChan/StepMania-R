@@ -390,7 +390,7 @@ static bool CompareSongPointersBySortValueDescending(const Song *pSong1, const S
 	return g_mapSongSortVal[pSong1] > g_mapSongSortVal[pSong2];
 }
 
-RString SongUtil::MakeSortString(RString s) {
+std::string SongUtil::MakeSortString(RString s) {
 	s.MakeUpper();
 
 	// Make sure that non-alphanumeric strings are placed at the very end.
@@ -602,7 +602,7 @@ void SongUtil::SortSongPointerArrayByNumPlays(
 	g_mapSongSortVal.clear();
 }
 
-RString SongUtil::GetSectionNameFromSongAndSort(const Song *pSong, SortOrder so) {
+std::string SongUtil::GetSectionNameFromSongAndSort(const Song *pSong, SortOrder so) {
 	if (pSong == nullptr)
 		return RString();
 
