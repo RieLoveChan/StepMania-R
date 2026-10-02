@@ -132,10 +132,10 @@ void ModIconRow::SetFromGameState() {
 	PlayerNumber pn = m_pn;
 
 	RString sOptions = GAMESTATE->m_pPlayerState[pn]->m_PlayerOptions.GetStage().GetString();
-	std::vector<RString> vsOptions;
+	std::vector<std::string> vsOptions;
 	split(sOptions, ", ", vsOptions, true);
 
-	std::vector<RString> vsText; // fill these with what will be displayed on the tabs
+	std::vector<std::string> vsText; // fill these with what will be displayed on the tabs
 	vsText.resize(m_vpModIcon.size());
 
 	// for each option, look for the best column to place it in

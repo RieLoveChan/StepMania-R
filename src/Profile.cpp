@@ -2345,7 +2345,7 @@ std::string Profile::MakeUniqueFileNameNoExtension(std::string sDir, std::string
 
 	for (int i = static_cast<int>(files.size()) - 1; i >= 0; --i) {
 		static Regex re("^" + sFileNameBeginning + "([0-9]{5})\\....$");
-		std::vector<RString> matches;
+		std::vector<std::string> matches;
 		if (!re.Compare(files[i], matches))
 			continue;
 

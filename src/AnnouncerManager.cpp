@@ -28,7 +28,7 @@ AnnouncerManager::~AnnouncerManager() {
 	LUA->UnsetGlobal("ANNOUNCER");
 }
 
-void AnnouncerManager::GetAnnouncerNames(std::vector<RString> &AddTo) {
+void AnnouncerManager::GetAnnouncerNames(std::vector<std::string> &AddTo) {
 	GetDirListing(ANNOUNCERS_DIR + "*", AddTo, true);
 
 	StripCvsAndSvn(AddTo);
@@ -36,7 +36,7 @@ void AnnouncerManager::GetAnnouncerNames(std::vector<RString> &AddTo) {
 
 	// strip out the empty announcer folder
 	for (int i = static_cast<int>(AddTo.size()) - 1; i >= 0; i--)
-		if (!strcasecmp(AddTo[i], EMPTY_ANNOUNCER_NAME.c_str()))
+		if (!strcasecmp(AddTo[i].c_str(), EMPTY_ANNOUNCER_NAME.c_str()))
 			AddTo.erase(AddTo.begin() + i, AddTo.begin() + i + 1);
 }
 
@@ -44,10 +44,10 @@ bool AnnouncerManager::DoesAnnouncerExist(std::string sAnnouncerName) {
 	if (sAnnouncerName.empty())
 		return true;
 
-	std::vector<RString> asAnnouncerNames;
+	std::vector<std::string> asAnnouncerNames;
 	GetAnnouncerNames(asAnnouncerNames);
 	for (unsigned i = 0; i < asAnnouncerNames.size(); i++)
-		if (0 == strcasecmp(sAnnouncerName.c_str(), asAnnouncerNames[i]))
+		if (0 == strcasecmp(sAnnouncerName.c_str(), asAnnouncerNames[i].c_str()))
 			return true;
 	return false;
 }
@@ -145,7 +145,7 @@ bool AnnouncerManager::HasSoundsFor(std::string sFolderName) {
 }
 
 void AnnouncerManager::NextAnnouncer() {
-	std::vector<RString> as;
+	std::vector<std::string> as;
 	GetAnnouncerNames(as);
 	if (as.empty())
 		return;
@@ -155,7 +155,7 @@ void AnnouncerManager::NextAnnouncer() {
 	else {
 		unsigned i;
 		for (i = 0; i < as.size(); i++)
-			if (as[i].EqualsNoCase(m_sCurAnnouncerName.c_str()))
+			if (StdString::ssicmp(as[i].c_str(), m_sCurAnnouncerName.c_str()) == 0)
 				break;
 		if (i == as.size() - 1)
 			SwitchAnnouncer("");
@@ -176,7 +176,7 @@ class LunaAnnouncerManager : public Luna<AnnouncerManager> {
 		return 1;
 	}
 	static int GetAnnouncerNames(T *p, lua_State *L) {
-		std::vector<RString> vAnnouncers;
+		std::vector<std::string> vAnnouncers;
 		p->GetAnnouncerNames(vAnnouncers);
 		LuaHelpers::CreateTableFromArray(vAnnouncers, L);
 		return 1;

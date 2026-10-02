@@ -872,7 +872,7 @@ void split(const std::wstring &Source, const std::wstring &Delimitor, int &begin
 void splitpath(const std::string &sPath, std::string &sDir, std::string &sFilename, std::string &sExt) {
 	sDir = sFilename = sExt = "";
 
-	std::vector<RString> asMatches;
+	std::vector<std::string> asMatches;
 
 	/*
 	 * One level of escapes for the regex, one for C. Ew.
@@ -1418,7 +1418,8 @@ bool Regex::Compare(const std::string &sStr) {
 	return iRet >= 0;
 }
 
-bool Regex::Compare(const RString &sStr, std::vector<RString> &asMatches) {
+template <class V> bool Regex::CompareImpl(const std::string &sStr, V &asMatches) {
+	typedef typename V::value_type S;
 	asMatches.clear();
 
 	int iMat[128 * 3];
@@ -1433,7 +1434,7 @@ bool Regex::Compare(const RString &sStr, std::vector<RString> &asMatches) {
 	for (unsigned i = 1; i < m_iBackrefs; ++i) {
 		const int iStart = iMat[i * 2], end = iMat[i * 2 + 1];
 		if (iStart == -1)
-			asMatches.push_back(RString()); /* no match */
+			asMatches.push_back(S()); /* no match */
 		else
 			asMatches.push_back(sStr.substr(iStart, end - iStart));
 	}
@@ -1441,10 +1442,18 @@ bool Regex::Compare(const RString &sStr, std::vector<RString> &asMatches) {
 	return true;
 }
 
+bool Regex::Compare(const RString &sStr, std::vector<RString> &asMatches) {
+	return CompareImpl(sStr, asMatches);
+}
+
+bool Regex::Compare(const std::string &sStr, std::vector<std::string> &asMatches) {
+	return CompareImpl(sStr, asMatches);
+}
+
 // Arguments and behavior are the same are similar to
 // http://us3.php.net/manual/en/function.preg-replace.php
 bool Regex::Replace(const std::string &sReplacement, const std::string &sSubject, std::string &sOut) {
-	std::vector<RString> asMatches;
+	std::vector<std::string> asMatches;
 	if (!Compare(sSubject, asMatches))
 		return false;
 

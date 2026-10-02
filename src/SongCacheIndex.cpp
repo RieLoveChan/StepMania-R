@@ -68,7 +68,7 @@ void SongCacheIndex::ReadFromDisk() {
 static void EmptyDir(RString dir) {
 	ASSERT(dir[dir.size() - 1] == '/');
 
-	std::vector<RString> asCacheFileNames;
+	std::vector<std::string> asCacheFileNames;
 	GetDirListing(dir, asCacheFileNames);
 	for (unsigned i = 0; i < asCacheFileNames.size(); i++) {
 		if (!IsADirectory(dir + asCacheFileNames[i]))
@@ -89,8 +89,8 @@ void SongCacheIndex::ReadCacheIndex() {
 	EmptyDir(SpecialFiles::CACHE_DIR + "Songs/");
 	EmptyDir(SpecialFiles::CACHE_DIR + "Courses/");
 
-	std::vector<RString> ImageDir;
-	split(CommonMetrics::IMAGES_TO_CACHE, ",", ImageDir);
+	std::vector<std::string> ImageDir;
+	split(CommonMetrics::IMAGES_TO_CACHE.GetValue(), ",", ImageDir);
 	for (unsigned c = 0; c < ImageDir.size(); c++)
 		EmptyDir(SpecialFiles::CACHE_DIR + ImageDir[c] + "/");
 

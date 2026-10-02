@@ -779,20 +779,20 @@ bool InputMapper::CheckForChangedInputDevicesAndRemap(std::string &sMessageOut) 
 	INPUTMAN->GetDevicesAndDescriptions(vDevices);
 
 	// Strip non-joysticks.
-	std::vector<RString> vsLastSeenJoysticks;
+	std::vector<std::string> vsLastSeenJoysticks;
 	// Don't use "," since some vendors have a name like "company Ltd., etc".
 	// For now, use a pipe character. -aj, fix from Mordae.
-	split(g_sLastSeenInputDevices, "|", vsLastSeenJoysticks);
+	split(g_sLastSeenInputDevices.Get(), "|", vsLastSeenJoysticks);
 
-	std::vector<RString> vsCurrent;
-	std::vector<RString> vsCurrentJoysticks;
+	std::vector<std::string> vsCurrent;
+	std::vector<std::string> vsCurrentJoysticks;
 	for (int i = static_cast<int>(vDevices.size()) - 1; i >= 0; i--) {
 		vsCurrent.push_back(vDevices[i].sDesc);
 		if (IsJoystick(vDevices[i].id)) {
 			vsCurrentJoysticks.push_back(vDevices[i].sDesc);
 		}
 		else {
-			std::vector<RString>::iterator iter =
+			std::vector<std::string>::iterator iter =
 			   find(vsLastSeenJoysticks.begin(), vsLastSeenJoysticks.end(), vDevices[i].sDesc);
 			if (iter != vsLastSeenJoysticks.end())
 				vsLastSeenJoysticks.erase(iter);
@@ -803,7 +803,7 @@ bool InputMapper::CheckForChangedInputDevicesAndRemap(std::string &sMessageOut) 
 	if (!bJoysticksChanged)
 		return false;
 
-	std::vector<RString> vsConnects, vsDisconnects;
+	std::vector<std::string> vsConnects, vsDisconnects;
 	GetConnectsDisconnects(vsLastSeenJoysticks, vsCurrentJoysticks, vsDisconnects, vsConnects);
 
 	sMessageOut = RString();

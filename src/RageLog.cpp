@@ -203,7 +203,7 @@ void RageLog::SetLogLevelSpec(const RString &spec) {
 	for (int i = 0; i < Log::NUM_Category; ++i)
 		m_CategoryLevel[i] = -1;
 
-	std::vector<RString> tokens;
+	std::vector<std::string> tokens;
 	split(spec, ",", tokens, true);
 	for (RString tok : tokens) {
 		Trim(tok);
@@ -478,9 +478,9 @@ void RageLog::Write(int where, LogLevel level, Log::Category cat, const RString 
 		SpillRepeat();
 		m_sLastEmit.clear(); // a multi-line / special line breaks the run
 
-		std::vector<RString> asLines;
+		std::vector<std::string> asLines;
 		split(sLine, "\n", asLines, false);
-		for (RString &s : asLines)
+		for (std::string &s : asLines)
 			EmitLine(where, RString(sTag) + s);
 	}
 

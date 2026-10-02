@@ -45,7 +45,7 @@ bool ActorUtil::ResolvePath(std::string &sPath, const std::string &sName, bool o
 	// so "foo" doesn't partial match "foobar" if "foo" exists.
 	RageFileManager::FileType ft = FILEMAN->GetFileType(sPath);
 	if (ft != RageFileManager::TYPE_FILE && ft != RageFileManager::TYPE_DIR) {
-		std::vector<RString> asPaths;
+		std::vector<std::string> asPaths;
 		GetDirListing(sPath + "*", asPaths, false, true); // return path too
 
 		if (asPaths.empty()) {

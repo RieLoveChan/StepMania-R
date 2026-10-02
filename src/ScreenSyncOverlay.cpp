@@ -51,17 +51,17 @@ static LocalizedString COLLECTING_SAMPLE("ScreenSyncOverlay", "Collecting sample
 static LocalizedString STANDARD_DEVIATION("ScreenSyncOverlay", "Standard deviation");
 void ScreenSyncOverlay::UpdateText() {
 	// Update Status
-	std::vector<RString> vs;
+	std::vector<std::string> vs;
 
 	PlayerController pc = GamePreferences::m_AutoPlay.Get();
 	switch (pc) {
 	case PC_HUMAN:
 		break;
 	case PC_AUTOPLAY:
-		vs.push_back(AUTO_PLAY);
+		vs.push_back(AUTO_PLAY.GetValue());
 		break;
 	case PC_CPU:
-		vs.push_back(AUTO_PLAY_CPU);
+		vs.push_back(AUTO_PLAY_CPU.GetValue());
 		break;
 	default:
 		FAIL_M(ssprintf("Invalid PlayerController: %i", pc));
@@ -72,13 +72,13 @@ void ScreenSyncOverlay::UpdateText() {
 	case AutosyncType_Off:
 		break;
 	case AutosyncType_Song:
-		vs.push_back(AUTO_SYNC_SONG);
+		vs.push_back(AUTO_SYNC_SONG.GetValue());
 		break;
 	case AutosyncType_Machine:
-		vs.push_back(AUTO_SYNC_MACHINE);
+		vs.push_back(AUTO_SYNC_MACHINE.GetValue());
 		break;
 	case AutosyncType_Tempo:
-		vs.push_back(AUTO_SYNC_TEMPO);
+		vs.push_back(AUTO_SYNC_TEMPO.GetValue());
 		break;
 	default:
 		FAIL_M(ssprintf("Invalid autosync type: %i", type));

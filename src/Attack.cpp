@@ -75,7 +75,7 @@ std::string Attack::GetTextDescription() const {
 }
 
 int Attack::GetNumAttacks() const {
-	std::vector<RString> tmp;
+	std::vector<std::string> tmp;
 	split(this->sModifiers, ",", tmp);
 	return static_cast<int>(tmp.size());
 }

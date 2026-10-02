@@ -28,7 +28,7 @@ static void GetPrefsDefaultModifiers(PlayerOptions &po, SongOptions &so) {
 }
 
 static void SetPrefsDefaultModifiers(const PlayerOptions &po, const SongOptions &so) {
-	std::vector<RString> as;
+	std::vector<std::string> as;
 #define remove_empty_back()                                                                                            \
 	if (as.back().empty()) {                                                                                            \
 		as.pop_back();                                                                                                   \
@@ -184,11 +184,11 @@ static void GameSel(int &sel, bool ToSel, const ConfOption *pConfOption) {
 }
 
 static void LanguageChoices(std::vector<RString> &out) {
-	std::vector<RString> vs;
+	std::vector<std::string> vs;
 	THEME->GetLanguages(vs);
 	SortRStringArray(vs, true);
 
-	for (RString const &s : vs) {
+	for (std::string const &s : vs) {
 		const LanguageInfo *pLI = GetLanguageInfo(s);
 		if (pLI)
 			out.push_back(THEME->GetString("NativeLanguageNames", pLI->szEnglishName));
@@ -198,19 +198,19 @@ static void LanguageChoices(std::vector<RString> &out) {
 }
 
 static void Language(int &sel, bool ToSel, const ConfOption * /* pConfOption */) {
-	std::vector<RString> vs;
+	std::vector<std::string> vs;
 	THEME->GetLanguages(vs);
 	SortRStringArray(vs, true);
 
 	if (ToSel) {
 		sel = -1;
 		for (unsigned i = 0; sel == -1 && i < vs.size(); ++i)
-			if (!strcasecmp(vs[i], THEME->GetCurLanguage().c_str()))
+			if (!strcasecmp(vs[i].c_str(), THEME->GetCurLanguage().c_str()))
 				sel = i;
 
 		// If the current language doesn't exist, we'll show BASE_LANGUAGE, so select that.
 		for (unsigned i = 0; sel == -1 && i < vs.size(); ++i)
-			if (!strcasecmp(vs[i], SpecialFiles::BASE_LANGUAGE.c_str()))
+			if (!strcasecmp(vs[i].c_str(), SpecialFiles::BASE_LANGUAGE.c_str()))
 				sel = i;
 
 		if (sel == -1) {
@@ -225,7 +225,7 @@ static void Language(int &sel, bool ToSel, const ConfOption * /* pConfOption */)
 		}
 	}
 	else {
-		const RString &sNewLanguage = vs[sel];
+		const std::string &sNewLanguage = vs[sel];
 
 		PREFSMAN->m_sLanguage.Set(sNewLanguage);
 		if (THEME->GetCurLanguage() != sNewLanguage)
@@ -234,9 +234,11 @@ static void Language(int &sel, bool ToSel, const ConfOption * /* pConfOption */)
 }
 
 static void ThemeChoices(std::vector<RString> &out) {
-	THEME->GetSelectableThemeNames(out);
-	for (RString &s : out)
-		s = THEME->GetThemeDisplayName(s);
+	// out is always empty here (ConfOption::UpdateAvailableOptions clears it first).
+	std::vector<std::string> vsThemeNames;
+	THEME->GetSelectableThemeNames(vsThemeNames);
+	for (std::string const &s : vsThemeNames)
+		out.push_back(THEME->GetThemeDisplayName(s));
 }
 
 static DisplaySpecs display_specs;
@@ -260,13 +262,13 @@ static void RequestedTheme(int &sel, bool ToSel, const ConfOption *pConfOption) 
 	std::vector<RString> choices;
 	pConfOption->MakeOptionsList(choices);
 
-	std::vector<RString> vsThemeNames;
+	std::vector<std::string> vsThemeNames;
 	THEME->GetSelectableThemeNames(vsThemeNames);
 
 	if (ToSel) {
 		sel = 0;
 		for (unsigned i = 1; i < vsThemeNames.size(); i++)
-			if (!strcasecmp(vsThemeNames[i], PREFSMAN->m_sTheme.Get()))
+			if (!strcasecmp(vsThemeNames[i].c_str(), PREFSMAN->m_sTheme.Get()))
 				sel = i;
 	}
 	else {
@@ -277,7 +279,10 @@ static void RequestedTheme(int &sel, bool ToSel, const ConfOption *pConfOption) 
 
 static LocalizedString OFF("ScreenOptionsMasterPrefs", "Off");
 static void AnnouncerChoices(std::vector<RString> &out) {
-	ANNOUNCER->GetAnnouncerNames(out);
+	std::vector<std::string> vsAnnouncers;
+	ANNOUNCER->GetAnnouncerNames(vsAnnouncers);
+	for (std::string const &s : vsAnnouncers)
+		out.push_back(s);
 	out.insert(out.begin(), OFF);
 }
 
@@ -299,7 +304,10 @@ static void Announcer(int &sel, bool ToSel, const ConfOption *pConfOption) {
 }
 
 static void DefaultNoteSkinChoices(std::vector<RString> &out) {
-	NOTESKIN->GetNoteSkinNames(out);
+	std::vector<std::string> vsNoteSkins;
+	NOTESKIN->GetNoteSkinNames(vsNoteSkins);
+	for (std::string const &s : vsNoteSkins)
+		out.push_back(s);
 }
 
 static void DefaultNoteSkin(int &sel, bool ToSel, const ConfOption *pConfOption) {

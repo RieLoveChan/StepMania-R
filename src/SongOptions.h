@@ -54,8 +54,8 @@ class SongOptions {
 		*this = {};
 	}
 	void Approach(const SongOptions &other, float fDeltaSeconds);
-	void GetMods(std::vector<RString> &AddTo) const;
-	void GetLocalizedMods(std::vector<RString> &AddTo) const;
+	void GetMods(std::vector<std::string> &AddTo) const;
+	void GetLocalizedMods(std::vector<std::string> &AddTo) const;
 	RString GetString() const;
 	RString GetLocalizedString() const;
 	void FromString(const std::string &sOptions);

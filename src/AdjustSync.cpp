@@ -83,7 +83,7 @@ bool AdjustSync::IsSyncDataChanged() {
 	// Can't sync in course modes
 	if (GAMESTATE->IsCourseMode())
 		return false;
-	std::vector<RString> vs;
+	std::vector<std::string> vs;
 	AdjustSync::GetSyncChangeTextGlobal(vs);
 	AdjustSync::GetSyncChangeTextSong(vs);
 	return !vs.empty();
@@ -283,7 +283,7 @@ static LocalizedString ERROR("AdjustSync", "Average Error %.5fs");
 static LocalizedString ETC("AdjustSync", "Etc.");
 static LocalizedString TAPS_IGNORED("AdjustSync", "%d taps ignored.");
 
-void AdjustSync::GetSyncChangeTextGlobal(std::vector<RString> &vsAddTo) {
+void AdjustSync::GetSyncChangeTextGlobal(std::vector<std::string> &vsAddTo) {
 	{
 		float fOld = Quantize(AdjustSync::s_fGlobalOffsetSecondsOriginal, 0.001f);
 		float fNew = Quantize(PREFSMAN->m_fGlobalOffsetSeconds, 0.001f);
@@ -298,7 +298,7 @@ void AdjustSync::GetSyncChangeTextGlobal(std::vector<RString> &vsAddTo) {
 }
 
 // XXX: needs cleanup still -- vyhd
-void AdjustSync::GetSyncChangeTextSong(std::vector<RString> &vsAddTo) {
+void AdjustSync::GetSyncChangeTextSong(std::vector<std::string> &vsAddTo) {
 	if (GAMESTATE->m_pCurSong.Get()) {
 #define SEGMENTS_MISMATCH_MESSAGE(orig, test, segments_name)                                                           \
 	if ((orig).size() != (test).size()) {                                                                               \

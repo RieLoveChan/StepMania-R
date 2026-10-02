@@ -226,7 +226,7 @@ void PlayerOptions::Approach(const PlayerOptions &other, float fDeltaSeconds) {
 #undef DO_COPY
 }
 
-static void AddPart(std::vector<RString> &AddTo, float level, RString name) {
+static void AddPart(std::vector<std::string> &AddTo, float level, RString name) {
 	if (level == 0)
 		return;
 
@@ -236,12 +236,12 @@ static void AddPart(std::vector<RString> &AddTo, float level, RString name) {
 }
 
 std::string PlayerOptions::GetString(bool bForceNoteSkin) const {
-	std::vector<RString> v;
+	std::vector<std::string> v;
 	GetMods(v, bForceNoteSkin);
 	return join(", ", v);
 }
 
-void PlayerOptions::GetMods(std::vector<RString> &AddTo, bool bForceNoteSkin) const {
+void PlayerOptions::GetMods(std::vector<std::string> &AddTo, bool bForceNoteSkin) const {
 	// RString sReturn;
 
 	switch (m_LifeType) {
@@ -716,7 +716,7 @@ bool PlayerOptions::FromOneModString(const std::string &sOneMod, std::string &sE
 
 	static Regex mult("^([0-9]+(\\.[0-9]+)?)x$");
 	static Regex disabledWindows("(w[1-5])");
-	std::vector<RString> matches;
+	std::vector<std::string> matches;
 	if (mult.Compare(sBit, matches)) {
 		StringConversion::FromString(matches[0], level);
 		SET_FLOAT(fScrollSpeed)
@@ -1401,7 +1401,10 @@ bool PlayerOptions::FromOneModString(const std::string &sOneMod, std::string &sE
 				break;
 
 			TimingWindow tw;
-			bool ret = StringConversion::FromString(matches[0].MakeUpper(), tw);
+			std::string sWindowUpper = matches[0];
+			if (!sWindowUpper.empty())
+				MakeUpper(&sWindowUpper[0], sWindowUpper.size());
+			bool ret = StringConversion::FromString(sWindowUpper, tw);
 			if (ret && TW_W1 <= tw && tw <= TW_W5) {
 				m_twDisabledWindows.set(tw);
 			}
@@ -1859,10 +1862,10 @@ bool PlayerOptions::IsEasierForCourseAndTrail(Course *pCourse, Trail *pTrail) co
 	});
 }
 
-void PlayerOptions::GetLocalizedMods(std::vector<RString> &AddTo) const {
-	std::vector<RString> vMods;
+void PlayerOptions::GetLocalizedMods(std::vector<std::string> &AddTo) const {
+	std::vector<std::string> vMods;
 	GetMods(vMods);
-	for (RString const &sOneMod : vMods) {
+	for (std::string const &sOneMod : vMods) {
 		ASSERT(!sOneMod.empty());
 
 		std::vector<std::string> asTokens;

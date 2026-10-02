@@ -222,9 +222,9 @@ class LunaPlayerState : public Luna<PlayerState> {
 	}
 	static int GetPlayerOptionsArray(T *p, lua_State *L) {
 		ModsLevel m = Enum::Check<ModsLevel>(L, 1);
-		std::vector<RString> s;
+		std::vector<std::string> s;
 		p->m_PlayerOptions.Get(m).GetMods(s);
-		LuaHelpers::CreateTableFromArray<RString>(s, L);
+		LuaHelpers::CreateTableFromArray<std::string>(s, L);
 		return 1;
 	}
 	static int GetPlayerOptionsString(T *p, lua_State *L) {

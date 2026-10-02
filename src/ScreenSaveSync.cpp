@@ -15,14 +15,14 @@ static std::string GetPromptText() {
 	RString s;
 
 	{
-		std::vector<RString> vs;
+		std::vector<std::string> vs;
 		AdjustSync::GetSyncChangeTextGlobal(vs);
 		if (!vs.empty())
 			s += join("\n", vs) + "\n\n";
 	}
 
 	{
-		std::vector<RString> vs;
+		std::vector<std::string> vs;
 		AdjustSync::GetSyncChangeTextSong(vs);
 		if (!vs.empty()) {
 			s += ssprintf(

@@ -67,7 +67,7 @@ void ScreenMapControllers::Init() {
 	}
 	else {
 		/* Map the specified buttons. */
-		std::vector<RString> asBits;
+		std::vector<std::string> asBits;
 		split(sButtons, ",", asBits);
 		for (unsigned i = 0; i < asBits.size(); ++i) {
 			KeyToMap k;

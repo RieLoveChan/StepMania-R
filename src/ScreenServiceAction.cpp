@@ -381,13 +381,13 @@ static RString CopyEditsMemoryCardToMachine() {
 	if (!MEMCARDMAN->IsMounted(pn))
 		MEMCARDMAN->MountCard(pn);
 
-	std::vector<RString> vsSubDirs;
+	std::vector<std::string> vsSubDirs;
 	ProfileManager::GetMemoryCardProfileDirectoriesToTry(vsSubDirs);
 
 	std::vector<std::string> vs;
 	vs.push_back(ssprintf(COPIED_FROM_CARD.GetValue(), pn + 1));
 
-	for (RString const &sSubDir : vsSubDirs) {
+	for (std::string const &sSubDir : vsSubDirs) {
 		RString sFromDir = MEM_CARD_MOUNT_POINT[pn] + sSubDir + "/";
 		RString sToDir = PROFILEMAN->GetProfileDir(ProfileSlot_Machine);
 

@@ -284,7 +284,7 @@ static void DoPlayOnceFromDir(RString sPath) {
 	if (sPath.Right(1) != "/")
 		sPath += "/";
 
-	std::vector<RString> arraySoundFiles;
+	std::vector<std::string> arraySoundFiles;
 	GetDirListing(sPath + "*.mp3", arraySoundFiles);
 	GetDirListing(sPath + "*.wav", arraySoundFiles);
 	GetDirListing(sPath + "*.ogg", arraySoundFiles);
@@ -855,7 +855,7 @@ LUA_REGISTER_CLASS(GameSoundManager);
 
 int LuaFunc_get_sound_driver_list(lua_State *L);
 int LuaFunc_get_sound_driver_list(lua_State *L) {
-	std::vector<RString> driver_names;
+	std::vector<std::string> driver_names;
 	split(RageSoundDriver::GetDefaultSoundDriverList(), ",", driver_names, true);
 	lua_createtable(L, static_cast<int>(driver_names.size()), 0);
 	for (std::size_t n = 0; n < driver_names.size(); ++n) {

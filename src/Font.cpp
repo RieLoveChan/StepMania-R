@@ -501,7 +501,7 @@ void Font::LoadFontPageSettings(
 				 * Map hiragana to 0-84:
 				 * range Unicode #3041-3094=0
 				 */
-				std::vector<RString> asMatches;
+				std::vector<std::string> asMatches;
 				static Regex parse("^RANGE ([A-Z0-9\\-]+)( ?#([0-9A-F]+)-([0-9A-F]+))?$");
 				bool match = parse.Compare(sName, asMatches);
 				ASSERT(asMatches.size() == 4); // 4 parens
@@ -743,7 +743,7 @@ void Font::Load(const std::string &sIniPath, std::string sChars) {
 	}
 
 	{
-		std::vector<RString> ImportList;
+		std::vector<std::string> ImportList;
 
 		bool bIsTopLevelFont = LoadStack.size() == 1;
 

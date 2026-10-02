@@ -538,7 +538,7 @@ void ScreenEdit::LoadKeymapSectionIntoMappingsMember(XNode const *section, MapEd
 		if (name_entry != name_to_edit_button.end()) {
 			RString joined_names;
 			attr->second->GetValue(joined_names);
-			std::vector<RString> key_names;
+			std::vector<std::string> key_names;
 			split(joined_names, DEVICE_INPUT_SEPARATOR, key_names, false);
 			for (std::size_t k = 0; k < key_names.size() && k < NUM_EDIT_TO_DEVICE_SLOTS; ++k) {
 				DeviceInput devi;
@@ -4001,7 +4001,7 @@ void ScreenEdit::HandleScreenMessage(const ScreenMessage SM) {
 	else if (SM == SM_BackFromEditingModToExistingAttack && !ScreenTextEntry::s_bCancelledLast) {
 		AttackArray &attacks = (GAMESTATE->m_bIsUsingStepTiming ? m_pSteps->m_Attacks : m_pSong->m_Attacks);
 		Attack &attack = attacks[attackInProcess];
-		std::vector<RString> mods;
+		std::vector<std::string> mods;
 		split(attack.sModifiers, ",", mods);
 		RString mod = ScreenTextEntry::s_sLastAnswer;
 		Trim(mod);
@@ -4023,7 +4023,7 @@ void ScreenEdit::HandleScreenMessage(const ScreenMessage SM) {
 		unsigned option = ScreenMiniMenu::s_iLastRowCode;
 		AttackArray &attacks = (GAMESTATE->m_bIsUsingStepTiming ? m_pSteps->m_Attacks : m_pSong->m_Attacks);
 		Attack &attack = attacks[attackInProcess];
-		std::vector<RString> mods;
+		std::vector<std::string> mods;
 		split(attack.sModifiers, ",", mods);
 		modInProcess = option;
 		if (option == 0) // adjusting the starting time
@@ -4090,7 +4090,7 @@ void ScreenEdit::HandleScreenMessage(const ScreenMessage SM) {
 				   MenuRowDef(1, "Secs Remaining", true, EditMode_CourseMods, true, true, 0, nullptr)
 				);
 				g_IndividualAttack.rows[1].SetOneUnthemedChoice(std::to_string(attack.fSecsRemaining));
-				std::vector<RString> mods;
+				std::vector<std::string> mods;
 				split(attack.sModifiers, ",", mods);
 				for (unsigned i = 0; i < mods.size(); ++i) {
 					unsigned col = i + 2;
@@ -6267,19 +6267,19 @@ static void ProcessKeyName(std::string &s) {
 		s.replace(idx, 4, "");
 }
 
-static void ProcessKeyNames(std::vector<RString> &vs, bool doSort) {
-	for (RString &s : vs)
+static void ProcessKeyNames(std::vector<std::string> &vs, bool doSort) {
+	for (std::string &s : vs)
 		ProcessKeyName(s);
 
 	if (doSort)
 		sort(vs.begin(), vs.end());
-	std::vector<RString>::iterator toDelete = unique(vs.begin(), vs.end());
+	std::vector<std::string>::iterator toDelete = unique(vs.begin(), vs.end());
 	vs.erase(toDelete, vs.end());
 }
 
 static std::string GetDeviceButtonsLocalized(const std::vector<EditButton> &veb, const MapEditToDI &editmap) {
-	std::vector<RString> vsPress;
-	std::vector<RString> vsHold;
+	std::vector<std::string> vsPress;
+	std::vector<std::string> vsHold;
 	for (EditButton const &eb : veb) {
 		if (!IsMapped(eb, editmap))
 			continue;

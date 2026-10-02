@@ -105,7 +105,7 @@ class ProfileManager {
 		return (Profile *)((const ProfileManager *)this)->GetProfile(slot);
 	}
 
-	const RString &GetProfileDir(ProfileSlot slot) const;
+	const std::string &GetProfileDir(ProfileSlot slot) const;
 	std::string GetProfileDirImportedFrom(ProfileSlot slot) const;
 
 	Profile *GetMachineProfile() {
@@ -155,7 +155,7 @@ class ProfileManager {
 	);
 	void IncrementCategoryPlayCount(StepsType st, RankingCategory rc, PlayerNumber pn);
 
-	static void GetMemoryCardProfileDirectoriesToTry(std::vector<RString> &asDirsToTry);
+	static void GetMemoryCardProfileDirectoriesToTry(std::vector<std::string> &asDirsToTry);
 
 	// Lua
 	void PushSelf(lua_State *L);
@@ -169,7 +169,7 @@ class ProfileManager {
 
 	// Directory that contains the profile.  Either on local machine or
 	// on a memory card.
-	RString m_sProfileDir[NUM_PLAYERS];
+	std::string m_sProfileDir[NUM_PLAYERS];
 
 	// MemoryCardProfileImportSubdirs name, if the profile was imported.
 	std::string m_sProfileDirImportedFrom[NUM_PLAYERS];

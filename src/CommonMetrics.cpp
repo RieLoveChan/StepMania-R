@@ -37,14 +37,14 @@ void ThemeMetricDifficultiesToShow::Read() {
 
 	m_v.clear();
 
-	std::vector<RString> v;
+	std::vector<std::string> v;
 	split(ThemeMetric<RString>::GetValue(), ",", v);
 	if (v.empty()) {
 		LuaHelpers::ReportScriptError("DifficultiesToShow must have at least one entry.");
 		return;
 	}
 
-	for (RString const &i : v) {
+	for (std::string const &i : v) {
 		Difficulty d = StringToDifficulty(i);
 		if (d == Difficulty_Invalid) {
 			LuaHelpers::ReportScriptErrorFmt("Unknown difficulty \"%s\" in CourseDifficultiesToShow.", i.c_str());
@@ -71,14 +71,14 @@ void ThemeMetricCourseDifficultiesToShow::Read() {
 
 	m_v.clear();
 
-	std::vector<RString> v;
+	std::vector<std::string> v;
 	split(ThemeMetric<RString>::GetValue(), ",", v);
 	if (v.empty()) {
 		LuaHelpers::ReportScriptError("CourseDifficultiesToShow must have at least one entry.");
 		return;
 	}
 
-	for (RString const &i : v) {
+	for (std::string const &i : v) {
 		CourseDifficulty d = StringToDifficulty(i);
 		if (d == Difficulty_Invalid) {
 			LuaHelpers::ReportScriptErrorFmt("Unknown CourseDifficulty \"%s\" in CourseDifficultiesToShow.", i.c_str());
@@ -93,13 +93,13 @@ const std::vector<CourseDifficulty> &ThemeMetricCourseDifficultiesToShow::GetVal
 }
 
 static void RemoveStepsTypes(std::vector<StepsType> &inout, RString sStepsTypesToRemove) {
-	std::vector<RString> v;
+	std::vector<std::string> v;
 	split(sStepsTypesToRemove, ",", v);
 	if (v.empty())
 		return; // Nothing to do!
 
 	// subtract StepsTypes
-	for (RString const &i : v) {
+	for (std::string const &i : v) {
 		StepsType st = GAMEMAN->StringToStepsType(i);
 		if (st == StepsType_Invalid) {
 			LuaHelpers::ReportScriptErrorFmt(

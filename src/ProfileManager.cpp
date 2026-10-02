@@ -45,7 +45,7 @@ Preference1D<RString> ProfileManager::m_sDefaultLocalProfileID(DefaultLocalProfi
 
 const std::string NEW_MEM_CARD_NAME = "";
 const std::string USER_PROFILES_DIR = "/Save/LocalProfiles/";
-const RString MACHINE_PROFILE_DIR ="/Save/MachineProfile/";
+const std::string MACHINE_PROFILE_DIR = "/Save/MachineProfile/";
 const std::string LAST_GOOD_SUBDIR = "LastGood/";
 
 // Directories to search for a profile if m_sMemoryCardProfileSubdir doesn't
@@ -223,12 +223,12 @@ bool ProfileManager::LoadLocalProfileFromMachine(PlayerNumber pn) {
 	return true;
 }
 
-void ProfileManager::GetMemoryCardProfileDirectoriesToTry(std::vector<RString> &asDirsToTry) {
+void ProfileManager::GetMemoryCardProfileDirectoriesToTry(std::vector<std::string> &asDirsToTry) {
 	/* Try to load the preferred profile. */
 	asDirsToTry.push_back(PREFSMAN->m_sMemoryCardProfileSubdir.Get());
 
 	/* If that failed, try loading from all fallback directories. */
-	split(g_sMemoryCardProfileImportSubdirs, ";", asDirsToTry, true);
+	split(g_sMemoryCardProfileImportSubdirs.Get(), ";", asDirsToTry, true);
 }
 
 bool ProfileManager::LoadProfileFromMemoryCard(PlayerNumber pn, bool bLoadEdits) {
@@ -238,12 +238,12 @@ bool ProfileManager::LoadProfileFromMemoryCard(PlayerNumber pn, bool bLoadEdits)
 	if (MEMCARDMAN->GetCardState(pn) != MemoryCardState_Ready)
 		return false;
 
-	std::vector<RString> asDirsToTry;
+	std::vector<std::string> asDirsToTry;
 	GetMemoryCardProfileDirectoriesToTry(asDirsToTry);
 	m_bNewProfile[pn] = true;
 
 	for (unsigned i = 0; i < asDirsToTry.size(); ++i) {
-		const RString &sSubdir = asDirsToTry[i];
+		const std::string &sSubdir = asDirsToTry[i];
 		RString sDir = MEM_CARD_MOUNT_POINT[pn] + sSubdir + "/";
 
 		/* If the load fails with ProfileLoadResult_FailedNoProfile, keep searching.  However,
@@ -277,7 +277,7 @@ bool ProfileManager::LoadProfileFromMemoryCard(PlayerNumber pn, bool bLoadEdits)
 	/* Load edits from all fallback directories, newest first. */
 	if (bLoadEdits) {
 		for (unsigned i = 0; i < asDirsToTry.size(); ++i) {
-			const RString &sSubdir = asDirsToTry[i];
+			const std::string &sSubdir = asDirsToTry[i];
 			RString sDir = MEM_CARD_MOUNT_POINT[pn] + sSubdir + "/";
 
 			if (m_bProfileStepEdits)
@@ -301,11 +301,11 @@ bool ProfileManager::LoadFirstAvailableProfile(PlayerNumber pn, bool bLoadEdits)
 }
 
 bool ProfileManager::FastLoadProfileNameFromMemoryCard(std::string sRootDir, std::string &sName) const {
-	std::vector<RString> asDirsToTry;
+	std::vector<std::string> asDirsToTry;
 	GetMemoryCardProfileDirectoriesToTry(asDirsToTry);
 
 	for (unsigned i = 0; i < asDirsToTry.size(); ++i) {
-		const RString &sSubdir = asDirsToTry[i];
+		const std::string &sSubdir = asDirsToTry[i];
 		RString sDir = sRootDir + sSubdir + "/";
 
 		Profile profile;
@@ -413,7 +413,7 @@ void ProfileManager::RefreshLocalProfilesFromDisk() {
 }
 
 void ProfileManager::LoadLocalProfilesByPriority() {
-	std::vector<RString> profile_ids;
+	std::vector<std::string> profile_ids;
 	GetDirListing(USER_PROFILES_DIR + "*", profile_ids, true, true);
 	// Profiles have 3 types:
 	// 1.  Guest profiles:
@@ -428,7 +428,7 @@ void ProfileManager::LoadLocalProfilesByPriority() {
 	// The type data for a profile is in its own file so that loading isn't
 	// slowed down by copying temporary profiles around to make sure the list
 	// is sorted.  The profiles are loaded at the end. -Kyz
-	for (RString const &id : profile_ids) {
+	for (std::string const &id : profile_ids) {
 		DirAndProfile derp;
 		derp.sDir = id + "/";
 		derp.profile.LoadTypeFromDir(derp.sDir);
@@ -460,7 +460,7 @@ void ProfileManager::LoadLocalProfilesByPriority() {
 }
 
 void ProfileManager::LoadLocalProfilesByName() {
-	std::vector<RString> profile_ids;
+	std::vector<std::string> profile_ids;
 	GetDirListing(USER_PROFILES_DIR + "*", profile_ids, true, true);
 
 	// Create separate vectors for each profile type
@@ -468,7 +468,7 @@ void ProfileManager::LoadLocalProfilesByName() {
 	std::vector<DirAndProfile> normalProfiles;
 	std::vector<DirAndProfile> testProfiles;
 
-	for (RString const &id : profile_ids) {
+	for (std::string const &id : profile_ids) {
 		DirAndProfile derp;
 		derp.sDir = id + "/";
 		derp.profile.LoadEditableDataFromDir(derp.sDir);
@@ -519,7 +519,7 @@ void ProfileManager::LoadLocalProfilesByName() {
 // This function is used within RefreshLocalProfilesFromDisk() to sort the profiles by date.
 void ProfileManager::LoadLocalProfilesByRecent() {
 
-	std::vector<RString> profile_ids;
+	std::vector<std::string> profile_ids;
 	GetDirListing(USER_PROFILES_DIR + "*", profile_ids, true, true);
 
 	// Create separate vectors for each profile type
@@ -530,7 +530,7 @@ void ProfileManager::LoadLocalProfilesByRecent() {
 	// The type data for a profile is in its own file so that loading isn't
 	// slowed down by copying temporary profiles around to make sure the list
 	// is sorted.	The profiles are loaded at the end. -Kyz
-	for (RString const &id : profile_ids) {
+	for (std::string const &id : profile_ids) {
 		DirAndProfile derp;
 		derp.sDir = id + "/";
 		derp.profile.LoadTypeFromDir(derp.sDir);
@@ -785,7 +785,7 @@ bool ProfileManager::LastLoadWasFromLastGood(PlayerNumber pn) const {
 	return !m_sProfileDir[pn].empty() && m_bLastLoadWasFromLastGood[pn];
 }
 
-const RString &ProfileManager::GetProfileDir(ProfileSlot slot) const {
+const std::string &ProfileManager::GetProfileDir(ProfileSlot slot) const {
 	switch (slot) {
 	case ProfileSlot_Player1:
 	case ProfileSlot_Player2:
@@ -1259,7 +1259,7 @@ class LunaProfileManager : public Luna<ProfileManager> {
 		return 1;
 	}
 	static int GetProfileDir(T *p, lua_State *L) {
-		lua_pushstring(L, p->GetProfileDir(Enum::Check<ProfileSlot>(L, 1)));
+		lua_pushstring(L, p->GetProfileDir(Enum::Check<ProfileSlot>(L, 1)).c_str());
 		return 1;
 	}
 	static int IsSongNew(T *p, lua_State *L) {

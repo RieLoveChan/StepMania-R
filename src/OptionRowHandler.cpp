@@ -338,17 +338,17 @@ class OptionRowHandlerList : public OptionRowHandler {
 	}
 };
 
-static void SortNoteSkins(std::vector<RString> &asSkinNames) {
+static void SortNoteSkins(std::vector<std::string> &asSkinNames) {
 	std::set<std::string> setSkinNames;
 	setSkinNames.insert(asSkinNames.begin(), asSkinNames.end());
 
-	std::vector<RString> asSorted;
+	std::vector<std::string> asSorted;
 	split(NOTE_SKIN_SORT_ORDER, ",", asSorted);
 
 	std::set<std::string> setUnusedSkinNames(setSkinNames);
 	asSkinNames.clear();
 
-	for (RString const &sSkin : asSorted) {
+	for (std::string const &sSkin : asSorted) {
 		if (setSkinNames.find(sSkin) == setSkinNames.end())
 			continue;
 		asSkinNames.push_back(sSkin);
@@ -364,7 +364,7 @@ class OptionRowHandlerListNoteSkins : public OptionRowHandlerList {
 		m_Def.m_bOneChoiceForAllPlayers = false;
 		m_Def.m_bAllowThemeItems = false; // we theme the text ourself
 
-		std::vector<RString> arraySkinNames;
+		std::vector<std::string> arraySkinNames;
 		NOTESKIN->GetNoteSkinNames(arraySkinNames);
 		SortNoteSkins(arraySkinNames);
 

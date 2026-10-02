@@ -32,15 +32,15 @@ class ThemeManager {
 	ThemeManager();
 	~ThemeManager();
 
-	void GetThemeNames(std::vector<RString> &AddTo);
-	void GetSelectableThemeNames(std::vector<RString> &AddTo);
+	void GetThemeNames(std::vector<std::string> &AddTo);
+	void GetSelectableThemeNames(std::vector<std::string> &AddTo);
 	int GetNumSelectableThemes();
 	bool DoesThemeExist(const std::string &sThemeName);
 	bool IsThemeSelectable(const std::string &name);
 	bool IsThemeNameValid(const std::string &name);
 	RString GetThemeDisplayName(const std::string &sThemeName);
 	RString GetThemeAuthor(const std::string &sThemeName);
-	void GetLanguages(std::vector<RString> &AddTo);
+	void GetLanguages(std::vector<std::string> &AddTo);
 	bool DoesLanguageExist(const std::string &sLanguage);
 	void SwitchThemeAndLanguage(
 	   const std::string &sThemeName, const std::string &sLanguage, bool bPseudoLocalize, bool bForceThemeReload = false
@@ -120,7 +120,7 @@ class ThemeManager {
 	void GetString(const std::string &sMetricsGroup, const std::string &sValueName, RString &valueOut) {
 		valueOut = GetString(sMetricsGroup, sValueName);
 	}
-	void FilterFileLanguages(std::vector<RString> &asElementPaths);
+	void FilterFileLanguages(std::vector<std::string> &asElementPaths);
 
 	void GetMetricsThatBeginWith(
 	   const std::string &sMetricsGroup, const std::string &sValueName, std::set<std::string> &vsValueNamesOut
@@ -160,10 +160,10 @@ class ThemeManager {
 	static std::string GetThemeDirFromName(const std::string &sThemeName);
 	RString GetElementDir(const RString &sThemeName);
 	static std::string GetMetricsIniPath(const std::string &sThemeName);
-	static void GetLanguagesForTheme(const std::string &sThemeName, std::vector<RString> &asLanguagesOut);
+	static void GetLanguagesForTheme(const std::string &sThemeName, std::vector<std::string> &asLanguagesOut);
 	static std::string GetLanguageIniPath(const std::string &sThemeName, const std::string &sLanguage);
 	void GetOptionalLanguageIniPaths(
-	   std::vector<RString> &vsPathsOut, const std::string &sThemeName, const std::string &sLanguage
+	   std::vector<std::string> &vsPathsOut, const std::string &sThemeName, const std::string &sLanguage
 	);
 	std::string GetDefaultLanguage();
 

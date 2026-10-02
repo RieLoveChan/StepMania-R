@@ -554,9 +554,11 @@ class Regex {
 	void Set(const std::string &str);
 	bool Compare(const std::string &sStr);
 	bool Compare(const RString &sStr, std::vector<RString> &asMatches);
+	bool Compare(const std::string &sStr, std::vector<std::string> &asMatches);
 	bool Replace(const std::string &sReplacement, const std::string &sSubject, std::string &sOut);
 
  private:
+	template <class V> bool CompareImpl(const std::string &sStr, V &asMatches);
 	void Compile();
 	void Release();
 

@@ -157,10 +157,10 @@ bool InputQueueCode::EnteredCode(GameController controller) const {
 bool InputQueueCode::Load(std::string sButtonsNames) {
 	m_aPresses.clear();
 
-	std::vector<RString> asPresses;
+	std::vector<std::string> asPresses;
 	split(sButtonsNames, ",", asPresses, false);
-	for (RString &sPress : asPresses) {
-		std::vector<RString> asButtonNames;
+	for (std::string &sPress : asPresses) {
+		std::vector<std::string> asButtonNames;
 
 		split(sPress, "-", asButtonNames, false);
 

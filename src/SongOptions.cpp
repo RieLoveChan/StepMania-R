@@ -44,7 +44,7 @@ void SongOptions::Approach(const SongOptions &other, float fDeltaSeconds) {
 #undef DO_COPY
 }
 
-static void AddPart(std::vector<RString> &AddTo, float level, RString name) {
+static void AddPart(std::vector<std::string> &AddTo, float level, RString name) {
 	if (level == 0)
 		return;
 
@@ -53,7 +53,7 @@ static void AddPart(std::vector<RString> &AddTo, float level, RString name) {
 	AddTo.push_back(LevelStr + name);
 }
 
-void SongOptions::GetMods(std::vector<RString> &AddTo) const {
+void SongOptions::GetMods(std::vector<std::string> &AddTo) const {
 	if (m_fMusicRate != 1) {
 		RString s = ssprintf("%2.2f", m_fMusicRate);
 		if (s[s.size() - 1] == '0')
@@ -103,21 +103,21 @@ void SongOptions::GetMods(std::vector<RString> &AddTo) const {
 		AddTo.push_back("RandomBG");
 }
 
-void SongOptions::GetLocalizedMods(std::vector<RString> &v) const {
+void SongOptions::GetLocalizedMods(std::vector<std::string> &v) const {
 	GetMods(v);
-	for (RString &s : v) {
+	for (std::string &s : v) {
 		s = CommonMetrics::LocalizeOptionItem(s, true);
 	}
 }
 
 RString SongOptions::GetString() const {
-	std::vector<RString> v;
+	std::vector<std::string> v;
 	GetMods(v);
 	return join(", ", v);
 }
 
 RString SongOptions::GetLocalizedString() const {
-	std::vector<RString> v;
+	std::vector<std::string> v;
 	GetLocalizedMods(v);
 	return join(", ", v);
 }
@@ -140,7 +140,7 @@ bool SongOptions::FromOneModString(const std::string &sOneMod, std::string & /* 
 	Trim(sBit);
 
 	Regex mult("^([0-9]+(\\.[0-9]+)?)xmusic$");
-	std::vector<RString> matches;
+	std::vector<std::string> matches;
 	if (mult.Compare(sBit, matches)) {
 		m_fMusicRate = StringToFloat(matches[0]);
 		return true;

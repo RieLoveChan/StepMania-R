@@ -28,7 +28,7 @@ void ActiveAttackList::Update(float fDelta) {
 void ActiveAttackList::Refresh() {
 	const AttackArray &attacks = m_pPlayerState->m_ActiveAttacks;
 
-	std::vector<RString> vsThemedMods;
+	std::vector<std::string> vsThemedMods;
 	for (unsigned i = 0; i < attacks.size(); i++) {
 		const Attack &attack = attacks[i];
 

@@ -18,13 +18,13 @@ BGAnimation::~BGAnimation() {
 	DeleteAllChildren();
 }
 
-static bool CompareLayerNames(const RString &s1, const RString &s2) {
+static bool CompareLayerNames(const std::string &s1, const std::string &s2) {
 	int i1, i2;
 	int ret;
 
-	ret = sscanf(s1, "Layer%d", &i1);
+	ret = sscanf(s1.c_str(), "Layer%d", &i1);
 	ASSERT(ret == 1);
-	ret = sscanf(s2, "Layer%d", &i2);
+	ret = sscanf(s2.c_str(), "Layer%d", &i2);
 	ASSERT(ret == 1);
 	return i1 < i2;
 }
@@ -33,7 +33,7 @@ void BGAnimation::AddLayersFromAniDir(const std::string &_sAniDir, const XNode *
 	const std::string &sAniDir = _sAniDir;
 
 	{
-		std::vector<RString> vsLayerNames;
+		std::vector<std::string> vsLayerNames;
 		FOREACH_CONST_Child(pNode, pLayer) {
 			if (strncmp(pLayer->GetName().c_str(), "Layer", 5) == 0)
 				vsLayerNames.push_back(pLayer->GetName());
@@ -41,7 +41,7 @@ void BGAnimation::AddLayersFromAniDir(const std::string &_sAniDir, const XNode *
 
 		sort(vsLayerNames.begin(), vsLayerNames.end(), CompareLayerNames);
 
-		for (RString const &sLayer : vsLayerNames) {
+		for (std::string const &sLayer : vsLayerNames) {
 			const XNode *pKey = pNode->GetChild(sLayer);
 			ASSERT(pKey != nullptr);
 
@@ -117,7 +117,7 @@ void BGAnimation::LoadFromAniDir(const std::string &_sAniDir) {
 		// This is an 3.0 and before-style BGAnimation (not using .ini)
 
 		// loading a directory of layers
-		std::vector<RString> asImagePaths;
+		std::vector<std::string> asImagePaths;
 		ASSERT(!sAniDir.empty());
 
 		GetDirListing(sAniDir + "*.png", asImagePaths, false, true);
