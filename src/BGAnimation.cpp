@@ -133,7 +133,7 @@ void BGAnimation::LoadFromAniDir(const std::string &_sAniDir) {
 
 		for (unsigned i = 0; i < asImagePaths.size(); i++) {
 			const RString sPath = asImagePaths[i];
-			if (Basename(sPath).Left(1) == "_")
+			if (Basename(sPath).substr(0, 1) == "_")
 				continue; // don't directly load files starting with an underscore
 			BGAnimationLayer *pLayer = new BGAnimationLayer;
 			pLayer->LoadFromAniLayerFile(asImagePaths[i]);

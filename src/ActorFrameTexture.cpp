@@ -19,7 +19,7 @@ ActorFrameTexture::ActorFrameTexture() {
 	m_bPreserveTexture = false;
 	static std::uint64_t i = 0;
 	++i;
-	m_sTextureName = ssprintf(ConvertI64FormatString("ActorFrameTexture %lli"), i);
+	m_sTextureName = ssprintf(ConvertI64FormatString("ActorFrameTexture %lli").c_str(), i);
 
 	m_pRenderTarget = nullptr;
 }

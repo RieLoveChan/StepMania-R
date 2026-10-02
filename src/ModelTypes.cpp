@@ -57,7 +57,7 @@ void AnimatedTexture::Load(const std::string &sTexOrIniPath) {
 	else
 		m_BlendMode = BLEND_NORMAL;
 
-	if (GetExtension(sTexOrIniPath).CompareNoCase("ini") == 0) {
+	if (StdString::ssicmp(GetExtension(sTexOrIniPath).c_str(), "ini") == 0) {
 		IniFile ini;
 		if (!ini.ReadFile(sTexOrIniPath))
 			RageException::Throw("Error reading \"%s\": %s", sTexOrIniPath.c_str(), ini.GetError().c_str());
@@ -201,7 +201,7 @@ RageVector2 AnimatedTexture::GetTextureTranslate() {
 
 bool msAnimation::LoadMilkshapeAsciiBones(RString /* sAniName */, RString sPath) {
 	FixSlashesInPlace(sPath);
-	const RString sDir = Dirname(sPath);
+	const std::string sDir = Dirname(sPath);
 
 	RageFile f;
 	if (!f.Open(sPath))

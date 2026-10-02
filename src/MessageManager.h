@@ -91,12 +91,12 @@ enum MessageID {
 const RString &MessageIDToString(MessageID m);
 
 struct Message {
-	explicit Message(const RString &s);
+	explicit Message(const std::string &s);
 	explicit Message(const MessageID id);
-	Message(const RString &s, const LuaReference &params);
+	Message(const std::string &s, const LuaReference &params);
 	~Message();
 
-	void SetName(const RString &sName) {
+	void SetName(const std::string &sName) {
 		m_sName = sName;
 	}
 	std::string GetName() const {
@@ -114,10 +114,10 @@ struct Message {
 	const LuaReference &GetParamTable() const;
 	void SetParamTable(const LuaReference &params);
 
-	void GetParamFromStack(lua_State *L, const RString &sName) const;
-	void SetParamFromStack(lua_State *L, const RString &sName);
+	void GetParamFromStack(lua_State *L, const std::string &sName) const;
+	void SetParamFromStack(lua_State *L, const std::string &sName);
 
-	template <typename T> bool GetParam(const RString &sName, T &val) const {
+	template <typename T> bool GetParam(const std::string &sName, T &val) const {
 		Lua *L = LUA->Get();
 		GetParamFromStack(L, sName);
 		bool bRet = LuaHelpers::Pop(L, val);
@@ -125,21 +125,21 @@ struct Message {
 		return bRet;
 	}
 
-	template <typename T> void SetParam(const RString &sName, const T &val) {
+	template <typename T> void SetParam(const std::string &sName, const T &val) {
 		Lua *L = LUA->Get();
 		LuaHelpers::Push(L, val);
 		SetParamFromStack(L, sName);
 		LUA->Release(L);
 	}
 
-	template <typename T> void SetParam(const RString &sName, const std::vector<T> &val) {
+	template <typename T> void SetParam(const std::string &sName, const std::vector<T> &val) {
 		Lua *L = LUA->Get();
 		LuaHelpers::CreateTableFromArray(val, L);
 		SetParamFromStack(L, sName);
 		LUA->Release(L);
 	}
 
-	bool operator==(const RString &s) const {
+	bool operator==(const std::string &s) const {
 		return m_sName == s;
 	}
 	bool operator==(MessageID id) const {
@@ -165,7 +165,7 @@ class IMessageSubscriber {
 	virtual ~IMessageSubscriber() {
 	}
 	virtual void HandleMessage(const Message &msg) = 0;
-	void ClearMessages(const RString sMessage = "");
+	void ClearMessages(const std::string sMessage = "");
 
  private:
 	friend class MessageManager;
@@ -182,12 +182,12 @@ class MessageSubscriber : public IMessageSubscriber {
 	// Messages
 	//
 	void SubscribeToMessage(MessageID message);           // will automatically unsubscribe
-	void SubscribeToMessage(const RString &sMessageName); // will automatically unsubscribe
+	void SubscribeToMessage(const std::string &sMessageName); // will automatically unsubscribe
 
 	void UnsubscribeAll();
 
  private:
-	std::vector<RString> m_vsSubscribedTo;
+	std::vector<std::string> m_vsSubscribedTo;
 };
 
 /** @brief Deliver messages to any part of the program as needed. */
@@ -196,14 +196,14 @@ class MessageManager {
 	MessageManager();
 	~MessageManager();
 
-	void Subscribe(IMessageSubscriber *pSubscriber, const RString &sMessage);
+	void Subscribe(IMessageSubscriber *pSubscriber, const std::string &sMessage);
 	void Subscribe(IMessageSubscriber *pSubscriber, MessageID m);
-	void Unsubscribe(IMessageSubscriber *pSubscriber, const RString &sMessage);
+	void Unsubscribe(IMessageSubscriber *pSubscriber, const std::string &sMessage);
 	void Unsubscribe(IMessageSubscriber *pSubscriber, MessageID m);
 	void Broadcast(Message &msg) const;
-	void Broadcast(const RString &sMessage) const;
+	void Broadcast(const std::string &sMessage) const;
 	void Broadcast(MessageID m) const;
-	bool IsSubscribedToMessage(IMessageSubscriber *pSubscriber, const RString &sMessage) const;
+	bool IsSubscribedToMessage(IMessageSubscriber *pSubscriber, const std::string &sMessage) const;
 	inline bool IsSubscribedToMessage(IMessageSubscriber *pSubscriber, MessageID message) const {
 		return IsSubscribedToMessage(pSubscriber, MessageIDToString(message));
 	}

@@ -132,7 +132,7 @@ std::string LuaReference::Serialize() const {
 	const char *pString = lua_tostring(L, -1);
 	ASSERT_M(pString != nullptr, "Serialize() didn't return a string");
 
-	RString sRet = pString;
+	std::string sRet = pString;
 	lua_pop(L, 1);
 
 	LUA->Release(L);

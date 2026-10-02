@@ -784,7 +784,7 @@ bool SSCLoader::LoadNoteDataFromSimfile(const RString &cachePath, Steps &out) {
 					// tag. -Kyz
 					if (
 					   out.GetDifficulty() != StringToDifficulty(matcher) &&
-					   !(out.GetDifficulty() == Difficulty_Edit && GetExtension(cachePath).MakeLower() == "edit")
+					   !(out.GetDifficulty() == Difficulty_Edit && RString(GetExtension(cachePath)).MakeLower() == "edit")
 					) {
 						tryingSteps = false;
 					}

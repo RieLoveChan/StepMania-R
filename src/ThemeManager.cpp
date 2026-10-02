@@ -607,7 +607,7 @@ bool ThemeManager::GetPathInfoToRaw(
 
 		for (unsigned p = 0; p < asPaths.size(); ++p) {
 			// BGAnimations, Fonts, Graphics, Sounds, Other
-			const RString ext = GetExtension(asPaths[p]);
+			const std::string ext = GetExtension(asPaths[p]);
 			bool matches = category == EC_OTHER || ext == "redir";
 			if (!matches) {
 				FileType ft = ActorUtil::GetFileType(asPaths[p]);
@@ -685,7 +685,7 @@ bool ThemeManager::GetPathInfoToRaw(
 	}
 
 	std::string sPath = asElementPaths[0];
-	bool bIsARedirect = GetExtension(sPath).CompareNoCase("redir") == 0;
+	bool bIsARedirect = StdString::ssicmp(GetExtension(sPath).c_str(), "redir") == 0;
 
 	if (!bIsARedirect) {
 		out.sResolvedPath = sPath;

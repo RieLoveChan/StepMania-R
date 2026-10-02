@@ -83,7 +83,7 @@ bool RageModelGeometry::HasAnyPerVertexBones() const {
 void RageModelGeometry::LoadMilkshapeAscii(const std::string &_sPath, bool bNeedsNormals) {
 	RString sPath = _sPath;
 	FixSlashesInPlace(sPath);
-	const RString sDir = Dirname(sPath);
+	const std::string sDir = Dirname(sPath);
 
 	RageFile f;
 	if (!f.Open(sPath))

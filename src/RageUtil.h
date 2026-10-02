@@ -317,30 +317,30 @@ float fmodfp(float x, float y);
 int power_of_two(int input);
 bool IsAnInt(const std::string &s);
 bool IsHexVal(const std::string &s);
-RString BinaryToHex(const void *pData_, std::size_t iNumBytes);
-RString BinaryToHex(const std::string &sString);
+std::string BinaryToHex(const void *pData_, std::size_t iNumBytes);
+std::string BinaryToHex(const std::string &sString);
 bool HexToBinary(const std::string &s, unsigned char *stringOut);
 bool HexToBinary(const RString &s, RString *sOut);
 float HHMMSSToSeconds(const std::string &sHMS);
-RString SecondsToHHMMSS(float fSecs);
-RString SecondsToMSSMsMs(float fSecs);
-RString SecondsToMMSSMsMs(float fSecs);
-RString SecondsToMMSSMsMsMs(float fSecs);
-RString SecondsToMSS(float fSecs);
-RString SecondsToMMSS(float fSecs);
-RString PrettyPercent(float fNumerator, float fDenominator);
-inline RString PrettyPercent(int fNumerator, int fDenominator) {
+std::string SecondsToHHMMSS(float fSecs);
+std::string SecondsToMSSMsMs(float fSecs);
+std::string SecondsToMMSSMsMs(float fSecs);
+std::string SecondsToMMSSMsMsMs(float fSecs);
+std::string SecondsToMSS(float fSecs);
+std::string SecondsToMMSS(float fSecs);
+std::string PrettyPercent(float fNumerator, float fDenominator);
+inline std::string PrettyPercent(int fNumerator, int fDenominator) {
 	return PrettyPercent(float(fNumerator), float(fDenominator));
 }
-RString Commify(int iNum);
-RString Commify(const std::string &num, const std::string &sep = ",", const std::string &dot = ".");
-RString FormatNumberAndSuffix(int i);
+std::string Commify(int iNum);
+std::string Commify(const std::string &num, const std::string &sep = ",", const std::string &dot = ".");
+std::string FormatNumberAndSuffix(int i);
 
 struct tm GetLocalTime();
 
 RString ssprintf(const char *fmt, ...) PRINTF(1, 2);
 RString vssprintf(const char *fmt, va_list argList);
-RString ConvertI64FormatString(const std::string &sStr);
+std::string ConvertI64FormatString(const std::string &sStr);
 
 /*
  * Splits a Path into 4 parts (Directory, Drive, Filename, Extention).  Supports UNC path names.
@@ -350,9 +350,9 @@ RString ConvertI64FormatString(const std::string &sStr);
 void splitpath(const std::string &Path, std::string &Dir, std::string &Filename, std::string &Ext);
 RString custom_songify_path(RString const &path);
 
-RString SetExtension(const std::string &path, const std::string &ext);
-RString GetExtension(const std::string &sPath);
-RString GetFileNameWithoutExtension(const std::string &sPath);
+std::string SetExtension(const std::string &path, const std::string &ext);
+std::string GetExtension(const std::string &sPath);
+std::string GetFileNameWithoutExtension(const std::string &sPath);
 void MakeValidFilename(std::string &sName);
 
 bool FindFirstFilenameContaining(
@@ -391,8 +391,8 @@ int StringToInt(const std::string &str, std::size_t *pos = 0, int base = 10, int
 long StringToLong(const std::string &str, std::size_t *pos = 0, int base = 10, long exceptVal = 0);
 long long StringToLLong(const std::string &str, std::size_t *pos = 0, int base = 10, long long exceptVal = 0);
 
-RString WStringToRString(const std::wstring &sString);
-RString WcharToUTF8(wchar_t c);
+std::string WStringToRString(const std::wstring &sString);
+std::string WcharToUTF8(wchar_t c);
 std::wstring RStringToWstring(const std::string &sString);
 
 struct LanguageInfo {
@@ -460,7 +460,7 @@ RString SmUnescape(const RString &sEscaped);
 RString DwiEscape(const RString &sUnescaped);
 RString DwiEscape(const char *cUnescaped, int len);
 
-RString GetCwd();
+std::string GetCwd();
 
 void SetCommandlineArguments(int argc, char **argv);
 void GetCommandLineArguments(int &argc, char **&argv);
@@ -531,14 +531,14 @@ void Trim(std::string &sStr, const char *szTrim = "\r\n\t ");
 void StripCrnl(std::string &sStr);
 bool BeginsWith(const std::string &sTestThis, const std::string &sBeginning);
 bool EndsWith(const std::string &sTestThis, const std::string &sEnding);
-RString URLEncode(const std::string &sStr);
+std::string URLEncode(const std::string &sStr);
 
 void StripCvsAndSvn(std::vector<RString> &vs);        // Removes various versioning system metafolders.
 void StripMacResourceForks(std::vector<RString> &vs); // Removes files starting with "._"
 void StripCvsAndSvn(std::vector<std::string> &vs);
 void StripMacResourceForks(std::vector<std::string> &vs);
 
-RString DerefRedir(const std::string &sPath);
+std::string DerefRedir(const std::string &sPath);
 bool GetFileContents(const std::string &sPath, std::string &sOut, bool bOneLine = false);
 bool GetFileContents(const std::string &sFile, std::vector<std::string> &asOut);
 
@@ -572,9 +572,9 @@ void ReplaceEntityText(std::string &sText, const std::map<char, RString> &m);
 void Replace_Unicode_Markers(std::string &Text);
 RString WcharDisplayText(wchar_t c);
 
-RString Basename(const std::string &dir);
-RString Dirname(const std::string &dir);
-RString Capitalize(const std::string &s);
+std::string Basename(const std::string &dir);
+std::string Dirname(const std::string &dir);
+std::string Capitalize(const std::string &s);
 
 #if defined(HAVE_UNISTD_H)
 #include <unistd.h> /* correct place with correct definitions */

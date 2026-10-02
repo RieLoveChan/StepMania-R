@@ -87,8 +87,9 @@ RageSurface *RageSurfaceUtils::LoadFile(const std::string &sPath, RString &error
 		FileTypes.insert(*curr);
 	}
 
-	RString format = GetExtension(sPath);
-	format.MakeLower();
+	std::string format = GetExtension(sPath);
+	if (!format.empty())
+		MakeLower(&format[0], format.size());
 
 	bool bKeepTrying = true;
 

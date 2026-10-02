@@ -881,7 +881,7 @@ class LunaScreenManager : public Luna<ScreenManager> {
 		ValidateScreenName(L, screen);
 		ScreenMessage SM = SM_None;
 		if (lua_gettop(L) >= 2 && !lua_isnil(L, 2)) {
-			RString sMessage = SArg(2);
+			std::string sMessage = SArg(2);
 			SM = ScreenMessageHelpers::ToScreenMessage(sMessage);
 		}
 

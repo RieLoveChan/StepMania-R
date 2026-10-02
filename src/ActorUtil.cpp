@@ -532,8 +532,9 @@ void ActorUtil::AddTypeExtensionsToList(FileType ft, std::vector<std::string> &a
 }
 
 FileType ActorUtil::GetFileType(const std::string &sPath) {
-	RString sExt = GetExtension(sPath);
-	sExt.MakeLower();
+	std::string sExt = GetExtension(sPath);
+	if (!sExt.empty())
+		MakeLower(&sExt[0], sExt.size());
 
 	etft_cont_t::iterator conversion_entry = ExtensionToFileType.find(sExt);
 	if (conversion_entry != ExtensionToFileType.end()) {

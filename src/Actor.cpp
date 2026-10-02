@@ -1389,7 +1389,7 @@ void Actor::AddCommand(const std::string &sCmdName, apActorCommands apac, bool w
 		LuaHelpers::ReportScriptError(sWarning, "COMMAND_DEFINED_TWICE");
 	}
 
-	RString sMessage;
+	std::string sMessage;
 	if (GetMessageNameFromCommandName(sCmdName, sMessage)) {
 		SubscribeToMessage(sMessage);
 		m_mapNameToCommands[sMessage] = apac; // sCmdName w/o "Message" at the end

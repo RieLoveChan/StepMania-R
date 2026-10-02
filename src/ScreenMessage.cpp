@@ -19,7 +19,7 @@ AutoScreenMessage(SM_Failure);
 
 static std::map<std::string, ScreenMessage> *m_pScreenMessages;
 
-ScreenMessage ScreenMessageHelpers::ToScreenMessage(const RString &sName) {
+ScreenMessage ScreenMessageHelpers::ToScreenMessage(const std::string &sName) {
 	if (m_pScreenMessages == nullptr)
 		m_pScreenMessages = new std::map<std::string, ScreenMessage>;
 

@@ -153,9 +153,9 @@ bool IsHexVal(const std::string &s) {
 	return true;
 }
 
-RString BinaryToHex(const void *pData_, std::size_t iNumBytes) {
+std::string BinaryToHex(const void *pData_, std::size_t iNumBytes) {
 	const unsigned char *pData = (const unsigned char *)pData_;
-	RString s;
+	std::string s;
 	for (std::size_t i = 0; i < iNumBytes; i++) {
 		unsigned val = pData[i];
 		s += ssprintf("%02x", val);
@@ -163,7 +163,7 @@ RString BinaryToHex(const void *pData_, std::size_t iNumBytes) {
 	return s;
 }
 
-RString BinaryToHex(const std::string &sString) {
+std::string BinaryToHex(const std::string &sString) {
 	return BinaryToHex(sString.data(), sString.size());
 }
 
@@ -204,61 +204,61 @@ float HHMMSSToSeconds(const std::string &sHHMMSS) {
 	return fSeconds;
 }
 
-RString SecondsToHHMMSS(float fSecs) {
+std::string SecondsToHHMMSS(float fSecs) {
 	const int iMinsDisplay = static_cast<int>(fSecs / 60);
 	const int iSecsDisplay = static_cast<int>(fmod(fSecs, 60));
-	RString sReturn = ssprintf("%02d:%02d:%02d", iMinsDisplay / 60, iMinsDisplay % 60, iSecsDisplay);
+	std::string sReturn = ssprintf("%02d:%02d:%02d", iMinsDisplay / 60, iMinsDisplay % 60, iSecsDisplay);
 	return sReturn;
 }
 
-RString SecondsToMMSSMsMs(float fSecs) {
-	const int iMinsDisplay = static_cast<int>(fSecs / 60);
-	const int iSecsDisplay = static_cast<int>(fmod(fSecs, 60));
-	const int iLeftoverDisplay = static_cast<int>((fSecs - iMinsDisplay * 60 - iSecsDisplay) * 100);
-	RString sReturn = ssprintf("%02d:%02d.%02d", iMinsDisplay, iSecsDisplay, std::min(99, iLeftoverDisplay));
-	return sReturn;
-}
-
-RString SecondsToMSSMsMs(float fSecs) {
+std::string SecondsToMMSSMsMs(float fSecs) {
 	const int iMinsDisplay = static_cast<int>(fSecs / 60);
 	const int iSecsDisplay = static_cast<int>(fmod(fSecs, 60));
 	const int iLeftoverDisplay = static_cast<int>((fSecs - iMinsDisplay * 60 - iSecsDisplay) * 100);
-	RString sReturn = ssprintf("%01d:%02d.%02d", iMinsDisplay, iSecsDisplay, std::min(99, iLeftoverDisplay));
+	std::string sReturn = ssprintf("%02d:%02d.%02d", iMinsDisplay, iSecsDisplay, std::min(99, iLeftoverDisplay));
 	return sReturn;
 }
 
-RString SecondsToMMSSMsMsMs(float fSecs) {
+std::string SecondsToMSSMsMs(float fSecs) {
+	const int iMinsDisplay = static_cast<int>(fSecs / 60);
+	const int iSecsDisplay = static_cast<int>(fmod(fSecs, 60));
+	const int iLeftoverDisplay = static_cast<int>((fSecs - iMinsDisplay * 60 - iSecsDisplay) * 100);
+	std::string sReturn = ssprintf("%01d:%02d.%02d", iMinsDisplay, iSecsDisplay, std::min(99, iLeftoverDisplay));
+	return sReturn;
+}
+
+std::string SecondsToMMSSMsMsMs(float fSecs) {
 	const int iMinsDisplay = static_cast<int>(fSecs / 60);
 	const int iSecsDisplay = static_cast<int>(fmod(fSecs, 60));
 	const int iLeftoverDisplay = static_cast<int>((fSecs - iMinsDisplay * 60 - iSecsDisplay) * 1000);
-	RString sReturn = ssprintf("%02d:%02d.%03d", iMinsDisplay, iSecsDisplay, std::min(999, iLeftoverDisplay));
+	std::string sReturn = ssprintf("%02d:%02d.%03d", iMinsDisplay, iSecsDisplay, std::min(999, iLeftoverDisplay));
 	return sReturn;
 }
 
-RString SecondsToMSS(float fSecs) {
+std::string SecondsToMSS(float fSecs) {
 	const int iMinsDisplay = static_cast<int>(fSecs / 60);
 	const int iSecsDisplay = static_cast<int>(fmod(fSecs, 60));
-	RString sReturn = ssprintf("%01d:%02d", iMinsDisplay, iSecsDisplay);
+	std::string sReturn = ssprintf("%01d:%02d", iMinsDisplay, iSecsDisplay);
 	return sReturn;
 }
 
-RString SecondsToMMSS(float fSecs) {
+std::string SecondsToMMSS(float fSecs) {
 	const int iMinsDisplay = static_cast<int>(fSecs / 60);
 	const int iSecsDisplay = static_cast<int>(fmod(fSecs, 60));
-	RString sReturn = ssprintf("%02d:%02d", iMinsDisplay, iSecsDisplay);
+	std::string sReturn = ssprintf("%02d:%02d", iMinsDisplay, iSecsDisplay);
 	return sReturn;
 }
 
-RString PrettyPercent(float fNumerator, float fDenominator) {
+std::string PrettyPercent(float fNumerator, float fDenominator) {
 	return ssprintf("%0.2f%%", fNumerator / fDenominator * 100);
 }
 
-RString Commify(int iNum) {
-	RString sNum = ssprintf("%d", iNum);
+std::string Commify(int iNum) {
+	std::string sNum = ssprintf("%d", iNum);
 	return Commify(sNum);
 }
 
-RString Commify(const std::string &num, const std::string &sep, const std::string &dot) {
+std::string Commify(const std::string &num, const std::string &sep, const std::string &dot) {
 	std::size_t num_start = 0;
 	std::size_t num_end = num.size();
 	std::size_t dot_pos = num.find(dot);
@@ -275,7 +275,7 @@ RString Commify(const std::string &num, const std::string &sep, const std::strin
 		return num;
 	}
 	std::size_t commified_len = num.size() + (commies * sep.size());
-	RString ret;
+	std::string ret;
 	ret.resize(commified_len);
 	std::size_t dest = 0;
 	std::size_t next_comma = (num_size % 3) + (3 * (!(num_size % 3))) + num_start;
@@ -298,7 +298,7 @@ static LocalizedString NUM_ST("RageUtil", "NumSt");
 static LocalizedString NUM_ND("RageUtil", "NumNd");
 static LocalizedString NUM_RD("RageUtil", "NumRd");
 static LocalizedString NUM_TH("RageUtil", "NumTh");
-RString FormatNumberAndSuffix(int i) {
+std::string FormatNumberAndSuffix(int i) {
 	RString sSuffix;
 	switch (i % 10) {
 	case 1:
@@ -411,8 +411,8 @@ RString vssprintf(const char *szFormat, va_list argList) {
  * to "a b %I64 %-3I64u c d". This assumes a well-formed format string; invalid format strings
  * should not crash, but the results are undefined. */
 #if defined(WIN32)
-RString ConvertI64FormatString(const std::string &sStr) {
-	RString sRet;
+std::string ConvertI64FormatString(const std::string &sStr) {
+	std::string sRet;
 	sRet.reserve(sStr.size() + 16);
 
 	std::size_t iOffset = 0;
@@ -440,7 +440,7 @@ RString ConvertI64FormatString(const std::string &sStr) {
 	return sRet;
 }
 #else
-RString ConvertI64FormatString(const std::string &sStr) {
+std::string ConvertI64FormatString(const std::string &sStr) {
 	return sStr;
 }
 #endif
@@ -909,26 +909,26 @@ RString custom_songify_path(RString const &path) {
 /* "foo.bar", "baz" -> "foo.baz"
  * "foo", "baz" -> "foo.baz"
  * "foo.bar", "" -> "foo" */
-RString SetExtension(const std::string &sPath, const std::string &sExt) {
-	RString sDir, sFileName, sOldExt;
+std::string SetExtension(const std::string &sPath, const std::string &sExt) {
+	std::string sDir, sFileName, sOldExt;
 	splitpath(sPath, sDir, sFileName, sOldExt);
 	return sDir + sFileName + (!sExt.empty() ? "." : "") + sExt;
 }
 
-RString GetExtension(const std::string &sPath) {
+std::string GetExtension(const std::string &sPath) {
 	std::size_t pos = sPath.rfind('.');
 	if (pos == sPath.npos)
-		return RString();
+		return std::string();
 
 	std::size_t slash = sPath.find('/', pos);
 	if (slash != sPath.npos)
-		return RString(); /* rare: path/dir.ext/fn */
+		return std::string(); /* rare: path/dir.ext/fn */
 
 	return sPath.substr(pos + 1, sPath.size() - pos + 1);
 }
 
-RString GetFileNameWithoutExtension(const std::string &sPath) {
-	RString sThrowAway, sFName;
+std::string GetFileNameWithoutExtension(const std::string &sPath) {
+	std::string sThrowAway, sFName;
 	splitpath(sPath, sThrowAway, sFName, sThrowAway);
 	return sFName;
 }
@@ -1040,7 +1040,7 @@ bool GetCommandlineArgument(const std::string &option, RString *argument, int iI
 	return false;
 }
 
-RString GetCwd() {
+std::string GetCwd() {
 	char buf[PATH_MAX];
 	bool ret = DoGetCwd(buf, PATH_MAX) != nullptr;
 	ASSERT(ret);
@@ -1231,8 +1231,8 @@ bool EndsWith(const std::string &sTestThis, const std::string &sEnding) {
 	return sTestThis.compare(sTestThis.length() - sEnding.length(), sEnding.length(), sEnding) == 0;
 }
 
-RString URLEncode(const std::string &sStr) {
-	RString sOutput;
+std::string URLEncode(const std::string &sStr) {
+	std::string sOutput;
 	for (unsigned k = 0; k < sStr.size(); k++) {
 		char t = sStr[k];
 		if (t >= '!' && t <= 'z')
@@ -1281,7 +1281,7 @@ void StripMacResourceForks(std::vector<std::string> &vs) {
 }
 
 // path is a .redir pathname. Read it and return the real one.
-RString DerefRedir(const std::string &_path) {
+std::string DerefRedir(const std::string &_path) {
 	RString sPath = _path;
 
 	for (int i = 0; i < 100; i++) {
@@ -1841,8 +1841,8 @@ std::wstring RStringToWstring(const std::string &s) {
 	return ret;
 }
 
-RString WStringToRString(const std::wstring &sStr) {
-	RString sRet;
+std::string WStringToRString(const std::wstring &sStr) {
+	std::string sRet;
 
 	for (unsigned i = 0; i < sStr.size(); ++i)
 		wchar_to_utf8(sStr[i], sRet);
@@ -1850,8 +1850,8 @@ RString WStringToRString(const std::wstring &sStr) {
 	return sRet;
 }
 
-RString WcharToUTF8(wchar_t c) {
-	RString ret;
+std::string WcharToUTF8(wchar_t c) {
+	std::string ret;
 	wchar_to_utf8(c, ret);
 	return ret;
 }
@@ -2002,10 +2002,10 @@ RString WcharDisplayText(wchar_t c) {
  * a/b/c -> c
  * a/b/c/ -> c
  */
-RString Basename(const std::string &sDir) {
+std::string Basename(const std::string &sDir) {
 	std::size_t iEnd = sDir.find_last_not_of("/\\");
 	if (iEnd == sDir.npos)
-		return RString();
+		return std::string();
 
 	std::size_t iStart = sDir.find_last_of("/\\", iEnd);
 	if (iStart == sDir.npos)
@@ -2024,7 +2024,7 @@ RString Basename(const std::string &sDir) {
  * /foo -> /
  * / -> /
  */
-RString Dirname(const std::string &dir) {
+std::string Dirname(const std::string &dir) {
 	// Special case: "/" -> "/".
 	if (dir.size() == 1 && dir[0] == '/')
 		return "/";
@@ -2044,9 +2044,9 @@ RString Dirname(const std::string &dir) {
 	return dir.substr(0, pos + 1);
 }
 
-RString Capitalize(const std::string &s) {
+std::string Capitalize(const std::string &s) {
 	if (s.empty())
-		return RString();
+		return std::string();
 
 	char *buf = const_cast<char *>(s.c_str());
 

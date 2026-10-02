@@ -58,8 +58,9 @@ void Model::Load(const std::string &sFile) {
 	if (sFile.empty())
 		return;
 
-	RString sExt = GetExtension(sFile);
-	sExt.MakeLower();
+	std::string sExt = GetExtension(sFile);
+	if (!sExt.empty())
+		MakeLower(&sExt[0], sExt.size());
 	if (sExt == "txt")
 		LoadMilkshapeAscii(sFile);
 	RecalcAnimationLengthSeconds();
@@ -125,7 +126,7 @@ void Model::LoadMaterialsFromMilkshapeAscii(const std::string &_sPath) {
 	RString sPath = _sPath;
 
 	FixSlashesInPlace(sPath);
-	const RString sDir = Dirname(sPath);
+	const std::string sDir = Dirname(sPath);
 
 	RageFile f;
 	if (!f.Open(sPath))

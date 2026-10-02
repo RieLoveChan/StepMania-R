@@ -410,7 +410,7 @@ class LunaScreen : public Luna<Screen> {
 	DEFINE_METHOD(GetScreenType, GetScreenType())
 
 	static int PostScreenMessage(T *p, lua_State *L) {
-		RString sMessage = SArg(1);
+		std::string sMessage = SArg(1);
 		ScreenMessage SM = ScreenMessageHelpers::ToScreenMessage(sMessage);
 		p->PostScreenMessage(SM, static_cast<float>(IArg(2)));
 		COMMON_RETURN_SELF;

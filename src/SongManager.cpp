@@ -243,7 +243,7 @@ void SongManager::SanityCheckGroupDir(std::string sDir) const {
 	GetDirListing(sDir + "/*", arrayFiles);
 	const std::vector<RString> &audio_exts = ActorUtil::GetTypeExtensionList(FT_Sound);
 	for (RString &fname : arrayFiles) {
-		const RString ext = GetExtension(fname);
+		const std::string ext = GetExtension(fname);
 		for (RString const &aud : audio_exts) {
 			if (ext == aud) {
 				RageException::Throw(FOLDER_CONTAINS_MUSIC_FILES.GetValue(), sDir.c_str());
@@ -394,7 +394,7 @@ void SongManager::LoadSongDir(RString sDir, LoadingWindow *ld, bool onlyAddition
 		int loaded = 0;
 
 		SongPointerVector &index_entry = m_mapSongGroupIndex[sGroupDirName];
-		RString group_base_name = Basename(sGroupDirName);
+		std::string group_base_name = Basename(sGroupDirName);
 		for (unsigned j = 0; j < arraySongDirs.size(); ++j) // for each song dir
 		{
 			RString sSongDirName = arraySongDirs[j];
@@ -898,7 +898,7 @@ void SongManager::InitCoursesFromDisk(LoadingWindow *ld, bool onlyAdditions) {
 			ld->SetTotalWork(static_cast<int>(vsCoursePaths.size()));
 		}
 
-		RString base_course_group = Basename(sCourseGroup);
+		std::string base_course_group = Basename(sCourseGroup);
 		for (RString const &sCoursePath : vsCoursePaths) {
 			// Skip already loaded courses if onlyAdditions is set.
 			if (onlyAdditions) {

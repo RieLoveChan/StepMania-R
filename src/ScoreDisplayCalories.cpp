@@ -16,7 +16,7 @@ ScoreDisplayCalories::ScoreDisplayCalories() = default;
 
 ScoreDisplayCalories::~ScoreDisplayCalories() {
 	if (!m_sMessageOnStep.empty())
-		MESSAGEMAN->Unsubscribe(this, RString(m_sMessageOnStep));
+		MESSAGEMAN->Unsubscribe(this, m_sMessageOnStep);
 }
 
 void ScoreDisplayCalories::LoadFromNode(const XNode *pNode) {

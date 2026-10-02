@@ -68,7 +68,7 @@ static void InstallSmzip(const RString &sZipFile, PlayAfterLaunchInfo &out) {
 
 		std::vector<std::string> vsPrettyFiles;
 		for (std::string const &s : vsRawFiles) {
-			if (GetExtension(s).EqualsNoCase("ctl"))
+			if (StdString::ssicmp(GetExtension(s).c_str(), "ctl") == 0)
 				continue;
 
 			vsFiles.push_back(s);
@@ -119,8 +119,8 @@ void InstallSmzipOsArg(const RString &sOsZipFile, PlayAfterLaunchInfo &out) {
 }
 
 static bool IsPackageFile(const RString &arg) {
-	RString ext = GetExtension(arg);
-	return ext.EqualsNoCase("smzip") || ext.EqualsNoCase("zip");
+	std::string ext = GetExtension(arg);
+	return StdString::ssicmp(ext.c_str(), "smzip") == 0 || StdString::ssicmp(ext.c_str(), "zip") == 0;
 }
 
 PlayAfterLaunchInfo DoInstalls(CommandLineActions::CommandLineArgs args) {

@@ -660,7 +660,7 @@ void Song::TidyUpData(bool from_cache, bool /* duringCache */) {
 		for (std::vector<RString>::iterator filename = song_dir_listing.begin(); filename != song_dir_listing.end();
 		     ++filename) {
 			bool matched_something = false;
-			RString file_ext = GetExtension(*filename).MakeLower();
+			RString file_ext = RString(GetExtension(*filename)).MakeLower();
 			if (!file_ext.empty()) {
 				for (std::size_t tf = 0; tf < lists_to_fill.size(); ++tf) {
 					for (std::vector<RString>::const_iterator ext = fill_exts[tf]->begin(); ext != fill_exts[tf]->end();

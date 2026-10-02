@@ -50,7 +50,7 @@ void ScoreDisplayLifeTime::Update(float fDelta) {
 
 	float fSecs = m_pPlayerStageStats->m_fLifeRemainingSeconds;
 
-	RString s = SecondsToMSSMsMs(fSecs);
+	std::string s = SecondsToMSSMsMs(fSecs);
 	m_textTimeRemaining.SetText(s);
 }
 

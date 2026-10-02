@@ -75,7 +75,7 @@ ScreenTestSound::~ScreenTestSound() {
 }
 
 void ScreenTestSound::UpdateText(int n) {
-	RString fn = Basename(s[n].s.GetLoadedFilePath());
+	std::string fn = Basename(s[n].s.GetLoadedFilePath());
 
 	std::vector<RageSound *> &snds = m_sSoundCopies[n];
 

@@ -341,7 +341,7 @@ class LunaScreenWithMenuElements : public Luna<ScreenWithMenuElements> {
 	}
 
 	static int StartTransitioningScreen(T *p, lua_State *L) {
-		RString sMessage = SArg(1);
+		std::string sMessage = SArg(1);
 		ScreenMessage SM = ScreenMessageHelpers::ToScreenMessage(sMessage);
 		p->StartTransitioningScreen(SM);
 		COMMON_RETURN_SELF;

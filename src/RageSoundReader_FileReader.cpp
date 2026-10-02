@@ -112,8 +112,9 @@ RageSoundReader_FileReader *RageSoundReader_FileReader::OpenFile(std::string fil
 		FileTypes.insert(*curr);
 	}
 
-	RString format = GetExtension(filename);
-	format.MakeLower();
+	std::string format = GetExtension(filename);
+	if (!format.empty())
+		MakeLower(&format[0], format.size());
 
 	error = "";
 
