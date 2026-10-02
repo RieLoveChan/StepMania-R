@@ -1082,6 +1082,16 @@ void GetDirListing(const RString &sPath, std::vector<RString> &AddTo, bool bOnly
 	FILEMAN->GetDirListing(sPath, AddTo, bOnlyDirs, bReturnPathToo);
 }
 
+/* std::vector<std::string> entry point. FILEMAN's listing (the driver hierarchy) still works on
+ * std::vector<RString>, so run it on a copy of AddTo (the listing appends, and de-duplicates / strips
+ * resource forks relative to what is already in the vector) and copy the result back: identical
+ * results, at the cost of two element-wise copies per call. */
+void GetDirListing(const std::string &sPath, std::vector<std::string> &AddTo, bool bOnlyDirs, bool bReturnPathToo) {
+	std::vector<RString> vsTmp(AddTo.begin(), AddTo.end());
+	FILEMAN->GetDirListing(sPath, vsTmp, bOnlyDirs, bReturnPathToo);
+	AddTo.assign(vsTmp.begin(), vsTmp.end());
+}
+
 void GetDirListingRecursive(const RString &sDir, const RString &sMatch, std::vector<RString> &AddTo) {
 	ASSERT(sDir.Right(1) == "/");
 	std::vector<RString> vsFiles;

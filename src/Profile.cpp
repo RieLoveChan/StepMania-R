@@ -2337,7 +2337,7 @@ void Profile::MoveBackupToDir(std::string sFromDir, std::string sToDir) {
 std::string Profile::MakeUniqueFileNameNoExtension(std::string sDir, std::string sFileNameBeginning) {
 	FILEMAN->FlushDirCache(sDir);
 	// Find a file name for the screenshot
-	std::vector<RString> files;
+	std::vector<std::string> files;
 	GetDirListing(sDir + sFileNameBeginning + "*", files, false, false);
 	sort(files.begin(), files.end());
 

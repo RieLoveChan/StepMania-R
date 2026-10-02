@@ -126,10 +126,10 @@ RString SongOptions::GetLocalizedString() const {
  * you don't want this. */
 void SongOptions::FromString(const std::string &sMultipleMods) {
 	RString sTemp = sMultipleMods;
-	std::vector<RString> vs;
+	std::vector<std::string> vs;
 	split(sTemp, ",", vs, true);
 	RString sThrowAway;
-	for (RString &s : vs) {
+	for (std::string &s : vs) {
 		FromOneModString(s, sThrowAway);
 	}
 }
@@ -148,7 +148,7 @@ bool SongOptions::FromOneModString(const std::string &sOneMod, std::string & /* 
 
 	matches.clear();
 
-	std::vector<RString> asParts;
+	std::vector<std::string> asParts;
 	split(sBit, " ", asParts, true);
 	bool on = true;
 	if (asParts.size() > 1) {

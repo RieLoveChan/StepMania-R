@@ -471,21 +471,21 @@ void ThemeManager::RunLuaScripts(const std::string &sMask, bool bUseThemeDir) {
 		m_sCurThemeName = iter->sThemeName;
 		const RString &sScriptDir = bUseThemeDir ? GetThemeDirFromName(m_sCurThemeName) : std::string("/");
 
-		std::vector<RString> asElementPaths;
+		std::vector<std::string> asElementPaths;
 		// get files from directories
-		std::vector<RString> asElementChildPaths;
-		std::vector<RString> arrayScriptDirs;
+		std::vector<std::string> asElementChildPaths;
+		std::vector<std::string> arrayScriptDirs;
 		GetDirListing(sScriptDir + "Scripts/*", arrayScriptDirs, true);
 		SortRStringArray(arrayScriptDirs);
 		StripCvsAndSvn(arrayScriptDirs);
 		StripMacResourceForks(arrayScriptDirs);
-		for (RString const &sScriptDirName : arrayScriptDirs) // foreach dir in /Scripts/
+		for (std::string const &sScriptDirName : arrayScriptDirs) // foreach dir in /Scripts/
 		{
 			// Find all Lua files in this directory, add them to asElementPaths
 			GetDirListing(sScriptDir + "Scripts/" + sScriptDirName + "/" + sMask, asElementChildPaths, false, true);
 			for (unsigned i = 0; i < asElementChildPaths.size(); ++i) {
 				// push these Lua files into the main element paths
-				const RString &sPath = asElementChildPaths[i];
+				const std::string &sPath = asElementChildPaths[i];
 				asElementPaths.push_back(sPath);
 			}
 		}
@@ -495,7 +495,7 @@ void ThemeManager::RunLuaScripts(const std::string &sMask, bool bUseThemeDir) {
 
 		// load Lua files
 		for (unsigned i = 0; i < asElementPaths.size(); ++i) {
-			const RString &sPath = asElementPaths[i];
+			const std::string &sPath = asElementPaths[i];
 			LOG_TRACE(Log::Theme, "Loading \"%s\" ...", sPath.c_str());
 			LuaHelpers::RunScriptFile(sPath);
 		}
@@ -1112,20 +1112,20 @@ RString ThemeManager::GetNextSelectableTheme() {
 
 void ThemeManager::GetLanguagesForTheme(const std::string &sThemeName, std::vector<RString> &asLanguagesOut) {
 	RString sLanguageDir = GetThemeDirFromName(sThemeName) + SpecialFiles::LANGUAGES_SUBDIR;
-	std::vector<RString> as;
+	std::vector<std::string> as;
 	GetDirListing(sLanguageDir + "*.ini", as);
 
-	for (RString const &s : as) {
+	for (std::string const &s : as) {
 		// ignore metrics.ini
-		if (s.CompareNoCase(SpecialFiles::METRICS_FILE.c_str()) == 0)
+		if (StdString::ssicmp(s.c_str(), SpecialFiles::METRICS_FILE.c_str()) == 0)
 			continue;
 
 		// Ignore filenames with a space.  These are optional language inis that probably came from a mounted package.
-		if (s.find(" ") != RString::npos)
+		if (s.find(" ") != std::string::npos)
 			continue;
 
 		// strip ".ini"
-		RString s2 = s.Left(static_cast<int>(s.size()) - 4);
+		std::string s2 = s.substr(0, s.size() > 4 ? s.size() - 4 : 0);
 
 		asLanguagesOut.push_back(s2);
 	}

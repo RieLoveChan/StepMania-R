@@ -46,11 +46,11 @@ void InstallSmzipOsArg(const RString &sOsZipFile, PlayAfterLaunchInfo &out);
 PlayAfterLaunchInfo DoInstalls(CommandLineActions::CommandLineArgs args);
 
 static void Parse(const RString &sDir, PlayAfterLaunchInfo &out) {
-	std::vector<RString> vsDirParts;
+	std::vector<std::string> vsDirParts;
 	split(sDir, "/", vsDirParts, true);
-	if (vsDirParts.size() == 3 && vsDirParts[0].EqualsNoCase("Songs"))
+	if (vsDirParts.size() == 3 && StdString::ssicmp(vsDirParts[0].c_str(), "Songs") == 0)
 		out.sSongDir = "/" + sDir;
-	else if (vsDirParts.size() == 2 && vsDirParts[0].EqualsNoCase("Themes"))
+	else if (vsDirParts.size() == 2 && StdString::ssicmp(vsDirParts[0].c_str(), "Themes") == 0)
 		out.sTheme = vsDirParts[1];
 }
 

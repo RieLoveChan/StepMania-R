@@ -167,7 +167,7 @@ void ScreenSelectMaster::Init() {
 
 		// init icon
 		if (SHOW_ICON) {
-			std::vector<RString> vs;
+			std::vector<std::string> vs;
 			vs.push_back("Icon");
 			if (PER_CHOICE_ICON_ELEMENT)
 				vs.push_back("Choice" + mc.m_sName);
@@ -200,7 +200,7 @@ void ScreenSelectMaster::Init() {
 		// init scroll
 		if (SHOW_SCROLLER) {
 			for (PlayerNumber const &p : vpns) {
-				std::vector<RString> vs;
+				std::vector<std::string> vs;
 				vs.push_back("Scroll");
 				if (PER_CHOICE_SCROLL_ELEMENT)
 					vs.push_back("Choice" + mc.m_sName);
@@ -253,12 +253,12 @@ void ScreenSelectMaster::Init() {
 	// init m_Next order info
 	FOREACH_MenuDir(dir) {
 		const RString order = OPTION_ORDER.GetValue(dir);
-		std::vector<RString> parts;
+		std::vector<std::string> parts;
 		split(order, ",", parts, true);
 
 		for (unsigned part = 0; part < parts.size(); ++part) {
 			int from, to;
-			if (sscanf(parts[part], "%d:%d", &from, &to) != 2) {
+			if (sscanf(parts[part].c_str(), "%d:%d", &from, &to) != 2) {
 				LuaHelpers::ReportScriptErrorFmt(
 				   "%s::OptionOrder%s parse error", m_sName.c_str(), MenuDirToString(dir).c_str()
 				);

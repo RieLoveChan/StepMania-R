@@ -604,11 +604,12 @@ const LanguageInfo *GetLanguageInfo(const std::string &sIsoCode) {
 	return nullptr;
 }
 
-RString join(const RString &sDeliminator, const std::vector<RString> &sSource) {
+// One shared algorithm for the std::vector<RString> and std::vector<std::string> entry points.
+template <class R, class S> static R do_join(const S &sDeliminator, const std::vector<S> &sSource) {
 	if (sSource.empty())
-		return RString();
+		return R();
 
-	RString sTmp;
+	R sTmp;
 	std::size_t final_size = 0;
 	std::size_t delim_size = sDeliminator.size();
 	for (std::size_t n = 0; n < sSource.size() - 1; ++n) {
@@ -625,15 +626,17 @@ RString join(const RString &sDeliminator, const std::vector<RString> &sSource) {
 	return sTmp;
 }
 
-RString
-join(const RString &sDelimitor, std::vector<RString>::const_iterator begin, std::vector<RString>::const_iterator end) {
+template <class R, class S>
+static R do_join(
+   const S &sDelimitor, typename std::vector<S>::const_iterator begin, typename std::vector<S>::const_iterator end
+) {
 	if (begin == end)
-		return RString();
+		return R();
 
-	RString sRet;
+	R sRet;
 	std::size_t final_size = 0;
 	std::size_t delim_size = sDelimitor.size();
-	for (std::vector<RString>::const_iterator curr = begin; curr != end; ++curr) {
+	for (typename std::vector<S>::const_iterator curr = begin; curr != end; ++curr) {
 		final_size += curr->size();
 		if (curr != end) {
 			final_size += delim_size;
@@ -649,6 +652,25 @@ join(const RString &sDelimitor, std::vector<RString>::const_iterator begin, std:
 	}
 
 	return sRet;
+}
+
+RString join(const RString &sDeliminator, const std::vector<RString> &sSource) {
+	return do_join<RString, RString>(sDeliminator, sSource);
+}
+
+RString
+join(const RString &sDelimitor, std::vector<RString>::const_iterator begin, std::vector<RString>::const_iterator end) {
+	return do_join<RString, RString>(sDelimitor, begin, end);
+}
+
+std::string join(const std::string &sDeliminator, const std::vector<std::string> &sSource) {
+	return do_join<std::string, std::string>(sDeliminator, sSource);
+}
+
+std::string join(
+   const std::string &sDelimitor, std::vector<std::string>::const_iterator begin, std::vector<std::string>::const_iterator end
+) {
+	return do_join<std::string, std::string>(sDelimitor, begin, end);
 }
 
 RString SmEscape(const RString &sUnescaped, const std::vector<char> charsToEscape) {
@@ -761,6 +783,15 @@ void do_split(const S &Source, const C Delimitor, std::vector<S> &AddIt, const b
 }
 
 void split(const RString &sSource, const RString &sDelimitor, std::vector<RString> &asAddIt, const bool bIgnoreEmpty) {
+	if (sDelimitor.size() == 1)
+		do_split(sSource, sDelimitor[0], asAddIt, bIgnoreEmpty);
+	else
+		do_split(sSource, sDelimitor, asAddIt, bIgnoreEmpty);
+}
+
+void split(
+   const std::string &sSource, const std::string &sDelimitor, std::vector<std::string> &asAddIt, const bool bIgnoreEmpty
+) {
 	if (sDelimitor.size() == 1)
 		do_split(sSource, sDelimitor[0], asAddIt, bIgnoreEmpty);
 	else
@@ -1085,6 +1116,10 @@ void SortRStringArray(std::vector<RString> &arrayRStrings, const bool bSortAscen
 	sort(arrayRStrings.begin(), arrayRStrings.end(), bSortAscending ? CompareRStringsAsc : CompareRStringsDesc);
 }
 
+void SortRStringArray(std::vector<std::string> &arrayRStrings, const bool bSortAscending) {
+	std::sort(arrayRStrings.begin(), arrayRStrings.end(), bSortAscending ? CompareRStringsAsc : CompareRStringsDesc);
+}
+
 float calc_mean(const float *pStart, const float *pEnd) {
 	/* The Kahan summation algorithm is used here to prevent
 	 * situations where the low order bits may be lost.
@@ -1229,6 +1264,26 @@ static bool MacResourceFork(const RString &s) {
 
 void StripMacResourceForks(std::vector<RString> &vs) {
 	RemoveIf(vs, MacResourceFork);
+}
+
+// std::string twins of the two predicates above, with the same Left/Right/EqualsNoCase semantics.
+static bool CVSOrSVNStd(const std::string &s) {
+	const std::size_t n = s.size();
+	const std::string r3 = s.substr(n - std::min<std::size_t>(3, n));
+	const std::string r4 = s.substr(n - std::min<std::size_t>(4, n));
+	return StdString::ssicmp(r3.c_str(), "CVS") == 0 || r4 == ".svn" || StdString::ssicmp(r3.c_str(), ".hg") == 0;
+}
+
+void StripCvsAndSvn(std::vector<std::string> &vs) {
+	RemoveIf(vs, CVSOrSVNStd);
+}
+
+static bool MacResourceForkStd(const std::string &s) {
+	return StdString::ssicmp(s.substr(0, 2).c_str(), "._") == 0;
+}
+
+void StripMacResourceForks(std::vector<std::string> &vs) {
+	RemoveIf(vs, MacResourceForkStd);
 }
 
 // path is a .redir pathname. Read it and return the real one.

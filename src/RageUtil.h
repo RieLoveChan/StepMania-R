@@ -407,6 +407,13 @@ RString GetLanguageNameFromISO639Code(RString sName);
 void split(
    const RString &sSource, const RString &sDelimitor, std::vector<RString> &asAddIt, const bool bIgnoreEmpty = true
 );
+// std::vector<std::string> entry point: same algorithm, appends to asAddIt.
+void split(
+   const std::string &sSource,
+   const std::string &sDelimitor,
+   std::vector<std::string> &asAddIt,
+   const bool bIgnoreEmpty = true
+);
 void split(
    const std::wstring &sSource,
    const std::wstring &sDelimitor,
@@ -437,6 +444,11 @@ void split(
 RString join(const RString &sDelimitor, const std::vector<RString> &sSource);
 RString
 join(const RString &sDelimitor, std::vector<RString>::const_iterator begin, std::vector<RString>::const_iterator end);
+// std::vector<std::string> entry points: same algorithm, result is a std::string.
+std::string join(const std::string &sDelimitor, const std::vector<std::string> &sSource);
+std::string join(
+   const std::string &sDelimitor, std::vector<std::string>::const_iterator begin, std::vector<std::string>::const_iterator end
+);
 
 // These methods escapes a string for saving in a .sm or .crs file
 RString SmEscape(const RString &sUnescaped, const std::vector<char> charsToEscape = {'\\', ':', ';'});
@@ -470,6 +482,7 @@ bool DirectoryIsEmpty(const std::string &sPath);
 bool CompareRStringsAsc(const std::string &sStr1, const std::string &sStr2);
 bool CompareRStringsDesc(const std::string &sStr1, const std::string &sStr2);
 void SortRStringArray(std::vector<RString> &asAddTo, const bool bSortAscending = true);
+void SortRStringArray(std::vector<std::string> &asAddTo, const bool bSortAscending = true);
 
 /* Find the mean and standard deviation of all numbers in [start,end). */
 float calc_mean(const float *pStart, const float *pEnd);
@@ -525,6 +538,8 @@ RString URLEncode(const std::string &sStr);
 
 void StripCvsAndSvn(std::vector<RString> &vs);        // Removes various versioning system metafolders.
 void StripMacResourceForks(std::vector<RString> &vs); // Removes files starting with "._"
+void StripCvsAndSvn(std::vector<std::string> &vs);
+void StripMacResourceForks(std::vector<std::string> &vs);
 
 RString DerefRedir(const std::string &sPath);
 bool GetFileContents(const std::string &sPath, std::string &sOut, bool bOneLine = false);
@@ -613,6 +628,10 @@ typedef std::basic_string<char, char_traits_char_nocase> istring;
  * declared here since they're used in many places. */
 void GetDirListing(
    const RString &sPath, std::vector<RString> &AddTo, bool bOnlyDirs = false, bool bReturnPathToo = false
+);
+// std::vector<std::string> entry point: runs the same listing and appends in the same order.
+void GetDirListing(
+   const std::string &sPath, std::vector<std::string> &AddTo, bool bOnlyDirs = false, bool bReturnPathToo = false
 );
 void GetDirListingRecursive(
    const RString &sDir, const RString &sMatch, std::vector<RString> &AddTo

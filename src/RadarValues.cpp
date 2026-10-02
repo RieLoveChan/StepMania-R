@@ -63,7 +63,7 @@ std::string RadarValues::ToString(int iMaxValues) const {
 		iMaxValues = NUM_RadarCategory;
 	iMaxValues = std::min(iMaxValues, (int)NUM_RadarCategory);
 
-	std::vector<RString> asRadarValues;
+	std::vector<std::string> asRadarValues;
 	for (int r = 0; r < iMaxValues; r++) {
 		asRadarValues.push_back(ssprintf("%.3f", (*this)[r]));
 	}
@@ -72,7 +72,7 @@ std::string RadarValues::ToString(int iMaxValues) const {
 }
 
 void RadarValues::FromString(RString sRadarValues) {
-	std::vector<RString> saValues;
+	std::vector<std::string> saValues;
 	split(sRadarValues, ",", saValues, true);
 
 	if (saValues.size() != NUM_RadarCategory) {

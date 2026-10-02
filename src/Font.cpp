@@ -378,11 +378,13 @@ void Font::SetDefaultGlyph(FontPage *pPage) {
 // Given the INI for a font, find all of the texture pages for the font.
 void Font::GetFontPaths(const std::string &sFontIniPath, std::vector<std::string> &asTexturePathsOut) {
 	RString sPrefix = SetExtension(sFontIniPath, "");
-	std::vector<RString> asFiles;
+	std::vector<std::string> asFiles;
 	GetDirListing(sPrefix + "*", asFiles, false, true);
 
 	for (unsigned i = 0; i < asFiles.size(); ++i) {
-		if (!asFiles[i].Right(4).EqualsNoCase(".ini"))
+		// Right(4).EqualsNoCase(".ini")
+		const std::string &sFile = asFiles[i];
+		if (StdString::ssicmp(sFile.substr(sFile.size() - std::min<std::size_t>(4, sFile.size())).c_str(), ".ini") != 0)
 			asTexturePathsOut.push_back(asFiles[i]);
 	}
 }

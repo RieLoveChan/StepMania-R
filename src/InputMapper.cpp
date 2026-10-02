@@ -625,9 +625,9 @@ void InputMapper::AutoMapJoysticksForCurrentGame() {
 	std::vector<AutoMappings> vAutoMappings;
 	{
 		// file automaps - Add these first so that they can match before the hard-coded mappings
-		std::vector<RString> vs;
+		std::vector<std::string> vs;
 		GetDirListing(AUTOMAPPINGS_DIR "*.ini", vs, false, true);
-		for (RString const &sFilePath : vs) {
+		for (std::string const &sFilePath : vs) {
 			InputMappings km;
 			km.ReadMappings(m_pInputScheme, sFilePath, true);
 
@@ -1193,7 +1193,7 @@ void InputMappings::ReadMappings(const InputScheme *pInputScheme, RString sFileP
 			if (!GameI.IsValid())
 				continue;
 
-			std::vector<RString> sDeviceInputStrings;
+			std::vector<std::string> sDeviceInputStrings;
 			split(value, DEVICE_INPUT_SEPARATOR, sDeviceInputStrings, false);
 
 			for (unsigned j = 0; j < sDeviceInputStrings.size() && j < unsigned(NUM_GAME_TO_DEVICE_SLOTS); j++) {
@@ -1224,7 +1224,7 @@ void InputMappings::WriteMappings(const InputScheme *pInputScheme, RString sFile
 			GameInput GameI(i, j);
 			RString sNameString = GameI.ToString(pInputScheme);
 
-			std::vector<RString> asValues;
+			std::vector<std::string> asValues;
 			for (int slot = 0; slot < NUM_USER_GAME_TO_DEVICE_SLOTS;
 			     ++slot) // don't save data from the last (keyboard automap) slot
 				asValues.push_back(m_GItoDI[i][j][slot].ToString());

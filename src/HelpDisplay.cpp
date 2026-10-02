@@ -90,9 +90,9 @@ class LunaHelpDisplay : public Luna<HelpDisplay> {
 		COMMON_RETURN_SELF;
 	}
 	static int SetTipsColonSeparated(T *p, lua_State *L) {
-		std::vector<RString> vs;
+		std::vector<std::string> vs;
 		split(SArg(1), "::", vs);
-		p->SetTips(std::vector<std::string>(vs.begin(), vs.end()));
+		p->SetTips(vs);
 		COMMON_RETURN_SELF;
 	}
 

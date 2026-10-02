@@ -36,7 +36,7 @@ RString ClearMachineStats() {
 
 static LocalizedString MACHINE_EDITS_CLEARED("ScreenServiceAction", "%d edits cleared, %d errors.");
 static RString ClearMachineEdits() {
-	std::vector<RString> vsEditFiles;
+	std::vector<std::string> vsEditFiles;
 	GetDirListing(
 	   PROFILEMAN->GetProfileDir(ProfileSlot_Machine) + EDIT_STEPS_SUBDIR + "*.edit", vsEditFiles, false, true
 	);
@@ -45,7 +45,7 @@ static RString ClearMachineEdits() {
 	);
 
 	int editCount = static_cast<int>(vsEditFiles.size());
-	int removedCount = static_cast<int>(std::count_if(vsEditFiles.begin(), vsEditFiles.end(), [](RString const &i) {
+	int removedCount = static_cast<int>(std::count_if(vsEditFiles.begin(), vsEditFiles.end(), [](std::string const &i) {
 		return FILEMAN->Remove(i);
 	}));
 
@@ -82,11 +82,11 @@ static RString ClearMemoryCardEdits() {
 		MEMCARDMAN->MountCard(pn);
 
 	RString sDir = MEM_CARD_MOUNT_POINT[pn] + (RString)PREFSMAN->m_sMemoryCardProfileSubdir + "/";
-	std::vector<RString> vsEditFiles;
+	std::vector<std::string> vsEditFiles;
 	GetDirListing(sDir + EDIT_STEPS_SUBDIR + "*.edit", vsEditFiles, false, true);
 	GetDirListing(sDir + EDIT_COURSES_SUBDIR + "*.crs", vsEditFiles, false, true);
 	int editCount = static_cast<int>(vsEditFiles.size());
-	int removedCount = static_cast<int>(std::count_if(vsEditFiles.begin(), vsEditFiles.end(), [](RString const &i) {
+	int removedCount = static_cast<int>(std::count_if(vsEditFiles.begin(), vsEditFiles.end(), [](std::string const &i) {
 		return FILEMAN->Remove(i);
 	}));
 
@@ -177,9 +177,9 @@ static void CopyEdits(
 		RString sFromDir = sFromProfileDir + EDIT_STEPS_SUBDIR;
 		RString sToDir = sToProfileDir + EDIT_STEPS_SUBDIR;
 
-		std::vector<RString> vsFiles;
+		std::vector<std::string> vsFiles;
 		GetDirListing(sFromDir + "*.edit", vsFiles, false, false);
-		for (RString const &i : vsFiles) {
+		for (std::string const &i : vsFiles) {
 			if (DoesFileExist(sToDir + i))
 				iNumOverwritten++;
 			bool bSuccess = FileCopy(sFromDir + i, sToDir + i);
@@ -203,9 +203,9 @@ static void CopyEdits(
 		RString sFromDir = sFromProfileDir + EDIT_COURSES_SUBDIR;
 		RString sToDir = sToProfileDir + EDIT_COURSES_SUBDIR;
 
-		std::vector<RString> vsFiles;
+		std::vector<std::string> vsFiles;
 		GetDirListing(sFromDir + "*.crs", vsFiles, false, false);
-		for (RString const &i : vsFiles) {
+		for (std::string const &i : vsFiles) {
 			if (DoesFileExist(sToDir + i))
 				iNumOverwritten++;
 			bool bSuccess = FileCopy(sFromDir + i, sToDir + i);
@@ -234,7 +234,7 @@ static RString CopyEdits(const RString &sFromProfileDir, const RString &sToProfi
 
 	CopyEdits(sFromProfileDir, sToProfileDir, iNumSucceeded, iNumOverwritten, iNumIgnored, iNumErrored);
 
-	std::vector<RString> vs;
+	std::vector<std::string> vs;
 	vs.push_back(sDisplayDir);
 	vs.push_back(ssprintf(COPIED.GetValue(), iNumSucceeded) + ", " + ssprintf(OVERWRITTEN.GetValue(), iNumOverwritten));
 	if (iNumIgnored)
@@ -253,13 +253,13 @@ static void SyncFiles(
    int &iNumOverwritten,
    int &iNumFailed
 ) {
-	std::vector<RString> vsFilesSource;
+	std::vector<std::string> vsFilesSource;
 	GetDirListing(sFromDir + sMask, vsFilesSource, false, false);
 
-	std::vector<RString> vsFilesDest;
+	std::vector<std::string> vsFilesDest;
 	GetDirListing(sToDir + sMask, vsFilesDest, false, false);
 
-	std::vector<RString> vsToDelete;
+	std::vector<std::string> vsToDelete;
 	GetAsNotInBs(vsFilesDest, vsFilesSource, vsToDelete);
 
 	for (unsigned i = 0; i < vsToDelete.size(); ++i) {
@@ -334,7 +334,7 @@ static RString CopyEditsMachineToMemoryCard() {
 	RString sFromDir = PROFILEMAN->GetProfileDir(ProfileSlot_Machine);
 	RString sToDir = MEM_CARD_MOUNT_POINT[pn] + (RString)PREFSMAN->m_sMemoryCardProfileSubdir + "/";
 
-	std::vector<RString> vs;
+	std::vector<std::string> vs;
 	vs.push_back(ssprintf(COPIED_TO_CARD.GetValue(), pn + 1));
 	RString s = CopyEdits(sFromDir, sToDir, PREFSMAN->m_sMemoryCardProfileSubdir);
 	vs.push_back(s);
@@ -384,7 +384,7 @@ static RString CopyEditsMemoryCardToMachine() {
 	std::vector<RString> vsSubDirs;
 	ProfileManager::GetMemoryCardProfileDirectoriesToTry(vsSubDirs);
 
-	std::vector<RString> vs;
+	std::vector<std::string> vs;
 	vs.push_back(ssprintf(COPIED_FROM_CARD.GetValue(), pn + 1));
 
 	for (RString const &sSubDir : vsSubDirs) {
@@ -413,11 +413,11 @@ static RString ResetPreferences() {
 REGISTER_SCREEN_CLASS(ScreenServiceAction);
 void ScreenServiceAction::BeginScreen() {
 	RString sActions = THEME->GetMetric(m_sName, "Actions");
-	std::vector<RString> vsActions;
+	std::vector<std::string> vsActions;
 	split(sActions, ",", vsActions);
 
-	std::vector<RString> vsResults;
-	for (RString const &s : vsActions) {
+	std::vector<std::string> vsResults;
+	for (std::string const &s : vsActions) {
 		RString (*pfn)() = nullptr;
 
 		if (s == "ClearBookkeepingData")
@@ -441,7 +441,7 @@ void ScreenServiceAction::BeginScreen() {
 		else if (s == "ResetPreferences")
 			pfn = ResetPreferences;
 
-		ASSERT_M(pfn != nullptr, s);
+		ASSERT_M(pfn != nullptr, s.c_str());
 
 		RString sResult = pfn();
 		vsResults.push_back(sResult);

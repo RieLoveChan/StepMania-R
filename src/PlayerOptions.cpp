@@ -648,10 +648,10 @@ void PlayerOptions::GetMods(std::vector<RString> &AddTo, bool bForceNoteSkin) co
  * you don't want this. */
 void PlayerOptions::FromString(const std::string &sMultipleMods) {
 	RString sTemp = sMultipleMods;
-	std::vector<RString> vs;
+	std::vector<std::string> vs;
 	split(sTemp, ",", vs, true);
 	RString sThrowAway;
-	for (RString &s : vs) {
+	for (std::string &s : vs) {
 		if (!FromOneModString(s, sThrowAway)) {
 			LOG_TRACE(Log::General, "Attempted to load a non-existing mod \'%s\' for the Player. Ignoring.", s.c_str());
 		}
@@ -673,10 +673,10 @@ bool PlayerOptions::FromOneModString(const std::string &sOneMod, std::string &sE
 
 	float level = 1;
 	float speed = 1;
-	std::vector<RString> asParts;
+	std::vector<std::string> asParts;
 	split(sBit, " ", asParts, true);
 
-	for (RString const &s : asParts) {
+	for (std::string const &s : asParts) {
 		if (s == "no") {
 			level = 0;
 		}
@@ -688,7 +688,7 @@ bool PlayerOptions::FromOneModString(const std::string &sOneMod, std::string &sE
 			}
 			/* If the last character is a *, they probably said "123*" when
 			 * they meant "*123". */
-			else if (s.Right(1) == "*") {
+			else if (!s.empty() && s.back() == '*') {
 				// XXX: We know what they want, is there any reason not to handle it?
 				// Yes. We should be strict in handling the format. -Chris
 				sErrorOut = ssprintf("Invalid player options \"%s\"; did you mean '*%d'?", s.c_str(), StringToInt(s));
@@ -699,7 +699,7 @@ bool PlayerOptions::FromOneModString(const std::string &sOneMod, std::string &sE
 			}
 		}
 		else if (s[0] == '*') {
-			sscanf(s, "*%f", &speed);
+			sscanf(s.c_str(), "*%f", &speed);
 			if (!std::isfinite(speed))
 				speed = 1.0f;
 		}
@@ -1865,7 +1865,7 @@ void PlayerOptions::GetLocalizedMods(std::vector<RString> &AddTo) const {
 	for (RString const &sOneMod : vMods) {
 		ASSERT(!sOneMod.empty());
 
-		std::vector<RString> asTokens;
+		std::vector<std::string> asTokens;
 		split(sOneMod, " ", asTokens);
 
 		if (asTokens.empty())

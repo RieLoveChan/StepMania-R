@@ -22,13 +22,13 @@ bool Character::Load(std::string sCharDir) {
 
 	// save ID
 	{
-		std::vector<RString> as;
+		std::vector<std::string> as;
 		split(sCharDir, "/", as);
 		m_sCharacterID = as.back();
 	}
 
 	{
-		std::vector<RString> as;
+		std::vector<std::string> as;
 		GetDirListing(m_sCharDir + "card.png", as, false, true);
 		GetDirListing(m_sCharDir + "card.jpg", as, false, true);
 		GetDirListing(m_sCharDir + "card.jpeg", as, false, true);
@@ -41,7 +41,7 @@ bool Character::Load(std::string sCharDir) {
 	}
 
 	{
-		std::vector<RString> as;
+		std::vector<std::string> as;
 		GetDirListing(m_sCharDir + "icon.png", as, false, true);
 		GetDirListing(m_sCharDir + "icon.jpg", as, false, true);
 		GetDirListing(m_sCharDir + "icon.jpeg", as, false, true);
@@ -74,7 +74,7 @@ bool Character::Load(std::string sCharDir) {
 }
 
 std::string GetRandomFileInDir(std::string sDir) {
-	std::vector<RString> asFiles;
+	std::vector<std::string> asFiles;
 	GetDirListing(sDir, asFiles, false, true);
 	if (asFiles.empty())
 		return std::string();
@@ -100,7 +100,7 @@ std::string Character::GetDanceAnimationPath() const {
 	return DerefRedir(GetRandomFileInDir(m_sCharDir + "Dance/"));
 }
 std::string Character::GetTakingABreakPath() const {
-	std::vector<RString> as;
+	std::vector<std::string> as;
 	GetDirListing(m_sCharDir + "break.png", as, false, true);
 	GetDirListing(m_sCharDir + "break.jpg", as, false, true);
 	GetDirListing(m_sCharDir + "break.jpeg", as, false, true);
@@ -113,7 +113,7 @@ std::string Character::GetTakingABreakPath() const {
 }
 
 std::string Character::GetSongSelectIconPath() const {
-	std::vector<RString> as;
+	std::vector<std::string> as;
 	// first try and find an icon specific to the select music screen
 	// so you can have different icons for music select / char select
 	GetDirListing(m_sCharDir + "selectmusicicon.png", as, false, true);
@@ -139,7 +139,7 @@ std::string Character::GetSongSelectIconPath() const {
 }
 
 std::string Character::GetStageIconPath() const {
-	std::vector<RString> as;
+	std::vector<std::string> as;
 	// first try and find an icon specific to the select music screen
 	// so you can have different icons for music select / char select
 	GetDirListing(m_sCharDir + "stageicon.png", as, false, true);

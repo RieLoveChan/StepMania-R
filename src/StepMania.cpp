@@ -594,8 +594,8 @@ RageDisplay *CreateDisplay() {
 	   "\n\n" VIDEO_TROUBLESHOOTING_URL "\n\n" + ssprintf(ERROR_VIDEO_DRIVER.GetValue(), GetVideoDriverName().c_str()) +
 	   "\n\n";
 
-	std::vector<RString> asRenderers;
-	split(PREFSMAN->m_sVideoRenderers, ",", asRenderers, true);
+	std::vector<std::string> asRenderers;
+	split(PREFSMAN->m_sVideoRenderers.Get(), ",", asRenderers, true);
 
 	if (asRenderers.empty())
 		RageException::Throw("%s", ERROR_NO_VIDEO_RENDERERS.GetValue().c_str());
@@ -728,7 +728,7 @@ void StepMania::InitializeCurrentGame(const Game *g) {
 }
 
 static void MountTreeOfZips(const RString &dir) {
-	std::vector<RString> dirs;
+	std::vector<std::string> dirs;
 	dirs.push_back(dir);
 
 	while (!dirs.empty()) {
@@ -738,7 +738,7 @@ static void MountTreeOfZips(const RString &dir) {
 		if (!IsADirectory(path))
 			continue;
 
-		std::vector<RString> zips;
+		std::vector<std::string> zips;
 		GetDirListing(path + "/*.zip", zips, false, true);
 		GetDirListing(path + "/*.smzip", zips, false, true);
 
@@ -756,7 +756,7 @@ static void MountTreeOfZips(const RString &dir) {
 
 static void MountFolders(const RString &type, const RString &realPathList, const RString &mountPoint) {
 	if (!realPathList.empty()) {
-		std::vector<RString> dirs;
+		std::vector<std::string> dirs;
 		split(realPathList, ",", dirs, true);
 		for (const auto &dir : dirs)
 			FILEMAN->Mount(type, dir, mountPoint);
