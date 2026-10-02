@@ -667,12 +667,6 @@ std::string join(const std::string &sDeliminator, const std::vector<std::string>
 	return do_join<std::string, std::string>(sDeliminator, sSource);
 }
 
-std::string join(
-   const std::string &sDelimitor, std::vector<std::string>::const_iterator begin, std::vector<std::string>::const_iterator end
-) {
-	return do_join<std::string, std::string>(sDelimitor, begin, end);
-}
-
 RString SmEscape(const RString &sUnescaped, const std::vector<char> charsToEscape) {
 	return SmEscape(sUnescaped.c_str(), static_cast<int>(sUnescaped.size()), charsToEscape);
 }

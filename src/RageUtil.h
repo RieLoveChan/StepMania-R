@@ -446,9 +446,6 @@ RString
 join(const RString &sDelimitor, std::vector<RString>::const_iterator begin, std::vector<RString>::const_iterator end);
 // std::vector<std::string> entry points: same algorithm, result is a std::string.
 std::string join(const std::string &sDelimitor, const std::vector<std::string> &sSource);
-std::string join(
-   const std::string &sDelimitor, std::vector<std::string>::const_iterator begin, std::vector<std::string>::const_iterator end
-);
 
 // These methods escapes a string for saving in a .sm or .crs file
 RString SmEscape(const RString &sUnescaped, const std::vector<char> charsToEscape = {'\\', ':', ';'});
