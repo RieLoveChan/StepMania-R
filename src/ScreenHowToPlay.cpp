@@ -50,7 +50,7 @@ static const std::string anims[NUM_ANIMATIONS] = {
 };
 
 static std::string GetAnimPath(Animation a) {
-	return RString("Characters/") + anims[a];
+	return std::string("Characters/") + anims[a];
 }
 
 static bool HaveAllCharAnimations() {

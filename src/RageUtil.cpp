@@ -884,7 +884,7 @@ void splitpath(const std::string &sPath, std::string &sDir, std::string &sFilena
 	ASSERT(bCheck);
 
 	sDir = asMatches[0];
-	const RString sBase = asMatches[1];
+	const std::string sBase = asMatches[1];
 
 	/* ^(.*)(\.[^\.]+)$ */
 	static Regex SplitExt("^(.*)(\\.[^\\.]+)$");

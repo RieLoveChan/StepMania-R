@@ -662,7 +662,7 @@ void XmlFileUtil::CompileXNodeTree(XNode *pNode, const RString &sFile) {
 }
 
 namespace {
-XNode *XNodeFromTableRecursive(lua_State *L, const RString &sName, LuaReference &ProcessedTables) {
+XNode *XNodeFromTableRecursive(lua_State *L, const std::string &sName, LuaReference &ProcessedTables) {
 	XNode *pNode = new XNode(sName);
 
 	// Set the value of the node to the table.
@@ -674,7 +674,7 @@ XNode *XNodeFromTableRecursive(lua_State *L, const RString &sName, LuaReference 
 	}
 
 	// Iterate over the table, pulling out attributes and tables to process.
-	std::vector<RString> NodeNamesToAdd;
+	std::vector<std::string> NodeNamesToAdd;
 	std::vector<LuaReference> NodesToAdd;
 
 	/* Add array elements first, in array order, so iterating over the XNode
@@ -721,7 +721,7 @@ XNode *XNodeFromTableRecursive(lua_State *L, const RString &sName, LuaReference 
 
 	// Recursively process tables.
 	for (std::size_t i = 0; i < NodesToAdd.size(); ++i) {
-		const RString &sNodeName = NodeNamesToAdd[i];
+		const std::string &sNodeName = NodeNamesToAdd[i];
 		LuaReference &NodeToAdd = NodesToAdd[i];
 
 		// Check if the table is on the stack.

@@ -459,7 +459,7 @@ void PrefsManager::SavePrefsToIni(IniFile &ini) {
 	IPreference::SavePrefsToNode(pNode);
 
 	for (auto const &iter : m_mapGameNameToGamePrefs) {
-		RString sSection = "Game-" + RString(iter.first);
+		std::string sSection = "Game-" + iter.first;
 
 		// todo: write more values here? -aj
 		ini.SetValue(sSection, "Announcer", iter.second.m_sAnnouncer);

@@ -119,13 +119,13 @@ void Profile::InitEditableData() {
 
 void Profile::ClearStats() {
 	// don't reset the Guid
-	RString sGuid = m_sGuid;
+	std::string sGuid = m_sGuid;
 	InitAll();
 	m_sGuid = sGuid;
 }
 
 std::string Profile::MakeGuid() {
-	RString s;
+	std::string s;
 	s.reserve(GUID_SIZE_BYTES * 2);
 	unsigned char buf[GUID_SIZE_BYTES];
 	CryptManager::GetRandomBytes(buf, GUID_SIZE_BYTES);
@@ -494,7 +494,7 @@ int Profile::GetSongNumTimesPlayed(const SongID &songID) const {
  * is played, and from the profile every time thereafter.
  */
 bool Profile::GetDefaultModifiers(const Game *pGameType, std::string &sModifiersOut) const {
-	std::map<std::string, RString>::const_iterator it;
+	std::map<std::string, std::string>::const_iterator it;
 	it = m_sDefaultModifiers.find(pGameType->m_szName);
 	if (it == m_sDefaultModifiers.end())
 		return false;
@@ -825,8 +825,8 @@ void Profile::MergeScoresFromOtherProfile(
 		std::size_t old_count = m_vScreenshots.size();
 		m_vScreenshots.insert(m_vScreenshots.end(), other->m_vScreenshots.begin(), other->m_vScreenshots.end());
 		for (std::size_t sid = old_count; sid < m_vScreenshots.size(); ++sid) {
-			RString old_path = from_dir + "Screenshots/" + m_vScreenshots[sid].sFileName;
-			RString new_path = to_dir + "Screenshots/" + m_vScreenshots[sid].sFileName;
+			std::string old_path = from_dir + "Screenshots/" + m_vScreenshots[sid].sFileName;
+			std::string new_path = to_dir + "Screenshots/" + m_vScreenshots[sid].sFileName;
 			// Only move the old screenshot over if it exists and won't stomp an
 			// existing screenshot.
 			if (FILEMAN->DoesFileExist(old_path) && (!FILEMAN->DoesFileExist(new_path))) {
@@ -948,7 +948,7 @@ void Profile::IncrementCategoryPlayCount(StepsType st, RankingCategory rc) {
 		WARN_PARSER;                                                                                                     \
 		break;                                                                                                           \
 	}
-#define WARN_M(m) ShowWarningOrTrace(__FILE__, __LINE__, RString("Error parsing file: ") + (m), true)
+#define WARN_M(m) ShowWarningOrTrace(__FILE__, __LINE__, (RString("Error parsing file: ") + (m)).c_str(), true)
 #define WARN_AND_RETURN_M(m)                                                                                           \
 	{                                                                                                                   \
 		WARN_M(m);                                                                                                       \
@@ -1004,9 +1004,9 @@ void Profile::HandleStatsPrefixChange(RString dir, bool require_signature) {
 	// Temp variables to preserve stuff across the reload.
 	// Some stuff intentionally left out because the original reason for the
 	// stats prefix was to allow scores from different game types to coexist.
-	RString display_name = m_sDisplayName;
-	RString character_id = m_sCharacterID;
-	RString last_high_score_name = m_sLastUsedHighScoreName;
+	std::string display_name = m_sDisplayName;
+	std::string character_id = m_sCharacterID;
+	std::string last_high_score_name = m_sLastUsedHighScoreName;
 	int weight = m_iWeightPounds;
 	float voomax = m_Voomax;
 	int birth_year = m_BirthYear;
@@ -1014,8 +1014,8 @@ void Profile::HandleStatsPrefixChange(RString dir, bool require_signature) {
 	bool male = m_IsMale;
 	ProfileType type = m_Type;
 	int priority = m_ListPriority;
-	RString guid = m_sGuid;
-	std::map<std::string, RString> default_mods = m_sDefaultModifiers;
+	std::string guid = m_sGuid;
+	std::map<std::string, std::string> default_mods = m_sDefaultModifiers;
 	SortOrder sort_order = m_SortOrder;
 	Difficulty last_diff = m_LastDifficulty;
 	CourseDifficulty last_course_diff = m_LastCourseDifficulty;
@@ -1210,7 +1210,7 @@ ProfileLoadResult Profile::LoadStatsFromDir(RString dir, bool require_signature)
 void Profile::LoadTypeFromDir(std::string dir) {
 	m_Type = ProfileType_Normal;
 	m_ListPriority = 0;
-	RString fn = dir + TYPE_INI;
+	std::string fn = dir + TYPE_INI;
 	if (FILEMAN->DoesFileExist(fn)) {
 		IniFile ini;
 		if (ini.ReadFile(fn)) {
@@ -1245,9 +1245,9 @@ ProfileLoadResult Profile::LoadStatsXmlFromNode(const XNode *xml, bool bIgnoreEd
 	}
 
 	// These are loaded from Editable, so we usually want to ignore them here.
-	RString sName = m_sDisplayName;
-	RString sCharacterID = m_sCharacterID;
-	RString sLastUsedHighScoreName = m_sLastUsedHighScoreName;
+	std::string sName = m_sDisplayName;
+	std::string sCharacterID = m_sCharacterID;
+	std::string sLastUsedHighScoreName = m_sLastUsedHighScoreName;
 	int iWeightPounds = m_iWeightPounds;
 	float Voomax = m_Voomax;
 	int BirthYear = m_BirthYear;
@@ -1461,7 +1461,7 @@ XNode *Profile::SaveGeneralDataCreateNode() const {
 
 	{
 		XNode *pDefaultModifiers = pGeneralDataNode->AppendChild("DefaultModifiers");
-		for (std::pair<std::string const &, RString> it : m_sDefaultModifiers)
+		for (std::pair<std::string const &, std::string> it : m_sDefaultModifiers)
 			pDefaultModifiers->AppendChild(it.first, it.second);
 	}
 
@@ -1656,16 +1656,16 @@ void Profile::LoadGeneralDataFromNode(const XNode *pNode) {
 		const XNode *pUnlocks = pNode->GetChild("Unlocks");
 		if (pUnlocks) {
 			FOREACH_CONST_Child(pUnlocks, unlock) {
-				RString sUnlockEntryID;
+				std::string sUnlockEntryID;
 				if (!unlock->GetAttrValue("UnlockEntryID", sUnlockEntryID))
 					continue;
 
 				if (!UNLOCK_AUTH_STRING.GetValue().empty()) {
-					RString sUnlockAuth;
+					std::string sUnlockAuth;
 					if (!unlock->GetAttrValue("Auth", sUnlockAuth))
 						continue;
 
-					RString sExpectedUnlockAuth =
+					std::string sExpectedUnlockAuth =
 					   BinaryToHex(CRYPTMAN->GetMD5ForString(sUnlockEntryID + UNLOCK_AUTH_STRING.GetValue()));
 					if (sUnlockAuth != sExpectedUnlockAuth)
 						continue;
@@ -1992,14 +1992,16 @@ void Profile::LoadCourseScoresFromNode(const XNode *pCourseScores) {
 		{
 			Course *pC = courseID.ToCourse();
 			if (pC == nullptr) {
-				RString sDir, sFName, sExt;
+				std::string sDir, sFName, sExt;
 				splitpath(courseID.GetPath(), sDir, sFName, sExt);
-				RString sFullFileName = sFName + sExt;
+				std::string sFullFileName = sFName + sExt;
 
 				for (Course *c : vpAllCourses) {
-					RString sOther = c->m_sPath.Right(static_cast<int>(sFullFileName.size()));
+					// Right(n) clamps n to the string length.
+					std::size_t iRightLen = std::min(sFullFileName.size(), c->m_sPath.size());
+					std::string sOther = c->m_sPath.substr(c->m_sPath.size() - iRightLen);
 
-					if (sFullFileName.CompareNoCase(sOther) == 0) {
+					if (StdString::ssicmp(sFullFileName.c_str(), sOther.c_str()) == 0) {
 						pC = c;
 						courseID.FromCourse(pC);
 						break;
@@ -2069,7 +2071,7 @@ void Profile::LoadCategoryScoresFromNode(const XNode *pCategoryScores) {
 		if (pStepsType->GetName() != "StepsType")
 			continue;
 
-		RString str;
+		std::string str;
 		if (!pStepsType->GetAttrValue("Type", str))
 			WARN_AND_CONTINUE;
 		StepsType st = GAMEMAN->StringToStepsType(str);
@@ -2147,7 +2149,7 @@ void Profile::LoadCalorieDataFromNode(const XNode *pCalorieData) {
 		if (pCaloriesBurned->GetName() != "CaloriesBurned")
 			WARN_AND_CONTINUE_M(pCaloriesBurned->GetName().c_str());
 
-		RString sDate;
+		std::string sDate;
 		if (!pCaloriesBurned->GetAttrValue("Date", sDate))
 			WARN_AND_CONTINUE;
 		DateTime date;
@@ -2369,7 +2371,7 @@ class LunaProfile : public Luna<Profile> {
  public:
 	static int AddScreenshot(T *p, lua_State *L) {
 		HighScore *hs = Luna<HighScore>::check(L, 1);
-		RString filename = SArg(2);
+		std::string filename = SArg(2);
 		Screenshot screenshot;
 		screenshot.sFileName = filename;
 		screenshot.sMD5 = BinaryToHex(CRYPTMAN->GetMD5ForFile(filename));

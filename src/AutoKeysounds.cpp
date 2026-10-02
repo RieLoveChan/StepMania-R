@@ -107,8 +107,8 @@ void AutoKeysounds::LoadTracks(
 	pPlayer2 = nullptr;
 	pShared = nullptr;
 
-	std::vector<RString> vsMusicFile;
-	const RString sMusicPath = GAMESTATE->m_pCurSteps[GAMESTATE->GetMasterPlayerNumber()]->GetMusicPath();
+	std::vector<std::string> vsMusicFile;
+	const std::string sMusicPath = GAMESTATE->m_pCurSteps[GAMESTATE->GetMasterPlayerNumber()]->GetMusicPath();
 
 	if (!sMusicPath.empty())
 		vsMusicFile.push_back(sMusicPath);
@@ -121,8 +121,8 @@ void AutoKeysounds::LoadTracks(
 	}
 
 	std::vector<RageSoundReader *> vpSounds;
-	for (RString const &s : vsMusicFile) {
-		RString sError;
+	for (std::string const &s : vsMusicFile) {
+		std::string sError;
 		RageSoundReader *pSongReader = RageSoundReader_FileReader::OpenFile(s, sError);
 		vpSounds.push_back(pSongReader);
 	}
@@ -151,7 +151,7 @@ void AutoKeysounds::LoadTracks(
 	}
 
 	if (pSong->HasInstrumentTrack(InstrumentTrack_Guitar)) {
-		RString sError;
+		std::string sError;
 		RageSoundReader *pGuitarTrackReader =
 		   RageSoundReader_FileReader::OpenFile(pSong->GetInstrumentTrackPath(InstrumentTrack_Guitar), sError);
 		// Load the buffering filter before the effects filters, so effects aren't delayed.

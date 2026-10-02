@@ -101,9 +101,9 @@ SongManager::~SongManager() {
 }
 
 void SongManager::InitAll(LoadingWindow *ld, bool onlyAdditions) {
-	std::vector<RString> never_cache;
-	split(PREFSMAN->m_NeverCacheList, ",", never_cache);
-	for (std::vector<RString>::iterator group = never_cache.begin(); group != never_cache.end(); ++group) {
+	std::vector<std::string> never_cache;
+	split(PREFSMAN->m_NeverCacheList.Get(), ",", never_cache);
+	for (std::vector<std::string>::iterator group = never_cache.begin(); group != never_cache.end(); ++group) {
 		m_GroupsToNeverCache.insert(*group);
 	}
 	InitSongsFromDisk(ld, onlyAdditions);
@@ -132,25 +132,25 @@ void SongManager::Reload(bool bAllowFastLoad, LoadingWindow *ld) {
 	PROFILEMAN->SaveMachineProfile();
 	GAMESTATE->SavePlayerProfiles();
 
-	std::vector<std::tuple<PlayerNumber, RString, bool>> rejoinPlayers;
+	std::vector<std::tuple<PlayerNumber, std::string, bool>> rejoinPlayers;
 	FOREACH_HumanPlayer(pn) {
 		if (GAMESTATE->m_bSideIsJoined[pn]) {
 			if (PROFILEMAN->ProfileWasLoadedFromMemoryCard(pn)) {
-				rejoinPlayers.push_back(std::make_tuple(pn, RString(""), true));
+				rejoinPlayers.push_back(std::make_tuple(pn, std::string(""), true));
 			}
 			else if (PROFILEMAN->IsPersistentProfile(pn)) {
 				int numLocalProfiles = PROFILEMAN->GetNumLocalProfiles();
 				for (int i = 0; i < numLocalProfiles; i++) {
 					Profile *profile = PROFILEMAN->GetLocalProfileFromIndex(i);
 					if (profile->m_sGuid == PROFILEMAN->GetProfile(pn)->m_sGuid) {
-						RString profileID = PROFILEMAN->GetLocalProfileIDFromIndex(i);
+						std::string profileID = PROFILEMAN->GetLocalProfileIDFromIndex(i);
 						rejoinPlayers.push_back(std::make_tuple(pn, profileID, false));
 						break;
 					}
 				}
 			}
 			else {
-				rejoinPlayers.push_back(std::make_tuple(pn, RString(""), false));
+				rejoinPlayers.push_back(std::make_tuple(pn, std::string(""), false));
 			}
 			GAMESTATE->UnjoinPlayer(pn);
 			PROFILEMAN->UnloadProfile(pn);
@@ -178,7 +178,7 @@ void SongManager::Reload(bool bAllowFastLoad, LoadingWindow *ld) {
 	MEMCARDMAN->WaitForCheckingToComplete();
 	for (auto &it : rejoinPlayers) {
 		PlayerNumber pn;
-		RString profileID;
+		std::string profileID;
 		bool isMemoryCard;
 		std::tie(pn, profileID, isMemoryCard) = it;
 
@@ -944,7 +944,7 @@ void SongManager::InitAutogenCourses() {
 	Course *pCourse;
 	for (unsigned g = 0; g < saGroupNames.size(); g++) // foreach Group
 	{
-		RString sGroupName = saGroupNames[g];
+		std::string sGroupName = saGroupNames[g];
 
 		// Generate random courses from each group.
 		pCourse = new Course;
@@ -975,16 +975,16 @@ void SongManager::InitAutogenCourses() {
 		std::vector<Song *> apSongs = this->GetAllSongs();
 		SongUtil::SortSongPointerArrayByDisplayArtist(apSongs);
 
-		RString sCurArtist = "";
-		RString sCurArtistTranslit = "";
+		std::string sCurArtist = "";
+		std::string sCurArtistTranslit = "";
 		int iCurArtistCount = 0;
 
 		std::vector<Song *> aSongs;
 		unsigned i = 0;
 		do {
-			RString sArtist = i >= apSongs.size() ? RString("") : apSongs[i]->GetDisplayArtist();
-			RString sTranslitArtist = i >= apSongs.size() ? RString("") : apSongs[i]->GetTranslitArtist();
-			if (i < apSongs.size() && !sCurArtist.CompareNoCase(sArtist)) {
+			std::string sArtist = i >= apSongs.size() ? RString("") : apSongs[i]->GetDisplayArtist();
+			std::string sTranslitArtist = i >= apSongs.size() ? RString("") : apSongs[i]->GetTranslitArtist();
+			if (i < apSongs.size() && !StdString::ssicmp(sCurArtist.c_str(), sArtist.c_str())) {
 				aSongs.push_back(apSongs[i]);
 				++iCurArtistCount;
 				continue;
@@ -993,8 +993,9 @@ void SongManager::InitAutogenCourses() {
 			/* Different artist, or we're at the end. If we have enough entries for
 			 * the last artist, add it. Skip blanks and "Unknown artist". */
 			if (
-			   iCurArtistCount >= 3 && !sCurArtistTranslit.empty() && sCurArtistTranslit.CompareNoCase("Unknown artist") &&
-			   sCurArtist.CompareNoCase("Unknown artist")
+			   iCurArtistCount >= 3 && !sCurArtistTranslit.empty() &&
+			   StdString::ssicmp(sCurArtistTranslit.c_str(), "Unknown artist") &&
+			   StdString::ssicmp(sCurArtist.c_str(), "Unknown artist")
 			) {
 				pCourse = new Course;
 				CourseUtil::AutogenOniFromArtist(sCurArtist, sCurArtistTranslit, aSongs, Difficulty_Hard, *pCourse);
@@ -1030,8 +1031,8 @@ void SongManager::InitRandomAttacks() {
 			for (unsigned i = 0; i < msd.GetNumValues(); i++) {
 				int iNumParams = msd.GetNumParams(i);
 				const MsdFile::value_t &sParams = msd.GetValue(i);
-				RString sType = sParams[0];
-				RString sAttack = sParams[1];
+				std::string sType = sParams[0];
+				std::string sAttack = sParams[1];
 
 				if (iNumParams > 2) {
 					LuaHelpers::ReportScriptErrorFmt(
@@ -1040,7 +1041,7 @@ void SongManager::InitRandomAttacks() {
 					continue;
 				}
 
-				if (!sType.EqualsNoCase("ATTACK")) {
+				if (StdString::ssicmp(sType.c_str(), "ATTACK") != 0) {
 					LuaHelpers::ReportScriptErrorFmt(
 					   "Got \"%s:%s\" tag with wrong declaration", sType.c_str(), sAttack.c_str()
 					);
@@ -1150,7 +1151,7 @@ void SongManager::SetPreferences() {
 }
 
 void SongManager::SaveEnabledSongsToPref() {
-	std::vector<RString> vsDisabledSongs;
+	std::vector<std::string> vsDisabledSongs;
 
 	// Intentionally drop disabled song entries for songs that aren't currently loaded.
 
@@ -1165,10 +1166,10 @@ void SongManager::SaveEnabledSongsToPref() {
 }
 
 void SongManager::LoadEnabledSongsFromPref() {
-	std::vector<RString> asDisabledSongs;
-	split(g_sDisabledSongs, ";", asDisabledSongs, true);
+	std::vector<std::string> asDisabledSongs;
+	split(g_sDisabledSongs.Get(), ";", asDisabledSongs, true);
 
-	for (RString const &s : asDisabledSongs) {
+	for (std::string const &s : asDisabledSongs) {
 		SongID sid;
 		sid.FromString(s);
 		Song *pSong = sid.ToSong();
@@ -1375,13 +1376,14 @@ Course *SongManager::GetRandomCourse() {
 	return nullptr;
 }
 
-Song *SongManager::GetSongFromDir(RString dir) const {
-	if (dir.Right(1) != "/") {
+Song *SongManager::GetSongFromDir(std::string dir) const {
+	if (dir.empty() || dir.back() != '/') {
 		dir += "/";
 	}
 
-	dir.Replace('\\', '/');
-	dir.MakeLower();
+	std::replace(dir.begin(), dir.end(), '\\', '/');
+	if (!dir.empty())
+		MakeLower(&dir[0], dir.size());
 	std::map<std::string, Song *>::const_iterator entry = m_SongsByDir.find(dir);
 	if (entry != m_SongsByDir.end()) {
 		return entry->second;
@@ -1389,24 +1391,24 @@ Song *SongManager::GetSongFromDir(RString dir) const {
 	return nullptr;
 }
 
-Course *SongManager::GetCourseFromPath(RString sPath) const {
+Course *SongManager::GetCourseFromPath(std::string sPath) const {
 	if (sPath.empty())
 		return nullptr;
 
 	for (Course *c : m_pCourses) {
-		if (sPath.CompareNoCase(c->m_sPath) == 0)
+		if (StdString::ssicmp(sPath.c_str(), c->m_sPath.c_str()) == 0)
 			return c;
 	}
 
 	return nullptr;
 }
 
-Course *SongManager::GetCourseFromName(RString sName) const {
+Course *SongManager::GetCourseFromName(std::string sName) const {
 	if (sName.empty())
 		return nullptr;
 
 	for (Course *c : m_pCourses)
-		if (sName.CompareNoCase(c->GetDisplayFullTitle()) == 0)
+		if (StdString::ssicmp(sName.c_str(), c->GetDisplayFullTitle().c_str()) == 0)
 			return c;
 
 	return nullptr;
@@ -1425,9 +1427,9 @@ Course *SongManager::GetCourseFromName(RString sName) const {
  * a common error, but that would result in course files floating around that
  * only work for people who put songs in "Songs"; we don't want that. */
 
-Song *SongManager::FindSong(RString sPath) const {
-	sPath.Replace('\\', '/');
-	std::vector<RString> bits;
+Song *SongManager::FindSong(std::string sPath) const {
+	std::replace(sPath.begin(), sPath.end(), '\\', '/');
+	std::vector<std::string> bits;
 	split(sPath, "/", bits);
 
 	if (bits.size() == 1)
@@ -1449,9 +1451,9 @@ Song *SongManager::FindSong(RString sGroup, RString sSong) const {
 	return nullptr;
 }
 
-Course *SongManager::FindCourse(RString sPath) const {
-	sPath.Replace('\\', '/');
-	std::vector<RString> bits;
+Course *SongManager::FindCourse(std::string sPath) const {
+	std::replace(sPath.begin(), sPath.end(), '\\', '/');
+	std::vector<std::string> bits;
 	split(sPath, "/", bits);
 
 	if (bits.size() == 1)

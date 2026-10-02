@@ -536,7 +536,7 @@ void ScreenEdit::LoadKeymapSectionIntoMappingsMember(XNode const *section, MapEd
 	FOREACH_CONST_Attr(section, attr) {
 		std::map<std::string, EditButton>::iterator name_entry = name_to_edit_button.find(attr->first);
 		if (name_entry != name_to_edit_button.end()) {
-			RString joined_names;
+			std::string joined_names;
 			attr->second->GetValue(joined_names);
 			std::vector<std::string> key_names;
 			split(joined_names, DEVICE_INPUT_SEPARATOR, key_names, false);
@@ -2005,9 +2005,9 @@ void ScreenEdit::UpdateTextInfo() {
 
 	m_bTextInfoNeedsUpdate = false;
 
-	RString sNoteType = ssprintf(NOTES.GetValue(), NoteTypeToLocalizedString(m_SnapDisplay.GetNoteType()).c_str());
+	std::string sNoteType = ssprintf(NOTES.GetValue(), NoteTypeToLocalizedString(m_SnapDisplay.GetNoteType()).c_str());
 
-	RString sText;
+	std::string sText;
 	sText += ssprintf(CURRENT_BEAT_FORMAT.GetValue(), CURRENT_BEAT.GetValue().c_str(), GetBeat());
 	float second = GetAppropriateTiming().GetElapsedTimeFromBeatNoOffset(GetBeat());
 	sText += ssprintf(CURRENT_SECOND_FORMAT.GetValue(), CURRENT_SECOND.GetValue().c_str(), second);
@@ -2032,7 +2032,7 @@ void ScreenEdit::UpdateTextInfo() {
 		if (m_NoteFieldEdit.m_iEndMarker != -1)
 			sText += ssprintf(SELECTION_BEAT_END_FORMAT.GetValue(), NoteRowToBeat(m_NoteFieldEdit.m_iEndMarker));
 		else
-			sText += SELECTION_BEAT_UNFINISHED_FORMAT;
+			sText += SELECTION_BEAT_UNFINISHED_FORMAT.GetValue();
 	}
 
 	if (EDIT_MODE.GetValue() == EditMode_Full) {
@@ -2058,7 +2058,7 @@ void ScreenEdit::UpdateTextInfo() {
 		   SEGMENT_TYPE.GetValue().c_str(),
 		   TimingSegmentTypeToString(currentCycleSegment).c_str()
 		);
-		const RString tapnoteType = TapNoteTypeToString(m_selectedTap.type);
+		const std::string tapnoteType = TapNoteTypeToString(m_selectedTap.type);
 		sText += ssprintf(TAP_NOTE_TYPE_FORMAT.GetValue(), TAP_NOTE_TYPE.GetValue().c_str(), tapnoteType.c_str());
 
 		AttackArray &attacks = (GAMESTATE->m_bIsUsingStepTiming ? m_pSteps->m_Attacks : m_pSong->m_Attacks);
@@ -3048,7 +3048,7 @@ bool ScreenEdit::InputEdit(const InputEventPlus &input, EditButton EditB) {
 	case EDIT_BUTTON_BAKE_RANDOM_FROM_SONG_GROUP:
 	case EDIT_BUTTON_BAKE_RANDOM_FROM_SONG_GROUP_AND_GENRE: {
 		bool bTryGenre = EditB == EDIT_BUTTON_BAKE_RANDOM_FROM_SONG_GROUP_AND_GENRE;
-		RString sName = GetOneBakedRandomFile(m_pSong, bTryGenre);
+		std::string sName = GetOneBakedRandomFile(m_pSong, bTryGenre);
 		if (sName.empty()) {
 			SCREENMAN->PlayInvalidSound();
 			SCREENMAN->SystemMessage(NO_BACKGROUNDS_AVAILABLE);
@@ -3848,7 +3848,7 @@ void ScreenEdit::HandleScreenMessage(const ScreenMessage SM) {
 		const int num = ScreenMiniMenu::s_viLastAnswers[0];
 		GAMESTATE->m_pCurCourse.Set(nullptr);
 		if (num != 0) {
-			const RString name = g_CourseMode.rows[0].choices[num];
+			const std::string name = g_CourseMode.rows[0].choices[num];
 			Course *pCourse = SONGMAN->FindCourse(name);
 
 			int iCourseEntryIndex = -1;
@@ -3957,7 +3957,7 @@ void ScreenEdit::HandleScreenMessage(const ScreenMessage SM) {
 	}
 	else if (SM == SM_BackFromInsertTapAttackPlayerOptions) {
 		PlayerOptions poChosen = GAMESTATE->m_pPlayerState[PLAYER_1]->m_PlayerOptions.GetPreferred();
-		RString sMods = poChosen.GetString();
+		std::string sMods = poChosen.GetString();
 		const int row = BeatToNoteRow(GAMESTATE->m_Position.m_fSongBeat);
 
 		TapNote tn(
@@ -4162,7 +4162,7 @@ void ScreenEdit::HandleScreenMessage(const ScreenMessage SM) {
 	else if (SM == SM_BackFromInsertStepAttackPlayerOptions) {
 		ModsGroup<PlayerOptions> &toRestore = GAMESTATE->m_pPlayerState[PLAYER_1]->m_PlayerOptions;
 		PlayerOptions poChosen = toRestore.GetPreferred();
-		RString mods = poChosen.GetString();
+		std::string mods = poChosen.GetString();
 
 		if (g_fLastInsertAttackPositionSeconds >= 0) {
 			Attack a(
@@ -4179,7 +4179,7 @@ void ScreenEdit::HandleScreenMessage(const ScreenMessage SM) {
 	}
 	else if (SM == SM_BackFromInsertCourseAttackPlayerOptions) {
 		PlayerOptions poChosen = GAMESTATE->m_pPlayerState[PLAYER_1]->m_PlayerOptions.GetPreferred();
-		RString sMods = poChosen.GetString();
+		std::string sMods = poChosen.GetString();
 
 		Course *pCourse = GAMESTATE->m_pCurCourse;
 		CourseEntry &ce = pCourse->m_vEntries[GAMESTATE->m_iEditCourseEntryIndex];
@@ -4620,7 +4620,7 @@ void ScreenEdit::DisplayTimingMenu() {
 	   bHasSpeedOnThisRow ? std::to_string(pTime.GetSpeedWaitAtRow(row)) : "---"
 	);
 
-	RString starting = (pTime.GetSpeedModeAtRow(row) == 1 ? "Seconds" : "Beats");
+	std::string starting = (pTime.GetSpeedModeAtRow(row) == 1 ? "Seconds" : "Beats");
 	g_TimingDataInformation.rows[speed_mode].SetOneUnthemedChoice(starting.c_str());
 
 	g_TimingDataInformation.rows[scroll].SetOneUnthemedChoice(std::to_string(pTime.GetScrollAtRow(row)));
@@ -6297,7 +6297,7 @@ static std::string GetDeviceButtonsLocalized(const std::vector<EditButton> &veb,
 	ProcessKeyNames(vsPress, false);
 	ProcessKeyNames(vsHold, true);
 
-	RString s = join("/", vsPress);
+	std::string s = join("/", vsPress);
 	if (!vsHold.empty())
 		s = join("/", vsHold) + " + " + s;
 	return s;
@@ -6314,7 +6314,7 @@ void ScreenEdit::DoStepAttackMenu() {
 
 	for (int &i : points) {
 		const Attack &attack = attacks[i];
-		RString desc =
+		std::string desc =
 		   ssprintf("%g -> %g (%d mod[s])", startTime, startTime + attack.fSecsRemaining, attack.GetNumAttacks());
 
 		g_AttackAtTimeMenu.rows.push_back(

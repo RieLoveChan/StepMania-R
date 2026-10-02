@@ -48,13 +48,13 @@ void ScreenOptionsMemoryCard::CreateMenu() {
 	std::vector<OptionRowHandler *> vHands;
 
 	for (UsbStorageDevice const &iter : m_CurrentUsbStorageDevices) {
-		std::vector<RString> vs;
+		std::vector<std::string> vs;
 		if (iter.sVolumeLabel.empty())
-			vs.push_back(NO_LABEL);
+			vs.push_back(NO_LABEL.GetValue());
 		else
 			vs.push_back(iter.sVolumeLabel);
 		if (iter.iVolumeSizeMB == 0)
-			vs.push_back(SIZE_UNKNOWN);
+			vs.push_back(SIZE_UNKNOWN.GetValue());
 		else
 			vs.push_back(ssprintf(RString(VOLUME_SIZE).c_str(), iter.iVolumeSizeMB));
 

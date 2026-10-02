@@ -25,7 +25,7 @@ class Command {
 	};
 	Arg GetArg(unsigned index) const;
 
-	std::vector<RString> m_vsArgs;
+	std::vector<std::string> m_vsArgs;
 
 	Command() : m_vsArgs() {
 	}

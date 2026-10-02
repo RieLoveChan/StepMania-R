@@ -122,7 +122,7 @@ bool NoteSkinManager::LoadNoteSkinDataRecursive(const std::string &sNoteSkinName
 			sDir = GLOBAL_BASE_DIR + sNoteSkinName + "/";
 			if (!FILEMAN->IsADirectory(sDir)) {
 				LuaHelpers::ReportScriptError(
-				   "NoteSkin \"" + RString(data_out.sName) + "\" references skin \"" + sNoteSkinName +
+				   "NoteSkin \"" + data_out.sName + "\" references skin \"" + sNoteSkinName +
 				      "\" that is not present",
 				   "NOTESKIN_ERROR"
 				);

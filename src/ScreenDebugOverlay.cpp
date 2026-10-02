@@ -75,11 +75,11 @@ class IDebugLine {
 	virtual Type GetType() const {
 		return all_screens;
 	}
-	virtual RString GetDisplayTitle() = 0;
-	virtual RString GetDisplayValue() {
+	virtual std::string GetDisplayTitle() = 0;
+	virtual std::string GetDisplayValue() {
 		return IsEnabled() ? ON.GetValue() : OFF.GetValue();
 	}
-	virtual RString GetPageName() const {
+	virtual std::string GetPageName() const {
 		return "Main";
 	}
 	virtual bool ForceOffAfterUse() const {
@@ -87,8 +87,8 @@ class IDebugLine {
 	}
 	virtual bool IsEnabled() = 0;
 	virtual void DoAndLog(std::string &sMessageOut) {
-		RString s1 = GetDisplayTitle();
-		RString s2 = GetDisplayValue();
+		std::string s1 = GetDisplayTitle();
+		std::string s2 = GetDisplayValue();
 		if (!s2.empty())
 			s1 += " - ";
 		sMessageOut = s1 + s2;
@@ -146,7 +146,7 @@ static MapDebugToDI g_Mappings;
 static LocalizedString IN_GAMEPLAY("ScreenDebugOverlay", "%s in gameplay");
 static LocalizedString OR("ScreenDebugOverlay", "or");
 static std::string GetDebugButtonName(const IDebugLine *pLine) {
-	RString s = INPUTMAN->GetDeviceSpecificInputString(pLine->m_Button);
+	std::string s = INPUTMAN->GetDeviceSpecificInputString(pLine->m_Button);
 	IDebugLine::Type type = pLine->GetType();
 	switch (type) {
 	case IDebugLine::all_screens:
@@ -224,7 +224,7 @@ void ScreenDebugOverlay::Init() {
 	std::map<std::string, int> iNextDebugButton;
 	int iNextGameplayButton = 0;
 	for (IDebugLine *p : *g_pvpSubscribers) {
-		RString sPageName = p->GetPageName();
+		std::string sPageName = p->GetPageName();
 
 		DeviceInput di;
 		switch (p->GetType()) {
@@ -264,7 +264,7 @@ void ScreenDebugOverlay::Init() {
 		bool b = GetKeyFromMap(g_Mappings.pageButton, iPage, di);
 		ASSERT(b);
 
-		RString sButton = INPUTMAN->GetDeviceSpecificInputString(di);
+		std::string sButton = INPUTMAN->GetDeviceSpecificInputString(di);
 
 		BitmapText *p = new BitmapText;
 		p->SetName("PageText");
@@ -355,7 +355,7 @@ void ScreenDebugOverlay::UpdateText() {
 	int iOffset = 0;
 	auto subStart = g_pvpSubscribers->begin();
 	for (std::vector<IDebugLine *>::const_iterator p = subStart; p != g_pvpSubscribers->end(); ++p) {
-		RString sPageName = (*p)->GetPageName();
+		std::string sPageName = (*p)->GetPageName();
 
 		int i = static_cast<int>(p - subStart);
 
@@ -378,15 +378,15 @@ void ScreenDebugOverlay::UpdateText() {
 		txt2.SetX(LINE_FUNCTION_X);
 		txt2.SetY(fY);
 
-		RString s1 = (*p)->GetDisplayTitle();
-		RString s2 = (*p)->GetDisplayValue();
+		std::string s1 = (*p)->GetDisplayTitle();
+		std::string s2 = (*p)->GetDisplayValue();
 
 		bool bOn = (*p)->IsEnabled();
 
 		txt1.SetDiffuse(bOn ? LINE_ON_COLOR : LINE_OFF_COLOR);
 		txt2.SetDiffuse(bOn ? LINE_ON_COLOR : LINE_OFF_COLOR);
 
-		RString sButton = GetDebugButtonName(*p);
+		std::string sButton = GetDebugButtonName(*p);
 		if (!sButton.empty())
 			sButton += ": ";
 		txt1.SetText(sButton);
@@ -445,7 +445,7 @@ bool ScreenDebugOverlay::Input(const InputEventPlus &input) {
 
 	auto start = g_pvpSubscribers->begin();
 	for (std::vector<IDebugLine *>::const_iterator p = start; p != g_pvpSubscribers->end(); ++p) {
-		RString sPageName = (*p)->GetPageName();
+		std::string sPageName = (*p)->GetPageName();
 
 		int i = static_cast<int>(p - start);
 
@@ -472,7 +472,7 @@ bool ScreenDebugOverlay::Input(const InputEventPlus &input) {
 				return true; // eat the input but do nothing
 
 			// do the action
-			RString sMessage;
+			std::string sMessage;
 			(*p)->DoAndLog(sMessage);
 			if (!sMessage.empty())
 				LOG_TRACE(Log::Screen, "DEBUG: %s", sMessage.c_str());
@@ -564,10 +564,10 @@ static LocalizedString MACHINE("ScreenDebugOverlay", "Machine");
 static LocalizedString SYNC_TEMPO("ScreenDebugOverlay", "Tempo");
 
 class DebugLineAutoplay : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return AUTO_PLAY.GetValue() + " (+Shift = AI) (+Alt = hide)";
 	}
-	RString GetDisplayValue() override {
+	std::string GetDisplayValue() override {
 		PlayerController pc = GamePreferences::m_AutoPlay.Get();
 		switch (pc) {
 		case PC_HUMAN:
@@ -607,13 +607,13 @@ class DebugLineAutoplay : public IDebugLine {
 };
 
 class DebugLineAssist : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return ASSIST.GetValue();
 	}
 	Type GetType() const override {
 		return gameplay_only;
 	}
-	RString GetDisplayValue() override {
+	std::string GetDisplayValue() override {
 		SongOptions so;
 		so.m_bAssistClap = GAMESTATE->m_SongOptions.GetSong().m_bAssistClap;
 		so.m_bAssistMetronome = GAMESTATE->m_SongOptions.GetSong().m_bAssistMetronome;
@@ -643,10 +643,10 @@ class DebugLineAssist : public IDebugLine {
 };
 
 class DebugLineAutosync : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return AUTOSYNC.GetValue();
 	}
-	RString GetDisplayValue() override {
+	std::string GetDisplayValue() override {
 		AutosyncType type = GAMESTATE->m_SongOptions.GetSong().m_AutosyncType;
 		switch (type) {
 		case AutosyncType_Off:
@@ -684,10 +684,10 @@ class DebugLineAutosync : public IDebugLine {
 };
 
 class DebugLineCoinMode : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return COIN_MODE.GetValue();
 	}
-	RString GetDisplayValue() override {
+	std::string GetDisplayValue() override {
 		return CoinModeToString(GAMESTATE->GetCoinMode());
 	}
 	bool IsEnabled() override {
@@ -706,7 +706,7 @@ class DebugLineCoinMode : public IDebugLine {
 };
 
 class DebugLineSlow : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return SLOW.GetValue();
 	}
 	bool IsEnabled() override {
@@ -720,7 +720,7 @@ class DebugLineSlow : public IDebugLine {
 };
 
 class DebugLineHalt : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return HALT.GetValue();
 	}
 	bool IsEnabled() override {
@@ -735,7 +735,7 @@ class DebugLineHalt : public IDebugLine {
 };
 
 class DebugLineLightsDebug : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return LIGHTS_DEBUG.GetValue();
 	}
 	bool IsEnabled() override {
@@ -748,7 +748,7 @@ class DebugLineLightsDebug : public IDebugLine {
 };
 
 class DebugLineMonkeyInput : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return MONKEY_INPUT.GetValue();
 	}
 	bool IsEnabled() override {
@@ -761,7 +761,7 @@ class DebugLineMonkeyInput : public IDebugLine {
 };
 
 class DebugLineStats : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return RENDERING_STATS.GetValue();
 	}
 	bool IsEnabled() override {
@@ -774,7 +774,7 @@ class DebugLineStats : public IDebugLine {
 };
 
 class DebugLineVsync : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return VSYNC.GetValue();
 	}
 	bool IsEnabled() override {
@@ -788,7 +788,7 @@ class DebugLineVsync : public IDebugLine {
 };
 
 class DebugLineAllowMultitexture : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return MULTITEXTURE.GetValue();
 	}
 	bool IsEnabled() override {
@@ -801,13 +801,13 @@ class DebugLineAllowMultitexture : public IDebugLine {
 };
 
 class DebugLineShowMasks : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return SCREEN_SHOW_MASKS.GetValue();
 	}
 	bool IsEnabled() override {
 		return GetPref()->Get();
 	}
-	RString GetPageName() const override {
+	std::string GetPageName() const override {
 		return "Theme";
 	}
 	void DoAndLog(std::string &sMessageOut) override {
@@ -828,10 +828,10 @@ static bool IsSelectProfilePersistent() {
 }
 
 class DebugLineProfileSlot : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return PROFILE.GetValue();
 	}
-	RString GetDisplayValue() override {
+	std::string GetDisplayValue() override {
 		switch (g_ProfileSlot) {
 		case ProfileSlot_Machine:
 			return "Machine";
@@ -840,13 +840,13 @@ class DebugLineProfileSlot : public IDebugLine {
 		case ProfileSlot_Player2:
 			return "Player 2";
 		default:
-			return RString();
+			return std::string();
 		}
 	}
 	bool IsEnabled() override {
 		return IsSelectProfilePersistent();
 	}
-	RString GetPageName() const override {
+	std::string GetPageName() const override {
 		return "Profiles";
 	}
 	void DoAndLog(std::string &sMessageOut) override {
@@ -859,16 +859,16 @@ class DebugLineProfileSlot : public IDebugLine {
 };
 
 class DebugLineClearProfileStats : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return CLEAR_PROFILE_STATS.GetValue();
 	}
-	RString GetDisplayValue() override {
-		return RString();
+	std::string GetDisplayValue() override {
+		return std::string();
 	}
 	bool IsEnabled() override {
 		return IsSelectProfilePersistent();
 	}
-	RString GetPageName() const override {
+	std::string GetPageName() const override {
 		return "Profiles";
 	}
 	void DoAndLog(std::string &sMessageOut) override {
@@ -953,16 +953,16 @@ static void FillProfileStats(Profile *pProfile) {
 }
 
 class DebugLineFillProfileStats : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return FILL_PROFILE_STATS.GetValue();
 	}
-	RString GetDisplayValue() override {
-		return RString();
+	std::string GetDisplayValue() override {
+		return std::string();
 	}
 	bool IsEnabled() override {
 		return IsSelectProfilePersistent();
 	}
-	RString GetPageName() const override {
+	std::string GetPageName() const override {
 		return "Profiles";
 	}
 	void DoAndLog(std::string &sMessageOut) override {
@@ -973,11 +973,11 @@ class DebugLineFillProfileStats : public IDebugLine {
 };
 
 class DebugLineSendNotesEnded : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return SEND_NOTES_ENDED.GetValue();
 	}
-	RString GetDisplayValue() override {
-		return RString();
+	std::string GetDisplayValue() override {
+		return std::string();
 	}
 	bool IsEnabled() override {
 		return true;
@@ -989,11 +989,11 @@ class DebugLineSendNotesEnded : public IDebugLine {
 };
 
 class DebugLineResetKeyMapping : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return RESET_KEY_MAP.GetValue();
 	}
-	RString GetDisplayValue() override {
-		return RString();
+	std::string GetDisplayValue() override {
+		return std::string();
 	}
 	bool IsEnabled() override {
 		return true;
@@ -1006,11 +1006,11 @@ class DebugLineResetKeyMapping : public IDebugLine {
 };
 
 class DebugLineMuteActions : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return MUTE_ACTIONS.GetValue();
 	}
-	RString GetDisplayValue() override {
-		return RString();
+	std::string GetDisplayValue() override {
+		return std::string();
 	}
 	bool IsEnabled() override {
 		return PREFSMAN->m_MuteActions;
@@ -1023,16 +1023,16 @@ class DebugLineMuteActions : public IDebugLine {
 };
 
 class DebugLineReloadCurrentScreen : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return RELOAD.GetValue();
 	}
-	RString GetDisplayValue() override {
-		return SCREENMAN && SCREENMAN->GetTopScreen() ? SCREENMAN->GetTopScreen()->GetName() : RString();
+	std::string GetDisplayValue() override {
+		return SCREENMAN && SCREENMAN->GetTopScreen() ? std::string(SCREENMAN->GetTopScreen()->GetName()) : std::string();
 	}
 	bool IsEnabled() override {
 		return true;
 	}
-	RString GetPageName() const override {
+	std::string GetPageName() const override {
 		return "Theme";
 	}
 	void DoAndLog(std::string &sMessageOut) override {
@@ -1049,11 +1049,11 @@ class DebugLineReloadCurrentScreen : public IDebugLine {
 };
 
 class DebugLineRestartCurrentScreen : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return RESTART.GetValue();
 	}
-	RString GetDisplayValue() override {
-		return SCREENMAN && SCREENMAN->GetTopScreen() ? SCREENMAN->GetTopScreen()->GetName() : RString();
+	std::string GetDisplayValue() override {
+		return SCREENMAN && SCREENMAN->GetTopScreen() ? std::string(SCREENMAN->GetTopScreen()->GetName()) : std::string();
 	}
 	bool IsEnabled() override {
 		return true;
@@ -1061,7 +1061,7 @@ class DebugLineRestartCurrentScreen : public IDebugLine {
 	bool ForceOffAfterUse() const override {
 		return true;
 	}
-	RString GetPageName() const override {
+	std::string GetPageName() const override {
 		return "Theme";
 	}
 	void DoAndLog(std::string &sMessageOut) override {
@@ -1072,11 +1072,11 @@ class DebugLineRestartCurrentScreen : public IDebugLine {
 };
 
 class DebugLineCurrentScreenOn : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return SCREEN_ON.GetValue();
 	}
-	RString GetDisplayValue() override {
-		return SCREENMAN && SCREENMAN->GetTopScreen() ? SCREENMAN->GetTopScreen()->GetName() : RString();
+	std::string GetDisplayValue() override {
+		return SCREENMAN && SCREENMAN->GetTopScreen() ? std::string(SCREENMAN->GetTopScreen()->GetName()) : std::string();
 	}
 	bool IsEnabled() override {
 		return true;
@@ -1084,7 +1084,7 @@ class DebugLineCurrentScreenOn : public IDebugLine {
 	bool ForceOffAfterUse() const override {
 		return true;
 	}
-	RString GetPageName() const override {
+	std::string GetPageName() const override {
 		return "Theme";
 	}
 	void DoAndLog(std::string &sMessageOut) override {
@@ -1095,11 +1095,11 @@ class DebugLineCurrentScreenOn : public IDebugLine {
 };
 
 class DebugLineCurrentScreenOff : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return SCREEN_OFF.GetValue();
 	}
-	RString GetDisplayValue() override {
-		return SCREENMAN && SCREENMAN->GetTopScreen() ? SCREENMAN->GetTopScreen()->GetName() : RString();
+	std::string GetDisplayValue() override {
+		return SCREENMAN && SCREENMAN->GetTopScreen() ? std::string(SCREENMAN->GetTopScreen()->GetName()) : std::string();
 	}
 	bool IsEnabled() override {
 		return true;
@@ -1107,7 +1107,7 @@ class DebugLineCurrentScreenOff : public IDebugLine {
 	bool ForceOffAfterUse() const override {
 		return true;
 	}
-	RString GetPageName() const override {
+	std::string GetPageName() const override {
 		return "Theme";
 	}
 	void DoAndLog(std::string &sMessageOut) override {
@@ -1118,16 +1118,16 @@ class DebugLineCurrentScreenOff : public IDebugLine {
 };
 
 class DebugLineReloadTheme : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return RELOAD_THEME_AND_TEXTURES.GetValue();
 	}
-	RString GetDisplayValue() override {
-		return RString();
+	std::string GetDisplayValue() override {
+		return std::string();
 	}
 	bool IsEnabled() override {
 		return true;
 	}
-	RString GetPageName() const override {
+	std::string GetPageName() const override {
 		return "Theme";
 	}
 	void DoAndLog(std::string &sMessageOut) override {
@@ -1142,16 +1142,16 @@ class DebugLineReloadTheme : public IDebugLine {
 };
 
 class DebugLineReloadOverlayScreens : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return RELOAD_OVERLAY_SCREENS.GetValue();
 	}
-	RString GetDisplayValue() override {
-		return RString();
+	std::string GetDisplayValue() override {
+		return std::string();
 	}
 	bool IsEnabled() override {
 		return true;
 	}
-	RString GetPageName() const override {
+	std::string GetPageName() const override {
 		return "Theme";
 	}
 	void DoAndLog(std::string &sMessageOut) override {
@@ -1161,16 +1161,16 @@ class DebugLineReloadOverlayScreens : public IDebugLine {
 };
 
 class DebugLineToggleErrors : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return TOGGLE_ERRORS.GetValue();
 	}
-	RString GetDisplayValue() override {
-		return RString();
+	std::string GetDisplayValue() override {
+		return std::string();
 	}
 	bool IsEnabled() override {
 		return PREFSMAN->m_show_theme_errors;
 	}
-	RString GetPageName() const override {
+	std::string GetPageName() const override {
 		return "Theme";
 	}
 	void DoAndLog(std::string &sMessageOut) override {
@@ -1180,16 +1180,16 @@ class DebugLineToggleErrors : public IDebugLine {
 };
 
 class DebugLineShowRecentErrors : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return SHOW_RECENT_ERRORS.GetValue();
 	}
-	RString GetDisplayValue() override {
-		return RString();
+	std::string GetDisplayValue() override {
+		return std::string();
 	}
 	bool IsEnabled() override {
 		return true;
 	}
-	RString GetPageName() const override {
+	std::string GetPageName() const override {
 		return "Theme";
 	}
 	void DoAndLog(std::string &sMessageOut) override {
@@ -1200,16 +1200,16 @@ class DebugLineShowRecentErrors : public IDebugLine {
 };
 
 class DebugLineClearErrors : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return CLEAR_ERRORS.GetValue();
 	}
-	RString GetDisplayValue() override {
-		return RString();
+	std::string GetDisplayValue() override {
+		return std::string();
 	}
 	bool IsEnabled() override {
 		return true;
 	}
-	RString GetPageName() const override {
+	std::string GetPageName() const override {
 		return "Theme";
 	}
 	void DoAndLog(std::string &sMessageOut) override {
@@ -1220,16 +1220,16 @@ class DebugLineClearErrors : public IDebugLine {
 };
 
 class DebugLineConvertXML : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return CONVERT_XML.GetValue();
 	}
-	RString GetDisplayValue() override {
-		return RString();
+	std::string GetDisplayValue() override {
+		return std::string();
 	}
 	bool IsEnabled() override {
 		return true;
 	}
-	RString GetPageName() const override {
+	std::string GetPageName() const override {
 		return "Theme";
 	}
 	void DoAndLog(std::string &sMessageOut) override {
@@ -1242,16 +1242,16 @@ class DebugLineConvertXML : public IDebugLine {
 };
 
 class DebugLineWriteProfiles : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return WRITE_PROFILES.GetValue();
 	}
-	RString GetDisplayValue() override {
-		return RString();
+	std::string GetDisplayValue() override {
+		return std::string();
 	}
 	bool IsEnabled() override {
 		return IsSelectProfilePersistent();
 	}
-	RString GetPageName() const override {
+	std::string GetPageName() const override {
 		return "Profiles";
 	}
 	void DoAndLog(std::string &sMessageOut) override {
@@ -1269,11 +1269,11 @@ class DebugLineWriteProfiles : public IDebugLine {
 };
 
 class DebugLineWritePreferences : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return WRITE_PREFERENCES.GetValue();
 	}
-	RString GetDisplayValue() override {
-		return RString();
+	std::string GetDisplayValue() override {
+		return std::string();
 	}
 	bool IsEnabled() override {
 		return true;
@@ -1285,16 +1285,16 @@ class DebugLineWritePreferences : public IDebugLine {
 };
 
 class DebugLineReloadPreferences : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return RELOAD_PREFS.GetValue();
 	}
-	RString GetDisplayValue() override {
-		return RString();
+	std::string GetDisplayValue() override {
+		return std::string();
 	}
 	bool IsEnabled() override {
 		return true;
 	}
-	RString GetPageName() const override {
+	std::string GetPageName() const override {
 		return "Profiles";
 	}
 	void DoAndLog(std::string &sMessageOut) override {
@@ -1304,11 +1304,11 @@ class DebugLineReloadPreferences : public IDebugLine {
 };
 
 class DebugLineMenuTimer : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return MENU_TIMER.GetValue();
 	}
-	RString GetDisplayValue() override {
-		return RString();
+	std::string GetDisplayValue() override {
+		return std::string();
 	}
 	bool IsEnabled() override {
 		return PREFSMAN->m_bMenuTimer.Get();
@@ -1320,11 +1320,11 @@ class DebugLineMenuTimer : public IDebugLine {
 };
 
 class DebugLineFlushLog : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return FLUSH_LOG.GetValue();
 	}
-	RString GetDisplayValue() override {
-		return RString();
+	std::string GetDisplayValue() override {
+		return std::string();
 	}
 	bool IsEnabled() override {
 		return true;
@@ -1336,11 +1336,11 @@ class DebugLineFlushLog : public IDebugLine {
 };
 
 class DebugLinePullBackCamera : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return PULL_BACK_CAMERA.GetValue();
 	}
-	RString GetDisplayValue() override {
-		return RString();
+	std::string GetDisplayValue() override {
+		return std::string();
 	}
 	bool IsEnabled() override {
 		return g_fImageScaleDestination != 1;
@@ -1355,10 +1355,10 @@ class DebugLinePullBackCamera : public IDebugLine {
 };
 
 class DebugLineVolumeUp : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return VOLUME_UP.GetValue();
 	}
-	RString GetDisplayValue() override {
+	std::string GetDisplayValue() override {
 		return ssprintf("%.0f%%", GetPref()->Get() * 100);
 	}
 	bool IsEnabled() override {
@@ -1374,11 +1374,11 @@ class DebugLineVolumeUp : public IDebugLine {
 };
 
 class DebugLineVolumeDown : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return VOLUME_DOWN.GetValue();
 	}
-	RString GetDisplayValue() override {
-		return RString();
+	std::string GetDisplayValue() override {
+		return std::string();
 	}
 	bool IsEnabled() override {
 		return true;
@@ -1394,10 +1394,10 @@ class DebugLineVolumeDown : public IDebugLine {
 };
 
 class DebugLineVisualDelayUp : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return VISUAL_DELAY_UP.GetValue();
 	}
-	RString GetDisplayValue() override {
+	std::string GetDisplayValue() override {
 		return ssprintf("%.03f", GetPref()->Get());
 	}
 	bool IsEnabled() override {
@@ -1413,11 +1413,11 @@ class DebugLineVisualDelayUp : public IDebugLine {
 };
 
 class DebugLineVisualDelayDown : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return VISUAL_DELAY_DOWN.GetValue();
 	}
-	RString GetDisplayValue() override {
-		return RString();
+	std::string GetDisplayValue() override {
+		return std::string();
 	}
 	bool IsEnabled() override {
 		return true;
@@ -1433,11 +1433,11 @@ class DebugLineVisualDelayDown : public IDebugLine {
 };
 
 class DebugLineForceCrash : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return FORCE_CRASH.GetValue();
 	}
-	RString GetDisplayValue() override {
-		return RString();
+	std::string GetDisplayValue() override {
+		return std::string();
 	}
 	bool IsEnabled() override {
 		return false;
@@ -1448,10 +1448,10 @@ class DebugLineForceCrash : public IDebugLine {
 };
 
 class DebugLineUptime : public IDebugLine {
-	RString GetDisplayTitle() override {
+	std::string GetDisplayTitle() override {
 		return UPTIME.GetValue();
 	}
-	RString GetDisplayValue() override {
+	std::string GetDisplayValue() override {
 		return SecondsToMMSSMsMsMs(static_cast<float>(RageTimer::GetTimeSinceStart()));
 	}
 	bool IsEnabled() override {

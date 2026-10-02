@@ -105,7 +105,7 @@ bool NetworkManager::IsUrlAllowed(const std::string &url) {
 	}
 
 	std::string protocol;
-	RString host;
+	std::string host;
 	std::string path;
 	std::string query;
 	int port;
@@ -120,12 +120,14 @@ bool NetworkManager::IsUrlAllowed(const std::string &url) {
 		return false;
 	}
 
-	host.MakeLower();
+	if (!host.empty())
+		MakeLower(&host[0], host.size());
 
-	RString allowedHostsStr = this->httpAllowHosts.Get();
-	allowedHostsStr.MakeLower();
+	std::string allowedHostsStr = this->httpAllowHosts.Get();
+	if (!allowedHostsStr.empty())
+		MakeLower(&allowedHostsStr[0], allowedHostsStr.size());
 
-	std::vector<RString> allowedHosts;
+	std::vector<std::string> allowedHosts;
 	split(allowedHostsStr, ",", allowedHosts);
 
 	for (const auto &allowedHost : allowedHosts) {

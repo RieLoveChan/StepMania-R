@@ -24,7 +24,7 @@ class ScreenDebugOverlay : public Screen {
  private:
 	void UpdateText();
 
-	RString GetCurrentPageName() const {
+	std::string GetCurrentPageName() const {
 		return m_asPages[m_iCurrentPage];
 	}
 	std::vector<std::string> m_asPages;

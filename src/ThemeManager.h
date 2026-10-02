@@ -142,9 +142,9 @@ class ThemeManager {
 
  protected:
 	void LoadThemeMetrics(const std::string &sThemeName, const std::string &sLanguage_);
-	RString GetMetricRaw(const IniFile &ini, const std::string &sMetricsGroup, const std::string &sValueName);
+	std::string GetMetricRaw(const IniFile &ini, const std::string &sMetricsGroup, const std::string &sValueName);
 	bool GetMetricRawRecursive(
-	   const IniFile &ini, const std::string &sMetricsGroup, const std::string &sValueName, RString &sRet
+	   const IniFile &ini, const std::string &sMetricsGroup, const std::string &sValueName, std::string &sRet
 	);
 
 	bool GetPathInfoToAndFallback(
@@ -152,7 +152,7 @@ class ThemeManager {
 	);
 	bool GetPathInfoToRaw(
 	   PathInfo &out,
-	   const RString &sThemeName,
+	   const std::string &sThemeName,
 	   ElementCategory category,
 	   const std::string &sMetricsGroup,
 	   const std::string &sFile

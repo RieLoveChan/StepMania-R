@@ -159,9 +159,9 @@ class SongManager {
 	const std::vector<Course *> &GetPopularCourses(CourseType ct) const {
 		return m_pPopularCourses[ct];
 	}
-	Song *FindSong(RString sPath) const;
+	Song *FindSong(std::string sPath) const;
 	Song *FindSong(RString sGroup, RString sSong) const;
-	Course *FindCourse(RString sPath) const;
+	Course *FindCourse(std::string sPath) const;
 	Course *FindCourse(RString sGroup, RString sName) const;
 	/**
 	 * @brief Retrieve the number of songs in the game.
@@ -193,9 +193,9 @@ class SongManager {
 	void GetPreferredSortCourses(CourseType ct, std::vector<Course *> &AddTo, bool bIncludeAutogen) const;
 
 	void GetExtraStageInfo(bool bExtra2, const Style *s, Song *&pSongOut, Steps *&pStepsOut);
-	Song *GetSongFromDir(RString sDir) const;
-	Course *GetCourseFromPath(RString sPath) const; // path to .crs file, or path to song group dir
-	Course *GetCourseFromName(RString sName) const;
+	Song *GetSongFromDir(std::string sDir) const;
+	Course *GetCourseFromPath(std::string sPath) const; // path to .crs file, or path to song group dir
+	Course *GetCourseFromName(std::string sName) const;
 
 	void UpdatePopular();
 	void UpdateShuffled(); // re-shuffle songs and courses
