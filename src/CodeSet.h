@@ -15,7 +15,7 @@ class InputQueueCodeSet {
 
  private:
 	std::vector<InputQueueCode> m_aCodes;
-	std::vector<RString> m_asCodeNames;
+	std::vector<std::string> m_asCodeNames;
 };
 
 #endif

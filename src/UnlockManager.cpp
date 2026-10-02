@@ -435,12 +435,12 @@ std::string UnlockEntry::GetBackgroundFile() const {
 void UnlockManager::Load() {
 	LOG_TRACE(Log::Song, "UnlockManager::Load()");
 
-	std::vector<RString> asUnlockNames;
+	std::vector<std::string> asUnlockNames;
 	split(UNLOCK_NAMES, ",", asUnlockNames);
 
 	Lua *L = LUA->Get();
 	for (unsigned i = 0; i < asUnlockNames.size(); ++i) {
-		const RString &sUnlockName = asUnlockNames[i];
+		const std::string &sUnlockName = asUnlockNames[i];
 
 		LuaReference cmds = UNLOCK(sUnlockName);
 

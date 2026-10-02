@@ -25,7 +25,7 @@ ScoreDisplayBattle::ScoreDisplayBattle() {
 		this->AddChild(&m_ItemIcon[i]);
 	}
 
-	std::vector<RString> asIconPaths;
+	std::vector<std::string> asIconPaths;
 	GetDirListing(THEME->GetCurThemeDir() + "Graphic/ScoreDisplayBattle icon*", asIconPaths);
 	for (unsigned j = 0; j < asIconPaths.size(); j++)
 		m_TexturePreload.Load(asIconPaths[j]);

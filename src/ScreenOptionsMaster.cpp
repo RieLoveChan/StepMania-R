@@ -28,7 +28,7 @@
 REGISTER_SCREEN_CLASS(ScreenOptionsMaster);
 
 void ScreenOptionsMaster::Init() {
-	std::vector<RString> asLineNames;
+	std::vector<std::string> asLineNames;
 	split(LINE_NAMES, ",", asLineNames);
 	if (asLineNames.empty()) {
 		LuaHelpers::ReportScriptErrorFmt("\"%s:LineNames\" is empty.", m_sName.c_str());

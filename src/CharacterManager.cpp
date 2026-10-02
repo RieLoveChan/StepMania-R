@@ -25,7 +25,7 @@ CharacterManager::CharacterManager() {
 		SAFE_DELETE(m_pCharacters[i]);
 	m_pCharacters.clear();
 
-	std::vector<RString> as;
+	std::vector<std::string> as;
 	GetDirListing(CHARACTERS_DIR "*", as, true, true);
 	StripCvsAndSvn(as);
 	StripMacResourceForks(as);

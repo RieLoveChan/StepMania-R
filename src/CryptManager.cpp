@@ -263,10 +263,10 @@ bool CryptManager::VerifyFileWithFile(std::string sPath, std::string sSignatureF
 	if (VerifyFileWithFile(sPath, sSignatureFile, PUBLIC_KEY_PATH))
 		return true;
 
-	std::vector<RString> asKeys;
+	std::vector<std::string> asKeys;
 	GetDirListing(ALTERNATE_PUBLIC_KEY_DIR, asKeys, false, true);
 	for (unsigned i = 0; i < asKeys.size(); ++i) {
-		const RString &sKey = asKeys[i];
+		const std::string &sKey = asKeys[i];
 		LOG_TRACE(Log::General, "Trying alternate key \"%s\" ...", sKey.c_str());
 
 		if (VerifyFileWithFile(sPath, sSignatureFile, sKey))

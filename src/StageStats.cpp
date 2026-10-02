@@ -150,7 +150,7 @@ static HighScore FillInHighScore(
 	hs.SetStageAward(pss.m_StageAward);
 	hs.SetPeakComboAward(pss.m_PeakComboAward);
 
-	std::vector<RString> asModifiers;
+	std::vector<std::string> asModifiers;
 	{
 		RString sPlayerOptions = ps.m_PlayerOptions.GetStage().GetString();
 		if (!sPlayerOptions.empty())

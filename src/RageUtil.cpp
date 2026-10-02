@@ -190,7 +190,7 @@ bool HexToBinary(const std::string &s, std::string &sOut) {
 }
 
 float HHMMSSToSeconds(const std::string &sHHMMSS) {
-	std::vector<RString> arrayBits;
+	std::vector<std::string> arrayBits;
 	split(sHHMMSS, ":", arrayBits, false);
 
 	while (arrayBits.size() < 3)
@@ -898,7 +898,7 @@ void splitpath(const std::string &sPath, std::string &sDir, std::string &sFilena
 }
 
 RString custom_songify_path(RString const &path) {
-	std::vector<RString> parts;
+	std::vector<std::string> parts;
 	split(path, "/", parts, false);
 	if (parts.size() < 2) {
 		return CUSTOM_SONG_PATH + path;
@@ -1093,7 +1093,7 @@ bool DirectoryIsEmpty(const std::string &sDir) {
 	if (!DoesFileExist(sDir))
 		return true;
 
-	std::vector<RString> asFileNames;
+	std::vector<std::string> asFileNames;
 	GetDirListing(sDir, asFileNames);
 	return asFileNames.empty();
 }
@@ -1301,7 +1301,7 @@ RString DerefRedir(const std::string &_path) {
 
 		sPath2 += "*";
 
-		std::vector<RString> matches;
+		std::vector<std::string> matches;
 		GetDirListing(sPath2, matches, false, true);
 
 		if (matches.empty())

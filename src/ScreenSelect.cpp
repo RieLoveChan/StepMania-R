@@ -70,7 +70,7 @@ void ScreenSelect::Init() {
 		// Each element in the list is a choice name. This level of indirection
 		// makes it easier to add or remove items without having to change a
 		// bunch of indices.
-		std::vector<RString> asChoiceNames;
+		std::vector<std::string> asChoiceNames;
 		split(CHOICE_NAMES, ",", asChoiceNames, true);
 
 		for (unsigned c = 0; c < asChoiceNames.size(); c++) {

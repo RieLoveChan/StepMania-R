@@ -61,26 +61,29 @@ static void InstallSmzip(const RString &sZipFile, PlayAfterLaunchInfo &out) {
 	if (!FILEMAN->Mount("zip", sZipFile, TEMP_ZIP_MOUNT_POINT))
 		FAIL_M("Failed to mount " + sZipFile);
 
-	std::vector<RString> vsFiles;
+	std::vector<std::string> vsFiles;
 	{
-		std::vector<RString> vsRawFiles;
+		std::vector<std::string> vsRawFiles;
 		GetDirListingRecursive(TEMP_ZIP_MOUNT_POINT, "*", vsRawFiles);
 
-		std::vector<RString> vsPrettyFiles;
-		for (RString const &s : vsRawFiles) {
+		std::vector<std::string> vsPrettyFiles;
+		for (std::string const &s : vsRawFiles) {
 			if (GetExtension(s).EqualsNoCase("ctl"))
 				continue;
 
 			vsFiles.push_back(s);
 
-			RString s2 = s.Right(static_cast<int>(s.length() - TEMP_ZIP_MOUNT_POINT.length()));
+			// Same as CStdStr::Right(s.length() - mount.length()), with the count clamped to [0, size].
+			const std::size_t iKeep =
+			   s.length() > TEMP_ZIP_MOUNT_POINT.length() ? s.length() - TEMP_ZIP_MOUNT_POINT.length() : 0;
+			std::string s2 = s.substr(s.length() - iKeep);
 			vsPrettyFiles.push_back(s2);
 		}
 		sort(vsPrettyFiles.begin(), vsPrettyFiles.end());
 	}
 
 	RString sResult = "Success installing " + sZipFile;
-	for (RString &tmpFile : vsFiles) {
+	for (std::string &tmpFile : vsFiles) {
 		RString sDestFile = tmpFile;
 		sDestFile = sDestFile.Right(static_cast<int>(sDestFile.length() - TEMP_ZIP_MOUNT_POINT.length()));
 

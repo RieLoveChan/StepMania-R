@@ -645,7 +645,7 @@ class OptionRowHandlerListCharacters : public OptionRowHandlerList {
 		m_Default.m_pCharacter = CHARMAN->GetDefaultCharacter();
 
 		{
-			m_Def.m_vsChoices.push_back(OFF);
+			m_Def.m_vsChoices.push_back(OFF.GetValue());
 			GameCommand mc;
 			mc.m_pCharacter = nullptr;
 			m_aListEntries.push_back(mc);
@@ -961,7 +961,7 @@ class OptionRowHandlerLua : public OptionRowHandler {
 			// `key' is at index -2 and `value' at index -1
 			const char *pValue = lua_tostring(L, -1);
 			// LOG->Trace( "choice: '%s'", pValue);
-			m_Def.m_vsChoices.push_back(pValue);
+			m_Def.m_vsChoices.push_back(pValue != nullptr ? pValue : "");
 			lua_pop(L, 1); // removes `value'; keeps `key' for next iteration
 		}
 		lua_pop(L, 1); // pop choices table
@@ -1233,7 +1233,7 @@ class OptionRowHandlerLua : public OptionRowHandler {
 					// `key' is at index -2 and `value' at index -1
 					const char *pValue = lua_tostring(L, -1);
 					// LOG->Trace( "choice: '%s'", pValue);
-					m_Def.m_vsChoices.push_back(pValue);
+					m_Def.m_vsChoices.push_back(pValue != nullptr ? pValue : "");
 					lua_pop(L, 1); // removes `value'; keeps `key' for next iteration
 				}
 			}
@@ -1555,7 +1555,7 @@ OptionRowHandler *OptionRowHandlerUtil::MakeSimple(const MenuRowDef &mr) {
 	pHand->m_Def.m_bExportOnChange = false; // true;
 
 	// MISTER CHOICES!
-	pHand->m_Def.m_vsChoices = mr.choices;
+	pHand->m_Def.m_vsChoices.assign(mr.choices.begin(), mr.choices.end());
 
 	// Each row must have at least one choice.
 	if (pHand->m_Def.m_vsChoices.empty())
@@ -1564,7 +1564,7 @@ OptionRowHandler *OptionRowHandlerUtil::MakeSimple(const MenuRowDef &mr) {
 	pHand->m_Def.m_bAllowThemeTitle = mr.bThemeTitle;
 	pHand->m_Def.m_bAllowThemeItems = mr.bThemeItems;
 
-	for (RString &c : pHand->m_Def.m_vsChoices)
+	for (std::string &c : pHand->m_Def.m_vsChoices)
 		FontCharAliases::ReplaceMarkers(c); // Allow special characters
 
 	return pHand;

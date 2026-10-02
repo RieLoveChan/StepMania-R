@@ -47,7 +47,7 @@ void ScreenOptionsEditProfile::BeginScreen() {
 		for (Character const *c : vpCharacters)
 			def.m_vsChoices.push_back(c->GetDisplayName());
 		if (def.m_vsChoices.empty())
-			def.m_vsChoices.push_back(RString());
+			def.m_vsChoices.push_back(std::string());
 	}
 
 	InitMenu(vHands);

@@ -1092,11 +1092,11 @@ void GetDirListing(const std::string &sPath, std::vector<std::string> &AddTo, bo
 	AddTo.assign(vsTmp.begin(), vsTmp.end());
 }
 
-void GetDirListingRecursive(const RString &sDir, const RString &sMatch, std::vector<RString> &AddTo) {
-	ASSERT(sDir.Right(1) == "/");
-	std::vector<RString> vsFiles;
+void GetDirListingRecursive(const std::string &sDir, const std::string &sMatch, std::vector<std::string> &AddTo) {
+	ASSERT(!sDir.empty() && sDir.back() == '/');
+	std::vector<std::string> vsFiles;
 	GetDirListing(sDir + sMatch, vsFiles, false, true);
-	std::vector<RString> vsDirs;
+	std::vector<std::string> vsDirs;
 	GetDirListing(sDir + "*", vsDirs, true, true);
 	for (int i = 0; i < (int)vsDirs.size(); i++) {
 		GetDirListing(vsDirs[i] + "/" + sMatch, vsFiles, false, true);

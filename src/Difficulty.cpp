@@ -101,9 +101,9 @@ RString GetCustomDifficulty(StepsType st, Difficulty dc, CourseType ct) {
 		return "Edit";
 	}
 	// OPTIMIZATION OPPORTUNITY: cache these metrics and cache the splitting
-	std::vector<RString> vsNames;
-	split(NAMES, ",", vsNames);
-	for (RString const &sName : vsNames) {
+	std::vector<std::string> vsNames;
+	split(NAMES.GetValue(), ",", vsNames);
+	for (std::string const &sName : vsNames) {
 		ThemeMetric<StepsType> STEPS_TYPE("CustomDifficulty", sName + "StepsType");
 		if (STEPS_TYPE == StepsType_Invalid || st == STEPS_TYPE) // match
 		{

@@ -194,7 +194,7 @@ static int GetLuaStack(lua_State *L) {
 		// The function is now on the top of the stack.
 		const char *file = ar.source[0] == '@' ? ar.source + 1 : ar.short_src;
 		const char *name;
-		std::vector<RString> vArgs;
+		std::vector<std::string> vArgs;
 
 		if (!strcmp(ar.what, "C")) {
 			for (int i = 1; i <= ar.nups && (name = lua_getupvalue(L, -1, i)) != nullptr; ++i) {
@@ -541,7 +541,7 @@ XNode *LuaHelpers::GetLuaInformation() {
 	XNode *pEnumsNode = pLuaNode->AppendChild("Enums");
 	XNode *pConstantsNode = pLuaNode->AppendChild("Constants");
 
-	std::vector<RString> vFunctions;
+	std::vector<std::string> vFunctions;
 	std::map<std::string, LClass> mClasses;
 	std::map<std::string, std::vector<std::string>> mNamespaces;
 	std::map<std::string, std::string> mSingletons;
@@ -648,7 +648,7 @@ XNode *LuaHelpers::GetLuaInformation() {
 
 	/* Globals */
 	sort(vFunctions.begin(), vFunctions.end());
-	for (RString const &func : vFunctions) {
+	for (std::string const &func : vFunctions) {
 		XNode *pFunctionNode = pGlobalsNode->AppendChild("Function");
 		pFunctionNode->AppendAttr("name", func);
 	}

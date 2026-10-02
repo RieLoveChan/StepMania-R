@@ -74,7 +74,7 @@ XToString(RagePixelFormat);
 static LocalizedString SETVIDEOMODE_FAILED("RageDisplay", "SetVideoMode failed:");
 RString RageDisplay::SetVideoMode(VideoModeParams p, bool &bNeedReloadTextures) {
 	RString err;
-	std::vector<RString> vs;
+	std::vector<std::string> vs;
 
 	if ((err = this->TryVideoMode(p, bNeedReloadTextures)).empty())
 		return RString();

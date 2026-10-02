@@ -37,7 +37,7 @@ struct NoteSkinData {
 	IniFile metrics;
 
 	// When looking for an element, search these dirs from head to tail.
-	std::vector<RString> vsDirSearchOrder;
+	std::vector<std::string> vsDirSearchOrder;
 
 	LuaReference m_Loader;
 };
@@ -159,7 +159,7 @@ bool NoteSkinManager::LoadNoteSkinDataRecursive(const std::string &sNoteSkinName
 	}
 
 	LuaReference refScript;
-	for (std::vector<RString>::reverse_iterator dir = data_out.vsDirSearchOrder.rbegin();
+	for (std::vector<std::string>::reverse_iterator dir = data_out.vsDirSearchOrder.rbegin();
 	     dir != data_out.vsDirSearchOrder.rend();
 	     ++dir) {
 		RString sFile = *dir + "NoteSkin.lua";
@@ -315,7 +315,7 @@ std::string NoteSkinManager::GetPath(const std::string &sButtonName, const std::
 	const NoteSkinData &data = iter->second;
 
 	RString sPath; // fill this in below
-	for (RString const &directory : data.vsDirSearchOrder) {
+	for (std::string const &directory : data.vsDirSearchOrder) {
 		if (sButtonName.empty())
 			sPath = GetPathFromDirAndFile(directory, sElement);
 		else
@@ -325,7 +325,7 @@ std::string NoteSkinManager::GetPath(const std::string &sButtonName, const std::
 	}
 
 	if (sPath.empty()) {
-		for (RString const &directory : data.vsDirSearchOrder) {
+		for (std::string const &directory : data.vsDirSearchOrder) {
 			if (!sButtonName.empty())
 				sPath = GetPathFromDirAndFile(directory, "Fallback " + sElement);
 			if (!sPath.empty())
@@ -337,7 +337,7 @@ std::string NoteSkinManager::GetPath(const std::string &sButtonName, const std::
 		RString sPaths;
 
 		// TODO: Find a more elegant way of doing this.
-		for (RString const &dir : data.vsDirSearchOrder) {
+		for (std::string const &dir : data.vsDirSearchOrder) {
 			if (!sPaths.empty())
 				sPaths += ", ";
 
@@ -353,7 +353,7 @@ std::string NoteSkinManager::GetPath(const std::string &sButtonName, const std::
 
 		switch (LuaHelpers::ReportScriptError(message, "NOTESKIN_ERROR", true)) {
 		case Dialog::retry:
-			for (RString const &dir : data.vsDirSearchOrder)
+			for (std::string const &dir : data.vsDirSearchOrder)
 				FILEMAN->FlushDirCache(dir);
 			g_PathCache.clear();
 			return GetPath(sButtonName, sElement);
@@ -379,7 +379,7 @@ std::string NoteSkinManager::GetPath(const std::string &sButtonName, const std::
 		GetFileContents(sPath, sNewFileName, true);
 		RString sRealPath;
 
-		for (RString const &directory : data.vsDirSearchOrder) {
+		for (std::string const &directory : data.vsDirSearchOrder) {
 			sRealPath = GetPathFromDirAndFile(directory, sNewFileName);
 			if (!sRealPath.empty())
 				break; // done searching
@@ -395,7 +395,7 @@ std::string NoteSkinManager::GetPath(const std::string &sButtonName, const std::
 
 			switch (LuaHelpers::ReportScriptError(message, "NOTESKIN_ERROR", true)) {
 			case Dialog::retry:
-				for (RString const &dir : data.vsDirSearchOrder)
+				for (std::string const &dir : data.vsDirSearchOrder)
 					FILEMAN->FlushDirCache(dir);
 				g_PathCache.clear();
 				return GetPath(sButtonName, sElement);

@@ -148,7 +148,7 @@ std::string RageInput::GetDisplayDevicesString() const {
 	std::vector<InputDeviceInfo> vDevices;
 	GetDevicesAndDescriptions(vDevices);
 
-	std::vector<RString> vs;
+	std::vector<std::string> vs;
 	for (unsigned i = 0; i < vDevices.size(); ++i) {
 		const RString &sDescription = vDevices[i].sDesc;
 		InputDevice id = vDevices[i].id;

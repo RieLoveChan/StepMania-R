@@ -101,8 +101,8 @@ void ScreenRanking::Init() {
 		this->AddChild(&m_textCourseTitle);
 		LOAD_ALL_COMMANDS(m_textCourseTitle);
 
-		std::vector<RString> asCoursePaths;
-		split(COURSES_TO_SHOW, ",", asCoursePaths, true);
+		std::vector<std::string> asCoursePaths;
+		split(COURSES_TO_SHOW.GetValue(), ",", asCoursePaths, true);
 		for (unsigned i = 0; i < STEPS_TYPES_TO_SHOW.GetValue().size(); i++) {
 			for (unsigned c = 0; c < asCoursePaths.size(); c++) {
 				PageToShow pts;

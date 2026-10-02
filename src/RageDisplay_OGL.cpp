@@ -269,7 +269,7 @@ RString GetInfoLog(GLhandleARB h) {
 	return sRet;
 }
 
-GLhandleARB CompileShader(GLenum ShaderType, RString sFile, std::vector<RString> asDefines) {
+GLhandleARB CompileShader(GLenum ShaderType, std::string sFile, std::vector<std::string> asDefines) {
 	/* XXX: This would not be necessary if it wasn't for the special case for Cel. */
 	if (ShaderType == GL_FRAGMENT_SHADER_ARB && !glewIsSupported("GL_VERSION_2_0")) {
 		LOG_WARN(Log::Gl, "Fragment shaders not supported by driver. Some effects will not be available.");
@@ -294,7 +294,7 @@ GLhandleARB CompileShader(GLenum ShaderType, RString sFile, std::vector<RString>
 	GLhandleARB hShader = glCreateShaderObjectARB(ShaderType);
 	std::vector<const GLcharARB *> apData;
 	std::vector<GLint> aiLength;
-	for (RString &s : asDefines) {
+	for (std::string &s : asDefines) {
 		s = ssprintf("#define %s\n", s.c_str());
 		apData.push_back(s.data());
 		aiLength.push_back(static_cast<GLint>(s.size()));
@@ -324,7 +324,7 @@ GLhandleARB CompileShader(GLenum ShaderType, RString sFile, std::vector<RString>
 	return hShader;
 }
 
-GLhandleARB LoadShader(GLenum ShaderType, RString sFile, std::vector<RString> asDefines) {
+GLhandleARB LoadShader(GLenum ShaderType, std::string sFile, std::vector<std::string> asDefines) {
 	/* Vertex shaders are supported by more hardware than fragment shaders.
 	 * If this causes any trouble I will have to up the requirement for both
 	 * of them to at least GL 2.0. Regardless we need basic GLSL support.
@@ -395,7 +395,7 @@ void InitShaders() {
 	// xxx: replace this with a ShaderManager or something that reads in
 	// the shaders and determines shader type by file extension. -aj
 	// argh shaders in stepmania are painful -colby
-	std::vector<RString> asDefines;
+	std::vector<std::string> asDefines;
 
 	// used for scrolling textures (I think)
 	g_bTextureMatrixShader =

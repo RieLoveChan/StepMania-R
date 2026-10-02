@@ -963,7 +963,7 @@ void NoteField::DrawPrimitives() {
 					}
 
 					if (IS_ON_SCREEN(fLowestBeat)) {
-						std::vector<RString> vsBGChanges;
+						std::vector<std::string> vsBGChanges;
 						for (BackgroundLayer const &bl : viLowestIndex) {
 							ASSERT(iter[bl] != GAMESTATE->m_pCurSong->GetBackgroundChanges(bl).end());
 							const BackgroundChange &change = *iter[bl];

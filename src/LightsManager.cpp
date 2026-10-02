@@ -55,10 +55,10 @@ LuaXType(LightsMode);
 static void GetUsedGameInputs(std::vector<GameInput> &vGameInputsOut) {
 	vGameInputsOut.clear();
 
-	std::vector<RString> asGameButtons;
+	std::vector<std::string> asGameButtons;
 	split(GAME_BUTTONS_TO_SHOW.GetValue(), ",", asGameButtons);
 	FOREACH_ENUM(GameController, gc) {
-		for (RString const &button : asGameButtons) {
+		for (std::string const &button : asGameButtons) {
 			GameButton gb = StringToGameButton(INPUTMAPPER->GetInputScheme(), button);
 			if (gb != GameButton_Invalid) {
 				GameInput gi = GameInput(gc, gb);

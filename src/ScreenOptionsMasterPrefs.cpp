@@ -155,17 +155,16 @@ static void MoveNop(int &iSel, bool bToSel, const ConfOption * /* pConfOption */
 
 // TODO: Write GenerateValueList() function that can use ints and floats. -aj
 
-static void GameChoices(std::vector<RString> &out) {
+static void GameChoices(std::vector<std::string> &out) {
 	std::vector<const Game *> aGames;
 	GAMEMAN->GetEnabledGames(aGames);
 	for (Game const *g : aGames) {
-		RString sGameName = g->m_szName;
-		out.push_back(sGameName);
+		out.push_back(std::string(g->m_szName));
 	}
 }
 
 static void GameSel(int &sel, bool ToSel, const ConfOption *pConfOption) {
-	std::vector<RString> choices;
+	std::vector<std::string> choices;
 	pConfOption->MakeOptionsList(choices);
 
 	if (ToSel) {
@@ -173,7 +172,7 @@ static void GameSel(int &sel, bool ToSel, const ConfOption *pConfOption) {
 
 		sel = 0;
 		for (unsigned i = 0; i < choices.size(); ++i)
-			if (!strcasecmp(choices[i], sCurGameName))
+			if (!strcasecmp(choices[i].c_str(), sCurGameName))
 				sel = i;
 	}
 	else {
@@ -183,7 +182,7 @@ static void GameSel(int &sel, bool ToSel, const ConfOption *pConfOption) {
 	}
 }
 
-static void LanguageChoices(std::vector<RString> &out) {
+static void LanguageChoices(std::vector<std::string> &out) {
 	std::vector<std::string> vs;
 	THEME->GetLanguages(vs);
 	SortRStringArray(vs, true);
@@ -233,7 +232,7 @@ static void Language(int &sel, bool ToSel, const ConfOption * /* pConfOption */)
 	}
 }
 
-static void ThemeChoices(std::vector<RString> &out) {
+static void ThemeChoices(std::vector<std::string> &out) {
 	// out is always empty here (ConfOption::UpdateAvailableOptions clears it first).
 	std::vector<std::string> vsThemeNames;
 	THEME->GetSelectableThemeNames(vsThemeNames);
@@ -248,7 +247,7 @@ static void cache_display_specs() {
 	}
 }
 
-static void DisplayResolutionChoices(std::vector<RString> &out) {
+static void DisplayResolutionChoices(std::vector<std::string> &out) {
 	cache_display_specs();
 	for (DisplaySpec const &iter : display_specs) {
 		if (iter.currentMode() != nullptr) {
@@ -259,7 +258,7 @@ static void DisplayResolutionChoices(std::vector<RString> &out) {
 }
 
 static void RequestedTheme(int &sel, bool ToSel, const ConfOption *pConfOption) {
-	std::vector<RString> choices;
+	std::vector<std::string> choices;
 	pConfOption->MakeOptionsList(choices);
 
 	std::vector<std::string> vsThemeNames;
@@ -278,32 +277,32 @@ static void RequestedTheme(int &sel, bool ToSel, const ConfOption *pConfOption) 
 }
 
 static LocalizedString OFF("ScreenOptionsMasterPrefs", "Off");
-static void AnnouncerChoices(std::vector<RString> &out) {
+static void AnnouncerChoices(std::vector<std::string> &out) {
 	std::vector<std::string> vsAnnouncers;
 	ANNOUNCER->GetAnnouncerNames(vsAnnouncers);
 	for (std::string const &s : vsAnnouncers)
 		out.push_back(s);
-	out.insert(out.begin(), OFF);
+	out.insert(out.begin(), OFF.GetValue());
 }
 
 static void Announcer(int &sel, bool ToSel, const ConfOption *pConfOption) {
-	std::vector<RString> choices;
+	std::vector<std::string> choices;
 	pConfOption->MakeOptionsList(choices);
 
 	if (ToSel) {
 		sel = 0;
 		for (unsigned i = 1; i < choices.size(); i++)
-			if (!strcasecmp(choices[i], ANNOUNCER->GetCurAnnouncerName().c_str()))
+			if (!strcasecmp(choices[i].c_str(), ANNOUNCER->GetCurAnnouncerName().c_str()))
 				sel = i;
 	}
 	else {
-		const RString sNewAnnouncer = sel ? choices[sel] : RString("");
+		const std::string sNewAnnouncer = sel ? choices[sel] : std::string("");
 		ANNOUNCER->SwitchAnnouncer(sNewAnnouncer);
 		PREFSMAN->m_sAnnouncer.Set(sNewAnnouncer);
 	}
 }
 
-static void DefaultNoteSkinChoices(std::vector<RString> &out) {
+static void DefaultNoteSkinChoices(std::vector<std::string> &out) {
 	std::vector<std::string> vsNoteSkins;
 	NOTESKIN->GetNoteSkinNames(vsNoteSkins);
 	for (std::string const &s : vsNoteSkins)
@@ -311,7 +310,7 @@ static void DefaultNoteSkinChoices(std::vector<RString> &out) {
 }
 
 static void DefaultNoteSkin(int &sel, bool ToSel, const ConfOption *pConfOption) {
-	std::vector<RString> choices;
+	std::vector<std::string> choices;
 	pConfOption->MakeOptionsList(choices);
 
 	if (ToSel) {
@@ -319,7 +318,7 @@ static void DefaultNoteSkin(int &sel, bool ToSel, const ConfOption *pConfOption)
 		po.FromString(PREFSMAN->m_sDefaultModifiers.Get());
 		sel = 0;
 		for (unsigned i = 0; i < choices.size(); i++)
-			if (!strcasecmp(choices[i], po.m_sNoteSkin))
+			if (!strcasecmp(choices[i].c_str(), po.m_sNoteSkin))
 				sel = i;
 	}
 	else {
@@ -331,7 +330,7 @@ static void DefaultNoteSkin(int &sel, bool ToSel, const ConfOption *pConfOption)
 	}
 }
 
-static void DefaultFailChoices(std::vector<RString> &out) {
+static void DefaultFailChoices(std::vector<std::string> &out) {
 	out.push_back("Immediate");
 	out.push_back("ImmediateContinue");
 	out.push_back("EndOfSong");
@@ -1136,7 +1135,7 @@ void ConfOption::UpdateAvailableOptions() {
 	}
 }
 
-void ConfOption::MakeOptionsList(std::vector<RString> &out) const {
+void ConfOption::MakeOptionsList(std::vector<std::string> &out) const {
 	out = names;
 }
 

@@ -32,8 +32,9 @@ std::string Command::GetOriginalCommandString() const {
 	return join(",", m_vsArgs);
 }
 
-static void
-SplitWithQuotes(const RString sSource, const char Delimitor, std::vector<RString> &asOut, const bool bIgnoreEmpty) {
+static void SplitWithQuotes(
+   const std::string sSource, const char Delimitor, std::vector<std::string> &asOut, const bool bIgnoreEmpty
+) {
 	/* Short-circuit if the source is empty; we want to return an empty vector if
 	 * the string is empty, even if bIgnoreEmpty is true. */
 	if (sSource.empty())
@@ -64,7 +65,7 @@ SplitWithQuotes(const RString sSource, const char Delimitor, std::vector<RString
 			if (startpos == 0 && pos - startpos == sSource.size())
 				asOut.push_back(sSource);
 			else {
-				const RString AddCString = sSource.substr(startpos, pos - startpos);
+				const std::string AddCString = sSource.substr(startpos, pos - startpos);
 				asOut.push_back(AddCString);
 			}
 		}
@@ -80,7 +81,7 @@ std::string Commands::GetOriginalCommandString() const {
 }
 
 void ParseCommands(const std::string &sCommands, Commands &vCommandsOut, bool bLegacy) {
-	std::vector<RString> vsCommands;
+	std::vector<std::string> vsCommands;
 	if (bLegacy)
 		split(sCommands, ";", vsCommands, true);
 	else

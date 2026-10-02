@@ -71,7 +71,7 @@ const int MAX_BOTTOM_RANGE = 10;
 // #define INCLUDE_BEGINNER_STEPS	THEME->GetMetricB( "Course","IncludeBeginnerSteps" );
 
 std::string CourseEntry::GetTextDescription() const {
-	std::vector<RString> vsEntryDescription;
+	std::vector<std::string> vsEntryDescription;
 	Song *pSong = songID.ToSong();
 	if (pSong)
 		vsEntryDescription.push_back(pSong->GetTranslitFullTitle());
@@ -108,8 +108,7 @@ std::string CourseEntry::GetTextDescription() const {
 	if (fGainSeconds != 0)
 		vsEntryDescription.push_back(ssprintf("Low meter: %.0f", fGainSeconds));
 
-	RString s = join(",", vsEntryDescription);
-	return s;
+	return join(",", vsEntryDescription);
 }
 
 int CourseEntry::GetNumModChanges() const {
@@ -1092,12 +1091,12 @@ void Course::UpdateCourseStats(StepsType st) {
 }
 
 bool Course::IsRanking() const {
-	std::vector<RString> rankingsongs;
+	std::vector<std::string> rankingsongs;
 
 	split(THEME->GetMetric("ScreenRanking", "CoursesToShow"), ",", rankingsongs);
 
 	for (unsigned i = 0; i < rankingsongs.size(); i++)
-		if (rankingsongs[i].EqualsNoCase(m_sPath))
+		if (StdString::ssicmp(rankingsongs[i].c_str(), m_sPath.c_str()) == 0)
 			return true;
 
 	return false;
@@ -1154,10 +1153,10 @@ bool Course::Matches(RString sGroup, RString sCourse) const {
 	RString sFile = m_sPath;
 	if (!sFile.empty()) {
 		sFile.Replace("\\", "/");
-		std::vector<RString> bits;
+		std::vector<std::string> bits;
 		split(sFile, "/", bits);
-		const RString &sLastBit = bits[bits.size() - 1];
-		if (sCourse.EqualsNoCase(sLastBit))
+		const std::string &sLastBit = bits[bits.size() - 1];
+		if (sCourse.EqualsNoCase(sLastBit.c_str()))
 			return true;
 	}
 

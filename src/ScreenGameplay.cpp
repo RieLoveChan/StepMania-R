@@ -1282,7 +1282,7 @@ void ScreenGameplay::LoadLights() {
 
 	// No explicit lights.  Create autogen lights.
 	RString sDifficulty = PREFSMAN->m_sLightsStepsDifficulty;
-	std::vector<RString> asDifficulties;
+	std::vector<std::string> asDifficulties;
 	split(sDifficulty, ",", asDifficulties);
 
 	// Always use the steps from the primary steps type so that lights are consistent over single and double styles.
@@ -1290,7 +1290,7 @@ void ScreenGameplay::LoadLights() {
 
 	Difficulty d1 = Difficulty_Invalid;
 	if (!asDifficulties.empty()) {
-		if (asDifficulties[0].CompareNoCase("selected") == 0) {
+		if (StdString::ssicmp(asDifficulties[0].c_str(), "selected") == 0) {
 			// Base lights off current difficulty of active player
 			// Can be either P1 or P2 if they're individual or P1 if both are active
 			FOREACH_EnabledPlayerNumberInfo(m_vPlayerInfo, pi) {

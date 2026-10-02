@@ -15,7 +15,7 @@ void InputQueueCodeSet::Load(const std::string &sType) {
 	split(CODE_NAMES, ",", m_asCodeNames, true);
 
 	for (unsigned c = 0; c < m_asCodeNames.size(); c++) {
-		std::vector<RString> asBits;
+		std::vector<std::string> asBits;
 		split(m_asCodeNames[c], "=", asBits, true);
 		RString sCodeName = asBits[0];
 		if (asBits.size() > 1)

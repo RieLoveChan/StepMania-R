@@ -29,10 +29,10 @@ void ScreenDemonstration::Init() {
 
 	// Choose a Style
 	{
-		std::vector<RString> v;
+		std::vector<std::string> v;
 		split(ALLOW_STYLE_TYPES, ",", v);
 		std::vector<StyleType> vStyleTypeAllow;
-		for (RString const &s : v) {
+		for (std::string const &s : v) {
 			StyleType st = StringToStyleType(s);
 			ASSERT(st != StyleType_Invalid);
 			vStyleTypeAllow.push_back(st);

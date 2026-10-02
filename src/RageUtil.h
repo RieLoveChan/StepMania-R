@@ -633,7 +633,7 @@ void GetDirListing(
    const std::string &sPath, std::vector<std::string> &AddTo, bool bOnlyDirs = false, bool bReturnPathToo = false
 );
 void GetDirListingRecursive(
-   const RString &sDir, const RString &sMatch, std::vector<RString> &AddTo
+   const std::string &sDir, const std::string &sMatch, std::vector<std::string> &AddTo
 ); /* returns path too */
 void GetDirListingRecursive(
    RageFileDriver *prfd, const RString &sDir, const RString &sMatch, std::vector<RString> &AddTo
