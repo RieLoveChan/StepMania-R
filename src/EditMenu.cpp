@@ -576,9 +576,9 @@ void EditMenu::OnRowValueChanged(EditMenuRow row) {
 			m_textLabel[ROW_SOURCE_STEPS].SetVisible(GetSelectedSteps() ? false : true);
 			m_textValue[ROW_SOURCE_STEPS].SetVisible(GetSelectedSteps() ? false : true);
 			{
-				RString s;
+				std::string s;
 				if (GetSelectedSourceDifficulty() == Difficulty_Invalid) {
-					s = BLANK;
+					s = BLANK.GetValue();
 				}
 				else {
 					s = CustomDifficultyToLocalizedString(

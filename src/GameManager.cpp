@@ -321,8 +321,8 @@ const StepsTypeInfo &GameManager::GetStepsTypeInfo(StepsType st) {
 	return g_StepsTypeInfos[st];
 }
 
-StepsType GameManager::StringToStepsType(RString sStepsType) {
-	sStepsType.MakeLower();
+StepsType GameManager::StringToStepsType(std::string sStepsType) {
+	MakeLower(&sStepsType[0], sStepsType.size());
 
 	for (int i = 0; i < NUM_StepsType; i++)
 		if (g_StepsTypeInfos[i].szName == sStepsType)
@@ -340,18 +340,18 @@ std::string GameManager::StyleToLocalizedString(const Style *style) {
 		return s;
 }
 
-const Game *GameManager::StringToGame(RString sGame) {
+const Game *GameManager::StringToGame(const std::string &sGame) {
 	for (std::size_t i = 0; i < g_Games.size(); ++i)
-		if (!sGame.CompareNoCase(g_Games[i]->m_szName))
+		if (StdString::ssicmp(sGame.c_str(), g_Games[i]->m_szName) == 0)
 			return g_Games[i];
 
 	return nullptr;
 }
 
-const Style *GameManager::GameAndStringToStyle(const Game *game, RString sStyle) {
+const Style *GameManager::GameAndStringToStyle(const Game *game, const std::string &sStyle) {
 	for (int s = 0; game->m_apStyles[s]; ++s) {
 		const Style *style = game->m_apStyles[s];
-		if (sStyle.CompareNoCase(style->m_szName) == 0)
+		if (StdString::ssicmp(sStyle.c_str(), style->m_szName) == 0)
 			return style;
 	}
 
@@ -388,7 +388,7 @@ class LunaGameManager : public Luna<GameManager> {
 		return 1;
 	}
 	static int GetStylesForGame(T *p, lua_State *L) {
-		RString game_name = SArg(1);
+		std::string game_name = SArg(1);
 		const Game *pGame = p->StringToGame(game_name);
 		if (!pGame) {
 			luaL_error(L, "GetStylesForGame: Invalid Game: '%s'", game_name.c_str());
@@ -414,7 +414,7 @@ class LunaGameManager : public Luna<GameManager> {
 	}
 
 	static int SetGame(T *p, lua_State *L) {
-		RString game_name = SArg(1);
+		std::string game_name = SArg(1);
 		const Game *pGame = p->StringToGame(game_name);
 		if (!pGame) {
 			luaL_error(L, "SetGame: Invalid Game: '%s'", game_name.c_str());

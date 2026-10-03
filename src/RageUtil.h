@@ -571,8 +571,8 @@ class Regex {
 	std::string m_sPattern;
 };
 
-void ReplaceEntityText(std::string &sText, const std::map<RString, RString> &m);
-void ReplaceEntityText(std::string &sText, const std::map<char, RString> &m);
+void ReplaceEntityText(std::string &sText, const std::map<std::string, std::string> &m);
+void ReplaceEntityText(std::string &sText, const std::map<char, std::string> &m);
 void Replace_Unicode_Markers(std::string &Text);
 std::string WcharDisplayText(wchar_t c);
 

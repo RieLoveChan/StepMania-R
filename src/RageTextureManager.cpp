@@ -237,7 +237,7 @@ void RageTextureManager::GarbageCollect(GCType type) {
 		std::map<RageTextureID, RageTexture *>::iterator j = i;
 		i++;
 
-		RString sPath = j->first.filename;
+		std::string sPath = j->first.filename;
 		RageTexture *t = j->second;
 
 		if (t->m_iRefCount)
@@ -320,7 +320,7 @@ void RageTextureManager::DiagnosticOutput() const {
 		const RageTexture *pTex = i.second;
 
 		RString sDiags = DISPLAY->GetTextureDiagnostics(pTex->GetTexHandle());
-		RString sStr = ssprintf("%3ix%3i (%2i)", pTex->GetTextureHeight(), pTex->GetTextureWidth(), pTex->m_iRefCount);
+		std::string sStr = ssprintf("%3ix%3i (%2i)", pTex->GetTextureHeight(), pTex->GetTextureWidth(), pTex->m_iRefCount);
 
 		if (!sDiags.empty())
 			sStr += " " + sDiags;

@@ -48,8 +48,8 @@ static const char chXMLTagPre = '/';
 static const char chXMLExclamation = '!';
 static const char chXMLDash = '-';
 
-static std::map<RString, RString> g_mapEntitiesToChars;
-static std::map<char, RString> g_mapCharsToEntities;
+static std::map<std::string, std::string> g_mapEntitiesToChars;
+static std::map<char, std::string> g_mapCharsToEntities;
 
 static void InitEntities() {
 	if (!g_mapEntitiesToChars.empty())
@@ -83,7 +83,7 @@ static void InitEntities() {
 
 	for (unsigned i = 0; i < ARRAYLEN(EntityTable); ++i) {
 		const Entity &ent = EntityTable[i];
-		g_mapEntitiesToChars[ent.pEntity] = RString(1, ent.c);
+		g_mapEntitiesToChars[ent.pEntity] = std::string(1, ent.c);
 		g_mapCharsToEntities[ent.c] = ent.pEntity;
 	}
 }

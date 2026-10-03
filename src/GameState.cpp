@@ -2898,7 +2898,7 @@ class LunaGameState : public Luna<GameState> {
 	static int SetCurrentStyle(T *p, lua_State *L) {
 		const Style *pStyle = nullptr;
 		if (lua_isstring(L, 1)) {
-			RString style = SArg(1);
+			std::string style = SArg(1);
 			pStyle = GAMEMAN->GameAndStringToStyle(GAMESTATE->m_pCurGame, style);
 			if (!pStyle) {
 				luaL_error(L, "SetCurrentStyle: %s is not a valid style.", style.c_str());

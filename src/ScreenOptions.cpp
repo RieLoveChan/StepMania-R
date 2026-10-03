@@ -502,7 +502,7 @@ void ScreenOptions::HandleScreenMessage(const ScreenMessage SM) {
 			return; // already transitioning
 
 		// If the selected option sets a screen, honor it.
-		RString sThisScreen = GetNextScreenForFocusedItem(GAMESTATE->GetMasterPlayerNumber());
+		std::string sThisScreen = GetNextScreenForFocusedItem(GAMESTATE->GetMasterPlayerNumber());
 		if (!sThisScreen.empty())
 			m_sNextScreen = sThisScreen;
 
@@ -905,7 +905,7 @@ void ScreenOptions::StoreFocus(PlayerNumber pn) {
 }
 
 bool ScreenOptions::FocusedItemEndsScreen(PlayerNumber pn) const {
-	RString sScreen = GetNextScreenForFocusedItem(pn);
+	std::string sScreen = GetNextScreenForFocusedItem(pn);
 	return !sScreen.empty();
 }
 

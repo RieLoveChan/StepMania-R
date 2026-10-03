@@ -1869,8 +1869,8 @@ std::string WcharToUTF8(wchar_t c) {
 }
 
 // &a; -> a
-void ReplaceEntityText(std::string &sText, const std::map<RString, RString> &m) {
-	RString sRet;
+void ReplaceEntityText(std::string &sText, const std::map<std::string, std::string> &m) {
+	std::string sRet;
 
 	std::size_t iOffset = 0;
 	while (iOffset != sText.size()) {
@@ -1898,17 +1898,17 @@ void ReplaceEntityText(std::string &sText, const std::map<RString, RString> &m) 
 			continue;
 		}
 
-		RString sElement = sText.substr(iStart + 1, iEnd - iStart - 1);
-		sElement.MakeLower();
+		std::string sElement = sText.substr(iStart + 1, iEnd - iStart - 1);
+		MakeLower(&sElement[0], sElement.size());
 
-		std::map<RString, RString>::const_iterator it = m.find(sElement);
+		std::map<std::string, std::string>::const_iterator it = m.find(sElement);
 		if (it == m.end()) {
 			sRet.append(sText, iStart, iEnd - iStart + 1);
 			iOffset = iEnd + 1;
 			continue;
 		}
 
-		const RString &sTo = it->second;
+		const std::string &sTo = it->second;
 		sRet.append(sTo);
 		iOffset = iEnd + 1;
 	}
@@ -1917,13 +1917,13 @@ void ReplaceEntityText(std::string &sText, const std::map<RString, RString> &m) 
 }
 
 // abcd -> &a; &b; &c; &d;
-void ReplaceEntityText(std::string &sText, const std::map<char, RString> &m) {
-	RString sFind;
+void ReplaceEntityText(std::string &sText, const std::map<char, std::string> &m) {
+	std::string sFind;
 
-	for (const std::pair<const char, RString> &c : m)
+	for (const std::pair<const char, std::string> &c : m)
 		sFind.append(1, c.first);
 
-	RString sRet;
+	std::string sRet;
 
 	std::size_t iOffset = 0;
 	while (iOffset != sText.size()) {
@@ -1944,10 +1944,10 @@ void ReplaceEntityText(std::string &sText, const std::map<char, RString> &m) {
 
 		char sElement = sText[iStart];
 
-		std::map<char, RString>::const_iterator it = m.find(sElement);
+		std::map<char, std::string>::const_iterator it = m.find(sElement);
 		ASSERT(it != m.end());
 
-		const RString &sTo = it->second;
+		const std::string &sTo = it->second;
 		sRet.append(1, '&');
 		sRet.append(sTo);
 		sRet.append(1, ';');

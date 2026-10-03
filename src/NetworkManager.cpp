@@ -188,7 +188,7 @@ HttpRequestFuturePtr NetworkManager::HttpRequest(const HttpRequestArgs &args) {
 
 	client.performRequest(req, [args, downloadFile, downloadFilename](const ix::HttpResponsePtr &response) {
 		if (!args.downloadFile.empty()) {
-			RString error = downloadFile->GetError();
+			std::string error = downloadFile->GetError();
 			downloadFile->Close();
 
 			if (!error.empty()) {

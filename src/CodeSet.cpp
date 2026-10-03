@@ -6,8 +6,8 @@
 
 #include <vector>
 
-#define CODE_NAMES THEME->GetMetric(RString(sType), "CodeNames")
-#define CODE(s) THEME->GetMetric(RString(sType), ssprintf("Code%s", (s).c_str()))
+#define CODE_NAMES THEME->GetMetric(sType, "CodeNames")
+#define CODE(s) THEME->GetMetric(sType, ssprintf("Code%s", (s).c_str()))
 void InputQueueCodeSet::Load(const std::string &sType) {
 	//
 	// Load codes
@@ -17,7 +17,7 @@ void InputQueueCodeSet::Load(const std::string &sType) {
 	for (unsigned c = 0; c < m_asCodeNames.size(); c++) {
 		std::vector<std::string> asBits;
 		split(m_asCodeNames[c], "=", asBits, true);
-		RString sCodeName = asBits[0];
+		std::string sCodeName = asBits[0];
 		if (asBits.size() > 1)
 			m_asCodeNames[c] = asBits[1];
 

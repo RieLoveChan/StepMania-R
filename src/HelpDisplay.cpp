@@ -65,13 +65,13 @@ class LunaHelpDisplay : public Luna<HelpDisplay> {
 	static int settips(T *p, lua_State *L) {
 		luaL_checktype(L, 1, LUA_TTABLE);
 		lua_pushvalue(L, 1);
-		std::vector<RString> arrayTips;
+		std::vector<std::string> arrayTips;
 		LuaHelpers::ReadArrayFromTable(arrayTips, L);
 		lua_pop(L, 1);
 		for (unsigned i = 0; i < arrayTips.size(); ++i)
 			FontCharAliases::ReplaceMarkers(arrayTips[i]);
 		if (lua_gettop(L) > 1 && !lua_isnil(L, 2)) {
-			std::vector<RString> arrayTipsAlt;
+			std::vector<std::string> arrayTipsAlt;
 			luaL_checktype(L, 2, LUA_TTABLE);
 			lua_pushvalue(L, 2);
 			LuaHelpers::ReadArrayFromTable(arrayTipsAlt, L);
@@ -79,13 +79,10 @@ class LunaHelpDisplay : public Luna<HelpDisplay> {
 			for (unsigned i = 0; i < arrayTipsAlt.size(); ++i)
 				FontCharAliases::ReplaceMarkers(arrayTipsAlt[i]);
 
-			p->SetTips(
-			   std::vector<std::string>(arrayTips.begin(), arrayTips.end()),
-			   std::vector<std::string>(arrayTipsAlt.begin(), arrayTipsAlt.end())
-			);
+			p->SetTips(arrayTips, arrayTipsAlt);
 		}
 		else
-			p->SetTips(std::vector<std::string>(arrayTips.begin(), arrayTips.end()));
+			p->SetTips(arrayTips);
 
 		COMMON_RETURN_SELF;
 	}

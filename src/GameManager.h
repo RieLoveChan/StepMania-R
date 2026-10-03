@@ -53,9 +53,9 @@ class GameManager {
 	const Game *GetGameFromIndex(int index);
 
 	const StepsTypeInfo &GetStepsTypeInfo(StepsType st);
-	StepsType StringToStepsType(RString sStepsType);
-	const Game *StringToGame(RString sGame);
-	const Style *GameAndStringToStyle(const Game *pGame, RString sStyle);
+	StepsType StringToStepsType(std::string sStepsType);
+	const Game *StringToGame(const std::string &sGame);
+	const Style *GameAndStringToStyle(const Game *pGame, const std::string &sStyle);
 	std::string StyleToLocalizedString(const Style *s);
 
 	// Lua

@@ -93,7 +93,7 @@ void ScreenHowToPlay::Init() {
 		else
 			displayChar = CHARMAN->GetRandomCharacter();
 
-		RString sModelPath = displayChar->GetModelPath();
+		std::string sModelPath = displayChar->GetModelPath();
 		if (!sModelPath.empty()) {
 			m_pmCharacter = new Model;
 			m_pmCharacter->SetName("Character");
@@ -103,7 +103,7 @@ void ScreenHowToPlay::Init() {
 			m_pmCharacter->LoadMilkshapeAsciiBones("Step-UP", GetAnimPath(ANIM_UP));
 			m_pmCharacter->LoadMilkshapeAsciiBones("Step-RIGHT", GetAnimPath(ANIM_RIGHT));
 			m_pmCharacter->LoadMilkshapeAsciiBones("Step-JUMPLR", GetAnimPath(ANIM_JUMPLR));
-			RString sRestFile = displayChar->GetRestAnimationPath();
+			std::string sRestFile = displayChar->GetRestAnimationPath();
 			ASSERT(!sRestFile.empty());
 			m_pmCharacter->LoadMilkshapeAsciiBones("rest", displayChar->GetRestAnimationPath());
 			m_pmCharacter->SetDefaultAnimation("rest");

@@ -34,9 +34,9 @@ void ScreenSelect::Init() {
 
 	// Load choices
 	// Allow lua as an alternative to metrics.
-	RString choice_names = CHOICE_NAMES;
-	if (choice_names.Left(4) == "lua,") {
-		RString command = choice_names.Right(static_cast<int>(choice_names.size()) - 4);
+	std::string choice_names = CHOICE_NAMES;
+	if (choice_names.compare(0, 4, "lua,") == 0) {
+		std::string command = choice_names.substr(4);
 		Lua *L = LUA->Get();
 		if (LuaHelpers::RunExpression(L, command, m_sName + "::ChoiceNames")) {
 			if (!lua_istable(L, 1)) {
@@ -50,7 +50,7 @@ void ScreenSelect::Init() {
 						LuaHelpers::ReportScriptErrorFmt(m_sName + "::ChoiceNames element %zu is not a string.", i);
 					}
 					else {
-						RString com = SArg(-1);
+						std::string com = SArg(-1);
 						GameCommand mc;
 						mc.ApplyCommitsScreens(false);
 						mc.m_sName = ssprintf("%zu", i);
@@ -74,7 +74,7 @@ void ScreenSelect::Init() {
 		split(CHOICE_NAMES, ",", asChoiceNames, true);
 
 		for (unsigned c = 0; c < asChoiceNames.size(); c++) {
-			RString sChoiceName = asChoiceNames[c];
+			std::string sChoiceName = asChoiceNames[c];
 
 			GameCommand mc;
 			mc.ApplyCommitsScreens(false);

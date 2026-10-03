@@ -221,7 +221,7 @@ class LunaScreenNameEntryTraditional : public Luna<ScreenNameEntryTraditional> {
  public:
 	static int EnterKey(T *p, lua_State *L) {
 		PlayerNumber pn = Enum::Check<PlayerNumber>(L, 1);
-		RString sKey = SArg(2);
+		std::string sKey = SArg(2);
 		bool bRet = p->EnterKey(pn, utf8_get_char(sKey));
 		LuaHelpers::Push(L, bRet);
 		return 1;
