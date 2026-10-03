@@ -1033,7 +1033,7 @@ int sm_main(int argc, char *argv[]) {
 		// so ExportGameToDisk's normal IniFile::WriteFile calls can land
 		// on real disk for this one-shot migration.
 		const RString sGamesMountPoint = "/" + SpecialFiles::GAMES_DIR;
-		RString sRealInstallRoot = FILEMAN->ResolvePath("/");
+		std::string sRealInstallRoot = FILEMAN->ResolvePath("/");
 		// ResolvePath() always re-adds a leading '/' via its own
 		// NormalizePath() call, even when the resolved path is already a
 		// real, drive-letter-rooted OS path (e.g. "/S:/repos/...") -- strip

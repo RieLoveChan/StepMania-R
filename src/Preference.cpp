@@ -8,7 +8,7 @@
 
 static SubscriptionManager<IPreference> m_Subscribers;
 
-IPreference::IPreference(const RString &sName, PreferenceType type)
+IPreference::IPreference(const std::string &sName, PreferenceType type)
     : m_sName(sName), m_bDoNotWrite(type == PreferenceType::Deprecated),
       m_bImmutable(type == PreferenceType::Immutable) {
 	m_Subscribers.Subscribe(this);
@@ -18,9 +18,9 @@ IPreference::~IPreference() {
 	m_Subscribers.Unsubscribe(this);
 }
 
-IPreference *IPreference::GetPreferenceByName(const RString &sName) {
+IPreference *IPreference::GetPreferenceByName(const std::string &sName) {
 	for (IPreference *p : *m_Subscribers.m_pSubscribers) {
-		if (!p->GetName().CompareNoCase(sName))
+		if (!StdString::ssicmp(p->GetName().c_str(), sName.c_str()))
 			return p;
 	}
 
@@ -88,7 +88,7 @@ void IPreference::ReadDefaultFrom(const XNode *pNode) {
 	SetDefaultFromString(sVal);
 }
 
-void BroadcastPreferenceChanged(const RString &sPreferenceName) {
+void BroadcastPreferenceChanged(const std::string &sPreferenceName) {
 	if (MESSAGEMAN)
 		MESSAGEMAN->Broadcast(sPreferenceName + "Changed");
 }

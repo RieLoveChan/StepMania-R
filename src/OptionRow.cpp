@@ -19,7 +19,7 @@ const std::string NEXT_ROW_NAME = "NextRow";
 const std::string EXIT_NAME = "Exit";
 
 std::string OptionRow::GetThemedItemText(int iChoice) const {
-	RString s = m_pHand->GetThemedItemText(iChoice);
+	std::string s = m_pHand->GetThemedItemText(iChoice);
 
 	// HACK: Always theme the NEXT_ROW and EXIT items.
 	if (m_bFirstItemGoesDown && iChoice == 0)
@@ -180,7 +180,7 @@ void OptionRow::ChoicesChanged(RowType type, bool reset_focus) {
 }
 
 std::string OptionRow::GetRowTitle() const {
-	RString sTitle = m_pHand->OptionTitle();
+	std::string sTitle = m_pHand->OptionTitle();
 
 	// HACK: tack the BPM onto the name of the speed line
 	if (m_pHand->m_Def.m_sName.CompareNoCase("speed") == 0) {
@@ -267,7 +267,7 @@ void OptionRow::InitText(RowType /* type */) {
 		// Figure out the width of the row.
 		float fWidth = 0;
 		for (unsigned c = 0; c < m_pHand->m_Def.m_vsChoices.size(); c++) {
-			RString sText = GetThemedItemText(c);
+			std::string sText = GetThemedItemText(c);
 			bt.SetText(sText);
 
 			fWidth += bt.GetZoomedWidth();
@@ -330,7 +330,7 @@ void OptionRow::InitText(RowType /* type */) {
 			bt->SetBaseZoomX(fBaseZoom);
 			bt->PlayCommand("On");
 			// Set text after running OnCommand so e.g. uppercase,true works -aj
-			RString sText = GetThemedItemText(c);
+			std::string sText = GetThemedItemText(c);
 			bt->SetText(sText);
 
 			// set the X position of each item in the line
@@ -474,7 +474,7 @@ void OptionRow::UpdateText(PlayerNumber p) {
 		if (iChoiceWithFocus == -1)
 			break;
 
-		RString sText = GetThemedItemText(iChoiceWithFocus);
+		std::string sText = GetThemedItemText(iChoiceWithFocus);
 
 		// If player_no is 2 and there is no player 1:
 		int index = std::min(static_cast<int>(pn), static_cast<int>(m_textItems.size()) - 1);

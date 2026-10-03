@@ -55,7 +55,7 @@ void ControllerStateDisplay::LoadInternal(std::string sType, MultiPlayer mp, Gam
 	FOREACH_ENUM(ControllerStateButton, b) {
 		Button &button = m_Buttons[b];
 
-		RString sPath = THEME->GetPathG(sType, ControllerStateButtonToString(b));
+		std::string sPath = THEME->GetPathG(sType, ControllerStateButtonToString(b));
 		button.spr.Load(sPath);
 		this->AddChild(m_Buttons[b].spr);
 

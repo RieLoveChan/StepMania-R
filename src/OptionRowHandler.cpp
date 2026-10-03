@@ -324,7 +324,7 @@ class OptionRowHandlerList : public OptionRowHandler {
 
 		gcOut = m_aListEntries[iFirstSelection];
 	}
-	RString GetScreen(int iChoice) const override {
+	std::string GetScreen(int iChoice) const override {
 		const GameCommand &gc = m_aListEntries[iChoice];
 		return gc.m_sScreen;
 	}
@@ -1448,7 +1448,7 @@ class OptionRowHandlerGameCommand : public OptionRowHandler {
 		sIconTextOut = "";
 		gcOut = m_gc;
 	}
-	RString GetScreen(int /* iChoice */) const override {
+	std::string GetScreen(int /* iChoice */) const override {
 		return m_gc.m_sScreen;
 	}
 };

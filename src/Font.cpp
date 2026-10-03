@@ -764,7 +764,7 @@ void Font::Load(const std::string &sIniPath, std::string sChars) {
 		}
 
 		for (unsigned i = 0; i < ImportList.size(); ++i) {
-			RString sPath = THEME->GetPathF("", ImportList[i], true);
+			std::string sPath = THEME->GetPathF("", ImportList[i], true);
 			if (sPath.empty()) {
 				RString s = ssprintf(
 				   "Font \"%s\" imports a font \"%s\" that doesn't exist", sIniPath.c_str(), ImportList[i].c_str()

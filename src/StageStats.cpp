@@ -155,7 +155,7 @@ static HighScore FillInHighScore(
 		RString sPlayerOptions = ps.m_PlayerOptions.GetStage().GetString();
 		if (!sPlayerOptions.empty())
 			asModifiers.push_back(sPlayerOptions);
-		RString sSongOptions = GAMESTATE->m_SongOptions.GetStage().GetString();
+		std::string sSongOptions = GAMESTATE->m_SongOptions.GetStage().GetString();
 		if (!sSongOptions.empty())
 			asModifiers.push_back(sSongOptions);
 	}

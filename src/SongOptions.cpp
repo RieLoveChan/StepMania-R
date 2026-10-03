@@ -110,13 +110,13 @@ void SongOptions::GetLocalizedMods(std::vector<std::string> &v) const {
 	}
 }
 
-RString SongOptions::GetString() const {
+std::string SongOptions::GetString() const {
 	std::vector<std::string> v;
 	GetMods(v);
 	return join(", ", v);
 }
 
-RString SongOptions::GetLocalizedString() const {
+std::string SongOptions::GetLocalizedString() const {
 	std::vector<std::string> v;
 	GetLocalizedMods(v);
 	return join(", ", v);
@@ -128,7 +128,7 @@ void SongOptions::FromString(const std::string &sMultipleMods) {
 	RString sTemp = sMultipleMods;
 	std::vector<std::string> vs;
 	split(sTemp, ",", vs, true);
-	RString sThrowAway;
+	std::string sThrowAway;
 	for (std::string &s : vs) {
 		FromOneModString(s, sThrowAway);
 	}

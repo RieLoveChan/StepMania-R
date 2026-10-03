@@ -120,9 +120,9 @@ class PrefsManager {
 
 	void Init();
 
-	void SetCurrentGame(const RString &sGame);
-	RString GetCurrentGame() {
-		return m_sCurrentGame;
+	void SetCurrentGame(const std::string &sGame);
+	std::string GetCurrentGame() {
+		return m_sCurrentGame.Get();
 	}
 
  protected:

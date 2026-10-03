@@ -31,7 +31,7 @@ enum class PreferenceType {
 struct lua_State;
 class IPreference {
  public:
-	IPreference(const RString &sName, PreferenceType type);
+	IPreference(const std::string &sName, PreferenceType type);
 	virtual ~IPreference();
 	void ReadFrom(const XNode *pNode, bool bIsStatic);
 	void WriteTo(XNode *pNode) const;
@@ -46,17 +46,17 @@ class IPreference {
 	virtual void SetFromStack(lua_State *L);
 	virtual void PushValue(lua_State *L) const;
 
-	const RString &GetName() const {
+	const std::string &GetName() const {
 		return m_sName;
 	}
 
-	static IPreference *GetPreferenceByName(const RString &sName);
+	static IPreference *GetPreferenceByName(const std::string &sName);
 	static void LoadAllDefaults();
 	static void ReadAllPrefsFromNode(const XNode *pNode, bool bIsStatic);
 	static void SavePrefsToNode(XNode *pNode);
 	static void ReadAllDefaultsFromNode(const XNode *pNode);
 
-	RString GetName() {
+	std::string GetName() {
 		return m_sName;
 	}
 	bool IsImmutable() {
@@ -64,17 +64,17 @@ class IPreference {
 	}
 
  private:
-	RString m_sName;
+	std::string m_sName;
 	bool m_bDoNotWrite;
 	bool m_bImmutable;
 };
 
-void BroadcastPreferenceChanged(const RString &sPreferenceName);
+void BroadcastPreferenceChanged(const std::string &sPreferenceName);
 
 template <class T> class Preference : public IPreference {
  public:
 	Preference(
-	   const RString &sName,
+	   const std::string &sName,
 	   const T &defaultValue,
 	   void(pfnValidate)(T &val) = nullptr,
 	   PreferenceType type = PreferenceType::Mutable
@@ -128,7 +128,7 @@ template <class T> class Preference : public IPreference {
 		BroadcastPreferenceChanged(GetName());
 	}
 
-	static Preference<T> *GetPreferenceByName(const RString &sName) {
+	static Preference<T> *GetPreferenceByName(const std::string &sName) {
 		IPreference *pPreference = IPreference::GetPreferenceByName(sName);
 		Preference<T> *pRet = dynamic_cast<Preference<T> *>(pPreference);
 		return pRet;

@@ -1070,7 +1070,7 @@ void GameState::Update(float fDelta) {
 
 void GameState::SetCurGame(const Game *pGame) {
 	m_pCurGame.Set(pGame);
-	RString sGame = pGame ? RString(pGame->m_szName) : RString();
+	std::string sGame = pGame ? std::string(pGame->m_szName) : std::string();
 	PREFSMAN->SetCurrentGame(sGame);
 }
 
@@ -2603,7 +2603,7 @@ class LunaGameState : public Luna<GameState> {
 	DEFINE_METHOD(GetSongOptionsString, m_SongOptions.GetCurrent().GetString())
 	static int GetSongOptions(T *p, lua_State *L) {
 		ModsLevel m = Enum::Check<ModsLevel>(L, 1);
-		RString s = p->m_SongOptions.Get(m).GetString();
+		std::string s = p->m_SongOptions.Get(m).GetString();
 		LuaHelpers::Push(L, s);
 		return 1;
 	}
@@ -2615,7 +2615,7 @@ class LunaGameState : public Luna<GameState> {
 	static int GetDefaultSongOptions(T *p, lua_State *L) {
 		SongOptions so;
 		p->GetDefaultSongOptions(so);
-		lua_pushstring(L, so.GetString());
+		lua_pushstring(L, so.GetString().c_str());
 		return 1;
 	}
 	static int ApplyPreferredSongOptionsToOtherLevels(T *p, lua_State * /* L */) {

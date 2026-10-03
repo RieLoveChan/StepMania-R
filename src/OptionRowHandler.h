@@ -217,8 +217,8 @@ class OptionRowHandler {
 		return 0;
 	}
 	virtual void GetIconTextAndGameCommand(int iFirstSelection, std::string &sIconTextOut, GameCommand &gcOut) const;
-	virtual RString GetScreen(int /* iChoice */) const {
-		return RString();
+	virtual std::string GetScreen(int /* iChoice */) const {
+		return std::string();
 	}
 	// Exists so that a lua function can act on the selection.  Returns true if the choices should be reloaded.
 	virtual bool NotifyOfSelection(PlayerNumber /* pn */, int /* choice */) {

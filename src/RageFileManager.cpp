@@ -863,7 +863,7 @@ int RageFileManager::GetFileHash(const std::string &sPath_) {
 	return iRet;
 }
 
-RString RageFileManager::ResolvePath(const std::string &path) {
+std::string RageFileManager::ResolvePath(const std::string &path) {
 	RString tmpPath = path;
 	NormalizePath(tmpPath);
 

@@ -913,7 +913,7 @@ std::string ScreenOptions::GetNextScreenForFocusedItem(PlayerNumber pn) const {
 	int iCurRow = this->GetCurrentRow(pn);
 
 	if (iCurRow == -1)
-		return RString();
+		return std::string();
 
 	ASSERT(iCurRow >= 0 && iCurRow < (int)m_pRows.size());
 	const OptionRow *pRow = m_pRows[iCurRow];
@@ -924,11 +924,11 @@ std::string ScreenOptions::GetNextScreenForFocusedItem(PlayerNumber pn) const {
 
 	// not the "goes down" item
 	if (iChoice == -1)
-		return RString();
+		return std::string();
 
 	const OptionRowHandler *pHand = pRow->GetHandler();
 	if (pHand == nullptr)
-		return RString();
+		return std::string();
 	return pHand->GetScreen(iChoice);
 }
 

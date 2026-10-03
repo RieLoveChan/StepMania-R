@@ -101,9 +101,9 @@ void OptionListRow::SetTextFromHandler(const OptionRowHandler *pHandler) {
 	ASSERT(pHandler != nullptr);
 	for (unsigned i = 0; i < pHandler->m_Def.m_vsChoices.size(); ++i) {
 		// init text
-		RString sText = pHandler->GetThemedItemText(i);
+		std::string sText = pHandler->GetThemedItemText(i);
 
-		RString sDest = pHandler->GetScreen(i);
+		std::string sDest = pHandler->GetScreen(i);
 		if (m_pOptions->m_setDirectRows.find(sDest) != m_pOptions->m_setDirectRows.end() && !sDest.empty()) {
 			const OptionRowHandler *pTarget = m_pOptions->m_Rows[sDest];
 			if (pTarget->m_Def.m_selectType == SELECT_ONE) {
@@ -121,7 +121,7 @@ void OptionListRow::SetUnderlines(const std::vector<bool> &aSelections, const Op
 		Actor *pActor = m_Underlines[i];
 
 		bool bSelected = aSelections[i];
-		RString sDest = pHandler->GetScreen(i);
+		std::string sDest = pHandler->GetScreen(i);
 		if (!sDest.empty()) {
 			/* This is a submenu.  Underline the row if its options have been changed
 			 * from the default. */
@@ -218,7 +218,7 @@ void OptionsList::Load(RString sType, PlayerNumber pn) {
 		m_asLoadedRows.push_back(sLineName);
 
 		for (std::size_t i = 0; i < pHand->m_Def.m_vsChoices.size(); ++i) {
-			RString sScreen = pHand->GetScreen(static_cast<int>(i));
+			std::string sScreen = pHand->GetScreen(static_cast<int>(i));
 			if (!sScreen.empty())
 				setToLoad.push_back(sScreen);
 		}
@@ -318,7 +318,7 @@ void OptionsList::SwitchMenu(int iDir) {
 	if (iCurrentRow >= 0) {
 		if (iCurrentRow >= (int)pHandler->m_Def.m_vsChoices.size())
 			return;
-		RString sDest = pHandler->GetScreen(iCurrentRow);
+		std::string sDest = pHandler->GetScreen(iCurrentRow);
 		if (sDest.empty())
 			return;
 
@@ -362,7 +362,7 @@ bool OptionsList::Input(const InputEventPlus &input) {
 			if (m_iMenuStackSelection == (int)bSelections.size())
 				return false;
 
-			RString sDest = pHandler->GetScreen(m_iMenuStackSelection);
+			std::string sDest = pHandler->GetScreen(m_iMenuStackSelection);
 			if (m_setDirectRows.find(sDest) != m_setDirectRows.end() && !sDest.empty()) {
 				const OptionRowHandler *pTarget = m_Rows[sDest];
 				std::vector<bool> &bTargetSelections = m_bSelections[sDest];
@@ -643,7 +643,7 @@ bool OptionsList::Start() {
 		}
 	}
 
-	RString sDest = pHandler->GetScreen(m_iMenuStackSelection);
+	std::string sDest = pHandler->GetScreen(m_iMenuStackSelection);
 	if (!sDest.empty()) {
 		Push(sDest);
 		TweenOnCurrentRow(true);

@@ -709,7 +709,7 @@ void ScreenMapControllers::ActionRow::Load(
 	RString lower_name = name;
 	lower_name.MakeLower();
 	// Make the specific actor optional, use a fallback if it doesn't exist.
-	RString path = THEME->GetPathG(scr_name, lower_name, true);
+	std::string path = THEME->GetPathG(scr_name, lower_name, true);
 	if (path.empty()) {
 		path = THEME->GetPathG(scr_name, "action");
 	}

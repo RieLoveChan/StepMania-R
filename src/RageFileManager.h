@@ -56,7 +56,7 @@ class RageFileManager {
 	 * @brief Get the absolte path from the VPS.
 	 * @param path the VPS path.
 	 * @return the absolute path. */
-	RString ResolvePath(const std::string &path);
+	std::string ResolvePath(const std::string &path);
 
 	bool Mount(const std::string &sType, const std::string &sRealPath, const std::string &sMountPoint);
 	void Unmount(const std::string &sType, const std::string &sRoot, const std::string &sMountPoint);

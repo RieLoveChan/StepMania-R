@@ -292,7 +292,7 @@ PrefsManager::~PrefsManager() {
 	LUA->UnsetGlobal("PREFSMAN");
 }
 
-void PrefsManager::SetCurrentGame(const RString &sGame) {
+void PrefsManager::SetCurrentGame(const std::string &sGame) {
 	if (m_sCurrentGame.Get() == sGame)
 		return; // redundant
 

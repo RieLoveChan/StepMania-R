@@ -31,9 +31,9 @@ LocalizedString CREDITS_LOADED_FROM_LAST_GOOD_APPEND("ScreenSystemLayer", "Credi
 
 ThemeMetric<bool> CREDITS_JOIN_ONLY("ScreenSystemLayer", "CreditsJoinOnly");
 
-RString GetCreditsMessage(PlayerNumber pn) {
+std::string GetCreditsMessage(PlayerNumber pn) {
 	if ((bool)CREDITS_JOIN_ONLY && !GAMESTATE->PlayersCanJoin())
-		return RString();
+		return std::string();
 
 	bool bShowCreditsMessage;
 	if (SCREENMAN && SCREENMAN->GetTopScreen() && SCREENMAN->GetTopScreen()->GetScreenType() == system_menu)
@@ -60,7 +60,7 @@ RString GetCreditsMessage(PlayerNumber pn) {
 			else if (GAMESTATE->PlayersCanJoin())
 				return CREDITS_INSERT_CARD.GetValue();
 			else
-				return RString();
+				return std::string();
 
 		case MemoryCardState_Error:
 			return THEME->GetString("ScreenSystemLayer", "CreditsCard" + MEMCARDMAN->GetCardError(pn));
@@ -77,7 +77,7 @@ RString GetCreditsMessage(PlayerNumber pn) {
 
 			// If there is a local profile loaded, prefer it over the name of the memory card.
 			if (PROFILEMAN->IsPersistentProfile(pn)) {
-				RString s = pProfile->GetDisplayNameOrHighScoreName();
+				std::string s = pProfile->GetDisplayNameOrHighScoreName();
 				if (s.empty())
 					s = CREDITS_CARD_NO_NAME.GetValue();
 				if (PROFILEMAN->LastLoadWasFromLastGood(pn))
@@ -107,7 +107,7 @@ RString GetCreditsMessage(PlayerNumber pn) {
 			{
 				int iCredits = GAMESTATE->m_iCoins / PREFSMAN->m_iCoinsPerCredit;
 				int iCoins = GAMESTATE->m_iCoins % PREFSMAN->m_iCoinsPerCredit;
-				RString sCredits = CREDITS_CREDITS;
+				std::string sCredits = CREDITS_CREDITS.GetValue();
 				// todo: allow themers to change these strings -aj
 				if (iCredits > 0 || PREFSMAN->m_iCoinsPerCredit == 1)
 					sCredits += ssprintf("  %d", iCredits);
@@ -124,7 +124,7 @@ RString GetCreditsMessage(PlayerNumber pn) {
 			// Probably something like "Please Wait" or "Cannot Join"? -freem
 		}
 	}
-	return RString();
+	return std::string();
 }
 
 }; // namespace
@@ -135,7 +135,7 @@ RString GetCreditsMessage(PlayerNumber pn) {
 namespace {
 int GetCreditsMessage(lua_State *L) {
 	PlayerNumber pn = Enum::Check<PlayerNumber>(L, 1);
-	RString sText = GetCreditsMessage(pn);
+	std::string sText = GetCreditsMessage(pn);
 	LuaHelpers::Push(L, sText);
 	return 1;
 }
