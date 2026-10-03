@@ -37,11 +37,11 @@ void StyleID::LoadFromNode(const XNode *pNode) {
 	Unset();
 	ASSERT(pNode->GetName() == "Style");
 
-	RString sGameTmp = "";
+	std::string sGameTmp = "";
 	pNode->GetAttrValue("Game", sGameTmp);
 	sGame = sGameTmp;
 
-	RString sStyleTmp = "";
+	std::string sStyleTmp = "";
 	pNode->GetAttrValue("Style", sStyleTmp);
 	sStyle = sStyleTmp;
 }

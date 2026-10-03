@@ -71,7 +71,7 @@ void PaneDisplay::Load(const std::string &sMetricsGroup, PlayerNumber pn) {
 	FOREACH_ENUM(PaneCategory, pc) {
 		LuaThreadVariable var("PaneCategory", LuaReference::Create(pc));
 
-		RString sFontType = g_Contents[pc].sFontType;
+		std::string sFontType = g_Contents[pc].sFontType;
 
 		m_textContents[pc].LoadFromFont(THEME->GetPathF(sMetricsGroup, sFontType));
 		m_textContents[pc].SetName(PaneCategoryToString(pc) + "Text");
@@ -95,7 +95,7 @@ void PaneDisplay::Load(const std::string &sMetricsGroup, PlayerNumber pn) {
 void PaneDisplay::LoadFromNode(const XNode *pNode) {
 	bool b;
 
-	RString sMetricsGroup;
+	std::string sMetricsGroup;
 	b = pNode->GetAttrValue("MetricsGroup", sMetricsGroup);
 	if (!b) {
 		sMetricsGroup = "PaneDisplay";
@@ -284,7 +284,7 @@ void PaneDisplay::GetPaneTextAndLevel(PaneCategory c, std::string &sTextOut, flo
 
 void PaneDisplay::SetContent(PaneCategory c) {
 	// these get filled in later:
-	RString str;
+	std::string str;
 	float val;
 
 	GetPaneTextAndLevel(c, str, val);

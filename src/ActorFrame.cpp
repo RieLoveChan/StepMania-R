@@ -96,7 +96,7 @@ void ActorFrame::LoadFromNode(const XNode *pNode) {
 	pNode->GetAttrValue("VanishY", m_fVanishY);
 	m_bOverrideLighting = pNode->GetAttrValue("Lighting", m_bLighting);
 	// new lighting values (only ambient color seems to work?) -aj
-	RString sTemp1, sTemp2, sTemp3;
+	std::string sTemp1, sTemp2, sTemp3;
 	pNode->GetAttrValue("AmbientColor", sTemp1);
 	m_ambientColor.FromString(sTemp1);
 	pNode->GetAttrValue("DiffuseColor", sTemp2);

@@ -42,7 +42,7 @@ void AutoKeysounds::LoadAutoplaySoundsInto(RageSoundReader_Chain *pChain) {
 	// Load sounds.
 	//
 	Song *pSong = GAMESTATE->m_pCurSong;
-	RString sSongDir = pSong->GetSongDir();
+	std::string sSongDir = pSong->GetSongDir();
 
 	/*
 	 * Add all current autoplay sounds in both players to the chain.
@@ -79,7 +79,7 @@ void AutoKeysounds::LoadAutoplaySoundsInto(RageSoundReader_Chain *pChain) {
 
 				ASSERT(tn[pn].type == TapNoteType_AutoKeysound);
 				if (tn[pn].iKeysoundIndex >= 0) {
-					RString sKeysoundFilePath = sSongDir + pSong->m_vsKeysoundFile[tn[pn].iKeysoundIndex];
+					std::string sKeysoundFilePath = sSongDir + pSong->m_vsKeysoundFile[tn[pn].iKeysoundIndex];
 					float fSeconds =
 					   GAMESTATE->m_pCurSteps[pn]->GetTimingData()->GetElapsedTimeFromBeatNoOffset(NoteRowToBeat(iRow)) +
 					   SOUNDMAN->GetPlayLatency();

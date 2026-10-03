@@ -70,7 +70,7 @@ Attack Attack::FromGlobalCourseModifier(const std::string &sModifiers) {
 }
 
 std::string Attack::GetTextDescription() const {
-	RString s = sModifiers + " " + ssprintf("(%.2f seconds)", fSecsRemaining);
+	std::string s = sModifiers + " " + ssprintf("(%.2f seconds)", fSecsRemaining);
 	return s;
 }
 

@@ -23,7 +23,7 @@ void LifeMeterBattery::Load(const PlayerState *pPlayerState, PlayerStageStats *p
 	m_iLivesLeft = m_pPlayerState->m_PlayerOptions.GetStage().m_BatteryLives;
 	m_iTrailingLivesLeft = m_iLivesLeft;
 
-	const RString sType = "LifeMeterBattery";
+	const std::string sType = "LifeMeterBattery";
 	PlayerNumber pn = pPlayerState->m_PlayerNumber;
 
 	MIN_SCORE_TO_KEEP_LIFE.Load(sType, "MinScoreToKeepLife");

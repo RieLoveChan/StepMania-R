@@ -25,7 +25,7 @@ bool DifficultyIcon::Load(std::string sPath) {
 	if (sPath.find("_blank") != std::string::npos)
 		bWarn = false;
 	if (bWarn) {
-		RString sError = ssprintf(
+		std::string sError = ssprintf(
 		   "The difficulty icon graphic '%s' must have %d or %d frames.  It has %d states.",
 		   sPath.c_str(),
 		   NUM_Difficulty,

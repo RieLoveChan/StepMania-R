@@ -42,7 +42,7 @@ void ActiveAttackList::Refresh() {
 		po.GetLocalizedMods(vsThemedMods);
 	}
 
-	RString s = join("\n", vsThemedMods);
+	std::string s = join("\n", vsThemedMods);
 
 	this->SetText(s); // BitmapText will not rebuild vertices if these strings are the same.
 }
