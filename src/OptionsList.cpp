@@ -22,7 +22,7 @@
 
 static const std::string RESET_ROW = "ResetOptions";
 
-void OptionListRow::Load(OptionsList *pOptions, const RString &sType) {
+void OptionListRow::Load(OptionsList *pOptions, const std::string &sType) {
 	m_pOptions = pOptions;
 	ITEMS_SPACING_Y.Load(sType, "ItemsSpacingY");
 
@@ -167,7 +167,7 @@ OptionsList::~OptionsList() {
 }
 
 // This is the initialization function.
-void OptionsList::Load(RString sType, PlayerNumber pn) {
+void OptionsList::Load(std::string sType, PlayerNumber pn) {
 	TOP_MENU.Load(sType, "TopMenu");
 
 	m_pn = pn;
@@ -183,23 +183,23 @@ void OptionsList::Load(RString sType, PlayerNumber pn) {
 	ActorUtil::LoadAllCommands(*m_Cursor, sType);
 	this->AddChild(m_Cursor);
 
-	std::vector<RString> asDirectLines;
+	std::vector<std::string> asDirectLines;
 	split(DIRECT_LINES, ",", asDirectLines, true);
-	for (RString &s : asDirectLines)
+	for (std::string &s : asDirectLines)
 		m_setDirectRows.insert(s);
 
-	std::vector<RString> setToLoad;
+	std::vector<std::string> setToLoad;
 	split(TOP_MENUS, ",", setToLoad);
 	m_setTopMenus.insert(setToLoad.begin(), setToLoad.end());
 
 	while (!setToLoad.empty()) {
-		RString sLineName = *setToLoad.begin();
+		std::string sLineName = *setToLoad.begin();
 		setToLoad.erase(setToLoad.begin());
 
 		if (m_Rows.find(sLineName) != m_Rows.end())
 			continue;
 
-		RString sRowCommands = LINE(sLineName);
+		std::string sRowCommands = LINE(sLineName);
 		Commands cmds;
 		ParseCommands(sRowCommands, cmds, false);
 
@@ -275,7 +275,7 @@ std::string OptionsList::GetCurrentRow() const {
 
 // This can't be const because OptionRowHandler->NotifyOfSelection() will modify the OptionRow.
 OptionRowHandler *OptionsList::GetCurrentHandler() {
-	RString sCurrentRow = GetCurrentRow();
+	std::string sCurrentRow = GetCurrentRow();
 	return m_Rows[sCurrentRow];
 }
 
@@ -306,7 +306,7 @@ void OptionsList::SwitchMenu(int iDir) {
 	 * submenus follow.  This allows consistent navigation; moving right from the
 	 * main menu walks through the menus, moving left goes back as far as the main
 	 * menu.  Don't loop, so it's harder to lose track of menus. */
-	RString sTopRow = m_asMenuStack.front();
+	std::string sTopRow = m_asMenuStack.front();
 	const OptionRowHandler *pHandler = m_Rows[sTopRow];
 	int iCurrentRow = 0;
 	if (m_asMenuStack.size() == 1)
@@ -357,7 +357,7 @@ bool OptionsList::Input(const InputEventPlus &input) {
 
 			m_bAcceptStartRelease = false;
 
-			const RString &sCurrentRow = m_asMenuStack.back();
+			const std::string sCurrentRow = m_asMenuStack.back();
 			std::vector<bool> &bSelections = m_bSelections[sCurrentRow];
 			if (m_iMenuStackSelection == (int)bSelections.size())
 				return false;
@@ -512,7 +512,7 @@ void OptionsList::SetDefaultCurrentRow() {
 	/* If all items on the row just point to other menus, default to 0. */
 	m_iMenuStackSelection = 0;
 
-	const RString &sCurrentRow = m_asMenuStack.back();
+	const std::string sCurrentRow = m_asMenuStack.back();
 	const OptionRowHandler *pHandler = m_Rows.find(sCurrentRow)->second;
 	if (pHandler->m_Def.m_selectType == SELECT_ONE) {
 		/* One item is selected, so position the cursor on it. */
@@ -536,7 +536,7 @@ void OptionsList::Pop() {
 		return;
 	}
 
-	RString sLastMenu = m_asMenuStack.back();
+	std::string sLastMenu = m_asMenuStack.back();
 
 	m_asMenuStack.pop_back();
 
@@ -607,7 +607,7 @@ void OptionsList::UpdateMenuFromSelections() {
 
 bool OptionsList::Start() {
 	OptionRowHandler *pHandler = GetCurrentHandler();
-	const RString &sCurrentRow = m_asMenuStack.back();
+	const std::string sCurrentRow = m_asMenuStack.back();
 	std::vector<bool> &bSelections = m_bSelections[sCurrentRow];
 	if (m_iMenuStackSelection == (int)bSelections.size()) {
 		Pop();
@@ -620,7 +620,7 @@ bool OptionsList::Start() {
 	}
 
 	{
-		RString sIconText;
+		std::string sIconText;
 		GameCommand gc;
 		pHandler->GetIconTextAndGameCommand(m_iMenuStackSelection, sIconText, gc);
 		if (gc.m_sName == RESET_ROW) {

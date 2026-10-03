@@ -146,7 +146,7 @@ class ScreenSelectMusic : public ScreenWithMenuElements {
 	std::string m_sRandomMusicPath;
 	std::string m_sCourseMusicPath;
 	std::string m_sLoopMusicPath;
-	RString m_sFallbackCDTitlePath;
+	std::string m_sFallbackCDTitlePath;
 
 	FadingBanner m_Banner;
 	Sprite m_sprCDTitleFront, m_sprCDTitleBack;

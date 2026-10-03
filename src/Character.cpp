@@ -66,7 +66,7 @@ bool Character::Load(std::string sCharDir) {
 	ini.GetValue("Character", "DisplayName", m_sDisplayName);
 
 	// get optional InitCommand
-	RString s;
+	std::string s;
 	ini.GetValue("Character", "InitCommand", s);
 	m_cmdInit = ActorUtil::ParseActorCommands(s);
 
@@ -107,7 +107,7 @@ std::string Character::GetTakingABreakPath() const {
 	GetDirListing(m_sCharDir + "break.gif", as, false, true);
 	GetDirListing(m_sCharDir + "break.bmp", as, false, true);
 	if (as.empty())
-		return RString();
+		return std::string();
 	else
 		return as[0];
 }
@@ -130,7 +130,7 @@ std::string Character::GetSongSelectIconPath() const {
 		GetDirListing(m_sCharDir + "icon.gif", as, false, true);
 		GetDirListing(m_sCharDir + "icon.bmp", as, false, true);
 		if (as.empty())
-			return RString();
+			return std::string();
 		else
 			return as[0];
 	}
@@ -156,7 +156,7 @@ std::string Character::GetStageIconPath() const {
 		GetDirListing(m_sCharDir + "card.gif", as, false, true);
 		GetDirListing(m_sCharDir + "card.bmp", as, false, true);
 		if (as.empty())
-			return RString();
+			return std::string();
 		else
 			return as[0];
 	}

@@ -243,8 +243,8 @@ void Sprite::LoadFromNode(const XNode *pNode) {
 		else
 			for (int i = 0; true; i++) {
 				// deprecated
-				RString sFrameKey = ssprintf("Frame%04d", i);
-				RString sDelayKey = ssprintf("Delay%04d", i);
+				std::string sFrameKey = ssprintf("Frame%04d", i);
+				std::string sDelayKey = ssprintf("Delay%04d", i);
 				State newState;
 
 				int iFrameIndex;

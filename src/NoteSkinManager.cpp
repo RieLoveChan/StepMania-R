@@ -481,7 +481,7 @@ std::string NoteSkinManager::GetPathFromDirAndFile(const std::string &sDir, cons
 	GetDirListing(sDir + sFileName + "*", matches, false, true);
 
 	if (matches.empty())
-		return RString();
+		return std::string();
 
 	if (matches.size() > 1) {
 		RString sError = "Multiple files match '" + sDir + sFileName + "'.  Please remove all but one of these files: ";

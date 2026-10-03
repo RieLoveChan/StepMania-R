@@ -11,7 +11,7 @@
 
 #include <vector>
 
-int OptionToPreferredColumn(RString sOptionText);
+int OptionToPreferredColumn(std::string sOptionText);
 
 REGISTER_ACTOR_CLASS(ModIconRow);
 
@@ -113,7 +113,7 @@ static const OptionColumnEntry g_OptionColumnEntries[] = {
    {"Distant", 6},
 };
 
-int OptionToPreferredColumn(RString sOptionText) {
+int OptionToPreferredColumn(std::string sOptionText) {
 	// Speedups always go in column 0. digit ... x
 	if (sOptionText.size() > 1 && isdigit(sOptionText[0]) && tolower(sOptionText[sOptionText.size() - 1]) == 'x') {
 		return 0;
@@ -131,7 +131,7 @@ int OptionToPreferredColumn(RString sOptionText) {
 void ModIconRow::SetFromGameState() {
 	PlayerNumber pn = m_pn;
 
-	RString sOptions = GAMESTATE->m_pPlayerState[pn]->m_PlayerOptions.GetStage().GetString();
+	std::string sOptions = GAMESTATE->m_pPlayerState[pn]->m_PlayerOptions.GetStage().GetString();
 	std::vector<std::string> vsOptions;
 	split(sOptions, ", ", vsOptions, true);
 
@@ -140,7 +140,7 @@ void ModIconRow::SetFromGameState() {
 
 	// for each option, look for the best column to place it in
 	for (unsigned i = 0; i < vsOptions.size(); i++) {
-		RString sOption = vsOptions[i];
+		std::string sOption = vsOptions[i];
 		int iPreferredCol = OptionToPreferredColumn(sOption);
 		iPreferredCol = std::clamp(iPreferredCol, 0, (int)m_vpModIcon.size() - 1);
 

@@ -618,9 +618,9 @@ void MemoryCardManager::UnmountCard(PlayerNumber pn) {
 	}
 }
 
-bool MemoryCardManager::PathIsMemCard(RString sDir) const {
-	FOREACH_PlayerNumber(p) if (!sDir.Left(static_cast<int>(MEM_CARD_MOUNT_POINT[p].size()))
-	                                .CompareNoCase(MEM_CARD_MOUNT_POINT[p].c_str())) return true;
+bool MemoryCardManager::PathIsMemCard(const std::string &sDir) const {
+	FOREACH_PlayerNumber(p) if (StdString::ssicmp(sDir.substr(0, MEM_CARD_MOUNT_POINT[p].size()).c_str(), MEM_CARD_MOUNT_POINT[p].c_str()) == 0)
+		return true;
 	return false;
 }
 

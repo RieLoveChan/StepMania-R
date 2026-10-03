@@ -309,7 +309,7 @@ void ScreenSelectMaster::BeginScreen() {
 	int iDefaultChoice = -1;
 	for (unsigned c = 0; c < m_aGameCommands.size(); c++) {
 		const GameCommand &mc = m_aGameCommands[c];
-		if (mc.m_sName == (RString)DEFAULT_CHOICE) {
+		if (mc.m_sName == DEFAULT_CHOICE.GetValue()) {
 			iDefaultChoice = c;
 			break;
 		}

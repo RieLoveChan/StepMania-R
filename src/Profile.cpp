@@ -208,7 +208,7 @@ std::string Profile::GetDisplayNameOrHighScoreName() const {
 	else if (!m_sLastUsedHighScoreName.empty())
 		return m_sLastUsedHighScoreName;
 	else
-		return RString();
+		return std::string();
 }
 
 Character *Profile::GetCharacter() const {

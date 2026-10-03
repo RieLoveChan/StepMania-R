@@ -16,7 +16,7 @@
 class OptionsList;
 class OptionListRow : public ActorFrame {
  public:
-	void Load(OptionsList *pOptions, const RString &sType);
+	void Load(OptionsList *pOptions, const std::string &sType);
 	void SetFromHandler(const OptionRowHandler *pHandler);
 	void SetTextFromHandler(const OptionRowHandler *pHandler);
 	void SetUnderlines(const std::vector<bool> &aSelections, const OptionRowHandler *pHandler);
@@ -44,7 +44,7 @@ class OptionsList : public ActorFrame {
 	OptionsList();
 	~OptionsList();
 
-	void Load(RString sType, PlayerNumber pn);
+	void Load(std::string sType, PlayerNumber pn);
 	void Reset();
 
 	void Link(OptionsList *pLink) {

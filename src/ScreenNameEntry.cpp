@@ -72,7 +72,7 @@ void ScreenNameEntry::ScrollingText::DrawPrimitives() {
 	float fY = GRAY_ARROWS_Y + (fClosestYOffset - g_iNumCharsToDrawBehind) * g_fCharsSpacingY;
 
 	for (int i = 0; i < NUM_CHARS_TO_DRAW_TOTAL; ++i) {
-		const RString c = CHARS_CHOICES.substr(iCharIndex, 1);
+		const std::string c = CHARS_CHOICES.substr(iCharIndex, 1);
 		float fZoom = g_fCharsZoomSmall;
 		float fAlpha = 1.f;
 
@@ -275,7 +275,7 @@ void ScreenNameEntry::Init() {
 		m_textCategory[p].SetX(fPlayerX);
 		m_textCategory[p].SetY(CATEGORY_Y);
 		m_textCategory[p].SetZoom(CATEGORY_ZOOM);
-		RString joined;
+		std::string joined;
 		for (unsigned j = 0; j < aFeats[p].size(); ++j) {
 			if (j)
 				joined += "\n";
@@ -320,7 +320,7 @@ bool ScreenNameEntry::Input(const InputEventPlus &input) {
 			m_ReceptorArrowRow[input.pn].Step(iCol, TNS_W1);
 			m_soundStep.Play(true);
 			char c = m_Text[input.pn].GetClosestChar(m_fFakeBeat);
-			m_textSelectedChars[input.pn][iCol].SetText(RString(1, c));
+			m_textSelectedChars[input.pn][iCol].SetText(std::string(1, c));
 			m_sSelectedName[input.pn][iStringIndex] = c;
 		}
 		bHandled = true;

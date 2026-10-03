@@ -16,37 +16,37 @@ namespace {
 // freed) -- matches the lifetime of the string literals this replaces
 // (`static const char *m_szName = "dance";` etc, which also never get freed).
 // Avoids strdup(), which MSVC flags as deprecated (C4996) under -Werror.
-const char *DupString(const RString &s) {
+const char *DupString(const std::string &s) {
 	char *p = new char[s.size() + 1];
 	std::memcpy(p, s.c_str(), s.size() + 1);
 	return p;
 }
 
-RString GameButtonTypeToString(GameButtonType t) {
+std::string GameButtonTypeToString(GameButtonType t) {
 	return (t == GameButtonType_Menu) ? "Menu" : "Step";
 }
-GameButtonType StringToGameButtonType(const RString &s) {
-	return s.EqualsNoCase("Menu") ? GameButtonType_Menu : GameButtonType_Step;
+GameButtonType StringToGameButtonType(const std::string &s) {
+	return StdString::ssicmp(s.c_str(), "Menu") == 0 ? GameButtonType_Menu : GameButtonType_Step;
 }
 
 // InputScheme::GameButtonInfo::m_SecondaryMenuButton and
 // AutoMappingEntry::m_gb are always resolved through the owning game's own
 // InputScheme (GameButtonToString/StringToGameButton both take one), so the
 // scheme must exist before either field can round-trip.
-RString SafeGameButtonToString(const InputScheme *pScheme, GameButton gb) {
+std::string SafeGameButtonToString(const InputScheme *pScheme, GameButton gb) {
 	if (gb == GameButton_Invalid)
 		return "Invalid";
 	return GameButtonToString(pScheme, gb);
 }
-GameButton SafeStringToGameButton(const InputScheme *pScheme, const RString &s) {
-	if (s.EqualsNoCase("Invalid") || s.empty())
+GameButton SafeStringToGameButton(const InputScheme *pScheme, const std::string &s) {
+	if (StdString::ssicmp(s.c_str(), "Invalid") == 0 || s.empty())
 		return GameButton_Invalid;
 	return StringToGameButton(pScheme, s);
 }
 } // namespace
 
-void ExportGameToDisk(const Game *pGame, const RString &sBaseDir) {
-	const RString sGameDir = sBaseDir + pGame->m_szName + "/";
+void ExportGameToDisk(const Game *pGame, const std::string &sBaseDir) {
+	const std::string sGameDir = sBaseDir + pGame->m_szName + "/";
 
 	// Count styles (m_apStyles is nullptr-terminated) and collect their names
 	// up front, in original order -- the load side needs the ordered list to
@@ -73,7 +73,7 @@ void ExportGameToDisk(const Game *pGame, const RString &sBaseDir) {
 		const InputScheme::GameButtonInfo *pSchemeInfo = pScheme->GetGameButtonInfo(gb);
 		const Game::PerButtonInfo *pGameInfo = pGame->GetPerButtonInfo(gb);
 
-		game_ini.SetValue("Game", ssprintf("Button%dName", i), RString(pSchemeInfo->m_szName));
+		game_ini.SetValue("Game", ssprintf("Button%dName", i), std::string(pSchemeInfo->m_szName));
 		game_ini.SetValue(
 		   "Game", ssprintf("Button%dSecondaryMenu", i), SafeGameButtonToString(pScheme, pSchemeInfo->m_SecondaryMenuButton)
 		);
@@ -82,7 +82,7 @@ void ExportGameToDisk(const Game *pGame, const RString &sBaseDir) {
 
 	game_ini.SetValue("Game", "NumStyles", static_cast<int>(vpStyles.size()));
 	for (std::size_t i = 0; i < vpStyles.size(); ++i)
-		game_ini.SetValue("Game", ssprintf("Style%d", static_cast<int>(i)), RString(vpStyles[i]->m_szName));
+		game_ini.SetValue("Game", ssprintf("Style%d", static_cast<int>(i)), std::string(vpStyles[i]->m_szName));
 
 	game_ini.WriteFile(sGameDir + "game.ini");
 
@@ -99,7 +99,7 @@ void ExportGameToDisk(const Game *pGame, const RString &sBaseDir) {
 		map_ini.SetValue("AutoMappings", "NumEntries", static_cast<int>(pMap->m_vMaps.size()));
 		for (std::size_t i = 0; i < pMap->m_vMaps.size(); ++i) {
 			const AutoMappingEntry &e = pMap->m_vMaps[i];
-			const RString sEntry = ssprintf(
+			const std::string sEntry = ssprintf(
 			   "%d,%s,%s,%d",
 			   e.m_iSlotIndex,
 			   DeviceButtonToString(e.m_deviceButton).c_str(),
@@ -129,10 +129,10 @@ void ExportGameToDisk(const Game *pGame, const RString &sBaseDir) {
 		for (int p = 0; p < NUM_PLAYERS; ++p) {
 			for (int c = 0; c < MAX_COLS_PER_PLAYER; ++c) {
 				const Style::ColumnInfo &ci = pStyle->m_ColumnInfo[p][c];
-				const RString sPrefix = ssprintf("P%dCol%d", p, c);
+				const std::string sPrefix = ssprintf("P%dCol%d", p, c);
 				style_ini.SetValue("Style", sPrefix + "Track", ci.track);
 				style_ini.SetValue("Style", sPrefix + "XOffset", ci.fXOffset);
-				style_ini.SetValue("Style", sPrefix + "Name", RString(ci.pzName != nullptr ? ci.pzName : ""));
+				style_ini.SetValue("Style", sPrefix + "Name", std::string(ci.pzName != nullptr ? ci.pzName : ""));
 			}
 		}
 		for (int c = 0; c < NUM_GameController; ++c) {
@@ -146,8 +146,8 @@ void ExportGameToDisk(const Game *pGame, const RString &sBaseDir) {
 	}
 }
 
-const Game *LoadGameFromDisk(const RString &sName, const RString &sBaseDir, GameDataStore *pStore) {
-	const RString sGameDir = sBaseDir + sName + "/";
+const Game *LoadGameFromDisk(const std::string &sName, const std::string &sBaseDir, GameDataStore *pStore) {
+	const std::string sGameDir = sBaseDir + sName + "/";
 
 	IniFile game_ini;
 	if (!game_ini.ReadFile(sGameDir + "game.ini")) {
@@ -168,7 +168,7 @@ const Game *LoadGameFromDisk(const RString &sName, const RString &sBaseDir, Game
 	game_ini.GetValue("Game", "TickHolds", game.m_bTickHolds);
 	game_ini.GetValue("Game", "PlayersHaveSeparateStyles", game.m_PlayersHaveSeparateStyles);
 
-	RString sMap;
+	std::string sMap;
 	game_ini.GetValue("Game", "MapW1To", sMap);
 	game.m_mapW1To = StringToTapNoteScore(sMap);
 	game_ini.GetValue("Game", "MapW2To", sMap);
@@ -189,15 +189,15 @@ const Game *LoadGameFromDisk(const RString &sName, const RString &sBaseDir, Game
 		// their arrays as [gb - GAME_BUTTON_NEXT], i.e. plain [i] here --
 		// the first GAME_BUTTON_NEXT slots are the universal buttons
 		// (common tables in InputMapper.cpp/Game.cpp), not part of this data.
-		RString sButtonName;
+		std::string sButtonName;
 		game_ini.GetValue("Game", ssprintf("Button%dName", i), sButtonName);
 		scheme.m_GameButtonInfo[i].m_szName = DupString(sButtonName);
 
-		RString sSecondary;
+		std::string sSecondary;
 		game_ini.GetValue("Game", ssprintf("Button%dSecondaryMenu", i), sSecondary);
 		scheme.m_GameButtonInfo[i].m_SecondaryMenuButton = SafeStringToGameButton(&scheme, sSecondary);
 
-		RString sType;
+		std::string sType;
 		game_ini.GetValue("Game", ssprintf("Button%dType", i), sType);
 		game.m_PerButtonInfo[i].m_gbt = StringToGameButtonType(sType);
 	}
@@ -215,9 +215,9 @@ const Game *LoadGameFromDisk(const RString &sName, const RString &sBaseDir, Game
 		int iNumEntries = 0;
 		map_ini.GetValue("AutoMappings", "NumEntries", iNumEntries);
 		for (int i = 0; i < iNumEntries; ++i) {
-			RString sEntry;
+			std::string sEntry;
 			map_ini.GetValue("AutoMappings", ssprintf("Entry%d", i), sEntry);
-			std::vector<RString> parts;
+			std::vector<std::string> parts;
 			split(sEntry, ",", parts, false);
 			if (parts.size() != 4)
 				continue;
@@ -241,7 +241,7 @@ const Game *LoadGameFromDisk(const RString &sName, const RString &sBaseDir, Game
 	std::vector<const Style *> &vpStyles = pStore->styleArrays.back();
 
 	for (int s = 0; s < iNumStyles; ++s) {
-		RString sStyleName;
+		std::string sStyleName;
 		game_ini.GetValue("Game", ssprintf("Style%d", s), sStyleName);
 
 		IniFile style_ini;
@@ -265,11 +265,11 @@ const Game *LoadGameFromDisk(const RString &sName, const RString &sBaseDir, Game
 		style_ini.GetValue("Style", "UsedForDemonstration", style.m_bUsedForDemonstration);
 		style_ini.GetValue("Style", "UsedForHowToPlay", style.m_bUsedForHowToPlay);
 
-		RString sStepsType;
+		std::string sStepsType;
 		style_ini.GetValue("Style", "StepsType", sStepsType);
 		style.m_StepsType = GAMEMAN->StringToStepsType(sStepsType);
 
-		RString sStyleType;
+		std::string sStyleType;
 		style_ini.GetValue("Style", "StyleType", sStyleType);
 		style.m_StyleType = StringToStyleType(sStyleType);
 
@@ -282,10 +282,10 @@ const Game *LoadGameFromDisk(const RString &sName, const RString &sBaseDir, Game
 		for (int p = 0; p < NUM_PLAYERS; ++p) {
 			for (int c = 0; c < MAX_COLS_PER_PLAYER; ++c) {
 				Style::ColumnInfo &ci = style.m_ColumnInfo[p][c];
-				const RString sPrefix = ssprintf("P%dCol%d", p, c);
+				const std::string sPrefix = ssprintf("P%dCol%d", p, c);
 				style_ini.GetValue("Style", sPrefix + "Track", ci.track);
 				style_ini.GetValue("Style", sPrefix + "XOffset", ci.fXOffset);
-				RString sColName;
+				std::string sColName;
 				style_ini.GetValue("Style", sPrefix + "Name", sColName);
 				ci.pzName = sColName.empty() ? nullptr : DupString(sColName);
 			}

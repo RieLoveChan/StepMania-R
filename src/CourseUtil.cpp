@@ -529,7 +529,7 @@ std::string CourseID::ToString() const {
 		return sPath;
 	if (!sFullTitle.empty())
 		return sFullTitle;
-	return RString();
+	return std::string();
 }
 
 bool CourseID::IsValid() const {

@@ -36,7 +36,7 @@ struct GameDataStore {
  * literals at runtime and serializes them to disk. Not used at normal
  * runtime once Games/ is populated and the hand-written literals are
  * removed. */
-void ExportGameToDisk(const Game *pGame, const RString &sBaseDir);
+void ExportGameToDisk(const Game *pGame, const std::string &sBaseDir);
 
 /**
  * @brief Load one game's data from Games/<name>/... under the given base
@@ -44,7 +44,7 @@ void ExportGameToDisk(const Game *pGame, const RString &sBaseDir);
  * (which must outlive the returned pointer).
  * @return the loaded Game, or nullptr if Games/<name>/ doesn't exist or a
  * required file/field inside it is missing. */
-const Game *LoadGameFromDisk(const RString &sName, const RString &sBaseDir, GameDataStore *pStore);
+const Game *LoadGameFromDisk(const std::string &sName, const std::string &sBaseDir, GameDataStore *pStore);
 
 #endif
 

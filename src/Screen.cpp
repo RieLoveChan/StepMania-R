@@ -82,7 +82,7 @@ void Screen::BeginScreen() {
 
 	/* Screens set these when they determine their next screen dynamically. Reset them
 	 * here, so a reused screen doesn't inherit these from the last time it was used. */
-	m_sNextScreen = RString();
+	m_sNextScreen = std::string();
 
 	m_fLockInputSecs = 0;
 
@@ -232,7 +232,7 @@ void Screen::HandleScreenMessage(const ScreenMessage SM) {
 		if (SCREENMAN->IsStackedScreen(this))
 			SCREENMAN->PopTopScreen(m_smSendOnPop);
 		else {
-			RString ToScreen = (SM == SM_GoToNextScreen ? GetNextScreenName() : GetPrevScreen());
+			std::string ToScreen = (SM == SM_GoToNextScreen ? GetNextScreenName() : GetPrevScreen());
 			if (ToScreen.empty()) {
 				LuaHelpers::ReportScriptError("Error:  Tried to go to empty screen.");
 			}

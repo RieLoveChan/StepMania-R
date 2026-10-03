@@ -138,7 +138,7 @@ float StageStats::GetTotalPossibleStepsSeconds() const {
 }
 
 static HighScore FillInHighScore(
-   const PlayerStageStats &pss, const PlayerState &ps, RString sRankingToFillInMarker, RString sPlayerGuid
+   const PlayerStageStats &pss, const PlayerState &ps, std::string sRankingToFillInMarker, std::string sPlayerGuid
 ) {
 	HighScore hs;
 	hs.SetName(sRankingToFillInMarker);
@@ -152,7 +152,7 @@ static HighScore FillInHighScore(
 
 	std::vector<std::string> asModifiers;
 	{
-		RString sPlayerOptions = ps.m_PlayerOptions.GetStage().GetString();
+		std::string sPlayerOptions = ps.m_PlayerOptions.GetStage().GetString();
 		if (!sPlayerOptions.empty())
 			asModifiers.push_back(sPlayerOptions);
 		std::string sSongOptions = GAMESTATE->m_SongOptions.GetStage().GetString();
@@ -203,12 +203,13 @@ void StageStats::FinalizeScores(bool bSummary) {
 	// whether or not to save scores when the stage was failed depends on if this
 	// is a course or not... it's handled below in the switch.
 	FOREACH_HumanPlayer(p) {
-		RString sPlayerGuid = PROFILEMAN->IsPersistentProfile(p) ? PROFILEMAN->GetProfile(p)->m_sGuid : RString("");
+		std::string sPlayerGuid =
+		   PROFILEMAN->IsPersistentProfile(p) ? std::string(PROFILEMAN->GetProfile(p)->m_sGuid) : std::string("");
 		m_player[p].m_HighScore =
 		   FillInHighScore(m_player[p], *GAMESTATE->m_pPlayerState[p], RANKING_TO_FILL_IN_MARKER[p], sPlayerGuid);
 	}
 	FOREACH_EnabledMultiPlayer(mp) {
-		RString sPlayerGuid = "00000000-0000-0000-0000-000000000000"; // FIXME
+		std::string sPlayerGuid = "00000000-0000-0000-0000-000000000000"; // FIXME
 		m_multiPlayer[mp].m_HighScore =
 		   FillInHighScore(m_multiPlayer[mp], *GAMESTATE->m_pMultiPlayerState[mp], "", sPlayerGuid);
 	}

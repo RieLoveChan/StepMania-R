@@ -81,7 +81,7 @@ static std::string ClearMemoryCardEdits() {
 	if (!MEMCARDMAN->IsMounted(pn))
 		MEMCARDMAN->MountCard(pn);
 
-	std::string sDir = MEM_CARD_MOUNT_POINT[pn] + (RString)PREFSMAN->m_sMemoryCardProfileSubdir + "/";
+	std::string sDir = MEM_CARD_MOUNT_POINT[pn] + PREFSMAN->m_sMemoryCardProfileSubdir.Get() + "/";
 	std::vector<std::string> vsEditFiles;
 	GetDirListing(sDir + EDIT_STEPS_SUBDIR + "*.edit", vsEditFiles, false, true);
 	GetDirListing(sDir + EDIT_COURSES_SUBDIR + "*.crs", vsEditFiles, false, true);
@@ -332,7 +332,7 @@ static std::string CopyEditsMachineToMemoryCard() {
 		MEMCARDMAN->MountCard(pn);
 
 	std::string sFromDir = PROFILEMAN->GetProfileDir(ProfileSlot_Machine);
-	std::string sToDir = MEM_CARD_MOUNT_POINT[pn] + (RString)PREFSMAN->m_sMemoryCardProfileSubdir + "/";
+	std::string sToDir = MEM_CARD_MOUNT_POINT[pn] + PREFSMAN->m_sMemoryCardProfileSubdir.Get() + "/";
 
 	std::vector<std::string> vs;
 	vs.push_back(ssprintf(COPIED_TO_CARD.GetValue(), pn + 1));
@@ -358,7 +358,7 @@ static std::string SyncEditsMachineToMemoryCard() {
 	int iNumFailed = 0;
 
 	std::string sFromDir = PROFILEMAN->GetProfileDir(ProfileSlot_Machine);
-	std::string sToDir = MEM_CARD_MOUNT_POINT[pn] + (RString)PREFSMAN->m_sMemoryCardProfileSubdir + "/";
+	std::string sToDir = MEM_CARD_MOUNT_POINT[pn] + PREFSMAN->m_sMemoryCardProfileSubdir.Get() + "/";
 	SyncEdits(sFromDir, sToDir, iNumAdded, iNumDeleted, iNumOverwritten, iNumFailed);
 
 	MEMCARDMAN->UnmountCard(pn);
