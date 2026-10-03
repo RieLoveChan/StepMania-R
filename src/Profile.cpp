@@ -994,7 +994,7 @@ void Profile::LoadCustomFunction(std::string sDir, PlayerNumber pn) {
 	}
 
 	// Run it
-	RString Error = "Error running CustomLoadFunction: ";
+	std::string Error = "Error running CustomLoadFunction: ";
 	LuaHelpers::RunScriptOnStack(L, Error, 3, 0, true);
 
 	LUA->Release(L);
@@ -1311,7 +1311,7 @@ bool Profile::SaveAllToDir(RString sDir, bool bSignData) const {
 	LuaHelpers::Push(L, sDir);
 
 	// Run it
-	RString Error = "Error running CustomSaveFunction: ";
+	std::string Error = "Error running CustomSaveFunction: ";
 	LuaHelpers::RunScriptOnStack(L, Error, 2, 0, true);
 
 	LUA->Release(L);

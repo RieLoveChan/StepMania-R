@@ -92,7 +92,7 @@ void LifeMeterBattery::OnSongEnded() {
 			COURSE_SONG_REWARD_LIVES.PushSelf(L);
 			PushSelf(L);
 			LuaHelpers::Push(L, pn);
-			RString error = "Error running CourseSongRewardLives callback: ";
+			std::string error = "Error running CourseSongRewardLives callback: ";
 			LuaHelpers::RunScriptOnStack(L, error, 2, 1, true);
 			m_iLivesLeft += (int)luaL_optnumber(L, -1, 0);
 			lua_settop(L, 0);

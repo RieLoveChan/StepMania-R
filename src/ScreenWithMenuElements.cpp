@@ -168,7 +168,7 @@ RString ScreenWithMenuElements::HandleLuaMusicFile(RString const &path) {
 	RString ret = path;
 	if (ft == FT_Lua) {
 		RString script;
-		RString error = "Lua runtime error: ";
+		std::string error = "Lua runtime error: ";
 		if (GetFileContents(path, script)) {
 			Lua *L = LUA->Get();
 			if (!LuaHelpers::RunScript(L, script, "@" + path, error, 0, 1, true)) {

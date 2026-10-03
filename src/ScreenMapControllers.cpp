@@ -84,7 +84,7 @@ void ScreenMapControllers::Init() {
 			text.LoadFromFont(THEME->GetPathF(m_sName, "title"));
 			PlayerNumber pn = (PlayerNumber)c;
 			text.SetName("Label" + PlayerNumberToString(pn));
-			RString sText = ssprintf(PLAYER_SLOTS.GetValue(), PlayerNumberToLocalizedString(pn).c_str());
+			std::string sText = ssprintf(PLAYER_SLOTS.GetValue(), PlayerNumberToLocalizedString(pn).c_str());
 			text.SetText(sText);
 			ActorUtil::LoadAllCommands(text, m_sName);
 			m_Line.back()->AddChild(&m_textLabel[c]);
@@ -688,7 +688,7 @@ bool ScreenMapControllers::SanityCheckWrapper() {
 		for (RString &reason : reasons_not_sane) {
 			reason = THEME->GetString("ScreenMapControllers", reason);
 		}
-		RString joined_reasons = join("\n", reasons_not_sane);
+		std::string joined_reasons = join("\n", reasons_not_sane);
 		joined_reasons = THEME->GetString("ScreenMapControllers", "VitalButtons") + "\n" + joined_reasons;
 		Message msg("SetText");
 		msg.SetParam("Text", joined_reasons);

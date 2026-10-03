@@ -121,7 +121,7 @@ class RageTexture {
 	}
 
 	static void GetFrameDimensionsFromFileName(
-	   RString sPath, int *puFramesWide, int *puFramesHigh, int source_width = 0, int source_height = 0
+	   std::string sPath, int *puFramesWide, int *puFramesHigh, int source_width = 0, int source_height = 0
 	);
 
 	// Lua

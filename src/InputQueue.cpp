@@ -171,25 +171,25 @@ bool InputQueueCode::Load(std::string sButtonsNames) {
 		}
 
 		m_aPresses.push_back(ButtonPress());
-		for (RString sButtonName : asButtonNames) // for each button in this code
+		for (std::string sButtonName : asButtonNames) // for each button in this code
 		{
 			bool bHold = false;
 			bool bNotHold = false;
 			for (;;) {
-				if (sButtonName.Left(1) == "+") {
+				if (!sButtonName.empty() && sButtonName[0] == '+') {
 					m_aPresses.back().m_InputTypes[IET_REPEAT] = true;
 					sButtonName.erase(0, 1);
 				}
-				else if (sButtonName.Left(1) == "~") {
+				else if (!sButtonName.empty() && sButtonName[0] == '~') {
 					m_aPresses.back().m_InputTypes[IET_FIRST_PRESS] = false;
 					m_aPresses.back().m_InputTypes[IET_RELEASE] = true;
 					sButtonName.erase(0, 1);
 				}
-				else if (sButtonName.Left(1) == "@") {
+				else if (!sButtonName.empty() && sButtonName[0] == '@') {
 					sButtonName.erase(0, 1);
 					bHold = true;
 				}
-				else if (sButtonName.Left(1) == "!") {
+				else if (!sButtonName.empty() && sButtonName[0] == '!') {
 					sButtonName.erase(0, 1);
 					bNotHold = true;
 				}

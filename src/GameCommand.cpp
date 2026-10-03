@@ -672,7 +672,7 @@ void GameCommand::ApplySelf(const std::vector<PlayerNumber> &vpns) const {
 			ASSERT(!lua_isnil(L, -1));
 
 			lua_pushnumber(L, pn); // 1st parameter
-			RString error = "Lua GameCommand error: ";
+			std::string error = "Lua GameCommand error: ";
 			LuaHelpers::RunScriptOnStack(L, error, 1, 0, true);
 		}
 		LUA->Release(L);

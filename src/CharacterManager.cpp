@@ -32,11 +32,11 @@ CharacterManager::CharacterManager() {
 
 	bool FoundDefault = false;
 	for (unsigned i = 0; i < as.size(); i++) {
-		RString sCharName, sDummy;
+		std::string sCharName, sDummy;
 		splitpath(as[i], sDummy, sCharName, sDummy);
-		sCharName.MakeLower();
+		MakeLower(&sCharName[0], sCharName.size());
 
-		if (sCharName.CompareNoCase("default") == 0)
+		if (StdString::ssicmp(sCharName.c_str(), "default") == 0)
 			FoundDefault = true;
 
 		Character *pChar = new Character;

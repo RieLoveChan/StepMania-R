@@ -40,7 +40,7 @@ void RageTexture::CreateFrameRects() {
 }
 
 void RageTexture::GetFrameDimensionsFromFileName(
-   RString sPath, int *piFramesWide, int *piFramesHigh, int source_width, int source_height
+   std::string sPath, int *piFramesWide, int *piFramesHigh, int source_width, int source_height
 ) {
 	static Regex match(" ([0-9]+)x([0-9]+)([\\. ]|$)");
 	std::vector<std::string> asMatch;

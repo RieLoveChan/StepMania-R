@@ -339,7 +339,7 @@ int ScoreKeeperNormal::CalcNextToastyAt(int level) {
 		amount = static_cast<int>(lua_tointeger(L, 1));
 		break;
 	case LUA_TFUNCTION: {
-		RString err = "Error running ToastyTriggersAt: ";
+		std::string err = "Error running ToastyTriggersAt: ";
 		LuaHelpers::Push(L, m_pPlayerState->m_PlayerNumber);
 		lua_pushnumber(L, level);
 		if (LuaHelpers::RunScriptOnStack(L, err, 2, 1, true)) {

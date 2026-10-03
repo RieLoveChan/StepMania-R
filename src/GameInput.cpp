@@ -30,7 +30,7 @@ GameButton StringToGameButton(const InputScheme *pInputs, const std::string &s) 
 }
 
 std::string GameInput::ToString(const InputScheme *pInputs) const {
-	return GameControllerToString(controller) + RString("_") + GameButtonToString(pInputs, button);
+	return GameControllerToString(controller) + "_" + GameButtonToString(pInputs, button);
 }
 
 bool GameInput::FromString(const InputScheme *pInputs, const std::string &s) {

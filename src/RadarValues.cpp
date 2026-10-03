@@ -71,7 +71,7 @@ std::string RadarValues::ToString(int iMaxValues) const {
 	return join(",", asRadarValues);
 }
 
-void RadarValues::FromString(RString sRadarValues) {
+void RadarValues::FromString(std::string sRadarValues) {
 	std::vector<std::string> saValues;
 	split(sRadarValues, ",", saValues, true);
 

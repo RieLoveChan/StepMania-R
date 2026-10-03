@@ -173,7 +173,7 @@ bool NoteSkinManager::LoadNoteSkinDataRecursive(const std::string &sNoteSkinName
 		LOG_TRACE(Log::Actor, "Load script \"%s\"", sFile.c_str());
 
 		Lua *L = LUA->Get();
-		RString Error = "Error running " + sFile + ": ";
+		std::string Error = "Error running " + sFile + ": ";
 		refScript.PushSelf(L);
 		if (!LuaHelpers::RunScript(L, sScript, "@" + sFile, Error, 1, 1, true)) {
 			lua_pop(L, 1);

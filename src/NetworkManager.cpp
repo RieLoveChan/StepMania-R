@@ -751,7 +751,7 @@ class LunaNetworkManager : public Luna<NetworkManager> {
 		lua_pushfstring(L, "access to %s is not allowed", url.c_str());
 		lua_setfield(L, -2, "errorMessage");
 
-		RString error = "Lua error in HTTP response handler: ";
+		std::string error = "Lua error in HTTP response handler: ";
 		LuaHelpers::RunScriptOnStack(L, error, 1, 0, true);
 	}
 
@@ -767,7 +767,7 @@ class LunaNetworkManager : public Luna<NetworkManager> {
 		lua_pushstring(L, errorMessage.c_str());
 		lua_setfield(L, -2, "errorMessage");
 
-		RString error = "Lua error in HTTP response handler: ";
+		std::string error = "Lua error in HTTP response handler: ";
 		LuaHelpers::RunScriptOnStack(L, error, 1, 0, true);
 	}
 
@@ -859,7 +859,7 @@ class LunaNetworkManager : public Luna<NetworkManager> {
 		lua_pushnumber(L, static_cast<lua_Number>(response->downloadSize));
 		lua_setfield(L, -2, "downloadSize");
 
-		RString error = "Lua error in HTTP response handler: ";
+		std::string error = "Lua error in HTTP response handler: ";
 		LuaHelpers::RunScriptOnStack(L, error, 1, 0, true);
 	}
 
@@ -868,7 +868,7 @@ class LunaNetworkManager : public Luna<NetworkManager> {
 		lua_pushinteger(L, current);
 		lua_pushinteger(L, total);
 
-		RString error = "Lua error in HTTP progress handler: ";
+		std::string error = "Lua error in HTTP progress handler: ";
 		LuaHelpers::RunScriptOnStack(L, error, 2, 0, true);
 	}
 
@@ -884,7 +884,7 @@ class LunaNetworkManager : public Luna<NetworkManager> {
 		lua_pushfstring(L, "access to %s is not allowed", url.c_str());
 		lua_setfield(L, -2, "reason");
 
-		RString error = "Lua error in WebSocket message handler: ";
+		std::string error = "Lua error in WebSocket message handler: ";
 		LuaHelpers::RunScriptOnStack(L, error, 1, 0, true);
 	}
 
@@ -963,7 +963,7 @@ class LunaNetworkManager : public Luna<NetworkManager> {
 			return;
 		}
 
-		RString error = "Lua error in WebSocket message handler: ";
+		std::string error = "Lua error in WebSocket message handler: ";
 		LuaHelpers::RunScriptOnStack(L, error, 1, 0, true);
 	}
 };

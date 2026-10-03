@@ -417,7 +417,7 @@ static bool ValidateFromLua(const RString &sAnswer, RString &sErrorOut) {
 
 	bool valid = false;
 
-	RString error = "Lua error in ScreenTextEntry Validate: ";
+	std::string error = "Lua error in ScreenTextEntry Validate: ";
 	if (LuaHelpers::RunScriptOnStack(L, error, 2, 2, true)) {
 		if (!lua_isstring(L, -1) || !lua_isboolean(L, -2)) {
 			LuaHelpers::ReportScriptError("Lua error: ScreenTextEntry Validate did not return 'bool, string'.");
@@ -445,7 +445,7 @@ static void OnOKFromLua(const RString &sAnswer) {
 	g_OnOKFunc.PushSelf(L);
 	// Argument 1 (answer):
 	lua_pushstring(L, sAnswer);
-	RString error = "Lua error in ScreenTextEntry OnOK: ";
+	std::string error = "Lua error in ScreenTextEntry OnOK: ";
 	LuaHelpers::RunScriptOnStack(L, error, 1, 0, true);
 
 	LUA->Release(L);
@@ -458,7 +458,7 @@ static void OnCancelFromLua() {
 	Lua *L = LUA->Get();
 
 	g_OnCancelFunc.PushSelf(L);
-	RString error = "Lua error in ScreenTextEntry OnCancel: ";
+	std::string error = "Lua error in ScreenTextEntry OnCancel: ";
 	LuaHelpers::RunScriptOnStack(L, error, 0, 0, true);
 
 	LUA->Release(L);
@@ -480,7 +480,7 @@ static bool ValidateAppendFromLua(const RString &sAnswerBeforeChar, RString &sAp
 
 	bool append = false;
 
-	RString error = "Lua error in ScreenTextEntry ValidateAppend: ";
+	std::string error = "Lua error in ScreenTextEntry ValidateAppend: ";
 	if (LuaHelpers::RunScriptOnStack(L, error, 2, 1, true)) {
 		if (!lua_isboolean(L, -1)) {
 			LuaHelpers::ReportScriptError("\"ValidateAppend\" did not return a boolean.");
@@ -505,7 +505,7 @@ static RString FormatAnswerForDisplayFromLua(const RString &sAnswer) {
 	lua_pushstring(L, sAnswer);
 
 	std::string answer;
-	RString error = "Lua error in ScreenTextEntry FormatAnswerForDisplay: ";
+	std::string error = "Lua error in ScreenTextEntry FormatAnswerForDisplay: ";
 	if (LuaHelpers::RunScriptOnStack(L, error, 1, 1, true)) {
 		if (!lua_isstring(L, -1)) {
 			LuaHelpers::ReportScriptError("\"FormatAnswerForDisplay\" did not return a string.");

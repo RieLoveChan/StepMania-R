@@ -61,7 +61,7 @@ namespace LuaHelpers {
 /* Load the given script with the given name. On success, the resulting
  * chunk will be on the stack. On error, the error is stored in sError
  * and the stack is unchanged. */
-bool LoadScript(Lua *L, const std::string &sScript, const std::string &sName, RString &sError);
+bool LoadScript(Lua *L, const std::string &sScript, const std::string &sName, std::string &sError);
 
 /* Report the error three ways:  Broadcast message, Warn, and Dialog. */
 /* If UseAbort is true, reports the error through Dialog::AbortRetryIgnore
@@ -82,7 +82,7 @@ void ReportScriptErrorFmt(const char *fmt, ...);
  * when reporting.  The error is reported through LOG->Warn and
  * SCREENMAN->SystemMessage.
  */
-bool RunScriptOnStack(Lua *L, RString &Error, int Args = 0, int ReturnValues = 0, bool ReportError = false);
+bool RunScriptOnStack(Lua *L, std::string &Error, int Args = 0, int ReturnValues = 0, bool ReportError = false);
 
 /* LoadScript the given script, and RunScriptOnStack it.
  * iArgs arguments are at the top of the stack. */
@@ -90,7 +90,7 @@ bool RunScript(
    Lua *L,
    const std::string &Script,
    const std::string &Name,
-   RString &Error,
+   std::string &Error,
    int Args = 0,
    int ReturnValues = 0,
    bool ReportError = false

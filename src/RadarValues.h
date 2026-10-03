@@ -69,7 +69,7 @@ struct RadarValues {
 	void LoadFromNode(const XNode *pNode);
 
 	std::string ToString(int iMaxValues = -1) const; // default = all
-	void FromString(RString sValues);
+	void FromString(std::string sValues);
 
 	static ThemeMetric<bool> WRITE_SIMPLE_VALIES;
 	static ThemeMetric<bool> WRITE_COMPLEX_VALIES;

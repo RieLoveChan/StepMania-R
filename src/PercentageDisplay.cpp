@@ -171,7 +171,7 @@ void PercentageDisplay::Refresh() {
 				Lua *L = LUA->Get();
 				m_FormatPercentScore.PushSelf(L);
 				LuaHelpers::Push(L, fPercentDancePoints);
-				RString Error = "Error running FormatPercentScore: ";
+				std::string Error = "Error running FormatPercentScore: ";
 				LuaHelpers::RunScriptOnStack(L, Error, 1, 1, true); // 1 arg, 1 result
 				LuaHelpers::Pop(L, sNumToDisplay);
 				LUA->Release(L);

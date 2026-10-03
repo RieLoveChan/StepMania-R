@@ -121,7 +121,7 @@ void ScreenSelectMaster::Init() {
 			Lua *L = LUA->Get();
 			command.PushSelf(L);
 			lua_pushnumber(L, static_cast<lua_Number>(m_aGameCommands.size()));
-			RString err = m_sName + "::IconChoicePosFunction: ";
+			std::string err = m_sName + "::IconChoicePosFunction: ";
 			if (!LuaHelpers::RunScriptOnStack(L, err, 1, 1, true)) {
 				positions_set_by_lua = false;
 			}
@@ -171,9 +171,9 @@ void ScreenSelectMaster::Init() {
 			vs.push_back("Icon");
 			if (PER_CHOICE_ICON_ELEMENT)
 				vs.push_back("Choice" + mc.m_sName);
-			RString sElement = join(" ", vs);
+			std::string sElement = join(" ", vs);
 			m_vsprIcon[c].Load(THEME->GetPathG(m_sName, sElement));
-			RString sName = "Icon"
+			std::string sName = "Icon"
 			                "Choice" +
 			   mc.m_sName;
 			m_vsprIcon[c]->SetName(sName);
@@ -206,9 +206,9 @@ void ScreenSelectMaster::Init() {
 					vs.push_back("Choice" + mc.m_sName);
 				if (!SHARED_SELECTION)
 					vs.push_back(PLAYER_APPEND_NO_SPACE(p));
-				RString sElement = join(" ", vs);
+				std::string sElement = join(" ", vs);
 				m_vsprScroll[p][c].Load(THEME->GetPathG(m_sName, sElement));
-				RString sName = "Scroll"
+				std::string sName = "Scroll"
 				                "Choice" +
 				   mc.m_sName;
 				if (!SHARED_SELECTION)
@@ -593,7 +593,7 @@ bool ScreenSelectMaster::ChangePage(int iNewChoice) {
 	// change both players
 	FOREACH_PlayerNumber(p) m_iChoice[p] = iNewChoice;
 
-	const RString sIconAndExplanationCommand = ssprintf("SwitchToPage%d", newPage + 1);
+	const std::string sIconAndExplanationCommand = ssprintf("SwitchToPage%d", newPage + 1);
 	if (SHOW_ICON)
 		for (unsigned c = 0; c < m_aGameCommands.size(); ++c)
 			m_vsprIcon[c]->PlayCommand(sIconAndExplanationCommand);

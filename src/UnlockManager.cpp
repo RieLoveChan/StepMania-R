@@ -455,7 +455,7 @@ void UnlockManager::Load() {
 		current.PushSelf(L);
 
 		// call function with 1 argument and 0 results
-		RString error = "Lua error in command: ";
+		std::string error = "Lua error in command: ";
 		LuaHelpers::RunScriptOnStack(L, error, 1, 0, true);
 
 		if (current.m_bRoulette)

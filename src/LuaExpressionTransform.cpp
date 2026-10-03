@@ -23,7 +23,7 @@ void LuaExpressionTransform::TransformItemDirect(
 	LuaHelpers::Push(L, fPositionOffsetFromCenter);
 	LuaHelpers::Push(L, iItemIndex);
 	LuaHelpers::Push(L, iNumItems);
-	RString error = "Lua error in Transform function: ";
+	std::string error = "Lua error in Transform function: ";
 	LuaHelpers::RunScriptOnStack(L, error, 4, 0, true);
 	LUA->Release(L);
 }

@@ -222,7 +222,7 @@ XNode *LoadXNodeFromLuaShowErrors(const RString &sFile) {
 
 	Lua *L = LUA->Get();
 
-	RString sError;
+	std::string sError;
 	if (!LuaHelpers::LoadScript(L, sScript, "@" + sFile, sError)) {
 		LUA->Release(L);
 		sError = ssprintf("Lua runtime error: %s", sError.c_str());
@@ -247,7 +247,7 @@ bool ActorUtil::LoadTableFromStackShowErrors(Lua *L) {
 	lua_pushvalue(L, -1);
 	func.SetFromStack(L);
 
-	RString Error = "Lua runtime error: ";
+	std::string Error = "Lua runtime error: ";
 	if (!LuaHelpers::RunScriptOnStack(L, Error, 0, 1, true)) {
 		lua_pop(L, 1);
 		return false;

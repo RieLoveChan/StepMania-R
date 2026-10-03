@@ -1055,7 +1055,7 @@ void NoteField::FadeToFail() {
 		(member_name).PushSelf(L);
 
 #define OPEN_RUN_BLOCK(arg_count)                                                                                      \
-	RString error = "Error running callback: ";                                                                         \
+	std::string error = "Error running callback: ";                                                                         \
 	if (LuaHelpers::RunScriptOnStack(L, error, arg_count, arg_count, true)) {
 
 #define CLOSE_RUN_AND_CALLBACK_BLOCKS                                                                                  \

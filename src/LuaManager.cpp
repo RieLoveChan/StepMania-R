@@ -739,7 +739,7 @@ bool LuaHelpers::RunScriptFile(const std::string &sFile) {
 
 	Lua *L = LUA->Get();
 
-	RString sError;
+	std::string sError;
 	if (!LuaHelpers::RunScript(L, sScript, "@" + sFile, sError, 0)) {
 		LUA->Release(L);
 		sError = ssprintf("Lua runtime error: %s", sError.c_str());
@@ -751,7 +751,7 @@ bool LuaHelpers::RunScriptFile(const std::string &sFile) {
 	return true;
 }
 
-bool LuaHelpers::LoadScript(Lua *L, const std::string &sScript, const std::string &sName, RString &sError) {
+bool LuaHelpers::LoadScript(Lua *L, const std::string &sScript, const std::string &sName, std::string &sError) {
 	// load string
 	int ret = luaL_loadbuffer(L, sScript.data(), sScript.size(), sName.c_str());
 	if (ret) {
@@ -793,7 +793,7 @@ void LuaHelpers::ReportScriptErrorFmt(const char *fmt, ...) {
 	ReportScriptError(Buff);
 }
 
-bool LuaHelpers::RunScriptOnStack(Lua *L, RString &Error, int Args, int ReturnValues, bool ReportError) {
+bool LuaHelpers::RunScriptOnStack(Lua *L, std::string &Error, int Args, int ReturnValues, bool ReportError) {
 	lua_pushcfunction(L, GetLuaStack);
 
 	// move the error function above the function and params
@@ -823,9 +823,9 @@ bool LuaHelpers::RunScriptOnStack(Lua *L, RString &Error, int Args, int ReturnVa
 }
 
 bool LuaHelpers::RunScript(
-   Lua *L, const std::string &Script, const std::string &Name, RString &Error, int Args, int ReturnValues, bool ReportError
+   Lua *L, const std::string &Script, const std::string &Name, std::string &Error, int Args, int ReturnValues, bool ReportError
 ) {
-	RString lerror;
+	std::string lerror;
 	if (!LoadScript(L, Script, Name, lerror)) {
 		Error += lerror;
 		if (ReportError) {
@@ -844,7 +844,7 @@ bool LuaHelpers::RunScript(
 }
 
 bool LuaHelpers::RunExpression(Lua *L, const std::string &sExpression, const std::string &sName) {
-	RString sError =
+	std::string sError =
 	   ssprintf("Lua runtime error parsing \"%s\": ", !sName.empty() ? sName.c_str() : sExpression.c_str());
 	if (!LuaHelpers::RunScript(L, "return " + sExpression, sName.empty() ? std::string("in") : sName, sError, 0, 1, true)) {
 		return false;
@@ -919,7 +919,7 @@ void LuaHelpers::ParseCommandList(Lua *L, const RString &sCommands, const RStrin
 		sLuaFunction = s.str();
 	}
 
-	RString sError;
+	std::string sError;
 	if (!LuaHelpers::RunScript(L, sLuaFunction, sName, sError, 0, 1))
 		LOG_ERROR(Log::Lua, "Compiling \"%s\": %s", sLuaFunction.c_str(), sError.c_str());
 

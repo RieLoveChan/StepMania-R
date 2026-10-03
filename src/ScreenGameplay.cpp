@@ -495,7 +495,7 @@ void ScreenGameplay::Init() {
 			++next_player_slot;
 		}
 		Enum::Push(L, GAMESTATE->GetCurrentStyle(PLAYER_INVALID)->m_StyleType);
-		RString err = "Error running MarginFunction:  ";
+		std::string err = "Error running MarginFunction:  ";
 		if (LuaHelpers::RunScriptOnStack(L, err, 2, 3, true)) {
 			RString marge = "Margin value must be a number.";
 			margins[PLAYER_1][0] = static_cast<float>(SafeFArg(L, -3, marge, 40));
@@ -510,7 +510,7 @@ void ScreenGameplay::Init() {
 
 	float left_edge[NUM_PLAYERS] = {0.0f, SCREEN_WIDTH / 2.0f};
 	FOREACH_EnabledPlayerInfo(m_vPlayerInfo, pi) {
-		RString sName = ssprintf("Player%s", pi->GetName().c_str());
+		std::string sName = ssprintf("Player%s", pi->GetName().c_str());
 		pi->m_pPlayer->SetName(sName);
 
 		Style const *style = GAMESTATE->GetCurrentStyle(pi->m_pn);
