@@ -122,7 +122,7 @@ void ScreenMapControllers::Init() {
 			BitmapText *pName = new BitmapText;
 			pName->SetName("Primary");
 			pName->LoadFromFont(THEME->GetPathF(m_sName, "title"));
-			RString sText = GameButtonToLocalizedString(INPUTMAPPER->GetInputScheme(), pKey->m_GameButton);
+			std::string sText = GameButtonToLocalizedString(INPUTMAPPER->GetInputScheme(), pKey->m_GameButton);
 			pName->SetText(sText);
 			ActorUtil::LoadAllCommands(*pName, m_sName);
 			m_Line.back()->AddChild(pName);
@@ -132,7 +132,7 @@ void ScreenMapControllers::Init() {
 			pSecondary->SetName("Secondary");
 			pSecondary->LoadFromFont(THEME->GetPathF(m_sName, "title"));
 			GameButton mb = INPUTMAPPER->GetInputScheme()->GameButtonToMenuButton(pKey->m_GameButton);
-			RString sText;
+			std::string sText;
 			if (mb != GameButton_Invalid && mb != pKey->m_GameButton)
 				sText = GameButtonToLocalizedString(INPUTMAPPER->GetInputScheme(), mb);
 			ActorUtil::LoadAllCommands(*pSecondary, m_sName);

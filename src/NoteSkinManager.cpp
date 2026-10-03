@@ -217,7 +217,7 @@ bool NoteSkinManager::DoNoteSkinsExistForGame(const Game *pGame) {
 }
 
 std::string NoteSkinManager::GetDefaultNoteSkinName() {
-	RString name = THEME->GetMetric("Common", "DefaultNoteSkinName");
+	std::string name = THEME->GetMetric("Common", "DefaultNoteSkinName");
 	std::vector<std::string> all_names;
 	GetAllNoteSkinNamesForGame(GAMESTATE->m_pCurGame, all_names);
 	if (all_names.empty()) {

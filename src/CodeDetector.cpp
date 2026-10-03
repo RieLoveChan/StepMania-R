@@ -70,7 +70,7 @@ void CodeDetector::RefreshCacheItems(std::string sClass) {
 	FOREACH_ENUM(Code, c) {
 		InputQueueCode &item = g_CodeItems[c];
 		const RString sCodeName = CodeToString(c);
-		const RString sButtonsNames = THEME->GetMetric(sClass, sCodeName);
+		const std::string sButtonsNames = THEME->GetMetric(sClass, sCodeName);
 
 		item.Load(sButtonsNames);
 	}

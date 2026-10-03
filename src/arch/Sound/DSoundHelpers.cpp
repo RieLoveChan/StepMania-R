@@ -48,7 +48,7 @@ void DSound::SetPrimaryBufferMode() {
 	IDirectSoundBuffer *pBuffer;
 	HRESULT hr = this->GetDS()->CreateSoundBuffer(&format, &pBuffer, nullptr);
 	if (FAILED(hr)) {
-		LOG->Warn(hr_ssprintf(hr, "Couldn't create primary buffer"));
+		LOG->Warn(hr_ssprintf(hr, "Couldn't create primary buffer").c_str());
 		return;
 	}
 
@@ -65,12 +65,12 @@ void DSound::SetPrimaryBufferMode() {
 	// Set the primary buffer's format
 	hr = IDirectSoundBuffer_SetFormat(pBuffer, &waveformat);
 	if (FAILED(hr))
-		LOG->Warn(hr_ssprintf(hr, "SetFormat on primary buffer"));
+		LOG->Warn(hr_ssprintf(hr, "SetFormat on primary buffer").c_str());
 
 	DWORD got;
 	hr = pBuffer->GetFormat(&waveformat, sizeof(waveformat), &got);
 	if (FAILED(hr))
-		LOG->Warn(hr_ssprintf(hr, "GetFormat on primary buffer"));
+		LOG->Warn(hr_ssprintf(hr, "GetFormat on primary buffer").c_str());
 	else if (waveformat.nSamplesPerSec != 44100)
 		LOG->Warn("Primary buffer set to %i instead of 44100", waveformat.nSamplesPerSec);
 
@@ -97,7 +97,7 @@ void DSound::SetPrimaryBufferMode() {
 DSound::DSound() {
 	HRESULT hr;
 	if (FAILED(hr = CoInitialize(nullptr)))
-		RageException::Throw(hr_ssprintf(hr, "CoInitialize"));
+		RageException::Throw(hr_ssprintf(hr, "CoInitialize").c_str());
 	m_pDS = nullptr;
 }
 
@@ -114,7 +114,7 @@ RString DSound::Init() {
 		DSCAPS Caps;
 		Caps.dwSize = sizeof(Caps);
 		if (FAILED(hr = m_pDS->GetCaps(&Caps))) {
-			LOG->Warn(hr_ssprintf(hr, "m_pDS->GetCaps failed"));
+			LOG->Warn(hr_ssprintf(hr, "m_pDS->GetCaps failed").c_str());
 		}
 		else {
 			LOG->Info(
@@ -147,7 +147,7 @@ bool DSound::IsEmulated() const {
 	Caps.dwSize = sizeof(Caps);
 	HRESULT hr;
 	if (FAILED(hr = m_pDS->GetCaps(&Caps))) {
-		LOG->Warn(hr_ssprintf(hr, "m_pDS->GetCaps failed"));
+		LOG->Warn(hr_ssprintf(hr, "m_pDS->GetCaps failed").c_str());
 		/* This is strange, so let's be conservative. */
 		return true;
 	}
@@ -248,7 +248,7 @@ DSoundBuf::Init(DSound &ds, DSoundBuf::hw hardware, int iChannels, int iSampleRa
 	DWORD got;
 	hr = m_pBuffer->GetFormat(&waveformat, sizeof(waveformat), &got);
 	if (FAILED(hr))
-		LOG->Warn(hr_ssprintf(hr, "GetFormat on secondary buffer"));
+		LOG->Warn(hr_ssprintf(hr, "GetFormat on secondary buffer").c_str());
 	else if ((int)waveformat.nSamplesPerSec != m_iSampleRate)
 		LOG->Warn("Secondary buffer set to %i instead of %i", waveformat.nSamplesPerSec, m_iSampleRate);
 
@@ -261,7 +261,7 @@ void DSoundBuf::SetSampleRate(int hz) {
 	m_iSampleRate = hz;
 	HRESULT hr = m_pBuffer->SetFrequency(hz);
 	if (FAILED(hr))
-		RageException::Throw(hr_ssprintf(hr, "m_pBuffer->SetFrequency(%i)", hz));
+		RageException::Throw(hr_ssprintf(hr, "m_pBuffer->SetFrequency(%i)", hz).c_str());
 }
 
 void DSoundBuf::SetVolume(float fVolume) {
@@ -281,7 +281,7 @@ void DSoundBuf::SetVolume(float fVolume) {
 	if (FAILED(hr)) {
 		static bool bWarned = false;
 		if (!bWarned)
-			LOG->Warn(hr_ssprintf(hr, "DirectSoundBuffer::SetVolume(%i) failed", iNewVolume));
+			LOG->Warn(hr_ssprintf(hr, "DirectSoundBuffer::SetVolume(%i) failed", iNewVolume).c_str());
 		bWarned = true;
 		return;
 	}
@@ -427,7 +427,7 @@ bool DSoundBuf::get_output_buf(char **pBuffer, unsigned *pBufferSize, int iChunk
 		result = m_pBuffer->GetCurrentPosition(&iCursorStart, &iCursorEnd);
 	}
 	if (result != DS_OK) {
-		LOG->Warn(hr_ssprintf(result, "DirectSound::GetCurrentPosition failed"));
+		LOG->Warn(hr_ssprintf(result, "DirectSound::GetCurrentPosition failed").c_str());
 		return false;
 	}
 
@@ -535,7 +535,7 @@ bool DSoundBuf::get_output_buf(char **pBuffer, unsigned *pBufferSize, int iChunk
 	}
 
 	if (result != DS_OK) {
-		LOG->Warn(hr_ssprintf(result, "Couldn't lock the DirectSound buffer."));
+		LOG->Warn(hr_ssprintf(result, "Couldn't lock the DirectSound buffer.").c_str());
 		return false;
 	}
 
@@ -570,7 +570,7 @@ std::int64_t DSoundBuf::GetPosition() const {
 		hr = m_pBuffer->GetCurrentPosition(&iCursor, &iJunk);
 	}
 	if (hr != DS_OK) {
-		LOG->Warn(hr_ssprintf(hr, "DirectSound::GetPosition failed"));
+		LOG->Warn(hr_ssprintf(hr, "DirectSound::GetPosition failed").c_str());
 		iCursor = 0;
 	}
 

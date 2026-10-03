@@ -117,7 +117,7 @@ void Banner::LoadMode() {
 }
 
 void Banner::LoadFromSongGroup(std::string sSongGroup) {
-	RString sGroupBannerPath = SONGMAN->GetSongGroupBannerPath(sSongGroup);
+	std::string sGroupBannerPath = SONGMAN->GetSongGroupBannerPath(sSongGroup);
 	if (!sGroupBannerPath.empty())
 		Load(sGroupBannerPath);
 	else

@@ -15,7 +15,7 @@ CTextureRenderer::CTextureRenderer()
     : CBaseVideoRenderer(__uuidof(CLSID_TextureRenderer), NAME("Texture Renderer"), nullptr, &CBV_ret),
       m_OneFrameDecoded("m_OneFrameDecoded", 0) {
 	if (FAILED(CBV_ret))
-		RageException::Throw(hr_ssprintf(CBV_ret, "Could not create texture renderer object!"));
+		RageException::Throw(hr_ssprintf(CBV_ret, "Could not create texture renderer object!").c_str());
 
 	m_pTexture = nullptr;
 }

@@ -517,7 +517,7 @@ void EditMenu::OnRowValueChanged(EditMenuRow row) {
 			m_StepsDisplay.Unset();
 		}
 		else {
-			RString s = CustomDifficultyToLocalizedString(
+			std::string s = CustomDifficultyToLocalizedString(
 			   GetCustomDifficulty(GetSelectedStepsType(), GetSelectedDifficulty(), CourseType_Invalid)
 			);
 

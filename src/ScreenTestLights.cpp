@@ -70,7 +70,7 @@ void ScreenTestLights::Update(float fDeltaTime) {
 		s += CONTROLLER_LIGHT.GetValue() + ": -----\n";
 	}
 	else {
-		RString sGameButton = GameButtonToLocalizedString(INPUTMAPPER->GetInputScheme(), gi.button);
+		std::string sGameButton = GameButtonToLocalizedString(INPUTMAPPER->GetInputScheme(), gi.button);
 		PlayerNumber pn = (PlayerNumber)(gi.controller);
 		s += ssprintf(
 		   "%s: %s %d %s\n",

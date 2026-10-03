@@ -2690,11 +2690,11 @@ class LunaGameState : public Luna<GameState> {
 
 		for (unsigned i = 0; i < vpStepsToShow.size(); i++) {
 			const Steps *pSteps = vpStepsToShow[i];
-			RString sDifficulty = CustomDifficultyToLocalizedString(
+			std::string sDifficulty = CustomDifficultyToLocalizedString(
 			   GetCustomDifficulty(pSteps->m_StepsType, pSteps->GetDifficulty(), CourseType_Invalid)
 			);
 
-			lua_pushstring(L, sDifficulty);
+			lua_pushstring(L, sDifficulty.c_str());
 			lua_pushstring(L, pSteps->GetDescription());
 		}
 

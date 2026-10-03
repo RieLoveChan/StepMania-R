@@ -690,7 +690,7 @@ void ScreenOptions::AfterChangeValueOrRow(PlayerNumber pn) {
 		}
 	}
 
-	const RString text = GetExplanationText(iCurRow);
+	const std::string text = GetExplanationText(iCurRow);
 	BitmapText *pText = nullptr;
 	switch (m_InputMode) {
 	case INPUTMODE_INDIVIDUAL:

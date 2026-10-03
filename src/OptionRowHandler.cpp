@@ -733,7 +733,7 @@ class OptionRowHandlerListDifficulties : public OptionRowHandlerList {
 		for (Difficulty const &d : CommonMetrics::DIFFICULTIES_TO_SHOW.GetValue()) {
 			// TODO: Is this the best thing we can do here?
 			StepsType st = GAMEMAN->GetHowToPlayStyleForGame(GAMESTATE->m_pCurGame)->m_StepsType;
-			RString s = CustomDifficultyToLocalizedString(GetCustomDifficulty(st, d, CourseType_Invalid));
+			std::string s = CustomDifficultyToLocalizedString(GetCustomDifficulty(st, d, CourseType_Invalid));
 
 			m_Def.m_vsChoices.push_back(s);
 			GameCommand mc;
@@ -1364,7 +1364,7 @@ class OptionRowHandlerStepsType : public OptionRowHandler {
 
 		m_Def.m_vsChoices.clear();
 		for (StepsType const &st : m_vStepsTypesToShow) {
-			RString s = GAMEMAN->GetStepsTypeInfo(st).GetLocalizedString();
+			std::string s = GAMEMAN->GetStepsTypeInfo(st).GetLocalizedString();
 			m_Def.m_vsChoices.push_back(s);
 		}
 

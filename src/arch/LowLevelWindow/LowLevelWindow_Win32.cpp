@@ -247,7 +247,7 @@ RString LowLevelWindow_Win32::TryVideoMode(const VideoModeParams &p, bool &bNewD
 		}
 
 		if (!wglShareLists(g_HGLRC, g_HGLRC_Background)) {
-			LOG->Warn(werr_ssprintf(GetLastError(), "wglShareLists failed"));
+			LOG->Warn(werr_ssprintf(GetLastError(), "wglShareLists failed").c_str());
 			wglDeleteContext(g_HGLRC_Background);
 			g_HGLRC_Background = nullptr;
 		}
@@ -268,8 +268,8 @@ bool LowLevelWindow_Win32::SupportsThreadedRendering() {
 void LowLevelWindow_Win32::BeginConcurrentRendering() {
 	if (!wglMakeCurrent(GraphicsWindow::GetHDC(), g_HGLRC_Background)) {
 		DWORD err = GetLastError();
-		LOG->Warn(hr_ssprintf(err, "wglMakeCurrent"));
-		FAIL_M(hr_ssprintf(err, "wglMakeCurrent"));
+		LOG->Warn(hr_ssprintf(err, "wglMakeCurrent").c_str());
+		FAIL_M(hr_ssprintf(err, "wglMakeCurrent").c_str());
 	}
 }
 

@@ -183,7 +183,7 @@ MovieTexture_DShow::~MovieTexture_DShow() {
 
 		HRESULT hr;
 		if (FAILED(hr = pMC->Stop()))
-			RageException::Throw(hr_ssprintf(hr, "Could not stop the DirectShow graph."));
+			RageException::Throw(hr_ssprintf(hr, "Could not stop the DirectShow graph.").c_str());
 
 		//		Stop();
 		m_pGB.Release();
@@ -265,7 +265,7 @@ RString PrintCodecError(HRESULT hr, RString s) {
 	/* Actually, we might need XviD; we might want to look
 	 * at the file and try to figure out if it's something
 	 * common: DIV3, DIV4, DIV5, XVID, or maybe even MPEG2. */
-	RString err = hr_ssprintf(hr, "%s", s.c_str());
+	std::string err = hr_ssprintf(hr, "%s", s.c_str());
 	return ssprintf(
 	   "There was an error initializing a movie: %s.\n"
 	   "Could not locate the DivX video codec.\n"
@@ -309,11 +309,11 @@ RString MovieTexture_DShow::Create() {
 	actualID.iAlphaBits = 0;
 
 	if (FAILED(hr = CoInitialize(nullptr)))
-		RageException::Throw(hr_ssprintf(hr, "Could not CoInitialize"));
+		RageException::Throw(hr_ssprintf(hr, "Could not CoInitialize").c_str());
 
 	// Create the filter graph
 	if (FAILED(hr = m_pGB.CoCreateInstance(CLSID_FilterGraph, nullptr, CLSCTX_INPROC)))
-		RageException::Throw(hr_ssprintf(hr, "Could not create CLSID_FilterGraph!"));
+		RageException::Throw(hr_ssprintf(hr, "Could not create CLSID_FilterGraph!").c_str());
 
 	// Create the Texture Renderer object
 	CTextureRenderer *pCTR = new CTextureRenderer;
@@ -322,7 +322,7 @@ RString MovieTexture_DShow::Create() {
 	 * graph.  When m_pGB is released, it will free pFTR. */
 	CComPtr<IBaseFilter> pFTR = pCTR;
 	if (FAILED(hr = m_pGB->AddFilter(pFTR, L"TEXTURERENDERER")))
-		RageException::Throw(hr_ssprintf(hr, "Could not add renderer filter to graph!"));
+		RageException::Throw(hr_ssprintf(hr, "Could not add renderer filter to graph!").c_str());
 
 	// Add the source filter
 	CComPtr<IBaseFilter> pFSrc; // Source Filter
@@ -456,7 +456,7 @@ void MovieTexture_DShow::Play() {
 	// Start the graph running;
 	HRESULT hr;
 	if (FAILED(hr = pMC->Run()))
-		RageException::Throw(hr_ssprintf(hr, "Could not run the DirectShow graph."));
+		RageException::Throw(hr_ssprintf(hr, "Could not run the DirectShow graph.").c_str());
 
 	m_bPlaying = true;
 
@@ -472,7 +472,7 @@ void MovieTexture_DShow::Pause() {
 	HRESULT hr;
 	/* Use Pause(), so we'll get a still frame in CTextureRenderer::OnReceiveFirstSample. */
 	if (FAILED(hr = pMC->Pause()))
-		RageException::Throw(hr_ssprintf(hr, "Could not pause the DirectShow graph."));
+		RageException::Throw(hr_ssprintf(hr, "Could not pause the DirectShow graph.").c_str());
 
 	StopSkippingUpdates();
 }

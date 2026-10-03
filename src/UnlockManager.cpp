@@ -885,11 +885,11 @@ class LunaUnlockManager : public Luna<UnlockManager> {
 	}
 	static int FindEntryID(T *p, lua_State *L) {
 		RString sName = SArg(1);
-		RString s = p->FindEntryID(sName);
+		std::string s = p->FindEntryID(sName);
 		if (s.empty())
 			lua_pushnil(L);
 		else
-			lua_pushstring(L, s);
+			lua_pushstring(L, s.c_str());
 		return 1;
 	}
 	static int UnlockEntryID(T *p, lua_State *L) {

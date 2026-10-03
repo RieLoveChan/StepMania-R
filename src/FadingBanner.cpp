@@ -170,7 +170,7 @@ void FadingBanner::LoadMode() {
 }
 
 void FadingBanner::LoadFromSongGroup(std::string sSongGroup) {
-	const RString sGroupBannerPath = SONGMAN->GetSongGroupBannerPath(sSongGroup);
+	const std::string sGroupBannerPath = SONGMAN->GetSongGroupBannerPath(sSongGroup);
 	LoadFromCachedBanner(sGroupBannerPath);
 }
 

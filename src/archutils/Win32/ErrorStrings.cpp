@@ -4,7 +4,7 @@
 
 #include <windows.h>
 
-RString werr_ssprintf(int err, const char *fmt, ...) {
+std::string werr_ssprintf(int err, const char *fmt, ...) {
 	char buf[1024] = "";
 	FormatMessage(
 	   FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, nullptr, err, 0, buf, sizeof(buf), nullptr
@@ -19,7 +19,7 @@ RString werr_ssprintf(int err, const char *fmt, ...) {
 
 	va_list va;
 	va_start(va, fmt);
-	RString s = vssprintf(fmt, va);
+	std::string s = vssprintf(fmt, va);
 	va_end(va);
 
 	return s += ssprintf(" (%s)", text.c_str());
