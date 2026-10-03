@@ -29,7 +29,7 @@ int CheckEnum(
 
 	// If not found, check case-insensitively for legacy compatibility
 	if (lua_isnil(L, -1) && lua_isstring(L, iPos)) {
-		RString sLower;
+		std::string sLower;
 
 		// Get rid of nil value on stack
 		lua_pop(L, 1);
@@ -37,7 +37,7 @@ int CheckEnum(
 		// Get the string and lowercase it
 		lua_pushvalue(L, iPos);
 		LuaHelpers::Pop(L, sLower);
-		sLower.MakeLower();
+		MakeLower(&sLower[0], sLower.size());
 
 		// Try again to read the value
 		table.PushSelf(L);
@@ -49,7 +49,7 @@ int CheckEnum(
 	// an error.  To specify the invalid value, pass nil.  That way, typos will throw an error,
 	// and not silently result in nil, or an out-of-bounds value.
 	if (unlikely(lua_isnil(L, -1))) {
-		RString sGot;
+		std::string sGot;
 		if (lua_isstring(L, iPos)) {
 			/* We were given a string, but it wasn't a valid value for this enum.  Show
 			 * the string. */
@@ -68,7 +68,7 @@ int CheckEnum(
 		// StepMania crashes out completely.  bAllowAnything allows those places
 		// to avoid crashing over theme mistakes.
 		if (bAllowAnything) {
-			RString errmsg;
+			std::string errmsg;
 			LuaHelpers::Pop(L, errmsg);
 			LuaHelpers::ReportScriptError(errmsg);
 			lua_pop(L, 2);

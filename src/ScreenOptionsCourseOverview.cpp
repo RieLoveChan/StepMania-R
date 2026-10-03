@@ -96,7 +96,7 @@ void ScreenOptionsCourseOverview::ImportOptions(int /* iRow */, const std::vecto
 void ScreenOptionsCourseOverview::ExportOptions(int iRow, const std::vector<PlayerNumber> & /* vpns */) {
 	OptionRow &row = *m_pRows[iRow];
 	int iIndex = row.GetOneSharedSelection(true);
-	RString sValue;
+	std::string sValue;
 	if (iIndex >= 0)
 		sValue = row.GetRowDef().m_vsChoices[iIndex];
 }

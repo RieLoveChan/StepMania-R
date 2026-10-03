@@ -423,7 +423,7 @@ static bool ValidateFromLua(const RString &sAnswer, RString &sErrorOut) {
 			LuaHelpers::ReportScriptError("Lua error: ScreenTextEntry Validate did not return 'bool, string'.");
 		}
 		else {
-			RString ErrorFromLua;
+			std::string ErrorFromLua;
 			LuaHelpers::Pop(L, ErrorFromLua);
 			if (!ErrorFromLua.empty()) {
 				sErrorOut = ErrorFromLua;
@@ -504,7 +504,7 @@ static RString FormatAnswerForDisplayFromLua(const RString &sAnswer) {
 	// Argument 1 (Answer):
 	lua_pushstring(L, sAnswer);
 
-	RString answer;
+	std::string answer;
 	RString error = "Lua error in ScreenTextEntry FormatAnswerForDisplay: ";
 	if (LuaHelpers::RunScriptOnStack(L, error, 1, 1, true)) {
 		if (!lua_isstring(L, -1)) {

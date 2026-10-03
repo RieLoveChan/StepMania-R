@@ -377,6 +377,10 @@ void MakeLower(char *p, std::size_t iLen);
 void MakeUpper(wchar_t *p, std::size_t iLen);
 void MakeLower(wchar_t *p, std::size_t iLen);
 
+/* Replace every occurrence of szOld in s with szNew, advancing past each
+ * replacement. Equivalent to CStdStr::Replace(PCMYSTR, PCMYSTR). */
+void ReplaceAll(std::string &s, const char *szOld, const char *szNew);
+
 // TODO: Have the three functions below be moved to better locations.
 float StringToFloat(const RString &sString);
 bool StringToFloat(const RString &sString, float &fOut);

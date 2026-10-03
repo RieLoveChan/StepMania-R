@@ -190,16 +190,16 @@ std::string LastWeekToString(int iLastWeekIndex) {
 }
 
 std::string LastDayToLocalizedString(int iLastDayIndex) {
-	RString s = LastDayToString(iLastDayIndex);
-	s.Replace("Day", "");
-	s.Replace("Ago", " Ago");
+	std::string s = LastDayToString(iLastDayIndex);
+	ReplaceAll(s, "Day", "");
+	ReplaceAll(s, "Ago", " Ago");
 	return s;
 }
 
 std::string LastWeekToLocalizedString(int iLastWeekIndex) {
-	RString s = LastWeekToString(iLastWeekIndex);
-	s.Replace("Week", "");
-	s.Replace("Ago", " Ago");
+	std::string s = LastWeekToString(iLastWeekIndex);
+	ReplaceAll(s, "Week", "");
+	ReplaceAll(s, "Ago", " Ago");
 	return s;
 }
 

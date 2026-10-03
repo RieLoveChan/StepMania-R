@@ -504,7 +504,7 @@ bool RageSound::SetPositionFrames(int iFrames) {
 	}
 
 	int iRet = m_pSource->SetPosition(iFrames);
-	RString filePath = GetLoadedFilePath();
+	std::string filePath = GetLoadedFilePath();
 	if (iRet == -1) {
 		m_sError = m_pSource->GetError();
 		LOG_ERROR(Log::Sound, "SetPositionFrames: seek %s failed: %s", filePath.c_str(), m_sError.c_str());

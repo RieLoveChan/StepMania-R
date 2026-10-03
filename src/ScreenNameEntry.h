@@ -27,7 +27,7 @@ class ScreenNameEntry : public ScreenWithMenuElements {
 		inline void SetDone() {
 			m_bDone = true;
 		}
-		void Init(const RString &sName, const std::vector<float> &xs);
+		void Init(const std::string &sName, const std::vector<float> &xs);
 		virtual bool EarlyAbortDraw() const {
 			return m_bDone;
 		}

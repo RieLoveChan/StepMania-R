@@ -94,10 +94,10 @@ struct NoteMetricCache_t {
 	bool m_bTopHoldAnchorWhenReverse;
 	bool m_bHoldActiveIsAddLayer;
 
-	void Load(const RString &sButton);
+	void Load(const std::string &sButton);
 } *NoteMetricCache;
 
-void NoteMetricCache_t::Load(const RString &sButton) {
+void NoteMetricCache_t::Load(const std::string &sButton) {
 	m_bDrawHoldHeadForTapsOnSameRow = NOTESKIN->GetMetricB(sButton, "DrawHoldHeadForTapsOnSameRow");
 	m_bDrawRollHeadForTapsOnSameRow = NOTESKIN->GetMetricB(sButton, "DrawRollHeadForTapsOnSameRow");
 	m_bTapHoldRollOnRowMeansHold = NOTESKIN->GetMetricB(sButton, "TapHoldRollOnRowMeansHold");
@@ -128,7 +128,7 @@ void NoteMetricCache_t::Load(const RString &sButton) {
 }
 
 struct NoteSkinAndPath {
-	NoteSkinAndPath(const RString sNoteSkin_, const RString sPath_, const PlayerNumber pn_, const GameController gc_)
+	NoteSkinAndPath(const std::string sNoteSkin_, const std::string sPath_, const PlayerNumber pn_, const GameController gc_)
 	    : sNoteSkin(sNoteSkin_), sPath(sPath_), pn(pn_), gc(gc_) {
 	}
 	std::string sNoteSkin;
@@ -181,9 +181,9 @@ struct NoteResource {
 static std::map<NoteSkinAndPath, NoteResource *> g_NoteResource;
 
 static NoteResource *MakeNoteResource(
-   const RString &sButton, const RString &sElement, PlayerNumber pn, GameController gc, bool bSpriteOnly
+   const std::string &sButton, const std::string &sElement, PlayerNumber pn, GameController gc, bool bSpriteOnly
 ) {
-	RString sElementAndType = ssprintf("%s, %s", sButton.c_str(), sElement.c_str());
+	std::string sElementAndType = ssprintf("%s, %s", sButton.c_str(), sElement.c_str());
 	NoteSkinAndPath nsap(NOTESKIN->GetCurrentNoteSkin(), sElementAndType, pn, gc);
 
 	std::map<NoteSkinAndPath, NoteResource *>::iterator it = g_NoteResource.find(nsap);
@@ -391,7 +391,7 @@ void NoteDisplay::Load(int iColNum, const PlayerState *pPlayerState, float fYRev
 	std::vector<GameInput> GameI;
 	GAMESTATE->GetCurrentStyle(pPlayerState->m_PlayerNumber)->StyleInputToGameInput(iColNum, pn, GameI);
 
-	RString sButton = GAMESTATE->GetCurrentStyle(pPlayerState->m_PlayerNumber)->ColToButtonName(iColNum);
+	std::string sButton = GAMESTATE->GetCurrentStyle(pPlayerState->m_PlayerNumber)->ColToButtonName(iColNum);
 
 	cache->Load(sButton);
 

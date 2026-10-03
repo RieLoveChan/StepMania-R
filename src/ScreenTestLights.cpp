@@ -48,7 +48,7 @@ void ScreenTestLights::Update(float fDeltaTime) {
 	CabinetLight cl = LIGHTSMAN->GetFirstLitCabinetLight();
 	GameInput gi = LIGHTSMAN->GetFirstLitGameButtonLight();
 
-	RString s;
+	std::string s;
 
 	switch (LIGHTSMAN->GetLightsMode()) {
 	case LIGHTSMODE_TEST_AUTO_CYCLE:

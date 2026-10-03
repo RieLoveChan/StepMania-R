@@ -13,7 +13,7 @@ class ScreenAttract : public ScreenWithMenuElements {
 	virtual void BeginScreen();
 
 	static bool AttractInput(const InputEventPlus &input, ScreenWithMenuElements *pScreen);
-	static void GoToStartScreen(RString sScreenName);
+	static void GoToStartScreen(const std::string &sScreenName);
 	static void SetAttractVolume(bool bInAttract);
 
 	virtual bool Input(const InputEventPlus &input);

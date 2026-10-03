@@ -910,7 +910,7 @@ std::string ThemeManager::GetMetricsGroupFallback(const std::string &sMetricsGro
 
 	Lua *L = LUA->Get();
 	LuaHelpers::RunExpression(L, sFallback);
-	RString sRet;
+	std::string sRet;
 	LuaHelpers::Pop(L, sRet);
 	LUA->Release(L);
 
@@ -1010,7 +1010,7 @@ void GetAndConvertMetric(const std::string &sMetricsGroup, const std::string &sV
 
 /* Get a string metric. */
 std::string ThemeManager::GetMetric(const std::string &sMetricsGroup, const std::string &sValueName) {
-	RString sRet;
+	std::string sRet;
 	GetAndConvertMetric(sMetricsGroup, sValueName, sRet);
 	return sRet;
 }
@@ -1147,21 +1147,6 @@ void ThemeManager::GetOptionNames(std::vector<std::string> &AddTo) {
 	const XNode *cur = g_pLoadedThemeData->iniStrings.GetChild("OptionNames");
 	if (cur) {
 		FOREACH_CONST_Attr(cur, p) AddTo.push_back(p->first);
-	}
-}
-
-// Equivalent to CStdStr::Replace(PCMYSTR, PCMYSTR), which isn't available on
-// plain std::string: replace every occurrence of szOld in s with szNew,
-// advancing past each replacement.
-static void ReplaceAll(std::string &s, const char *szOld, const char *szNew) {
-	std::string::size_type nOldLen = strlen(szOld);
-	if (nOldLen == 0)
-		return;
-	std::string::size_type nNewLen = strlen(szNew);
-	std::string::size_type nIdx = 0;
-	while ((nIdx = s.find(szOld, nIdx)) != std::string::npos) {
-		s.replace(nIdx, nOldLen, szNew);
-		nIdx += nNewLen;
 	}
 }
 

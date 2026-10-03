@@ -17,7 +17,7 @@ class PercentageDisplay : public ActorFrame {
 	void Load(
 	   const PlayerState *pPlayerState,
 	   const PlayerStageStats *pPlayerStageStats,
-	   const RString &sMetricsGroup,
+	   const std::string &sMetricsGroup,
 	   bool bAutoRefresh
 	);
 	void Update(float fDeltaTime);

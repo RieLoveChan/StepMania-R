@@ -305,7 +305,7 @@ void ScreenEvaluation::Init() {
 				if (PLAYER_OPTIONS_HIDE_FAIL_TYPE)
 					po.m_FailType = (FailType)0; // blank out the fail type so that it won't show in the mods list
 				po.GetLocalizedMods(v);
-				RString sPO = join(PLAYER_OPTIONS_SEPARATOR, v);
+				std::string sPO = join(PLAYER_OPTIONS_SEPARATOR, v);
 				m_textPlayerOptions[p].SetText(sPO);
 				this->AddChild(&m_textPlayerOptions[p]);
 			}

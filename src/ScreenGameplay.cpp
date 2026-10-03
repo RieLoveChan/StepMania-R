@@ -1281,7 +1281,7 @@ void ScreenGameplay::LoadLights() {
 	}
 
 	// No explicit lights.  Create autogen lights.
-	RString sDifficulty = PREFSMAN->m_sLightsStepsDifficulty;
+	std::string sDifficulty = PREFSMAN->m_sLightsStepsDifficulty.Get();
 	std::vector<std::string> asDifficulties;
 	split(sDifficulty, ",", asDifficulties);
 
@@ -2109,7 +2109,7 @@ void ScreenGameplay::SendCrossedMessages() {
 					if (GAMESTATE->GetCurrentGame()->m_PlayersHaveSeparateStyles) {
 						FOREACH_EnabledPlayerNumberInfo(m_vPlayerInfo, pi) {
 							const Style *pStyle = GAMESTATE->GetCurrentStyle(pi->m_pn);
-							RString sButton = pStyle->ColToButtonName(t);
+							std::string sButton = pStyle->ColToButtonName(t);
 							Message msg(i == 0 ? "NoteCrossed" : "NoteWillCross");
 							msg.SetParam("ButtonName", sButton);
 							msg.SetParam("NumMessagesFromCrossed", i);
@@ -2119,7 +2119,7 @@ void ScreenGameplay::SendCrossedMessages() {
 					}
 					else {
 						const Style *pStyle = GAMESTATE->GetCurrentStyle(PLAYER_INVALID);
-						RString sButton = pStyle->ColToButtonName(t);
+						std::string sButton = pStyle->ColToButtonName(t);
 						Message msg(i == 0 ? "NoteCrossed" : "NoteWillCross");
 						msg.SetParam("ButtonName", sButton);
 						msg.SetParam("NumMessagesFromCrossed", i);

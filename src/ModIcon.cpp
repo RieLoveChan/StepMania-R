@@ -37,19 +37,19 @@ void ModIcon::Load(std::string sMetricsGroup) {
 	// stop words
 	STOP_WORDS.Load(sMetricsGroup, "StopWords");
 	m_vStopWords.clear();
-	split(STOP_WORDS, ",", m_vStopWords);
+	split(STOP_WORDS.GetValue(), ",", m_vStopWords);
 
 	Set("");
 }
 
 void ModIcon::Set(const std::string &_sText) {
-	RString sText = _sText;
+	std::string sText = _sText;
 
 	for (unsigned i = 0; i < m_vStopWords.size(); i++)
-		if (sText.EqualsNoCase(m_vStopWords[i]))
+		if (StdString::ssicmp(sText.c_str(), m_vStopWords[i].c_str()) == 0)
 			sText = "";
 
-	sText.Replace(" ", "\n");
+	std::replace(sText.begin(), sText.end(), ' ', '\n');
 
 	bool bVacant = (sText.empty());
 	m_sprFilled->SetVisible(!bVacant);

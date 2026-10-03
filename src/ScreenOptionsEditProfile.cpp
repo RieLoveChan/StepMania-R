@@ -74,7 +74,7 @@ void ScreenOptionsEditProfile::ExportOptions(int iRow, const std::vector<PlayerN
 	ASSERT(pProfile != nullptr);
 	OptionRow &row = *m_pRows[iRow];
 	int iIndex = row.GetOneSharedSelection(true);
-	RString sValue;
+	std::string sValue;
 	if (iIndex >= 0)
 		sValue = row.GetRowDef().m_vsChoices[iIndex];
 

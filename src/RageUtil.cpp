@@ -1758,6 +1758,18 @@ void MakeLower(wchar_t *p, std::size_t iLen) {
 	UnicodeUpperLower(p, iLen, g_LowerCase);
 }
 
+void ReplaceAll(std::string &s, const char *szOld, const char *szNew) {
+	std::string::size_type nOldLen = strlen(szOld);
+	if (nOldLen == 0)
+		return;
+	std::string::size_type nNewLen = strlen(szNew);
+	std::string::size_type nIdx = 0;
+	while ((nIdx = s.find(szOld, nIdx)) != std::string::npos) {
+		s.replace(nIdx, nOldLen, szNew);
+		nIdx += nNewLen;
+	}
+}
+
 float StringToFloat(const RString &sString) {
 	float fOut = std::strtof(sString, nullptr);
 	if (!std::isfinite(fOut)) {

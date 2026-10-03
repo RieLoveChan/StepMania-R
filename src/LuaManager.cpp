@@ -51,6 +51,7 @@ template <> bool FromStack<float>(Lua *L, float &Object, int iOffset);
 template <> bool FromStack<int>(Lua *L, int &Object, int iOffset);
 template <> bool FromStack<unsigned int>(Lua *L, unsigned int &Object, int iOffset);
 template <> bool FromStack<RString>(Lua *L, RString &Object, int iOffset);
+template <> bool FromStack<std::string>(Lua *L, std::string &Object, int iOffset);
 
 bool InReportScriptError = false;
 } // namespace LuaHelpers
@@ -129,6 +130,16 @@ template <> bool FromStack<RString>(Lua *L, RString &Object, int iOffset) {
 
 	return pStr != nullptr;
 }
+template <> bool FromStack<std::string>(Lua *L, std::string &Object, int iOffset) {
+	std::size_t iLen;
+	const char *pStr = lua_tolstring(L, iOffset, &iLen);
+	if (pStr != nullptr)
+		Object.assign(pStr, iLen);
+	else
+		Object.clear();
+
+	return pStr != nullptr;
+}
 } // namespace LuaHelpers
 
 void LuaHelpers::CreateTableFromArrayB(Lua *L, const std::vector<bool> &aIn) {
@@ -183,7 +194,7 @@ void LuaHelpers::CreateTableFromXNode(Lua *L, const XNode *pNode) {
 }
 
 static int GetLuaStack(lua_State *L) {
-	RString sErr;
+	std::string sErr;
 	LuaHelpers::Pop(L, sErr);
 
 	lua_Debug ar;
@@ -236,7 +247,7 @@ static int GetLuaStack(lua_State *L) {
 static int LuaPanic(lua_State *L) {
 	GetLuaStack(L);
 
-	RString sErr;
+	std::string sErr;
 	LuaHelpers::Pop(L, sErr);
 
 	RageException::Throw("[Lua panic] %s", sErr.c_str());
@@ -551,7 +562,7 @@ XNode *LuaHelpers::GetLuaInformation() {
 
 	Lua *L = LUA->Get();
 	FOREACH_LUATABLE(L, LUA_GLOBALSINDEX) {
-		RString sKey;
+		std::string sKey;
 		LuaHelpers::Pop(L, sKey);
 
 		switch (lua_type(L, -1)) {
@@ -576,7 +587,7 @@ XNode *LuaHelpers::GetLuaInformation() {
 
 				// Get methods.
 				FOREACH_LUATABLE(L, -1) {
-					RString sMethod;
+					std::string sMethod;
 					if (LuaHelpers::FromStack(L, sMethod, -1))
 						c.m_vMethods.push_back(sMethod);
 				}
@@ -589,7 +600,7 @@ XNode *LuaHelpers::GetLuaInformation() {
 		{
 			if (!luaL_callmeta(L, -1, "__type"))
 				break;
-			RString sType;
+			std::string sType;
 			if (!LuaHelpers::Pop(L, sType))
 				break;
 			if (sType == "Enum")
@@ -630,13 +641,13 @@ XNode *LuaHelpers::GetLuaInformation() {
 	const std::string BuiltInPackages[] = {"_G", "coroutine", "debug", "math", "package", "string", "table"};
 	const std::string *const end = BuiltInPackages + ARRAYLEN(BuiltInPackages);
 	FOREACH_LUATABLE(L, -1) {
-		RString sNamespace;
+		std::string sNamespace;
 		LuaHelpers::Pop(L, sNamespace);
 		if (find(BuiltInPackages, end, sNamespace) != end)
 			continue;
 		std::vector<std::string> &vNamespaceFunctions = mNamespaces[sNamespace];
 		FOREACH_LUATABLE(L, -1) {
-			RString sFunction;
+			std::string sFunction;
 			LuaHelpers::Pop(L, sFunction);
 			vNamespaceFunctions.push_back(sFunction);
 		}
@@ -793,7 +804,7 @@ bool LuaHelpers::RunScriptOnStack(Lua *L, RString &Error, int Args, int ReturnVa
 	int ret = lua_pcall(L, Args, ReturnValues, ErrFunc);
 	if (ret) {
 		if (ReportError) {
-			RString lerror;
+			std::string lerror;
 			LuaHelpers::Pop(L, lerror);
 			Error += lerror;
 			ReportScriptError(Error);
@@ -918,7 +929,7 @@ void LuaHelpers::ParseCommandList(Lua *L, const RString &sCommands, const RStrin
 /* Like luaL_typerror, but without the special case for argument 1 being "self"
  * in method calls, so we give a correct error message after we remove self. */
 int LuaHelpers::TypeError(Lua *L, int iArgNo, const char *szName) {
-	RString sType;
+	std::string sType;
 	luaL_pushtype(L, iArgNo);
 	LuaHelpers::Pop(L, sType);
 

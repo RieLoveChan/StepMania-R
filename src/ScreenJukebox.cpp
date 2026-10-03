@@ -114,8 +114,8 @@ void ScreenJukebox::SetSong() {
 					if (!pEntry->sModifiers.empty())
 						aAttacks.push_back(Attack::FromGlobalCourseModifier(pEntry->sModifiers));
 					for (Attack const &a : aAttacks) {
-						RString s = a.sModifiers;
-						s.MakeLower();
+						std::string s = a.sModifiers;
+						MakeLower(&s[0], s.size());
 						// todo: allow themers to modify this list? -aj
 						if (s.find("dark") != std::string::npos || s.find("stealth") != std::string::npos) {
 							bModsAreOkToShow = false;

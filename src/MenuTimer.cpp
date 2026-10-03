@@ -172,7 +172,7 @@ void MenuTimer::SetText(float fSeconds) {
 		RString errorMessage = ssprintf("Error running Text%dFormatFunction: ", i + 1);
 		LuaHelpers::RunScriptOnStack(L, errorMessage, 1, 1, true);
 
-		RString sText;
+		std::string sText;
 		LuaHelpers::Pop(L, sText);
 
 		m_text[i].SetText(sText);

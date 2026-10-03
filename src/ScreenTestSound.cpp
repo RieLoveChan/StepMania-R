@@ -79,7 +79,7 @@ void ScreenTestSound::UpdateText(int n) {
 
 	std::vector<RageSound *> &snds = m_sSoundCopies[n];
 
-	RString pos;
+	std::string pos;
 	for (unsigned p = 0; p < snds.size(); ++p) {
 		if (p)
 			pos += ", ";

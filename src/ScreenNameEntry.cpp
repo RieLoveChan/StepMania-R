@@ -55,7 +55,7 @@ static int g_iNumCharsToDrawBehind;
 static int g_iNumCharsToDrawTotal;
 static float g_fFakeBeatsPerSec;
 
-void ScreenNameEntry::ScrollingText::Init(const RString &sName, const std::vector<float> &xs) {
+void ScreenNameEntry::ScrollingText::Init(const std::string &sName, const std::vector<float> &xs) {
 	SetName(sName);
 	m_Xs = xs;
 	m_bDone = false;

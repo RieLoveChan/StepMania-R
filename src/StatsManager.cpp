@@ -259,8 +259,8 @@ void StatsManager::SaveUploadFile(const StageStats *pSS) {
 		}
 	}
 
-	RString sDate = DateTime::GetNowDate().GetString();
-	sDate.Replace(":", "-");
+	std::string sDate = DateTime::GetNowDate().GetString();
+	ReplaceAll(sDate, ":", "-");
 
 	const std::string UPLOAD_DIR = "/Save/Upload/";
 	std::string sFileNameNoExtension = Profile::MakeUniqueFileNameNoExtension(UPLOAD_DIR, sDate + " ");
@@ -279,8 +279,8 @@ void StatsManager::SavePadmissScore(const StageStats *pSS, PlayerNumber pn) {
 
 	std::unique_ptr<XNode> xml(new XNode("SongScore"));
 
-	RString sDate = DateTime::GetNowDate().GetString();
-	sDate.Replace(":", "-");
+	std::string sDate = DateTime::GetNowDate().GetString();
+	ReplaceAll(sDate, ":", "-");
 
 	XNode *taps = xml->AppendChild("TapNoteScores");
 	FOREACH_ENUM(TapNoteScore, tns)

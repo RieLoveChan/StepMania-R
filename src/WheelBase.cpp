@@ -265,7 +265,7 @@ bool WheelBase::Select() // return true if this selection can end the screen
 		m_LastSelection = m_CurWheelItemData[m_iSelection];
 		return true;
 	case WheelItemDataType_Section: {
-		RString sThisItemSectionName = m_CurWheelItemData[m_iSelection]->m_sText;
+		std::string sThisItemSectionName = m_CurWheelItemData[m_iSelection]->m_sText;
 		// Keep track of the open section so that we can restore it
 		// when navigating back to ScreenSelectMusic.
 		GAMESTATE->sLastOpenSection = sThisItemSectionName;

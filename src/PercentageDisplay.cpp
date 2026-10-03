@@ -83,7 +83,7 @@ void PercentageDisplay::Load(const PlayerState *pPlayerState, const PlayerStageS
 void PercentageDisplay::Load(
    const PlayerState *pPlayerState,
    const PlayerStageStats *pPlayerStageStats,
-   const RString &sMetricsGroup,
+   const std::string &sMetricsGroup,
    bool bAutoRefresh
 ) {
 	m_pPlayerState = pPlayerState;
@@ -149,7 +149,7 @@ void PercentageDisplay::Refresh() {
 	m_Last = iActualDancePoints;
 	m_LastMax = iCurPossibleDancePoints;
 
-	RString sNumToDisplay;
+	std::string sNumToDisplay;
 
 	if (ShowDancePointsNotPercentage()) {
 		sNumToDisplay = ssprintf("%*d", m_iDancePointsDigits, std::max(0, iActualDancePoints));
@@ -178,7 +178,7 @@ void PercentageDisplay::Refresh() {
 			}
 
 			// HACK: Use the last frame in the numbers texture as '-'
-			sNumToDisplay.Replace('-', 'x');
+			std::replace(sNumToDisplay.begin(), sNumToDisplay.end(), '-', 'x');
 		}
 	}
 

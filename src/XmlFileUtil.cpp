@@ -534,9 +534,7 @@ void XNodeLuaValue::PushValue(lua_State *L) const {
 void XNodeLuaValue::GetValue(std::string &out) const {
 	Lua *L = LUA->Get();
 	PushValue(L);
-	RString sPopped; // Pop<std::string> has no FromStack specialization
-	LuaHelpers::Pop(L, sPopped);
-	out = sPopped;
+	LuaHelpers::Pop(L, out);
 	LUA->Release(L);
 }
 void XNodeLuaValue::GetValue(int &out) const {
@@ -701,7 +699,7 @@ XNode *XNodeFromTableRecursive(lua_State *L, const std::string &sName, LuaRefere
 					continue;
 			}
 
-			RString nName;
+			std::string nName;
 			LuaHelpers::Pop(L, nName);
 			NodeNamesToAdd.push_back(nName);
 			NodesToAdd.push_back(LuaReference());
@@ -709,7 +707,7 @@ XNode *XNodeFromTableRecursive(lua_State *L, const std::string &sName, LuaRefere
 			continue;
 		}
 
-		RString nName;
+		std::string nName;
 		LuaHelpers::Pop(L, nName);
 
 		// Otherwise, add an attribute.

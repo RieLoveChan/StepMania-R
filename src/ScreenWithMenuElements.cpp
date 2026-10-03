@@ -178,7 +178,7 @@ RString ScreenWithMenuElements::HandleLuaMusicFile(RString const &path) {
 				// there are two possible ways to load a music file via Lua.
 				// 1) return the path to the sound
 				// (themer has to use THEME:GetPathS())
-				RString music_path_from_lua;
+				std::string music_path_from_lua;
 				LuaHelpers::Pop(L, music_path_from_lua);
 				if (!music_path_from_lua.empty()) {
 					ret = music_path_from_lua;
