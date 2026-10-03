@@ -53,7 +53,7 @@ void RollingNumbers::DrawPrimitives() {
 	float original_crop_left = m_pTempState->crop.left;
 	float original_crop_right = m_pTempState->crop.right;
 
-	RString s = this->GetText();
+	std::string s = this->GetText();
 	int i;
 	// find the first non-zero non-comma character, or the last character
 	for (i = 0; i < (int)(s.length() - 1); i++) {
@@ -110,7 +110,7 @@ void RollingNumbers::UpdateText() {
 	if (!m_metrics_loaded) {
 		return;
 	}
-	RString s = ssprintf(TEXT_FORMAT.GetValue(), m_fCurrentNumber);
+	std::string s = ssprintf(TEXT_FORMAT.GetValue(), m_fCurrentNumber);
 	if (COMMIFY) {
 		s = Commify(s);
 	}

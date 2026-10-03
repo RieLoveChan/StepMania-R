@@ -21,7 +21,7 @@ std::string GameButtonToLocalizedString(const InputScheme *pInputs, GameButton i
 	return THEME->GetString("GameButton", GameButtonToString(pInputs, i));
 }
 
-GameButton StringToGameButton(const InputScheme *pInputs, const RString &s) {
+GameButton StringToGameButton(const InputScheme *pInputs, const std::string &s) {
 	FOREACH_GameButtonInScheme(pInputs, i) {
 		if (s == GameButtonToString(pInputs, i))
 			return i;
@@ -33,11 +33,11 @@ std::string GameInput::ToString(const InputScheme *pInputs) const {
 	return GameControllerToString(controller) + RString("_") + GameButtonToString(pInputs, button);
 }
 
-bool GameInput::FromString(const InputScheme *pInputs, const RString &s) {
+bool GameInput::FromString(const InputScheme *pInputs, const std::string &s) {
 	char szController[32] = "";
 	char szButton[32] = "";
 
-	if (2 != sscanf(s, "%31[^_]_%31[^_]", szController, szButton)) {
+	if (2 != sscanf(s.c_str(), "%31[^_]_%31[^_]", szController, szButton)) {
 		controller = GameController_Invalid;
 		return false;
 	}

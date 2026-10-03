@@ -339,7 +339,7 @@ void AdjustSync::GetSyncChangeTextSong(std::vector<std::string> &vsAddTo) {
 				break;
 			}
 
-			RString s =
+			std::string s =
 			   ssprintf(TEMPO_SEGMENT_FROM.GetValue(), FormatNumberAndSuffix(static_cast<int>(i + 1)).c_str(), fOld, fNew);
 
 			vsAddTo.push_back(s);
@@ -362,7 +362,7 @@ void AdjustSync::GetSyncChangeTextSong(std::vector<std::string> &vsAddTo) {
 				break;
 			}
 
-			RString s = ssprintf(CHANGED_STOP.GetValue(), i + 1, fOld, fNew, fDelta);
+			std::string s = ssprintf(CHANGED_STOP.GetValue(), i + 1, fOld, fNew, fDelta);
 			vsAddTo.push_back(s);
 		}
 
@@ -386,7 +386,7 @@ void AdjustSync::GetSyncChangeTextSong(std::vector<std::string> &vsAddTo) {
 				break;
 			}
 
-			RString s = ssprintf(CHANGED_STOP.GetValue(), i + 1, fOld, fNew, fDelta);
+			std::string s = ssprintf(CHANGED_STOP.GetValue(), i + 1, fOld, fNew, fDelta);
 			vsAddTo.push_back(s);
 		}
 

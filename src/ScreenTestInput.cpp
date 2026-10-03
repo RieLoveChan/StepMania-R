@@ -84,7 +84,7 @@ REGISTER_ACTOR_CLASS(InputList);
 REGISTER_SCREEN_CLASS(ScreenTestInput);
 
 bool ScreenTestInput::Input(const InputEventPlus &input) {
-	RString sMessage = input.DeviceI.ToString();
+	std::string sMessage = input.DeviceI.ToString();
 	bool bHandled = false;
 	switch (input.type) {
 	case IET_FIRST_PRESS:

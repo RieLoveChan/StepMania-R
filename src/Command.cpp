@@ -11,7 +11,7 @@
 std::string Command::GetName() const {
 	if (m_vsArgs.empty())
 		return std::string();
-	RString s = m_vsArgs[0];
+	std::string s = m_vsArgs[0];
 	Trim(s);
 	return s;
 }

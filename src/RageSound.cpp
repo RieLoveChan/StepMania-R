@@ -642,7 +642,7 @@ class LunaRageSound : public Luna<RageSound> {
 	static int SetParam(T *p, lua_State *L) {
 		RageSoundParams params(p->GetParams());
 
-		RString val = SArg(1);
+		std::string val = SArg(1);
 		if (val == "StartSecond")
 			params.m_StartSecond = FArg(2);
 		else if (val == "LengthSeconds")

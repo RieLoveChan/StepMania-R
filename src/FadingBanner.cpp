@@ -84,7 +84,7 @@ void FadingBanner::Load(RageTextureID ID, bool bLowResToHighRes) {
 /* If bLowResToHighRes is true, we're fading from a low-res banner to the
  * corresponding high-res banner. */
 void FadingBanner::BeforeChange(bool bLowResToHighRes) {
-	RString sCommand;
+	std::string sCommand;
 	if (bLowResToHighRes)
 		sCommand = "FadeFromCached";
 	else
@@ -157,7 +157,7 @@ void FadingBanner::LoadFromSong(const Song *pSong) {
 
 	/* Don't call HasBanner. That'll do disk access and cause the music wheel
 	 * to skip. */
-	RString sPath = pSong->GetBannerPath();
+	std::string sPath = pSong->GetBannerPath();
 	if (sPath.empty())
 		LoadFallback();
 	else
@@ -182,7 +182,7 @@ void FadingBanner::LoadFromCourse(const Course *pCourse) {
 
 	/* Don't call HasBanner. That'll do disk access and cause the music wheel
 	 * to skip. */
-	RString sPath = pCourse->GetBannerPath();
+	std::string sPath = pCourse->GetBannerPath();
 	if (sPath.empty())
 		LoadCourseFallback();
 	else

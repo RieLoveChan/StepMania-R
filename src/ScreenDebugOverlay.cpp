@@ -1036,7 +1036,7 @@ class DebugLineReloadCurrentScreen : public IDebugLine {
 		return "Theme";
 	}
 	void DoAndLog(std::string &sMessageOut) override {
-		RString sScreenName = SCREENMAN->GetScreen(0)->GetName();
+		std::string sScreenName = SCREENMAN->GetScreen(0)->GetName();
 		SCREENMAN->PopAllScreens();
 
 		SOUND->StopMusic();

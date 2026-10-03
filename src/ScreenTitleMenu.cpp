@@ -66,7 +66,7 @@ bool ScreenTitleMenu::Input(const InputEventPlus &input) {
 		   CodeDetector::EnteredCode(input.GameI.controller, CODE_NEXT_ANNOUNCER2)
 		) {
 			ANNOUNCER->NextAnnouncer();
-			RString sName = ANNOUNCER->GetCurAnnouncerName();
+			std::string sName = ANNOUNCER->GetCurAnnouncerName();
 			if (sName.empty())
 				sName = "(none)";
 			SCREENMAN->SystemMessage(ANNOUNCER_.GetValue() + ": " + sName);

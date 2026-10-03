@@ -55,7 +55,7 @@ enum GameButton {
 
 std::string GameButtonToString(const InputScheme *pInputs, GameButton i);
 std::string GameButtonToLocalizedString(const InputScheme *pInputs, GameButton i);
-GameButton StringToGameButton(const InputScheme *pInputs, const RString &s);
+GameButton StringToGameButton(const InputScheme *pInputs, const std::string &s);
 
 /** @brief A special way to loop through each game button. */
 #define FOREACH_GameButton_Custom(gb) for (GameButton gb = GAME_BUTTON_CUSTOM_01; gb < NUM_GameButton; enum_add(gb, +1))
@@ -220,7 +220,7 @@ struct GameInput {
 	};
 
 	std::string ToString(const InputScheme *pInputs) const;
-	bool FromString(const InputScheme *pInputs, const RString &s);
+	bool FromString(const InputScheme *pInputs, const std::string &s);
 };
 
 #endif

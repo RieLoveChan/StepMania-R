@@ -163,7 +163,7 @@ void Banner::LoadBannerFromUnlockEntry(const UnlockEntry *pUE) {
 	if (pUE == nullptr)
 		LoadFallback();
 	else {
-		RString sFile = pUE->GetBannerFile();
+		std::string sFile = pUE->GetBannerFile();
 		Load(sFile);
 		m_bScrolling = false;
 	}
@@ -173,7 +173,7 @@ void Banner::LoadBackgroundFromUnlockEntry(const UnlockEntry *pUE) {
 	if (pUE == nullptr)
 		LoadFallback();
 	else {
-		RString sFile = pUE->GetBackgroundFile();
+		std::string sFile = pUE->GetBackgroundFile();
 		Load(sFile);
 		m_bScrolling = false;
 	}

@@ -292,7 +292,7 @@ void GraphicsWindow::CreateGraphicsWindow(const VideoModeParams &p, bool bForceR
 				break;
 		}
 
-		SetWindowTextA(g_hWndMain, ConvertUTF8ToACP(p.sWindowTitle));
+		SetWindowTextA(g_hWndMain, ConvertUTF8ToACP(p.sWindowTitle).c_str());
 	} while (false);
 
 	// Update the window icon.

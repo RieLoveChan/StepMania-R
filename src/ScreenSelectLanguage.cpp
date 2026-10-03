@@ -43,7 +43,7 @@ void ScreenSelectLanguage::BeginScreen() {
 
 bool ScreenSelectLanguage::MenuStart(const InputEventPlus &input) {
 	int iIndex = this->GetSelectionIndex(input.pn);
-	RString sLangCode = m_aGameCommands[iIndex].m_sName;
+	std::string sLangCode = m_aGameCommands[iIndex].m_sName;
 	PREFSMAN->m_sLanguage.Set(sLangCode);
 	PREFSMAN->SavePrefsToDisk();
 	THEME->SwitchThemeAndLanguage(THEME->GetCurThemeName(), PREFSMAN->m_sLanguage.Get(), PREFSMAN->m_bPseudoLocalize);

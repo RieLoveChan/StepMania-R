@@ -182,17 +182,17 @@ class LunaAnnouncerManager : public Luna<AnnouncerManager> {
 		return 1;
 	}
 	static int GetCurrentAnnouncer(T *p, lua_State *L) {
-		RString s = p->GetCurAnnouncerName();
+		std::string s = p->GetCurAnnouncerName();
 		if (s.empty()) {
 			lua_pushnil(L);
 		}
 		else {
-			lua_pushstring(L, s);
+			lua_pushstring(L, s.c_str());
 		}
 		return 1;
 	}
 	static int SetCurrentAnnouncer(T *p, lua_State *L) {
-		RString s = SArg(1);
+		std::string s = SArg(1);
 		// only bother switching if the announcer exists. -aj
 		if (p->DoesAnnouncerExist(s))
 			p->SwitchAnnouncer(s);

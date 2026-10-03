@@ -70,6 +70,7 @@
 #include "ActorUtil.h"
 #include "ver.h"
 
+#include <algorithm>
 #include <cmath>
 #include <ctime>
 #include <string>
@@ -1079,18 +1080,18 @@ int sm_main(int argc, char *argv[]) {
 	return 0;
 }
 
-RString StepMania::SaveScreenshot(
-   RString Dir, bool SaveCompressed, bool MakeSignature, RString NamePrefix, RString NameSuffix
+std::string StepMania::SaveScreenshot(
+   std::string Dir, bool SaveCompressed, bool MakeSignature, std::string NamePrefix, std::string NameSuffix
 ) {
 	/* As of sm-ssc v1.0 rc2, screenshots are no longer named by an arbitrary
 	 * index. This was causing naming issues for some unknown reason, so we have
 	 * changed the screenshot names to a non-blocking format: date and time.
 	 * As before, we ignore the extension. -aj */
-	RString FileNameNoExtension = NamePrefix + DateTime::GetNowDateTime().GetString() + NameSuffix;
+	std::string FileNameNoExtension = NamePrefix + DateTime::GetNowDateTime().GetString() + NameSuffix;
 	// replace space with underscore.
-	FileNameNoExtension.Replace(" ", "_");
+	std::replace(FileNameNoExtension.begin(), FileNameNoExtension.end(), ' ', '_');
 	// colons are illegal in filenames.
-	FileNameNoExtension.Replace(":", "");
+	FileNameNoExtension.erase(std::remove(FileNameNoExtension.begin(), FileNameNoExtension.end(), ':'), FileNameNoExtension.end());
 
 	// Save the screenshot. If writing lossy to a memcard, use
 	// SAVE_LOSSY_LOW_QUAL, so we don't eat up lots of space.
@@ -1102,12 +1103,12 @@ RString StepMania::SaveScreenshot(
 	else
 		fmt = RageDisplay::SAVE_LOSSLESS_SENSIBLE;
 
-	RString FileName = FileNameNoExtension + "." + (SaveCompressed ? "jpg" : "png");
-	RString Path = Dir + FileName;
+	std::string FileName = FileNameNoExtension + "." + (SaveCompressed ? "jpg" : "png");
+	std::string Path = Dir + FileName;
 	bool Result = DISPLAY->SaveScreenshot(Path, fmt);
 	if (!Result) {
 		SCREENMAN->PlayInvalidSound();
-		return RString();
+		return std::string();
 	}
 
 	SCREENMAN->PlayScreenshotSound();
@@ -1453,9 +1454,9 @@ int LuaFunc_SaveScreenshot(lua_State *L) {
 	PlayerNumber pn = Enum::Check<PlayerNumber>(L, 1, true);
 	bool compress = lua_toboolean(L, 2) > 0;
 	bool sign = lua_toboolean(L, 3) > 0;
-	RString prefix = luaL_optstring(L, 4, "");
-	RString suffix = luaL_optstring(L, 5, "");
-	RString dir;
+	std::string prefix = luaL_optstring(L, 4, "");
+	std::string suffix = luaL_optstring(L, 5, "");
+	std::string dir;
 	if (pn == PlayerNumber_Invalid) {
 		dir = "Screenshots/";
 	}
@@ -1465,15 +1466,15 @@ int LuaFunc_SaveScreenshot(lua_State *L) {
 			MEMCARDMAN->MountCard(pn);
 		}
 	}
-	RString filename = StepMania::SaveScreenshot(dir, compress, sign, prefix, suffix);
+	std::string filename = StepMania::SaveScreenshot(dir, compress, sign, prefix, suffix);
 	if (pn != PlayerNumber_Invalid) {
 		if (PROFILEMAN->ProfileWasLoadedFromMemoryCard(pn)) {
 			MEMCARDMAN->UnmountCard(pn);
 		}
 	}
-	RString path = dir + filename;
+	std::string path = dir + filename;
 	lua_pushboolean(L, !filename.empty());
-	lua_pushstring(L, path);
+	lua_pushstring(L, path.c_str());
 	return 2;
 }
 void LuaFunc_Register_SaveScreenshot(lua_State *L);
