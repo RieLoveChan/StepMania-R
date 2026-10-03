@@ -89,7 +89,7 @@ class UnlockEntry {
 		return GetUnlockEntryStatus() != UnlockEntryStatus_Unlocked;
 	}
 	UnlockEntryStatus GetUnlockEntryStatus() const;
-	RString GetModifier() const {
+	std::string GetModifier() const {
 		return m_cmd.GetArg(1).s;
 	}
 	std::string GetDescription() const;
@@ -154,7 +154,7 @@ class UnlockManager {
 	void UnlockSong(const Song *pSong);
 
 	// Return the associated EntryID.
-	RString FindEntryID(const RString &sName) const;
+	std::string FindEntryID(const std::string &sName) const;
 
 	// All locked songs are stored here
 	std::vector<UnlockEntry> m_UnlockEntries;

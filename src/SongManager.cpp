@@ -557,13 +557,13 @@ bool SongManager::IsGroupNeverCached(const std::string &group) const {
 	return m_GroupsToNeverCache.find(group) != m_GroupsToNeverCache.end();
 }
 
-RString SongManager::GetSongGroupBannerPath(std::string sSongGroup) const {
+std::string SongManager::GetSongGroupBannerPath(std::string sSongGroup) const {
 	for (unsigned i = 0; i < m_sSongGroupNames.size(); ++i) {
 		if (sSongGroup == m_sSongGroupNames[i])
 			return m_sSongGroupBannerPaths[i];
 	}
 
-	return RString();
+	return std::string();
 }
 /*
 RString SongManager::GetSongGroupBackgroundPath( RString sSongGroup ) const
@@ -668,11 +668,11 @@ RageColor SongManager::GetSongColor(const Song *pSong) const {
 	}
 }
 
-RString SongManager::GetCourseGroupBannerPath(const std::string &sCourseGroup) const {
+std::string SongManager::GetCourseGroupBannerPath(const std::string &sCourseGroup) const {
 	std::map<std::string, CourseGroupInfo>::const_iterator iter = m_mapCourseGroupToInfo.find(sCourseGroup);
 	if (iter == m_mapCourseGroupToInfo.end()) {
 		ASSERT_M(0, ssprintf("requested banner for course group '%s' that doesn't exist", sCourseGroup.c_str()));
-		return RString();
+		return std::string();
 	}
 	else {
 		return iter->second.m_sBannerPath;

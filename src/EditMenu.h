@@ -111,7 +111,7 @@ class EditMenu : public ActorFrame {
 
 	/** @brief Retrieve the currently selected group.
 	 * @return the current group. */
-	RString GetSelectedGroup() const {
+	std::string GetSelectedGroup() const {
 		if (!SHOW_GROUPS.GetValue())
 			return GROUP_ALL;
 		int groups = static_cast<int>(m_sGroups.size());

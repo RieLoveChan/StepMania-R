@@ -104,7 +104,7 @@ bool ActorUtil::ResolvePath(std::string &sPath, const std::string &sName, bool o
 }
 
 namespace {
-RString GetLegacyActorClass(XNode *pActor) {
+std::string GetLegacyActorClass(XNode *pActor) {
 	DEBUG_ASSERT(PREFSMAN->m_bQuirksMode);
 	ASSERT(pActor);
 

@@ -1773,7 +1773,7 @@ bool StringToFloat(const RString &sString, float &fOut) {
 	return !sString.empty() && *endPtr == '\0' && std::isfinite(fOut);
 }
 
-RString FloatToString(const float &num) {
+std::string FloatToString(const float &num) {
 	std::stringstream ss;
 	ss << num;
 	return ss.str();
@@ -1990,8 +1990,8 @@ void Replace_Unicode_Markers(std::string &sText) {
 }
 
 // Form a string to identify a wchar_t with ASCII.
-RString WcharDisplayText(wchar_t c) {
-	RString sChr;
+std::string WcharDisplayText(wchar_t c) {
+	std::string sChr;
 	sChr = ssprintf("U+%4.4x", c);
 	if (c < 128)
 		sChr += ssprintf(" ('%c')", char(c));

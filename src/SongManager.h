@@ -92,14 +92,14 @@ class SongManager {
 
 	bool IsGroupNeverCached(const std::string &group) const;
 
-	RString GetSongGroupBannerPath(std::string sSongGroup) const;
+	std::string GetSongGroupBannerPath(std::string sSongGroup) const;
 	// RString GetSongGroupBackgroundPath( RString sSongGroup ) const;
 	void GetSongGroupNames(std::vector<std::string> &AddTo) const;
 	bool DoesSongGroupExist(std::string sSongGroup) const;
 	RageColor GetSongGroupColor(const std::string &sSongGroupName) const;
 	RageColor GetSongColor(const Song *pSong) const;
 
-	RString GetCourseGroupBannerPath(const std::string &sCourseGroup) const;
+	std::string GetCourseGroupBannerPath(const std::string &sCourseGroup) const;
 	// RString GetCourseGroupBackgroundPath( const RString &sCourseGroup ) const;
 	void GetCourseGroupNames(std::vector<std::string> &AddTo) const;
 	bool DoesCourseGroupExist(const std::string &sCourseGroup) const;

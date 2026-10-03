@@ -13,11 +13,11 @@ XToString(GameController);
 StringToX(GameController);
 LuaXType(GameController);
 
-RString GameButtonToString(const InputScheme *pInputs, GameButton i) {
+std::string GameButtonToString(const InputScheme *pInputs, GameButton i) {
 	return pInputs->GetGameButtonName(i);
 }
 
-RString GameButtonToLocalizedString(const InputScheme *pInputs, GameButton i) {
+std::string GameButtonToLocalizedString(const InputScheme *pInputs, GameButton i) {
 	return THEME->GetString("GameButton", GameButtonToString(pInputs, i));
 }
 

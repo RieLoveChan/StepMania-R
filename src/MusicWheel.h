@@ -38,7 +38,7 @@ class MusicWheel : public WheelBase {
 	Course *GetSelectedCourse() {
 		return GetCurWheelItemData(m_iSelection)->m_pCourse;
 	}
-	RString GetSelectedSection() {
+	std::string GetSelectedSection() {
 		return GetCurWheelItemData(m_iSelection)->m_sText;
 	}
 

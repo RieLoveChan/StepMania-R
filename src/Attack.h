@@ -30,20 +30,20 @@ struct Attack {
 		level = ATTACK_LEVEL_1;
 		fStartSecond = ATTACK_STARTS_NOW;
 		fSecsRemaining = 0;
-		sModifiers = RString();
+		sModifiers = std::string();
 		bOn = false;
 		bGlobal = false;
 		bShowInAttackList = true;
 	}
 	Attack()
-	    : level(ATTACK_LEVEL_1), fStartSecond(ATTACK_STARTS_NOW), fSecsRemaining(0), sModifiers(RString()), bOn(false),
+	    : level(ATTACK_LEVEL_1), fStartSecond(ATTACK_STARTS_NOW), fSecsRemaining(0), sModifiers(std::string()), bOn(false),
 	      bGlobal(false), bShowInAttackList(true) {
 	} // MakeBlank() is effectively called here.
 	Attack(
 	   AttackLevel level_,
 	   float fStartSecond_,
 	   float fSecsRemaining_,
-	   RString sModifiers_,
+	   std::string sModifiers_,
 	   bool bOn_,
 	   bool bGlobal_,
 	   bool bShowInAttackList_ = true

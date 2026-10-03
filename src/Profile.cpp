@@ -1471,7 +1471,7 @@ XNode *Profile::SaveGeneralDataCreateNode() const {
 			XNode *pEntry = pUnlocks->AppendChild("UnlockEntry");
 			pEntry->AppendAttr("UnlockEntryID", unlockEntry);
 			if (!UNLOCK_AUTH_STRING.GetValue().empty()) {
-				RString sUnlockAuth = BinaryToHex(CRYPTMAN->GetMD5ForString(unlockEntry + UNLOCK_AUTH_STRING.GetValue()));
+				std::string sUnlockAuth = BinaryToHex(CRYPTMAN->GetMD5ForString(unlockEntry + UNLOCK_AUTH_STRING.GetValue()));
 				pEntry->AppendAttr("Auth", sUnlockAuth);
 			}
 		}

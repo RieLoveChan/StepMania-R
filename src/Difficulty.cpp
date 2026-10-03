@@ -82,7 +82,7 @@ LuaFunction(OldStyleStringToDifficulty, OldStyleStringToDifficulty(SArg(1)));
 
 static ThemeMetric<RString> NAMES("CustomDifficulty", "Names");
 
-RString GetCustomDifficulty(StepsType st, Difficulty dc, CourseType ct) {
+std::string GetCustomDifficulty(StepsType st, Difficulty dc, CourseType ct) {
 	/* XXX GAMEMAN->GetStepsTypeInfo( StepsType_Invalid ) will crash. I'm not
 	 * sure what the correct behavior in this case should be. Should we still
 	 * allow custom difficulties? Why do we not allow custom difficulties for
@@ -93,7 +93,7 @@ RString GetCustomDifficulty(StepsType st, Difficulty dc, CourseType ct) {
 		 * return "", but the comment there says that the caller should
 		 * really be checking for invalid values. */
 		if (dc == Difficulty_Invalid)
-			return RString();
+			return std::string();
 		return DifficultyToString(dc);
 	}
 
@@ -121,7 +121,7 @@ RString GetCustomDifficulty(StepsType st, Difficulty dc, CourseType ct) {
 	}
 	// no matching CustomDifficulty, so use a regular difficulty name
 	if (dc == Difficulty_Invalid)
-		return RString();
+		return std::string();
 	return DifficultyToString(dc);
 }
 
@@ -130,17 +130,17 @@ LuaFunction(
    GetCustomDifficulty(Enum::Check<StepsType>(L, 1), Enum::Check<Difficulty>(L, 2), Enum::Check<CourseType>(L, 3, true))
 );
 
-RString CustomDifficultyToLocalizedString(const RString &sCustomDifficulty) {
+std::string CustomDifficultyToLocalizedString(const std::string &sCustomDifficulty) {
 	return THEME->GetString("CustomDifficulty", sCustomDifficulty);
 }
 
 LuaFunction(CustomDifficultyToLocalizedString, CustomDifficultyToLocalizedString(SArg(1)));
 
-RString StepsToCustomDifficulty(const Steps *pSteps) {
+std::string StepsToCustomDifficulty(const Steps *pSteps) {
 	return GetCustomDifficulty(pSteps->m_StepsType, pSteps->GetDifficulty(), CourseType_Invalid);
 }
 
-RString TrailToCustomDifficulty(const Trail *pTrail) {
+std::string TrailToCustomDifficulty(const Trail *pTrail) {
 	return GetCustomDifficulty(pTrail->m_StepsType, pTrail->m_CourseDifficulty, pTrail->m_CourseType);
 }
 

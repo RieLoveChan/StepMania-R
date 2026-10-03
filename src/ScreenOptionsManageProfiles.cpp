@@ -449,10 +449,10 @@ int ScreenOptionsManageProfiles::GetLocalProfileIndexWithFocus() const {
 	return iIndex;
 }
 
-RString ScreenOptionsManageProfiles::GetLocalProfileIDWithFocus() const {
+std::string ScreenOptionsManageProfiles::GetLocalProfileIDWithFocus() const {
 	int iIndex = GetLocalProfileIndexWithFocus();
 	if (iIndex == -1)
-		return RString();
+		return std::string();
 	return m_vsLocalProfileID[iIndex];
 }
 

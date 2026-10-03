@@ -320,7 +320,7 @@ class Actor : public MessageSubscriber {
 	/**
 	 * @brief Set the Actor's name to a new one.
 	 * @param sName the new name for the Actor. */
-	virtual void SetName(const RString &sName) {
+	virtual void SetName(const std::string &sName) {
 		m_sName = sName;
 	}
 	/**

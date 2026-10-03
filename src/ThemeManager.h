@@ -38,8 +38,8 @@ class ThemeManager {
 	bool DoesThemeExist(const std::string &sThemeName);
 	bool IsThemeSelectable(const std::string &name);
 	bool IsThemeNameValid(const std::string &name);
-	RString GetThemeDisplayName(const std::string &sThemeName);
-	RString GetThemeAuthor(const std::string &sThemeName);
+	std::string GetThemeDisplayName(const std::string &sThemeName);
+	std::string GetThemeAuthor(const std::string &sThemeName);
 	void GetLanguages(std::vector<std::string> &AddTo);
 	bool DoesLanguageExist(const std::string &sLanguage);
 	void SwitchThemeAndLanguage(
@@ -55,11 +55,11 @@ class ThemeManager {
 	std::string GetCurLanguage() const {
 		return m_sCurLanguage;
 	};
-	RString GetCurThemeDir() const {
+	std::string GetCurThemeDir() const {
 		return GetThemeDirFromName(m_sCurThemeName);
 	};
-	RString GetNextTheme();
-	RString GetNextSelectableTheme();
+	std::string GetNextTheme();
+	std::string GetNextSelectableTheme();
 	void ReloadMetrics();
 	void ReloadSubscribers();
 	void ClearSubscribers();
@@ -80,29 +80,29 @@ class ThemeManager {
 	   const std::string &sElement,
 	   bool bOptional = false
 	);
-	RString GetPath(
+	std::string GetPath(
 	   ElementCategory category, const std::string &sMetricsGroup, const std::string &sElement, bool bOptional = false
 	);
-	RString GetPathB(const std::string &sMetricsGroup, const std::string &sElement, bool bOptional = false) {
+	std::string GetPathB(const std::string &sMetricsGroup, const std::string &sElement, bool bOptional = false) {
 		return GetPath(EC_BGANIMATIONS, sMetricsGroup, sElement, bOptional);
 	};
-	RString GetPathF(const std::string &sMetricsGroup, const std::string &sElement, bool bOptional = false) {
+	std::string GetPathF(const std::string &sMetricsGroup, const std::string &sElement, bool bOptional = false) {
 		return GetPath(EC_FONTS, sMetricsGroup, sElement, bOptional);
 	};
-	RString GetPathG(const std::string &sMetricsGroup, const std::string &sElement, bool bOptional = false) {
+	std::string GetPathG(const std::string &sMetricsGroup, const std::string &sElement, bool bOptional = false) {
 		return GetPath(EC_GRAPHICS, sMetricsGroup, sElement, bOptional);
 	};
-	RString GetPathS(const std::string &sMetricsGroup, const std::string &sElement, bool bOptional = false) {
+	std::string GetPathS(const std::string &sMetricsGroup, const std::string &sElement, bool bOptional = false) {
 		return GetPath(EC_SOUNDS, sMetricsGroup, sElement, bOptional);
 	};
-	RString GetPathO(const std::string &sMetricsGroup, const std::string &sElement, bool bOptional = false) {
+	std::string GetPathO(const std::string &sMetricsGroup, const std::string &sElement, bool bOptional = false) {
 		return GetPath(EC_OTHER, sMetricsGroup, sElement, bOptional);
 	};
 	void ClearThemePathCache();
 
 	bool HasMetric(const std::string &sMetricsGroup, const std::string &sValueName);
 	void PushMetric(Lua *L, const std::string &sMetricsGroup, const std::string &sValueName);
-	RString GetMetric(const std::string &sMetricsGroup, const std::string &sValueName);
+	std::string GetMetric(const std::string &sMetricsGroup, const std::string &sValueName);
 	int GetMetricI(const std::string &sMetricsGroup, const std::string &sValueName);
 	float GetMetricF(const std::string &sMetricsGroup, const std::string &sValueName);
 	bool GetMetricB(const std::string &sMetricsGroup, const std::string &sValueName);
@@ -116,7 +116,7 @@ class ThemeManager {
 
 	// Languages
 	bool HasString(const std::string &sMetricsGroup, const std::string &sValueName);
-	RString GetString(const std::string &sMetricsGroup, const std::string &sValueName);
+	std::string GetString(const std::string &sMetricsGroup, const std::string &sValueName);
 	void GetString(const std::string &sMetricsGroup, const std::string &sValueName, RString &valueOut) {
 		valueOut = GetString(sMetricsGroup, sValueName);
 	}
@@ -158,7 +158,7 @@ class ThemeManager {
 	   const std::string &sFile
 	);
 	static std::string GetThemeDirFromName(const std::string &sThemeName);
-	RString GetElementDir(const RString &sThemeName);
+	std::string GetElementDir(const std::string &sThemeName);
 	static std::string GetMetricsIniPath(const std::string &sThemeName);
 	static void GetLanguagesForTheme(const std::string &sThemeName, std::vector<std::string> &asLanguagesOut);
 	static std::string GetLanguageIniPath(const std::string &sThemeName, const std::string &sLanguage);

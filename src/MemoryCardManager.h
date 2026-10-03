@@ -21,7 +21,7 @@ class MemoryCardManager {
 	MemoryCardState GetCardState(PlayerNumber pn) const {
 		return m_State[pn];
 	}
-	RString GetCardError(PlayerNumber pn) const {
+	std::string GetCardError(PlayerNumber pn) const {
 		return m_sError[pn];
 	}
 

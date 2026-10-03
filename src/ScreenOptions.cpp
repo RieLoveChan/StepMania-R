@@ -68,7 +68,7 @@
  * in player options menus, but it should in the options menu.
  */
 
-static std::string OPTION_EXPLANATION(RString s) {
+static std::string OPTION_EXPLANATION(const std::string &s) {
 	return THEME->GetString("OptionExplanations", s);
 }
 
@@ -330,15 +330,15 @@ ScreenOptions::~ScreenOptions() {
 		SAFE_DELETE(m_pRows[i]);
 }
 
-RString ScreenOptions::GetExplanationText(int iRow) const {
+std::string ScreenOptions::GetExplanationText(int iRow) const {
 	const OptionRow &row = *m_pRows[iRow];
 
 	bool bAllowExplanation = row.GetRowDef().m_bAllowExplanation;
 	bool bShowExplanations = bAllowExplanation && SHOW_EXPLANATIONS.GetValue();
 	if (!bShowExplanations)
-		return RString();
+		return std::string();
 
-	RString sExplanationName = row.GetRowDef().m_sExplanationName;
+	std::string sExplanationName = row.GetRowDef().m_sExplanationName;
 	if (sExplanationName.empty())
 		sExplanationName = row.GetRowDef().m_sName;
 	ASSERT(!sExplanationName.empty());

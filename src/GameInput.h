@@ -53,8 +53,8 @@ enum GameButton {
 	GameButton_Invalid
 };
 
-RString GameButtonToString(const InputScheme *pInputs, GameButton i);
-RString GameButtonToLocalizedString(const InputScheme *pInputs, GameButton i);
+std::string GameButtonToString(const InputScheme *pInputs, GameButton i);
+std::string GameButtonToLocalizedString(const InputScheme *pInputs, GameButton i);
 GameButton StringToGameButton(const InputScheme *pInputs, const RString &s);
 
 /** @brief A special way to loop through each game button. */

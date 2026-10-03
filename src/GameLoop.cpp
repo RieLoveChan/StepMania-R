@@ -111,15 +111,15 @@ void GameLoop::ChangeGame(const std::string &new_game, const std::string &new_th
 #include "GameManager.h"
 #include "Game.h"
 namespace {
-RString GetNewScreenName() {
+std::string GetNewScreenName() {
 	if (THEME->HasMetric("Common", "AfterThemeChangeScreen")) {
-		RString after_screen = THEME->GetMetric("Common", "AfterThemeChangeScreen");
+		std::string after_screen =THEME->GetMetric("Common", "AfterThemeChangeScreen");
 		if (SCREENMAN->IsScreenNameValid(after_screen)) {
 			return after_screen;
 		}
 	}
 
-	RString new_screen = THEME->GetMetric("Common", "InitialScreen");
+	std::string new_screen = THEME->GetMetric("Common", "InitialScreen");
 	if (!SCREENMAN->IsScreenNameValid(new_screen)) {
 		return "ScreenInitialScreenIsInvalid";
 	}
@@ -153,7 +153,7 @@ void DoChangeTheme() {
 	// So now the correct thing to do is for a theme to specify its entry
 	// point after a theme change, ensuring that we are going to a valid
 	// screen and not crashing. -Kyz
-	RString newScreenName = GetNewScreenName();
+	std::string newScreenName = GetNewScreenName();
 	SCREENMAN->SetNewScreen(newScreenName);
 
 	// Indicate no further theme change is needed
@@ -185,8 +185,8 @@ void DoChangeGame() {
 		SCREENMAN = new ScreenManager();
 	}
 	StepMania::ResetGame();
-	RString new_screen = THEME->GetMetric("Common", "InitialScreen");
-	RString after_screen;
+	std::string new_screen = THEME->GetMetric("Common", "InitialScreen");
+	std::string after_screen;
 	if (theme_changing) {
 		SCREENMAN->ThemeChanged();
 		if (THEME->HasMetric("Common", "AfterGameAndThemeChangeScreen")) {

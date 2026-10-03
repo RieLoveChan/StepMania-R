@@ -401,7 +401,7 @@ struct LanguageInfo {
 };
 void GetLanguageInfos(std::vector<const LanguageInfo *> &vAddTo);
 const LanguageInfo *GetLanguageInfo(const std::string &sIsoCode);
-RString GetLanguageNameFromISO639Code(RString sName);
+std::string GetLanguageNameFromISO639Code(std::string sName);
 
 // Splits a RString into an std::vector<RString> according the Delimitor.
 void split(
@@ -570,7 +570,7 @@ class Regex {
 void ReplaceEntityText(std::string &sText, const std::map<RString, RString> &m);
 void ReplaceEntityText(std::string &sText, const std::map<char, RString> &m);
 void Replace_Unicode_Markers(std::string &Text);
-RString WcharDisplayText(wchar_t c);
+std::string WcharDisplayText(wchar_t c);
 
 std::string Basename(const std::string &dir);
 std::string Dirname(const std::string &dir);

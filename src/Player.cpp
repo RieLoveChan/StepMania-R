@@ -3215,7 +3215,7 @@ void Player::IncrementComboOrMissCombo(bool bComboOrMissCombo) {
 	SendComboMessages(iOldCombo, iOldMissCombo);
 }
 
-RString Player::ApplyRandomAttack() {
+std::string Player::ApplyRandomAttack() {
 	if (GAMESTATE->m_RandomAttacks.empty())
 		return "";
 

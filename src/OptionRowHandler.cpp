@@ -63,8 +63,8 @@ std::string OptionRowHandler::OptionTitle() const {
 	return bTheme ? THEME->GetString("OptionTitles", s) : s;
 }
 
-RString OptionRowHandler::GetThemedItemText(int iChoice) const {
-	RString s = m_Def.m_vsChoices[iChoice];
+std::string OptionRowHandler::GetThemedItemText(int iChoice) const {
+	std::string s = m_Def.m_vsChoices[iChoice];
 	if (s.empty())
 		return "";
 	bool bTheme = false;

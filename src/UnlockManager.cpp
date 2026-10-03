@@ -84,7 +84,7 @@ void UnlockManager::UnlockSong(const Song *song) {
 	UnlockEntryID(p->m_sEntryID);
 }
 
-RString UnlockManager::FindEntryID(const RString &sName) const {
+std::string UnlockManager::FindEntryID(const std::string &sName) const {
 	const UnlockEntry *pEntry = nullptr;
 
 	const Song *pSong = SONGMAN->FindSong(sName);

@@ -193,7 +193,7 @@ class Player : public ActorFrame {
 	int GetClosestNonEmptyRowDirectional(int iStartRow, int iMaxRowsAhead, bool bAllowGraded, bool bForward) const;
 	int GetClosestNonEmptyRow(int iNoteRow, int iMaxRowsAhead, int iMaxRowsBehind, bool bAllowGraded) const;
 
-	RString ApplyRandomAttack();
+	std::string ApplyRandomAttack();
 
 	inline void HideNote(int col, int row) {
 		NoteData::iterator iter = m_NoteData.FindTapNote(col, row);

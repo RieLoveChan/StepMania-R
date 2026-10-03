@@ -56,7 +56,7 @@ class ScreenOptions : public ScreenWithMenuElements {
 
 	void RestartOptions();
 	void GetWidthXY(PlayerNumber pn, int iRow, int iChoiceOnRow, int &iWidthOut, int &iXOut, int &iYOut) const;
-	RString GetExplanationText(int iRow) const;
+	std::string GetExplanationText(int iRow) const;
 	void RefreshIcons(int iRow, PlayerNumber pn);
 	void PositionCursor(PlayerNumber pn);
 	void PositionRows(bool bTween);

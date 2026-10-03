@@ -200,7 +200,7 @@ bool ThemeManager::IsThemeNameValid(const std::string &name) {
 	return name.substr(0, 1) != "_";
 }
 
-RString ThemeManager::GetThemeDisplayName(const std::string &sThemeName) {
+std::string ThemeManager::GetThemeDisplayName(const std::string &sThemeName) {
 	std::string sDir = GetThemeDirFromName(sThemeName);
 	IniFile ini;
 	ini.ReadFile(sDir + THEME_INFO_INI);
@@ -212,7 +212,7 @@ RString ThemeManager::GetThemeDisplayName(const std::string &sThemeName) {
 	return sThemeName;
 }
 
-RString ThemeManager::GetThemeAuthor(const std::string &sThemeName) {
+std::string ThemeManager::GetThemeAuthor(const std::string &sThemeName) {
 	std::string sDir = GetThemeDirFromName(sThemeName);
 	IniFile ini;
 	ini.ReadFile(sDir + THEME_INFO_INI);
@@ -848,7 +848,7 @@ try_element_again:
 	}
 }
 
-RString ThemeManager::GetPath(
+std::string ThemeManager::GetPath(
    ElementCategory category, const std::string &sMetricsGroup, const std::string &sElement, bool bOptional
 ) {
 	PathInfo pi;
@@ -1009,7 +1009,7 @@ void GetAndConvertMetric(const std::string &sMetricsGroup, const std::string &sV
 }
 
 /* Get a string metric. */
-RString ThemeManager::GetMetric(const std::string &sMetricsGroup, const std::string &sValueName) {
+std::string ThemeManager::GetMetric(const std::string &sMetricsGroup, const std::string &sValueName) {
 	RString sRet;
 	GetAndConvertMetric(sMetricsGroup, sValueName, sRet);
 	return sRet;
@@ -1087,7 +1087,7 @@ void ThemeManager::EvaluateString(std::string &sText) {
 	FontCharAliases::ReplaceMarkers(sText);
 }
 
-RString ThemeManager::GetNextTheme() {
+std::string ThemeManager::GetNextTheme() {
 	std::vector<std::string> as;
 	GetThemeNames(as);
 	unsigned i;
@@ -1098,7 +1098,7 @@ RString ThemeManager::GetNextTheme() {
 	return as[iNewIndex];
 }
 
-RString ThemeManager::GetNextSelectableTheme() {
+std::string ThemeManager::GetNextSelectableTheme() {
 	std::vector<std::string> as;
 	GetSelectableThemeNames(as);
 	unsigned i;
@@ -1150,31 +1150,46 @@ void ThemeManager::GetOptionNames(std::vector<std::string> &AddTo) {
 	}
 }
 
-static std::string PseudoLocalize(RString s) {
-	s.Replace("a", "\xc3\xa0\xc3\xa1"); // àá
-	s.Replace("A", "\xc3\x80\xc3\x80"); // ÀÀ
-	s.Replace("e", "\xc3\xa9\xc3\xa9"); // éé
-	s.Replace("E", "\xc3\x89\xc3\x89"); // ÉÉ
-	s.Replace("i", "\xc3\xad\xc3\xad"); // íí
-	s.Replace("I", "\xc3\x8d\xc3\x8d"); // ÍÍ
-	s.Replace("o", "\xc3\xb3\xc3\xb3"); // óó
-	s.Replace("O", "\xc3\x93\xc3\x93"); // ÓÓ
-	s.Replace("u", "\xc3\xbc\xc3\xbc"); // üü
-	s.Replace("U", "\xc3\x9c\xc3\x9c"); // ÜÜ
-	s.Replace("n", "\xc3\xb1");         // ñ
-	s.Replace("N", "\xc3\x91");         // Ñ
-	s.Replace("c", "\xc3\xa7");         // ç
-	s.Replace("C", "\xc3\x87");         // Ç
+// Equivalent to CStdStr::Replace(PCMYSTR, PCMYSTR), which isn't available on
+// plain std::string: replace every occurrence of szOld in s with szNew,
+// advancing past each replacement.
+static void ReplaceAll(std::string &s, const char *szOld, const char *szNew) {
+	std::string::size_type nOldLen = strlen(szOld);
+	if (nOldLen == 0)
+		return;
+	std::string::size_type nNewLen = strlen(szNew);
+	std::string::size_type nIdx = 0;
+	while ((nIdx = s.find(szOld, nIdx)) != std::string::npos) {
+		s.replace(nIdx, nOldLen, szNew);
+		nIdx += nNewLen;
+	}
+}
+
+static std::string PseudoLocalize(std::string s) {
+	ReplaceAll(s, "a", "\xc3\xa0\xc3\xa1"); // àá
+	ReplaceAll(s, "A", "\xc3\x80\xc3\x80"); // ÀÀ
+	ReplaceAll(s, "e", "\xc3\xa9\xc3\xa9"); // éé
+	ReplaceAll(s, "E", "\xc3\x89\xc3\x89"); // ÉÉ
+	ReplaceAll(s, "i", "\xc3\xad\xc3\xad"); // íí
+	ReplaceAll(s, "I", "\xc3\x8d\xc3\x8d"); // ÍÍ
+	ReplaceAll(s, "o", "\xc3\xb3\xc3\xb3"); // óó
+	ReplaceAll(s, "O", "\xc3\x93\xc3\x93"); // ÓÓ
+	ReplaceAll(s, "u", "\xc3\xbc\xc3\xbc"); // üü
+	ReplaceAll(s, "U", "\xc3\x9c\xc3\x9c"); // ÜÜ
+	ReplaceAll(s, "n", "\xc3\xb1");         // ñ
+	ReplaceAll(s, "N", "\xc3\x91");         // Ñ
+	ReplaceAll(s, "c", "\xc3\xa7");         // ç
+	ReplaceAll(s, "C", "\xc3\x87");         // Ç
 	// transformations that help expose punctuation assumptions
-	// s.Replace( ":", " :" );	// this messes up "::" help text tip separator markers
-	s.Replace("?", " ?");
-	s.Replace("!", " !");
+	// ReplaceAll( s, ":", " :" );	// this messes up "::" help text tip separator markers
+	ReplaceAll(s, "?", " ?");
+	ReplaceAll(s, "!", " !");
 
 	return s;
 }
 
-RString ThemeManager::GetString(const std::string &sMetricsGroup, const std::string &sValueName_) {
-	RString sValueName = sValueName_;
+std::string ThemeManager::GetString(const std::string &sMetricsGroup, const std::string &sValueName_) {
+	std::string sValueName = sValueName_;
 	if (sMetricsGroup.empty() || sValueName.empty()) {
 		LuaHelpers::ReportScriptError(
 		   "PushMetric:  Attempted to fetch metric with empty group name or empty value name."
@@ -1186,27 +1201,27 @@ RString ThemeManager::GetString(const std::string &sMetricsGroup, const std::str
 	DEBUG_ASSERT(sValueName.find('=') == sValueName.npos);
 
 	// TODO: Move this escaping into IniFile?
-	sValueName.Replace("\r\n", "\\n");
-	sValueName.Replace("\n", "\\n");
+	ReplaceAll(sValueName, "\r\n", "\\n");
+	ReplaceAll(sValueName, "\n", "\\n");
 
 	ASSERT(g_pLoadedThemeData != nullptr);
-	RString s = GetMetricRaw(g_pLoadedThemeData->iniStrings, sMetricsGroup, sValueName);
+	std::string s = GetMetricRaw(g_pLoadedThemeData->iniStrings, sMetricsGroup, sValueName);
 	FontCharAliases::ReplaceMarkers(s);
 
 	// Don't EvalulateString.  Strings are raw and shouldn't allow Lua.
 	// EvaluateString( s );
 
-	s.Replace("\\n", "\n");
+	ReplaceAll(s, "\\n", "\n");
 
 	if (m_bPseudoLocalize) {
 		// pseudolocalize ignoring replace markers.  e.g.: "%{steps} steps: %{author}"
-		RString sTranslated;
+		std::string sTranslated;
 
 		for (; true;) {
-			RString::size_type pos = s.find("%{");
+			std::string::size_type pos = s.find("%{");
 			if (pos == s.npos) {
 				sTranslated += PseudoLocalize(s);
-				s = RString();
+				s = std::string();
 				break;
 			}
 			else {
@@ -1286,7 +1301,7 @@ class LunaThemeManager : public Luna<ThemeManager> {
 		if (group.empty() || name.empty()) {
 			luaL_error(L, "Cannot fetch string with empty group name or empty value name.");
 		}
-		lua_pushstring(L, p->GetString(group, name));
+		lua_pushstring(L, p->GetString(group, name).c_str());
 		return 1;
 	}
 	static int GetPathInfoB(T *p, lua_State *L) {
@@ -1301,7 +1316,7 @@ class LunaThemeManager : public Luna<ThemeManager> {
 	// it optional. -Kyz
 #define GENERAL_GET_PATH(get_path_name)                                                                                \
 	static int get_path_name(T *p, lua_State *L) {                                                                      \
-		lua_pushstring(L, p->get_path_name(SArg(1), SArg(2), lua_toboolean(L, 3)));                                      \
+		lua_pushstring(L, p->get_path_name(SArg(1), SArg(2), lua_toboolean(L, 3)).c_str());                                  \
 		return 1;                                                                                                        \
 	}
 	GENERAL_GET_PATH(GetPathF);
@@ -1333,11 +1348,11 @@ class LunaThemeManager : public Luna<ThemeManager> {
 	DEFINE_METHOD(GetCurrentThemeDirectory, GetCurThemeDir());
 	DEFINE_METHOD(GetCurLanguage, GetCurLanguage());
 	static int GetThemeDisplayName(T *p, lua_State *L) {
-		lua_pushstring(L, p->GetThemeDisplayName(p->GetCurThemeName()));
+		lua_pushstring(L, p->GetThemeDisplayName(p->GetCurThemeName()).c_str());
 		return 1;
 	}
 	static int GetThemeAuthor(T *p, lua_State *L) {
-		lua_pushstring(L, p->GetThemeAuthor(p->GetCurThemeName()));
+		lua_pushstring(L, p->GetThemeAuthor(p->GetCurThemeName()).c_str());
 		return 1;
 	}
 	DEFINE_METHOD(DoesThemeExist, DoesThemeExist(SArg(1)));

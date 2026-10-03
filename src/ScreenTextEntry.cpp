@@ -326,7 +326,7 @@ void ScreenTextEntry::End(bool bCancelled) {
 	}
 
 	s_bCancelledLast = bCancelled;
-	s_sLastAnswer = bCancelled ? RString("") : WStringToRString(m_sAnswer);
+	s_sLastAnswer = bCancelled ? std::string("") : WStringToRString(m_sAnswer);
 }
 
 bool ScreenTextEntry::MenuBack(const InputEventPlus &input) {

@@ -621,7 +621,7 @@ XNodeValue *CompileXMLNodeValue(Lua *L, const RString &sName, const XNodeValue *
 } // namespace
 
 void XmlFileUtil::AnnotateXNodeTree(XNode *pNode, const RString &sFile) {
-	RString sDir = Dirname(sFile);
+	std::string sDir = Dirname(sFile);
 
 	std::vector<XNode *> queue;
 	queue.push_back(pNode);
