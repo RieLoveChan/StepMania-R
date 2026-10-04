@@ -326,11 +326,11 @@ void Actor::LoadFromNode(const XNode *pNode) {
 			LuaReference *pRef = new LuaReference;
 			pValue->PushValue(L);
 			pRef->SetFromStack(L);
-			RString sCmdName = sKeyName.substr(0, sKeyName.size() - 7);
+			std::string sCmdName = sKeyName.substr(0, sKeyName.size() - 7);
 			AddCommand(sCmdName, apActorCommands(pRef));
 		}
 		else if (sKeyName == "Name")
-			SetName(pValue->GetValue<RString>());
+			SetName(pValue->GetValue<std::string>());
 		else if (sKeyName == "BaseRotationX")
 			SetBaseRotationX(pValue->GetValue<float>());
 		else if (sKeyName == "BaseRotationY")
@@ -759,7 +759,7 @@ void Actor::UpdateTweening(float fDeltaTime) {
 		TI.m_fTimeLeftInTween -= fSecsToSubtract;
 		fDeltaTime -= fSecsToSubtract;
 
-		RString sCommand = TI.m_sCommandName;
+		std::string sCommand = TI.m_sCommandName;
 		if (bBeginning) // we are just beginning this tween
 		{
 			m_start = m_current; // set the start position
@@ -784,7 +784,7 @@ void Actor::UpdateTweening(float fDeltaTime) {
 			// Execute the command in this tween (if any). Do this last, and don't
 			// access TI or TS after, since this may modify the tweening queue.
 			if (!sCommand.empty()) {
-				if (sCommand.Left(1) == "!")
+				if (sCommand.front() == '!')
 					MESSAGEMAN->Broadcast(sCommand.substr(1));
 				else
 					this->PlayCommand(sCommand);

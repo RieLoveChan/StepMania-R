@@ -47,7 +47,7 @@ void TitleTrans::LoadFromNode(const XNode *pNode) {
 	FOREACH_CONST_Attr(pNode, attr) {
 		/* Surround each regex with ^(...)$, to force all comparisons to default
 		 * to being a full-line match.  (Add ".*" manually if this isn't wanted.) */
-		const RString &sKeyName = attr->first;
+		const std::string &sKeyName = attr->first;
 		const std::string sValue = attr->second->GetValue<std::string>();
 		if (sKeyName == "DontTransliterate")
 			translit = false;

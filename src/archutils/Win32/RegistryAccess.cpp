@@ -10,7 +10,7 @@
 
 /* Given "HKEY_LOCAL_MACHINE\hardware\foo", return "hardware\foo", and place
  * the HKEY_LOCAL_MACHINE constant in key. */
-static bool GetRegKeyType(const RString &sIn, std::string &sOut, HKEY &key) {
+static bool GetRegKeyType(const std::string &sIn, std::string &sOut, HKEY &key) {
 	std::size_t iBackslash = sIn.find('\\');
 	if (iBackslash == sIn.npos) {
 		LOG->Warn("Invalid registry key: \"%s\" ", sIn.c_str());
@@ -45,14 +45,14 @@ enum RegKeyMode {
 	READ,
 	WRITE
 };
-static HKEY OpenRegKey(const RString &sKey, RegKeyMode mode, bool bWarnOnError = true) {
-	RString sSubkey;
+static HKEY OpenRegKey(const std::string &sKey, RegKeyMode mode, bool bWarnOnError = true) {
+	std::string sSubkey;
 	HKEY hType;
 	if (!GetRegKeyType(sKey, sSubkey, hType))
 		return nullptr;
 
 	HKEY hRetKey;
-	LONG retval = RegOpenKeyEx(hType, sSubkey, 0, (mode == READ) ? KEY_READ : KEY_WRITE, &hRetKey);
+	LONG retval = RegOpenKeyEx(hType, sSubkey.c_str(), 0, (mode == READ) ? KEY_READ : KEY_WRITE, &hRetKey);
 	if (retval != ERROR_SUCCESS) {
 		if (bWarnOnError)
 			LOG->Warn(werr_ssprintf(retval, "RegOpenKeyEx(%x,%s) error", hType, sSubkey.c_str()).c_str());
@@ -83,7 +83,7 @@ bool RegistryAccess::GetRegValue(const std::string &sKey, const std::string &sNa
 	if (iSize && (iType == REG_SZ || iType == REG_MULTI_SZ || iType == REG_EXPAND_SZ))
 		--iSize; /* remove nul terminator */
 
-	sVal = RString(sBuffer, iSize);
+	sVal = std::string(sBuffer, iSize);
 	return true;
 }
 
@@ -138,7 +138,7 @@ bool RegistryAccess::GetRegSubKeys(
 			break;
 		}
 
-		RString sStr(szBuffer, iSize);
+		std::string sStr(szBuffer, iSize);
 
 		if (re.Compare(sStr)) {
 			if (bReturnPathToo)
@@ -188,7 +188,7 @@ bool RegistryAccess::SetRegValue(const std::string &sKey, const std::string &sNa
 }
 
 bool RegistryAccess::CreateKey(const std::string &sKey) {
-	RString sSubkey;
+	std::string sSubkey;
 	HKEY hType;
 	if (!GetRegKeyType(sKey, sSubkey, hType))
 		return false;
@@ -197,7 +197,7 @@ bool RegistryAccess::CreateKey(const std::string &sKey) {
 	DWORD dwDisposition = 0;
 	if (
 	   ::RegCreateKeyEx(
-	      hType, sSubkey, 0, nullptr, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, nullptr, &hKey, &dwDisposition
+	      hType, sSubkey.c_str(), 0, nullptr, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, nullptr, &hKey, &dwDisposition
 	   ) != ERROR_SUCCESS
 	) {
 		return false;

@@ -74,7 +74,7 @@ struct FontPageSettings {
 	int m_iDrawExtraPixelsLeft, m_iDrawExtraPixelsRight, m_iAddToAllWidths, m_iLineSpacing, m_iTop, m_iBaseline,
 	   m_iDefaultWidth, m_iAdvanceExtraPixels;
 	float m_fScaleAllWidthsBy;
-	RString m_sTextureHints;
+	std::string m_sTextureHints;
 
 	std::map<wchar_t, int> CharToGlyphNo;
 	// If a value is missing, the width of the texture frame is used.

@@ -9,11 +9,11 @@ void DriverList::Add(const istring &sName, CreateRageDriverFn pfn) {
 	(*m_pRegistrees)[sName] = pfn;
 }
 
-RageDriver *DriverList::Create(const RString &sDriverName) {
+RageDriver *DriverList::Create(const std::string &sDriverName) {
 	if (m_pRegistrees == nullptr)
 		return nullptr;
 
-	std::map<istring, CreateRageDriverFn>::const_iterator iter = m_pRegistrees->find(istring(sDriverName));
+	std::map<istring, CreateRageDriverFn>::const_iterator iter = m_pRegistrees->find(istring(sDriverName.c_str()));
 	if (iter == m_pRegistrees->end())
 		return nullptr;
 	return (iter->second)();

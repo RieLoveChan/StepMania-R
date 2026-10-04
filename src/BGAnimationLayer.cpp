@@ -106,12 +106,12 @@ BGAnimationLayer::~BGAnimationLayer() {
 void BGAnimationLayer::LoadFromAniLayerFile(const std::string &sPath) {
 	/* Generic BGAs are new.  Animation directories with no INI are old and obsolete.
 	 * Don't combine them. */
-	RString lcPath = sPath;
-	lcPath.MakeLower();
+	std::string lcPath = sPath;
+	if (!lcPath.empty()) MakeLower(&lcPath[0], lcPath.size());
 
-	if (lcPath.find("usesongbg") != RString::npos) {
+	if (lcPath.find("usesongbg") != std::string::npos) {
 		const Song *pSong = GAMESTATE->m_pCurSong;
-		RString sSongBGPath;
+		std::string sSongBGPath;
 		if (pSong && pSong->HasBackground())
 			sSongBGPath = pSong->GetBackgroundPath();
 		else
@@ -353,26 +353,26 @@ void BGAnimationLayer::LoadFromAniLayerFile(const std::string &sPath) {
 		FAIL_M(ssprintf("Unrecognized layer effect: %i", effect));
 	}
 
-	RString sHint = sPath;
-	sHint.MakeLower();
+	std::string sHint = sPath;
+	if (!sHint.empty()) MakeLower(&sHint[0], sHint.size());
 
-	if (sHint.find("cyclecolor") != RString::npos)
+	if (sHint.find("cyclecolor") != std::string::npos)
 		for (unsigned i = 0; i < m_SubActors.size(); i++)
 			m_SubActors[i]->SetEffectRainbow(5);
 
-	if (sHint.find("cyclealpha") != RString::npos)
+	if (sHint.find("cyclealpha") != std::string::npos)
 		for (unsigned i = 0; i < m_SubActors.size(); i++)
 			m_SubActors[i]->SetEffectDiffuseShift(2, RageColor(1, 1, 1, 1), RageColor(1, 1, 1, 0));
 
-	if (sHint.find("startonrandomframe") != RString::npos)
+	if (sHint.find("startonrandomframe") != std::string::npos)
 		for (unsigned i = 0; i < m_SubActors.size(); i++)
 			m_SubActors[i]->SetState(RandomInt(m_SubActors[i]->GetNumStates()));
 
-	if (sHint.find("dontanimate") != RString::npos)
+	if (sHint.find("dontanimate") != std::string::npos)
 		for (unsigned i = 0; i < m_SubActors.size(); i++)
 			m_SubActors[i]->StopAnimating();
 
-	if (sHint.find("add") != RString::npos)
+	if (sHint.find("add") != std::string::npos)
 		for (unsigned i = 0; i < m_SubActors.size(); i++)
 			m_SubActors[i]->SetBlendMode(BLEND_ADD);
 }

@@ -78,12 +78,12 @@ void Dialog::Shutdown() {
 	g_pImpl = nullptr;
 }
 
-static bool MessageIsIgnored(RString sID) {
+static bool MessageIsIgnored(std::string sID) {
 #if !defined(SMPACKAGE)
 	std::vector<RString> asList;
 	split(g_sIgnoredDialogs, ",", asList);
 	for (unsigned i = 0; i < asList.size(); ++i)
-		if (!sID.CompareNoCase(asList[i]))
+		if (!StrCompareNoCase(sID, asList[i]))
 			return true;
 #endif
 	return false;
