@@ -65,7 +65,7 @@ struct MusicWheelItemData : public WheelItemBaseData {
 	    : m_pCourse(nullptr), m_pSong(nullptr), m_Flags(), m_iSectionCount(0), m_sLabel(""), m_pAction() {
 	}
 	MusicWheelItemData(
-	   WheelItemDataType type, Song *pSong, RString sSectionName, Course *pCourse, RageColor color, int iSectionCount
+	   WheelItemDataType type, Song *pSong, std::string sSectionName, Course *pCourse, RageColor color, int iSectionCount
 	);
 
 	Course *m_pCourse;

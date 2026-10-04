@@ -190,7 +190,7 @@ bool ScreenEditMenu::MenuStart(const InputEventPlus &) {
 	Steps *pSourceSteps = m_Selector.GetSelectedSourceSteps();
 	EditMenuAction action = m_Selector.GetSelectedAction();
 	if (st == StepsType_Invalid) {
-		ScreenPrompt::Prompt(SM_None, INVALID_SELECTION);
+		ScreenPrompt::Prompt(SM_None, INVALID_SELECTION.GetValue());
 		return true;
 	}
 
@@ -201,7 +201,7 @@ bool ScreenEditMenu::MenuStart(const InputEventPlus &) {
 
 	// handle error cases
 	if (!pSong->HasMusic()) {
-		ScreenPrompt::Prompt(SM_None, MISSING_MUSIC_FILE);
+		ScreenPrompt::Prompt(SM_None, MISSING_MUSIC_FILE.GetValue());
 		return true;
 	}
 
@@ -211,7 +211,7 @@ bool ScreenEditMenu::MenuStart(const InputEventPlus &) {
 		std::string sTempFile = sDir + TEMP_FILE_NAME;
 		RageFile file;
 		if (!file.Open(sTempFile, RageFile::WRITE)) {
-			ScreenPrompt::Prompt(SM_None, SONG_DIR_READ_ONLY);
+			ScreenPrompt::Prompt(SM_None, SONG_DIR_READ_ONLY.GetValue());
 			return true;
 		}
 

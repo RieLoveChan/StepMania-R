@@ -332,7 +332,7 @@ StepsType GameManager::StringToStepsType(std::string sStepsType) {
 }
 
 std::string GameManager::StyleToLocalizedString(const Style *style) {
-	RString s = style->m_szName;
+	std::string s = style->m_szName;
 	s = Capitalize(s);
 	if (THEME->HasString("Style", s))
 		return THEME->GetString("Style", s);
@@ -419,7 +419,7 @@ class LunaGameManager : public Luna<GameManager> {
 		if (!pGame) {
 			luaL_error(L, "SetGame: Invalid Game: '%s'", game_name.c_str());
 		}
-		RString theme;
+		std::string theme;
 		if (lua_gettop(L) >= 2 && !lua_isnil(L, 2)) {
 			theme = SArg(2);
 			if (!THEME->IsThemeSelectable(theme)) {

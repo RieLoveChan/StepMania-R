@@ -133,7 +133,7 @@ void ScreenOptionsCourseOverview::HandleScreenMessage(const ScreenMessage SM) {
 			ASSERT(!ScreenTextEntry::s_sLastAnswer.empty()); // validate should have assured this
 
 			if (!EditCourseUtil::RenameAndSave(GAMESTATE->m_pCurCourse, ScreenTextEntry::s_sLastAnswer)) {
-				ScreenPrompt::Prompt(SM_None, ERROR_RENAMING);
+				ScreenPrompt::Prompt(SM_None, ERROR_RENAMING.GetValue());
 				return;
 			}
 

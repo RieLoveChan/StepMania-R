@@ -669,7 +669,7 @@ void ScreenMapControllers::ExitAction() {
 		// If the current mapping doesn't pass the sanity check, then the user
 		// can't navigate the prompt screen to pick a choice. -Kyz
 		if (SanityCheckWrapper()) {
-			ScreenPrompt::Prompt(SM_DoSaveAndExit, SAVE_PROMPT, PROMPT_YES_NO_CANCEL, ANSWER_YES);
+			ScreenPrompt::Prompt(SM_DoSaveAndExit, SAVE_PROMPT.GetValue(), PROMPT_YES_NO_CANCEL, ANSWER_YES);
 		}
 	}
 	else {

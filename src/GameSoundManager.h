@@ -40,7 +40,7 @@ class GameSoundManager {
 	};
 	void PlayMusic(PlayMusicParams params, PlayMusicParams FallbackMusicParams = PlayMusicParams());
 	void PlayMusic(
-	   RString sFile,
+	   std::string sFile,
 	   const TimingData *pTiming = nullptr,
 	   bool force_loop = false,
 	   float start_sec = 0,

@@ -101,8 +101,8 @@ void ScreenUnlockStatus::Init() {
 				const Song *pSong = entry.m_Song.ToSong();
 				ASSERT(pSong != nullptr);
 
-				RString title = pSong->GetDisplayMainTitle();
-				RString subtitle = pSong->GetDisplaySubTitle();
+				std::string title = pSong->GetDisplayMainTitle();
+				std::string subtitle = pSong->GetDisplaySubTitle();
 				if (!subtitle.empty())
 					title = title + "\n" + subtitle;
 				text->SetMaxWidth(MaxWidth);
@@ -251,8 +251,8 @@ void ScreenUnlockStatus::Init() {
 			NewText->LoadFromFont(THEME->GetPathF("ScreenUnlockStatus", "text"));
 			NewText->SetHorizAlign(align_left);
 
-			RString title = pSong->GetDisplayMainTitle();
-			RString subtitle = pSong->GetDisplaySubTitle();
+			std::string title = pSong->GetDisplayMainTitle();
+			std::string subtitle = pSong->GetDisplaySubTitle();
 
 			if (!subtitle.empty())
 				title = title + "\n" + subtitle;
@@ -311,17 +311,17 @@ void ScreenUnlockStatus::Init() {
 
 	PointsUntilNextUnlock.SetName("PointsDisplay");
 
-	RString PointDisplay = TYPE_TO_DISPLAY;
+	std::string PointDisplay = TYPE_TO_DISPLAY;
 	if (PointDisplay == "DP" || PointDisplay == "Dance") {
-		RString sDP = ssprintf("%d", (int)UNLOCKMAN->PointsUntilNextUnlock(UnlockRequirement_DancePoints));
+		std::string sDP = ssprintf("%d", (int)UNLOCKMAN->PointsUntilNextUnlock(UnlockRequirement_DancePoints));
 		PointsUntilNextUnlock.SetText(sDP);
 	}
 	else if (PointDisplay == "AP" || PointDisplay == "Arcade") {
-		RString sAP = ssprintf("%d", (int)UNLOCKMAN->PointsUntilNextUnlock(UnlockRequirement_ArcadePoints));
+		std::string sAP = ssprintf("%d", (int)UNLOCKMAN->PointsUntilNextUnlock(UnlockRequirement_ArcadePoints));
 		PointsUntilNextUnlock.SetText(sAP);
 	}
 	else if (PointDisplay == "SP" || PointDisplay == "Song") {
-		RString sSP = ssprintf("%d", (int)UNLOCKMAN->PointsUntilNextUnlock(UnlockRequirement_SongPoints));
+		std::string sSP = ssprintf("%d", (int)UNLOCKMAN->PointsUntilNextUnlock(UnlockRequirement_SongPoints));
 		PointsUntilNextUnlock.SetText(sSP);
 	}
 

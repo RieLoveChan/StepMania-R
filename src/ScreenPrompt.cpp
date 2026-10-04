@@ -30,7 +30,7 @@ void *g_pCallbackData;
 }; // namespace
 
 void ScreenPrompt::SetPromptSettings(
-   const RString &sText,
+   const std::string &sText,
    PromptType type,
    PromptAnswer defaultAnswer,
    void (*OnYes)(void *),
@@ -47,7 +47,7 @@ void ScreenPrompt::SetPromptSettings(
 
 void ScreenPrompt::Prompt(
    ScreenMessage smSendOnPop,
-   const RString &sText,
+   const std::string &sText,
    PromptType type,
    PromptAnswer defaultAnswer,
    void (*OnYes)(void *),

@@ -34,7 +34,7 @@ static const char *MusicWheelItemTypeNames[] = {
 XToString(MusicWheelItemType);
 
 MusicWheelItemData::MusicWheelItemData(
-   WheelItemDataType type, Song *pSong, RString sSectionName, Course *pCourse, RageColor color, int iSectionCount
+   WheelItemDataType type, Song *pSong, std::string sSectionName, Course *pCourse, RageColor color, int iSectionCount
 )
     : WheelItemBaseData(type, sSectionName, color), m_pCourse(pCourse), m_pSong(pSong), m_iSectionCount(iSectionCount),
       m_sLabel("") {
@@ -181,7 +181,7 @@ void MusicWheelItem::LoadFromWheelItemData(const WheelItemBaseData *pData, int i
 	FOREACH_PlayerNumber(p) m_pGradeDisplay[p]->SetVisible(false);
 
 	// Fill these in below
-	RString sDisplayName, sTranslitName;
+	std::string sDisplayName, sTranslitName;
 	MusicWheelItemType type = MusicWheelItemType_Invalid;
 
 	switch (pWID->m_Type) {

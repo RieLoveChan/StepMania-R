@@ -1007,7 +1007,7 @@ void ScreenGameplay::SetupSong(int iSongIndex) {
 		}
 
 		{
-			RString sType;
+			std::string sType;
 			switch (GAMESTATE->m_SongOptions.GetCurrent().m_SoundEffectType) {
 			case SoundEffectType_Off:
 				sType = "SoundEffectControl_Off";
@@ -2130,7 +2130,7 @@ void ScreenGameplay::SendCrossedMessages() {
 				if (iNumTracksWithTapOrHoldHead > 0)
 					MESSAGEMAN->Broadcast((MessageID)(Message_NoteCrossed + i));
 				if (i == 0 && iNumTracksWithTapOrHoldHead >= 2) {
-					RString sMessageName = "NoteCrossedJump";
+					std::string sMessageName = "NoteCrossedJump";
 					MESSAGEMAN->Broadcast(sMessageName);
 				}
 			}
@@ -2684,7 +2684,7 @@ void ScreenGameplay::HandleScreenMessage(const ScreenMessage SM) {
 	}
 	else if (ScreenMessageHelpers::ScreenMessageToString(SM).find("0Combo") != std::string::npos) {
 		int iCombo;
-		RString sCropped = ScreenMessageHelpers::ScreenMessageToString(SM).substr(3);
+		std::string sCropped = ScreenMessageHelpers::ScreenMessageToString(SM).substr(3);
 		sscanf(sCropped.c_str(), "%d%*s", &iCombo);
 		PlayAnnouncer(ssprintf("gameplay %d combo", iCombo), 2);
 	}
@@ -2911,7 +2911,7 @@ void ScreenGameplay::SaveReplay() {
 				break;
 			}
 
-			RString sFileName = ssprintf("replay%05d.xml", iIndex);
+			std::string sFileName = ssprintf("replay%05d.xml", iIndex);
 
 			XmlFileUtil::SaveToFile(p, "Save/Replays/" + sFileName);
 			SAFE_DELETE(p);

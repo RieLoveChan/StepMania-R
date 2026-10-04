@@ -23,7 +23,7 @@ enum PromptAnswer {
 class ScreenPrompt : public ScreenWithMenuElements {
  public:
 	static void SetPromptSettings(
-	   const RString &sText,
+	   const std::string &sText,
 	   PromptType type = PROMPT_OK,
 	   PromptAnswer defaultAnswer = ANSWER_NO,
 	   void (*OnYes)(void *) = nullptr,
@@ -32,7 +32,7 @@ class ScreenPrompt : public ScreenWithMenuElements {
 	);
 	static void Prompt(
 	   ScreenMessage smSendOnPop,
-	   const RString &sText,
+	   const std::string &sText,
 	   PromptType type = PROMPT_OK,
 	   PromptAnswer defaultAnswer = ANSWER_NO,
 	   void (*OnYes)(void *) = nullptr,

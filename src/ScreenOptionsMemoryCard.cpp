@@ -188,7 +188,7 @@ void ScreenOptionsMemoryCard::ProcessMenuStart(const InputEventPlus &) {
 			this->BeginFadingOut();
 		}
 		else {
-			RString s = ssprintf(ERROR_MOUNTING_CARD.GetValue(), MEMCARDMAN->GetCardError(PLAYER_1).c_str());
+			std::string s = ssprintf(ERROR_MOUNTING_CARD.GetValue(), MEMCARDMAN->GetCardError(PLAYER_1).c_str());
 			ScreenPrompt::Prompt(SM_None, s);
 		}
 	}

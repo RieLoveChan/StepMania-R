@@ -276,12 +276,12 @@ static void DoPlayOnce(std::string sPath) {
 	pSound->DeleteSelfWhenFinishedPlaying();
 }
 
-static void DoPlayOnceFromDir(RString sPath) {
+static void DoPlayOnceFromDir(std::string sPath) {
 	if (sPath.empty())
 		return;
 
 	// make sure there's a slash at the end of this path
-	if (sPath.Right(1) != "/")
+	if (sPath.back() != '/')
 		sPath += "/";
 
 	std::vector<std::string> arraySoundFiles;
@@ -340,7 +340,7 @@ static void StartQueuedSounds() {
 		DoPlayOnceFromDir(aSoundsToPlayOnceFromDir[i]);
 
 	for (unsigned i = 0; i < aSoundsToPlayOnceFromAnnouncer.size(); ++i) {
-		RString sPath = aSoundsToPlayOnceFromAnnouncer[i];
+		std::string sPath = aSoundsToPlayOnceFromAnnouncer[i];
 		if (!sPath.empty()) {
 			sPath = ANNOUNCER->GetPathTo(sPath);
 			DoPlayOnceFromDir(sPath);
@@ -579,7 +579,7 @@ void GameSoundManager::Update(float fDeltaTime) {
 		const float fDiff = fExpectedTimePassed - fSoundTimePassed;
 
 		static std::string sLastFile = "";
-		const RString ThisFile = g_Playing->m_Music->GetLoadedFilePath();
+		const std::string ThisFile = g_Playing->m_Music->GetLoadedFilePath();
 
 		/* If fSoundTimePassed < 0, the sound has probably looped. */
 		if (sLastFile == ThisFile && fSoundTimePassed >= 0 && std::abs(fDiff) > 0.003f)
@@ -668,7 +668,7 @@ std::string GameSoundManager::GetMusicPath() const {
 }
 
 void GameSoundManager::PlayMusic(
-   RString sFile,
+   std::string sFile,
    const TimingData *pTiming,
    bool bForceLoop,
    float fStartSecond,
@@ -786,7 +786,7 @@ class LunaGameSoundManager : public Luna<GameSoundManager> {
 		COMMON_RETURN_SELF;
 	}
 	static int PlayOnce(T *p, lua_State *L) {
-		RString sPath = SArg(1);
+		std::string sPath = SArg(1);
 		if (lua_toboolean(L, 2) && PREFSMAN->m_MuteActions) {
 			COMMON_RETURN_SELF;
 		}
@@ -794,7 +794,7 @@ class LunaGameSoundManager : public Luna<GameSoundManager> {
 		COMMON_RETURN_SELF;
 	}
 	static int PlayAnnouncer(T *p, lua_State *L) {
-		RString sPath = SArg(1);
+		std::string sPath = SArg(1);
 		p->PlayOnceFromAnnouncer(sPath);
 		COMMON_RETURN_SELF;
 	}
@@ -804,7 +804,7 @@ class LunaGameSoundManager : public Luna<GameSoundManager> {
 		return 1;
 	}
 	static int PlayMusicPart(T *p, lua_State *L) {
-		RString musicPath = SArg(1);
+		std::string musicPath = SArg(1);
 		float musicStart = FArg(2);
 		float musicLength = FArg(3);
 		float fadeIn = 0;

@@ -154,11 +154,11 @@ void GameCommand::Load(int iIndex, const Commands &cmds) {
 }
 
 void GameCommand::LoadOne(const Command &cmd) {
-	RString sName = cmd.GetName();
+	std::string sName = cmd.GetName();
 	if (sName.empty())
 		return;
 
-	RString sValue;
+	std::string sValue;
 	for (unsigned i = 1; i < cmd.m_vsArgs.size(); ++i) {
 		if (i > 1)
 			sValue += ",";
@@ -261,7 +261,7 @@ void GameCommand::LoadOne(const Command &cmd) {
 	}
 
 	else if (sName == "steps") {
-		RString sSteps = sValue;
+		std::string sSteps = sValue;
 
 		// This must be processed after "song" and "style" commands.
 		if (!m_bInvalid) {
@@ -294,7 +294,7 @@ void GameCommand::LoadOne(const Command &cmd) {
 	}
 
 	else if (sName == "trail") {
-		RString sTrail = sValue;
+		std::string sTrail = sValue;
 
 		// This must be processed after "course" and "style" commands.
 		if (!m_bInvalid) {
@@ -738,7 +738,7 @@ void GameCommand::ApplySelf(const std::vector<PlayerNumber> &vpns) const {
 				SCREENMAN->SetNewScreen("ScreenExit");
 		}
 		else
-			ScreenPrompt::Prompt(SM_None, COULD_NOT_LAUNCH_BROWSER);
+			ScreenPrompt::Prompt(SM_None, COULD_NOT_LAUNCH_BROWSER.GetValue());
 	}
 
 	/* If we're going to stop music, do so before preparing new screens, so we

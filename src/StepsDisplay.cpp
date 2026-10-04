@@ -63,7 +63,7 @@ void StepsDisplay::Load(const std::string &sMetricsGroup, const PlayerState *pPl
 	this->AddChild(m_sprFrame);
 
 	if (m_bShowTicks) {
-		RString sChars = "10"; // on, off (todo: make this metricable -aj)
+		std::string sChars = "10"; // on, off (todo: make this metricable -aj)
 		m_textTicks.SetName("Ticks");
 		m_textTicks.LoadFromTextureAndChars(THEME->GetPathF(m_sMetricsGroup, "ticks"), sChars);
 		ActorUtil::LoadAllCommandsAndSetXYAndOnCommand(m_textTicks, m_sMetricsGroup);
@@ -178,7 +178,7 @@ void StepsDisplay::SetInternal(const SetParams &params) {
 	this->SetVisible(true);
 	Message msg("Set");
 
-	RString sCustomDifficulty;
+	std::string sCustomDifficulty;
 	if (params.pSteps)
 		sCustomDifficulty = StepsToCustomDifficulty(params.pSteps);
 	else if (params.pTrail)
@@ -187,16 +187,16 @@ void StepsDisplay::SetInternal(const SetParams &params) {
 		sCustomDifficulty = GetCustomDifficulty(params.st, params.dc, params.ct);
 	msg.SetParam("CustomDifficulty", sCustomDifficulty);
 
-	RString sDisplayDescription;
+	std::string sDisplayDescription;
 	if (params.pSteps && params.pSteps->IsAnEdit())
 		sDisplayDescription = params.pSteps->GetDescription();
 	else if (sCustomDifficulty.empty())
-		sDisplayDescription = RString();
+		sDisplayDescription.clear();
 	else
 		sDisplayDescription = CustomDifficultyToLocalizedString(sCustomDifficulty);
 	msg.SetParam("DisplayDescription", sDisplayDescription);
 
-	RString sDisplayCredit;
+	std::string sDisplayCredit;
 	if (params.pSteps)
 		sDisplayCredit = params.pSteps->GetCredit();
 
@@ -214,7 +214,7 @@ void StepsDisplay::SetInternal(const SetParams &params) {
 		char on = char('1');
 		char off = '0';
 
-		RString sNewText;
+		std::string sNewText;
 		int iNumOn = std::min((int)m_iMaxTicks, params.iMeter);
 		sNewText.insert(sNewText.end(), iNumOn, on);
 		int iNumOff = std::max(0, m_iNumTicks - iNumOn);
@@ -229,7 +229,7 @@ void StepsDisplay::SetInternal(const SetParams &params) {
 			m_textMeter.SetText(m_sZeroMeterString.GetValue());
 		}
 		else {
-			const RString sMeter = ssprintf(m_sMeterFormatString.GetValue().c_str(), params.iMeter);
+			const std::string sMeter = ssprintf(m_sMeterFormatString.GetValue().c_str(), params.iMeter);
 			m_textMeter.SetText(sMeter);
 			m_textMeter.HandleMessage(msg);
 		}

@@ -4255,7 +4255,7 @@ void ScreenEdit::HandleScreenMessage(const ScreenMessage SM) {
 		}
 
 		if (m_CurrentAction == save_on_exit) {
-			ScreenPrompt::Prompt(SM_DoExit, *message);
+			ScreenPrompt::Prompt(SM_DoExit, message->GetValue());
 		}
 		else {
 			SCREENMAN->SystemMessage(*message);
@@ -4835,7 +4835,7 @@ void ScreenEdit::HandleMainMenuChoice(MainMenuChoice c, const std::vector<int> &
 		case EditMode_Full:
 		case EditMode_Home:
 			if (IsDirty())
-				ScreenPrompt::Prompt(SM_DoSaveAndExit, SAVE_CHANGES_BEFORE_EXITING, PROMPT_YES_NO_CANCEL, ANSWER_CANCEL);
+				ScreenPrompt::Prompt(SM_DoSaveAndExit, SAVE_CHANGES_BEFORE_EXITING.GetValue(), PROMPT_YES_NO_CANCEL, ANSWER_CANCEL);
 			else
 				SCREENMAN->SendMessageToTopScreen(SM_DoExit);
 			break;
@@ -5831,7 +5831,7 @@ void ScreenEdit::HandleTimingDataInformationChoice(TimingDataInformationChoice c
 		break;
 	}
 	case erase_step_timing:
-		ScreenPrompt::Prompt(SM_DoEraseStepTiming, CONFIRM_TIMING_ERASE, PROMPT_YES_NO, ANSWER_NO);
+		ScreenPrompt::Prompt(SM_DoEraseStepTiming, CONFIRM_TIMING_ERASE.GetValue(), PROMPT_YES_NO, ANSWER_NO);
 		break;
 	}
 }
@@ -6139,7 +6139,7 @@ void ScreenEdit::CheckNumberOfNotesAndUndo() {
 		if (bLastBeatIncreased && bPassedTheEnd) {
 			Undo();
 			m_bHasUndo = false;
-			RString sError = CREATES_NOTES_PAST_END.GetValue() + "\n\n" + CHANGE_REVERTED.GetValue();
+			std::string sError = CREATES_NOTES_PAST_END.GetValue() + "\n\n" + CHANGE_REVERTED.GetValue();
 			ScreenPrompt::Prompt(SM_None, sError);
 			return;
 		}

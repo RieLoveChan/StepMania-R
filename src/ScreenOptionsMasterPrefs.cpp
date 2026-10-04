@@ -168,11 +168,11 @@ static void GameSel(int &sel, bool ToSel, const ConfOption *pConfOption) {
 	pConfOption->MakeOptionsList(choices);
 
 	if (ToSel) {
-		const RString sCurGameName = PREFSMAN->GetCurrentGame();
+		const std::string sCurGameName = PREFSMAN->GetCurrentGame();
 
 		sel = 0;
 		for (unsigned i = 0; i < choices.size(); ++i)
-			if (!strcasecmp(choices[i].c_str(), sCurGameName))
+			if (!strcasecmp(choices[i].c_str(), sCurGameName.c_str()))
 				sel = i;
 	}
 	else {
@@ -251,7 +251,7 @@ static void DisplayResolutionChoices(std::vector<std::string> &out) {
 	cache_display_specs();
 	for (DisplaySpec const &iter : display_specs) {
 		if (iter.currentMode() != nullptr) {
-			RString s = ssprintf("%dx%d", iter.currentMode()->width, iter.currentMode()->height);
+			std::string s = ssprintf("%dx%d", iter.currentMode()->width, iter.currentMode()->height);
 			out.push_back(s);
 		}
 	}
@@ -271,7 +271,7 @@ static void RequestedTheme(int &sel, bool ToSel, const ConfOption *pConfOption) 
 				sel = i;
 	}
 	else {
-		const RString sNewTheme = vsThemeNames[sel];
+		const std::string sNewTheme = vsThemeNames[sel];
 		PREFSMAN->m_sTheme.Set(sNewTheme); // OPT_APPLY_THEME will load the theme
 	}
 }
