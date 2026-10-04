@@ -10,6 +10,12 @@ tags: [adr, renderer, opengl, direct3d, proposed]
 **Accepted** — 2026-09-15. Maintainer decision (slot reserved by ADR
 0001 §9, 2026-09-02).
 
+**Partially superseded by [ADR 0009](./0009-renderer-vulkan-primary.md)
+— 2026-10-04.** The "migrate to GL 3.3 core profile" direction is
+replaced (Vulkan primary, OpenGL kept as a fallback instead). The
+decisions to **drop the D3D9 renderer** and **drop `WITH_GLES2`** below
+remain in force.
+
 # Decision
 
 - **Direction: migrate to GL 3.3 core profile.** Drop fixed-function
