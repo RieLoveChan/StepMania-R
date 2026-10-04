@@ -107,7 +107,7 @@ ActorMultiVertex::ActorMultiVertex(const ActorMultiVertex &cpy) : Actor(cpy) {
 }
 
 void ActorMultiVertex::LoadFromNode(const XNode *Node) {
-	RString path;
+	std::string path;
 	Node->GetAttrValue("Texture", path);
 	if (!path.empty() && !TEXTUREMAN->IsTextureRegistered(RageTextureID(path))) {
 		ActorUtil::GetAttrPath(Node, "Texture", path);

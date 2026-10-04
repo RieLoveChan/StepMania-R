@@ -109,7 +109,7 @@ void Model::LoadPieces(const std::string &sMeshesPath, const std::string &sMater
 }
 
 void Model::LoadFromNode(const XNode *pNode) {
-	RString s1, s2, s3;
+	std::string s1, s2, s3;
 	ActorUtil::GetAttrPath(pNode, "Meshes", s1);
 	ActorUtil::GetAttrPath(pNode, "Materials", s2);
 	ActorUtil::GetAttrPath(pNode, "Bones", s3);

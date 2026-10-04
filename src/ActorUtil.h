@@ -148,7 +148,7 @@ Actor *LoadFromNode(const XNode *pNode, Actor *pParentActor = nullptr);
 Actor *MakeActor(const std::string &sPath, Actor *pParentActor = nullptr);
 std::string GetSourcePath(const XNode *pNode);
 std::string GetWhere(const XNode *pNode);
-bool GetAttrPath(const XNode *pNode, const std::string &sName, RString &sOut, bool optional = false);
+bool GetAttrPath(const XNode *pNode, const std::string &sName, std::string &sOut, bool optional = false);
 bool LoadTableFromStackShowErrors(Lua *L);
 
 bool ResolvePath(std::string &sPath, const std::string &sName, bool optional = false);

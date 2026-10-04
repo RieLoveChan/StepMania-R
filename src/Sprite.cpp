@@ -172,7 +172,7 @@ void Sprite::Load(RageTextureID ID) {
 void Sprite::LoadFromNode(const XNode *pNode) {
 	/* Texture may refer to the ID of a render target; if it's already
 	 * registered, use it without trying to resolve it. */
-	RString sPath;
+	std::string sPath;
 	pNode->GetAttrValue("Texture", sPath);
 	if (!sPath.empty() && !TEXTUREMAN->IsTextureRegistered(RageTextureID(sPath)))
 		ActorUtil::GetAttrPath(pNode, "Texture", sPath);

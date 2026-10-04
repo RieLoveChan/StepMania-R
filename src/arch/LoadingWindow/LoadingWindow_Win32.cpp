@@ -70,7 +70,7 @@ static HBITMAP LoadWin32Surface(const RageSurface *pSplash, HWND hWnd) {
 }
 
 static HBITMAP LoadWin32Surface(RString sFile, HWND hWnd) {
-	RString error;
+	std::string error;
 	RageSurface *pSurface = RageSurfaceUtils::LoadFile(sFile, error);
 	if (pSurface == nullptr)
 		return nullptr;

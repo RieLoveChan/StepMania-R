@@ -23,7 +23,7 @@ void HoldJudgment::Load(const std::string &sPath) {
 }
 
 void HoldJudgment::LoadFromNode(const XNode *pNode) {
-	RString sFile;
+	std::string sFile;
 	if (!ActorUtil::GetAttrPath(pNode, "File", sFile)) {
 		LuaHelpers::ReportScriptErrorFmt(
 		   "%s: HoldJudgment: missing the attribute \"File\"", ActorUtil::GetWhere(pNode).c_str()

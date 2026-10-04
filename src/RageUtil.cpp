@@ -2576,8 +2576,8 @@ int LuaFunc_get_music_file_length(lua_State *L);
 int LuaFunc_get_music_file_length(lua_State *L) {
 	// Args:  file_path
 	// Returns:  The length of the music in seconds.
-	RString path = SArg(1);
-	RString error;
+	std::string path = SArg(1);
+	std::string error;
 	RageSoundReader *sample = RageSoundReader_FileReader::OpenFile(path, error);
 	if (sample == nullptr) {
 		luaL_error(L, "The music file '%s' does not exist.", path.c_str());

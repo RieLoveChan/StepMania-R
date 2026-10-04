@@ -67,7 +67,7 @@ void RageBitmapTexture::Create() {
 	ASSERT(!actualID.filename.empty());
 
 	/* Load the image into a RageSurface. */
-	RString error;
+	std::string error;
 	RageSurface *pImg = nullptr;
 	if (actualID.filename == TEXTUREMAN->GetScreenTextureID().filename) {
 		pImg = TEXTUREMAN->GetScreenSurface();

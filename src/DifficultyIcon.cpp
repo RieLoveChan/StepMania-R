@@ -39,7 +39,7 @@ bool DifficultyIcon::Load(std::string sPath) {
 }
 
 void DifficultyIcon::LoadFromNode(const XNode *pNode) {
-	RString sFile;
+	std::string sFile;
 	if (!ActorUtil::GetAttrPath(pNode, "File", sFile)) {
 		LuaHelpers::ReportScriptErrorFmt(
 		   "%s: DifficultyIcon: missing the \"File\" attribute.", ActorUtil::GetWhere(pNode).c_str()

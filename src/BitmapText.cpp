@@ -160,15 +160,15 @@ void BitmapText::BMT_TweenState::MakeWeightedAverage(
 }
 
 void BitmapText::LoadFromNode(const XNode *node) {
-	RString text;
+	std::string text;
 	node->GetAttrValue("Text", text);
-	RString alt_text;
+	std::string alt_text;
 	node->GetAttrValue("AltText", alt_text);
 
 	ThemeManager::EvaluateString(text);
 	ThemeManager::EvaluateString(alt_text);
 
-	RString font;
+	std::string font;
 	// Pass optional= true so that an error will not be reported if the path
 	// doesn't resolve to a file.  This way, a font can be either a path or the
 	// name of a font to look up in Fonts/.  -Kyz
@@ -876,19 +876,19 @@ class LunaBitmapText : public Luna<BitmapText> {
 		COMMON_RETURN_SELF;
 	}
 	static int settext(T *p, lua_State *L) {
-		RString s = SArg(1);
-		RString sAlt;
+		std::string s = SArg(1);
+		std::string sAlt;
 		/* XXX: Lua strings should simply use "\n" natively. However, some
 		 * settext calls may be made from GetMetric() calls to other strings, and
 		 * it's confusing for :: to work in some strings and not others.
 		 * Eventually, all strings should be Lua expressions, but until then,
 		 * continue to support this. */
-		s.Replace("::", "\n");
+		ReplaceAll(s, "::", "\n");
 		FontCharAliases::ReplaceMarkers(s);
 
 		if (lua_gettop(L) > 1) {
 			sAlt = SArg(2);
-			sAlt.Replace("::", "\n");
+			ReplaceAll(sAlt, "::", "\n");
 			FontCharAliases::ReplaceMarkers(sAlt);
 		}
 

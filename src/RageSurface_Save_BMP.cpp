@@ -33,7 +33,7 @@ bool RageSurfaceUtils::SaveBMP(RageSurface *surface, RageFile &f) {
 	   CreateSurface(surface->w, surface->h, 24, Swap24LE(0xFF0000), Swap24LE(0x00FF00), Swap24LE(0x0000FF), 0);
 	RageSurfaceUtils::CopySurface(surface, converted_surface);
 
-	RString sError;
+	std::string sError;
 
 	int iFilePitch = converted_surface->pitch;
 	iFilePitch = (iFilePitch + 3) & ~3; // round up a multiple of 4

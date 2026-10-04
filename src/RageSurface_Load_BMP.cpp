@@ -177,7 +177,7 @@ static RageSurfaceUtils::OpenResult LoadBMP(RageFile &f, RageSurface *&img, std:
 }
 
 RageSurfaceUtils::OpenResult
-RageSurface_Load_BMP(const std::string &sPath, RageSurface *&img, bool /* bHeaderOnly */, RString &error) {
+RageSurface_Load_BMP(const std::string &sPath, RageSurface *&img, bool /* bHeaderOnly */, std::string &error) {
 	RageFile f;
 
 	if (!f.Open(sPath)) {

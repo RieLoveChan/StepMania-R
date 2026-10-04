@@ -142,7 +142,7 @@ bool ScreenNameEntryTraditional::Finish(PlayerNumber pn) {
 	m_bFinalized[pn] = true;
 
 	UpdateSelectionText(pn); /* hide NAME_ cursor */
-	RString sSelection = WStringToRString(m_sSelection[pn]);
+	std::string sSelection = WStringToRString(m_sSelection[pn]);
 
 	// save last used ranking name
 	Profile *pProfile = PROFILEMAN->GetProfile(pn);

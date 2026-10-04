@@ -89,7 +89,7 @@ static void CheckInputDevices() {
 	if (INPUTMAN->DevicesChanged()) {
 		INPUTFILTER->Reset(); // fix "buttons stuck" if button held while unplugged
 		INPUTMAN->LoadDrivers();
-		RString sMessage;
+		std::string sMessage;
 		if (INPUTMAPPER->CheckForChangedInputDevicesAndRemap(sMessage))
 			SCREENMAN->SystemMessage(sMessage);
 	}

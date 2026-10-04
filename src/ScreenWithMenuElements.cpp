@@ -167,7 +167,7 @@ std::string ScreenWithMenuElements::HandleLuaMusicFile(std::string const &path) 
 	FileType ft = ActorUtil::GetFileType(path);
 	std::string ret = path;
 	if (ft == FT_Lua) {
-		RString script;
+		std::string script;
 		std::string error = "Lua runtime error: ";
 		if (GetFileContents(path, script)) {
 			Lua *L = LUA->Get();

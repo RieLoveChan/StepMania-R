@@ -290,7 +290,7 @@ ScreenSelectMusic::~ScreenSelectMusic() {
 void ScreenSelectMusic::CheckBackgroundRequests(bool bForce) {
 	if (g_bCDTitleWaiting) {
 		// The CDTitle is normally very small, so we don't bother waiting to display it.
-		RString sPath;
+		std::string sPath;
 		if (!m_BackgroundLoader.IsCacheFileFinished(g_sCDTitlePath, sPath))
 			return;
 
@@ -323,7 +323,7 @@ void ScreenSelectMusic::CheckBackgroundRequests(bool bForce) {
 		if (m_Banner.GetTweenTimeLeft() > 0)
 			return;
 
-		RString sPath;
+		std::string sPath;
 		bool bFreeCache = false;
 		if (TEXTUREMAN->IsTextureRegistered(Sprite::SongBannerTexture(g_sBannerPath))) {
 			/* If the file is already loaded into a texture, it's finished,

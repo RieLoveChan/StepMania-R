@@ -698,7 +698,7 @@ void Song::TidyUpData(bool from_cache, bool /* duringCache */) {
 		}
 		// This must be done before radar calculation.
 		if (m_bHasMusic) {
-			RString error;
+			std::string error;
 			RageSoundReader *Sample = RageSoundReader_FileReader::OpenFile(GetMusicPath(), error);
 			/* XXX: Checking if the music file exists eliminates a warning
 			 * originating from BMS files (which have no music file, per se)
@@ -734,7 +734,7 @@ void Song::TidyUpData(bool from_cache, bool /* duringCache */) {
 		if (!m_PreviewFile.empty() && m_fMusicSampleLengthSeconds <= 0.00f) { // if there's a preview file and sample
 		                                                                      // length isn't specified, set sample length
 		                                                                      // to length of preview file
-			RString error;
+			std::string error;
 			RageSoundReader *Sample = RageSoundReader_FileReader::OpenFile(GetPreviewMusicPath(), error);
 			if (Sample == nullptr && m_sMusicFile != "") {
 				LOG->UserLog("Sound file", GetPreviewMusicPath(), "couldn't be opened: %s", error.c_str());
@@ -894,7 +894,7 @@ void Song::TidyUpData(bool from_cache, bool /* duringCache */) {
 				RString sPath = m_sSongDir + image_list[i];
 
 				// We only care about the dimensions.
-				RString error;
+				std::string error;
 				RageSurface *img = RageSurfaceUtils::LoadFile(sPath, error, true);
 				if (!img) {
 					LOG->UserLog("Graphic file", sPath, "couldn't be loaded: %s", error.c_str());

@@ -248,7 +248,7 @@ static RageSurface *RageSurface_Load_PNG(RageFile *f, const char *fn, char error
 }; // namespace
 
 RageSurfaceUtils::OpenResult
-RageSurface_Load_PNG(const std::string &sPath, RageSurface *&ret, bool bHeaderOnly, RString &error) {
+RageSurface_Load_PNG(const std::string &sPath, RageSurface *&ret, bool bHeaderOnly, std::string &error) {
 	RageFile f;
 	if (!f.Open(sPath)) {
 		error = f.GetError();

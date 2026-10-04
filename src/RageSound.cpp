@@ -177,7 +177,7 @@ bool RageSound::Load(std::string sSoundFilePath, bool bPrecache, const RageSound
 	RageSoundReader *pSound = SOUNDMAN->GetLoadedSound(sSoundFilePath);
 	bool bNeedBuffer = true;
 	if (pSound == nullptr) {
-		RString error;
+		std::string error;
 		bool bPrebuffer;
 		pSound = RageSoundReader_FileReader::OpenFile(sSoundFilePath, error, &bPrebuffer);
 		if (pSound == nullptr) {

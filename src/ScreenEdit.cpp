@@ -4486,7 +4486,7 @@ static void ChangeCredit(const RString &sNew) {
 static void ChangePreview(const RString &sNew) {
 	Song *pSong = GAMESTATE->m_pCurSong;
 	if (!sNew.empty()) {
-		RString error;
+		std::string error;
 		RageSoundReader *sample = RageSoundReader_FileReader::OpenFile(pSong->GetPreviewMusicPath(), error);
 		if (sample == nullptr) {
 			LOG->UserLog("Preview file", pSong->GetPreviewMusicPath(), "couldn't be opened: %s", error.c_str());
@@ -4898,7 +4898,7 @@ void ScreenEdit::HandleArbitraryRemapping(RString const &mapstr) {
 	const NoteData OldClipboard(m_Clipboard);
 	HandleAlterMenuChoice(cut, false);
 	int mapping[MAX_NOTE_TRACKS];
-	RString error;
+	std::string error;
 	// error is actually reported by the validate function, and unused here.
 	if (ConvertMappingInputToMapping(mapstr, mapping, error)) {
 		NoteDataUtil::ArbitraryRemap(m_Clipboard, mapping);

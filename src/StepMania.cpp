@@ -929,7 +929,7 @@ int sm_main(int argc, char *argv[]) {
 	{
 		/* Now that THEME is loaded, load the icon and splash for the current
 		 * theme into the loading window. */
-		RString sError;
+		std::string sError;
 		RageSurface *pSurface = RageSurfaceUtils::LoadFile(THEME->GetPathG("Common", "window icon"), sError);
 		if (pSurface != nullptr)
 			pLoadingWindow->SetIcon(pSurface);
@@ -1009,7 +1009,7 @@ int sm_main(int argc, char *argv[]) {
 	SCREENMAN->SetNewScreen(StepMania::GetInitialScreen());
 
 	// Do this after ThemeChanged so that we can show a system message
-	RString sMessage;
+	std::string sMessage;
 	if (INPUTMAPPER->CheckForChangedInputDevicesAndRemap(sMessage))
 		SCREENMAN->SystemMessage(sMessage);
 

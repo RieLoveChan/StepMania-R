@@ -92,7 +92,7 @@ bool ActorUtil::ResolvePath(std::string &sPath, const std::string &sName, bool o
 	}
 
 	if (ft == RageFileManager::TYPE_DIR) {
-		RString sLuaPath = sPath + "/default.lua";
+		std::string sLuaPath = sPath + "/default.lua";
 		if (DoesFileExist(sLuaPath)) {
 			sPath = sLuaPath;
 			return true;
@@ -168,7 +168,7 @@ Actor *ActorUtil::LoadFromNode(const XNode *_pNode, Actor *pParentActor) {
 			return nullptr;
 	}
 
-	RString sClass;
+	std::string sClass;
 	bool bHasClass = node.GetAttrValue("Class", sClass);
 	if (!bHasClass)
 		bHasClass = node.GetAttrValue("Type", sClass);
@@ -179,11 +179,11 @@ Actor *ActorUtil::LoadFromNode(const XNode *_pNode, Actor *pParentActor) {
 
 	std::map<std::string, CreateActorFn>::iterator iter = g_pmapRegistrees->find(sClass);
 	if (iter == g_pmapRegistrees->end()) {
-		RString sFile;
+		std::string sFile;
 		if (bLegacy && node.GetAttrValue("File", sFile) && !sFile.empty()) {
-			RString sPath;
+			std::string sPath;
 			// Handle absolute paths correctly
-			if (sFile.Left(1) == "/")
+			if (sFile.front() == '/')
 				sPath = sFile;
 			else
 				sPath = Dirname(GetSourcePath(&node)) + sFile;
@@ -215,8 +215,8 @@ Actor *ActorUtil::LoadFromNode(const XNode *_pNode, Actor *pParentActor) {
 }
 
 namespace {
-XNode *LoadXNodeFromLuaShowErrors(const RString &sFile) {
-	RString sScript;
+XNode *LoadXNodeFromLuaShowErrors(const std::string &sFile) {
+	std::string sScript;
 	if (!GetFileContents(sFile, sScript))
 		return nullptr;
 
@@ -271,7 +271,7 @@ bool ActorUtil::LoadTableFromStackShowErrors(Lua *L) {
 // NOTE: This function can return nullptr if the actor should not be displayed.
 // Callers should be aware of this and handle it appropriately.
 Actor *ActorUtil::MakeActor(const std::string &sPath_, Actor *pParentActor) {
-	RString sPath(sPath_);
+	std::string sPath(sPath_);
 
 	FileType ft = GetFileType(sPath);
 	switch (ft) {
@@ -298,10 +298,10 @@ Actor *ActorUtil::MakeActor(const std::string &sPath_, Actor *pParentActor) {
 		return LoadFromNode(&xml, pParentActor);
 	}
 	case FT_Directory: {
-		if (sPath.Right(1) != "/")
+		if (sPath.empty() || sPath.back() != '/')
 			sPath += '/';
 
-		RString sXml = sPath + "default.xml";
+		std::string sXml = sPath + "default.xml";
 		if (DoesFileExist(sXml))
 			return MakeActor(sXml, pParentActor);
 
@@ -350,7 +350,7 @@ Actor *ActorUtil::MakeActor(const std::string &sPath_, Actor *pParentActor) {
 }
 
 std::string ActorUtil::GetSourcePath(const XNode *pNode) {
-	RString sRet;
+	std::string sRet;
 	pNode->GetAttrValue("_Source", sRet);
 	if (sRet.substr(0, 1) == "@")
 		sRet.erase(0, 1);
@@ -359,7 +359,7 @@ std::string ActorUtil::GetSourcePath(const XNode *pNode) {
 }
 
 std::string ActorUtil::GetWhere(const XNode *pNode) {
-	RString sPath = GetSourcePath(pNode);
+	std::string sPath = GetSourcePath(pNode);
 
 	int iLine;
 	if (pNode->GetAttrValue("_Line", iLine))
@@ -367,13 +367,13 @@ std::string ActorUtil::GetWhere(const XNode *pNode) {
 	return sPath;
 }
 
-bool ActorUtil::GetAttrPath(const XNode *pNode, const std::string &sName, RString &sOut, bool optional) {
+bool ActorUtil::GetAttrPath(const XNode *pNode, const std::string &sName, std::string &sOut, bool optional) {
 	if (!pNode->GetAttrValue(sName, sOut))
 		return false;
 
-	bool bIsRelativePath = sOut.Left(1) != "/";
+	bool bIsRelativePath = sOut.empty() || sOut.front() != '/';
 	if (bIsRelativePath) {
-		RString sDir;
+		std::string sDir;
 		if (!pNode->GetAttrValue("_Dir", sDir)) {
 			if (!optional) {
 				LOG_WARN(Log::Actor, "Relative path \"%s\", but path is unknown", sOut.c_str());
@@ -431,7 +431,7 @@ void ActorUtil::LoadAllCommandsFromName(Actor &actor, const std::string &sMetric
 	for (std::string const &sv : vsValueNames) {
 		static const std::string sEnding = "Command";
 		if (EndsWith(sv, sEnding)) {
-			RString sCommandName(sv.begin() + sName.size(), sv.end() - sEnding.size());
+			std::string sCommandName(sv.begin() + sName.size(), sv.end() - sEnding.size());
 			LoadCommandFromName(actor, sMetricsGroup, sCommandName, sName);
 		}
 	}
@@ -559,11 +559,11 @@ int GetFileType(lua_State *L) {
 	return 1;
 }
 int ResolvePath(lua_State *L) {
-	RString sPath(SArg(1));
+	std::string sPath(SArg(1));
 	int iLevel = IArg(2);
 	bool optional = lua_toboolean(L, 3);
 	luaL_where(L, iLevel);
-	RString sWhere = lua_tostring(L, -1);
+	std::string sWhere = lua_tostring(L, -1);
 	if (sWhere.size() > 2 && sWhere.substr(sWhere.size() - 2, 2) == ": ")
 		sWhere = sWhere.substr(0, sWhere.size() - 2); // remove trailing ": "
 

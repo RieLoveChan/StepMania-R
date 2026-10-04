@@ -78,7 +78,7 @@ int RageSoundReader_Chain::LoadSound(std::string sPath) {
 		FAIL_M(sPath.c_str());
 	}
 
-	RString sError;
+	std::string sError;
 	bool bPrebuffer;
 	RageSoundReader *pReader = RageSoundReader_FileReader::OpenFile(sPath, sError, &bPrebuffer);
 	if (pReader == nullptr) {

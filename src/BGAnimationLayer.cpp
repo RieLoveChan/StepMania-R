@@ -468,7 +468,7 @@ void BGAnimationLayer::LoadFromNode(const XNode *pNode) {
 			pActor->StretchTo(FullScreenRectF);
 	} break;
 	case TYPE_PARTICLES: {
-		RString sFile;
+		std::string sFile;
 		ActorUtil::GetAttrPath(pNode, "File", sFile);
 		FixSlashesInPlace(sFile);
 
@@ -496,7 +496,7 @@ void BGAnimationLayer::LoadFromNode(const XNode *pNode) {
 		}
 	} break;
 	case TYPE_TILES: {
-		RString sFile;
+		std::string sFile;
 		ActorUtil::GetAttrPath(pNode, "File", sFile);
 		FixSlashesInPlace(sFile);
 

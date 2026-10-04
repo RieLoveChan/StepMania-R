@@ -23,7 +23,7 @@ class BackgroundLoader {
 
 	/* Return true if the requested CacheFile request has finished.  If true is returned,
 	 * the cached file can be read using the path returned in sActualPath. */
-	bool IsCacheFileFinished(const std::string &sFile, RString &sActualPath);
+	bool IsCacheFileFinished(const std::string &sFile, std::string &sActualPath);
 
 	/* Call this when finished with a cached file, to release any resources. */
 	void FinishedWithCachedFile(std::string sFile);

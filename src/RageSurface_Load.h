@@ -12,7 +12,7 @@ enum OpenResult {
 
 /* If bHeaderOnly is true, the loader is only required to return a surface
  * with the width and height set (but may return a complete surface). */
-RageSurface *LoadFile(const std::string &sPath, RString &error, bool bHeaderOnly = false);
+RageSurface *LoadFile(const std::string &sPath, std::string &error, bool bHeaderOnly = false);
 } // namespace RageSurfaceUtils
 
 #endif

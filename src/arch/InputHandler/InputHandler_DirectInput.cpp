@@ -1079,7 +1079,7 @@ static wchar_t ScancodeAndKeysToChar(DWORD scancode, unsigned char keys[256]) {
 		int iNum = ToAsciiEx(vk, scancode, keys, result, 0, layout);
 		// iNum == 2 will happen only for dead keys. See MSDN for ToAsciiEx.
 		if (iNum == 1) {
-			RString s = RString() + (char)result[0];
+			std::string s(1, (char)result[0]);
 			return ConvertCodepageToWString(s, CP_ACP)[0];
 		}
 	}

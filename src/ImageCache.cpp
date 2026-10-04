@@ -339,7 +339,7 @@ void ImageCache::CacheImage(std::string sImageDir, std::string sImagePath) {
 }
 
 void ImageCache::CacheImageInternal(std::string sImageDir, std::string sImagePath) {
-	RString sError;
+	std::string sError;
 	RageSurface *pImage = RageSurfaceUtils::LoadFile(sImagePath, sError);
 	if (pImage == nullptr) {
 		LOG->UserLog("Cache file", sImagePath, "couldn't be loaded: %s", sError.c_str());
