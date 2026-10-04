@@ -71,7 +71,7 @@ Defined in `CMake/DefineOptions.cmake`. Pass as `-DWITH_X=ON/OFF`:
 | `WITH_SSE2` | ON | SSE2 codegen |
 | `WITH_CRASH_HANDLER` | ON | Built-in crash reporter |
 | `WITH_CLUB_FANTASTIC` | OFF | Bundle Club Fantastic songs |
-| `WITH_GLES2` / `WITH_GTK3` (Linux) | ON | GL ES 2.0 / GTK3 UI |
+| `WITH_GTK3` (Linux) | ON | GTK3 UI |
 | `WITH_ALSA` / `WITH_PULSEAUDIO` / `WITH_JACK` (Linux) | ON/ON/OFF | Audio backends |
 | `WITH_WERROR` | OFF | Treat the engine's own warnings as errors (CI) |
 | `WITH_TESTS` | OFF | Build `sm_tests` (Catch2); makes `src/` an OBJECT library |

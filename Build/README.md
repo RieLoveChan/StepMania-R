@@ -90,7 +90,7 @@ Defined in `CMake/DefineOptions.cmake`. Pass as `-DWITH_X=ON` / `-DWITH_X=OFF`:
 | `WITH_SSE2` | ON | SSE2 codegen |
 | `WITH_CLUB_FANTASTIC` | OFF | Bundle the Club Fantastic song packs |
 | `WITH_CRASH_HANDLER` | ON | Built-in crash reporter (non-Windows option; always on for Windows) |
-| `WITH_GLES2` / `WITH_GTK3` | ON | OpenGL ES 2.0 / GTK3 UI (Linux) |
+| `WITH_GTK3` | ON | GTK3 UI (Linux) |
 | `WITH_ALSA` / `WITH_PULSEAUDIO` / `WITH_JACK` | ON / ON / OFF | Audio backends (Linux) |
 
 ## More

@@ -2353,7 +2353,8 @@ generic template superseded by the concrete overloads right after it.
 `NoteData.cpp` (explains why the disabled iterator op is unsafe),
 `RageFileManager_ReadAhead.cpp` (explains why `dup()` doesn't work
 here), `RageDisplay_GLES2.cpp` (an active `#if 0`/`#else` selector —
-the `#else` branch is what's actually compiled), `RandomSample.cpp` /
+the `#else` branch is what's actually compiled; **file deleted
+2026-10-04** with the GLES2 backend, ADR 0009 stage 0), `RandomSample.cpp` /
 `ScoreKeeperNormal.cpp` (same, `#if 0`/`#else` or `#if 0`/`#elif 1`/
 `#else`), `RageUtil_CachedObject.cpp` (a deliberately-disabled usage
 example), `RageSoundReader_MP3.cpp`'s `resync()` (declared in the

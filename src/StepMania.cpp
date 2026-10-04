@@ -411,10 +411,6 @@ static void AdjustForChangedSystemCapabilities() {
 #include "RageDisplay_OGL.h"
 #endif
 
-#if defined(SUPPORT_GLES2)
-#include "RageDisplay_GLES2.h"
-#endif
-
 #include "RageDisplay_Null.h"
 
 struct VideoCardDefaults {
@@ -611,9 +607,9 @@ RageDisplay *CreateDisplay() {
 #endif
 		}
 		else if (StrCompareNoCase(sRenderer, "gles2") == 0) {
-#if defined(SUPPORT_GLES2)
-			pRet = new RageDisplay_GLES2;
-#endif
+			// Removed backend. Old preference files may still list it: skip it instead of
+			// treating it as an unknown renderer, which would abort startup.
+			LOG_WARN(Log::General, "Video renderer '%s' is no longer supported; skipping it.", sRenderer.c_str());
 		}
 		else if (StrCompareNoCase(sRenderer, "d3d") == 0) {
 // TODO: ANGLE/RageDisplay_Modern
