@@ -162,7 +162,7 @@ class OptionRowHandlerList : public OptionRowHandler {
 			ROW_INVALID_IF(NumCols < 1, "Not enough entries in list.", false);
 			for (unsigned i = 1; i < lCmds.v.size(); i++) {
 				const Command &cmd = lCmds.v[i];
-				RString sName = cmd.GetName();
+				std::string sName = cmd.GetName();
 
 				if (sName == "together")
 					m_Def.m_bOneChoiceForAllPlayers = true;
@@ -183,7 +183,7 @@ class OptionRowHandlerList : public OptionRowHandler {
 				else if (sName == "enabledforplayers") {
 					m_Def.m_vEnabledForPlayers.clear();
 					for (unsigned a = 1; a < cmd.m_vsArgs.size(); a++) {
-						RString sArg = cmd.m_vsArgs[a];
+						std::string sArg = cmd.m_vsArgs[a];
 						PlayerNumber pn = (PlayerNumber)(StringToInt(sArg) - 1);
 						ASSERT(pn >= 0 && pn < NUM_PLAYERS);
 						m_Def.m_vEnabledForPlayers.insert(pn);
@@ -224,7 +224,7 @@ class OptionRowHandlerList : public OptionRowHandler {
 				}
 
 				m_aListEntries.push_back(mc);
-				RString sChoice = mc.m_sName;
+				std::string sChoice = mc.m_sName;
 				m_Def.m_vsChoices.push_back(sChoice);
 			}
 		}
@@ -1466,7 +1466,7 @@ OptionRowHandler *OptionRowHandlerUtil::Make(const Commands &cmds) {
 	OptionRowHandler *pHand = nullptr;
 
 	ROW_INVALID_IF(cmds.v.empty(), "No commands for constructing row.", nullptr);
-	const RString &name = cmds.v[0].GetName();
+	const std::string &name = cmds.v[0].GetName();
 	ROW_INVALID_IF(name != "gamecommand" && cmds.v.size() != 1, "Row must be constructed from single command.", nullptr);
 
 	bool load_succeeded = false;

@@ -40,7 +40,7 @@ class ScreenNameEntry : public ScreenWithMenuElements {
 		std::vector<float> m_Xs;
 		bool m_bDone;
 		BitmapText m_Stamp;
-		static RString g_sNameChars;
+		static std::string g_sNameChars;
 	};
 
 	enum {
@@ -54,7 +54,7 @@ class ScreenNameEntry : public ScreenWithMenuElements {
 	RageSound m_soundStep;
 
 	float m_fFakeBeat;
-	RString m_sSelectedName[NUM_PLAYERS];
+	std::string m_sSelectedName[NUM_PLAYERS];
 	bool m_bStillEnteringName[NUM_PLAYERS];
 
 	ScrollingText m_Text[NUM_PLAYERS];

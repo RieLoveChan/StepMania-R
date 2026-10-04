@@ -806,7 +806,7 @@ bool GameCommand::IsZero() const {
 class LunaGameCommand : public Luna<GameCommand> {
  public:
 	static int GetName(T *p, lua_State *L) {
-		lua_pushstring(L, p->m_sName);
+		lua_pushstring(L, p->m_sName.c_str());
 		return 1;
 	}
 	static int GetText(T *p, lua_State *L) {

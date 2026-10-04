@@ -65,7 +65,7 @@ class GameState {
 	void ResetPlayer(PlayerNumber pn);
 	void ResetPlayerOptions(PlayerNumber pn);
 	void ApplyCmdline(); // called by Reset
-	void ApplyGameCommand(const RString &sCommand, PlayerNumber pn = PLAYER_INVALID);
+	void ApplyGameCommand(const std::string &sCommand, PlayerNumber pn = PLAYER_INVALID);
 	/** @brief Start the game when the first player joins in. */
 	void BeginGame();
 	void JoinPlayer(PlayerNumber pn);
@@ -151,7 +151,7 @@ class GameState {
 	GameStateStageSeedData m_StageSeedData;
 	// This is set to a random number per-game/round; it can be used for a random seed.
 	int &m_iGameSeed, &m_iStageSeed;
-	RString &m_sStageGUID;
+	std::string &m_sStageGUID;
 
 	void SetNewStageSeed() {
 		m_StageSeedData.SetNewStageSeed();
@@ -256,9 +256,9 @@ class GameState {
 	// GameStateSectionData (backlog item 9, phase 1 cluster 12; see
 	// playbooks/split-god-object.md).
 	GameStateSectionData m_SectionData;
-	RString &sExpandedSectionName;
+	std::string &sExpandedSectionName;
 
-	RString &sLastOpenSection;
+	std::string &sLastOpenSection;
 
 	static int GetNumStagesMultiplierForSong(const Song *pSong);
 	static int GetNumStagesForSongAndStyleType(const Song *pSong, StyleType st);

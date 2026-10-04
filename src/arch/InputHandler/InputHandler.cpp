@@ -183,7 +183,7 @@ RString InputHandler::GetDeviceSpecificInputString(const DeviceInput &di) {
 	return s;
 }
 
-RString InputHandler::GetLocalizedInputString(const DeviceInput &di) {
+std::string InputHandler::GetLocalizedInputString(const DeviceInput &di) {
 	switch (di.button) {
 	case KEY_HOME:
 		return HOME.GetValue();

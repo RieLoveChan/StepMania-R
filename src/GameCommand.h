@@ -66,7 +66,7 @@ class GameCommand {
 	// so that we know the order of commands when it comes time to Apply.
 	Commands m_Commands;
 
-	RString m_sName; // choice name
+	std::string m_sName; // choice name
 	std::string m_sText; // display text
 	bool m_bInvalid;
 	std::string m_sInvalidReason;

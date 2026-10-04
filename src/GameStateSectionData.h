@@ -7,8 +7,8 @@
 // outside GameState.h/.cpp changes. Pure data, no associated methods.
 class GameStateSectionData {
  public:
-	RString sExpandedSectionName;
-	RString sLastOpenSection;
+	std::string sExpandedSectionName;
+	std::string sLastOpenSection;
 };
 
 #endif

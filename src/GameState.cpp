@@ -210,7 +210,7 @@ void GameState::SetProcessedTimingData(TimingData *t) {
 	this->processedTiming = t;
 }
 
-void GameState::ApplyGameCommand(const RString &sCommand, PlayerNumber pn) {
+void GameState::ApplyGameCommand(const std::string &sCommand, PlayerNumber pn) {
 	GameCommand m;
 	m.Load(0, ParseCommands(sCommand));
 
@@ -2793,7 +2793,7 @@ class LunaGameState : public Luna<GameState> {
 		COMMON_RETURN_SELF;
 	}
 	static int GetExpandedSectionName(T *p, lua_State *L) {
-		lua_pushstring(L, p->sExpandedSectionName);
+		lua_pushstring(L, p->sExpandedSectionName.c_str());
 		return 1;
 	}
 	static int AddStageToPlayer(T *p, lua_State *L) {
