@@ -3,7 +3,7 @@
 #include <shlobj.h>
 
 static std::string GetSpecialFolderPath(int csidl) {
-	RString sDir;
+	std::string sDir;
 	TCHAR szDir[MAX_PATH] = "";
 	HRESULT hResult = SHGetFolderPath(nullptr, csidl, nullptr, SHGFP_TYPE_CURRENT, szDir);
 	ASSERT(hResult == S_OK);

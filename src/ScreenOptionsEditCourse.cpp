@@ -39,7 +39,7 @@ class EditCourseOptionRowHandlerSteps : public OptionRowHandler {
 		{
 			GetStepsForSong(pSong, m_vpSteps);
 			for (Steps const *steps : m_vpSteps) {
-				RString s;
+				std::string s;
 				if (steps->GetDifficulty() == Difficulty_Edit)
 					s = steps->GetDescription();
 				else
@@ -263,7 +263,7 @@ void ScreenOptionsEditCourse::ExportOptions(int /* iRow */, const std::vector<Pl
 	FOREACH_ENUM(EditCourseRow, i) {
 		OptionRow &row = *m_pRows[i];
 		int iIndex = row.GetOneSharedSelection(true);
-		RString sValue;
+		std::string sValue;
 		if (iIndex >= 0)
 			sValue = row.GetRowDef().m_vsChoices[iIndex];
 
@@ -272,7 +272,7 @@ void ScreenOptionsEditCourse::ExportOptions(int /* iRow */, const std::vector<Pl
 		case EditCourseRow_Minutes:
 			GAMESTATE->m_pCurCourse->m_fGoalSeconds = 0;
 			int mins;
-			if (sscanf(sValue, "%d", &mins) == 1)
+			if (sscanf(sValue.c_str(), "%d", &mins) == 1)
 				GAMESTATE->m_pCurCourse->m_fGoalSeconds = float(mins * 60);
 			break;
 		}

@@ -602,8 +602,8 @@ static void debug_crash() {
 
 /* Get a stack trace of the current thread and the specified thread.
  * If iID == GetInvalidThreadId(), then output a stack trace for every thread. */
-void CrashHandler::ForceDeadlock(RString reason, std::uint64_t iID) {
-	strncpy(g_CrashInfo.m_CrashReason, reason, sizeof(g_CrashInfo.m_CrashReason));
+void CrashHandler::ForceDeadlock(std::string reason, std::uint64_t iID) {
+	strncpy(g_CrashInfo.m_CrashReason, reason.c_str(), sizeof(g_CrashInfo.m_CrashReason));
 	g_CrashInfo.m_CrashReason[sizeof(g_CrashInfo.m_CrashReason) - 1] = 0;
 
 	/* Suspend the other thread we're going to backtrace. (We need to at least

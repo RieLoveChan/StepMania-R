@@ -699,15 +699,15 @@ bool ScreenMapControllers::SanityCheckWrapper() {
 }
 
 void ScreenMapControllers::ActionRow::Load(
-   RString const &scr_name,
-   RString const &name,
+   std::string const &scr_name,
+   std::string const &name,
    ScreenMapControllers::action_fun_t action,
    ActorFrame *line,
    ActorScroller *scroller
 ) {
 	m_action = action;
-	RString lower_name = name;
-	lower_name.MakeLower();
+	std::string lower_name = name;
+	MakeLower(&lower_name[0], lower_name.size());
 	// Make the specific actor optional, use a fallback if it doesn't exist.
 	std::string path = THEME->GetPathG(scr_name, lower_name, true);
 	if (path.empty()) {

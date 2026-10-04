@@ -21,7 +21,7 @@ class RageSoundReader_Chain : public RageSoundReader {
 		m_iPreferredSampleRate = iSampleRate;
 	}
 
-	int LoadSound(RString sPath);
+	int LoadSound(std::string sPath);
 	int LoadSound(RageSoundReader *pSound);
 
 	/* Add the given sound to play after fOffsetSecs seconds.  Takes ownership

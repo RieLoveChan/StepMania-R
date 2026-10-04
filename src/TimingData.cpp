@@ -112,14 +112,14 @@ void TimingData::ReleaseLookup() {
 	m_time_start_lookup = beat_start_lookup_t();
 }
 
-RString SegInfoStr(const std::vector<TimingSegment *> &segs, unsigned int index, const RString &name) {
+std::string SegInfoStr(const std::vector<TimingSegment *> &segs, unsigned int index, const std::string &name) {
 	if (index < segs.size()) {
 		return ssprintf("%s: %d at %d", name.c_str(), index, segs[index]->GetRow());
 	}
 	return ssprintf("%s: %d at end", name.c_str(), index);
 }
 
-void TimingData::DumpOneTable(const beat_start_lookup_t &lookup, const RString &name) {
+void TimingData::DumpOneTable(const beat_start_lookup_t &lookup, const std::string &name) {
 	const std::vector<TimingSegment *> &bpms = m_avpTimingSegments[SEGMENT_BPM];
 	const std::vector<TimingSegment *> &warps = m_avpTimingSegments[SEGMENT_WARP];
 	const std::vector<TimingSegment *> &stops = m_avpTimingSegments[SEGMENT_STOP];
@@ -129,7 +129,7 @@ void TimingData::DumpOneTable(const beat_start_lookup_t &lookup, const RString &
 		const lookup_item_t &item = lookup[lit];
 		const GetBeatStarts &starts = item.second;
 		LOG_TRACE(Log::Song, "%zu: %f", lit, item.first);
-		RString str = ssprintf(
+		std::string str = ssprintf(
 		   "  %s, %s, %s, %s,\n"
 		   "  last_row: %d, last_time: %.3f,\n"
 		   "  warp_destination: %.3f, is_warping: %d",

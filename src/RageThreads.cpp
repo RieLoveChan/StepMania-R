@@ -561,7 +561,7 @@ void RageMutex::Lock() {
 			ThisSlotName = ssprintf("%s (%i)", ThisSlot->GetThreadName(), (int)ThisSlot->m_iID);
 		if (OtherSlot)
 			OtherSlotName = ssprintf("%s (%i)", OtherSlot->GetThreadName(), (int)OtherSlot->m_iID);
-		const RString sReason = ssprintf(
+		const std::string sReason = ssprintf(
 		   "Thread deadlock on mutex %s between %s and %s", GetName().c_str(), ThisSlotName.c_str(), OtherSlotName.c_str()
 		);
 
@@ -574,7 +574,7 @@ void RageMutex::Lock() {
 		/* Pass the crash handle of the other thread, so it can backtrace that thread. */
 		CrashHandler::ForceDeadlock(sReason, CrashHandle);
 #else
-		FAIL_M(sReason);
+		FAIL_M(sReason.c_str());
 #endif
 	}
 
@@ -701,7 +701,7 @@ void RageSemaphore::Wait(bool bFailOnTimeout) {
 	/* We waited too long.  We're probably deadlocked, though unlike mutexes, we can't
 	 * tell which thread we're stuck on. */
 	const ThreadSlot *ThisSlot = GetThreadSlotFromID(GetThisThreadId());
-	const RString sReason = ssprintf(
+	const std::string sReason = ssprintf(
 	   "Semaphore timeout on mutex %s on thread %s",
 	   GetName().c_str(),
 	   ThisSlot ? ThisSlot->GetThreadName()

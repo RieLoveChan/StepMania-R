@@ -5,8 +5,8 @@
 
 #include <cstdint>
 
-bool GetFileVersion(RString fsFile, std::string &sOut);
-RString FindSystemFile(RString sFile);
+bool GetFileVersion(std::string fsFile, std::string &sOut);
+std::string FindSystemFile(std::string sFile);
 bool GetProcessFileName(std::uint32_t iProcessID, std::string &sName);
 
 #endif

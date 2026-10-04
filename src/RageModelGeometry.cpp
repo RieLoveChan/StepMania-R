@@ -81,7 +81,7 @@ bool RageModelGeometry::HasAnyPerVertexBones() const {
 #define THROW RageException::Throw("Parse error in \"%s\" at line %d: \"%s\".", sPath.c_str(), iLineNum, sLine.c_str())
 
 void RageModelGeometry::LoadMilkshapeAscii(const std::string &_sPath, bool bNeedsNormals) {
-	RString sPath = _sPath;
+	std::string sPath = _sPath;
 	FixSlashesInPlace(sPath);
 	const std::string sDir = Dirname(sPath);
 

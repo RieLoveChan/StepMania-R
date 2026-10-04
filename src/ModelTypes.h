@@ -131,7 +131,7 @@ struct msAnimation {
 		return -1;
 	}
 
-	bool LoadMilkshapeAsciiBones(RString sAniName, RString sPath);
+	bool LoadMilkshapeAsciiBones(std::string sAniName, std::string sPath);
 
 	std::vector<msBone> Bones;
 	int nTotalFrames = 0;

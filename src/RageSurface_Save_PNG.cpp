@@ -16,12 +16,12 @@
 #pragma warning(disable : 4611) /* interaction between '_setjmp' and C++ object destruction is non-portable */
 #endif                          // _MSC_VER
 
-static void SafePngError(png_struct *pPng, const RString &sStr) {
+static void SafePngError(png_struct *pPng, const std::string &sStr) {
 	/* png_error will call PNG_Error, which will longjmp.  If we just pass
 	 * GetError().c_str() to it, a temporary may be created; since control
 	 * never returns, it may never be destructed and leak. */
 	static char error[256];
-	strncpy(error, sStr, sizeof(error));
+	strncpy(error, sStr.c_str(), sizeof(error));
 	error[sizeof(error) - 1] = 0;
 	png_error(pPng, error);
 }

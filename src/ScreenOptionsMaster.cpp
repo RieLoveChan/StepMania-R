@@ -50,8 +50,8 @@ void ScreenOptionsMaster::Init() {
 
 	std::vector<OptionRowHandler *> OptionRowHandlers;
 	for (unsigned i = 0; i < asLineNames.size(); ++i) {
-		RString sLineName = asLineNames[i];
-		RString sRowCommands = LINE(sLineName);
+		std::string sLineName = asLineNames[i];
+		std::string sRowCommands = LINE(sLineName);
 
 		Commands cmds;
 		ParseCommands(sRowCommands, cmds, false);

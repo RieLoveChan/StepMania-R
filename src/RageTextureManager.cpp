@@ -319,7 +319,7 @@ void RageTextureManager::DiagnosticOutput() const {
 		const RageTextureID &ID = i.first;
 		const RageTexture *pTex = i.second;
 
-		RString sDiags = DISPLAY->GetTextureDiagnostics(pTex->GetTexHandle());
+		std::string sDiags = DISPLAY->GetTextureDiagnostics(pTex->GetTexHandle());
 		std::string sStr = ssprintf("%3ix%3i (%2i)", pTex->GetTextureHeight(), pTex->GetTextureWidth(), pTex->m_iRefCount);
 
 		if (!sDiags.empty())

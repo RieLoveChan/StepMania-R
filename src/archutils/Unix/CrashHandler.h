@@ -11,7 +11,7 @@ void CrashHandlerHandleArgs(int argc, char *argv[]);
 void InitializeCrashHandler();
 void CrashSignalHandler(int signal, siginfo_t *si, const ucontext_t *uc);
 void ForceCrash(const char *reason);
-void ForceDeadlock(RString reason, std::uint64_t CrashHandle);
+void ForceDeadlock(std::string reason, std::uint64_t CrashHandle);
 } // namespace CrashHandler
 
 #endif

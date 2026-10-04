@@ -65,8 +65,8 @@ void RageSoundReader_Chain::AddSound(int iIndex, float fOffsetSecs, float fPan) 
 	m_aSounds.push_back(s);
 }
 
-int RageSoundReader_Chain::LoadSound(RString sPath) {
-	sPath.MakeLower();
+int RageSoundReader_Chain::LoadSound(std::string sPath) {
+	MakeLower(&sPath[0], sPath.size());
 
 	std::map<std::string, RageSoundReader *>::const_iterator it = m_apNamedSounds.find(sPath);
 	if (it != m_apNamedSounds.end()) {
@@ -75,7 +75,7 @@ int RageSoundReader_Chain::LoadSound(RString sPath) {
 		for (int i = 0; i < (int)m_apLoadedSounds.size(); ++i)
 			if (m_apLoadedSounds[i] == pReader)
 				return i;
-		FAIL_M(sPath);
+		FAIL_M(sPath.c_str());
 	}
 
 	RString sError;

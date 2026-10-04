@@ -7,7 +7,7 @@
 
 class MessageWindow {
  public:
-	MessageWindow(const RString &sClassName);
+	MessageWindow(const std::string &sClassName);
 	~MessageWindow();
 
 	/* Run the message loop until WM_QUIT is received. */

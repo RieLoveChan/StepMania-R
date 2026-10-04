@@ -160,7 +160,7 @@ void ScoreScroller::LoadCourses(CourseType ct, int iNumRecentScores) {
 		m_vScoreRowItemData[i].m_pCourse = vpCourses[i];
 }
 
-void ScoreScroller::Load(RString sMetricsGroup) {
+void ScoreScroller::Load(const std::string &sMetricsGroup) {
 	SCROLLER_ITEMS_TO_DRAW.Load(sMetricsGroup, "ScrollerItemsToDraw");
 	SCROLLER_SECONDS_PER_ITEM.Load(sMetricsGroup, "ScrollerSecondsPerItem");
 

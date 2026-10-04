@@ -123,7 +123,7 @@ void Model::LoadFromNode(const XNode *pNode) {
 }
 
 void Model::LoadMaterialsFromMilkshapeAscii(const std::string &_sPath) {
-	RString sPath = _sPath;
+	std::string sPath = _sPath;
 
 	FixSlashesInPlace(sPath);
 	const std::string sDir = Dirname(sPath);
@@ -221,13 +221,13 @@ void Model::LoadMaterialsFromMilkshapeAscii(const std::string &_sPath) {
 					THROW;
 				strcpy(szName, "");
 				sscanf(sLine, "\"%255[^\"]\"", szName);
-				RString sDiffuseTexture = szName;
+				std::string sDiffuseTexture = szName;
 
 				if (sDiffuseTexture.empty()) {
 					Material.diffuse.LoadBlank();
 				}
 				else {
-					RString sTexturePath = sDir + sDiffuseTexture;
+					std::string sTexturePath = sDir + sDiffuseTexture;
 					FixSlashesInPlace(sTexturePath);
 					CollapsePath(sTexturePath);
 					if (!IsAFile(sTexturePath))
@@ -243,13 +243,13 @@ void Model::LoadMaterialsFromMilkshapeAscii(const std::string &_sPath) {
 					THROW;
 				strcpy(szName, "");
 				sscanf(sLine, "\"%255[^\"]\"", szName);
-				RString sAlphaTexture = szName;
+				std::string sAlphaTexture = szName;
 
 				if (sAlphaTexture.empty()) {
 					Material.alpha.LoadBlank();
 				}
 				else {
-					RString sTexturePath = sDir + sAlphaTexture;
+					std::string sTexturePath = sDir + sAlphaTexture;
 					FixSlashesInPlace(sTexturePath);
 					CollapsePath(sTexturePath);
 					if (!IsAFile(sTexturePath))

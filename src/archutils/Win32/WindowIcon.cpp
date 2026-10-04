@@ -83,7 +83,7 @@ HICON IconFromSurface(const RageSurface *pSrcImg) {
 	return icon;
 }
 
-HICON IconFromFile(const RString &sIconFile) {
+HICON IconFromFile(const std::string &sIconFile) {
 	RString sError;
 	RageSurface *pImg = RageSurfaceUtils::LoadFile(sIconFile, sError);
 	if (pImg == nullptr) {

@@ -100,8 +100,8 @@ class ScreenMapControllers : public ScreenWithMenuElements {
 		AutoActor m_actor;
 		action_fun_t m_action;
 		void Load(
-		   RString const &scr_name,
-		   RString const &name,
+		   std::string const &scr_name,
+		   std::string const &name,
 		   ScreenMapControllers::action_fun_t action,
 		   ActorFrame *line,
 		   ActorScroller *scroller

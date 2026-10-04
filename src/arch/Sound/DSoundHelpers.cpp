@@ -20,13 +20,13 @@
 
 BOOL CALLBACK
 DSound::EnumCallback(LPGUID /* lpGuid */, LPCSTR lpcstrDescription, LPCSTR lpcstrModule, LPVOID /* lpContext */) {
-	RString sLine = ssprintf("DirectSound Driver: %s", lpcstrDescription);
+	std::string sLine = ssprintf("DirectSound Driver: %s", lpcstrDescription);
 	if (lpcstrModule[0]) {
 		sLine += ssprintf(" %s", lpcstrModule);
 
-		RString sPath = FindSystemFile(lpcstrModule);
+		std::string sPath = FindSystemFile(lpcstrModule);
 		if (!sPath.empty()) {
-			RString sVersion;
+			std::string sVersion;
 			if (GetFileVersion(sPath, sVersion))
 				sLine += ssprintf(" %s", sVersion.c_str());
 		}
