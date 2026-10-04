@@ -24,7 +24,7 @@ ThemeMetric<bool> CommonMetrics::AUTO_SET_STYLE("Common", "AutoSetStyle");
 ThemeMetric<int> CommonMetrics::PERCENT_SCORE_DECIMAL_PLACES("Common", "PercentScoreDecimalPlaces");
 ThemeMetric<RString> CommonMetrics::IMAGES_TO_CACHE("Common", "ImageCache");
 
-ThemeMetricDifficultiesToShow::ThemeMetricDifficultiesToShow(const RString &sGroup, const RString &sName)
+ThemeMetricDifficultiesToShow::ThemeMetricDifficultiesToShow(const std::string &sGroup, const std::string &sName)
     : ThemeMetric<RString>(sGroup, sName) {
 	// re-read because ThemeMetric::ThemeMetric calls ThemeMetric::Read, not the derived one
 	if (IsLoaded())
@@ -58,7 +58,7 @@ const std::vector<Difficulty> &ThemeMetricDifficultiesToShow::GetValue() const {
 	return m_v;
 }
 
-ThemeMetricCourseDifficultiesToShow::ThemeMetricCourseDifficultiesToShow(const RString &sGroup, const RString &sName)
+ThemeMetricCourseDifficultiesToShow::ThemeMetricCourseDifficultiesToShow(const std::string &sGroup, const std::string &sName)
     : ThemeMetric<RString>(sGroup, sName) {
 	// re-read because ThemeMetric::ThemeMetric calls ThemeMetric::Read, not the derived one
 	if (IsLoaded())
@@ -113,7 +113,7 @@ static void RemoveStepsTypes(std::vector<StepsType> &inout, RString sStepsTypesT
 			inout.erase(iter);
 	}
 }
-ThemeMetricStepsTypesToShow::ThemeMetricStepsTypesToShow(const RString &sGroup, const RString &sName)
+ThemeMetricStepsTypesToShow::ThemeMetricStepsTypesToShow(const std::string &sGroup, const std::string &sName)
     : ThemeMetric<RString>(sGroup, sName) {
 	// re-read because ThemeMetric::ThemeMetric calls ThemeMetric::Read, not the derived one
 	if (IsLoaded())

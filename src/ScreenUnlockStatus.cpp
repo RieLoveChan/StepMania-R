@@ -149,7 +149,7 @@ void ScreenUnlockStatus::Init() {
 				// ssprintf("diffusealpha,0;sleep,%f;diffusealpha,1;linear,%f;y,%f;linear,%f;y,%f;linear,0.1;diffusealpha,0",
 				// SECS_PER_CYCLE * (i - 1), FirstCycleTime, StopOffPoint, SecondCycleTime * 2, ScrollingTextEndY).c_str()
 				// );
-				RString sCommand = ssprintf(
+				std::string sCommand = ssprintf(
 				   "diffusealpha,0;sleep,%f;diffusealpha,1;linear,%f;y,%f;linear,%f;y,%f;linear,0.1;diffusealpha,0",
 				   SECS_PER_CYCLE * (i - 1),
 				   FirstCycleTime,
@@ -160,7 +160,7 @@ void ScreenUnlockStatus::Init() {
 				text->RunCommands(ActorUtil::ParseActorCommands(sCommand));
 			}
 			else {
-				RString sCommand = ssprintf(
+				std::string sCommand = ssprintf(
 				   "diffusealpha,0;sleep,%f;diffusealpha,1;linear,%f;y,%f;linear,0.1;diffusealpha,0",
 				   SECS_PER_CYCLE * (i - 1),
 				   SECS_PER_CYCLE * (ScrollingTextRows),
@@ -194,7 +194,7 @@ void ScreenUnlockStatus::Init() {
 					// ssprintf("diffusealpha,0;sleep,%f;diffusealpha,1;linear,%f;y,%f;linear,%f;y,%f;linear,0.1;diffusealpha,0",
 					// SECS_PER_CYCLE * (i - 1), FirstCycleTime, StopOffPoint, SecondCycleTime * 2,
 					// ScrollingTextEndY).c_str() );
-					RString sCommand = ssprintf(
+					std::string sCommand = ssprintf(
 					   "diffusealpha,0;sleep,%f;diffusealpha,1;linear,%f;y,%f;linear,%f;y,%f;linear,0.1;diffusealpha,0",
 					   SECS_PER_CYCLE * (i - 1),
 					   FirstCycleTime,
@@ -205,7 +205,7 @@ void ScreenUnlockStatus::Init() {
 					IconCount->RunCommands(ActorUtil::ParseActorCommands(sCommand));
 				}
 				else {
-					RString sCommand = ssprintf(
+					std::string sCommand = ssprintf(
 					   "diffusealpha,0;sleep,%f;diffusealpha,1;linear,%f;y,%f;linear,0.1;diffusealpha,0",
 					   SECS_PER_CYCLE * (i - 1),
 					   SECS_PER_CYCLE * (ScrollingTextRows),
@@ -265,7 +265,7 @@ void ScreenUnlockStatus::Init() {
 
 			NewText->SetXY(ScrollingTextX, ScrollingTextStartY);
 			{
-				RString sCommand = ssprintf(
+				std::string sCommand = ssprintf(
 				   "diffusealpha,0;sleep,%f;diffusealpha,1;linear,%f;y,%f;",
 				   SECS_PER_CYCLE * (NumUnlocks + 2 * i - 2),
 				   SECS_PER_CYCLE * ((ScrollingTextRows - i) * 2 + 1),
@@ -282,7 +282,7 @@ void ScreenUnlockStatus::Init() {
 			NewIcon->SetHeight(UNLOCK_TEXT_SCROLL_ICON_SIZE);
 			NewIcon->SetWidth(UNLOCK_TEXT_SCROLL_ICON_SIZE);
 			{
-				RString sCommand = ssprintf(
+				std::string sCommand = ssprintf(
 				   "diffusealpha,0;sleep,%f;diffusealpha,1;linear,%f;y,%f;",
 				   SECS_PER_CYCLE * (NumUnlocks + 2 * i - 2),
 				   SECS_PER_CYCLE * ((ScrollingTextRows - i) * 2 + 1),

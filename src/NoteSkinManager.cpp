@@ -344,7 +344,7 @@ std::string NoteSkinManager::GetPath(const std::string &sButtonName, const std::
 			sPaths += dir;
 		}
 
-		RString message = ssprintf(
+		std::string message = ssprintf(
 		   "The NoteSkin element \"%s %s\" could not be found in any of the following directories:\n%s",
 		   sButtonName.c_str(),
 		   sElement.c_str(),
@@ -386,7 +386,7 @@ std::string NoteSkinManager::GetPath(const std::string &sButtonName, const std::
 		}
 
 		if (sRealPath.empty()) {
-			RString message = ssprintf(
+			std::string message = ssprintf(
 			   "NoteSkinManager:  The redirect \"%s\" points to the file \"%s\", which does not exist. "
 			   "Verify that this redirect is correct.",
 			   sPath.c_str(),
@@ -484,7 +484,7 @@ std::string NoteSkinManager::GetPathFromDirAndFile(const std::string &sDir, cons
 		return std::string();
 
 	if (matches.size() > 1) {
-		RString sError = "Multiple files match '" + sDir + sFileName + "'.  Please remove all but one of these files: ";
+		std::string sError = "Multiple files match '" + sDir + sFileName + "'.  Please remove all but one of these files: ";
 		sError += join(", ", matches);
 		LuaHelpers::ReportScriptError(sError, "NOTESKIN_ERROR");
 	}

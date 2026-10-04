@@ -305,7 +305,7 @@ Player::~Player() {
 
 /* Init() does the expensive stuff: load sounds and noteskins.  Load() just loads a NoteData. */
 void Player::Init(
-   const RString &sType,
+   const std::string &sType,
    PlayerState *pPlayerState,
    PlayerStageStats *pPlayerStageStats,
    LifeMeter *pLM,

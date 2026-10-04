@@ -59,9 +59,9 @@ void AddTypeExtensionsToList(FileType ft, std::vector<std::string> &add_to);
 // Every screen should register its class at program initialization.
 void Register(const std::string &sClassName, CreateActorFn pfn);
 
-apActorCommands ParseActorCommands(const RString &sCommands, const RString &sName = "");
+apActorCommands ParseActorCommands(const std::string &sCommands, const std::string &sName = "");
 void SetXY(Actor &actor, const std::string &sMetricsGroup);
-inline void PlayCommand(Actor &actor, const RString &sCommandName) {
+inline void PlayCommand(Actor &actor, const std::string &sCommandName) {
 	actor.PlayCommand(sCommandName);
 }
 inline void OnCommand(Actor &actor) {
@@ -108,7 +108,7 @@ inline void LoadAllCommandsAndSetXYAndOnCommand(Actor &actor, const std::string 
 inline void SetXY(Actor *pActor, const std::string &sMetricsGroup) {
 	SetXY(*pActor, sMetricsGroup);
 }
-inline void PlayCommand(Actor *pActor, const RString &sCommandName) {
+inline void PlayCommand(Actor *pActor, const std::string &sCommandName) {
 	if (pActor)
 		pActor->PlayCommand(sCommandName);
 }

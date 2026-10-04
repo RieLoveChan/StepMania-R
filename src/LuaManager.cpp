@@ -762,13 +762,13 @@ bool LuaHelpers::LoadScript(Lua *L, const std::string &sScript, const std::strin
 	return true;
 }
 
-void LuaHelpers::ScriptErrorMessage(RString const &Error) {
+void LuaHelpers::ScriptErrorMessage(std::string const &Error) {
 	Message msg("ScriptError");
 	msg.SetParam("message", Error);
 	MESSAGEMAN->Broadcast(msg);
 }
 
-Dialog::Result LuaHelpers::ReportScriptError(RString const &Error, RString ErrorType, bool UseAbort) {
+Dialog::Result LuaHelpers::ReportScriptError(std::string const &Error, std::string ErrorType, bool UseAbort) {
 	// Protect from a recursion loop resulting from a mistake in the error reporting lua.
 	if (!InReportScriptError) {
 		InReportScriptError = true;
@@ -777,7 +777,7 @@ Dialog::Result LuaHelpers::ReportScriptError(RString const &Error, RString Error
 	}
 	LOG_ERROR(Log::Lua, "%s", Error.c_str());
 	if (UseAbort) {
-		RString with_correct = Error + "  Correct this and click Retry, or Cancel to break.";
+		std::string with_correct = Error + "  Correct this and click Retry, or Cancel to break.";
 		return Dialog::AbortRetryIgnore(with_correct, ErrorType);
 	}
 	// Dialog::OK(Error, ErrorType);
@@ -852,8 +852,8 @@ bool LuaHelpers::RunExpression(Lua *L, const std::string &sExpression, const std
 	return true;
 }
 
-void LuaHelpers::ParseCommandList(Lua *L, const RString &sCommands, const RString &sName, bool bLegacy) {
-	RString sLuaFunction;
+void LuaHelpers::ParseCommandList(Lua *L, const std::string &sCommands, const std::string &sName, bool bLegacy) {
+	std::string sLuaFunction;
 	if (!sCommands.empty() && sCommands[0] == '\033') {
 		// This is a compiled Lua chunk. Just pass it on directly.
 		sLuaFunction = sCommands;
@@ -1076,8 +1076,8 @@ static int GetThreadVariable(lua_State *L) {
 }
 
 static int ReportScriptError(lua_State *L) {
-	RString error = "Script error occurred.";
-	RString error_type = "LUA_ERROR";
+	std::string error = "Script error occurred.";
+	std::string error_type = "LUA_ERROR";
 	if (lua_isstring(L, 1)) {
 		error = SArg(1);
 	}

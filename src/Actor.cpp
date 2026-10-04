@@ -1385,7 +1385,7 @@ void Actor::QueueMessage(const std::string &sMessageName) {
 
 void Actor::AddCommand(const std::string &sCmdName, apActorCommands apac, bool warn) {
 	if (HasCommand(sCmdName) && warn) {
-		RString sWarning = GetLineage() + "'s command '" + sCmdName + "' defined twice";
+		std::string sWarning = GetLineage() + "'s command '" + sCmdName + "' defined twice";
 		LuaHelpers::ReportScriptError(sWarning, "COMMAND_DEFINED_TWICE");
 	}
 

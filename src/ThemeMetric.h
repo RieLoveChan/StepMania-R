@@ -59,7 +59,7 @@ template <class T> class ThemeMetric : public IThemeMetric {
 	 * call Load() to set them.  This is done to allow initializing cached metrics
 	 * in one place for classes that don't receive their m_sName in the constructor
 	 * (everything except screens). */
-	ThemeMetric(const RString &sGroup = "", const RString &sName = "")
+	ThemeMetric(const std::string &sGroup = "", const std::string &sName = "")
 	    : m_sGroup(sGroup), m_sName(sName), m_Value(), m_currentValue(T()), m_bCallEachTime(false) {
 		ThemeManager::Subscribe(this);
 	}
@@ -78,13 +78,13 @@ template <class T> class ThemeMetric : public IThemeMetric {
 	 * @brief Load the chosen metric from the .ini file.
 	 * @param sGroup the group the metric is in.
 	 * @param sName the name of the metric. */
-	void Load(const RString &sGroup, const RString &sName) {
+	void Load(const std::string &sGroup, const std::string &sName) {
 		m_sGroup = sGroup;
 		m_sName = sName;
 		Read();
 	}
 
-	void ChangeGroup(const RString &sGroup) {
+	void ChangeGroup(const std::string &sGroup) {
 		m_sGroup = sGroup;
 		Read();
 	}

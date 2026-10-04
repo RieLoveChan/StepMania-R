@@ -774,7 +774,7 @@ void Sprite::SetState(int iNewState) {
 		   (m_pTexture->GetID().filename.find("_blank") == std::string::npos &&
 			 m_pTexture->GetID().filename.find("_missing") == std::string::npos)
 		) {
-			RString sError;
+			std::string sError;
 			if (m_pTexture)
 				sError = ssprintf(
 				   "A Sprite '%s' (\"%s\") tried to set state to frame %d, but it has only %u frames.",

@@ -52,7 +52,7 @@ bool ActorUtil::ResolvePath(std::string &sPath, const std::string &sName, bool o
 			if (optional) {
 				return false;
 			}
-			RString sError = ssprintf("%s: references a file \"%s\" which doesn't exist", sName.c_str(), sPath.c_str());
+			std::string sError = ssprintf("%s: references a file \"%s\" which doesn't exist", sName.c_str(), sPath.c_str());
 			switch (LuaHelpers::ReportScriptError(sError, "BROKEN_FILE_REFERENCE", true)) {
 			case Dialog::abort:
 				RageException::Throw("%s", sError.c_str());
@@ -70,7 +70,7 @@ bool ActorUtil::ResolvePath(std::string &sPath, const std::string &sName, bool o
 		THEME->FilterFileLanguages(asPaths);
 
 		if (asPaths.size() > 1) {
-			RString sError =
+			std::string sError =
 			   ssprintf("%s: references a file \"%s\" which has multiple matches", sName.c_str(), sPath.c_str());
 			sError += "\n" + join("\n", asPaths);
 			switch (LuaHelpers::ReportScriptError(sError, "BROKEN_FILE_REFERENCE", true)) {
@@ -199,7 +199,7 @@ Actor *ActorUtil::LoadFromNode(const XNode *_pNode, Actor *pParentActor) {
 		}
 
 		// sClass is invalid
-		RString sError = ssprintf("%s: invalid Class \"%s\"", ActorUtil::GetWhere(&node).c_str(), sClass.c_str());
+		std::string sError = ssprintf("%s: invalid Class \"%s\"", ActorUtil::GetWhere(&node).c_str(), sClass.c_str());
 		LuaHelpers::ReportScriptError(sError);
 		return new Actor; // Return a dummy object so that we don't crash in AutoActor later.
 	}
@@ -386,7 +386,7 @@ bool ActorUtil::GetAttrPath(const XNode *pNode, const std::string &sName, RStrin
 	return ActorUtil::ResolvePath(sOut, ActorUtil::GetWhere(pNode), optional);
 }
 
-apActorCommands ActorUtil::ParseActorCommands(const RString &sCommands, const RString &sName) {
+apActorCommands ActorUtil::ParseActorCommands(const std::string &sCommands, const std::string &sName) {
 	Lua *L = LUA->Get();
 	LuaHelpers::ParseCommandList(L, sCommands, sName, false);
 	LuaReference *pRet = new LuaReference;

@@ -78,7 +78,7 @@ class Player : public ActorFrame {
 	void UpdateHoldNotes(int iSongRow, float fDeltaTime, std::vector<TrackRowTapNote> &vTN);
 
 	void Init(
-	   const RString &sType,
+	   const std::string &sType,
 	   PlayerState *pPlayerState,
 	   PlayerStageStats *pPlayerStageStats,
 	   LifeMeter *pLM,

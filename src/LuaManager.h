@@ -68,9 +68,9 @@ bool LoadScript(Lua *L, const std::string &sScript, const std::string &sName, st
     and returns the result. */
 /* If UseAbort is false, reports the error through Dialog::OK and returns
     Dialog::ok. */
-Dialog::Result ReportScriptError(RString const &Error, RString ErrorType = "LUA_ERROR", bool UseAbort = false);
+Dialog::Result ReportScriptError(std::string const &Error, std::string ErrorType = "LUA_ERROR", bool UseAbort = false);
 // Just the broadcast message part, for things that need to do the rest differently.
-void ScriptErrorMessage(RString const &Error);
+void ScriptErrorMessage(std::string const &Error);
 // For convenience when replacing uses of LOG->Warn.
 void ReportScriptErrorFmt(const char *fmt, ...);
 
@@ -116,7 +116,7 @@ void DeepCopy(lua_State *L);
 // Read the table at the top of the stack back into a vector.
 void ReadArrayFromTableB(Lua *L, std::vector<bool> &aOut);
 
-void ParseCommandList(lua_State *L, const RString &sCommands, const RString &sName, bool bLegacy);
+void ParseCommandList(lua_State *L, const std::string &sCommands, const std::string &sName, bool bLegacy);
 
 XNode *GetLuaInformation();
 
@@ -256,7 +256,7 @@ inline bool TableContainsOnlyStrings(lua_State *L, int index) {
 // SafeFArg is for places that need to get a number off the lua stack, but
 // can't risk an error being raised.  IArg and luaL_optnumber would both raise
 // an error on a type mismatch. -Kyz
-inline int SafeFArg(lua_State *L, int index, RString const &err, int def) {
+inline int SafeFArg(lua_State *L, int index, std::string const &err, int def) {
 	if (lua_isnumber(L, index)) {
 		return static_cast<int>(lua_tonumber(L, index));
 	}

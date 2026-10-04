@@ -21,7 +21,7 @@ bool XmlFileUtil::LoadFromFileShowErrors(XNode &xml, RageFileBasic &f) {
 	if (sError.empty())
 		return true;
 
-	RString sWarning = ssprintf("XML: LoadFromFile failed: %s", sError.c_str());
+	std::string sWarning = ssprintf("XML: LoadFromFile failed: %s", sError.c_str());
 	LuaHelpers::ReportScriptError(sWarning, "XML_PARSE_ERROR");
 	return false;
 }
@@ -35,7 +35,7 @@ bool XmlFileUtil::LoadFromFileShowErrors(XNode &xml, const std::string &sFile) {
 
 	bool bSuccess = LoadFromFileShowErrors(xml, f);
 	if (!bSuccess) {
-		RString sWarning = ssprintf("XML: LoadFromFile failed for file: %s", sFile.c_str());
+		std::string sWarning = ssprintf("XML: LoadFromFile failed for file: %s", sFile.c_str());
 		LuaHelpers::ReportScriptError(sWarning, "XML_PARSE_ERROR");
 	}
 	return bSuccess;

@@ -14,7 +14,7 @@ class ThemeMetricDifficultiesToShow : public ThemeMetric<RString> {
  public:
 	ThemeMetricDifficultiesToShow() : m_v() {
 	}
-	ThemeMetricDifficultiesToShow(const RString &sGroup, const RString &sName);
+	ThemeMetricDifficultiesToShow(const std::string &sGroup, const std::string &sName);
 	void Read();
 	const std::vector<Difficulty> &GetValue() const;
 
@@ -25,7 +25,7 @@ class ThemeMetricCourseDifficultiesToShow : public ThemeMetric<RString> {
  public:
 	ThemeMetricCourseDifficultiesToShow() : m_v() {
 	}
-	ThemeMetricCourseDifficultiesToShow(const RString &sGroup, const RString &sName);
+	ThemeMetricCourseDifficultiesToShow(const std::string &sGroup, const std::string &sName);
 	void Read();
 	const std::vector<CourseDifficulty> &GetValue() const;
 
@@ -36,7 +36,7 @@ class ThemeMetricStepsTypesToShow : public ThemeMetric<RString> {
  public:
 	ThemeMetricStepsTypesToShow() : m_v() {
 	}
-	ThemeMetricStepsTypesToShow(const RString &sGroup, const RString &sName);
+	ThemeMetricStepsTypesToShow(const std::string &sGroup, const std::string &sName);
 	void Read();
 	const std::vector<StepsType> &GetValue() const;
 

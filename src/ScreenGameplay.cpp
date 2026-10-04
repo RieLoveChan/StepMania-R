@@ -497,7 +497,7 @@ void ScreenGameplay::Init() {
 		Enum::Push(L, GAMESTATE->GetCurrentStyle(PLAYER_INVALID)->m_StyleType);
 		std::string err = "Error running MarginFunction:  ";
 		if (LuaHelpers::RunScriptOnStack(L, err, 2, 3, true)) {
-			RString marge = "Margin value must be a number.";
+			std::string marge = "Margin value must be a number.";
 			margins[PLAYER_1][0] = static_cast<float>(SafeFArg(L, -3, marge, 40));
 			float center = static_cast<float>(SafeFArg(L, -2, marge, 80));
 			margins[PLAYER_1][1] = center / 2.0f;
@@ -756,7 +756,7 @@ void ScreenGameplay::Init() {
 		m_pSongBackground->Init();
 
 	FOREACH_EnabledPlayerInfo(m_vPlayerInfo, pi) {
-		RString sType = PLAYER_TYPE;
+		std::string sType = PLAYER_TYPE.GetValue();
 		if (pi->m_bIsDummy)
 			sType += "Dummy";
 		pi->m_pPlayer->Init(
