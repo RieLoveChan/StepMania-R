@@ -386,9 +386,9 @@ void BGAnimationLayer::LoadFromNode(const XNode *pNode) {
 
 	bool bStretch = false;
 	{
-		RString type = "sprite";
+		std::string type = "sprite";
 		pNode->GetAttrValue("Type", type);
-		type.MakeLower();
+		MakeLower(&type[0], type.size());
 
 		/* The preferred way of stretching a sprite to fit the screen is "Type=sprite"
 		 * and "stretch=1".  "type=1" is for backwards-compatibility. */
@@ -397,13 +397,13 @@ void BGAnimationLayer::LoadFromNode(const XNode *pNode) {
 		// Check for string match first, then do integer match.
 		// "if(StringType(type)==0)" was matching against all string matches.
 		// -Chris
-		if (type.EqualsNoCase("sprite")) {
+		if (StrEqualsNoCase(type, "sprite")) {
 			m_Type = TYPE_SPRITE;
 		}
-		else if (type.EqualsNoCase("particles")) {
+		else if (StrEqualsNoCase(type, "particles")) {
 			m_Type = TYPE_PARTICLES;
 		}
-		else if (type.EqualsNoCase("tiles")) {
+		else if (StrEqualsNoCase(type, "tiles")) {
 			m_Type = TYPE_TILES;
 		}
 		else if (StringToInt(type) == 1) {

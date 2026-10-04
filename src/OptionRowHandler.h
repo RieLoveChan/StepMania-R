@@ -47,7 +47,7 @@ LuaDeclareType(ReloadChanged);
 /** @brief Define the purpose of the OptionRow. */
 struct OptionRowDefinition {
 	/** @brief the name of the option row. */
-	RString m_sName;
+	std::string m_sName;
 	/** @brief an explanation of the row's purpose. */
 	std::string m_sExplanationName;
 	/** @brief Do all players have to share one option from the row? */
@@ -133,7 +133,7 @@ struct OptionRowDefinition {
 	   const char *c18 = nullptr,
 	   const char *c19 = nullptr
 	)
-	    : m_sName(n), m_sExplanationName(""), m_bOneChoiceForAllPlayers(b), m_selectType(SELECT_ONE),
+	    : m_sName(n != nullptr ? n : ""), m_sExplanationName(""), m_bOneChoiceForAllPlayers(b), m_selectType(SELECT_ONE),
 	      m_layoutType(LAYOUT_SHOW_ALL_IN_ROW), m_vsChoices(), m_vEnabledForPlayers(), m_iDefault(-1),
 	      m_bExportOnChange(false), m_bAllowThemeItems(true), m_bAllowThemeTitle(true), m_bAllowExplanation(true),
 	      m_bShowChoicesListOnSelect(false) {
@@ -239,7 +239,7 @@ void SelectExactlyOne(int iSelection, std::vector<bool> &vbSelectedOut);
 int GetOneSelection(const std::vector<bool> &vbSelected);
 } // namespace OptionRowHandlerUtil
 
-inline void VerifySelected(SelectType st, std::vector<bool> &selected, const RString &sName) {
+inline void VerifySelected(SelectType st, std::vector<bool> &selected, const std::string &sName) {
 	int num_selected = 0;
 	if (st == SELECT_ONE) {
 		std::size_t first_selected = std::numeric_limits<std::size_t>::max();

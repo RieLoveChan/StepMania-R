@@ -12,16 +12,16 @@
 #include <set>
 #include <vector>
 
-static RageSurface *TryOpenFile(std::string sPath, bool bHeaderOnly, std::string &error, RString format, bool &bKeepTrying) {
+static RageSurface *TryOpenFile(std::string sPath, bool bHeaderOnly, std::string &error, std::string format, bool &bKeepTrying) {
 	RageSurface *ret = nullptr;
 	RageSurfaceUtils::OpenResult result;
-	if (!format.CompareNoCase("png"))
+	if (!StrCompareNoCase(format, "png"))
 		result = RageSurface_Load_PNG(sPath, ret, bHeaderOnly, error);
-	else if (!format.CompareNoCase("gif"))
+	else if (!StrCompareNoCase(format, "gif"))
 		result = RageSurface_Load_GIF(sPath, ret, bHeaderOnly, error);
-	else if (!format.CompareNoCase("jpg") || !format.CompareNoCase("jpeg"))
+	else if (!StrCompareNoCase(format, "jpg") || !StrCompareNoCase(format, "jpeg"))
 		result = RageSurface_Load_JPEG(sPath, ret, bHeaderOnly, error);
-	else if (!format.CompareNoCase("bmp"))
+	else if (!StrCompareNoCase(format, "bmp"))
 		result = RageSurface_Load_BMP(sPath, ret, bHeaderOnly, error);
 	else {
 		error = "Unsupported format";

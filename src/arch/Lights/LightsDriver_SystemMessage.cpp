@@ -18,7 +18,7 @@ void LightsDriver_SystemMessage::Set(const LightsState *ls) {
 	if (!PREFSMAN->m_bDebugLights)
 		return;
 
-	RString s;
+	std::string s;
 
 	s += LightsModeToString(LIGHTSMAN->GetLightsMode()) + "\n";
 

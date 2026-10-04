@@ -114,10 +114,10 @@ std::string GetLegacyActorClass(XNode *pActor) {
 	if (pActor->GetAttr("Text") != nullptr)
 		return "BitmapText";
 
-	RString sFile;
+	std::string sFile;
 	if (pActor->GetAttrValue("File", sFile) && !sFile.empty()) {
 		// Backward compatibility hacks for "special" filenames
-		if (sFile.EqualsNoCase("songbackground")) {
+		if (StrEqualsNoCase(sFile, "songbackground")) {
 			XNodeStringValue *pVal = new XNodeStringValue;
 			Song *pSong = GAMESTATE->m_pCurSong;
 			if (pSong && pSong->HasBackground())
@@ -127,7 +127,7 @@ std::string GetLegacyActorClass(XNode *pActor) {
 			pActor->AppendAttrFrom("Texture", pVal, false);
 			return "Sprite";
 		}
-		else if (sFile.EqualsNoCase("songbanner")) {
+		else if (StrEqualsNoCase(sFile, "songbanner")) {
 			XNodeStringValue *pVal = new XNodeStringValue;
 			Song *pSong = GAMESTATE->m_pCurSong;
 			if (pSong && pSong->HasBanner())
@@ -137,7 +137,7 @@ std::string GetLegacyActorClass(XNode *pActor) {
 			pActor->AppendAttrFrom("Texture", pVal, false);
 			return "Sprite";
 		}
-		else if (sFile.EqualsNoCase("coursebanner")) {
+		else if (StrEqualsNoCase(sFile, "coursebanner")) {
 			XNodeStringValue *pVal = new XNodeStringValue;
 			Course *pCourse = GAMESTATE->m_pCurCourse;
 			if (pCourse && pCourse->HasBanner())

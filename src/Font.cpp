@@ -406,7 +406,7 @@ std::string Font::GetPageNameFromFileName(const std::string &sFilename) {
 }
 
 void Font::LoadFontPageSettings(
-   FontPageSettings &cfg, IniFile &ini, const RString &sTexturePath, const RString &sPageName, RString sChars
+   FontPageSettings &cfg, IniFile &ini, const std::string &sTexturePath, const std::string &sPageName, std::string sChars
 ) {
 	cfg.m_sTexturePath = sTexturePath;
 
@@ -784,7 +784,7 @@ void Font::Load(const std::string &sIniPath, std::string sChars) {
 		const std::string &sTexturePath = asTexturePaths[i];
 
 		// Grab the page name, eg "foo" from "Normal [foo].png".
-		RString sPagename = GetPageNameFromFileName(sTexturePath);
+		std::string sPagename = GetPageNameFromFileName(sTexturePath);
 
 		// Ignore stroke textures
 		if (sTexturePath.find("-stroke") != std::string::npos)

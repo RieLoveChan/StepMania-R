@@ -155,10 +155,10 @@ class Steps {
 	void SetDifficulty(Difficulty dc) {
 		SetDifficultyAndDescription(dc, GetDescription());
 	}
-	void SetDescription(RString sDescription) {
+	void SetDescription(std::string sDescription) {
 		SetDifficultyAndDescription(this->GetDifficulty(), sDescription);
 	}
-	void SetDifficultyAndDescription(Difficulty dc, RString sDescription);
+	void SetDifficultyAndDescription(Difficulty dc, std::string sDescription);
 	void SetCredit(RString sCredit);
 	void SetChartStyle(RString sChartStyle);
 	static bool MakeValidEditDescription(std::string &sPreferredDescription); // return true if was modified

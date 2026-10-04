@@ -381,6 +381,22 @@ void MakeLower(wchar_t *p, std::size_t iLen);
  * replacement. Equivalent to CStdStr::Replace(PCMYSTR, PCMYSTR). */
 void ReplaceAll(std::string &s, const char *szOld, const char *szNew);
 
+/* Case-insensitive comparison for std::string, equal to CStdStr::CompareNoCase /
+ * EqualsNoCase (StdString::ssicmp on c_str()). The const char* overload must not
+ * be passed NULL. */
+inline int StrCompareNoCase(const std::string &s, const char *szThat) {
+	return StdString::ssicmp(s.c_str(), szThat);
+}
+inline int StrCompareNoCase(const std::string &s, const std::string &sThat) {
+	return StdString::ssicmp(s.c_str(), sThat.c_str());
+}
+inline bool StrEqualsNoCase(const std::string &s, const char *szThat) {
+	return StrCompareNoCase(s, szThat) == 0;
+}
+inline bool StrEqualsNoCase(const std::string &s, const std::string &sThat) {
+	return StrCompareNoCase(s, sThat) == 0;
+}
+
 // TODO: Have the three functions below be moved to better locations.
 float StringToFloat(const RString &sString);
 bool StringToFloat(const RString &sString, float &fOut);

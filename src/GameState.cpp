@@ -214,7 +214,7 @@ void GameState::ApplyGameCommand(const RString &sCommand, PlayerNumber pn) {
 	GameCommand m;
 	m.Load(0, ParseCommands(sCommand));
 
-	RString sWhy;
+	std::string sWhy;
 	if (!m.IsPlayable(&sWhy)) {
 		LuaHelpers::ReportScriptErrorFmt("Can't apply GameCommand \"%s\": %s", sCommand.c_str(), sWhy.c_str());
 		return;
@@ -2961,7 +2961,7 @@ class LunaGameState : public Luna<GameState> {
 		StepsType stype = Enum::Check<StepsType>(L, 3);
 		Enum::Check<Difficulty>(L, 4); // Validate the arg; the resulting Difficulty isn't otherwise used here.
 		Steps *new_steps = song->CreateSteps();
-		RString edit_name;
+		std::string edit_name;
 		// Form 2.
 		if (steps == nullptr) {
 			new_steps->CreateBlank(stype);

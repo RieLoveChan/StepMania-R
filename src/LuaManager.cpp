@@ -45,6 +45,7 @@ template <> void Push<bool>(lua_State *L, const bool &Object);
 template <> void Push<float>(lua_State *L, const float &Object);
 template <> void Push<int>(lua_State *L, const int &Object);
 template <> void Push<RString>(lua_State *L, const RString &Object);
+template <> void Push<std::string>(lua_State *L, std::string const &object);
 
 template <> bool FromStack<bool>(Lua *L, bool &Object, int iOffset);
 template <> bool FromStack<float>(Lua *L, float &Object, int iOffset);
@@ -63,7 +64,7 @@ void LuaManager::SetGlobal(const std::string &sName, int val) {
 	Release(L);
 }
 
-void LuaManager::SetGlobal(const std::string &sName, const RString &val) {
+void LuaManager::SetGlobal(const std::string &sName, const std::string &val) {
 	Lua *L = Get();
 	LuaHelpers::Push(L, val);
 	lua_setglobal(L, sName.c_str());

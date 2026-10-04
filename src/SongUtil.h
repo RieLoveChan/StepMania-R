@@ -160,10 +160,10 @@ int CompareSongPointersByGroup(const Song *pSong1, const Song *pSong2);
  * @return true if it is unique, false otherwise.
  */
 bool IsEditDescriptionUnique(
-   const Song *pSong, StepsType st, const RString &sPreferredDescription, const Steps *pExclude
+   const Song *pSong, StepsType st, const std::string &sPreferredDescription, const Steps *pExclude
 );
 bool IsChartNameUnique(const Song *pSong, StepsType st, const RString &name, const Steps *pExclude);
-std::string MakeUniqueEditDescription(const Song *pSong, StepsType st, const RString &sPreferredDescription);
+std::string MakeUniqueEditDescription(const Song *pSong, StepsType st, const std::string &sPreferredDescription);
 bool ValidateCurrentEditStepsDescription(const RString &sAnswer, RString &sErrorOut);
 bool ValidateCurrentStepsDescription(const RString &sAnswer, RString &sErrorOut);
 bool ValidateCurrentStepsCredit(const RString &sAnswer, RString &sErrorOut);

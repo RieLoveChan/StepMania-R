@@ -144,7 +144,7 @@ void OptionRow::LoadExit() {
 }
 
 void OptionRow::ChoicesChanged(RowType type, bool reset_focus) {
-	ASSERT_M(!m_pHand->m_Def.m_vsChoices.empty(), m_pHand->m_Def.m_sName + " has no choices");
+	ASSERT_M(!m_pHand->m_Def.m_vsChoices.empty(), (m_pHand->m_Def.m_sName + " has no choices").c_str());
 
 	// Remove the NextRow marker before reloading choices
 	if (m_pHand->m_Def.m_vsChoices[0] == NEXT_ROW_NAME) {
@@ -183,7 +183,7 @@ std::string OptionRow::GetRowTitle() const {
 	std::string sTitle = m_pHand->OptionTitle();
 
 	// HACK: tack the BPM onto the name of the speed line
-	if (m_pHand->m_Def.m_sName.CompareNoCase("speed") == 0) {
+	if (StrCompareNoCase(m_pHand->m_Def.m_sName, "speed") == 0) {
 		bool bShowBpmInSpeedTitle = m_pParentType->SHOW_BPM_IN_SPEED_TITLE;
 
 		if (GAMESTATE->m_pCurCourse) {
@@ -882,7 +882,7 @@ class LunaOptionRow : public Luna<OptionRow> {
 	}
 	DEFINE_METHOD(GetLayoutType, GetHandler()->m_Def.m_layoutType)
 	static int GetName(T *p, lua_State *L) {
-		lua_pushstring(L, p->GetHandler()->m_Def.m_sName);
+		lua_pushstring(L, p->GetHandler()->m_Def.m_sName.c_str());
 		return 1;
 	}
 	static int GetNumChoices(T *p, lua_State *L) {

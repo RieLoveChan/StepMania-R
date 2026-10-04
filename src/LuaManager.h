@@ -44,7 +44,7 @@ class LuaManager {
 	void RegisterTypes();
 
 	void SetGlobal(const std::string &sName, int val);
-	void SetGlobal(const std::string &sName, const RString &val);
+	void SetGlobal(const std::string &sName, const std::string &val);
 	void UnsetGlobal(const std::string &sName);
 
  private:

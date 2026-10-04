@@ -275,7 +275,7 @@ bool ScreenEditMenu::MenuStart(const InputEventPlus &) {
 				FAIL_M("Cannot create steps in EditMode_Practice");
 			}
 
-			RString sEditName;
+			std::string sEditName;
 			if (pSourceSteps) {
 				pSteps->CopyFrom(pSourceSteps, st, pSong->m_fMusicLengthSeconds);
 				sEditName = GetCopyDescription(pSourceSteps);

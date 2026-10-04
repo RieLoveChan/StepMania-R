@@ -603,25 +603,25 @@ RageDisplay *CreateDisplay() {
 
 	RageDisplay *pRet = nullptr;
 	for (unsigned i = 0; i < asRenderers.size(); i++) {
-		RString sRenderer = asRenderers[i];
+		std::string sRenderer = asRenderers[i];
 
-		if (sRenderer.CompareNoCase("opengl") == 0) {
+		if (StrCompareNoCase(sRenderer, "opengl") == 0) {
 #if defined(SUPPORT_OPENGL)
 			pRet = new RageDisplay_Legacy;
 #endif
 		}
-		else if (sRenderer.CompareNoCase("gles2") == 0) {
+		else if (StrCompareNoCase(sRenderer, "gles2") == 0) {
 #if defined(SUPPORT_GLES2)
 			pRet = new RageDisplay_GLES2;
 #endif
 		}
-		else if (sRenderer.CompareNoCase("d3d") == 0) {
+		else if (StrCompareNoCase(sRenderer, "d3d") == 0) {
 // TODO: ANGLE/RageDisplay_Modern
 #if defined(SUPPORT_D3D)
 			pRet = new RageDisplay_D3D;
 #endif
 		}
-		else if (sRenderer.CompareNoCase("null") == 0) {
+		else if (StrCompareNoCase(sRenderer, "null") == 0) {
 			return new RageDisplay_Null;
 		}
 		else {

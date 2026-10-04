@@ -13,16 +13,16 @@
 #include "RageSoundReader_Vorbisfile.h"
 
 RageSoundReader_FileReader *
-RageSoundReader_FileReader::TryOpenFile(RageFileBasic *pFile, std::string &error, RString format, bool &bKeepTrying) {
+RageSoundReader_FileReader::TryOpenFile(RageFileBasic *pFile, std::string &error, std::string format, bool &bKeepTrying) {
 	RageSoundReader_FileReader *Sample = nullptr;
 
-	if (!format.CompareNoCase("wav"))
+	if (!StrCompareNoCase(format, "wav"))
 		Sample = new RageSoundReader_WAV;
 
-	if (!format.CompareNoCase("mp3"))
+	if (!StrCompareNoCase(format, "mp3"))
 		Sample = new RageSoundReader_MP3;
 
-	if (!format.CompareNoCase("oga") || !format.CompareNoCase("ogg"))
+	if (!StrCompareNoCase(format, "oga") || !StrCompareNoCase(format, "ogg"))
 		Sample = new RageSoundReader_Vorbisfile;
 
 	if (!Sample)

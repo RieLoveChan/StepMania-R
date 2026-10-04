@@ -17,17 +17,17 @@ static bool GetRegKeyType(const RString &sIn, std::string &sOut, HKEY &key) {
 		return false;
 	}
 
-	RString sType = sIn.substr(0, iBackslash);
+	std::string sType = sIn.substr(0, iBackslash);
 
-	if (!sType.CompareNoCase("HKEY_CLASSES_ROOT"))
+	if (!StrCompareNoCase(sType, "HKEY_CLASSES_ROOT"))
 		key = HKEY_CLASSES_ROOT;
-	else if (!sType.CompareNoCase("HKEY_CURRENT_CONFIG"))
+	else if (!StrCompareNoCase(sType, "HKEY_CURRENT_CONFIG"))
 		key = HKEY_CURRENT_CONFIG;
-	else if (!sType.CompareNoCase("HKEY_CURRENT_USER"))
+	else if (!StrCompareNoCase(sType, "HKEY_CURRENT_USER"))
 		key = HKEY_CURRENT_USER;
-	else if (!sType.CompareNoCase("HKEY_LOCAL_MACHINE"))
+	else if (!StrCompareNoCase(sType, "HKEY_LOCAL_MACHINE"))
 		key = HKEY_LOCAL_MACHINE;
-	else if (!sType.CompareNoCase("HKEY_USERS"))
+	else if (!StrCompareNoCase(sType, "HKEY_USERS"))
 		key = HKEY_USERS;
 	else {
 		LOG->Warn("Invalid registry key: \"%s\" ", sIn.c_str());

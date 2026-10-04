@@ -56,7 +56,7 @@ std::string OptionRowHandler::OptionTitle() const {
 	if (m_Def.m_bAllowThemeTitle)
 		bTheme = true;
 
-	RString s = m_Def.m_sName;
+	std::string s = m_Def.m_sName;
 	if (s.empty())
 		return s;
 
@@ -215,7 +215,7 @@ class OptionRowHandlerList : public OptionRowHandler {
 					mc.m_sName = "";
 				}
 
-				RString why;
+				std::string why;
 				if (!mc.IsPlayable(&why)) {
 					LuaHelpers::ReportScriptErrorFmt(
 					   "\"%s\" choice %d is not playable: %s", sParam.c_str(), col, why.c_str()
@@ -331,7 +331,7 @@ class OptionRowHandlerList : public OptionRowHandler {
 
 	ReloadChanged Reload() override {
 		// HACK: always reload "speed", to update the BPM text in the name of the speed line
-		if (!m_Def.m_sName.CompareNoCase("speed"))
+		if (!StrCompareNoCase(m_Def.m_sName, "speed"))
 			return RELOAD_CHANGED_ALL;
 
 		return OptionRowHandler::Reload();
@@ -989,7 +989,7 @@ class OptionRowHandlerLua : public OptionRowHandler {
 
 		lua_getfield(L, -1, "Name");
 		const char *pStr = lua_tostring(L, -1);
-		m_Def.m_sName = pStr;
+		m_Def.m_sName = pStr != nullptr ? pStr : "";
 		lua_pop(L, 1);
 
 		lua_getfield(L, -1, "GoToFirstOnStart");
@@ -1480,28 +1480,28 @@ OptionRowHandler *OptionRowHandlerUtil::Make(const Commands &cmds) {
 	// XXX: merge these, and merge "Steps" and "list,Steps"
 	if (name == "list") {
 		const Command &command = cmds.v[0];
-		RString sParam = command.GetArg(1).s;
+		std::string sParam = command.GetArg(1).s;
 		ROW_INVALID_IF(
 		   command.m_vsArgs.size() != 2 || sParam.empty(), "list row command must be 'list,name' or 'list,type'.", nullptr
 		);
 
-		if (sParam.CompareNoCase("NoteSkins") == 0)
+		if (StrCompareNoCase(sParam, "NoteSkins") == 0)
 			MAKE(OptionRowHandlerListNoteSkins)
-		else if (sParam.CompareNoCase("Steps") == 0)
+		else if (StrCompareNoCase(sParam, "Steps") == 0)
 			MAKE(OptionRowHandlerListSteps)
-		else if (sParam.CompareNoCase("StepsLocked") == 0) {
+		else if (StrCompareNoCase(sParam, "StepsLocked") == 0) {
 			MAKE(OptionRowHandlerListSteps);
 			pHand->m_Def.m_bOneChoiceForAllPlayers = true;
 		}
-		else if (sParam.CompareNoCase("Characters") == 0)
+		else if (StrCompareNoCase(sParam, "Characters") == 0)
 			MAKE(OptionRowHandlerListCharacters)
-		else if (sParam.CompareNoCase("Styles") == 0)
+		else if (StrCompareNoCase(sParam, "Styles") == 0)
 			MAKE(OptionRowHandlerListStyles)
-		else if (sParam.CompareNoCase("Groups") == 0)
+		else if (StrCompareNoCase(sParam, "Groups") == 0)
 			MAKE(OptionRowHandlerListGroups)
-		else if (sParam.CompareNoCase("Difficulties") == 0)
+		else if (StrCompareNoCase(sParam, "Difficulties") == 0)
 			MAKE(OptionRowHandlerListDifficulties)
-		else if (sParam.CompareNoCase("SongsInCurrentSongGroup") == 0)
+		else if (StrCompareNoCase(sParam, "SongsInCurrentSongGroup") == 0)
 			MAKE(OptionRowHandlerListSongsInCurrentSongGroup)
 		else
 			MAKE(OptionRowHandlerList)

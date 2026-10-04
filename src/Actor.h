@@ -787,7 +787,7 @@ class Actor : public MessageSubscriber {
 	void SetEffectClock(EffectClock c) {
 		m_EffectClock = c;
 	}
-	void SetEffectClockString(const RString &s); // convenience
+	void SetEffectClockString(const std::string &s); // convenience
 
 	void SetEffectMagnitude(RageVector3 vec) {
 		m_vEffectMagnitude = vec;

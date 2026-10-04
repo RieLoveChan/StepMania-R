@@ -12,7 +12,7 @@
 
 #include <vector>
 
-void PrepareToLoadScreen(const RString &sScreenName);
+void PrepareToLoadScreen(const std::string &sScreenName);
 void FinishedLoadingScreen();
 
 AutoScreenMessage(SM_GoToOK);
@@ -23,7 +23,7 @@ int ScreenMiniMenu::s_iLastRowCode = -1;
 std::vector<int> ScreenMiniMenu::s_viLastAnswers;
 
 // Hooks for profiling
-void PrepareToLoadScreen(const RString & /* sScreenName */) {
+void PrepareToLoadScreen(const std::string & /* sScreenName */) {
 }
 void FinishedLoadingScreen() {
 }

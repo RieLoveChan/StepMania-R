@@ -1004,20 +1004,20 @@ void Actor::ScaleTo(const RectF &rect, StretchType st) {
 	SetZoom(fNewZoom);
 }
 
-void Actor::SetEffectClockString(const RString &s) {
-	if (s.EqualsNoCase("timer"))
+void Actor::SetEffectClockString(const std::string &s) {
+	if (StrEqualsNoCase(s, "timer"))
 		this->SetEffectClock(CLOCK_TIMER);
-	else if (s.EqualsNoCase("timerglobal"))
+	else if (StrEqualsNoCase(s, "timerglobal"))
 		this->SetEffectClock(CLOCK_TIMER_GLOBAL);
-	else if (s.EqualsNoCase("beat"))
+	else if (StrEqualsNoCase(s, "beat"))
 		this->SetEffectClock(CLOCK_BGM_BEAT);
-	else if (s.EqualsNoCase("music"))
+	else if (StrEqualsNoCase(s, "music"))
 		this->SetEffectClock(CLOCK_BGM_TIME);
-	else if (s.EqualsNoCase("bgm"))
+	else if (StrEqualsNoCase(s, "bgm"))
 		this->SetEffectClock(CLOCK_BGM_BEAT); // compat, deprecated
-	else if (s.EqualsNoCase("musicnooffset"))
+	else if (StrEqualsNoCase(s, "musicnooffset"))
 		this->SetEffectClock(CLOCK_BGM_TIME_NO_OFFSET);
-	else if (s.EqualsNoCase("beatnooffset"))
+	else if (StrEqualsNoCase(s, "beatnooffset"))
 		this->SetEffectClock(CLOCK_BGM_BEAT_NO_OFFSET);
 	else {
 		CabinetLight cl = StringToCabinetLight(s);

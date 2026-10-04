@@ -50,8 +50,8 @@ LightsDriver_PacDrive::LightsDriver_PacDrive() {
 	else {
 		PacDriveConnected = true; // set connected
 		m_pacset(0, 0x0);         // clear all lights for device i
-		RString lightOrder = g_sPacDriveLightOrdering.Get();
-		if (lightOrder.CompareNoCase("lumenar") == 0 || lightOrder.CompareNoCase("openitg") == 0) {
+		std::string lightOrder = g_sPacDriveLightOrdering.Get();
+		if (StrCompareNoCase(lightOrder, "lumenar") == 0 || StrCompareNoCase(lightOrder, "openitg") == 0) {
 			iLightingOrder = 1;
 		}
 	}

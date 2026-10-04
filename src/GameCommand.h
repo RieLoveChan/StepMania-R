@@ -53,7 +53,7 @@ class GameCommand {
  public:
 	bool DescribesCurrentMode(PlayerNumber pn) const;
 	bool DescribesCurrentModeForAllPlayers() const;
-	bool IsPlayable(RString *why = nullptr) const;
+	bool IsPlayable(std::string *why = nullptr) const;
 	bool IsZero() const;
 
 	/* If true, Apply() will apply m_sScreen. If false, it won't, and you need

@@ -793,7 +793,7 @@ void SongUtil::SortByMostRecentlyPlayedForMachine(std::vector<Song *> &vpSongsIn
 }
 
 bool SongUtil::IsEditDescriptionUnique(
-   const Song *pSong, StepsType st, const RString &sPreferredDescription, const Steps *pExclude
+   const Song *pSong, StepsType st, const std::string &sPreferredDescription, const Steps *pExclude
 ) {
 	for (Steps const *pSteps : pSong->GetAllSteps()) {
 		if (pSteps->GetDifficulty() != Difficulty_Edit)
@@ -820,16 +820,17 @@ bool SongUtil::IsChartNameUnique(const Song *pSong, StepsType st, const RString 
 	return true;
 }
 
-std::string SongUtil::MakeUniqueEditDescription(const Song *pSong, StepsType st, const RString &sPreferredDescription) {
+std::string SongUtil::MakeUniqueEditDescription(const Song *pSong, StepsType st, const std::string &sPreferredDescription) {
 	if (IsEditDescriptionUnique(pSong, st, sPreferredDescription, nullptr))
 		return sPreferredDescription;
 
-	RString sTemp;
+	std::string sTemp;
 
 	for (int i = 0; i < 1000; i++) {
 		// make name "My Edit" -> "My Edit2"
-		RString sNum = ssprintf("%d", i + 1);
-		sTemp = sPreferredDescription.Left(MAX_STEPS_DESCRIPTION_LENGTH - static_cast<int>(sNum.size())) + sNum;
+		std::string sNum = ssprintf("%d", i + 1);
+		// sNum has at most 4 digits, so the count is positive; substr clamps it to the string length (same as Left).
+		sTemp = sPreferredDescription.substr(0, static_cast<std::size_t>(MAX_STEPS_DESCRIPTION_LENGTH) - sNum.size()) + sNum;
 
 		if (IsEditDescriptionUnique(pSong, st, sTemp, nullptr))
 			return sTemp;

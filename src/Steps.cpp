@@ -491,7 +491,7 @@ void Steps::CreateBlank(StepsType ntTo) {
 	this->SetNoteData(noteData);
 }
 
-void Steps::SetDifficultyAndDescription(Difficulty dc, RString sDescription) {
+void Steps::SetDifficultyAndDescription(Difficulty dc, std::string sDescription) {
 	DeAutogen();
 	m_Difficulty = dc;
 	m_sDescription = sDescription;

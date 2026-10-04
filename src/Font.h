@@ -217,7 +217,7 @@ class Font {
 	std::string m_sChars;
 
 	void LoadFontPageSettings(
-	   FontPageSettings &cfg, IniFile &ini, const RString &sTexturePath, const RString &PageName, RString sChars
+	   FontPageSettings &cfg, IniFile &ini, const std::string &sTexturePath, const std::string &PageName, std::string sChars
 	);
 	static void GetFontPaths(const std::string &sFontOrTextureFilePath, std::vector<std::string> &sTexturePaths);
 	std::string GetPageNameFromFileName(const std::string &sFilename);

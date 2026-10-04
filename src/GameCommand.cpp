@@ -483,7 +483,7 @@ static bool AreStyleAndPlayModeCompatible(const Style *style, PlayMode pm) {
 	return true;
 }
 
-bool GameCommand::IsPlayable(RString *why) const {
+bool GameCommand::IsPlayable(std::string *why) const {
 	if (m_bInvalid) {
 		if (why)
 			*why = m_sInvalidReason;

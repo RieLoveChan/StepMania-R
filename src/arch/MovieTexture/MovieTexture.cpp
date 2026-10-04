@@ -17,17 +17,17 @@ void ForceToAscii(std::string &str) {
 			str[i] = '?';
 }
 
-bool RageMovieTexture::GetFourCC(RString fn, std::string &handler, std::string &type) {
-	RString ignore, ext;
+bool RageMovieTexture::GetFourCC(std::string fn, std::string &handler, std::string &type) {
+	std::string ignore, ext;
 	splitpath(fn, ignore, ignore, ext);
 	if (
-	   !ext.CompareNoCase(".mpg") || !ext.CompareNoCase(".mpeg") || !ext.CompareNoCase(".mpv") ||
-	   !ext.CompareNoCase(".mpe")
+	   !StrCompareNoCase(ext, ".mpg") || !StrCompareNoCase(ext, ".mpeg") || !StrCompareNoCase(ext, ".mpv") ||
+	   !StrCompareNoCase(ext, ".mpe")
 	) {
 		handler = type = "MPEG";
 		return true;
 	}
-	if (!ext.CompareNoCase(".ogv")) {
+	if (!StrCompareNoCase(ext, ".ogv")) {
 		handler = type = "Ogg";
 		return true;
 	}
@@ -64,8 +64,8 @@ bool RageMovieTexture::GetFourCC(RString fn, std::string &handler, std::string &
 DriverList RageMovieTextureDriver::m_pDriverList;
 
 // Helper for MakeRageMovieTexture()
-static void DumpAVIDebugInfo(const RString &fn) {
-	RString type, handler;
+static void DumpAVIDebugInfo(const std::string &fn) {
+	std::string type, handler;
 	if (!RageMovieTexture::GetFourCC(fn, handler, type))
 		return;
 
