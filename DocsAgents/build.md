@@ -108,6 +108,28 @@ xmllint --noout Docs/Luadoc/Lua.xml
 xmllint --noout Docs/Luadoc/LuaDocumentation.xml
 ```
 
+## Wait for the Windows SelfTest process in PowerShell
+
+The Release executable is a GUI application. A direct PowerShell invocation
+can return before its child exits; an immediate log copy or shell exit code
+can therefore describe an earlier run. Wait for the actual process and inspect
+its exit code before recording the smoke result:
+
+```powershell
+$smokeProcess = Start-Process -FilePath (Resolve-Path 'Program\StepMania-R.exe') `
+    -ArgumentList @('--SelfTest', '--VideoRenderers=null', '--SoundDrivers=null') `
+    -WorkingDirectory (Get-Location).Path -WindowStyle Hidden -Wait -PassThru
+$smokeExitCode = $smokeProcess.ExitCode
+if ($smokeExitCode -ne 0) {
+    throw "Release SelfTest exited with code $smokeExitCode"
+}
+```
+
+Run this from the repository root after the Release build. Only copy
+`Logs/log.txt` after the wait; confirm the fresh log contains the SelfTest
+initialization and deliberate-exit message. That message verifies startup,
+while the process exit code verifies successful termination.
+
 # CI matrix
 
 `.github/workflows/ci.yml` builds on Ubuntu x86_64, macOS arm64, macOS
