@@ -226,15 +226,15 @@ RString InputHandler::GetLocalizedInputString(const DeviceInput &di) {
 DriverList InputHandler::m_pDriverList;
 
 static LocalizedString INPUT_HANDLERS_EMPTY("Arch", "Input Handlers cannot be empty.");
-void InputHandler::Create(const RString &drivers_, std::vector<InputHandler *> &Add) {
-	const RString drivers = drivers_.empty() ? RString(DEFAULT_INPUT_DRIVER_LIST) : drivers_;
-	std::vector<RString> DriversToTry;
+void InputHandler::Create(const std::string &drivers_, std::vector<InputHandler *> &Add) {
+	const std::string drivers = drivers_.empty() ? std::string(DEFAULT_INPUT_DRIVER_LIST) : drivers_;
+	std::vector<std::string> DriversToTry;
 	split(drivers, ",", DriversToTry, true);
 
 	if (DriversToTry.empty())
 		RageException::Throw("%s", INPUT_HANDLERS_EMPTY.GetValue().c_str());
 
-	for (RString const &s : DriversToTry) {
+	for (std::string const &s : DriversToTry) {
 		RageDriver *pDriver = InputHandler::m_pDriverList.Create(s);
 		if (pDriver == nullptr) {
 			LOG->Trace("Unknown Input Handler name: %s", s.c_str());

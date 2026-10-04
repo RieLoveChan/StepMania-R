@@ -13,37 +13,37 @@ LoadingWindow *LoadingWindow::Create() {
 	return new LoadingWindow_Null;
 #endif
 	// Don't load nullptr by default.
-	const RString drivers = "win32,macosx,gtk";
-	std::vector<RString> DriversToTry;
+	const std::string drivers = "win32,macosx,gtk";
+	std::vector<std::string> DriversToTry;
 	split(drivers, ",", DriversToTry, true);
 
 	ASSERT(!DriversToTry.empty());
 
-	RString Driver;
+	std::string Driver;
 	LoadingWindow *ret = nullptr;
 
 	for (unsigned i = 0; ret == nullptr && i < DriversToTry.size(); ++i) {
 		Driver = DriversToTry[i];
 
 #ifdef USE_LOADING_WINDOW_MACOSX
-		if (!DriversToTry[i].CompareNoCase("MacOSX"))
+		if (!StrCompareNoCase(DriversToTry[i], "MacOSX"))
 			ret = new LoadingWindow_MacOSX;
 #endif
 #ifdef USE_LOADING_WINDOW_GTK
-		if (!DriversToTry[i].CompareNoCase("Gtk"))
+		if (!StrCompareNoCase(DriversToTry[i], "Gtk"))
 			ret = new LoadingWindow_Gtk;
 #endif
 #ifdef USE_LOADING_WINDOW_WIN32
-		if (!DriversToTry[i].CompareNoCase("Win32"))
+		if (!StrCompareNoCase(DriversToTry[i], "Win32"))
 			ret = new LoadingWindow_Win32;
 #endif
-		if (!DriversToTry[i].CompareNoCase("Null"))
+		if (!StrCompareNoCase(DriversToTry[i], "Null"))
 			ret = new LoadingWindow_Null;
 
 		if (ret == nullptr)
 			continue;
 
-		RString sError = ret->Init();
+		std::string sError = ret->Init();
 		if (!sError.empty()) {
 			LOG->Info("Couldn't load driver %s: %s", DriversToTry[i].c_str(), sError.c_str());
 			SAFE_DELETE(ret);

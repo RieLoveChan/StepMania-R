@@ -31,7 +31,7 @@ struct WheelItemBaseData {
 	virtual ~WheelItemBaseData() {
 	}
 	WheelItemDataType m_Type;
-	RString m_sText;
+	std::string m_sText;
 	RageColor m_color; // either text color or section background color
 };
 /** @brief An item on the wheel. */
@@ -54,7 +54,7 @@ class WheelItemBase : public ActorFrame {
 
 	RageColor m_colorLocked;
 
-	const RString GetText() {
+	const std::string GetText() {
 		ASSERT(m_pData != nullptr);
 		return m_pData->m_sText;
 	}

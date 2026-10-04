@@ -79,11 +79,11 @@ static LocalizedString COULDNT_CREATE_MOVIE_DRIVER("Arch", "Couldn't create a mo
 RageMovieTexture *RageMovieTexture::Create(RageTextureID ID) {
 	DumpAVIDebugInfo(ID.filename);
 
-	RString sDrivers = g_sMovieDrivers;
+	std::string sDrivers = g_sMovieDrivers.Get();
 	if (sDrivers.empty())
 		sDrivers = DEFAULT_MOVIE_DRIVER_LIST;
 
-	std::vector<RString> DriversToTry;
+	std::vector<std::string> DriversToTry;
 	split(sDrivers, ",", DriversToTry, true);
 
 	if (DriversToTry.empty())
@@ -91,7 +91,7 @@ RageMovieTexture *RageMovieTexture::Create(RageTextureID ID) {
 
 	RageMovieTexture *ret = nullptr;
 
-	for (RString const &Driver : DriversToTry) {
+	for (std::string const &Driver : DriversToTry) {
 		char const *driverString = Driver.c_str();
 		LOG->Trace("Initializing driver: %s", driverString);
 		RageDriver *pDriverBase = RageMovieTextureDriver::m_pDriverList.Create(Driver);
@@ -104,7 +104,7 @@ RageMovieTexture *RageMovieTexture::Create(RageTextureID ID) {
 		RageMovieTextureDriver *pDriver = dynamic_cast<RageMovieTextureDriver *>(pDriverBase);
 		ASSERT(pDriver != nullptr);
 
-		RString sError;
+		std::string sError;
 		ret = pDriver->Create(ID, sError);
 		delete pDriver;
 

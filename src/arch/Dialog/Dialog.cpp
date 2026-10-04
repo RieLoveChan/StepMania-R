@@ -15,28 +15,28 @@ static Preference<RString> g_sIgnoredDialogs("IgnoredDialogs", "");
 #endif
 
 DialogDriver *MakeDialogDriver() {
-	RString sDrivers = "win32,cocoa,null";
-	std::vector<RString> asDriversToTry;
+	std::string sDrivers = "win32,cocoa,null";
+	std::vector<std::string> asDriversToTry;
 	split(sDrivers, ",", asDriversToTry, true);
 
 	ASSERT(!asDriversToTry.empty());
 
-	RString sDriver;
+	std::string sDriver;
 	DialogDriver *pRet = nullptr;
 
 	for (unsigned i = 0; pRet == nullptr && i < asDriversToTry.size(); ++i) {
 		sDriver = asDriversToTry[i];
 
 #ifdef USE_DIALOG_DRIVER_COCOA
-		if (!asDriversToTry[i].CompareNoCase("Cocoa"))
+		if (!StrCompareNoCase(asDriversToTry[i], "Cocoa"))
 			pRet = new DialogDriver_MacOSX;
 #endif
 #ifdef USE_DIALOG_DRIVER_WIN32
-		if (!asDriversToTry[i].CompareNoCase("Win32"))
+		if (!StrCompareNoCase(asDriversToTry[i], "Win32"))
 			pRet = new DialogDriver_Win32;
 #endif
 #ifdef USE_DIALOG_DRIVER_NULL
-		if (!asDriversToTry[i].CompareNoCase("Null"))
+		if (!StrCompareNoCase(asDriversToTry[i], "Null"))
 			pRet = new DialogDriver_Null;
 #endif
 
@@ -44,7 +44,7 @@ DialogDriver *MakeDialogDriver() {
 			continue;
 		}
 
-		RString sError = pRet->Init();
+		std::string sError = pRet->Init();
 		if (!sError.empty()) {
 			if (LOG)
 				LOG->Info("Couldn't load driver %s: %s", asDriversToTry[i].c_str(), sError.c_str());
@@ -80,8 +80,8 @@ void Dialog::Shutdown() {
 
 static bool MessageIsIgnored(std::string sID) {
 #if !defined(SMPACKAGE)
-	std::vector<RString> asList;
-	split(g_sIgnoredDialogs, ",", asList);
+	std::vector<std::string> asList;
+	split(g_sIgnoredDialogs.Get(), ",", asList);
 	for (unsigned i = 0; i < asList.size(); ++i)
 		if (!StrCompareNoCase(sID, asList[i]))
 			return true;
@@ -89,7 +89,7 @@ static bool MessageIsIgnored(std::string sID) {
 	return false;
 }
 
-void Dialog::IgnoreMessage(RString sID) {
+void Dialog::IgnoreMessage(std::string sID) {
 	// We can't ignore messages before PREFSMAN is around.
 #if !defined(SMPACKAGE)
 	if (PREFSMAN == nullptr) {
@@ -104,8 +104,8 @@ void Dialog::IgnoreMessage(RString sID) {
 	if (MessageIsIgnored(sID))
 		return;
 
-	std::vector<RString> asList;
-	split(g_sIgnoredDialogs, ",", asList);
+	std::vector<std::string> asList;
+	split(g_sIgnoredDialogs.Get(), ",", asList);
 	asList.push_back(sID);
 	g_sIgnoredDialogs.Set(join(",", asList));
 	PREFSMAN->SavePrefsToDisk();

@@ -11,8 +11,8 @@
 
 DriverList RageSoundDriver::m_pDriverList;
 
-RageSoundDriver *RageSoundDriver::Create(const RString &drivers) {
-	std::vector<RString> drivers_to_try;
+RageSoundDriver *RageSoundDriver::Create(const std::string &drivers) {
+	std::vector<std::string> drivers_to_try;
 	if (drivers.empty()) {
 		split(DEFAULT_SOUND_DRIVER_LIST, ",", drivers_to_try);
 	}
@@ -21,7 +21,7 @@ RageSoundDriver *RageSoundDriver::Create(const RString &drivers) {
 		std::size_t to_try = 0;
 		bool had_to_erase = false;
 		while (to_try < drivers_to_try.size()) {
-			if (m_pDriverList.m_pRegistrees->find(istring(drivers_to_try[to_try])) == m_pDriverList.m_pRegistrees->end()) {
+			if (m_pDriverList.m_pRegistrees->find(istring(drivers_to_try[to_try].c_str())) == m_pDriverList.m_pRegistrees->end()) {
 				LOG->Warn("Removed unusable sound driver %s", drivers_to_try[to_try].c_str());
 				drivers_to_try.erase(drivers_to_try.begin() + to_try);
 				had_to_erase = true;
@@ -38,7 +38,7 @@ RageSoundDriver *RageSoundDriver::Create(const RString &drivers) {
 		}
 	}
 
-	for (RString const &Driver : drivers_to_try) {
+	for (std::string const &Driver : drivers_to_try) {
 		RageDriver *pDriver = m_pDriverList.Create(Driver);
 		char const *driverString = Driver.c_str();
 		if (pDriver == nullptr) {
@@ -49,7 +49,7 @@ RageSoundDriver *RageSoundDriver::Create(const RString &drivers) {
 		RageSoundDriver *pRet = dynamic_cast<RageSoundDriver *>(pDriver);
 		ASSERT(pRet != nullptr);
 
-		const RString sError = pRet->Init();
+		const std::string sError = pRet->Init();
 		if (sError.empty()) {
 			LOG->Info("Sound driver: %s", driverString);
 			return pRet;

@@ -26,7 +26,7 @@ Result AbortRetry(RString sMessage, RString sID = "");
 Result YesNo(RString sMessage, RString sID = "");
 
 /* for DialogDrivers */
-void IgnoreMessage(RString sID);
+void IgnoreMessage(std::string sID);
 } // namespace Dialog
 
 #endif

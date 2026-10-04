@@ -24,7 +24,7 @@
 /** @brief A class designed to handle special input devices. */
 class InputHandler : public RageDriver {
  public:
-	static void Create(const RString &sDrivers, std::vector<InputHandler *> &apAdd);
+	static void Create(const std::string &sDrivers, std::vector<InputHandler *> &apAdd);
 	static DriverList m_pDriverList;
 
 	InputHandler() : m_LastUpdate(), m_iInputsSinceUpdate(0) {

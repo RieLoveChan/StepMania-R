@@ -67,7 +67,7 @@ class GameCommand {
 	Commands m_Commands;
 
 	RString m_sName; // choice name
-	RString m_sText; // display text
+	std::string m_sText; // display text
 	bool m_bInvalid;
 	std::string m_sInvalidReason;
 	int m_iIndex;

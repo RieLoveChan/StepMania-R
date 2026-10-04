@@ -57,7 +57,7 @@ void RageInput::LoadDrivers() {
 	// Init optional devices.
 	std::vector<InputHandler *> apDevices;
 
-	InputHandler::Create(g_sInputDrivers, apDevices);
+	InputHandler::Create(g_sInputDrivers.Get(), apDevices);
 	for (unsigned i = 0; i < apDevices.size(); ++i)
 		AddHandler(apDevices[i]);
 

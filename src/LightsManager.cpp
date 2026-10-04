@@ -103,7 +103,7 @@ LightsManager::LightsManager() {
 	m_CoinCounterTimer.SetZero();
 
 	m_LightsMode = LIGHTSMODE_JOINING;
-	RString sDriver = g_sLightsDriver.Get();
+	std::string sDriver = g_sLightsDriver.Get();
 	if (sDriver.empty())
 		sDriver = DEFAULT_LIGHTS_DRIVER;
 	LightsDriver::Create(sDriver, m_vpDrivers);

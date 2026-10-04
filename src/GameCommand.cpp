@@ -810,7 +810,7 @@ class LunaGameCommand : public Luna<GameCommand> {
 		return 1;
 	}
 	static int GetText(T *p, lua_State *L) {
-		lua_pushstring(L, p->m_sText);
+		lua_pushstring(L, p->m_sText.c_str());
 		return 1;
 	}
 	static int GetIndex(T *p, lua_State *L) {

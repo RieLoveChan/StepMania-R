@@ -17,7 +17,7 @@ static const int samples_per_block = 512;
 class RageSoundDriver : public RageDriver {
  public:
 	/* Pass an empty string to get the default sound driver list. */
-	static RageSoundDriver *Create(const RString &sDrivers);
+	static RageSoundDriver *Create(const std::string &sDrivers);
 	static DriverList m_pDriverList;
 	static std::string GetDefaultSoundDriverList();
 
