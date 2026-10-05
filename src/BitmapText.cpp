@@ -428,10 +428,11 @@ void BitmapText::DrawChars(bool bUseStrokeTexture) {
 void BitmapText::SetText(const std::string &_sText, const std::string &_sAlternateText, int iWrapWidthPixels) {
 	ASSERT(m_pFont != nullptr);
 
-	RString sNewText = StringWillUseAlternate(_sText, _sAlternateText) ? _sAlternateText : _sText;
+	std::string sNewText = StringWillUseAlternate(_sText, _sAlternateText) ? _sAlternateText : _sText;
 
 	if (m_bUppercase)
-		sNewText.MakeUpper();
+		if (!sNewText.empty())
+			MakeUpper(&sNewText[0], sNewText.size());
 
 	if (iWrapWidthPixels == -1) // wrap not specified
 		iWrapWidthPixels = m_iWrapWidthPixels;
@@ -468,7 +469,7 @@ void BitmapText::SetTextInternal() {
 			std::vector<std::string> asWords;
 			split(asLines[line], " ", asWords);
 
-			RString sCurLine;
+			std::string sCurLine;
 			int iCurLineWidth = 0;
 
 			for (unsigned i = 0; i < asWords.size(); i++) {
@@ -481,7 +482,7 @@ void BitmapText::SetTextInternal() {
 					continue;
 				}
 
-				RString sToAdd = " " + sWord;
+				std::string sToAdd = " " + sWord;
 				int iWidthToAdd = m_pFont->GetLineWidthInSourcePixels(L" ") + iWidthWord;
 				if (iCurLineWidth + iWidthToAdd <= m_iWrapWidthPixels) // will fit on current line
 				{

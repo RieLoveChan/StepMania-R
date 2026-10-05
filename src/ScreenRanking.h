@@ -61,7 +61,7 @@ class ScreenRanking : public ScreenAttract {
 	ThemeMetric<float> PAGE_FADE_SECONDS;
 
 	ThemeMetric<RankingType> RANKING_TYPE;
-	ThemeMetric<RString> COURSES_TO_SHOW;
+	ThemeMetric<std::string> COURSES_TO_SHOW;
 	ThemeMetric<float> SECONDS_PER_PAGE;
 
 	Banner m_Banner;              // for course

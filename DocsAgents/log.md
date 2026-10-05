@@ -2915,3 +2915,5 @@
 * **Byte replacement tooling, 2026-10-04.** Added a migrate-rstring playbook warning about PowerShell nested-array flattening; validate replacement pairs and inspect plain versus whitespace-ignored statistics immediately.
 
 * **ThemeMetric string values, 2026-10-04.** Added migration guidance distinguishing bounded Lua-backed value fields from deferred metric name/group reference getters and Preference serialization. Verify the identical explicit-length Lua conversions and use explicit value/C-string boundaries.
+
+* **Hosted-runner cancellation recovery, 2026-10-05.** Added a migrate-rstring procedure for zero-step runner-acquisition cancellations: wait for terminal workflow state, retry failed jobs on the same commit, and verify all seven results without changing source or republishing.

@@ -593,3 +593,12 @@ if a boundary gotcha turned up, plus `log.md`.
   without changing the generic template.
 - This does not migrate deferred metric name/group members or their reference
   getters, nor `Preference` serialization and its `FromString` hierarchy.
+
+## Hosted-runner cancellation recovery
+
+- Cancelled jobs with zero executed steps and runner-acquisition annotations are
+  infrastructure failures, not green checks. Wait until active jobs finish before
+  running `gh run rerun <run-id> --failed`; individual job retries can be rejected
+  while another job is active. This preserves successful jobs and the same commit.
+- After retry, verify the exact commit SHA and all seven job conclusions. Do not
+  change source, amend, force-push, publish twice or skip gates to recover CI.
