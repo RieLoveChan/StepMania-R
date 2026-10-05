@@ -62,7 +62,7 @@ class OptionRow : public ActorFrame {
 	void LoadNormal(OptionRowHandler *pHand, bool bFirstItemGoesDown);
 	void LoadExit();
 
-	void SetModIcon(PlayerNumber pn, const RString &sText, GameCommand &gc);
+	void SetModIcon(PlayerNumber pn, const std::string &sText, GameCommand &gc);
 
 	void ImportOptions(const std::vector<PlayerNumber> &vpns);
 	int ExportOptions(const std::vector<PlayerNumber> &vpns, bool bRowHasFocus[NUM_PLAYERS]);

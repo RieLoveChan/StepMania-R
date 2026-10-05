@@ -416,13 +416,13 @@ static std::string averr_ssprintf(int err, const char *fmt, ...) {
 
 	va_list va;
 	va_start(va, fmt);
-	RString s = vssprintf(fmt, va);
+	std::string s = vssprintf(fmt, va);
 	va_end(va);
 
 	std::size_t errbuf_size = 512;
 	char *errbuf = new char[errbuf_size];
 	avcodec::av_strerror(err, errbuf, errbuf_size);
-	RString Error = ssprintf("%i: %s", err, errbuf);
+	std::string Error = ssprintf("%i: %s", err, errbuf);
 	delete[] errbuf;
 
 	return s + " (" + Error + ")";
@@ -449,7 +449,7 @@ static std::int64_t AVIORageFile_Seek(void *opaque, std::int64_t offset, int whe
 	return f->Seek((int)offset, whence);
 }
 
-RString MovieDecoder_FFMpeg::Open(RString sFile) {
+std::string MovieDecoder_FFMpeg::Open(std::string sFile) {
 	av_format_context_ = avcodec::avformat_alloc_context();
 	if (!av_format_context_)
 		return "AVCodec: Couldn't allocate context";
@@ -457,8 +457,8 @@ RString MovieDecoder_FFMpeg::Open(RString sFile) {
 	RageFile *f = new RageFile;
 
 	if (!f->Open(sFile, RageFile::READ)) {
-		RString errorMessage = f->GetError();
-		RString error = ssprintf("MovieDecoder_FFMpeg: Error opening \"%s\": %s", sFile.c_str(), errorMessage.c_str());
+		std::string errorMessage = f->GetError();
+		std::string error = ssprintf("MovieDecoder_FFMpeg: Error opening \"%s\": %s", sFile.c_str(), errorMessage.c_str());
 		delete f;
 		return error;
 	}
@@ -470,11 +470,11 @@ RString MovieDecoder_FFMpeg::Open(RString sFile) {
 	av_format_context_->pb = av_io_context_;
 	int ret = avcodec::avformat_open_input(&av_format_context_, sFile.c_str(), nullptr, nullptr);
 	if (ret < 0)
-		return RString(averr_ssprintf(ret, "AVCodec: Couldn't open \"%s\"", sFile.c_str()));
+		return std::string(averr_ssprintf(ret, "AVCodec: Couldn't open \"%s\"", sFile.c_str()));
 
 	ret = avcodec::avformat_find_stream_info(av_format_context_, nullptr);
 	if (ret < 0)
-		return RString(averr_ssprintf(ret, "AVCodec (%s): Couldn't find codec parameters", sFile.c_str()));
+		return std::string(averr_ssprintf(ret, "AVCodec (%s): Couldn't find codec parameters", sFile.c_str()));
 
 	int stream_idx = avcodec::av_find_best_stream(av_format_context_, avcodec::AVMEDIA_TYPE_VIDEO, -1, -1, nullptr, 0);
 	if (
@@ -490,7 +490,7 @@ RString MovieDecoder_FFMpeg::Open(RString sFile) {
 	if (av_stream_codec_->codec_id == avcodec::AV_CODEC_ID_NONE)
 		return ssprintf("Unsupported codec %08x", av_stream_codec_->codec_tag);
 
-	RString sError = OpenCodec();
+	std::string sError = OpenCodec();
 	if (!sError.empty())
 		return ssprintf("AVCodec (%s): %s", sFile.c_str(), sError.c_str());
 
@@ -508,10 +508,10 @@ RString MovieDecoder_FFMpeg::Open(RString sFile) {
 	}
 	LOG->Trace("Number of frames detected: %i", total_frames_);
 
-	return RString();
+	return std::string();
 }
 
-RString MovieDecoder_FFMpeg::OpenCodec() {
+std::string MovieDecoder_FFMpeg::OpenCodec() {
 	Init();
 
 	ASSERT(av_stream_ != nullptr);
@@ -530,10 +530,10 @@ RString MovieDecoder_FFMpeg::OpenCodec() {
 
 	int ret = avcodec::avcodec_open2(av_stream_codec_, pCodec, nullptr);
 	if (ret < 0)
-		return RString(averr_ssprintf(ret, "Couldn't open codec \"%s\"", pCodec->name));
+		return std::string(averr_ssprintf(ret, "Couldn't open codec \"%s\"", pCodec->name));
 	ASSERT(av_stream_codec_->codec != nullptr);
 
-	return RString();
+	return std::string();
 }
 
 void MovieDecoder_FFMpeg::Close() {

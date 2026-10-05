@@ -572,3 +572,11 @@ if a boundary gotcha turned up, plus `log.md`.
   the local Windows Release build) comes back green. Swept all prior
   pilots for the same `Preference<RString>`-direct-assignment shape
   and found no other occurrences among migrated fields.
+
+## Byte replacement tooling
+
+- Use Python `read_bytes()` / `write_bytes()` with explicit old/new byte pairs.
+  PowerShell can flatten nested replacement arrays containing one pair, making
+  string indexing select characters and corrupt unrelated text. Validate each
+  pair has exactly two strings before replacing, and compare plain and `-w`
+  diff statistics immediately, before any build or staging.

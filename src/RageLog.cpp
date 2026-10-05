@@ -194,7 +194,7 @@ RageLog::LogLevel RageLog::GetEffectiveLevel(Log::Category c) const {
 	return m_MinLevel;
 }
 
-void RageLog::SetLogLevelSpec(const RString &spec) {
+void RageLog::SetLogLevelSpec(const std::string &spec) {
 	/* The spec is the complete config: reset to defaults (global Trace,
 	 * no per-category overrides) and rebuild from the tokens. So
 	 * "--LogLevel=sound:error" is (global trace) + sound:error; to keep
@@ -205,7 +205,7 @@ void RageLog::SetLogLevelSpec(const RString &spec) {
 
 	std::vector<std::string> tokens;
 	split(spec, ",", tokens, true);
-	for (RString tok : tokens) {
+	for (std::string tok : tokens) {
 		Trim(tok);
 		std::size_t colon = tok.find(':');
 		if (colon == std::string::npos) {

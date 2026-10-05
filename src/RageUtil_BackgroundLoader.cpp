@@ -30,10 +30,10 @@ BackgroundLoader::BackgroundLoader() : m_StartSem("BackgroundLoaderSem"), m_Mute
 }
 
 static void DeleteEmptyDirectories(std::string sDir) {
-	std::vector<RString> asNewDirs;
+	std::vector<std::string> asNewDirs;
 	GetDirListing(sDir + "/*", asNewDirs, false, true);
 	for (unsigned i = 0; i < asNewDirs.size(); ++i) {
-		ASSERT_M(IsADirectory(asNewDirs[i]), asNewDirs[i]);
+		ASSERT_M(IsADirectory(asNewDirs[i]), asNewDirs[i].c_str());
 		DeleteEmptyDirectories(asNewDirs[i]);
 	}
 

@@ -484,7 +484,7 @@ std::string GetCwd();
 
 void SetCommandlineArguments(int argc, char **argv);
 void GetCommandLineArguments(int &argc, char **&argv);
-bool GetCommandlineArgument(const std::string &option, RString *argument = nullptr, int iIndex = 0);
+bool GetCommandlineArgument(const std::string &option, std::string *argument = nullptr, int iIndex = 0);
 extern int g_argc;
 extern char **g_argv;
 

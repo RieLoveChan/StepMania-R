@@ -65,7 +65,7 @@ class RageLog {
 	/* Parse a --LogLevel spec: comma-separated, a bare token is the
 	 * global level, a "cat:level" token sets that category
 	 * (e.g. "warn,gl:off,font:trace"). Unknown tokens are ignored. */
-	void SetLogLevelSpec(const RString &spec);
+	void SetLogLevelSpec(const std::string &spec);
 
 	/* The category-aware sink the LOG_* macros below call. Formats
 	 * "<cat> <file>:<line>  <msg>" and routes it at `level`. */

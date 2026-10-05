@@ -363,7 +363,7 @@ void ScreenOptions::RefreshIcons(int iRow, PlayerNumber pn) {
 	int iFirstSelection = row.GetOneSelection(pn, true);
 
 	// set icon name and bullet
-	RString sIcon;
+	std::string sIcon;
 	GameCommand gc;
 
 	if (iFirstSelection == -1) {

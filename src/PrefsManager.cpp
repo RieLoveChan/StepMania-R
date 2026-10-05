@@ -469,7 +469,7 @@ void PrefsManager::SavePrefsToIni(IniFile &ini) {
 }
 
 std::string PrefsManager::GetPreferencesSection() const {
-	RString sSection = "Options";
+	std::string sSection = "Options";
 
 	// OK if this fails
 	GetFileContents(SpecialFiles::TYPE_TXT_FILE, sSection, true);

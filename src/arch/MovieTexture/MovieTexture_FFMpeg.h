@@ -84,7 +84,7 @@ class MovieDecoder_FFMpeg : public MovieDecoder {
 	MovieDecoder_FFMpeg();
 	~MovieDecoder_FFMpeg();
 
-	RString Open(RString sFile);
+	std::string Open(std::string sFile) override;
 	void Close();
 	void Rewind();
 
@@ -132,7 +132,7 @@ class MovieDecoder_FFMpeg : public MovieDecoder {
 
  private:
 	void Init();
-	RString OpenCodec();
+	std::string OpenCodec();
 
 	// Read a packet and send it to our frame data buffer.
 	// Returns -2 on cancel, -1 on error, 0 on EOF, 1 on OK.

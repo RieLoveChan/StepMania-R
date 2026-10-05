@@ -37,7 +37,7 @@ MovieTexture_Generic::MovieTexture_Generic(RageTextureID ID, MovieDecoder *pDeco
 }
 
 RString MovieTexture_Generic::Init() {
-	RString sError = m_pDecoder->Open(GetID().filename);
+	std::string sError = m_pDecoder->Open(GetID().filename);
 	if (!sError.empty())
 		return sError;
 

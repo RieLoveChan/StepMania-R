@@ -317,7 +317,7 @@ void ThemeManager::LoadThemeMetrics(const std::string &sThemeName_, const std::s
 	}
 
 	// Overlay metrics from the command line.
-	RString sMetric;
+	std::string sMetric;
 	for (int i = 0; GetCommandlineArgument("metric", &sMetric, i); ++i) {
 		/* sMetric must be "foo::bar=baz". "foo" and "bar" never contain "=", so
 		 * in "foo::bar=1+1=2", "baz" is always "1+1=2". Neither foo nor bar may

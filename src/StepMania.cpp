@@ -671,7 +671,7 @@ void StepMania::InitializeCurrentGame(const Game *g) {
 
 	if (sAnnouncer.empty())
 		sAnnouncer = GAMESTATE->GetCurrentGame()->m_szName;
-	RString argCurGame;
+	std::string argCurGame;
 	if (GetCommandlineArgument("game", &argCurGame) && argCurGame != sGametype) {
 		Game const *new_game = GAMEMAN->StringToGame(argCurGame);
 		if (new_game == nullptr) {
@@ -688,14 +688,14 @@ void StepMania::InitializeCurrentGame(const Game *g) {
 
 	// process gametype, theme and language command line arguments;
 	// these change the preferences in order for transparent loading -aj
-	RString argTheme;
+	std::string argTheme;
 	if (GetCommandlineArgument("theme", &argTheme) && argTheme != sTheme) {
 		sTheme = argTheme;
 		// set theme in preferences too for correct behavior  -aj
 		PREFSMAN->m_sTheme.Set(sTheme);
 	}
 
-	RString argLanguage;
+	std::string argLanguage;
 	if (GetCommandlineArgument("language", &argLanguage)) {
 		sLanguage = argLanguage;
 		// set language in preferences too for correct behavior -aj
@@ -797,7 +797,7 @@ static void ApplyLogPreferences() {
 	// overrides ("warn,gl:off,font:trace"). Lines emitted before this
 	// point (arch hooks, LUA, FILEMAN) are already out and cannot be
 	// filtered retroactively.
-	RString sLogLevel = PREFSMAN->m_sLogLevel;
+	std::string sLogLevel = PREFSMAN->m_sLogLevel.Get();
 	GetCommandlineArgument("LogLevel", &sLogLevel);
 	LOG->SetLogLevelSpec(sLogLevel);
 	Checkpoints::LogCheckpoints(PREFSMAN->m_bLogCheckpoints);

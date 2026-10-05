@@ -23,7 +23,7 @@ class MovieDecoder {
 	virtual ~MovieDecoder() {
 	}
 
-	virtual RString Open(RString sFile) = 0;
+	virtual std::string Open(std::string sFile) = 0;
 	virtual void Close() = 0;
 	virtual void Rewind() = 0;
 

@@ -591,7 +591,7 @@ void OptionRow::UpdateEnabledDisabled() {
 	}
 }
 
-void OptionRow::SetModIcon(PlayerNumber pn, const RString &sText, GameCommand &gc) {
+void OptionRow::SetModIcon(PlayerNumber pn, const std::string &sText, GameCommand &gc) {
 	// update row frame
 	Message msg("Refresh");
 	msg.SetParam("GameCommand", &gc);

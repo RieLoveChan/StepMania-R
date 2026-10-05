@@ -228,7 +228,7 @@ void GameState::ApplyGameCommand(const std::string &sCommand, PlayerNumber pn) {
 
 void GameState::ApplyCmdline() {
 	// We need to join players before we can set the style.
-	RString sPlayer;
+	std::string sPlayer;
 	for (int i = 0; GetCommandlineArgument("player", &sPlayer, i); ++i) {
 		int pn = StringToInt(sPlayer) - 1;
 		if (!IsAnInt(sPlayer) || pn < 0 || pn >= NUM_PLAYERS)
@@ -237,7 +237,7 @@ void GameState::ApplyCmdline() {
 		JoinPlayer((PlayerNumber)pn);
 	}
 
-	RString sMode;
+	std::string sMode;
 	for (int i = 0; GetCommandlineArgument("mode", &sMode, i); ++i) {
 		ApplyGameCommand(sMode);
 	}
