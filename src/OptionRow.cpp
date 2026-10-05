@@ -113,7 +113,7 @@ void OptionRowType::Load(const std::string &sMetricsGroup, Actor *pParent) {
 	ActorUtil::LoadAllCommandsAndSetXY(m_sprFrame, sMetricsGroup);
 
 	if (SHOW_MOD_ICONS) {
-		m_ModIcon.Load(MOD_ICON_METRICS_GROUP);
+		m_ModIcon.Load(MOD_ICON_METRICS_GROUP.GetValue());
 		m_ModIcon.SetName("ModIcon");
 		ActorUtil::LoadAllCommands(m_ModIcon, sMetricsGroup);
 	}

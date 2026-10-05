@@ -48,7 +48,7 @@ class OptionRowType {
 	ThemeMetric<bool> SHOW_BPM_IN_SPEED_TITLE;
 	ThemeMetric<bool> SHOW_MOD_ICONS;
 	ThemeMetric<bool> SHOW_UNDERLINES;
-	ThemeMetric<RString> MOD_ICON_METRICS_GROUP;
+	ThemeMetric<std::string> MOD_ICON_METRICS_GROUP;
 
 	friend class OptionRow;
 };
