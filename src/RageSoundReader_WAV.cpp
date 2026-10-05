@@ -405,14 +405,14 @@ struct WavReaderADPCM : public WavReader {
 	}
 };
 
-RString ReadString(RageFileBasic &f, int iSize, std::string &sError) {
+std::string ReadString(RageFileBasic &f, int iSize, std::string &sError) {
 	if (!sError.empty())
-		return RString();
+		return std::string();
 
 	char *buf = new char[iSize + 1];
 	std::fill(buf, buf + iSize + 1, '\0');
 	FileReading::ReadBytes(f, buf, iSize, sError);
-	RString ret(buf);
+	std::string ret(buf);
 	delete[] buf;
 	return ret;
 }
@@ -444,7 +444,7 @@ RageSoundReader_FileReader::OpenResult RageSoundReader_WAV::Open(RageFileBasic *
 
 	bool bGotFormatChunk = false, bGotDataChunk = false;
 	while (!bGotFormatChunk || !bGotDataChunk) {
-		RString ChunkID = ReadString(*m_pFile, 4, sError);
+		std::string ChunkID = ReadString(*m_pFile, 4, sError);
 		std::int32_t iChunkSize = FileReading::read_32_le(*m_pFile, sError);
 
 		if (!sError.empty()) {

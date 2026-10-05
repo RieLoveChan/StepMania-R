@@ -50,7 +50,7 @@ void RageSoundManager::Init() {
 RageSoundManager::~RageSoundManager() {
 	/* Don't lock while deleting the driver (the decoder thread might deadlock). */
 	delete m_pDriver;
-	for (std::pair<RString const &, RageSoundReader_Preload *> s : m_mapPreloadedSounds)
+	for (std::pair<std::string const &, RageSoundReader_Preload *> s : m_mapPreloadedSounds)
 		delete s.second;
 	m_mapPreloadedSounds.clear();
 }
@@ -59,7 +59,7 @@ void RageSoundManager::low_sample_count_workaround() {
 	m_pDriver->low_sample_count_workaround();
 }
 
-void RageSoundManager::fix_bogus_sound_driver_pref(RString const &valid_setting) {
+void RageSoundManager::fix_bogus_sound_driver_pref(std::string const &valid_setting) {
 	g_sSoundDrivers.Set(valid_setting);
 }
 
@@ -138,9 +138,10 @@ int RageSoundManager::GetDriverSampleRate() const {
 RageSoundReader *RageSoundManager::GetLoadedSound(const std::string &sPath_) {
 	LockMut(g_SoundManMutex); /* lock for access to m_mapPreloadedSounds */
 
-	RString sPath(sPath_);
-	sPath.MakeLower();
-	std::map<RString, RageSoundReader_Preload *>::const_iterator it;
+	std::string sPath(sPath_);
+	if (!sPath.empty())
+		MakeLower(&sPath[0], sPath.size());
+	std::map<std::string, RageSoundReader_Preload *>::const_iterator it;
 	it = m_mapPreloadedSounds.find(sPath);
 	if (it == m_mapPreloadedSounds.end())
 		return nullptr;
@@ -156,11 +157,12 @@ void RageSoundManager::AddLoadedSound(const std::string &sPath_, RageSoundReader
 
 	/* Don't AddLoadedSound a sound that's already registered.  It should have been
 	 * used in GetLoadedSound. */
-	RString sPath(sPath_);
-	sPath.MakeLower();
-	std::map<RString, RageSoundReader_Preload *>::const_iterator it;
+	std::string sPath(sPath_);
+	if (!sPath.empty())
+		MakeLower(&sPath[0], sPath.size());
+	std::map<std::string, RageSoundReader_Preload *>::const_iterator it;
 	it = m_mapPreloadedSounds.find(sPath);
-	ASSERT_M(it == m_mapPreloadedSounds.end(), sPath);
+	ASSERT_M(it == m_mapPreloadedSounds.end(), sPath.c_str());
 
 	m_mapPreloadedSounds[sPath] = pSound->Copy();
 }

@@ -23,7 +23,7 @@ class RageSoundBase {
 	virtual RageTimer GetStartTime() const {
 		return RageZeroTimer;
 	}
-	virtual RString GetLoadedFilePath() const = 0;
+	virtual std::string GetLoadedFilePath() const = 0;
 };
 
 /**
@@ -135,7 +135,7 @@ class RageSound : public RageSoundBase {
 
 	float GetLengthSeconds();
 	float GetPositionSeconds(bool *approximate = nullptr, RageTimer *Timestamp = nullptr) const;
-	RString GetLoadedFilePath() const override {
+	std::string GetLoadedFilePath() const override {
 		return m_sFilePath;
 	}
 	bool IsPlaying() const {

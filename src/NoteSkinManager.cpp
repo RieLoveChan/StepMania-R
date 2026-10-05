@@ -204,7 +204,7 @@ bool NoteSkinManager::NoteSkinNameInList(const std::string &name, const std::vec
 	return false;
 }
 
-bool NoteSkinManager::DoesNoteSkinExist(const RString &sSkinName) {
+bool NoteSkinManager::DoesNoteSkinExist(const std::string &sSkinName) {
 	std::vector<std::string> asSkinNames;
 	GetAllNoteSkinNamesForGame(GAMESTATE->m_pCurGame, asSkinNames);
 	return NoteSkinNameInList(sSkinName, asSkinNames);
@@ -517,8 +517,8 @@ class LunaNoteSkinManager : public Luna<NoteSkinManager> {
 	}
 #define FOR_NOTESKIN(x, n)                                                                                             \
 	static int x##ForNoteSkin(T *p, lua_State *L) {                                                                     \
-		const RString sOldNoteSkin = p->GetCurrentNoteSkin();                                                            \
-		RString nsname = SArg((n) + 1);                                                                                  \
+		const std::string sOldNoteSkin = p->GetCurrentNoteSkin();                                                        \
+		std::string nsname = SArg((n) + 1);                                                                              \
 		if (!p->DoesNoteSkinExist(nsname)) {                                                                             \
 			luaL_error(L, "Noteskin \"%s\" does not exist.", nsname.c_str());                                             \
 		}                                                                                                                \

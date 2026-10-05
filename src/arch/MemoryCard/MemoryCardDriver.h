@@ -58,7 +58,7 @@ struct UsbStorageDevice {
 	bool IsBlank() const {
 		return m_State == STATE_NONE;
 	}
-	void SetOsMountDir(const RString &s);
+	void SetOsMountDir(const std::string &s);
 
 	bool operator==(const UsbStorageDevice &other) const;
 };

@@ -60,13 +60,13 @@ struct RageTextureID {
 
 	RageTextureID()
 	    : filename(RString()), iMaxSize(0), bMipMaps(false), iAlphaBits(0), iGrayscaleBits(0), iColorDepth(0),
-	      bDither(false), bStretch(false), bHotPinkColorKey(false), AdditionalTextureHints(RString()),
+	      bDither(false), bStretch(false), bHotPinkColorKey(false), AdditionalTextureHints(std::string()),
 	      Policy(TEX_DEFAULT) {
 		Init();
 	}
 	RageTextureID(const std::string &fn)
 	    : filename(RString()), iMaxSize(0), bMipMaps(false), iAlphaBits(0), iGrayscaleBits(0), iColorDepth(0),
-	      bDither(false), bStretch(false), bHotPinkColorKey(false), AdditionalTextureHints(RString()),
+	      bDither(false), bStretch(false), bHotPinkColorKey(false), AdditionalTextureHints(std::string()),
 	      Policy(TEX_DEFAULT) {
 		Init();
 		SetFilename(fn);

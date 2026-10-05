@@ -22,13 +22,13 @@ class NoteSkinManager {
 	void GetNoteSkinNames(const Game *game, std::vector<std::string> &AddTo);
 	void GetNoteSkinNames(std::vector<std::string> &AddTo); // looks up current const Game* in GAMESTATE
 	bool NoteSkinNameInList(const std::string &name, const std::vector<std::string> &name_list);
-	bool DoesNoteSkinExist(const RString &sNoteSkin); // looks up current const Game* in GAMESTATE
+	bool DoesNoteSkinExist(const std::string &sNoteSkin); // looks up current const Game* in GAMESTATE
 	bool DoNoteSkinsExistForGame(const Game *pGame);
 	std::string GetDefaultNoteSkinName(); // looks up current const Game* in GAMESTATE
 
 	void ValidateNoteSkinName(std::string &name);
 
-	void SetCurrentNoteSkin(const RString &sNoteSkin) {
+	void SetCurrentNoteSkin(const std::string &sNoteSkin) {
 		m_sCurrentNoteSkin = sNoteSkin;
 	}
 	const RString &GetCurrentNoteSkin() {
@@ -72,7 +72,7 @@ extern NoteSkinManager *NOTESKIN; // global and accessible from anywhere in our 
 
 class LockNoteSkin {
  public:
-	LockNoteSkin(const RString &sNoteSkin) {
+	LockNoteSkin(const std::string &sNoteSkin) {
 		ASSERT(NOTESKIN->GetCurrentNoteSkin().empty());
 		NOTESKIN->SetCurrentNoteSkin(sNoteSkin);
 	}
