@@ -174,9 +174,10 @@ body of 0004 is not edited (ADRs are immutable once `Accepted`).
 
 # Open questions
 
-1. **Vulkan baseline version.** Which minimum Vulkan version and
-   extensions? MoltenVK's feature coverage on the two supported macOS
-   releases is the limiting case; decide it from the prototype.
+1. **Vulkan baseline version.** *Resolved by the 2026-10-04 amendment
+   below: target Vulkan 1.4.* Still open: which optional extensions the
+   backend needs, and whether MoltenVK covers them on the two supported
+   macOS releases (decided from the prototype).
 2. **Fallback lifetime.** The fallback has no end date here. Whether and
    when OpenGL is retired should be decided after Vulkan has been the
    default for a release cycle, with real-world init-failure data.
@@ -193,3 +194,33 @@ body of 0004 is not edited (ADRs are immutable once `Accepted`).
 6. **Fixed-function interface cleanup.** Whether to shrink the `RageDisplay`
    interface (lighting, environment mapping, cel shading, combiner modes)
    before or during stage 2, based on what the shipped themes use.
+
+# Amendment 2026-10-04 - target the latest Vulkan
+
+Maintainer instruction: use the latest Vulkan version available. This
+resolves open question 1 (baseline version).
+
+- **Target: Vulkan 1.4**, the latest core version at the time of writing
+  (1.4 was released 2024-12-02; the specification was at patch 1.4.365 on
+  2026-10-02 and Vulkan SDK 1.4.357+ is current). The instance is created
+  with `apiVersion = VK_API_VERSION_1_4`, and the backend is written against
+  1.4 core: features promoted into core by 1.4 are used directly instead of
+  being probed as extensions. The patch level is not pinned here; the SDK or
+  header version is pinned as a build dependency in stage 1.
+- **macOS:** MoltenVK 1.4 exposes Vulkan 1.4 over Metal, so the same target
+  holds on macOS. MoltenVK is still a translation layer with documented
+  limitations, so stage 1 must confirm that what this engine needs (2D and
+  simple 3D, textures, render-to-texture, blend modes, screenshots) is
+  covered, rather than assuming it.
+- **Consequence for hardware:** a 1.4 baseline excludes GPUs and drivers
+  that only expose an older Vulkan. They fall back to OpenGL automatically
+  (see Decision), which makes the fallback more important than a lower
+  baseline would. Which GPU generations actually expose 1.4 on Windows and
+  Linux is an expectation to measure in stage 1, not a fact established
+  here.
+- **Trade-off accepted:** a lower baseline (1.3 or 1.2) would reach more
+  GPUs and could be raised later; the maintainer chose the latest version
+  and relies on the OpenGL fallback for older hardware.
+- **Watch item:** the Vulkan SDK now also ships KosmicKrisp, a Vulkan
+  implementation for Apple platforms. It is a possible alternative to
+  MoltenVK; it is not evaluated or chosen here.

@@ -17,7 +17,7 @@ Status values: `Proposed` (awaiting maintainer sign-off) · `Accepted` ·
 * [0006](./0006-test-harness.md) - Test harness: Catch2 v3 (amalgamated) + `src/` as an OBJECT library so exe and `tests/` share one engine build. **Status: Accepted** (scaffold on branch, merge gated on green build).
 * [0007](./0007-threading-modernization.md) - Threading modernization: replace `RageThreads`' internals with `std::thread`/`mutex`/`condition_variable` (API unchanged), gated on a new concurrency stress test landing first. Backlog item 11. **Status: Accepted** (2026-09-15); **implemented and closed 2026-09-16.**
 * [0008](./0008-game-type-registry.md) - Data-driven game-type registry, stage 1: `g_Games[]` → a `Games/` ini-tree (`StepsType` stays an enum for now). Backlog item 20. **Status: Accepted** (2026-09-15); **stage 1 implemented and closed 2026-09-16.**
-* [0009](./0009-renderer-vulkan-primary.md) - Renderer strategy II: Vulkan as the primary renderer, OpenGL kept as a maintained fallback; supersedes 0004's "GL 3.3 core" direction only (its D3D9/GLES2 removals stay). **Status: Accepted** (2026-10-04); **stage 0 (remove GLES2 and D3D9) implemented and closed 2026-10-04**; stages 1-4 (Vulkan) not started.
+* [0009](./0009-renderer-vulkan-primary.md) - Renderer strategy II: Vulkan as the primary renderer, OpenGL kept as a maintained fallback; supersedes 0004's "GL 3.3 core" direction only (its D3D9/GLES2 removals stay). **Status: Accepted** (2026-10-04); **stage 0 (remove GLES2 and D3D9) implemented and closed 2026-10-04**; stages 1-4 (Vulkan) not started; target API is the latest Vulkan (1.4, amendment 2026-10-04).
 
 # Adding one
 
