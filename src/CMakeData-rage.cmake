@@ -101,11 +101,6 @@ list(APPEND SMDATA_RAGE_GRAPHICS_HPP
             "RageTexturePreloader.h"
             "RageTextureRenderTarget.h")
 
-if(WIN32)
-  list(APPEND SMDATA_RAGE_GRAPHICS_SRC "RageDisplay_D3D.cpp")
-  list(APPEND SMDATA_RAGE_GRAPHICS_HPP "RageDisplay_D3D.h")
-endif()
-
 source_group("Rage\\\\Graphics"
              FILES
              ${SMDATA_RAGE_GRAPHICS_SRC}

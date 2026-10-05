@@ -18,7 +18,7 @@ threading and logging to the rest of the game. Ground-truth file grouping:
 | Area | Files | Notes |
 |---|---|---|
 | Files / VFS | `RageFileManager.*`, `RageFileDriver*` | Virtual filesystem with mount points; drivers for Direct, Zip, Deflate, Memory, Slice, ReadAhead, Timeout. `FILEMAN` global. |
-| Display | `RageDisplay.*`, `RageDisplay_OGL*`, `RageDisplay_D3D*` (Win), `RageDisplay_Null` | `DISPLAY` global. Backend chosen at startup from prefs. |
+| Display | `RageDisplay.*`, `RageDisplay_OGL*`, `RageDisplay_Null` | `DISPLAY` global. Backend chosen at startup from prefs. |
 | Textures | `RageTexture*`, `RageBitmapTexture.*`, `RageSurface*` | `TEXTUREMAN` global. `RageSurface_Load_*` per image format. |
 | Sound | `RageSound.*`, `RageSoundManager.*`, `RageSoundReader_*` | `SOUNDMAN` global. Readers form a filter chain (see below). |
 | Misc | `RageInput*`, `RageLog.*`, `RageMath.*`, `RageTypes.*`, `RageThreads.*`, `RageTimer.*`, `RageException.*` | `LOG`, `INPUTMAN` globals. |

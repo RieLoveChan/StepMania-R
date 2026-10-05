@@ -2,7 +2,6 @@
 #define ARCH_SETUP_WINDOWS_H
 
 #define SUPPORT_OPENGL
-#define SUPPORT_D3D
 
 #pragma warning(disable : 4005) // macro redefinitions (ARRAYSIZE)
 

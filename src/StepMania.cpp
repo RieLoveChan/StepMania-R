@@ -30,7 +30,7 @@
 #include "RageSurface_Load.h"
 #include "CommandLineActions.h"
 
-#if !defined(SUPPORT_OPENGL) && !defined(SUPPORT_D3D)
+#if !defined(SUPPORT_OPENGL)
 #define SUPPORT_OPENGL
 #endif
 
@@ -403,7 +403,6 @@ static void AdjustForChangedSystemCapabilities() {
 }
 
 #if defined(_WIN32)
-#include "RageDisplay_D3D.h"
 #include "archutils/Win32/VideoDriverInfo.h"
 #endif
 
@@ -460,8 +459,8 @@ struct VideoCardDefaults {
       true  // Smooth lines
    ),
    VideoCardDefaults(
-      "",           // Video card name (generic Windows)
-      "opengl,d3d", // Available renderers
+      "",       // Video card name (generic Windows)
+      "opengl", // Available renderers
       1280,
       720,  // Default resolution
       32,   // Display color
@@ -559,27 +558,8 @@ static LocalizedString ERROR_UNKNOWN_VIDEO_RENDERER("StepMania", "Unknown video 
 
 RageDisplay *CreateDisplay() {
 	/* We never want to bother users with having to decide which API to use.
-	 *
-	 * Some cards simply are too troublesome with OpenGL to ever use it, eg. Voodoos.
-	 * If D3D8 isn't installed on those, complain and refuse to run (by default).
-	 * For others, always use OpenGL.  Allow forcing to D3D as an advanced option.
-	 *
-	 * If we're missing acceleration when we load D3D8 due to a card being in the
-	 * D3D list, it means we need drivers and that they do exist.
-	 *
-	 * If we try to load OpenGL and we're missing acceleration, it may mean:
-	 *  1. We're missing drivers, and they just need upgrading.
-	 *  2. The card doesn't have drivers, and it should be using D3D8.
-	 *     In other words, it needs an entry in this table.
-	 *  3. The card doesn't have drivers for either.  (Sorry, no S3 868s.)
-	 *     Can't play.
-	 * In this case, fail to load; don't silently fall back on D3D.  We don't want
-	 * people unknowingly using D3D8 with old drivers (and reporting obscure bugs
-	 * due to driver problems).  We'll probably get bug reports for all three types.
-	 * #2 is the only case that's actually a bug.
-	 *
-	 * Actually, right now we're falling back. I'm not sure which behavior is better.
-	 */
+	 * VideoRenderers lists the backends to try, in order; the first one that
+	 * initializes wins. */
 
 	// bool bAppliedDefaults = CheckVideoDefaultSettings();
 	CheckVideoDefaultSettings();
@@ -594,6 +574,26 @@ RageDisplay *CreateDisplay() {
 	std::vector<std::string> asRenderers;
 	split(PREFSMAN->m_sVideoRenderers.Get(), ",", asRenderers, true);
 
+	// Old preference files may still list renderers that were removed from the engine
+	// (Direct3D 9, OpenGL ES 2). Drop them, say so, and correct the preference so the
+	// warning does not repeat. If nothing else was listed, use OpenGL.
+	bool bDroppedRemoved = false;
+	for (auto it = asRenderers.begin(); it != asRenderers.end();) {
+		if (StrCompareNoCase(*it, "d3d") == 0 || StrCompareNoCase(*it, "gles2") == 0) {
+			LOG_WARN(Log::General, "Video renderer '%s' is no longer supported; ignoring it.", it->c_str());
+			it = asRenderers.erase(it);
+			bDroppedRemoved = true;
+		}
+		else {
+			++it;
+		}
+	}
+	if (bDroppedRemoved) {
+		if (asRenderers.empty())
+			asRenderers.push_back("opengl");
+		PREFSMAN->m_sVideoRenderers.Set(RString(join(",", asRenderers)));
+	}
+
 	if (asRenderers.empty())
 		RageException::Throw("%s", ERROR_NO_VIDEO_RENDERERS.GetValue().c_str());
 
@@ -604,17 +604,6 @@ RageDisplay *CreateDisplay() {
 		if (StrCompareNoCase(sRenderer, "opengl") == 0) {
 #if defined(SUPPORT_OPENGL)
 			pRet = new RageDisplay_Legacy;
-#endif
-		}
-		else if (StrCompareNoCase(sRenderer, "gles2") == 0) {
-			// Removed backend. Old preference files may still list it: skip it instead of
-			// treating it as an unknown renderer, which would abort startup.
-			LOG_WARN(Log::General, "Video renderer '%s' is no longer supported; skipping it.", sRenderer.c_str());
-		}
-		else if (StrCompareNoCase(sRenderer, "d3d") == 0) {
-// TODO: ANGLE/RageDisplay_Modern
-#if defined(SUPPORT_D3D)
-			pRet = new RageDisplay_D3D;
 #endif
 		}
 		else if (StrCompareNoCase(sRenderer, "null") == 0) {
