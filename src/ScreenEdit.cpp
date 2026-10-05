@@ -1955,18 +1955,18 @@ static LocalizedString PREVIEW_START("ScreenEdit", "Preview Start");
 static LocalizedString PREVIEW_LENGTH("ScreenEdit", "Preview Length");
 static LocalizedString RECORD_HOLD_TIME("ScreenEdit", "Record Hold Time");
 
-static ThemeMetric<RString> CURRENT_BEAT_FORMAT("ScreenEdit", "CurrentBeatFormat");
-static ThemeMetric<RString> CURRENT_SECOND_FORMAT("ScreenEdit", "CurrentSecondFormat");
-static ThemeMetric<RString> SNAP_TO_FORMAT("ScreenEdit", "SnapToFormat");
-static ThemeMetric<RString> SELECTION_BEAT_BEGIN_FORMAT("ScreenEdit", "SelectionBeatBeginFormat");
-static ThemeMetric<RString> SELECTION_BEAT_UNFINISHED_FORMAT("ScreenEdit", "SelectionBeatUnfinishedFormat");
-static ThemeMetric<RString> SELECTION_BEAT_END_FORMAT("ScreenEdit", "SelectionBeatEndFormat");
-static ThemeMetric<RString> DIFFICULTY_FORMAT("ScreenEdit", "DifficultyFormat");
-static ThemeMetric<RString> ROUTINE_PLAYER_FORMAT("ScreenEdit", "RoutinePlayerFormat");
-static ThemeMetric<RString> CHART_NAME_FORMAT("ScreenEdit", "ChartNameFormat");
+static ThemeMetric<std::string> CURRENT_BEAT_FORMAT("ScreenEdit", "CurrentBeatFormat");
+static ThemeMetric<std::string> CURRENT_SECOND_FORMAT("ScreenEdit", "CurrentSecondFormat");
+static ThemeMetric<std::string> SNAP_TO_FORMAT("ScreenEdit", "SnapToFormat");
+static ThemeMetric<std::string> SELECTION_BEAT_BEGIN_FORMAT("ScreenEdit", "SelectionBeatBeginFormat");
+static ThemeMetric<std::string> SELECTION_BEAT_UNFINISHED_FORMAT("ScreenEdit", "SelectionBeatUnfinishedFormat");
+static ThemeMetric<std::string> SELECTION_BEAT_END_FORMAT("ScreenEdit", "SelectionBeatEndFormat");
+static ThemeMetric<std::string> DIFFICULTY_FORMAT("ScreenEdit", "DifficultyFormat");
+static ThemeMetric<std::string> ROUTINE_PLAYER_FORMAT("ScreenEdit", "RoutinePlayerFormat");
+static ThemeMetric<std::string> CHART_NAME_FORMAT("ScreenEdit", "ChartNameFormat");
 static ThemeMetric<RString> DESCRIPTION_FORMAT("ScreenEdit", "DescriptionFormat");
 static ThemeMetric<RString> CHART_STYLE_FORMAT("ScreenEdit", "ChartStyleFormat");
-static ThemeMetric<RString> STEP_AUTHOR_FORMAT("ScreenEdit", "StepAuthorFormat");
+static ThemeMetric<std::string> STEP_AUTHOR_FORMAT("ScreenEdit", "StepAuthorFormat");
 static ThemeMetric<RString> MAIN_TITLE_FORMAT("ScreenEdit", "MainTitleFormat");
 static ThemeMetric<RString> SUBTITLE_FORMAT("ScreenEdit", "SubtitleFormat");
 static ThemeMetric<RString> TAP_NOTE_TYPE_FORMAT("ScreenEdit", "TapNoteTypeFormat");
@@ -2008,9 +2008,9 @@ void ScreenEdit::UpdateTextInfo() {
 	std::string sNoteType = ssprintf(NOTES.GetValue(), NoteTypeToLocalizedString(m_SnapDisplay.GetNoteType()).c_str());
 
 	std::string sText;
-	sText += ssprintf(CURRENT_BEAT_FORMAT.GetValue(), CURRENT_BEAT.GetValue().c_str(), GetBeat());
+	sText += ssprintf(CURRENT_BEAT_FORMAT.GetValue().c_str(), CURRENT_BEAT.GetValue().c_str(), GetBeat());
 	float second = GetAppropriateTiming().GetElapsedTimeFromBeatNoOffset(GetBeat());
-	sText += ssprintf(CURRENT_SECOND_FORMAT.GetValue(), CURRENT_SECOND.GetValue().c_str(), second);
+	sText += ssprintf(CURRENT_SECOND_FORMAT.GetValue().c_str(), CURRENT_SECOND.GetValue().c_str(), second);
 	switch (EDIT_MODE.GetValue()) {
 		DEFAULT_FAIL(EDIT_MODE.GetValue());
 	case EditMode_Practice:
@@ -2018,36 +2018,36 @@ void ScreenEdit::UpdateTextInfo() {
 	case EditMode_CourseMods:
 	case EditMode_Home:
 	case EditMode_Full:
-		sText += ssprintf(SNAP_TO_FORMAT.GetValue(), SNAP_TO.GetValue().c_str(), sNoteType.c_str());
+		sText += ssprintf(SNAP_TO_FORMAT.GetValue().c_str(), SNAP_TO.GetValue().c_str(), sNoteType.c_str());
 		break;
 	}
 
 	if (m_NoteFieldEdit.m_iBeginMarker != -1) {
 		sText += ssprintf(
-		   SELECTION_BEAT_BEGIN_FORMAT.GetValue(),
+		   SELECTION_BEAT_BEGIN_FORMAT.GetValue().c_str(),
 		   SELECTION_BEAT.GetValue().c_str(),
 		   NoteRowToBeat(m_NoteFieldEdit.m_iBeginMarker)
 		);
 
 		if (m_NoteFieldEdit.m_iEndMarker != -1)
-			sText += ssprintf(SELECTION_BEAT_END_FORMAT.GetValue(), NoteRowToBeat(m_NoteFieldEdit.m_iEndMarker));
+			sText += ssprintf(SELECTION_BEAT_END_FORMAT.GetValue().c_str(), NoteRowToBeat(m_NoteFieldEdit.m_iEndMarker));
 		else
 			sText += SELECTION_BEAT_UNFINISHED_FORMAT.GetValue();
 	}
 
 	if (EDIT_MODE.GetValue() == EditMode_Full) {
 		sText += ssprintf(
-		   DIFFICULTY_FORMAT.GetValue(),
+		   DIFFICULTY_FORMAT.GetValue().c_str(),
 		   DIFFICULTY.GetValue().c_str(),
 		   DifficultyToString(m_pSteps->GetDifficulty()).c_str()
 		);
 		if (m_InputPlayerNumber != PLAYER_INVALID)
 			sText +=
-			   ssprintf(ROUTINE_PLAYER_FORMAT.GetValue(), ROUTINE_PLAYER.GetValue().c_str(), m_InputPlayerNumber + 1);
+			   ssprintf(ROUTINE_PLAYER_FORMAT.GetValue().c_str(), ROUTINE_PLAYER.GetValue().c_str(), m_InputPlayerNumber + 1);
 		// sText += ssprintf( DESCRIPTION_FORMAT.GetValue(), DESCRIPTION.GetValue().c_str(),
 		// m_pSteps->GetDescription().c_str() );
-		sText += ssprintf(CHART_NAME_FORMAT.GetValue(), CHART_NAME.GetValue().c_str(), m_pSteps->GetChartName().c_str());
-		sText += ssprintf(STEP_AUTHOR_FORMAT.GetValue(), STEP_AUTHOR.GetValue().c_str(), m_pSteps->GetCredit().c_str());
+		sText += ssprintf(CHART_NAME_FORMAT.GetValue().c_str(), CHART_NAME.GetValue().c_str(), m_pSteps->GetChartName().c_str());
+		sText += ssprintf(STEP_AUTHOR_FORMAT.GetValue().c_str(), STEP_AUTHOR.GetValue().c_str(), m_pSteps->GetCredit().c_str());
 		// sText += ssprintf( CHART_STYLE_FORMAT.GetValue(), CHART_STYLE.GetValue().c_str(),
 		// m_pSteps->GetChartStyle().c_str() );
 		sText += ssprintf(MAIN_TITLE_FORMAT.GetValue(), MAIN_TITLE.GetValue().c_str(), m_pSong->m_sMainTitle.c_str());

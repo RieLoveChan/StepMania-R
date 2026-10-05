@@ -80,7 +80,7 @@ Difficulty OldStyleStringToDifficulty(const RString &sDC) {
 
 LuaFunction(OldStyleStringToDifficulty, OldStyleStringToDifficulty(SArg(1)));
 
-static ThemeMetric<RString> NAMES("CustomDifficulty", "Names");
+static ThemeMetric<std::string> NAMES("CustomDifficulty", "Names");
 
 std::string GetCustomDifficulty(StepsType st, Difficulty dc, CourseType ct) {
 	/* XXX GAMEMAN->GetStepsTypeInfo( StepsType_Invalid ) will crash. I'm not
@@ -113,7 +113,7 @@ std::string GetCustomDifficulty(StepsType st, Difficulty dc, CourseType ct) {
 				ThemeMetric<CourseType> COURSE_TYPE("CustomDifficulty", sName + "CourseType");
 				if (COURSE_TYPE == CourseType_Invalid || ct == COURSE_TYPE) // match
 				{
-					ThemeMetric<RString> STRING("CustomDifficulty", sName + "String");
+					ThemeMetric<std::string> STRING("CustomDifficulty", sName + "String");
 					return STRING.GetValue();
 				}
 			}
