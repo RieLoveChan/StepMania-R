@@ -56,8 +56,8 @@ class PaneDisplay : public ActorFrame {
 
 	LocalizedString EMPTY_MACHINE_HIGH_SCORE_NAME;
 	LocalizedString NOT_AVAILABLE;
-	ThemeMetric<RString> COUNT_FORMAT;
-	ThemeMetric<RString> NULL_COUNT_STRING;
+	ThemeMetric<std::string> COUNT_FORMAT;
+	ThemeMetric<std::string> NULL_COUNT_STRING;
 };
 
 #endif

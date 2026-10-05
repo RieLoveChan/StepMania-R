@@ -89,7 +89,7 @@ struct WavReader {
  protected:
 	RageFileBasic &m_File;
 	const RageSoundReader_WAV::WavData &m_WavData;
-	RString m_sError;
+	std::string m_sError;
 };
 
 struct WavReaderPCM : public WavReader {
@@ -428,7 +428,7 @@ std::string ReadString(RageFileBasic &f, int iSize, std::string &sError) {
 RageSoundReader_FileReader::OpenResult RageSoundReader_WAV::Open(RageFileBasic *pFile) {
 	m_pFile = pFile;
 
-	RString sError;
+	std::string sError;
 
 	/* RIFF header: */
 	if (ReadString(*m_pFile, 4, sError) != "RIFF") {

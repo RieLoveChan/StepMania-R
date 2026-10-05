@@ -27,7 +27,7 @@ class RollingNumbers : public BitmapText {
 	virtual void PushSelf(lua_State *L);
 
  private:
-	ThemeMetric<RString> TEXT_FORMAT;
+	ThemeMetric<std::string> TEXT_FORMAT;
 	ThemeMetric<float> APPROACH_SECONDS;
 	ThemeMetric<bool> COMMIFY;
 	ThemeMetric<RageColor> LEADING_ZERO_MULTIPLY_COLOR;

@@ -580,3 +580,16 @@ if a boundary gotcha turned up, plus `log.md`.
   string indexing select characters and corrupt unrelated text. Validate each
   pair has exactly two strings before replacing, and compare plain and `-w`
   diff statistics immediately, before any build or staging.
+
+## ThemeMetric string values
+
+- A bounded `ThemeMetric<RString>` value may become `ThemeMetric<std::string>`
+  after auditing every field access. `Read()` and callable `GetValue()` use
+  Lua `FromStack`/`Pop`; both string specializations copy explicit lengths,
+  preserve embedded NUL bytes, clear on null and return the same result.
+  Both value types use the default callable trait and initialize empty.
+- Use `.GetValue()` at standard-string sinks and `.GetValue().c_str()` for
+  C format arguments. Audit metric copy construction and callable/nil behavior
+  without changing the generic template.
+- This does not migrate deferred metric name/group members or their reference
+  getters, nor `Preference` serialization and its `FromString` hierarchy.

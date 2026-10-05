@@ -2913,3 +2913,5 @@
 * **ADR 0009 amendment, 2026-10-04.** Maintainer: target the latest Vulkan. Recorded as Vulkan 1.4 (MoltenVK 1.4 covers it on macOS; spec patch 1.4.365 on 2026-10-02, per the Khronos registry). Resolves open question 1; hardware coverage of 1.4 and MoltenVK's limits are to be measured in stage 1. Docs only.
 
 * **Byte replacement tooling, 2026-10-04.** Added a migrate-rstring playbook warning about PowerShell nested-array flattening; validate replacement pairs and inspect plain versus whitespace-ignored statistics immediately.
+
+* **ThemeMetric string values, 2026-10-04.** Added migration guidance distinguishing bounded Lua-backed value fields from deferred metric name/group reference getters and Preference serialization. Verify the identical explicit-length Lua conversions and use explicit value/C-string boundaries.

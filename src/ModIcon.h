@@ -23,7 +23,7 @@ class ModIcon : public ActorFrame {
 	AutoActor m_sprEmpty;
 
 	ThemeMetric<int> CROP_TEXT_TO_WIDTH;
-	ThemeMetric<RString> STOP_WORDS;
+	ThemeMetric<std::string> STOP_WORDS;
 	std::vector<std::string> m_vStopWords;
 };
 

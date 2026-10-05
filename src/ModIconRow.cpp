@@ -45,7 +45,7 @@ void ModIconRow::Load(const std::string &sMetricsGroup, PlayerNumber pn) {
 		float fOffset =
 		   SCALE(i, 0, NUM_OPTION_ICONS - 1, -(NUM_OPTION_ICONS - 1) / 2.0f, (float)(NUM_OPTION_ICONS - 1) / 2.0f);
 		p->SetXY(fOffset * SPACING_X, fOffset * SPACING_Y);
-		p->Load(OPTION_ICON_METRICS_GROUP);
+		p->Load(OPTION_ICON_METRICS_GROUP.GetValue());
 		ActorUtil::LoadAllCommands(p, sMetricsGroup);
 		m_vpModIcon.push_back(p);
 		this->AddChild(p);

@@ -110,7 +110,7 @@ void RollingNumbers::UpdateText() {
 	if (!m_metrics_loaded) {
 		return;
 	}
-	std::string s = ssprintf(TEXT_FORMAT.GetValue(), m_fCurrentNumber);
+	std::string s = ssprintf(TEXT_FORMAT.GetValue().c_str(), m_fCurrentNumber);
 	if (COMMIFY) {
 		s = Commify(s);
 	}
