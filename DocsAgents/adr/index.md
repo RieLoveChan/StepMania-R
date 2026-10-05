@@ -12,12 +12,12 @@ Status values: `Proposed` (awaiting maintainer sign-off) · `Accepted` ·
 * [0001](./0001-toolchain-target.md) - Toolchain & modernization target (C++17, CMake 3.20, `-Werror` policy, FFmpeg binaries). **Status: Accepted.** (§9 superseded by 0003.)
 * [0002](./0002-independent-project.md) - Independent project; no upstream compatibility constraint. **Status: Accepted.**
 * [0003](./0003-platform-support-floors.md) - Platform support floors: Windows 11, current macOS, current Linux; supersedes 0001 §9. **Status: Accepted.**
-* [0004](./0004-renderer-strategy.md) - Renderer strategy: GL 3.3 core profile, drop D3D9, drop WITH_GLES2. Deferred from ADR 0001. **Status: Accepted** (2026-09-15); **partially superseded by 0009** (2026-10-04): the GL 3.3 core direction is replaced, the D3D9/GLES2 removals stand.
+* [0004](./0004-renderer-strategy.md) - Renderer strategy: GL 3.3 core profile, drop D3D9, drop WITH_GLES2. Deferred from ADR 0001. **Status: Accepted** (2026-09-15); **partially superseded by 0009** (2026-10-04): the GL 3.3 core direction is replaced, the D3D9/GLES2 removals stand and were carried out under 0009 stage 0 (2026-10-04).
 * [0005](./0005-logging-overhaul.md) - Logging overhaul: bracketed level tags, no `/////` frames, categories, repeat-collapsing. **Status: Accepted** (phase 1 landed).
 * [0006](./0006-test-harness.md) - Test harness: Catch2 v3 (amalgamated) + `src/` as an OBJECT library so exe and `tests/` share one engine build. **Status: Accepted** (scaffold on branch, merge gated on green build).
 * [0007](./0007-threading-modernization.md) - Threading modernization: replace `RageThreads`' internals with `std::thread`/`mutex`/`condition_variable` (API unchanged), gated on a new concurrency stress test landing first. Backlog item 11. **Status: Accepted** (2026-09-15); **implemented and closed 2026-09-16.**
 * [0008](./0008-game-type-registry.md) - Data-driven game-type registry, stage 1: `g_Games[]` → a `Games/` ini-tree (`StepsType` stays an enum for now). Backlog item 20. **Status: Accepted** (2026-09-15); **stage 1 implemented and closed 2026-09-16.**
-* [0009](./0009-renderer-vulkan-primary.md) - Renderer strategy II: Vulkan as the primary renderer, OpenGL kept as a maintained fallback; supersedes 0004's "GL 3.3 core" direction only (its D3D9/GLES2 removals stay). **Status: Accepted** (2026-10-04); not yet implemented.
+* [0009](./0009-renderer-vulkan-primary.md) - Renderer strategy II: Vulkan as the primary renderer, OpenGL kept as a maintained fallback; supersedes 0004's "GL 3.3 core" direction only (its D3D9/GLES2 removals stay). **Status: Accepted** (2026-10-04); **stage 0 (remove GLES2 and D3D9) implemented and closed 2026-10-04**; stages 1-4 (Vulkan) not started.
 
 # Adding one
 

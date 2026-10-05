@@ -10,7 +10,12 @@ tags: [adr, renderer, vulkan, opengl, proposed]
 **Accepted** - 2026-10-04. Maintainer decision: Vulkan as the primary
 renderer, OpenGL kept as a maintained fallback, D3D9 removed. The
 maintainer also considered keeping D3D9 and adding Direct3D 11/12 and
-chose this option instead (see Alternatives). Not yet implemented.
+chose this option instead (see Alternatives).
+
+**Stage 0 implemented and closed - 2026-10-04.** GLES2 removed in
+`52802ec7b8`, D3D9 removed in `410aadbde0`; CI green on all 7 jobs for
+each. Stages 1-4 (Vulkan prototype, full backend, parity gate and default
+flip, fallback review) are not started.
 
 **Supersedes ADR 0004 in part.** Only 0004's first decision ("migrate to
 GL 3.3 core profile") is replaced. 0004's other two decisions - **drop the
