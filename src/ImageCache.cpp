@@ -70,12 +70,12 @@ void ImageCache::Demand(std::string sImageDir) {
 		return;
 
 	FOREACH_CONST_Child(&ImageData, p) {
-		RString sImagePath = p->GetName();
+		std::string sImagePath = p->GetName();
 
 		if (g_ImagePathToImage.find(sImagePath) != g_ImagePathToImage.end())
 			continue; /* already loaded */
 
-		const RString sCachePath = GetImageCachePath(sImageDir, sImagePath);
+		const std::string sCachePath = GetImageCachePath(sImageDir, sImagePath);
 		RageSurface *pImage = RageSurfaceUtils::LoadSurface(sCachePath);
 		if (pImage == nullptr) {
 			continue; /* doesn't exist */
@@ -108,7 +108,7 @@ void ImageCache::LoadImage(std::string sImageDir, std::string sImagePath) {
 		return;
 
 	/* Load it. */
-	const RString sCachePath = GetImageCachePath(sImageDir, sImagePath);
+	const std::string sCachePath = GetImageCachePath(sImageDir, sImagePath);
 
 	for (int tries = 0; tries < 2; ++tries) {
 		if (g_ImagePathToImage.find(sImagePath) != g_ImagePathToImage.end())
@@ -312,7 +312,7 @@ void ImageCache::CacheImage(std::string sImageDir, std::string sImagePath) {
 	if (!DoesFileExist(sImagePath))
 		return;
 
-	const RString sCachePath = GetImageCachePath(sImageDir, sImagePath);
+	const std::string sCachePath = GetImageCachePath(sImageDir, sImagePath);
 
 	/* Check the full file hash.  If it's the loaded and identical, don't recache. */
 	if (DoesFileExist(sCachePath)) {
@@ -396,7 +396,7 @@ void ImageCache::CacheImageInternal(std::string sImageDir, std::string sImagePat
 		pImage = dst;
 	}
 
-	const RString sCachePath = GetImageCachePath(sImageDir, sImagePath);
+	const std::string sCachePath = GetImageCachePath(sImageDir, sImagePath);
 	RageSurfaceUtils::SaveSurface(pImage, sCachePath);
 
 	/* If an old image is loaded, free it. */

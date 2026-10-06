@@ -78,7 +78,7 @@ void RageBitmapTexture::Create() {
 
 	/* Tolerate corrupt/unknown images. */
 	if (pImg == nullptr) {
-		RString warning = ssprintf("RageBitmapTexture: Couldn't load %s: %s", actualID.filename.c_str(), error.c_str());
+		std::string warning = ssprintf("RageBitmapTexture: Couldn't load %s: %s", actualID.filename.c_str(), error.c_str());
 		LOG_ERROR(Log::File, "%s", warning.c_str());
 		Dialog::OK(warning, "missing_texture");
 		pImg = RageSurfaceUtils::MakeDummySurface(64, 64);
@@ -99,8 +99,9 @@ void RageBitmapTexture::Create() {
 	}
 
 	// look in the file name for a format hints
-	RString sHintString = GetID().filename + actualID.AdditionalTextureHints;
-	sHintString.MakeLower();
+	std::string sHintString = GetID().filename + actualID.AdditionalTextureHints;
+	if (!sHintString.empty())
+		MakeLower(&sHintString[0], sHintString.size());
 
 	if (sHintString.find("32bpp") != std::string::npos)
 		actualID.iColorDepth = 32;
