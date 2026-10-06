@@ -174,10 +174,10 @@ bool HexToBinary(const std::string &s, unsigned char *stringOut) {
 	for (int i = 0; true; i++) {
 		if ((int)s.size() <= i * 2)
 			break;
-		RString sByte = s.substr(i * 2, 2);
+		std::string sByte = s.substr(i * 2, 2);
 
 		std::uint8_t val = 0;
-		if (sscanf(sByte, "%hhx", &val) != 1)
+		if (sscanf(sByte.c_str(), "%hhx", &val) != 1)
 			return false;
 		stringOut[i] = val;
 	}
@@ -299,25 +299,25 @@ static LocalizedString NUM_ND("RageUtil", "NumNd");
 static LocalizedString NUM_RD("RageUtil", "NumRd");
 static LocalizedString NUM_TH("RageUtil", "NumTh");
 std::string FormatNumberAndSuffix(int i) {
-	RString sSuffix;
+	std::string sSuffix;
 	switch (i % 10) {
 	case 1:
-		sSuffix = NUM_ST;
+		sSuffix = NUM_ST.GetValue();
 		break;
 	case 2:
-		sSuffix = NUM_ND;
+		sSuffix = NUM_ND.GetValue();
 		break;
 	case 3:
-		sSuffix = NUM_RD;
+		sSuffix = NUM_RD.GetValue();
 		break;
 	default:
-		sSuffix = NUM_TH;
+		sSuffix = NUM_TH.GetValue();
 		break;
 	}
 
 	// "11th", "113th", etc.
 	if (((i % 100) / 10) == 1)
-		sSuffix = NUM_TH;
+		sSuffix = NUM_TH.GetValue();
 
 	return NUM_PREFIX.GetValue() + ssprintf("%i", i) + sSuffix;
 }
@@ -1647,7 +1647,7 @@ wchar_t utf8_get_char(const std::string &s) {
 
 // Replace invalid sequences in s.
 void utf8_sanitize(std::string &s) {
-	RString ret;
+	std::string ret;
 	for (unsigned start = 0; start < s.size();) {
 		wchar_t ch;
 		if (!utf8_to_wchar_ec(s, start, ch))
@@ -1686,7 +1686,7 @@ static int UnicodeDoUpper(char *p, std::size_t iLen, const unsigned char pMappin
 	if (wc < 256)
 		iUpper = pMapping[wc];
 	if (iUpper != wc) {
-		RString sOut;
+		std::string sOut;
 		wchar_to_utf8(iUpper, sOut);
 		if (sOut.size() == iStart)
 			memcpy(p, sOut.data(), sOut.size());
@@ -2123,7 +2123,7 @@ void FixSlashesInPlace(std::string &sPath) {
  */
 
 void CollapsePath(std::string &sPath, bool bRemoveLeadingDot) {
-	RString sOut;
+	std::string sOut;
 	sOut.reserve(sPath.size());
 
 	std::size_t iPos = 0;

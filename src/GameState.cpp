@@ -55,7 +55,7 @@ GameState *GAMESTATE = nullptr; // global and accessible from anywhere in our pr
 class GameStateMessageHandler : public MessageSubscriber {
 	void HandleMessage(const Message &msg) override {
 		if (msg.GetName() == "RefreshCreditText") {
-			RString sJoined;
+			std::string sJoined;
 			FOREACH_HumanPlayer(pn) {
 				if (!sJoined.empty())
 					sJoined += ", ";
@@ -795,7 +795,7 @@ void GameState::LoadCurrentSettingsFromProfile(PlayerNumber pn) {
 	const Profile *pProfile = PROFILEMAN->GetProfile(pn);
 
 	// apply saved default modifiers if any
-	RString sModifiers;
+	std::string sModifiers;
 	if (pProfile->GetDefaultModifiers(m_pCurGame, sModifiers)) {
 		/* We don't save negative preferences (eg. "no reverse"). If the theme
 		 * sets a default of "reverse", and the player turns it off, we should
@@ -2438,7 +2438,7 @@ class LunaGameState : public Luna<GameState> {
 		COMMON_RETURN_SELF;
 	}
 	static int CanSafelyEnterGameplay(T *p, lua_State *L) {
-		RString reason;
+		std::string reason;
 		bool can = p->CanSafelyEnterGameplay(reason);
 		lua_pushboolean(L, can);
 		LuaHelpers::Push(L, reason);
