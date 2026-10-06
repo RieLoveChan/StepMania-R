@@ -293,7 +293,7 @@ void RageLog::SetShowLogOutput(bool show) {
 void RageLog::Trace(const char *fmt, ...) {
 	va_list va;
 	va_start(va, fmt);
-	RString sBuff = vssprintf(fmt, va);
+	std::string sBuff = vssprintf(fmt, va);
 	va_end(va);
 
 	Write(0, LogLevel_Trace, Log::General, sBuff);
@@ -302,7 +302,7 @@ void RageLog::Trace(const char *fmt, ...) {
 void RageLog::Debug(const char *fmt, ...) {
 	va_list va;
 	va_start(va, fmt);
-	RString sBuff = vssprintf(fmt, va);
+	std::string sBuff = vssprintf(fmt, va);
 	va_end(va);
 
 	Write(0, LogLevel_Debug, Log::General, sBuff);
@@ -313,7 +313,7 @@ void RageLog::Debug(const char *fmt, ...) {
 void RageLog::Info(const char *fmt, ...) {
 	va_list va;
 	va_start(va, fmt);
-	RString sBuff = vssprintf(fmt, va);
+	std::string sBuff = vssprintf(fmt, va);
 	va_end(va);
 
 	Write(WRITE_TO_INFO, LogLevel_Info, Log::General, sBuff);
@@ -322,7 +322,7 @@ void RageLog::Info(const char *fmt, ...) {
 void RageLog::Warn(const char *fmt, ...) {
 	va_list va;
 	va_start(va, fmt);
-	RString sBuff = vssprintf(fmt, va);
+	std::string sBuff = vssprintf(fmt, va);
 	va_end(va);
 
 	Write(WRITE_TO_INFO, LogLevel_Warn, Log::General, sBuff);
@@ -331,7 +331,7 @@ void RageLog::Warn(const char *fmt, ...) {
 void RageLog::Error(const char *fmt, ...) {
 	va_list va;
 	va_start(va, fmt);
-	RString sBuff = vssprintf(fmt, va);
+	std::string sBuff = vssprintf(fmt, va);
 	va_end(va);
 
 	Write(WRITE_TO_INFO, LogLevel_Error, Log::General, sBuff);
@@ -340,7 +340,7 @@ void RageLog::Error(const char *fmt, ...) {
 void RageLog::Time(const char *fmt, ...) {
 	va_list va;
 	va_start(va, fmt);
-	RString sBuff = vssprintf(fmt, va);
+	std::string sBuff = vssprintf(fmt, va);
 	va_end(va);
 
 	Write(WRITE_TO_TIME, LogLevel_Info, Log::General, sBuff);
@@ -349,7 +349,7 @@ void RageLog::Time(const char *fmt, ...) {
 void RageLog::UserLog(const std::string &sType, const std::string &sElement, const char *fmt, ...) {
 	va_list va;
 	va_start(va, fmt);
-	RString sBuf = vssprintf(fmt, va);
+	std::string sBuf = vssprintf(fmt, va);
 	va_end(va);
 
 	if (!sType.empty())
@@ -364,7 +364,7 @@ void RageLog::LogLine(LogLevel level, Log::Category cat, const char *file, int l
 
 	va_list va;
 	va_start(va, fmt);
-	RString sMsg = vssprintf(fmt, va);
+	std::string sMsg = vssprintf(fmt, va);
 	va_end(va);
 
 	/* Ignore everything up to and including the first "src/". */
@@ -374,7 +374,7 @@ void RageLog::LogLine(LogLevel level, Log::Category cat, const char *file, int l
 
 	/* "<cat>  <file>:<line>  <msg>" -- the [LEVEL] tag and timestamp are
 	 * added by Write(). */
-	RString sLine = ssprintf("%-7s %s:%d  %s", Log::CategoryToString(cat), file ? file : "?", line, sMsg.c_str());
+	std::string sLine = ssprintf("%-7s %s:%d  %s", Log::CategoryToString(cat), file ? file : "?", line, sMsg.c_str());
 
 	int where = (level >= LogLevel_Info) ? WRITE_TO_INFO : 0;
 	Write(where, level, cat, sLine);
