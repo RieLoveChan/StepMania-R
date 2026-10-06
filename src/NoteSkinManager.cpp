@@ -267,7 +267,7 @@ std::string NoteSkinManager::GetMetric(const std::string &sButtonName, const std
 	ASSERT_M(it != g_mapNameToData.end(), sNoteSkinName); // this NoteSkin doesn't exist!
 	const NoteSkinData &data = it->second;
 
-	RString sReturn;
+	std::string sReturn;
 	if (data.metrics.GetValue(sButtonName, sValue, sReturn))
 		return sReturn;
 	if (!data.metrics.GetValue("NoteDisplay", sValue, sReturn)) {

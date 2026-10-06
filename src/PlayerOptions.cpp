@@ -2265,7 +2265,7 @@ class LunaPlayerOptions : public Luna<PlayerOptions> {
 			lua_pushstring(L, p->m_sNoteSkin);
 		}
 		if (original_top >= 1 && lua_isstring(L, 1)) {
-			RString skin = SArg(1);
+			std::string skin = SArg(1);
 			if (NOTESKIN->DoesNoteSkinExist(skin)) {
 				p->m_sNoteSkin = skin;
 				lua_pushboolean(L, true);

@@ -487,7 +487,7 @@ std::string PrefsManager::GetPreferencesSection() const {
 class LunaPrefsManager : public Luna<PrefsManager> {
  public:
 	static int GetPreference(T * /* p */, lua_State *L) {
-		RString sName = SArg(1);
+		std::string sName = SArg(1);
 		IPreference *pPref = IPreference::GetPreferenceByName(sName);
 		if (pPref == nullptr) {
 			LuaHelpers::ReportScriptErrorFmt("GetPreference: unknown preference \"%s\"", sName.c_str());
@@ -499,7 +499,7 @@ class LunaPrefsManager : public Luna<PrefsManager> {
 		return 1;
 	}
 	static int SetPreference(T *p, lua_State *L) {
-		RString sName = SArg(1);
+		std::string sName = SArg(1);
 
 		IPreference *pPref = IPreference::GetPreferenceByName(sName);
 		if (pPref == nullptr) {
@@ -516,7 +516,7 @@ class LunaPrefsManager : public Luna<PrefsManager> {
 		COMMON_RETURN_SELF;
 	}
 	static int SetPreferenceToDefault(T *p, lua_State *L) {
-		RString sName = SArg(1);
+		std::string sName = SArg(1);
 
 		IPreference *pPref = IPreference::GetPreferenceByName(sName);
 		if (pPref == nullptr) {
@@ -533,7 +533,7 @@ class LunaPrefsManager : public Luna<PrefsManager> {
 		COMMON_RETURN_SELF;
 	}
 	static int PreferenceExists(T * /* p */, lua_State *L) {
-		RString sName = SArg(1);
+		std::string sName = SArg(1);
 
 		IPreference *pPref = IPreference::GetPreferenceByName(sName);
 		if (pPref == nullptr) {
