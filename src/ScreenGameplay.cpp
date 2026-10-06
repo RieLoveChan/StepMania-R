@@ -73,7 +73,7 @@
 
 static ThemeMetric<float> INITIAL_BACKGROUND_BRIGHTNESS("ScreenGameplay", "InitialBackgroundBrightness");
 static ThemeMetric<float> SECONDS_BETWEEN_COMMENTS("ScreenGameplay", "SecondsBetweenComments");
-static ThemeMetric<RString> SCORE_KEEPER_CLASS("ScreenGameplay", "ScoreKeeperClass");
+static ThemeMetric<std::string> SCORE_KEEPER_CLASS("ScreenGameplay", "ScoreKeeperClass");
 static ThemeMetric<bool> FORCE_IMMEDIATE_FAIL_FOR_BATTERY("ScreenGameplay", "ForceImmediateFailForBattery");
 
 AutoScreenMessage(SM_PlayGo);
@@ -157,7 +157,7 @@ void PlayerInfo::Load(PlayerNumber pn, MultiPlayer mp, bool bShowNoteField, int 
 	if (m_pSecondaryScoreDisplay)
 		m_pSecondaryScoreDisplay->Init(pPlayerState, pPlayerStageStats);
 
-	m_pPrimaryScoreKeeper = ScoreKeeper::MakeScoreKeeper(SCORE_KEEPER_CLASS, pPlayerState, pPlayerStageStats);
+	m_pPrimaryScoreKeeper = ScoreKeeper::MakeScoreKeeper(SCORE_KEEPER_CLASS.GetValue(), pPlayerState, pPlayerStageStats);
 
 	switch (GAMESTATE->m_PlayMode) {
 	case PLAY_MODE_RAVE:
@@ -1058,7 +1058,7 @@ void ScreenGameplay::LoadNextSong() {
 		pi->GetPlayerStageStats()->m_iSongsPlayed++;
 		if (pi->m_ptextCourseSongNumber)
 			pi->m_ptextCourseSongNumber->SetText(
-			   ssprintf(SONG_NUMBER_FORMAT.GetValue(), pi->GetPlayerStageStats()->m_iSongsPassed + 1)
+			   ssprintf(SONG_NUMBER_FORMAT.GetValue().c_str(), pi->GetPlayerStageStats()->m_iSongsPassed + 1)
 			);
 	}
 

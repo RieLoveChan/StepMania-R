@@ -86,7 +86,7 @@ class ScreenSelectMaster : public ScreenSelect {
 	ThemeMetric<LuaReference> SCROLLER_TRANSFORM;
 	// ThemeMetric<LuaReference> SCROLLER_TWEEN;
 	ThemeMetric<int> SCROLLER_SUBDIVISIONS;
-	ThemeMetric<RString> DEFAULT_CHOICE;
+	ThemeMetric<std::string> DEFAULT_CHOICE;
 
 	std::map<int, int> m_mapCurrentChoiceToNextChoice[NUM_MenuDir];
 

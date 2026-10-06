@@ -203,7 +203,7 @@ class ScreenGameplay : public ScreenWithMenuElements {
 		return true;
 	}
 
-	ThemeMetric<RString> PLAYER_TYPE;
+	ThemeMetric<std::string> PLAYER_TYPE;
 	ThemeMetric<RString> SCORE_DISPLAY_TYPE;
 	ThemeMetric<apActorCommands> PLAYER_INIT_COMMAND;
 	LocalizedString GIVE_UP_START_TEXT;
@@ -226,7 +226,7 @@ class ScreenGameplay : public ScreenWithMenuElements {
 	ThemeMetric<int> FAIL_ON_MISS_COMBO;
 	ThemeMetric<bool> ALLOW_CENTER_1_PLAYER;
 	ThemeMetric<bool> UNPAUSE_WITH_START;
-	ThemeMetric<RString> SONG_NUMBER_FORMAT;
+	ThemeMetric<std::string> SONG_NUMBER_FORMAT;
 	ThemeMetric<bool> SURVIVAL_MOD_OVERRIDE;
 
 	bool IsLastSong();

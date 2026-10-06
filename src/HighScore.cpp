@@ -11,7 +11,7 @@
 #include <cstddef>
 #include <vector>
 
-ThemeMetric<RString> EMPTY_NAME("HighScore", "EmptyName");
+ThemeMetric<std::string> EMPTY_NAME("HighScore", "EmptyName");
 
 struct HighScoreImpl {
 	RString sName; // name that shows in the machine's ranking screen

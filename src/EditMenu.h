@@ -243,7 +243,7 @@ class EditMenu : public ActorFrame {
 
  public:
 	ThemeMetric<EditMode> EDIT_MODE;
-	ThemeMetric<RString> TEXT_BANNER_TYPE;
+	ThemeMetric<std::string> TEXT_BANNER_TYPE;
 };
 
 #endif

@@ -95,8 +95,8 @@ class ScreenSelectMusic : public ScreenWithMenuElements {
 	ThemeMetric<bool> DO_ROULETTE_ON_MENU_TIMER;
 	ThemeMetric<float> ROULETTE_TIMER_SECONDS;
 	ThemeMetric<bool> ALIGN_MUSIC_BEATS;
-	ThemeMetric<RString> CODES;
-	ThemeMetric<RString> MUSIC_WHEEL_TYPE;
+	ThemeMetric<std::string> CODES;
+	ThemeMetric<std::string> MUSIC_WHEEL_TYPE;
 	ThemeMetric<bool> OPTIONS_MENU_AVAILABLE;
 	ThemeMetric<bool> SELECT_MENU_AVAILABLE;
 	ThemeMetric<bool> MODE_MENU_AVAILABLE;
@@ -111,7 +111,7 @@ class ScreenSelectMusic : public ScreenWithMenuElements {
 	ThemeMetric<bool> WRAP_CHANGE_STEPS;
 	ThemeMetric<bool> CHANGE_STEPS_WITH_GAME_BUTTONS;
 	ThemeMetric<bool> CHANGE_GROUPS_WITH_GAME_BUTTONS;
-	ThemeMetric<RString> NULL_SCORE_STRING;
+	ThemeMetric<std::string> NULL_SCORE_STRING;
 	ThemeMetric<bool> PLAY_SOUND_ON_ENTERING_OPTIONS_MENU;
 
 	bool CanChangeSong() const {

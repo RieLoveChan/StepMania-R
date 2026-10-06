@@ -150,7 +150,7 @@ void EditMenu::Load(const std::string &sType) {
 	this->AddChild(&m_SongBanner);
 
 	m_SongTextBanner.SetName("SongTextBanner");
-	m_SongTextBanner.Load(TEXT_BANNER_TYPE);
+	m_SongTextBanner.Load(TEXT_BANNER_TYPE.GetValue());
 	ActorUtil::SetXY(m_SongTextBanner, sType);
 	ActorUtil::LoadAllCommands(m_SongTextBanner, sType);
 	this->AddChild(&m_SongTextBanner);
