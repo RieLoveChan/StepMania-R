@@ -151,7 +151,7 @@ void ScreenOptionsManageProfiles::BeginScreen() {
 	ScreenOptions::InitMenu(OptionRowHandlers);
 
 	// Save sEditLocalProfileID before calling ScreenOptions::BeginScreen, because it will get clobbered.
-	RString sEditLocalProfileID = GAMESTATE->m_sEditLocalProfileID;
+	std::string sEditLocalProfileID = GAMESTATE->m_sEditLocalProfileID.Get();
 
 	ScreenOptions::BeginScreen();
 
@@ -196,7 +196,7 @@ void ScreenOptionsManageProfiles::HandleScreenMessage(const ScreenMessage SM) {
 			int iNumProfiles = PROFILEMAN->GetNumLocalProfiles();
 
 			// create
-			RString sProfileID;
+			std::string sProfileID;
 
 			// is this the correct way to go about checking the return value? -aj
 			bool bCreateProfile = PROFILEMAN->CreateLocalProfile(ScreenTextEntry::s_sLastAnswer, sProfileID);
@@ -208,7 +208,7 @@ void ScreenOptionsManageProfiles::HandleScreenMessage(const ScreenMessage SM) {
 				int iFirstUnused = -1;
 				int index = 0;
 				for (Preference<RString> const *i : PROFILEMAN->m_sDefaultLocalProfileID.m_v) {
-					RString sLocalProfileID = i->Get();
+					std::string sLocalProfileID = i->Get();
 					if (sLocalProfileID.empty()) {
 						iFirstUnused = index;
 						break;
@@ -226,7 +226,7 @@ void ScreenOptionsManageProfiles::HandleScreenMessage(const ScreenMessage SM) {
 		if (!ScreenTextEntry::s_bCancelledLast) {
 			ASSERT(!ScreenTextEntry::s_sLastAnswer.empty()); // validate should have assured this
 
-			RString sNewName = ScreenTextEntry::s_sLastAnswer;
+			std::string sNewName = ScreenTextEntry::s_sLastAnswer;
 			PROFILEMAN->RenameLocalProfile(GAMESTATE->m_sEditLocalProfileID.Get(), sNewName);
 			if (PREFSMAN->m_ProfileSortOrder == ProfileSortOrder_Alphabetical) {
 				PROFILEMAN->MoveProfileSorted(GetLocalProfileIndexWithFocus(), PREFSMAN->m_bProfileSortOrderAscending);
@@ -293,12 +293,12 @@ void ScreenOptionsManageProfiles::HandleScreenMessage(const ScreenMessage SM) {
 				);
 			} break;
 			case ProfileAction_Delete: {
-				RString sTitle = pProfile->m_sDisplayName;
+				std::string sTitle = pProfile->m_sDisplayName;
 				std::string sMessage = ssprintf(CONFIRM_DELETE_PROFILE.GetValue(), sTitle.c_str());
 				ScreenPrompt::Prompt(SM_BackFromDeleteConfirm, sMessage, PROMPT_YES_NO);
 			} break;
 			case ProfileAction_Clear: {
-				RString sTitle = pProfile->m_sDisplayName;
+				std::string sTitle = pProfile->m_sDisplayName;
 				std::string sMessage = ssprintf(CONFIRM_CLEAR_PROFILE.GetValue(), sTitle.c_str());
 				ScreenPrompt::Prompt(SM_BackFromClearConfirm, sMessage, PROMPT_YES_NO);
 			} break;
@@ -369,7 +369,7 @@ void ScreenOptionsManageProfiles::ProcessMenuStart(const InputEventPlus &) {
 		std::vector<std::string> vsUsedNames;
 		PROFILEMAN->GetLocalProfileDisplayNames(vsUsedNames);
 
-		RString sPotentialName;
+		std::string sPotentialName;
 		for (int i = 1; i < 1000; i++) {
 			sPotentialName = ssprintf("%s%04d", NEW_PROFILE_DEFAULT_NAME.GetValue().c_str(), i);
 			bool bNameIsUsed = find(vsUsedNames.begin(), vsUsedNames.end(), sPotentialName) != vsUsedNames.end();

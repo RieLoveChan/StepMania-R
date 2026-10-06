@@ -405,7 +405,7 @@ void ScreenSelectMaster::UpdateSelectableChoices() {
 	}
 
 	for (unsigned c = 0; c < m_aGameCommands.size(); c++) {
-		RString command = "Enabled";
+		std::string command = "Enabled";
 		bool disabled = false;
 		if (!m_aGameCommands[c].IsPlayable()) {
 			command = "Disabled";
