@@ -1979,19 +1979,19 @@ static ThemeMetric<std::string> NUM_HANDS_FORMAT("ScreenEdit", "NumHandsFormat")
 static ThemeMetric<std::string> NUM_ROLLS_FORMAT("ScreenEdit", "NumRollsFormat");
 static ThemeMetric<std::string> NUM_LIFTS_FORMAT("ScreenEdit", "NumLiftsFormat");
 static ThemeMetric<std::string> NUM_FAKES_FORMAT("ScreenEdit", "NumFakesFormat");
-static ThemeMetric<RString> NUM_STEPS_FORMAT_TWO_PLAYER("ScreenEdit", "NumStepsFormatTwoPlayer");
-static ThemeMetric<RString> NUM_JUMPS_FORMAT_TWO_PLAYER("ScreenEdit", "NumJumpsFormatTwoPlayer");
-static ThemeMetric<RString> NUM_HOLDS_FORMAT_TWO_PLAYER("ScreenEdit", "NumHoldsFormatTwoPlayer");
-static ThemeMetric<RString> NUM_MINES_FORMAT_TWO_PLAYER("ScreenEdit", "NumMinesFormatTwoPlayer");
-static ThemeMetric<RString> NUM_HANDS_FORMAT_TWO_PLAYER("ScreenEdit", "NumHandsFormatTwoPlayer");
-static ThemeMetric<RString> NUM_ROLLS_FORMAT_TWO_PLAYER("ScreenEdit", "NumRollsFormatTwoPlayer");
-static ThemeMetric<RString> NUM_LIFTS_FORMAT_TWO_PLAYER("ScreenEdit", "NumLiftsFormatTwoPlayer");
-static ThemeMetric<RString> NUM_FAKES_FORMAT_TWO_PLAYER("ScreenEdit", "NumFakesFormatTwoPlayer");
-static ThemeMetric<RString> TIMING_MODE_FORMAT("ScreenEdit", "TimingModeFormat");
-static ThemeMetric<RString> BEAT_0_OFFSET_FORMAT("ScreenEdit", "Beat0OffsetFormat");
-static ThemeMetric<RString> PREVIEW_START_FORMAT("ScreenEdit", "PreviewStartFormat");
-static ThemeMetric<RString> PREVIEW_LENGTH_FORMAT("ScreenEdit", "PreviewLengthFormat");
-static ThemeMetric<RString> RECORD_HOLD_TIME_FORMAT("ScreenEdit", "RecordHoldTimeFormat");
+static ThemeMetric<std::string> NUM_STEPS_FORMAT_TWO_PLAYER("ScreenEdit", "NumStepsFormatTwoPlayer");
+static ThemeMetric<std::string> NUM_JUMPS_FORMAT_TWO_PLAYER("ScreenEdit", "NumJumpsFormatTwoPlayer");
+static ThemeMetric<std::string> NUM_HOLDS_FORMAT_TWO_PLAYER("ScreenEdit", "NumHoldsFormatTwoPlayer");
+static ThemeMetric<std::string> NUM_MINES_FORMAT_TWO_PLAYER("ScreenEdit", "NumMinesFormatTwoPlayer");
+static ThemeMetric<std::string> NUM_HANDS_FORMAT_TWO_PLAYER("ScreenEdit", "NumHandsFormatTwoPlayer");
+static ThemeMetric<std::string> NUM_ROLLS_FORMAT_TWO_PLAYER("ScreenEdit", "NumRollsFormatTwoPlayer");
+static ThemeMetric<std::string> NUM_LIFTS_FORMAT_TWO_PLAYER("ScreenEdit", "NumLiftsFormatTwoPlayer");
+static ThemeMetric<std::string> NUM_FAKES_FORMAT_TWO_PLAYER("ScreenEdit", "NumFakesFormatTwoPlayer");
+static ThemeMetric<std::string> TIMING_MODE_FORMAT("ScreenEdit", "TimingModeFormat");
+static ThemeMetric<std::string> BEAT_0_OFFSET_FORMAT("ScreenEdit", "Beat0OffsetFormat");
+static ThemeMetric<std::string> PREVIEW_START_FORMAT("ScreenEdit", "PreviewStartFormat");
+static ThemeMetric<std::string> PREVIEW_LENGTH_FORMAT("ScreenEdit", "PreviewLengthFormat");
+static ThemeMetric<std::string> RECORD_HOLD_TIME_FORMAT("ScreenEdit", "RecordHoldTimeFormat");
 void ScreenEdit::UpdateTextInfo() {
 	if (m_pSteps == nullptr)
 		return;
@@ -2070,21 +2070,21 @@ void ScreenEdit::UpdateTextInfo() {
 	const StepsTypeCategory &cat = GAMEMAN->GetStepsTypeInfo(m_pSteps->m_StepsType).m_StepsTypeCategory;
 	if (cat == StepsTypeCategory_Couple || cat == StepsTypeCategory_Routine) {
 		std::pair<int, int> tmp = m_NoteDataEdit.GetNumTapNotesTwoPlayer();
-		sText += ssprintf(NUM_STEPS_FORMAT_TWO_PLAYER.GetValue(), TAP_STEPS.GetValue().c_str(), tmp.first, tmp.second);
+		sText += ssprintf(NUM_STEPS_FORMAT_TWO_PLAYER.GetValue().c_str(), TAP_STEPS.GetValue().c_str(), tmp.first, tmp.second);
 		tmp = m_NoteDataEdit.GetNumJumpsTwoPlayer();
-		sText += ssprintf(NUM_JUMPS_FORMAT_TWO_PLAYER.GetValue(), JUMPS.GetValue().c_str(), tmp.first, tmp.second);
+		sText += ssprintf(NUM_JUMPS_FORMAT_TWO_PLAYER.GetValue().c_str(), JUMPS.GetValue().c_str(), tmp.first, tmp.second);
 		tmp = m_NoteDataEdit.GetNumHandsTwoPlayer();
-		sText += ssprintf(NUM_HANDS_FORMAT_TWO_PLAYER.GetValue(), HANDS.GetValue().c_str(), tmp.first, tmp.second);
+		sText += ssprintf(NUM_HANDS_FORMAT_TWO_PLAYER.GetValue().c_str(), HANDS.GetValue().c_str(), tmp.first, tmp.second);
 		tmp = m_NoteDataEdit.GetNumHoldNotesTwoPlayer();
-		sText += ssprintf(NUM_HOLDS_FORMAT_TWO_PLAYER.GetValue(), HOLDS.GetValue().c_str(), tmp.first, tmp.second);
+		sText += ssprintf(NUM_HOLDS_FORMAT_TWO_PLAYER.GetValue().c_str(), HOLDS.GetValue().c_str(), tmp.first, tmp.second);
 		tmp = m_NoteDataEdit.GetNumMinesTwoPlayer();
-		sText += ssprintf(NUM_MINES_FORMAT_TWO_PLAYER.GetValue(), MINES.GetValue().c_str(), tmp.first, tmp.second);
+		sText += ssprintf(NUM_MINES_FORMAT_TWO_PLAYER.GetValue().c_str(), MINES.GetValue().c_str(), tmp.first, tmp.second);
 		tmp = m_NoteDataEdit.GetNumRollsTwoPlayer();
-		sText += ssprintf(NUM_ROLLS_FORMAT_TWO_PLAYER.GetValue(), ROLLS.GetValue().c_str(), tmp.first, tmp.second);
+		sText += ssprintf(NUM_ROLLS_FORMAT_TWO_PLAYER.GetValue().c_str(), ROLLS.GetValue().c_str(), tmp.first, tmp.second);
 		tmp = m_NoteDataEdit.GetNumLiftsTwoPlayer();
-		sText += ssprintf(NUM_LIFTS_FORMAT_TWO_PLAYER.GetValue(), LIFTS.GetValue().c_str(), tmp.first, tmp.second);
+		sText += ssprintf(NUM_LIFTS_FORMAT_TWO_PLAYER.GetValue().c_str(), LIFTS.GetValue().c_str(), tmp.first, tmp.second);
 		tmp = m_NoteDataEdit.GetNumFakesTwoPlayer();
-		sText += ssprintf(NUM_FAKES_FORMAT_TWO_PLAYER.GetValue(), FAKES.GetValue().c_str(), tmp.first, tmp.second);
+		sText += ssprintf(NUM_FAKES_FORMAT_TWO_PLAYER.GetValue().c_str(), FAKES.GetValue().c_str(), tmp.first, tmp.second);
 	}
 	else {
 		sText += ssprintf(NUM_STEPS_FORMAT.GetValue().c_str(), TAP_STEPS.GetValue().c_str(), m_NoteDataEdit.GetNumTapNotes());
@@ -2104,24 +2104,24 @@ void ScreenEdit::UpdateTextInfo() {
 		break;
 	case EditMode_Full:
 		sText += ssprintf(
-		   TIMING_MODE_FORMAT.GetValue(),
+		   TIMING_MODE_FORMAT.GetValue().c_str(),
 		   TIMING_MODE.GetValue().c_str(),
 		   (GAMESTATE->m_bIsUsingStepTiming ? STEP_TIMING.GetValue().c_str() : SONG_TIMING.GetValue().c_str())
 		);
 		sText += ssprintf(
-		   BEAT_0_OFFSET_FORMAT.GetValue(),
+		   BEAT_0_OFFSET_FORMAT.GetValue().c_str(),
 		   BEAT_0_OFFSET.GetValue().c_str(),
 		   GetAppropriateTiming().m_fBeat0OffsetInSeconds
 		);
 		sText += ssprintf(
-		   PREVIEW_START_FORMAT.GetValue(), PREVIEW_START.GetValue().c_str(), m_pSong->m_fMusicSampleStartSeconds
+		   PREVIEW_START_FORMAT.GetValue().c_str(), PREVIEW_START.GetValue().c_str(), m_pSong->m_fMusicSampleStartSeconds
 		);
 		sText += ssprintf(
-		   PREVIEW_LENGTH_FORMAT.GetValue(), PREVIEW_LENGTH.GetValue().c_str(), m_pSong->m_fMusicSampleLengthSeconds
+		   PREVIEW_LENGTH_FORMAT.GetValue().c_str(), PREVIEW_LENGTH.GetValue().c_str(), m_pSong->m_fMusicSampleLengthSeconds
 		);
 		if (record_hold_seconds < record_hold_default - .001f || record_hold_seconds > record_hold_default + .001f) {
 			sText +=
-			   ssprintf(RECORD_HOLD_TIME_FORMAT.GetValue(), RECORD_HOLD_TIME.GetValue().c_str(), record_hold_seconds);
+			   ssprintf(RECORD_HOLD_TIME_FORMAT.GetValue().c_str(), RECORD_HOLD_TIME.GetValue().c_str(), record_hold_seconds);
 		}
 		break;
 	}
