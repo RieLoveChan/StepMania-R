@@ -1967,18 +1967,18 @@ static ThemeMetric<std::string> CHART_NAME_FORMAT("ScreenEdit", "ChartNameFormat
 static ThemeMetric<RString> DESCRIPTION_FORMAT("ScreenEdit", "DescriptionFormat");
 static ThemeMetric<RString> CHART_STYLE_FORMAT("ScreenEdit", "ChartStyleFormat");
 static ThemeMetric<std::string> STEP_AUTHOR_FORMAT("ScreenEdit", "StepAuthorFormat");
-static ThemeMetric<RString> MAIN_TITLE_FORMAT("ScreenEdit", "MainTitleFormat");
-static ThemeMetric<RString> SUBTITLE_FORMAT("ScreenEdit", "SubtitleFormat");
-static ThemeMetric<RString> TAP_NOTE_TYPE_FORMAT("ScreenEdit", "TapNoteTypeFormat");
-static ThemeMetric<RString> SEGMENT_TYPE_FORMAT("ScreenEdit", "SegmentTypeFormat");
-static ThemeMetric<RString> NUM_STEPS_FORMAT("ScreenEdit", "NumStepsFormat");
-static ThemeMetric<RString> NUM_JUMPS_FORMAT("ScreenEdit", "NumJumpsFormat");
-static ThemeMetric<RString> NUM_HOLDS_FORMAT("ScreenEdit", "NumHoldsFormat");
-static ThemeMetric<RString> NUM_MINES_FORMAT("ScreenEdit", "NumMinesFormat");
-static ThemeMetric<RString> NUM_HANDS_FORMAT("ScreenEdit", "NumHandsFormat");
-static ThemeMetric<RString> NUM_ROLLS_FORMAT("ScreenEdit", "NumRollsFormat");
-static ThemeMetric<RString> NUM_LIFTS_FORMAT("ScreenEdit", "NumLiftsFormat");
-static ThemeMetric<RString> NUM_FAKES_FORMAT("ScreenEdit", "NumFakesFormat");
+static ThemeMetric<std::string> MAIN_TITLE_FORMAT("ScreenEdit", "MainTitleFormat");
+static ThemeMetric<std::string> SUBTITLE_FORMAT("ScreenEdit", "SubtitleFormat");
+static ThemeMetric<std::string> TAP_NOTE_TYPE_FORMAT("ScreenEdit", "TapNoteTypeFormat");
+static ThemeMetric<std::string> SEGMENT_TYPE_FORMAT("ScreenEdit", "SegmentTypeFormat");
+static ThemeMetric<std::string> NUM_STEPS_FORMAT("ScreenEdit", "NumStepsFormat");
+static ThemeMetric<std::string> NUM_JUMPS_FORMAT("ScreenEdit", "NumJumpsFormat");
+static ThemeMetric<std::string> NUM_HOLDS_FORMAT("ScreenEdit", "NumHoldsFormat");
+static ThemeMetric<std::string> NUM_MINES_FORMAT("ScreenEdit", "NumMinesFormat");
+static ThemeMetric<std::string> NUM_HANDS_FORMAT("ScreenEdit", "NumHandsFormat");
+static ThemeMetric<std::string> NUM_ROLLS_FORMAT("ScreenEdit", "NumRollsFormat");
+static ThemeMetric<std::string> NUM_LIFTS_FORMAT("ScreenEdit", "NumLiftsFormat");
+static ThemeMetric<std::string> NUM_FAKES_FORMAT("ScreenEdit", "NumFakesFormat");
 static ThemeMetric<RString> NUM_STEPS_FORMAT_TWO_PLAYER("ScreenEdit", "NumStepsFormatTwoPlayer");
 static ThemeMetric<RString> NUM_JUMPS_FORMAT_TWO_PLAYER("ScreenEdit", "NumJumpsFormatTwoPlayer");
 static ThemeMetric<RString> NUM_HOLDS_FORMAT_TWO_PLAYER("ScreenEdit", "NumHoldsFormatTwoPlayer");
@@ -2050,16 +2050,16 @@ void ScreenEdit::UpdateTextInfo() {
 		sText += ssprintf(STEP_AUTHOR_FORMAT.GetValue().c_str(), STEP_AUTHOR.GetValue().c_str(), m_pSteps->GetCredit().c_str());
 		// sText += ssprintf( CHART_STYLE_FORMAT.GetValue(), CHART_STYLE.GetValue().c_str(),
 		// m_pSteps->GetChartStyle().c_str() );
-		sText += ssprintf(MAIN_TITLE_FORMAT.GetValue(), MAIN_TITLE.GetValue().c_str(), m_pSong->m_sMainTitle.c_str());
+		sText += ssprintf(MAIN_TITLE_FORMAT.GetValue().c_str(), MAIN_TITLE.GetValue().c_str(), m_pSong->m_sMainTitle.c_str());
 		if (!m_pSong->m_sSubTitle.empty())
-			sText += ssprintf(SUBTITLE_FORMAT.GetValue(), SUBTITLE.GetValue().c_str(), m_pSong->m_sSubTitle.c_str());
+			sText += ssprintf(SUBTITLE_FORMAT.GetValue().c_str(), SUBTITLE.GetValue().c_str(), m_pSong->m_sSubTitle.c_str());
 		sText += ssprintf(
-		   SEGMENT_TYPE_FORMAT.GetValue(),
+		   SEGMENT_TYPE_FORMAT.GetValue().c_str(),
 		   SEGMENT_TYPE.GetValue().c_str(),
 		   TimingSegmentTypeToString(currentCycleSegment).c_str()
 		);
 		const std::string tapnoteType = TapNoteTypeToString(m_selectedTap.type);
-		sText += ssprintf(TAP_NOTE_TYPE_FORMAT.GetValue(), TAP_NOTE_TYPE.GetValue().c_str(), tapnoteType.c_str());
+		sText += ssprintf(TAP_NOTE_TYPE_FORMAT.GetValue().c_str(), TAP_NOTE_TYPE.GetValue().c_str(), tapnoteType.c_str());
 
 		AttackArray &attacks = (GAMESTATE->m_bIsUsingStepTiming ? m_pSteps->m_Attacks : m_pSong->m_Attacks);
 		float beat = GetAppropriateTiming().GetElapsedTimeFromBeat(GetBeat());
@@ -2087,14 +2087,14 @@ void ScreenEdit::UpdateTextInfo() {
 		sText += ssprintf(NUM_FAKES_FORMAT_TWO_PLAYER.GetValue(), FAKES.GetValue().c_str(), tmp.first, tmp.second);
 	}
 	else {
-		sText += ssprintf(NUM_STEPS_FORMAT.GetValue(), TAP_STEPS.GetValue().c_str(), m_NoteDataEdit.GetNumTapNotes());
-		sText += ssprintf(NUM_JUMPS_FORMAT.GetValue(), JUMPS.GetValue().c_str(), m_NoteDataEdit.GetNumJumps());
-		sText += ssprintf(NUM_HANDS_FORMAT.GetValue(), HANDS.GetValue().c_str(), m_NoteDataEdit.GetNumHands());
-		sText += ssprintf(NUM_HOLDS_FORMAT.GetValue(), HOLDS.GetValue().c_str(), m_NoteDataEdit.GetNumHoldNotes());
-		sText += ssprintf(NUM_MINES_FORMAT.GetValue(), MINES.GetValue().c_str(), m_NoteDataEdit.GetNumMines());
-		sText += ssprintf(NUM_ROLLS_FORMAT.GetValue(), ROLLS.GetValue().c_str(), m_NoteDataEdit.GetNumRolls());
-		sText += ssprintf(NUM_LIFTS_FORMAT.GetValue(), LIFTS.GetValue().c_str(), m_NoteDataEdit.GetNumLifts());
-		sText += ssprintf(NUM_FAKES_FORMAT.GetValue(), FAKES.GetValue().c_str(), m_NoteDataEdit.GetNumFakes());
+		sText += ssprintf(NUM_STEPS_FORMAT.GetValue().c_str(), TAP_STEPS.GetValue().c_str(), m_NoteDataEdit.GetNumTapNotes());
+		sText += ssprintf(NUM_JUMPS_FORMAT.GetValue().c_str(), JUMPS.GetValue().c_str(), m_NoteDataEdit.GetNumJumps());
+		sText += ssprintf(NUM_HANDS_FORMAT.GetValue().c_str(), HANDS.GetValue().c_str(), m_NoteDataEdit.GetNumHands());
+		sText += ssprintf(NUM_HOLDS_FORMAT.GetValue().c_str(), HOLDS.GetValue().c_str(), m_NoteDataEdit.GetNumHoldNotes());
+		sText += ssprintf(NUM_MINES_FORMAT.GetValue().c_str(), MINES.GetValue().c_str(), m_NoteDataEdit.GetNumMines());
+		sText += ssprintf(NUM_ROLLS_FORMAT.GetValue().c_str(), ROLLS.GetValue().c_str(), m_NoteDataEdit.GetNumRolls());
+		sText += ssprintf(NUM_LIFTS_FORMAT.GetValue().c_str(), LIFTS.GetValue().c_str(), m_NoteDataEdit.GetNumLifts());
+		sText += ssprintf(NUM_FAKES_FORMAT.GetValue().c_str(), FAKES.GetValue().c_str(), m_NoteDataEdit.GetNumFakes());
 	}
 	switch (EDIT_MODE.GetValue()) {
 		DEFAULT_FAIL(EDIT_MODE.GetValue());
