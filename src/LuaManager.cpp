@@ -440,7 +440,7 @@ bool LuaThreadVariable::PushThreadTable(lua_State *L, bool bCreate) {
 		lua_setfield(L, LUA_REGISTRYINDEX, "LuaThreadVariableTable");
 	}
 
-	RString sThreadIDString = GetCurrentThreadIDString();
+	std::string sThreadIDString = GetCurrentThreadIDString();
 	LuaHelpers::Push(L, sThreadIDString);
 	lua_gettable(L, -2);
 	if (lua_isnil(L, -1)) {
@@ -1001,12 +1001,12 @@ LuaFunction(clamp, std::clamp(FArg(1), FArg(2), FArg(3)));
 #include "LuaBinding.h"
 namespace {
 static int Trace(lua_State *L) {
-	RString sString = SArg(1);
+	std::string sString = SArg(1);
 	LOG_TRACE(Log::Lua, "%s", sString.c_str());
 	return 0;
 }
 static int Warn(lua_State *L) {
-	RString sString = SArg(1);
+	std::string sString = SArg(1);
 	LOG_WARN(Log::Lua, "%s", sString.c_str());
 	return 0;
 }
@@ -1021,13 +1021,13 @@ static int CheckType(lua_State *L) {
 	return 1;
 }
 static int ReadFile(lua_State *L) {
-	RString sPath = SArg(1);
+	std::string sPath = SArg(1);
 
 	/* Release Lua while we call GetFileContents, so we don't access
 	 * it while we read from the disk. */
 	LUA->YieldLua();
 
-	RString sFileContents;
+	std::string sFileContents;
 	bool bRet = GetFileContents(sPath, sFileContents);
 
 	LUA->UnyieldLua();

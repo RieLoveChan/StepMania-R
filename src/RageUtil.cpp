@@ -2311,7 +2311,7 @@ int LuaFunc_BinaryToHex(lua_State *L) {
 	std::size_t l;
 	const char *s = luaL_checklstring(L, 1, &l);
 
-	RString hex = BinaryToHex(s, l);
+	std::string hex = BinaryToHex(s, l);
 
 	LuaHelpers::Push(L, hex);
 	return 1;
@@ -2320,7 +2320,7 @@ LUAFUNC_REGISTER_COMMON(BinaryToHex);
 
 int LuaFunc_commify(lua_State *L);
 int LuaFunc_commify(lua_State *L) {
-	RString num = SArg(1);
+	std::string num = SArg(1);
 	RString sep = ",";
 	RString dot = ".";
 	if (!lua_isnoneornil(L, 2)) {
@@ -2329,7 +2329,7 @@ int LuaFunc_commify(lua_State *L) {
 	if (!lua_isnoneornil(L, 3)) {
 		dot = lua_tostring(L, 3);
 	}
-	RString ret = Commify(num, sep, dot);
+	std::string ret = Commify(num, sep, dot);
 	LuaHelpers::Push(L, ret);
 	return 1;
 }
