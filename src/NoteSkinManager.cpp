@@ -162,8 +162,8 @@ bool NoteSkinManager::LoadNoteSkinDataRecursive(const std::string &sNoteSkinName
 	for (std::vector<std::string>::reverse_iterator dir = data_out.vsDirSearchOrder.rbegin();
 	     dir != data_out.vsDirSearchOrder.rend();
 	     ++dir) {
-		RString sFile = *dir + "NoteSkin.lua";
-		RString sScript;
+		std::string sFile = *dir + "NoteSkin.lua";
+		std::string sScript;
 		if (!FILEMAN->IsAFile(sFile))
 			continue;
 

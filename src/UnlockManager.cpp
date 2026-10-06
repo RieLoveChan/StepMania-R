@@ -627,7 +627,7 @@ void UnlockManager::UnlockEntryID(RString sEntryID) {
 }
 
 void UnlockManager::UnlockEntryIndex(int iEntryIndex) {
-	RString sEntryID = m_UnlockEntries[iEntryIndex].m_sEntryID;
+	std::string sEntryID = m_UnlockEntries[iEntryIndex].m_sEntryID;
 	UnlockEntryID(sEntryID);
 }
 
@@ -637,7 +637,7 @@ void UnlockManager::LockEntryID(RString entryID) {
 }
 
 void UnlockManager::LockEntryIndex(int entryIndex) {
-	RString entryID = m_UnlockEntries[entryIndex].m_sEntryID;
+	std::string entryID = m_UnlockEntries[entryIndex].m_sEntryID;
 	LockEntryID(entryID);
 }
 
@@ -884,7 +884,7 @@ class LunaUnlockManager : public Luna<UnlockManager> {
 		return 1;
 	}
 	static int FindEntryID(T *p, lua_State *L) {
-		RString sName = SArg(1);
+		std::string sName = SArg(1);
 		std::string s = p->FindEntryID(sName);
 		if (s.empty())
 			lua_pushnil(L);
@@ -893,7 +893,7 @@ class LunaUnlockManager : public Luna<UnlockManager> {
 		return 1;
 	}
 	static int UnlockEntryID(T *p, lua_State *L) {
-		RString sUnlockEntryID = SArg(1);
+		std::string sUnlockEntryID = SArg(1);
 		p->UnlockEntryID(sUnlockEntryID);
 		COMMON_RETURN_SELF;
 	}
@@ -903,7 +903,7 @@ class LunaUnlockManager : public Luna<UnlockManager> {
 		COMMON_RETURN_SELF;
 	}
 	static int LockEntryID(T *p, lua_State *L) {
-		RString entryID = SArg(1);
+		std::string entryID = SArg(1);
 		p->LockEntryID(entryID);
 		COMMON_RETURN_SELF;
 	}
@@ -913,7 +913,7 @@ class LunaUnlockManager : public Luna<UnlockManager> {
 		COMMON_RETURN_SELF;
 	}
 	static int PreferUnlockEntryID(T *p, lua_State *L) {
-		RString sUnlockEntryID = SArg(1);
+		std::string sUnlockEntryID = SArg(1);
 		p->PreferUnlockEntryID(sUnlockEntryID);
 		COMMON_RETURN_SELF;
 	}
