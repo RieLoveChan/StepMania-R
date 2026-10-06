@@ -74,7 +74,7 @@ void NoteSkinManager::RefreshNoteSkinData(const Game *pGame) {
 	// clear path cache
 	g_PathCache.clear();
 
-	RString sBaseSkinFolder = SpecialFiles::NOTESKINS_DIR + pGame->m_szName + "/";
+	std::string sBaseSkinFolder = SpecialFiles::NOTESKINS_DIR + pGame->m_szName + "/";
 	std::vector<std::string> asNoteSkinNames;
 	GetDirListing(sBaseSkinFolder + "*", asNoteSkinNames, true);
 
@@ -117,7 +117,7 @@ bool NoteSkinManager::LoadNoteSkinDataRecursive(const std::string &sNoteSkinName
 			return false;
 		}
 
-		RString sDir = SpecialFiles::NOTESKINS_DIR + m_pCurGame->m_szName + "/" + sNoteSkinName + "/";
+		std::string sDir = SpecialFiles::NOTESKINS_DIR + m_pCurGame->m_szName + "/" + sNoteSkinName + "/";
 		if (!FILEMAN->IsADirectory(sDir)) {
 			sDir = GLOBAL_BASE_DIR + sNoteSkinName + "/";
 			if (!FILEMAN->IsADirectory(sDir)) {
@@ -141,7 +141,7 @@ bool NoteSkinManager::LoadNoteSkinDataRecursive(const std::string &sNoteSkinName
 		if (!sNoteSkinName.CompareNoCase(GAME_COMMON_NOTESKIN_NAME.c_str()))
 			bLoadedCommon = true;
 
-		RString sFallback;
+		std::string sFallback;
 		if (!ini.GetValue("Global", "FallbackNoteSkin", sFallback)) {
 			if (!bLoadedBase)
 				sFallback = GAME_BASE_NOTESKIN_NAME;
@@ -249,7 +249,7 @@ void NoteSkinManager::GetAllNoteSkinNamesForGame(const Game *pGame, std::vector<
 		}
 	}
 	else {
-		RString sBaseSkinFolder = SpecialFiles::NOTESKINS_DIR + pGame->m_szName + "/";
+		std::string sBaseSkinFolder = SpecialFiles::NOTESKINS_DIR + pGame->m_szName + "/";
 		GetDirListing(sBaseSkinFolder + "*", AddTo, true);
 		StripCvsAndSvn(AddTo);
 		StripMacResourceForks(AddTo);
@@ -314,7 +314,7 @@ std::string NoteSkinManager::GetPath(const std::string &sButtonName, const std::
 	ASSERT(iter != g_mapNameToData.end());
 	const NoteSkinData &data = iter->second;
 
-	RString sPath; // fill this in below
+	std::string sPath; // fill this in below
 	for (std::string const &directory : data.vsDirSearchOrder) {
 		if (sButtonName.empty())
 			sPath = GetPathFromDirAndFile(directory, sElement);
@@ -334,7 +334,7 @@ std::string NoteSkinManager::GetPath(const std::string &sButtonName, const std::
 	}
 
 	if (sPath.empty()) {
-		RString sPaths;
+		std::string sPaths;
 
 		// TODO: Find a more elegant way of doing this.
 		for (std::string const &dir : data.vsDirSearchOrder) {
@@ -375,9 +375,9 @@ std::string NoteSkinManager::GetPath(const std::string &sButtonName, const std::
 			);
 			return "";
 		}
-		RString sNewFileName;
+		std::string sNewFileName;
 		GetFileContents(sPath, sNewFileName, true);
-		RString sRealPath;
+		std::string sRealPath;
 
 		for (std::string const &directory : data.vsDirSearchOrder) {
 			sRealPath = GetPathFromDirAndFile(directory, sNewFileName);
