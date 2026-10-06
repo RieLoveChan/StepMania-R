@@ -11,7 +11,7 @@
 #include <vector>
 
 ThemeMetric<RString> CommonMetrics::OPERATOR_MENU_SCREEN("Common", "OperatorMenuScreen");
-ThemeMetric<RString> CommonMetrics::FIRST_ATTRACT_SCREEN("Common", "FirstAttractScreen");
+ThemeMetric<std::string> CommonMetrics::FIRST_ATTRACT_SCREEN("Common", "FirstAttractScreen");
 ThemeMetric<RString> CommonMetrics::DEFAULT_MODIFIERS("Common", "DefaultModifiers");
 LocalizedString CommonMetrics::WINDOW_TITLE("Common", "WindowTitle");
 ThemeMetric<int> CommonMetrics::MAX_COURSE_ENTRIES_BEFORE_VARIOUS("Common", "MaxCourseEntriesBeforeShowVarious");
