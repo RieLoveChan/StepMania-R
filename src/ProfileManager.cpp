@@ -1139,7 +1139,7 @@ bool ProfileManager::IsPersistentProfile(ProfileSlot slot) const {
 void ProfileManager::GetLocalProfileIDs(std::vector<std::string> &vsProfileIDsOut) const {
 	vsProfileIDsOut.clear();
 	for (DirAndProfile const &i : g_vLocalProfile) {
-		RString sID = LocalProfileDirToID(i.sDir);
+		std::string sID = LocalProfileDirToID(i.sDir);
 		vsProfileIDsOut.push_back(sID);
 	}
 }
@@ -1151,7 +1151,7 @@ void ProfileManager::GetLocalProfileDisplayNames(std::vector<std::string> &vsPro
 }
 
 int ProfileManager::GetLocalProfileIndexFromID(std::string sProfileID) const {
-	RString sDir = LocalProfileIDToDir(sProfileID);
+	std::string sDir = LocalProfileIDToDir(sProfileID);
 	int j = 0;
 	for (DirAndProfile const &i : g_vLocalProfile) {
 		if (i.sDir == sDir)
@@ -1162,7 +1162,7 @@ int ProfileManager::GetLocalProfileIndexFromID(std::string sProfileID) const {
 }
 
 std::string ProfileManager::GetLocalProfileIDFromIndex(int iIndex) {
-	RString sID = LocalProfileDirToID(g_vLocalProfile[iIndex].sDir);
+	std::string sID = LocalProfileDirToID(g_vLocalProfile[iIndex].sDir);
 	return sID;
 }
 
@@ -1199,7 +1199,7 @@ class LunaProfileManager : public Luna<ProfileManager> {
 		return 1;
 	}
 	static int SetStatsPrefix(T *p, lua_State *L) {
-		RString prefix = SArg(1);
+		std::string prefix = SArg(1);
 		p->SetStatsPrefix(prefix);
 		COMMON_RETURN_SELF;
 	}
@@ -1281,8 +1281,8 @@ class LunaProfileManager : public Luna<ProfileManager> {
 	}
 
 	static int LocalProfileIDToDir(T *, lua_State *L) {
-		RString dir = USER_PROFILES_DIR + SArg(1) + "/";
-		lua_pushstring(L, dir);
+		std::string dir = USER_PROFILES_DIR + SArg(1) + "/";
+		lua_pushstring(L, dir.c_str());
 		return 1;
 	}
 	static int SaveProfile(T *p, lua_State *L) {

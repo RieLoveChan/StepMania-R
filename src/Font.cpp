@@ -709,7 +709,7 @@ void Font::Load(const std::string &sIniPath, std::string sChars) {
 	// Check for recursion (recursive imports).
 	for (unsigned i = 0; i < LoadStack.size(); ++i) {
 		if (LoadStack[i] == sIniPath) {
-			RString str = join("\n", LoadStack);
+			std::string str = join("\n", LoadStack);
 			str += "\nCurrent font: " + sIniPath;
 			LuaHelpers::ReportScriptErrorFmt("Font import recursion detected\n%s", str.c_str());
 			return;
@@ -759,14 +759,14 @@ void Font::Load(const std::string &sIniPath, std::string sChars) {
 		split(imports, ",", ImportList, true);
 
 		if (bIsTopLevelFont && imports.empty() && asTexturePaths.empty()) {
-			RString s = ssprintf("Font \"%s\" is a top-level font with no textures or imports.", sIniPath.c_str());
+			std::string s = ssprintf("Font \"%s\" is a top-level font with no textures or imports.", sIniPath.c_str());
 			Dialog::OK(s);
 		}
 
 		for (unsigned i = 0; i < ImportList.size(); ++i) {
 			std::string sPath = THEME->GetPathF("", ImportList[i], true);
 			if (sPath.empty()) {
-				RString s = ssprintf(
+				std::string s = ssprintf(
 				   "Font \"%s\" imports a font \"%s\" that doesn't exist", sIniPath.c_str(), ImportList[i].c_str()
 				);
 				Dialog::OK(s);
