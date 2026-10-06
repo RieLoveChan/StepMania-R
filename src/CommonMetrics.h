@@ -10,7 +10,7 @@
 #include <vector>
 
 // Types
-class ThemeMetricDifficultiesToShow : public ThemeMetric<RString> {
+class ThemeMetricDifficultiesToShow : public ThemeMetric<std::string> {
  public:
 	ThemeMetricDifficultiesToShow() : m_v() {
 	}
@@ -21,7 +21,7 @@ class ThemeMetricDifficultiesToShow : public ThemeMetric<RString> {
  private:
 	std::vector<Difficulty> m_v;
 };
-class ThemeMetricCourseDifficultiesToShow : public ThemeMetric<RString> {
+class ThemeMetricCourseDifficultiesToShow : public ThemeMetric<std::string> {
  public:
 	ThemeMetricCourseDifficultiesToShow() : m_v() {
 	}
@@ -32,7 +32,7 @@ class ThemeMetricCourseDifficultiesToShow : public ThemeMetric<RString> {
  private:
 	std::vector<CourseDifficulty> m_v;
 };
-class ThemeMetricStepsTypesToShow : public ThemeMetric<RString> {
+class ThemeMetricStepsTypesToShow : public ThemeMetric<std::string> {
  public:
 	ThemeMetricStepsTypesToShow() : m_v() {
 	}

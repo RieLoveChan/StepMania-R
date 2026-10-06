@@ -25,7 +25,7 @@ ThemeMetric<int> CommonMetrics::PERCENT_SCORE_DECIMAL_PLACES("Common", "PercentS
 ThemeMetric<RString> CommonMetrics::IMAGES_TO_CACHE("Common", "ImageCache");
 
 ThemeMetricDifficultiesToShow::ThemeMetricDifficultiesToShow(const std::string &sGroup, const std::string &sName)
-    : ThemeMetric<RString>(sGroup, sName) {
+    : ThemeMetric<std::string>(sGroup, sName) {
 	// re-read because ThemeMetric::ThemeMetric calls ThemeMetric::Read, not the derived one
 	if (IsLoaded())
 		Read();
@@ -33,12 +33,12 @@ ThemeMetricDifficultiesToShow::ThemeMetricDifficultiesToShow(const std::string &
 void ThemeMetricDifficultiesToShow::Read() {
 	ASSERT(GetName().Right(6) == "ToShow");
 
-	ThemeMetric<RString>::Read();
+	ThemeMetric<std::string>::Read();
 
 	m_v.clear();
 
 	std::vector<std::string> v;
-	split(ThemeMetric<RString>::GetValue(), ",", v);
+	split(ThemeMetric<std::string>::GetValue(), ",", v);
 	if (v.empty()) {
 		LuaHelpers::ReportScriptError("DifficultiesToShow must have at least one entry.");
 		return;
@@ -59,7 +59,7 @@ const std::vector<Difficulty> &ThemeMetricDifficultiesToShow::GetValue() const {
 }
 
 ThemeMetricCourseDifficultiesToShow::ThemeMetricCourseDifficultiesToShow(const std::string &sGroup, const std::string &sName)
-    : ThemeMetric<RString>(sGroup, sName) {
+    : ThemeMetric<std::string>(sGroup, sName) {
 	// re-read because ThemeMetric::ThemeMetric calls ThemeMetric::Read, not the derived one
 	if (IsLoaded())
 		Read();
@@ -67,12 +67,12 @@ ThemeMetricCourseDifficultiesToShow::ThemeMetricCourseDifficultiesToShow(const s
 void ThemeMetricCourseDifficultiesToShow::Read() {
 	ASSERT(GetName().Right(6) == "ToShow");
 
-	ThemeMetric<RString>::Read();
+	ThemeMetric<std::string>::Read();
 
 	m_v.clear();
 
 	std::vector<std::string> v;
-	split(ThemeMetric<RString>::GetValue(), ",", v);
+	split(ThemeMetric<std::string>::GetValue(), ",", v);
 	if (v.empty()) {
 		LuaHelpers::ReportScriptError("CourseDifficultiesToShow must have at least one entry.");
 		return;
@@ -92,7 +92,7 @@ const std::vector<CourseDifficulty> &ThemeMetricCourseDifficultiesToShow::GetVal
 	return m_v;
 }
 
-static void RemoveStepsTypes(std::vector<StepsType> &inout, RString sStepsTypesToRemove) {
+static void RemoveStepsTypes(std::vector<StepsType> &inout, std::string sStepsTypesToRemove) {
 	std::vector<std::string> v;
 	split(sStepsTypesToRemove, ",", v);
 	if (v.empty())
@@ -114,7 +114,7 @@ static void RemoveStepsTypes(std::vector<StepsType> &inout, RString sStepsTypesT
 	}
 }
 ThemeMetricStepsTypesToShow::ThemeMetricStepsTypesToShow(const std::string &sGroup, const std::string &sName)
-    : ThemeMetric<RString>(sGroup, sName) {
+    : ThemeMetric<std::string>(sGroup, sName) {
 	// re-read because ThemeMetric::ThemeMetric calls ThemeMetric::Read, not the derived one
 	if (IsLoaded())
 		Read();
@@ -122,12 +122,12 @@ ThemeMetricStepsTypesToShow::ThemeMetricStepsTypesToShow(const std::string &sGro
 void ThemeMetricStepsTypesToShow::Read() {
 	ASSERT(GetName().Right(6) == "ToHide");
 
-	ThemeMetric<RString>::Read();
+	ThemeMetric<std::string>::Read();
 
 	m_v.clear();
 	GAMEMAN->GetStepsTypesForGame(GAMESTATE->m_pCurGame, m_v);
 
-	RemoveStepsTypes(m_v, ThemeMetric<RString>::GetValue());
+	RemoveStepsTypes(m_v, ThemeMetric<std::string>::GetValue());
 }
 const std::vector<StepsType> &ThemeMetricStepsTypesToShow::GetValue() const {
 	return m_v;
