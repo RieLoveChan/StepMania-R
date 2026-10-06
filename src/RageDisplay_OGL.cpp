@@ -263,7 +263,7 @@ RString GetInfoLog(GLhandleARB h) {
 
 	GLcharARB *pInfoLog = new GLcharARB[iLength];
 	glGetInfoLogARB(h, iLength, &iLength, pInfoLog);
-	RString sRet = pInfoLog;
+	std::string sRet = pInfoLog;
 	delete[] pInfoLog;
 	TrimRight(sRet);
 	return sRet;
@@ -308,7 +308,7 @@ GLhandleARB CompileShader(GLenum ShaderType, std::string sFile, std::vector<std:
 
 	glCompileShaderARB(hShader);
 
-	RString sInfo = GetInfoLog(hShader);
+	std::string sInfo = GetInfoLog(hShader);
 
 	GLint bCompileStatus = GL_FALSE;
 	glGetObjectParameterivARB(hShader, GL_OBJECT_COMPILE_STATUS_ARB, &bCompileStatus);

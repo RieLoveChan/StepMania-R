@@ -139,8 +139,8 @@ void RageDisplay::ProcessStatsOnFlip() {
 		g_iVPF = g_iVertsRenderedSinceLastCheck / g_iFramesRenderedSinceLastCheck;
 		g_iFramesRenderedSinceLastCheck = g_iVertsRenderedSinceLastCheck = 0;
 		if (LOG_FPS) {
-			RString sStats = GetStats();
-			sStats.Replace("\n", ", ");
+			std::string sStats = GetStats();
+			ReplaceAll(sStats, "\n", ", ");
 			LOG_TRACE(Log::General, "%s", sStats.c_str());
 		}
 	}
@@ -155,7 +155,7 @@ void RageDisplay::ResetStats() {
 }
 
 std::string RageDisplay::GetStats() const {
-	RString s;
+	std::string s;
 	// If FPS == 0, we don't have stats yet.
 	if (!GetFPS())
 		s = "-- FPS\n-- av FPS\n-- VPF";

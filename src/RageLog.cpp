@@ -561,7 +561,7 @@ static char g_AdditionalLogStr[10240] = "";
 static int g_AdditionalLogSize = 0;
 
 void RageLog::UpdateMappedLog() {
-	RString str;
+	std::string str;
 	for (auto const &i : LogMaps)
 		str += ssprintf("%s" NEWLINE, i.second.c_str());
 
