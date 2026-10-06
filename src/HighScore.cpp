@@ -600,7 +600,7 @@ class LunaHighScoreList : public Luna<HighScoreList> {
 	}
 
 	static int GetHighestScoreOfName(T *p, lua_State *L) {
-		RString name = SArg(1);
+		std::string name = SArg(1);
 		for (std::size_t i = 0; i < p->vHighScores.size(); ++i) {
 			if (name == p->vHighScores[i].GetName()) {
 				p->vHighScores[i].PushSelf(L);
@@ -612,7 +612,7 @@ class LunaHighScoreList : public Luna<HighScoreList> {
 	}
 
 	static int GetRankOfName(T *p, lua_State *L) {
-		RString name = SArg(1);
+		std::string name = SArg(1);
 		std::size_t rank = 0;
 		for (std::size_t i = 0; i < p->vHighScores.size(); ++i) {
 			if (name == p->vHighScores[i].GetName()) {

@@ -75,14 +75,14 @@ void AnimatedTexture::Load(const std::string &sTexOrIniPath) {
 		pAnimatedTexture->GetAttrValue("TexOffsetY", m_vTexOffset.y);
 
 		for (int i = 0; i < 1000; i++) {
-			RString sFileKey = ssprintf("Frame%04d", i);
-			RString sDelayKey = ssprintf("Delay%04d", i);
+			std::string sFileKey = ssprintf("Frame%04d", i);
+			std::string sDelayKey = ssprintf("Delay%04d", i);
 
 			RString sFileName;
 			float fDelay = 0;
 			if (pAnimatedTexture->GetAttrValue(sFileKey, sFileName) && pAnimatedTexture->GetAttrValue(sDelayKey, fDelay)) {
-				RString sTranslateXKey = ssprintf("TranslateX%04d", i);
-				RString sTranslateYKey = ssprintf("TranslateY%04d", i);
+				std::string sTranslateXKey = ssprintf("TranslateX%04d", i);
+				std::string sTranslateYKey = ssprintf("TranslateY%04d", i);
 
 				RageVector2 vOffset(0, 0);
 				pAnimatedTexture->GetAttrValue(sTranslateXKey, vOffset.x);

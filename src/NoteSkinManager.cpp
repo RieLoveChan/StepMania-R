@@ -508,8 +508,8 @@ class LunaNoteSkinManager : public Luna<NoteSkinManager> {
 		return 1;
 	}
 	static int LoadActor(T *p, lua_State *L) {
-		RString sButton = SArg(1);
-		RString sElement = SArg(2);
+		std::string sButton = SArg(1);
+		std::string sElement = SArg(2);
 		if (!p->PushActorTemplate(L, sButton, sElement, false))
 			lua_pushnil(L);
 
