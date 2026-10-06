@@ -142,7 +142,7 @@ void MusicWheel::Load(std::string sType) {
 
 void MusicWheel::BeginScreen() {
 	RageTimer timer;
-	RString times;
+	std::string times;
 	FOREACH_ENUM(SortOrder, so) {
 		if (m_WheelItemDatasStatus[so] != INVALID) {
 			m_WheelItemDatasStatus[so] = NEEDREFILTER;
@@ -663,7 +663,7 @@ void MusicWheel::BuildWheelItemDatas(std::vector<MusicWheelItemData *> &arrayWhe
 			}
 		}
 		// make WheelItemDatas with sections
-		RString sLastSection = "";
+		std::string sLastSection = "";
 		int iSectionColorIndex = 0;
 		switch (so) {
 		case SORT_PREFERRED:
@@ -715,7 +715,7 @@ void MusicWheel::BuildWheelItemDatas(std::vector<MusicWheelItemData *> &arrayWhe
 			for (unsigned i = 0; i < arraySongs.size(); i++) {
 				Song *pSong = arraySongs[i];
 				if (bUseSections) {
-					RString sThisSection = SongUtil::GetSectionNameFromSongAndSort(pSong, so);
+					std::string sThisSection = SongUtil::GetSectionNameFromSongAndSort(pSong, so);
 
 					if (sThisSection != sLastSection) {
 						int iSectionCount = 0;
@@ -867,7 +867,7 @@ void MusicWheel::BuildWheelItemDatas(std::vector<MusicWheelItemData *> &arrayWhe
 
 		arrayWheelItemDatas.clear(); // clear out the previous wheel items
 
-		RString sLastSection = "";
+		std::string sLastSection = "";
 		int iSectionColorIndex = 0;
 		for (unsigned i = 0; i < apCourses.size(); i++) // foreach course
 		{
@@ -877,7 +877,7 @@ void MusicWheel::BuildWheelItemDatas(std::vector<MusicWheelItemData *> &arrayWhe
 			if (UNLOCKMAN->CourseIsLocked(pCourse))
 				continue;
 
-			RString sThisSection = "";
+			std::string sThisSection = "";
 			if (so == SORT_ALL_COURSES) {
 				switch (pCourse->GetPlayMode()) {
 				case PLAY_MODE_ONI:
@@ -1612,7 +1612,7 @@ Song *MusicWheel::GetPreferredSelectionForRandomOrPortal() {
 		vDifficultiesToRequire.push_back(GAMESTATE->m_PreferredDifficulty[p]);
 	}
 
-	RString sPreferredGroup = m_sExpandedSectionName;
+	std::string sPreferredGroup = m_sExpandedSectionName;
 	std::vector<MusicWheelItemData *> &wid = getWheelItemsData(GAMESTATE->m_SortOrder);
 
 	StepsType st = GAMESTATE->GetCurrentStyle(PLAYER_INVALID)->m_StepsType;

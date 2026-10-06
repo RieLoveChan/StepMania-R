@@ -511,7 +511,7 @@ void OptionRow::UpdateEnabledDisabled() {
 	bool bRowEnabled = !m_pHand->m_Def.m_vEnabledForPlayers.empty();
 
 	// Don't tween selection colors at all.
-	RString sCmdName;
+	std::string sCmdName;
 	if (bThisRowHasFocusByAny)
 		sCmdName = "GainFocus";
 	else if (bRowEnabled)
