@@ -588,7 +588,7 @@ void ScreenTextEntryVisual::Init() {
 				pbt = text.Copy();
 				this->AddChild(pbt);
 
-				RString s = g_szKeys[r][x];
+				std::string s = g_szKeys[r][x];
 				if (!s.empty() && r == KEYBOARD_ROW_SPECIAL)
 					s = THEME->GetString(m_sName, s);
 				pbt->SetText(s);
@@ -636,7 +636,7 @@ void ScreenTextEntryVisual::TextEnteredDirectly() {
 }
 
 void ScreenTextEntryVisual::MoveX(int iDir) {
-	RString sKey;
+	std::string sKey;
 	do {
 		m_iFocusX += iDir;
 		wrap(m_iFocusX, KEYS_PER_ROW);
@@ -649,7 +649,7 @@ void ScreenTextEntryVisual::MoveX(int iDir) {
 }
 
 void ScreenTextEntryVisual::MoveY(int iDir) {
-	RString sKey;
+	std::string sKey;
 	do {
 		m_iFocusY = enum_add2(m_iFocusY, +iDir);
 		wrap(*ConvertValue<int>(&m_iFocusY), NUM_KeyboardRow);

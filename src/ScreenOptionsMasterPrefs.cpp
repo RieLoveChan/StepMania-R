@@ -1119,8 +1119,8 @@ ConfOption *ConfOption::Find(std::string name) {
 	InitializeConfOptions();
 	for (unsigned i = 0; i < g_ConfOptions.size(); ++i) {
 		ConfOption *opt = &g_ConfOptions[i];
-		RString match(opt->name);
-		if (match.CompareNoCase(name.c_str()))
+		std::string match(opt->name);
+		if (StrCompareNoCase(match, name))
 			continue;
 		return opt;
 	}

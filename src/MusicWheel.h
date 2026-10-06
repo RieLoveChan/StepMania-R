@@ -96,7 +96,7 @@ class MusicWheel : public WheelBase {
 	ThemeMetric<bool> RANDOM_PICKS_LOCKED_SONGS;
 	ThemeMetric<int> MOST_PLAYED_SONGS_TO_SHOW;
 	ThemeMetric<int> RECENT_SONGS_TO_SHOW;
-	ThemeMetric<RString> MODE_MENU_CHOICE_NAMES;
+	ThemeMetric<std::string> MODE_MENU_CHOICE_NAMES;
 	ThemeMetricMap<RString> CHOICE;
 	ThemeMetric1D<RageColor> SECTION_COLORS;
 	ThemeMetric<LuaReference> SORT_ORDERS;
@@ -111,7 +111,7 @@ class MusicWheel : public WheelBase {
 	ThemeMetric<RageColor> PORTAL_COLOR;
 	ThemeMetric<RageColor> EMPTY_COLOR;
 	std::vector<int> m_viWheelPositions;
-	ThemeMetric<RString> CUSTOM_WHEEL_ITEM_NAMES;
+	ThemeMetric<std::string> CUSTOM_WHEEL_ITEM_NAMES;
 	ThemeMetricMap<RString> CUSTOM_CHOICES;
 	ThemeMetricMap<RageColor> CUSTOM_CHOICE_COLORS;
 

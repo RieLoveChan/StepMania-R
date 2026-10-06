@@ -104,13 +104,13 @@ void MusicWheel::Load(std::string sType) {
 	HIDE_ACTIVE_SECTION_TITLE.Load(sType, "HideActiveSectionTitle");
 	REMIND_WHEEL_POSITIONS.Load(sType, "RemindWheelPositions");
 	std::vector<RString> vsModeChoiceNames;
-	split(MODE_MENU_CHOICE_NAMES, ",", vsModeChoiceNames);
+	split(MODE_MENU_CHOICE_NAMES.GetValue(), ",", vsModeChoiceNames);
 	CHOICE.Load(sType, CHOICE_NAME, vsModeChoiceNames);
 	SECTION_COLORS.Load(sType, SECTION_COLORS_NAME, NUM_SECTION_COLORS);
 
 	CUSTOM_WHEEL_ITEM_NAMES.Load(sType, "CustomWheelItemNames");
 	std::vector<RString> vsCustomItemNames;
-	split(CUSTOM_WHEEL_ITEM_NAMES, ",", vsCustomItemNames);
+	split(CUSTOM_WHEEL_ITEM_NAMES.GetValue(), ",", vsCustomItemNames);
 	CUSTOM_CHOICES.Load(sType, CUSTOM_WHEEL_ITEM_NAME, vsCustomItemNames);
 	CUSTOM_CHOICE_COLORS.Load(sType, CUSTOM_WHEEL_ITEM_COLOR, vsCustomItemNames);
 
@@ -499,7 +499,7 @@ void MusicWheel::BuildWheelItemDatas(std::vector<MusicWheelItemData *> &arrayWhe
 	case SORT_MODE_MENU: {
 		arrayWheelItemDatas.clear(); // clear out the previous wheel items
 		std::vector<RString> vsNames;
-		split(MODE_MENU_CHOICE_NAMES, ",", vsNames);
+		split(MODE_MENU_CHOICE_NAMES.GetValue(), ",", vsNames);
 		for (unsigned i = 0; i < vsNames.size(); ++i) {
 			MusicWheelItemData wid(WheelItemDataType_Sort, nullptr, "", nullptr, SORT_MENU_COLOR, 0);
 			wid.m_pAction = HiddenPtr<GameCommand>(new GameCommand);
@@ -771,7 +771,7 @@ void MusicWheel::BuildWheelItemDatas(std::vector<MusicWheelItemData *> &arrayWhe
 
 			// add custom wheel items
 			std::vector<RString> vsNames;
-			split(CUSTOM_WHEEL_ITEM_NAMES, ",", vsNames);
+			split(CUSTOM_WHEEL_ITEM_NAMES.GetValue(), ",", vsNames);
 			for (unsigned i = 0; i < vsNames.size(); ++i) {
 				MusicWheelItemData wid(
 				   WheelItemDataType_Custom, nullptr, "", nullptr, CUSTOM_CHOICE_COLORS.GetValue(vsNames[i]), 0

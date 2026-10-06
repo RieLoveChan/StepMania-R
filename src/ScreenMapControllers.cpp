@@ -56,7 +56,7 @@ void ScreenMapControllers::Init() {
 	LOAD_ALL_COMMANDS_AND_SET_XY(m_textDevices);
 	this->AddChild(&m_textDevices);
 
-	RString sButtons = BUTTONS_TO_MAP;
+	std::string sButtons = BUTTONS_TO_MAP;
 	if (sButtons.empty()) {
 		/* Map all buttons for this game. */
 		FOREACH_GameButtonInScheme(INPUTMAPPER->GetInputScheme(), gb) {
@@ -534,7 +534,7 @@ void ScreenMapControllers::Refresh() {
 				BitmapText *pText = pKey->m_textMappedTo[p][s];
 				GameInput cur_gi(p, pKey->m_GameButton);
 				DeviceInput di;
-				RString sText = "-----------";
+				std::string sText = "-----------";
 				if (INPUTMAPPER->GameToDevice(cur_gi, s, di))
 					sText = INPUTMAN->GetDeviceSpecificInputString(di);
 				pText->SetText(sText);
