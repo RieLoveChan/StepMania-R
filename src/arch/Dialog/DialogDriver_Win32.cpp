@@ -146,7 +146,7 @@ static INT_PTR CALLBACK ErrorWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM 
 			STARTUPINFO si;
 			ZeroMemory(&si, sizeof(si));
 
-			RString sAppDataDir = SpecialDirs::GetAppDataDir();
+			std::string sAppDataDir = SpecialDirs::GetAppDataDir();
 			RString sCommand = "notepad \"" + sAppDataDir + PRODUCT_ID + "/Logs/log.txt\"";
 			CreateProcess(
 			   nullptr,                              // pointer to name of executable module

@@ -114,7 +114,7 @@ void ScreenOptionsMemoryCard::HandleMessage(const Message &msg) {
 			/* Remember the old mountpoint. */
 			const std::vector<UsbStorageDevice> &v = m_CurrentUsbStorageDevices;
 			int iRow = m_iCurrentRow[GAMESTATE->GetMasterPlayerNumber()];
-			RString sOldMountPoint;
+			std::string sOldMountPoint;
 			if (iRow < int(v.size())) {
 				const UsbStorageDevice &dev = v[iRow];
 				sOldMountPoint = dev.sOsMountDir;

@@ -421,7 +421,7 @@ class OptionRowHandlerListSteps : public OptionRowHandlerList {
 			for (unsigned i = 0; i < vTrails.size(); i++) {
 				Trail *pTrail = vTrails[i];
 
-				RString s = CourseDifficultyToLocalizedString(pTrail->m_CourseDifficulty);
+				std::string s = CourseDifficultyToLocalizedString(pTrail->m_CourseDifficulty);
 				s += ssprintf(" %d", pTrail->GetMeter());
 				m_Def.m_vsChoices.push_back(s);
 				GameCommand mc;
@@ -444,7 +444,7 @@ class OptionRowHandlerListSteps : public OptionRowHandlerList {
 			for (unsigned i = 0; i < vpSteps.size(); i++) {
 				Steps *pSteps = vpSteps[i];
 
-				RString s;
+				std::string s;
 				if (STEPS_USE_CHART_NAME) {
 					s = pSteps->GetChartName();
 				}
@@ -558,7 +558,7 @@ class OptionRowHandlerSteps : public OptionRowHandler {
 				Steps *pSteps = m_vSteps[i];
 				Difficulty dc = m_vDifficulties[i];
 
-				RString s;
+				std::string s;
 				if (dc == Difficulty_Edit) {
 					if (pSteps)
 						s = pSteps->GetDescription();

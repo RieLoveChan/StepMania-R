@@ -6375,7 +6375,7 @@ void ScreenEdit::DoHelp() {
 			continue;
 
 		RString sButtons = GetDeviceButtonsLocalized(hl.veb, m_EditMappingsDeviceInput);
-		RString sDescription = THEME->GetString("EditHelpDescription", hl.szEnglishDescription);
+		std::string sDescription = THEME->GetString("EditHelpDescription", hl.szEnglishDescription);
 
 		// TODO: Better way of hiding routine only key on non-routine.
 		if (hl.veb[0] == EDIT_BUTTON_SWITCH_PLAYERS && m_InputPlayerNumber == PLAYER_INVALID) {
