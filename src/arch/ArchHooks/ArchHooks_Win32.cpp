@@ -108,7 +108,7 @@ bool ArchHooks_Win32::CheckForMultipleInstances(int argc, char *argv[]) {
 		std::vector<RString> vsArgs;
 		for (int i = 0; i < argc; i++)
 			vsArgs.push_back(argv[i]);
-		RString sAllArgs = join("|", vsArgs);
+		std::string sAllArgs = join("|", vsArgs);
 		COPYDATASTRUCT cds;
 		cds.dwData = 0;
 		cds.cbData = static_cast<DWORD>(sAllArgs.size());

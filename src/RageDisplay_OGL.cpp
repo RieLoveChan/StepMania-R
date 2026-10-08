@@ -474,11 +474,11 @@ RString RageDisplay_Legacy::Init(const VideoModeParams &p, bool bAllowUnaccelera
 		std::size_t iNextToPrint = 0;
 		while (iNextToPrint < asExtensions.size()) {
 			std::size_t iLastToPrint = iNextToPrint;
-			RString sType;
+			std::string sType;
 			for (std::size_t i = iNextToPrint; i < asExtensions.size(); ++i) {
 				std::vector<RString> asBits;
 				split(asExtensions[i], "_", asBits);
-				RString sThisType;
+				std::string sThisType;
 				if (asBits.size() > 2)
 					sThisType = join("_", asBits.begin(), asBits.begin() + 2);
 				if (i > iNextToPrint && sThisType != sType)
@@ -493,11 +493,11 @@ RString RageDisplay_Legacy::Init(const VideoModeParams &p, bool bAllowUnaccelera
 				continue;
 			}
 
-			RString sList = ssprintf("  %s: ", sType.c_str());
+			std::string sList = ssprintf("  %s: ", sType.c_str());
 			while (iNextToPrint <= iLastToPrint) {
 				std::vector<RString> asBits;
 				split(asExtensions[iNextToPrint], "_", asBits);
-				RString sShortExt = join("_", asBits.begin() + 2, asBits.end());
+				std::string sShortExt = join("_", asBits.begin() + 2, asBits.end());
 				sList += sShortExt;
 				if (iNextToPrint < iLastToPrint)
 					sList += ", ";

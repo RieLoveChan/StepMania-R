@@ -207,7 +207,7 @@ std::string DeviceInput::ToString() const {
 	if (device == InputDevice_Invalid)
 		return RString();
 
-	RString s = InputDeviceToString(device) + "_" + DeviceButtonToString(button);
+	std::string s = InputDeviceToString(device) + "_" + DeviceButtonToString(button);
 	return s;
 }
 

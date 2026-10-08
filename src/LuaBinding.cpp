@@ -26,7 +26,7 @@ void RegisterTypes(lua_State *L) {
 			if (!pBinding->IsDerivedClass()) {
 				break;
 			}
-			RString sBase = pBinding->GetBaseClassName();
+			std::string sBase = pBinding->GetBaseClassName();
 			std::map<std::string, LuaBinding *>::const_iterator it = mapToRegister.find(sBase);
 			if (it != mapToRegister.end()) {
 				pBinding = it->second;

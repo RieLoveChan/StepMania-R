@@ -577,7 +577,7 @@ const char *RageLog::GetAdditionalLog() {
 }
 
 void RageLog::MapLog(const std::string &key, const char *fmt, ...) {
-	RString s;
+	std::string s;
 
 	va_list va;
 	va_start(va, fmt);
