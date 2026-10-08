@@ -225,7 +225,7 @@ void StepMania::ApplyGraphicOptions() {
 
 	VideoModeParams params;
 	GetPreferredVideoModeParams(params);
-	RString sError = DISPLAY->SetVideoMode(params, bNeedReload);
+	std::string sError = DISPLAY->SetVideoMode(params, bNeedReload);
 	if (!sError.empty())
 		RageException::Throw("%s", sError.c_str());
 
@@ -567,7 +567,7 @@ RageDisplay *CreateDisplay() {
 	VideoModeParams params;
 	StepMania::GetPreferredVideoModeParams(params);
 
-	RString error = ERROR_INITIALIZING_CARD.GetValue() + "\n\n" + ERROR_DONT_FILE_BUG.GetValue() +
+	std::string error = ERROR_INITIALIZING_CARD.GetValue() + "\n\n" + ERROR_DONT_FILE_BUG.GetValue() +
 	   "\n\n" VIDEO_TROUBLESHOOTING_URL "\n\n" + ssprintf(ERROR_VIDEO_DRIVER.GetValue(), GetVideoDriverName().c_str()) +
 	   "\n\n";
 
@@ -616,7 +616,7 @@ RageDisplay *CreateDisplay() {
 		if (pRet == nullptr)
 			continue;
 
-		RString sError = pRet->Init(params, PREFSMAN->m_bAllowUnacceleratedRenderer);
+		std::string sError = pRet->Init(params, PREFSMAN->m_bAllowUnacceleratedRenderer);
 		if (!sError.empty()) {
 			error += ssprintf(ERROR_INITIALIZING.GetValue(), sRenderer.c_str()) + "\n" + sError;
 			SAFE_DELETE(pRet);
