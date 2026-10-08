@@ -73,7 +73,7 @@ XToString(RagePixelFormat);
  * XXX: the renderer itself should probably be the one to try fallback modes */
 static LocalizedString SETVIDEOMODE_FAILED("RageDisplay", "SetVideoMode failed:");
 RString RageDisplay::SetVideoMode(VideoModeParams p, bool &bNeedReloadTextures) {
-	RString err;
+	std::string err;
 	std::vector<std::string> vs;
 
 	if ((err = this->TryVideoMode(p, bNeedReloadTextures)).empty())
@@ -731,7 +731,7 @@ bool RageDisplay::SaveScreenshot(std::string sPath, GraphicsFileFormat format) {
 
 	bool bSuccess = false;
 	timer.Touch();
-	RString strError = "";
+	std::string strError = "";
 	switch (format) {
 	case SAVE_LOSSLESS:
 		bSuccess = RageSurfaceUtils::SaveBMP(surface, out);

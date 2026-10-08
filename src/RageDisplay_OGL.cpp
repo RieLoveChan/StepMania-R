@@ -452,7 +452,7 @@ RString RageDisplay_Legacy::Init(const VideoModeParams &p, bool bAllowUnaccelera
 	g_pWind = LowLevelWindow::Create();
 
 	bool bIgnore = false;
-	RString sError = SetVideoMode(p, bIgnore);
+	std::string sError = SetVideoMode(p, bIgnore);
 	if (!sError.empty())
 		return sError;
 
@@ -543,7 +543,7 @@ void RageDisplay_Legacy::GetDisplaySpecs(DisplaySpecs &out) const {
 }
 
 static void CheckPalettedTextures() {
-	RString sError;
+	std::string sError;
 	do {
 		if (!GLEW_EXT_paletted_texture) {
 			sError = "GL_EXT_paletted_texture missing";
@@ -719,7 +719,7 @@ RString RageDisplay_Legacy::TryVideoMode(const VideoModeParams &p, bool &bNewDev
 	// LOG->Warn( "RageDisplay_Legacy::TryVideoMode( %d, %d, %d, %d, %d, %d )", p.windowed, p.width, p.height, p.bpp,
 	// p.rate, p.vsync );
 
-	RString err;
+	std::string err;
 	err = g_pWind->TryVideoMode(p, bNewDeviceOut);
 	if (!err.empty())
 		return err; // failed to set video mode
