@@ -177,7 +177,7 @@ RString InputHandler::GetDeviceSpecificInputString(const DeviceInput &di) {
 			return InputDeviceToString(di.device) + " " + Capitalize(WStringToRString(std::wstring() + c));
 	}
 
-	RString s = DeviceButtonToString(di.button);
+	std::string s = DeviceButtonToString(di.button);
 	if (di.device != DEVICE_KEYBOARD)
 		s = InputDeviceToString(di.device) + " " + s;
 	return s;

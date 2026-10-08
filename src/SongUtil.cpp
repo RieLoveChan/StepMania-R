@@ -737,9 +737,9 @@ std::string SongUtil::GetSectionNameFromSongAndSort(const Song *pSong, SortOrder
 }
 
 void SongUtil::SortSongPointerArrayBySectionName(std::vector<Song *> &vpSongsInOut, SortOrder so) {
-	RString sOther = SORT_OTHER.GetValue();
+	std::string sOther = SORT_OTHER.GetValue();
 	for (unsigned i = 0; i < vpSongsInOut.size(); ++i) {
-		RString val = GetSectionNameFromSongAndSort(vpSongsInOut[i], so);
+		std::string val = GetSectionNameFromSongAndSort(vpSongsInOut[i], so);
 
 		// Make sure 0-9 comes first and OTHER comes last.
 		if (val == "0-9")
@@ -784,7 +784,7 @@ void SongUtil::SortByMostRecentlyPlayedForMachine(std::vector<Song *> &vpSongsIn
 
 	for (Song const *s : vpSongsInOut) {
 		int iNumTimesPlayed = pProfile->GetSongNumTimesPlayed(s);
-		RString val = iNumTimesPlayed ? pProfile->GetSongLastPlayedDateTime(s).GetString() : std::string("0");
+		std::string val = iNumTimesPlayed ? pProfile->GetSongLastPlayedDateTime(s).GetString() : std::string("0");
 		g_mapSongSortVal[s] = val;
 	}
 

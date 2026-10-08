@@ -2961,7 +2961,7 @@ bool ScreenEdit::InputEdit(const InputEventPlus &input, EditButton EditB) {
 		int iAttack = FindAttackAtTime(ce.attacks, fStartTime);
 
 		if (iAttack >= 0) {
-			const RString sDuration = std::to_string(ce.attacks[iAttack].fSecsRemaining);
+			const std::string sDuration = std::to_string(ce.attacks[iAttack].fSecsRemaining);
 
 			g_InsertCourseAttack.rows[remove].bEnabled = true;
 			if (g_InsertCourseAttack.rows[duration].choices.size() == 9)

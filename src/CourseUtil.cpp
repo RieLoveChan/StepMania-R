@@ -174,7 +174,7 @@ void CourseUtil::SortByMostRecentlyPlayedForMachine(std::vector<Course *> &vpCou
 
 	for (Course const *c : vpCoursesInOut) {
 		int iNumTimesPlayed = pProfile->GetCourseNumTimesPlayed(c);
-		RString val = iNumTimesPlayed ? pProfile->GetCourseLastPlayedDateTime(c).GetString() : std::string("9999999999999");
+		std::string val = iNumTimesPlayed ? pProfile->GetCourseLastPlayedDateTime(c).GetString() : std::string("9999999999999");
 		course_sort_val[c] = val;
 	}
 
