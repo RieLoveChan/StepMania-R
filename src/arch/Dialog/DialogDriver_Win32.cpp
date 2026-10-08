@@ -86,7 +86,7 @@ static HWND GetHwnd() {
 #if !defined(SMPACKAGE)
 static LocalizedString ERROR_WINDOW_TITLE("Dialog-Prompt", "Error");
 static std::string GetWindowTitle() {
-	RString s = ERROR_WINDOW_TITLE.GetValue();
+	std::string s = ERROR_WINDOW_TITLE.GetValue();
 	return s;
 }
 #endif

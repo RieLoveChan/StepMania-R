@@ -64,10 +64,10 @@ static LRESULT CALLBACK GraphicsWindow_WndProc(HWND hWnd, UINT msg, WPARAM wPara
 		g_bHasFocus = !bInactive && !bMinimized;
 		LOG->Trace("WM_ACTIVATE (%i, %i): %s", bInactive, bMinimized, g_bHasFocus ? "has focus" : "doesn't have focus");
 		if (!g_bHasFocus) {
-			RString sName = GetNewWindow();
+			std::string sName = GetNewWindow();
 			static std::set<std::string> sLostFocusTo;
 			sLostFocusTo.insert(sName);
-			RString sStr;
+			std::string sStr;
 			for (std::set<std::string>::const_iterator it = sLostFocusTo.begin(); it != sLostFocusTo.end(); ++it)
 				sStr += (!sStr.empty() ? ", " : "") + *it;
 

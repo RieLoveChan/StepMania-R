@@ -24,7 +24,7 @@ RString GetPrimaryVideoName() {
 		return RString();
 	}
 
-	RString sPrimaryDeviceName;
+	std::string sPrimaryDeviceName;
 	for (int i = 0; true; ++i) {
 		DISPLAY_DEVICE dd;
 		ZERO(dd);
@@ -43,7 +43,7 @@ RString GetPrimaryVideoName() {
 }
 
 RString GetPrimaryVideoDriverName() {
-	RString sPrimaryDeviceName = GetPrimaryVideoName();
+	std::string sPrimaryDeviceName = GetPrimaryVideoName();
 	if (!sPrimaryDeviceName.empty())
 		return sPrimaryDeviceName;
 
@@ -63,7 +63,7 @@ bool GetVideoDriverInfo(int iCardno, VideoDriverInfo &info) {
 	if (!bInitialized) {
 		bInitialized = true;
 
-		const RString sTopKey =
+		const std::string sTopKey =
 		   "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Class\\{4D36E968-E325-11CE-BFC1-08002BE10318}";
 
 		RegistryAccess::GetRegSubKeys(sTopKey, lst, ".*", false);
@@ -85,7 +85,7 @@ bool GetVideoDriverInfo(int iCardno, VideoDriverInfo &info) {
 	}
 
 	while (iCardno < (int)lst.size()) {
-		const RString sKey = lst[iCardno];
+		const std::string sKey = lst[iCardno];
 
 		if (!RegistryAccess::GetRegValue(sKey, "DriverDesc", info.sDescription)) {
 			/* Remove this one from the list and ignore it, */

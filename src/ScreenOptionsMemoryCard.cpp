@@ -61,7 +61,7 @@ void ScreenOptionsMemoryCard::CreateMenu() {
 		vHands.push_back(OptionRowHandlerUtil::MakeNull());
 
 		OptionRowDefinition &def = vHands.back()->m_Def;
-		RString sDescription = join(", ", vs);
+		std::string sDescription = join(", ", vs);
 		def.m_sName = sDescription;
 		def.m_vsChoices.push_back("");
 		def.m_sExplanationName = "Memory Card";
