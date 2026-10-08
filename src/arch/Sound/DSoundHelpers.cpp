@@ -390,7 +390,7 @@ void DSoundBuf::CheckUnderrun(int iCursorStart, int iCursorEnd) {
 	int iMissedBy = iCursorEnd - m_iWriteCursor;
 	wrap(iMissedBy, m_iBufferSize);
 
-	RString s = ssprintf(
+	std::string s = ssprintf(
 	   "underrun: %i..%i (%i) filled but cursor at %i..%i; missed it by %i",
 	   iFirstByteFilled,
 	   m_iWriteCursor,
@@ -483,7 +483,7 @@ bool DSoundBuf::get_output_buf(char **pBuffer, unsigned *pBufferSize, int iChunk
 
 		if (m_iExtraWriteahead) {
 			int used = std::min(m_iExtraWriteahead, bytes_played);
-			RString s = ssprintf("used %i of %i (%i..%i)", used, m_iExtraWriteahead, iCursorStart, iCursorEnd);
+			std::string s = ssprintf("used %i of %i (%i..%i)", used, m_iExtraWriteahead, iCursorStart, iCursorEnd);
 			s += "; last: ";
 			for (int i = 0; i < 4; ++i)
 				s += ssprintf("%i, %i; ", m_iLastCursors[i][0], m_iLastCursors[i][1]);

@@ -85,7 +85,7 @@ int ChooseWindowPixelFormat(const VideoModeParams &p, PIXELFORMATDESCRIPTOR *pix
 }
 
 void DumpPixelFormat(const PIXELFORMATDESCRIPTOR &pfd) {
-	RString str = ssprintf("Mode: ");
+	std::string str = ssprintf("Mode: ");
 	bool bInvalidFormat = false;
 
 	if (pfd.dwFlags & PFD_GENERIC_FORMAT) {
