@@ -164,7 +164,7 @@ RString LowLevelWindow_Win32::TryVideoMode(const VideoModeParams &p, bool &bNewD
 
 	/* Set the display mode: switch to a fullscreen mode or revert to windowed mode. */
 	LOG->Trace("SetScreenMode ...");
-	RString sErr = GraphicsWindow::SetScreenMode(p);
+	std::string sErr = GraphicsWindow::SetScreenMode(p);
 	if (!sErr.empty())
 		return sErr;
 

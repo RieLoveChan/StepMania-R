@@ -385,7 +385,7 @@ void MemoryCardManager::CheckStateChanges() {
 		const UsbStorageDevice &new_device = m_Device[p];
 
 		MemoryCardState state = MemoryCardState_Invalid;
-		RString sError;
+		std::string sError;
 
 		if (m_bCardLocked[p]) {
 			if (m_FinalDevice[p].m_State == UsbStorageDevice::STATE_NONE) {

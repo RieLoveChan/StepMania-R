@@ -34,7 +34,7 @@ static std::string wo_ssprintf(MMRESULT err, const char *szFmt, ...) {
 
 	va_list va;
 	va_start(va, szFmt);
-	RString s = vssprintf(szFmt, va);
+	std::string s = vssprintf(szFmt, va);
 	va_end(va);
 
 	return s += ssprintf("(%s)", szBuf);

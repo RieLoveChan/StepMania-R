@@ -16,7 +16,7 @@ LightsDriver_Win32Serial::LightsDriver_Win32Serial() {
 	// Ensure a non-match the first time
 	lastOutput[0] = 0;
 
-	RString sComPort = g_sLightsComPort.Get();
+	std::string sComPort = g_sLightsComPort.Get();
 
 	serialPort =
 	   CreateFile(RString("\\\\.\\").append(sComPort).c_str(), GENERIC_WRITE, 0, nullptr, OPEN_EXISTING, 0, nullptr);

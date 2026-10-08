@@ -70,7 +70,7 @@ static std::string wo_ssprintf(MMRESULT err, const char *fmt, ...) {
 
 	va_list va;
 	va_start(va, fmt);
-	RString s = vssprintf(fmt, va);
+	std::string s = vssprintf(fmt, va);
 	va_end(va);
 
 	return s += ssprintf("(%s)", buf);

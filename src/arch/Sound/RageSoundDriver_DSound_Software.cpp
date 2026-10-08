@@ -77,7 +77,7 @@ RageSoundDriver_DSound_Software::RageSoundDriver_DSound_Software() {
 }
 
 RString RageSoundDriver_DSound_Software::Init() {
-	RString sError = ds.Init();
+	std::string sError = ds.Init();
 	if (!sError.empty())
 		return sError;
 
