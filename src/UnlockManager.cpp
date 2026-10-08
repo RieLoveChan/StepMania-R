@@ -577,7 +577,7 @@ void UnlockManager::Load() {
 
 	// Log unlocks
 	for (UnlockEntry &e : m_UnlockEntries) {
-		RString str = ssprintf("Unlock: %s; ", join("\n", e.m_cmd.m_vsArgs).c_str());
+		std::string str = ssprintf("Unlock: %s; ", join("\n", e.m_cmd.m_vsArgs).c_str());
 		FOREACH_ENUM(UnlockRequirement, j)
 		if (e.m_fRequirement[j])
 			str += ssprintf("%s = %f; ", UnlockRequirementToString(j).c_str(), e.m_fRequirement[j]);

@@ -553,9 +553,9 @@ void RageMutex::Lock() {
 		const ThreadSlot *ThisSlot = GetThreadSlotFromID(GetThisThreadId());
 		const ThreadSlot *OtherSlot = GetThreadSlotFromID(m_LockedBy);
 
-		RString ThisSlotName = "(???"
+		std::string ThisSlotName = "(???"
 		                       ")"; // stupid trigraph warnings
-		RString OtherSlotName = "(???"
+		std::string OtherSlotName = "(???"
 		                        ")"; // stupid trigraph warnings
 		if (ThisSlot)
 			ThisSlotName = ssprintf("%s (%i)", ThisSlot->GetThreadName(), (int)ThisSlot->m_iID);

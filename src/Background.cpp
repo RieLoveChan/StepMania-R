@@ -719,7 +719,7 @@ void BackgroundImpl::Layer::UpdateCurBGChange(
 		std::map<BackgroundDef, Actor *>::const_iterator iter = m_BGAnimations.find(change.m_def);
 		if (iter == m_BGAnimations.end()) {
 			XNode *pNode = change.m_def.CreateNode();
-			RString xml = XmlFileUtil::GetXML(pNode);
+			std::string xml = XmlFileUtil::GetXML(pNode);
 			Trim(xml);
 			LuaHelpers::ReportScriptErrorFmt("Tried to switch to a background that was never loaded:\n%s", xml.c_str());
 			SAFE_DELETE(pNode);

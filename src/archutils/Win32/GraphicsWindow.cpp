@@ -41,7 +41,7 @@ static std::string GetNewWindow() {
 	DWORD iProcessID;
 	GetWindowThreadProcessId(h, &iProcessID);
 
-	RString sName;
+	std::string sName;
 	GetProcessFileName(iProcessID, sName);
 
 	sName = Basename(sName);

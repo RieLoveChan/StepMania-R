@@ -33,7 +33,7 @@ RageSoundReader_FileReader::TryOpenFile(RageFileBasic *pFile, std::string &error
 	if (ret == OPEN_OK)
 		return Sample;
 
-	RString err = Sample->GetError();
+	std::string err = Sample->GetError();
 	delete Sample;
 
 	LOG_TRACE(Log::Sound, "Format %s failed: %s", format.c_str(), err.c_str());

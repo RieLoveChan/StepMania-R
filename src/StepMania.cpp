@@ -481,7 +481,7 @@ static std::string GetVideoDriverName() {
 
 bool CheckVideoDefaultSettings() {
 	// Video card changed since last run
-	RString sVideoDriver = GetVideoDriverName();
+	std::string sVideoDriver = GetVideoDriverName();
 
 	LOG_TRACE(Log::General, "Last seen video driver: %s", PREFSMAN->m_sLastSeenVideoDriver.Get().c_str());
 
@@ -772,7 +772,7 @@ static void WriteLogHeader() {
 	LOG_TRACE(Log::General, " ");
 
 	if (g_argc > 1) {
-		RString args;
+		std::string args;
 		for (int i = 1; i < g_argc; ++i) {
 			if (i > 1)
 				args += " ";
