@@ -108,15 +108,15 @@ void LuaBinding::Register(lua_State *L) {
 		lua_newtable(L);
 		int iHeirarchyTable = lua_gettop(L);
 
-		RString sClass = GetClassName();
+		std::string sClass = GetClassName();
 		int iIndex = 0;
 		while (!sClass.empty()) {
-			lua_pushstring(L, sClass);
+			lua_pushstring(L, sClass.c_str());
 			lua_pushinteger(L, iIndex);
 			lua_rawset(L, iHeirarchyTable);
 			++iIndex;
 
-			luaL_getmetatable(L, sClass);
+			luaL_getmetatable(L, sClass.c_str());
 			ASSERT(!lua_isnil(L, -1));
 			lua_getfield(L, -1, "base");
 

@@ -6374,7 +6374,7 @@ void ScreenEdit::DoHelp() {
 		if (!IsMapped(hl.veb[0], m_EditMappingsDeviceInput))
 			continue;
 
-		RString sButtons = GetDeviceButtonsLocalized(hl.veb, m_EditMappingsDeviceInput);
+		std::string sButtons = GetDeviceButtonsLocalized(hl.veb, m_EditMappingsDeviceInput);
 		std::string sDescription = THEME->GetString("EditHelpDescription", hl.szEnglishDescription);
 
 		// TODO: Better way of hiding routine only key on non-routine.
@@ -6382,7 +6382,7 @@ void ScreenEdit::DoHelp() {
 			continue;
 		}
 
-		g_EditHelp.rows.push_back(MenuRowDef(-1, sDescription, false, EditMode_Practice, false, false, 0, sButtons));
+		g_EditHelp.rows.push_back(MenuRowDef(-1, sDescription, false, EditMode_Practice, false, false, 0, sButtons.c_str()));
 	}
 
 	EditMiniMenu(&g_EditHelp);

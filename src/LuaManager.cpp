@@ -1015,8 +1015,8 @@ static int Flush(lua_State * /* L */) {
 	return 0;
 }
 static int CheckType(lua_State *L) {
-	RString sType = SArg(1);
-	bool bRet = LuaBinding::CheckLuaObjectType(L, 2, sType);
+	std::string sType = SArg(1);
+	bool bRet = LuaBinding::CheckLuaObjectType(L, 2, sType.c_str());
 	LuaHelpers::Push(L, bRet);
 	return 1;
 }

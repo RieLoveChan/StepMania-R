@@ -282,12 +282,12 @@ class OptionRowHandlerList : public OptionRowHandler {
 			if (m_Def.m_selectType == SELECT_ONE && bUseFallbackOption) {
 				int iFallbackOption = m_Def.m_iDefault;
 				if (iFallbackOption == -1) {
-					RString s = ssprintf(
+					std::string s = ssprintf(
 					   "No options in row \"list,%s\" were selected, and no fallback row found; selected entry 0",
 					   m_Def.m_sName.c_str()
 					);
 					LOG_WARN(Log::Screen, "%s", s.c_str());
-					CHECKPOINT_M(s);
+					CHECKPOINT_M(s.c_str());
 					iFallbackOption = 0;
 				}
 

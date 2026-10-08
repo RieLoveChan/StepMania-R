@@ -479,10 +479,10 @@ static void MakeCrashReport(const CompleteCrashData &Data, std::string &sOut) {
 }
 
 static void DoSave(const RString &sReport) {
-	RString sName = SpliceProgramPath("../crashinfo.txt");
+	std::string sName = SpliceProgramPath("../crashinfo.txt");
 
-	SetFileAttributes(sName, FILE_ATTRIBUTE_NORMAL);
-	FILE *pFile = fopen(sName, "w+");
+	SetFileAttributes(sName.c_str(), FILE_ATTRIBUTE_NORMAL);
+	FILE *pFile = fopen(sName.c_str(), "w+");
 	if (pFile == nullptr)
 		return;
 	fprintf(pFile, "%s", sReport.c_str());
@@ -490,7 +490,7 @@ static void DoSave(const RString &sReport) {
 	fclose(pFile);
 
 	// Discourage changing crashinfo.txt.
-	SetFileAttributes(sName, FILE_ATTRIBUTE_READONLY);
+	SetFileAttributes(sName.c_str(), FILE_ATTRIBUTE_READONLY);
 }
 
 bool ReadCrashDataFromParent(int iFD, CompleteCrashData &Data) {
