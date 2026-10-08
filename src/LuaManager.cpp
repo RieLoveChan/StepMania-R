@@ -734,7 +734,7 @@ XNode *LuaHelpers::GetLuaInformation() {
 }
 
 bool LuaHelpers::RunScriptFile(const std::string &sFile) {
-	RString sScript;
+	std::string sScript;
 	if (!GetFileContents(sFile, sScript))
 		return false;
 

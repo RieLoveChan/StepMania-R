@@ -60,7 +60,7 @@ void BGAnimation::AddLayersFromAniDir(const std::string &_sAniDir, const XNode *
 
 				ASSERT_M(IsADirectory(sImportDir), sImportDir + " isn't a directory");
 
-				RString sPathToIni = sImportDir + "BGAnimation.ini";
+				std::string sPathToIni = sImportDir + "BGAnimation.ini";
 
 				IniFile ini2;
 				ini2.ReadFile(sPathToIni);
@@ -89,7 +89,7 @@ void BGAnimation::LoadFromAniDir(const std::string &_sAniDir) {
 
 	ASSERT_M(IsADirectory(sAniDir), sAniDir + " isn't a directory");
 
-	RString sPathToIni = sAniDir + "BGAnimation.ini";
+	std::string sPathToIni = sAniDir + "BGAnimation.ini";
 
 	if (DoesFileExist(sPathToIni)) {
 		if (PREFSMAN->m_bQuirksMode) {
@@ -132,7 +132,7 @@ void BGAnimation::LoadFromAniDir(const std::string &_sAniDir) {
 		SortRStringArray(asImagePaths);
 
 		for (unsigned i = 0; i < asImagePaths.size(); i++) {
-			const RString sPath = asImagePaths[i];
+			const std::string sPath = asImagePaths[i];
 			if (Basename(sPath).substr(0, 1) == "_")
 				continue; // don't directly load files starting with an underscore
 			BGAnimationLayer *pLayer = new BGAnimationLayer;
@@ -143,7 +143,7 @@ void BGAnimation::LoadFromAniDir(const std::string &_sAniDir) {
 }
 
 void BGAnimation::LoadFromNode(const XNode *pNode) {
-	RString sDir;
+	std::string sDir;
 	if (pNode->GetAttrValue("AniDir", sDir))
 		LoadFromAniDir(sDir);
 

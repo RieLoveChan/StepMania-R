@@ -357,7 +357,7 @@ void SymLookup(VDDebugInfo::Context *pctx, const void *ptr, char *buf) {
 		return;
 	}
 
-	RString sName = CrashChildGetModuleBaseName((HMODULE)meminfo.AllocationBase);
+	std::string sName = CrashChildGetModuleBaseName((HMODULE)meminfo.AllocationBase);
 
 	DWORD64 disp;
 	SYMBOL_INFO *pSymbol = GetSym(reinterpret_cast<std::uintptr_t>(ptr), disp);
@@ -413,7 +413,7 @@ RString ReportCallStack(const void *const *Backtrace) {
 	unavailable.\n", g_debugInfo.sFilename, g_debugInfo.nBuildNumber, int(version_num) );
 	}
 	*/
-	RString sRet;
+	std::string sRet;
 	for (int i = 0; Backtrace[i]; ++i) {
 		char buf[10240];
 		SymbolLookup::SymLookup(&g_debugInfo, Backtrace[i], buf);
@@ -825,7 +825,7 @@ void ChildProcess() {
 	CompleteCrashData Data;
 	ReadCrashDataFromParent(_fileno(stdin), Data);
 
-	RString sCrashReport;
+	std::string sCrashReport;
 	VDDebugInfo::VDDebugInfoInitFromFile(&g_debugInfo);
 	MakeCrashReport(Data, sCrashReport);
 	VDDebugInfo::VDDebugInfoDeinit(&g_debugInfo);
