@@ -620,7 +620,7 @@ bool ProfileManager::CreateLocalProfile(std::string sName, std::string &sProfile
 		profile_number = first_free_number;
 	}
 	ASSERT_M(profile_number >= 0 && profile_number <= MAX_ID, "Too many profiles, cannot assign ID to new profile.");
-	RString profile_id = ssprintf("%0" ID_DIGITS_STR "d", profile_number);
+	std::string profile_id = ssprintf("%0" ID_DIGITS_STR "d", profile_number);
 
 	// make sure this id doesn't already exist
 	ASSERT_M(

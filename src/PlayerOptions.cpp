@@ -230,7 +230,7 @@ static void AddPart(std::vector<std::string> &AddTo, float level, RString name) 
 	if (level == 0)
 		return;
 
-	const RString LevelStr = (level == 1) ? RString("") : ssprintf("%ld%% ", std::lrint(level * 100));
+	const std::string LevelStr = (level == 1) ? RString("") : ssprintf("%ld%% ", std::lrint(level * 100));
 
 	AddTo.push_back(LevelStr + name);
 }
@@ -1885,7 +1885,7 @@ void PlayerOptions::GetLocalizedMods(std::vector<std::string> &AddTo) const {
 		 * characters might use modifiers that don't exist in the theme. */
 		asTokens.back() = CommonMetrics::LocalizeOptionItem(asTokens.back(), true);
 
-		RString sLocalizedMod = join(" ", asTokens);
+		std::string sLocalizedMod = join(" ", asTokens);
 		AddTo.push_back(sLocalizedMod);
 	}
 }
