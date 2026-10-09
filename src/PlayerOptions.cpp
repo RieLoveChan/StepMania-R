@@ -270,12 +270,12 @@ void PlayerOptions::GetMods(std::vector<std::string> &AddTo, bool bForceNoteSkin
 
 	if (!m_fTimeSpacing) {
 		if (m_fMaxScrollBPM) {
-			RString s = ssprintf("m%.0f", m_fMaxScrollBPM);
+			std::string s = ssprintf("m%.0f", m_fMaxScrollBPM);
 			AddTo.push_back(s);
 		}
 		else if (m_bSetScrollSpeed || m_fScrollSpeed != 1) {
 			/* -> 1.00 */
-			RString s = ssprintf("%2.2f", m_fScrollSpeed);
+			std::string s = ssprintf("%2.2f", m_fScrollSpeed);
 			if (s[s.size() - 1] == '0') {
 				/* -> 1.0 */
 				s.erase(s.size() - 1); // delete last char
@@ -288,7 +288,7 @@ void PlayerOptions::GetMods(std::vector<std::string> &AddTo, bool bForceNoteSkin
 		}
 	}
 	else {
-		RString s = ssprintf("C%.0f", m_fScrollBPM);
+		std::string s = ssprintf("C%.0f", m_fScrollBPM);
 		AddTo.push_back(s);
 	}
 
@@ -447,7 +447,7 @@ void PlayerOptions::GetMods(std::vector<std::string> &AddTo, bool bForceNoteSkin
 	AddPart(AddTo, m_bCosecant, "Cosecant");
 
 	for (int i = 0; i < 16; i++) {
-		RString s = ssprintf("MoveX%d", i + 1);
+		std::string s = ssprintf("MoveX%d", i + 1);
 
 		AddPart(AddTo, m_fMovesX[i], s);
 		s = ssprintf("MoveY%d", i + 1);
