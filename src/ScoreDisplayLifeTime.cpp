@@ -34,12 +34,12 @@ void ScoreDisplayLifeTime::Init(const PlayerState *pPlayerState, const PlayerSta
 	ActorUtil::LoadAllCommandsAndOnCommand(m_textDeltaSeconds, sType);
 
 	FOREACH_ENUM(TapNoteScore, tns) {
-		const RString &sCommand = TapNoteScoreToString(tns);
+		const std::string &sCommand = TapNoteScoreToString(tns);
 		if (!m_textDeltaSeconds.HasCommand(sCommand))
 			ActorUtil::LoadCommand(m_textDeltaSeconds, sType, sCommand);
 	}
 	FOREACH_ENUM(HoldNoteScore, hns) {
-		const RString &sCommand = HoldNoteScoreToString(hns);
+		const std::string &sCommand = HoldNoteScoreToString(hns);
 		if (!m_textDeltaSeconds.HasCommand(sCommand))
 			ActorUtil::LoadCommand(m_textDeltaSeconds, sType, sCommand);
 	}

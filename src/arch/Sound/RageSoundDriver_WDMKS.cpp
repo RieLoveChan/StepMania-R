@@ -865,7 +865,7 @@ static bool BuildFilterList(std::vector<WinWdmFilter *> &aFilters, std::string &
 		if (!interfaceData.Flags || (interfaceData.Flags & SPINT_REMOVED))
 			continue;
 
-		RString sDevicePath;
+		std::string sDevicePath;
 		if (!GetDevicePath(hHandle, &interfaceData, sDevicePath))
 			continue;
 
