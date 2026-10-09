@@ -453,7 +453,7 @@ std::unique_ptr<WinWdmPin> WinWdmFilter::CreatePin(unsigned long iPinId, std::st
 void WinWdmPin::Close() {
 	if (m_hHandle == nullptr)
 		return;
-	RString sError;
+	std::string sError;
 	SetState(KSSTATE_PAUSE, sError);
 	SetState(KSSTATE_STOP, sError);
 	CloseHandle(m_hHandle);
@@ -1223,12 +1223,12 @@ void RageSoundDriver_WDMKS::MixerThread() {
 
 	/* Some drivers (stock USB audio in XP) misbehave if we go from KSSTATE_STOP to
 	 * KSSTATE_RUN.  Always transition through KSSTATE_PAUSE. */
-	RString sError;
+	std::string sError;
 	if (
 	   !m_pStream->m_pPlaybackPin->SetState(KSSTATE_PAUSE, sError) ||
 	   !m_pStream->m_pPlaybackPin->SetState(KSSTATE_RUN, sError)
 	)
-		FAIL_M(sError);
+		FAIL_M(sError.c_str());
 
 	/* Submit initial buffers. */
 	for (int i = 0; i < m_pStream->m_iWriteAheadChunks; ++i)
@@ -1288,7 +1288,7 @@ void RageSoundDriver_WDMKS::SetupDecodingThread() {
 std::int64_t RageSoundDriver_WDMKS::GetPosition() const {
 	KSAUDIO_POSITION pos;
 
-	RString sError;
+	std::string sError;
 	WdmGetPropertySimple(
 	   m_pStream->m_pPlaybackPin->m_hHandle,
 	   &KSPROPSETID_Audio,
@@ -1299,7 +1299,7 @@ std::int64_t RageSoundDriver_WDMKS::GetPosition() const {
 	   0,
 	   sError
 	);
-	ASSERT_M(sError.empty(), sError);
+	ASSERT_M(sError.empty(), sError.c_str());
 
 	pos.PlayOffset /= m_pStream->m_iBytesPerOutputSample * m_pStream->m_iDeviceOutputChannels;
 	return pos.PlayOffset;
@@ -1314,7 +1314,7 @@ RageSoundDriver_WDMKS::RageSoundDriver_WDMKS() {
 }
 
 RString RageSoundDriver_WDMKS::Init() {
-	RString sError;
+	std::string sError;
 	if (!PaWinWdm_Initialize(sError))
 		return sError;
 
@@ -1331,7 +1331,7 @@ RString RageSoundDriver_WDMKS::Init() {
 		for (const auto &pPin : pFilter->m_apPins) {
 			LOG->Trace("  Pin %i", j++);
 			for (KSDATARANGE_AUDIO const &range : pPin->m_dataRangesItem) {
-				RString sSubFormat;
+				std::string sSubFormat;
 				GUID const &rawSubFormat = range.DataRange.SubFormat;
 				if (!memcmp(&rawSubFormat, &KSDATAFORMAT_SUBTYPE_WILDCARD, sizeof(GUID)))
 					sSubFormat = "WILDCARD";
