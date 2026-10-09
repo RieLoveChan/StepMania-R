@@ -346,7 +346,7 @@ bool ProfileManager::SaveProfile(PlayerNumber pn) const {
 bool ProfileManager::SaveLocalProfile(std::string sProfileID) {
 	const Profile *pProfile = GetLocalProfile(sProfileID);
 	ASSERT(pProfile != nullptr);
-	RString sDir = LocalProfileIDToDir(sProfileID);
+	std::string sDir = LocalProfileIDToDir(sProfileID);
 	bool b = pProfile->SaveAllToDir(sDir, PREFSMAN->m_bSignProfileData);
 	return b;
 }
@@ -578,7 +578,7 @@ void ProfileManager::LoadLocalProfilesByRecent() {
 }
 
 const Profile *ProfileManager::GetLocalProfile(const std::string &sProfileID) const {
-	RString sDir = LocalProfileIDToDir(sProfileID);
+	std::string sDir = LocalProfileIDToDir(sProfileID);
 	for (DirAndProfile const &dap : g_vLocalProfile) {
 		const std::string &sOther = dap.sDir;
 		if (sOther == sDir)
@@ -634,7 +634,7 @@ bool ProfileManager::CreateLocalProfile(std::string sName, std::string &sProfile
 	pProfile->m_sCharacterID = CHARMAN->GetRandomCharacter()->m_sCharacterID;
 
 	// Save it to disk.
-	RString sProfileDir = LocalProfileIDToDir(profile_id);
+	std::string sProfileDir = LocalProfileIDToDir(profile_id);
 	if (!pProfile->SaveAllToDir(sProfileDir, PREFSMAN->m_bSignProfileData)) {
 		delete pProfile;
 		sProfileIDOut = "";
@@ -704,7 +704,7 @@ bool ProfileManager::RenameLocalProfile(std::string sProfileID, std::string sNew
 	ASSERT(pProfile != nullptr);
 	pProfile->m_sDisplayName = sNewName;
 
-	RString sProfileDir = LocalProfileIDToDir(sProfileID);
+	std::string sProfileDir = LocalProfileIDToDir(sProfileID);
 	return pProfile->SaveAllToDir(sProfileDir, PREFSMAN->m_bSignProfileData);
 }
 
