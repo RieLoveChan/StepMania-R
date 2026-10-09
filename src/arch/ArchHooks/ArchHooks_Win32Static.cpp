@@ -46,12 +46,12 @@ static std::string GetMountDir(const RString &sDirOfExecutable) {
 	split(sDirOfExecutable, "/", asParts);
 	CHECKPOINT_M(ssprintf("... %i asParts", asParts.size()));
 	ASSERT_M(asParts.size() > 1, ssprintf("Strange sDirOfExecutable: %s", sDirOfExecutable.c_str()));
-	RString sDir = join("/", asParts.begin(), asParts.end() - 1);
+	std::string sDir = join("/", asParts.begin(), asParts.end() - 1);
 	return sDir;
 }
 
 void ArchHooks::MountInitialFilesystems(const RString &sDirOfExecutable) {
-	RString sDir = GetMountDir(sDirOfExecutable);
+	std::string sDir = GetMountDir(sDirOfExecutable);
 	FILEMAN->Mount("dirro", sDir, "/");
 
 	bool portable = DoesFileExist("/Portable.ini");
@@ -84,7 +84,7 @@ void ArchHooks::MountUserFilesystems(const RString & /* sDirOfExecutable */) {
 	 * happen. Just don't do it, seriously. Keep them in one place.
 	 * - Colby
 	 */
-	RString sAppDataDir = SpecialDirs::GetAppDataDir() + PRODUCT_ID;
+	std::string sAppDataDir = SpecialDirs::GetAppDataDir() + PRODUCT_ID;
 	// RString sCommonAppDataDir = SpecialDirs::GetCommonAppDataDir() + PRODUCT_ID;
 	// RString sLocalAppDataDir = SpecialDirs::GetLocalAppDataDir() + PRODUCT_ID;
 	// RString sPicturesDir = SpecialDirs::GetPicturesDir() + PRODUCT_ID;
