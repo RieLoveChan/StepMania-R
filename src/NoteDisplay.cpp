@@ -102,7 +102,7 @@ void NoteMetricCache_t::Load(const std::string &sButton) {
 	m_bDrawRollHeadForTapsOnSameRow = NOTESKIN->GetMetricB(sButton, "DrawRollHeadForTapsOnSameRow");
 	m_bTapHoldRollOnRowMeansHold = NOTESKIN->GetMetricB(sButton, "TapHoldRollOnRowMeansHold");
 	FOREACH_NotePart(p) {
-		const RString &s = NotePartToString(p);
+		const std::string &s = NotePartToString(p);
 		m_fAnimationLength[p] = NOTESKIN->GetMetricF(sButton, s + "AnimationLength");
 		m_bAnimationIsVivid[p] = NOTESKIN->GetMetricB(sButton, s + "AnimationIsVivid");
 		m_fAdditionTextureCoordOffset[p].x = NOTESKIN->GetMetricF(sButton, s + "AdditionTextureCoordOffsetX");

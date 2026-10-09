@@ -661,7 +661,7 @@ void InputMapper::AutoMapJoysticksForCurrentGame() {
 	int iNumJoysticksMapped = 0;
 	for (InputDeviceInfo const &device : vDevices) {
 		InputDevice id = device.id;
-		const RString &sDescription = device.sDesc;
+		const std::string &sDescription = device.sDesc;
 		for (AutoMappings const &mapping : vAutoMappings) {
 			Regex regex(mapping.m_sDriverRegex);
 			if (!regex.Compare(sDescription))

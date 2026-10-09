@@ -150,7 +150,7 @@ std::string RageInput::GetDisplayDevicesString() const {
 
 	std::vector<std::string> vs;
 	for (unsigned i = 0; i < vDevices.size(); ++i) {
-		const RString &sDescription = vDevices[i].sDesc;
+		const std::string &sDescription = vDevices[i].sDesc;
 		InputDevice id = vDevices[i].id;
 		if (sDescription == "MonkeyKeyboard")
 			continue; // hide this
