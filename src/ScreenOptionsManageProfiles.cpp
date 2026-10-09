@@ -128,7 +128,7 @@ void ScreenOptionsManageProfiles::BeginScreen() {
 		Profile *pProfile = PROFILEMAN->GetLocalProfile(s);
 		ASSERT(pProfile != nullptr);
 
-		RString sCommand =
+		std::string sCommand =
 		   ssprintf("gamecommand;screen,ScreenOptionsCustomizeProfile;profileid,%s;name,dummy", s.c_str());
 		OptionRowHandler *pHand = OptionRowHandlerUtil::Make(ParseCommands(sCommand));
 		OptionRowDefinition &def = pHand->m_Def;

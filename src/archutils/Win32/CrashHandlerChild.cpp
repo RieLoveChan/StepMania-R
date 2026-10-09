@@ -707,7 +707,7 @@ INT_PTR CrashDialog::HandleMessage(UINT msg, WPARAM wParam, LPARAM lParam) {
 			// EndDialog(hDlg, TRUE); // don't always exit on ENTER
 			return TRUE;
 		case IDC_VIEW_LOG: {
-			RString sLogPath;
+			std::string sLogPath;
 			FILE *pFile = fopen(SpliceProgramPath("../Portable.ini"), "r");
 			if (pFile != nullptr) {
 				sLogPath = SpliceProgramPath("../Logs/log.txt");
@@ -716,7 +716,7 @@ INT_PTR CrashDialog::HandleMessage(UINT msg, WPARAM wParam, LPARAM lParam) {
 			else
 				sLogPath = SpecialDirs::GetAppDataDir() + PRODUCT_ID + "/Logs/log.txt";
 
-			ShellExecute(nullptr, "open", sLogPath, "", "", SW_SHOWNORMAL);
+			ShellExecute(nullptr, "open", sLogPath.c_str(), "", "", SW_SHOWNORMAL);
 		} break;
 		case IDC_CRASH_SAVE:
 			ShellExecute(nullptr, "open", SpliceProgramPath("../crashinfo.txt"), "", "", SW_SHOWNORMAL);

@@ -178,7 +178,7 @@ float ArchHooks_Win32::GetDisplayAspectRatio() {
 RString ArchHooks_Win32::GetClipboard() {
 	HGLOBAL hgl;
 	LPTSTR lpstr;
-	RString ret;
+	std::string ret;
 
 	// First make sure that the clipboard actually contains a string
 	// (or something stringifiable)
