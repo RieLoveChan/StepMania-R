@@ -119,11 +119,11 @@ void ProfileManager::Init() {
 			RString sCharacterID = FIXED_PROFILE_CHARACTER_ID(i);
 			Character *pCharacter = CHARMAN->GetCharacterFromID(sCharacterID);
 			ASSERT_M(pCharacter != nullptr, sCharacterID);
-			RString sProfileID;
+			std::string sProfileID;
 			bool b = CreateLocalProfile(pCharacter->GetDisplayName(), sProfileID);
 			ASSERT(b);
 			Profile *pProfile = GetLocalProfile(sProfileID);
-			ASSERT_M(pProfile != nullptr, sProfileID);
+			ASSERT_M(pProfile != nullptr, sProfileID.c_str());
 			pProfile->m_sCharacterID = sCharacterID;
 			SaveLocalProfile(sProfileID);
 		}
@@ -378,7 +378,7 @@ const Profile *ProfileManager::GetProfile(PlayerNumber pn) const {
 		return m_pMemoryCardProfile[pn];
 	}
 	else {
-		RString sProfileID = LocalProfileDirToID(m_sProfileDir[pn]);
+		std::string sProfileID = LocalProfileDirToID(m_sProfileDir[pn]);
 		return GetLocalProfile(sProfileID);
 	}
 }

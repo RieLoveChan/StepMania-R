@@ -533,7 +533,7 @@ void Font::LoadFontPageSettings(
 					count = last - first + 1;
 				}
 
-				RString error_string = cfg.MapRange(asMatches[0], first, pValue->GetValue<int>(), count);
+				std::string error_string = cfg.MapRange(asMatches[0], first, pValue->GetValue<int>(), count);
 				if (!error_string.empty()) {
 					LuaHelpers::ReportScriptErrorFmt(
 					   "Font definition \"%s\" has an invalid range \"%s\": %s.",
